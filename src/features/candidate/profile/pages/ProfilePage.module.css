@@ -147,6 +147,22 @@
   min-width: 0;
 }
 
+/* Two-column layout: the side cards stay pinned under the header so only the profile moves
+   with the page; on a very short window they scroll inside themselves (scrollbar hidden). */
+@media (min-width: 1024px) {
+  .side {
+    position: sticky;
+    top: calc(var(--header-height) + 24px);
+    max-height: calc(100vh - var(--header-height) - 48px);
+    overflow-y: auto;
+    scrollbar-width: none;
+  }
+
+  .side::-webkit-scrollbar {
+    display: none;
+  }
+}
+
 .resumeFile {
   display: flex;
   align-items: center;

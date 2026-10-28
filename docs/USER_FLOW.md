@@ -12,7 +12,8 @@ flowchart LR
   SI <-->|"workspace picker"| RSI["/recruiter/sign-in"]
   SI -->|valid email + password| CO["/candidate"]
   SI -->|Sign up| SU["/sign-up"]
-  SU -->|Create account| CO
+  SU -->|Create account| ONB["/candidate/onboarding<br/>Your story → Your preferences"]
+  ONB -->|Find my next chapter| CJ["/candidate/jobs"]
   RSI -->|valid email + password| RO["/recruiter"]
   RSI -->|Sign up| RSU["/recruiter/sign-up"]
   RSU -->|Create account| ON2["/recruiter/onboarding/company"]
@@ -28,7 +29,7 @@ flowchart LR
 | Screen | Reached from | Main action → result | Validation / states | Back / cancel |
 |---|---|---|---|---|
 | `/sign-in`, `/recruiter/sign-in`, `/admin/sign-in` | direct URL, "Sign out" in any workspace, onboarding end | **Sign in** → loading state → that role's workspace | email required + valid format; password required; show/hide password; "demo only — nothing sent or stored" | Candidate ⇄ Recruiter radio swaps the route; "Sign up" link |
-| `/sign-up` | "Sign up" on candidate sign-in | **Create account** → `/candidate` | required fields, email format, password rules and consent as stated in the frame | "Sign in" link |
+| `/sign-up` | "Sign up" on candidate sign-in | **Create account** → `/candidate/onboarding` (profile-completion, below) | required fields, email format, password rules and consent as stated in the frame | "Sign in" link |
 | `/recruiter/sign-up` | "Sign up" on recruiter sign-in | **Create account** → onboarding step 2 (account fields are kept) | same | "Sign in" link |
 | `/recruiter/onboarding/{account,company,kyc,verify,review}` | sign-up, or any step | **Continue** → next step; step 4 **Submit for admin review** → step 5 | per-step validation; values kept across steps (`lwm.onboarding.*`); file inputs keep only file names; passwords/OTPs never persisted; a guard redirects to the first unfinished step | **Back**; header "Sign in" exits. Step 5 "Recruiter tools locked" is disabled, exactly as drawn; "Return to sign in" |
 
@@ -69,6 +70,7 @@ flowchart TD
 | Verification | confirm demo code, Submit for review, Mark as reviewed (labelled demo) | per-check status | |
 | AI insights (5 pages) | tabs between pages; role picker (`?role=`); accept/dismiss/undo suggestions; evidence expanders; save role | review dialog with confirm checkbox | evidence over percentages; nothing is applied to a server |
 | Learning / details | level filter, Buy now (confirm, no payment), mark lessons complete | purchased / not found | |
+| Onboarding (2 steps) | **Step 1 "Your story":** choose/drop a resume (PDF/DOCX ≤ 10 MB; only the name is kept, nothing is uploaded), Continue or "I'll add my resume later" → step 2. **Step 2 "Your preferences":** work mode, preferred location, minimum salary (validated), **Find my next chapter** → saves to the profile (My profile and CV & versions reflect it) → `/candidate/jobs`; Back returns to step 1 | invalid file type / size, invalid location or salary | reached from candidate sign-up and the sidebar "Complete your profile" link; frames are on Figma Page 2 |
 | Settings (3 tabs) | toggles, Export CSV, Delete resume, Delete my data, Reset demo (each confirmed) | | `/candidate/settings` redirects to Privacy |
 
 ## 3. Recruiter workspace (`/recruiter`)

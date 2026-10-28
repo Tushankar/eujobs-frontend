@@ -2,7 +2,7 @@
 
 Source: Figma file `Local-WorkMan` (`7Ve4UcfOrOcbrPh0eoomRn`), page **Final** (node `68:8827`, a 46,767 x 26,200 canvas holding every screen). The page is laid out as three role rows (labelled by text nodes `Candidate`, `Recruiter`, `Admin`); within a row, frames run left-to-right in flow order and carry a numeric suffix (e.g. `Overview_3`).
 
-- **Roles discovered:** Candidate (job seeker), Recruiter (employer), Admin — each has its own sign-in frame and sidebar. No role or screen was assumed beyond these frames. **80 frames**: Candidate 23, Recruiter 31, Admin 26.
+- **Roles discovered:** Candidate (job seeker), Recruiter (employer), Admin — each has its own sign-in frame and sidebar. No role or screen was assumed beyond these frames. **80 frames on Final** (Candidate 23, Recruiter 31, Admin 26) **plus 2 candidate frames from Page 2** (the profile-completion flow, listed at the end of the table).
 - **Responsive variants:** none. Every frame is a 1440 px desktop design (heights 1024–2668 px); the file has no tablet or mobile frames. Layouts match the frames at ≥ 1280 px; below that they adapt (header drops language/location, sidebar becomes a drawer below 1024 px, grids collapse, tables/boards scroll inside their container). No horizontal page scroll at 375 px on any tested route.
 - The older **Work Space** page holds earlier duplicates of the same screens and was not used. The **D S** page is the design system (see `DESIGN_SYSTEM.md`).
 - **Status** means: built, then re-rendered in headless Chrome at the frame size and compared with the Figma screenshot — first by the builder, then again by an independent verifier agent (pixel offsets measured). "Remaining differences" lists what still differs; frames that are states/dialogs/menus of a page are rendered by opening that state. Related screens and transitions: `USER_FLOW.md`.
@@ -90,3 +90,22 @@ Source: Figma file `Local-WorkMan` (`7Ve4UcfOrOcbrPh0eoomRn`), page **Final** (n
 | Moderation_Account review_18 | [202:2852](https://www.figma.com/design/7Ve4UcfOrOcbrPh0eoomRn/Local-WorkMan?node-id=202-2852) | Admin | `/admin/moderation/accounts` | 1440x1024 | QueueTabs (Account review tab) | open account review | none visible | Visually checked |
 | Moderation_Review pending Account_19 | [168:8455](https://www.figma.com/design/7Ve4UcfOrOcbrPh0eoomRn/Local-WorkMan?node-id=168-8455) | Admin | `/admin/moderation/accounts/:accountId (dialog)` | 1440x1024 | ReviewDialog (account) | Suspend for review / Approve account (confirm + reason) | Figma backdrop is an earlier two-queue layout (Credential queue, Premium card) — not built | Visually checked |
 | Audit logs_20 | [168:8238](https://www.figma.com/design/7Ve4UcfOrOcbrPh0eoomRn/Local-WorkMan?node-id=168-8238) | Admin | `/admin/audit-logs` | 1440x1024 | AuditEventRow, filters, pagination | search, category filter, page, expand row, export CSV | extra sample events, filter chips and pagination beyond the frame; first-row geometry matches | Visually checked |
+| AI Job & Talent Platform — Step 1 of 2 · Your story | [98:11594](https://www.figma.com/design/7Ve4UcfOrOcbrPh0eoomRn/Local-WorkMan?node-id=98-11594) (Page 2) | Candidate | `/candidate/onboarding/story (`/candidate/onboarding` redirects)` | 1439x1024 | OnboardingStep shell, UploadDropzone (reused from CV), privacy note | choose/drop a resume (PDF/DOCX ≤ 10 MB, name only); Continue → step 2; 'I'll add my resume later' → step 2 | draft frame has the old 'matchpoint' shell and a 'Saved jobs' nav item (shell kept as is); Continue replaces the skip link once a file is chosen | Visually checked |
+| AI Job & Talent Platform — Step 2 of 2 · Your preferences | [98:11819](https://www.figma.com/design/7Ve4UcfOrOcbrPh0eoomRn/Local-WorkMan?node-id=98-11819) (Page 2) | Candidate | `/candidate/onboarding/preferences` | 1439x1024 | OnboardingStep shell, WorkModePicker (radio group), location input, salary input | choose work mode, location, minimum salary; Find my next chapter → saves to the profile → /candidate/jobs; Back | card bottom ~4px higher (draft borders are 1.46px); 'Back' link added (not drawn); primary button text white, not #07192b | Visually checked |
+
+## Missing-screens audit (all four Figma pages)
+
+Every top-level frame on **Final** is mapped above (85 top-level nodes = 80 frames + 3 role labels + the profile-menu component + an icon). Every dialog, drawer or menu drawn *inside* a Final frame (12 overlay nodes: AI job summary ×2, Manage stage, skill-gap review, account review, content review, Create matching policy, Manage access, Create custom role, profile menus) has a matching implementation.
+
+The older **Work Space** page (82 frames) and **Page 2** (14 frames) were compared against Final by text content. Findings:
+
+| Source | What it is | Decision |
+|---|---|---|
+| Page 2 · 98:11594, 98:11819 | Candidate "Step 1 of 2 · Your story" / "Step 2 of 2 · Your preferences" — not on Final | **Built** (see rows above) |
+| Page 2 · 44:72 | early sign-in with the "Choose your workspace" picker | covered by the Final sign-in frames |
+| Page 2 / Work Space · other "AI Job & Talent Platform" frames | earlier drafts of Overview, Find candidates, Hiring pipeline, Moderation, Recruiter learning, onboarding steps, etc. (older copy, "matchpoint" branding) | covered by their Final counterparts |
+| Work Space · "Saved jobs" ×2 (candidate) | page removed from Final's candidate sidebar | **not built** (saving jobs still works; the Overview has a Saved tab) |
+| Work Space · "Companies" 202:3527 / 248:4842 (admin) | company overview with "Review company record" | **not built** — Final's admin sidebar has no Companies item |
+| Work Space · funnel/diagram images, 1080×1080 squares | marketing/diagram assets | not screens |
+| D S page (5 frames) | design-system reference | documented in `DESIGN_SYSTEM.md` |
+| Final · "Create a job" / "Create your next role" | wizard says "Step 1 of 9" but **only step 1 is drawn anywhere** | steps 2–9 inferred from the stepper (see plan) |

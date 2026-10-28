@@ -8,7 +8,7 @@ The repository was empty apart from `CLAUDE.md`, so a clean **React 19 + Vite 8 
 
 ## Phase 2 — Figma discovery (via Figma MCP)
 
-* `get_metadata` on the page node showed **80 desktop screens in three role rows** (Candidate 23, Recruiter 31, Admin 26); every frame is 1440 px wide, so no tablet/mobile variants exist.
+* `get_metadata` on the page node showed **80 desktop screens in three role rows** (Candidate 23, Recruiter 31, Admin 26); every frame is 1440 px wide, so no tablet/mobile variants exist. A later audit of the other pages (Work Space, Page 2) found **two more candidate screens** (the 2-step profile-completion flow on Page 2), which were added.
 * `get_variable_defs`, `get_design_context` and `get_screenshot` on the **D S** page and on the shell sub-nodes (sidebars, headers, footer, profile menu, sign-in) produced the tokens and the shell; every other frame was read the same way by the build agents.
 * Outputs: `docs/DESIGN_SYSTEM.md`, `docs/FIGMA_SCREEN_INVENTORY.md`, `docs/USER_FLOW.md`, `docs/CONVENTIONS.md`.
 
@@ -23,7 +23,7 @@ See `docs/CONVENTIONS.md`: feature folders per role and screen group (`pages/`, 
 
 ## Screen checklist
 
-All 80 frames are implemented and have been rendered and compared with their Figma screenshot (builder + independent verifier). Per-frame notes and remaining differences: `docs/FIGMA_SCREEN_INVENTORY.md`.
+All 80 Final frames and the 2 Page 2 frames are implemented and have been rendered and compared with their Figma screenshot (builder + independent verifier). Per-frame notes and remaining differences: `docs/FIGMA_SCREEN_INVENTORY.md`.
 
 ### Batch A1 — Auth + recruiter onboarding
 
@@ -135,14 +135,20 @@ All 80 frames are implemented and have been rendered and compared with their Fig
 - [x] Admin · Moderation_Review pending Account_19 (`168:8455`)
 - [x] Admin · Audit logs_20 (`168:8238`)
 
+### Batch K1 — Candidate profile-completion flow (Page 2)
+
+- [x] Candidate · Step 1 of 2 · Your story (`98:11594`)
+- [x] Candidate · Step 2 of 2 · Your preferences (`98:11819`)
+
 ## Validation log (what was actually run)
 
 Final state of the codebase:
 
 * `npm run lint` (oxlint): **0 errors, 0 warnings**.
-* `npm run build`: succeeds (2,515 modules; entry chunk ≈ 352 kB, all page chunks lazy-loaded). The 8 MB auth hero PNG was re-encoded to a 0.6 MB JPEG at the same 4096×2803 resolution.
-* **Route sweep:** 81 URLs (every route, with real ids for parameterised ones, including dialog and tab routes) loaded in headless Chrome: **0 console errors, 0 404 panels, 0 router error screens, 0 near-empty pages**. No leftover temporary Figma URLs in `src/`.
+* `npm run build`: succeeds (2,526 modules; entry chunk ≈ 352 kB, all page chunks lazy-loaded). The 8 MB auth hero PNG was re-encoded to a 0.6 MB JPEG at the same 4096×2803 resolution.
+* **Route sweep:** 84 URLs (every route, with real ids for parameterised ones, including dialog and tab routes) loaded in headless Chrome: **0 console errors, 0 404 panels, 0 router error screens, 0 near-empty pages**. No leftover temporary Figma URLs in `src/`.
 * **Per-batch checks** by the builders (lint, build, console, 375 px overflow, scripted interactions) and **independent verification** by three verifier agents: auth + candidate (34 routes at 1440 and 375 px, 0 console errors; sign-in/up, onboarding, jobs, applications, alerts, profile, CV, verification, learning, settings and AI-insights controls exercised), recruiter (33 routes x 2 widths = 66 loads, 0 errors; ~80 actions incl. shortlist and pipeline state sharing), admin (26 routes, ~150 checks incl. role creation, course publish, policy creation, moderation decisions with audit entries, 5 CSV exports). No horizontal page scroll at 375 px on any route tested.
+* The two Page 2 onboarding screens were built after the verification pass: the builder ran 53 scripted interaction checks and compared both frames at 1:1; I re-rendered both against the live Figma frames myself (content within ~1–2 px) but they were not checked by a separate verifier agent.
 * My own checks: five pages compared against live Figma screenshots (skill gap, onboarding step, profile, header variants, modal frames), the modal-backdrop colours sampled from four Figma frames, the stale `PageTitle` offsets found and fixed, and the whole app re-linted/re-built after every consolidation.
 * After the verification pass, fixes made by the moderation and courses builders were re-compared by those builders only; those routes were re-swept by me but not re-verified by an independent agent.
 
@@ -154,6 +160,7 @@ Final state of the codebase:
 * **Modal backdrop:** the D S page documents an ink + blur scrim but none of the modal frames draw one; dialogs match the frames (no scrim/blur). One CSS variable restores the documented recipe (`--modal-backdrop`, `--modal-blur`).
 * **Content the frames don't show** (kept minimal): Create-a-job steps 2–9, company-size options, a sixth recruiter-learning course, Manage-stage reorder arrows, extra audit-log events, 12 mock jobs, a few seeded numbers (3 active applications), and the language list (English/Español/Français only changes the label).
 * **Shared state across screens:** shortlist (Find candidates / Overview / Shortlists), pipeline (Applications / Hiring pipeline / profile stage), recruiter jobs (Admin Jobs and moderation review), candidate applications (Admin Applications).
+* **Candidate profile completion:** the two Page 2 frames are early drafts (old shell and "matchpoint" branding). Only their page content is built, inside the current shell. Candidate **sign-up** lands on step 1; the sidebar "Complete your profile" link opens it; "Find my next chapter" saves to the profile and opens Find jobs. Candidate sign-in still goes straight to the Overview. Not built, on purpose: the old "Saved jobs" and admin "Companies" pages (dropped from Final's sidebars).
 * **Admin Settings** has no frame: the route shows an explicit placeholder instead of an invented screen.
 * **AI & matching** follows the later layout visible behind the policy modal (policy library), not the earlier single-card frame.
 * **Downloads, uploads, payments and auth are not real** (the frames say so): files only record names, there are no file downloads, no payments, and credentials are never sent or stored.
