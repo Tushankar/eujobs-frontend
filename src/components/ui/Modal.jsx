@@ -1,9 +1,13 @@
 import { useEffect, useId, useRef } from 'react'
 import { createPortal } from 'react-dom'
 import { X } from 'lucide-react'
+import { usePresence } from '@/hooks/usePresence.js'
 import { cx } from '@/utils/cx.js'
 import IconButton from './IconButton.jsx'
 import styles from './Modal.module.css'
+
+// Keep in sync with the exit animation in Modal.module.css.
+const EXIT_MS = 180
 
 const FOCUSABLE = 'a[href], button:not([disabled]), input:not([disabled]), select:not([disabled]), textarea:not([disabled]), [tabindex]:not([tabindex="-1"])'
 
@@ -16,6 +20,14 @@ export default function Modal({ open, onClose, title, description, children, foo
   const dialogRef = useRef(null)
   const titleId = useId()
   const descriptionId = useId()
+  const { mounted, closing } = usePresence(open, EXIT_MS)
+
+  // Callers usually clear the data behind a dialog (the selected item, its title) as they close it, so the
+  // exit animation keeps showing what the dialog last had instead of collapsing to an empty shell.
+  const latest = useRef(null)
+  const live = { title, description, children, footer }
+  if (open) latest.current = live
+  const shown = open ? live : (latest.current ?? live)
 
   useEffect(() => {
     if (!open) return undefined
@@ -53,37 +65,41 @@ export default function Modal({ open, onClose, title, description, children, foo
     }
   }, [open, onClose])
 
-  if (!open) return null
+  if (!mounted) return null
 
   return createPortal(
-    <div className={styles.backdrop} onMouseDown={(event) => event.target === event.currentTarget && onClose()}>
+    <div
+      className={cx(styles.backdrop, closing && styles.closing)}
+      inert={closing}
+      onMouseDown={(event) => event.target === event.currentTarget && onClose()}
+    >
       <div
         ref={dialogRef}
         role="dialog"
         aria-modal="true"
-        aria-labelledby={title ? titleId : undefined}
-        aria-describedby={description ? descriptionId : undefined}
+        aria-labelledby={shown.title ? titleId : undefined}
+        aria-describedby={shown.description ? descriptionId : undefined}
         tabIndex={-1}
         className={cx(styles.dialog, divided && styles.divided, className)}
         style={{ maxWidth: width }}
       >
         <header className={styles.header}>
           <div>
-            {title && (
+            {shown.title && (
               <h2 className={styles.title} id={titleId}>
-                {title}
+                {shown.title}
               </h2>
             )}
-            {description && (
+            {shown.description && (
               <p className={styles.description} id={descriptionId}>
-                {description}
+                {shown.description}
               </p>
             )}
           </div>
           <IconButton icon={X} label="Close dialog" onClick={onClose} />
         </header>
-        <div className={styles.body}>{children}</div>
-        {footer && <footer className={styles.footer}>{footer}</footer>}
+        <div className={styles.body}>{shown.children}</div>
+        {shown.footer && <footer className={styles.footer}>{shown.footer}</footer>}
       </div>
     </div>,
     document.body,

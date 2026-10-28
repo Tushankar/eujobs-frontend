@@ -1,8 +1,10 @@
 import { Icon } from '@/components/ui'
+import { useCountUp } from '@/hooks/useCountUp.js'
 import styles from './StatCard.module.css'
 
-/** KPI card: muted label with a corner glyph, large Manrope value, optional delta and caption. */
+/** KPI card: muted label with a corner glyph, large Manrope value (counts up), optional delta and caption. */
 export default function StatCard({ label, value, delta, caption, icon, iconSrc }) {
+  const shownValue = useCountUp(value)
   return (
     <section className={styles.card}>
       <div className={styles.head}>
@@ -14,7 +16,7 @@ export default function StatCard({ label, value, delta, caption, icon, iconSrc }
         )}
       </div>
       <p className={styles.valueRow}>
-        <span className={styles.value}>{value}</span>
+        <span className={styles.value}>{shownValue}</span>
         {delta && <span className={styles.delta}>{delta}</span>}
       </p>
       <p className={styles.caption}>{caption}</p>

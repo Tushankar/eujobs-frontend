@@ -1,6 +1,10 @@
 import { useEffect, useRef, useState } from 'react'
+import { usePresence } from '@/hooks/usePresence.js'
 import { cx } from '@/utils/cx.js'
 import styles from './Dropdown.module.css'
+
+// Keep in sync with the exit animation in Dropdown.module.css.
+const EXIT_MS = 140
 
 /**
  * Popover anchored to a trigger. Closes on outside click and Escape.
@@ -13,6 +17,7 @@ import styles from './Dropdown.module.css'
  */
 export default function Dropdown({ trigger, children, align = 'end', className, panelClassName }) {
   const [open, setOpen] = useState(false)
+  const { mounted, closing } = usePresence(open, EXIT_MS)
   const rootRef = useRef(null)
 
   useEffect(() => {
@@ -40,8 +45,11 @@ export default function Dropdown({ trigger, children, align = 'end', className, 
         'aria-expanded': open,
         'aria-haspopup': 'true',
       })}
-      {open && (
-        <div className={cx(styles.panel, align === 'start' ? styles.start : styles.end, panelClassName)}>
+      {mounted && (
+        <div
+          className={cx(styles.panel, align === 'start' ? styles.start : styles.end, closing && styles.closing, panelClassName)}
+          inert={closing}
+        >
           {typeof children === 'function' ? children({ close }) : children}
         </div>
       )}

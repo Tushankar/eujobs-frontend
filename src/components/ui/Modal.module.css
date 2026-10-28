@@ -45,6 +45,30 @@
   }
 }
 
+/* Exit: Modal.jsx keeps the dialog mounted for EXIT_MS (180ms) after `open` turns false. */
+@media (prefers-reduced-motion: no-preference) {
+  .closing {
+    animation: modal-fade-out 180ms var(--ease-out) forwards;
+  }
+
+  .closing .dialog {
+    animation: modal-sink 180ms var(--ease-out) forwards;
+  }
+}
+
+@keyframes modal-fade-out {
+  to {
+    opacity: 0;
+  }
+}
+
+@keyframes modal-sink {
+  to {
+    opacity: 0;
+    transform: translateY(8px) scale(0.98);
+  }
+}
+
 .header {
   display: flex;
   align-items: flex-start;

@@ -1,4 +1,6 @@
+import { useRef } from 'react'
 import { Icon } from '@/components/ui'
+import { useActiveIndicator } from '@/hooks/useActiveIndicator.js'
 import { cx } from '@/utils/cx.js'
 import styles from './ViewToggle.module.css'
 
@@ -6,10 +8,14 @@ import styles from './ViewToggle.module.css'
  * Bordered toggle for switching a page between views (Roles / User access, Data / Funnel, Candidate / Recruiter courses).
  * 12px / 600 buttons, 40px tall. `items` = [{ id, label, icon }]; selection is controlled and the caller shows the view.
  * variant: "muted" (grey tray, white active), "primary" (white tray, blue active) or "wide" (grey tray, equal-width 48px tabs).
+ * The active pill slides between items.
  */
 export default function ViewToggle({ items, value, onChange, label, variant = 'muted', className }) {
+  const trayRef = useRef(null)
+  useActiveIndicator(trayRef, value)
+
   return (
-    <div className={cx(styles.tray, styles[variant], className)} role="group" aria-label={label}>
+    <div className={cx(styles.tray, styles[variant], className)} role="group" aria-label={label} ref={trayRef}>
       {items.map((item) => {
         const active = item.id === value
         return (

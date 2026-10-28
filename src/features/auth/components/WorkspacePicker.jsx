@@ -2,11 +2,12 @@ import { useId } from 'react'
 import { useNavigate } from 'react-router-dom'
 import { cx } from '@/utils/cx.js'
 import { Icon } from '@/components/ui'
+import { canFlip, markFlip } from '@/utils/pageFlip.js'
 import styles from './WorkspacePicker.module.css'
 
 /**
  * "Choose your workspace" radio group of the Authentication frames. Choosing another
- * workspace opens the same screen for that workspace (`choice.path`). A single choice
+ * workspace flips the page to the same screen for that workspace (`choice.path`). A single choice
  * (admin sign-in) is shown selected and static.
  */
 export default function WorkspacePicker({ choices, activeId, helper }) {
@@ -39,7 +40,11 @@ export default function WorkspacePicker({ choices, activeId, helper }) {
               role="radio"
               aria-checked={active}
               className={cx(styles.choice, active && styles.choiceActive)}
-              onClick={() => !active && navigate(choice.path, { replace: true })}
+              onClick={() => {
+                if (active) return
+                markFlip()
+                navigate(choice.path, { replace: true, viewTransition: canFlip() })
+              }}
             >
               {content}
             </button>

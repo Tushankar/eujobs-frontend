@@ -35,6 +35,20 @@
   }
 }
 
+/* Exit: Dropdown.jsx keeps the panel mounted for EXIT_MS (140ms) after it closes. */
+@media (prefers-reduced-motion: no-preference) {
+  .closing {
+    animation: panel-out 140ms var(--ease-out) forwards;
+  }
+}
+
+@keyframes panel-out {
+  to {
+    opacity: 0;
+    transform: translateY(-4px) scale(0.98);
+  }
+}
+
 .start {
   left: 0;
 }

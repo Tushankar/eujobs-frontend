@@ -1,6 +1,7 @@
 import { useEffect, useState } from 'react'
 import { Link } from 'react-router-dom'
 import { cx } from '@/utils/cx.js'
+import { arrivedByFlip } from '@/utils/pageFlip.js'
 import logo from '@/assets/images/logo.png'
 import brandMark from '@/assets/images/auth-admin-brand-mark.png'
 import aiSparkleWhite from '@/assets/icons/ai-sparkle-white.svg'
@@ -22,6 +23,8 @@ let heroIntroPlayed = false
  */
 export default function AuthLayout({ children, hero, showLogo = true, logoTo = '/sign-in' }) {
   const [playHeroIntro] = useState(() => !heroIntroPlayed)
+  // Reached by a page flip (see utils/pageFlip.js): the flip is the entrance, so the form doesn't also cascade in.
+  const [flippedIn] = useState(arrivedByFlip)
   useEffect(() => {
     heroIntroPlayed = true
   }, [])
@@ -61,7 +64,7 @@ export default function AuthLayout({ children, hero, showLogo = true, logoTo = '
       </section>
 
       <section className={styles.formSection}>
-        <div className={cx(styles.formColumn, 'stagger')}>
+        <div className={cx(styles.formColumn, 'page-flip', !flippedIn && 'stagger')}>
           {showLogo && (
             <Link to={logoTo} className={styles.logo} aria-label="Local Worksmen — AI Job Portal">
               <img src={logo} alt="Local Worksmen, AI Job Portal" width={210} height={50} />

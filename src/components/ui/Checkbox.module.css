@@ -37,6 +37,20 @@
   color: var(--primary-foreground);
 }
 
+/* The tick springs in as the box fills. */
+.tick {
+  opacity: 0;
+  transform: scale(0.4);
+  transition:
+    opacity var(--transition),
+    transform var(--duration-base) var(--ease-spring);
+}
+
+.input:checked + .box .tick {
+  opacity: 1;
+  transform: scale(1);
+}
+
 .checkbox:active .input:not(:disabled) + .box {
   transform: scale(0.9);
 }

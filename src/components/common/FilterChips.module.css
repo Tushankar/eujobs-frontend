@@ -15,12 +15,17 @@
   transition:
     background-color var(--transition),
     border-color var(--transition),
-    color var(--transition);
+    color var(--transition),
+    transform var(--transition);
 }
 
 .chip:hover {
   border-color: #cdd0d9;
   color: var(--foreground);
+}
+
+.chip:active {
+  transform: scale(0.96);
 }
 
 .active,

@@ -68,6 +68,46 @@
   }
 }
 
+/*
+ * Page flip (utils/pageFlip.js): the marked element turns edge-on and the next screen's turns in behind it,
+ * like a card being flipped. Only runs while a view transition is active, i.e. when a flip navigation starts.
+ */
+.page-flip {
+  view-transition-name: page-flip;
+}
+
+@media (prefers-reduced-motion: no-preference) {
+  ::view-transition-group(page-flip) {
+    animation-duration: 760ms;
+    animation-timing-function: var(--ease-out);
+  }
+
+  ::view-transition-old(page-flip),
+  ::view-transition-new(page-flip) {
+    mix-blend-mode: normal;
+  }
+
+  ::view-transition-old(page-flip) {
+    animation: flip-out 320ms cubic-bezier(0.5, 0, 0.75, 0) both;
+  }
+
+  ::view-transition-new(page-flip) {
+    animation: flip-in 440ms var(--ease-out) 320ms both;
+  }
+}
+
+@keyframes flip-out {
+  to {
+    transform: perspective(1600px) rotateY(-90deg);
+  }
+}
+
+@keyframes flip-in {
+  from {
+    transform: perspective(1600px) rotateY(90deg);
+  }
+}
+
 @keyframes rise {
   from {
     opacity: 0;

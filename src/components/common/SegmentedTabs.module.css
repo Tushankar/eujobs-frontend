@@ -1,4 +1,5 @@
 .tray {
+  position: relative;
   display: inline-flex;
   gap: 4px;
   padding: 4px;
@@ -6,7 +7,33 @@
   background: #eef0f4;
 }
 
+/* The active pill: one element that slides under the tabs (positioned by useActiveIndicator). */
+.tray::before {
+  content: '';
+  position: absolute;
+  inset: 4px auto 4px 0;
+  width: var(--indicator-w, 0);
+  border-radius: var(--radius-md);
+  background: var(--card);
+  box-shadow: var(--shadow-segment);
+  opacity: 0;
+  transform: translateX(var(--indicator-x, 0));
+}
+
+.tray[data-ready]::before {
+  opacity: 1;
+}
+
+@media (prefers-reduced-motion: no-preference) {
+  .tray[data-ready]::before {
+    transition:
+      transform var(--duration-slow) var(--ease-out),
+      width var(--duration-slow) var(--ease-out);
+  }
+}
+
 .tab {
+  position: relative;
   display: inline-flex;
   align-items: center;
   gap: 6px;
@@ -28,8 +55,6 @@
 
 .active,
 .active:hover {
-  background: var(--card);
-  box-shadow: var(--shadow-segment);
   font-weight: 600;
   color: var(--foreground);
 }

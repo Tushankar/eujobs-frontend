@@ -42,11 +42,16 @@
   transition:
     background-color var(--transition),
     border-color var(--transition),
-    color var(--transition);
+    color var(--transition),
+    transform var(--transition);
 }
 
 .option:hover .tile {
   background: var(--muted);
+}
+
+.option:active .tile {
+  transform: scale(0.97);
 }
 
 input:checked + .tile,
@@ -54,6 +59,19 @@ input:checked + .tile,
   border-color: var(--primary);
   background: var(--accent);
   color: var(--primary);
+}
+
+/* Choosing a tile gives it a small spring. */
+@media (prefers-reduced-motion: no-preference) {
+  input:checked + .tile {
+    animation: tile-pick 380ms var(--ease-spring);
+  }
+}
+
+@keyframes tile-pick {
+  from {
+    transform: scale(0.94);
+  }
 }
 
 input:focus-visible + .tile {
