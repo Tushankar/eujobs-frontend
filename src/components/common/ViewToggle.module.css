@@ -29,8 +29,8 @@
 @media (prefers-reduced-motion: no-preference) {
   .tray[data-ready]::before {
     transition:
-      transform var(--duration-slow) var(--ease-out),
-      width var(--duration-slow) var(--ease-out);
+      transform var(--duration-base) var(--ease-out),
+      width var(--duration-base) var(--ease-out);
   }
 }
 

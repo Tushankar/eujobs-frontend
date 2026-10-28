@@ -64,13 +64,13 @@ input:checked + .tile,
 /* Choosing a tile gives it a small spring. */
 @media (prefers-reduced-motion: no-preference) {
   input:checked + .tile {
-    animation: tile-pick 380ms var(--ease-spring);
+    animation: tile-pick 280ms var(--ease-spring);
   }
 }
 
 @keyframes tile-pick {
   from {
-    transform: scale(0.94);
+    transform: scale(0.96);
   }
 }
 

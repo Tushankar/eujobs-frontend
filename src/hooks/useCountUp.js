@@ -1,7 +1,7 @@
 import { useEffect, useRef, useState } from 'react'
 
 const NUMBER = /^(\D*)(\d[\d,]*)(\D*)$/
-const DURATION_MS = 900
+const DURATION_MS = 600
 
 /**
  * Counts a stat up from zero when it first appears, and from its old value to the new one when it changes.

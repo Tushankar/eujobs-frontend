@@ -249,7 +249,7 @@
 @media (max-width: 1023px) {
   .sidebar {
     transform: translateX(-100%);
-    transition: transform var(--duration-slow) var(--ease-out);
+    transition: transform var(--duration-base) var(--ease-out);
     box-shadow: var(--shadow-popover);
   }
 
@@ -266,7 +266,7 @@
     background: var(--backdrop);
     opacity: 0;
     pointer-events: none;
-    transition: opacity var(--duration-slow) var(--ease-out);
+    transition: opacity var(--duration-base) var(--ease-out);
   }
 
   .scrimOpen {

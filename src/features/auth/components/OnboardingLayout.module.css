@@ -140,7 +140,7 @@
 /* A finished step's tick pops in rather than appearing. */
 @media (prefers-reduced-motion: no-preference) {
   .markerCheck {
-    animation: marker-pop 420ms var(--ease-spring);
+    animation: marker-pop 300ms var(--ease-spring);
   }
 }
 
@@ -277,7 +277,7 @@
   height: 100%;
   border-radius: var(--radius-full);
   background: var(--primary);
-  transition: width 600ms var(--ease-out);
+  transition: width 400ms var(--ease-out);
 }
 
 .cardBody {
@@ -296,28 +296,28 @@
 
   .stepCount,
   .percentBadge {
-    animation: counter-in var(--duration-slow) var(--ease-out) backwards;
+    animation: counter-in var(--duration-base) var(--ease-out) backwards;
   }
 }
 
 @keyframes step-forward {
   from {
     opacity: 0;
-    transform: translateX(32px);
+    transform: translateX(16px);
   }
 }
 
 @keyframes step-back {
   from {
     opacity: 0;
-    transform: translateX(-32px);
+    transform: translateX(-16px);
   }
 }
 
 @keyframes counter-in {
   from {
     opacity: 0;
-    transform: translateY(6px);
+    transform: translateY(4px);
   }
 }
 
