@@ -1,0 +1,88 @@
+.empty {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  min-height: 305px;
+  padding: 84px 24px 64px;
+  text-align: center;
+}
+
+.emptyIcon {
+  display: inline-flex;
+  margin-bottom: 20px;
+  padding: 16px;
+  border-radius: 16px;
+  background: var(--accent);
+  color: var(--primary);
+}
+
+.emptyTitle {
+  font-family: var(--font-display);
+  font-size: 18px;
+  font-weight: 700;
+  line-height: 28px;
+  color: var(--foreground);
+}
+
+.emptyText {
+  padding-top: 8px;
+  font-size: 14px;
+  line-height: 24px;
+  color: var(--muted-foreground);
+}
+
+.list {
+  padding-top: 20px;
+  list-style: none;
+}
+
+.item {
+  display: flex;
+  align-items: flex-start;
+  gap: 16px;
+  padding: 16px 0;
+  border-bottom: 1px solid var(--border);
+}
+
+.item:last-child {
+  border-bottom: 0;
+}
+
+.itemIcon {
+  display: inline-flex;
+  flex-shrink: 0;
+  padding: 11px;
+  border-radius: var(--radius-xl);
+  background: var(--accent);
+  color: var(--primary);
+}
+
+.itemText {
+  flex: 1;
+  min-width: 0;
+}
+
+.itemTitle {
+  font-size: 14px;
+  font-weight: 600;
+  line-height: 20px;
+  color: var(--foreground);
+}
+
+.itemMeta {
+  padding-top: 4px;
+  font-size: 11px;
+  line-height: 16.5px;
+  color: var(--muted-foreground);
+  overflow-wrap: anywhere;
+}
+
+.itemContext {
+  display: flex;
+  flex-direction: column;
+  padding-top: 8px;
+  font-size: 11px;
+  line-height: 20px;
+  color: var(--muted-foreground);
+  overflow-wrap: anywhere;
+}

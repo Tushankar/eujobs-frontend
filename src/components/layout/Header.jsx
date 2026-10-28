@@ -6,7 +6,7 @@ import { Dropdown, Icon, IconButton } from '@/components/ui'
 import { WORKSPACES, workspacePath } from '@/app/workspaces.js'
 import GlobalSearch from './GlobalSearch.jsx'
 import ProfileMenu from './ProfileMenu.jsx'
-import { LOCATIONS, useWorkspacePreferences } from './WorkspacePreferences.jsx'
+import { LANGUAGES, LOCATIONS, useWorkspacePreferences } from './WorkspacePreferences.jsx'
 import styles from './Header.module.css'
 
 const SWITCH_ICONS = { candidate: Users, recruiter: BriefcaseBusiness }
@@ -84,7 +84,7 @@ function LocationDropdown() {
 }
 
 function LanguageDropdown() {
-  const { language } = useWorkspacePreferences()
+  const { language, setLanguage } = useWorkspacePreferences()
   return (
     <Dropdown
       className={styles.hideBelowWide}
@@ -97,12 +97,20 @@ function LanguageDropdown() {
     >
       {({ close }) => (
         <div className={styles.menu}>
-          <button type="button" className={styles.menuItem} onClick={close}>
-            <span className={styles.menuCheck}>
-              <Icon as={Check} size={14} />
-            </span>
-            {language}
-          </button>
+          {LANGUAGES.map((option) => (
+            <button
+              key={option}
+              type="button"
+              className={styles.menuItem}
+              onClick={() => {
+                setLanguage(option)
+                close()
+              }}
+            >
+              <span className={styles.menuCheck}>{option === language && <Icon as={Check} size={14} />}</span>
+              {option}
+            </button>
+          ))}
         </div>
       )}
     </Dropdown>
@@ -125,7 +133,7 @@ export default function Header({ workspace, onOpenMenu }) {
   }, [])
 
   return (
-    <header className={styles.header}>
+    <header className={styles.header} data-workspace={workspace.id}>
       <IconButton
         icon={Menu}
         label="Open navigation"

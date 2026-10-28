@@ -12,6 +12,15 @@
   border-radius: var(--radius-full);
 }
 
+/* The admin avatar sits in a 40px box in Figma and its menu opens at y=54 (just inside the box's bottom edge). */
+[data-workspace='admin'] .trigger {
+  padding: 4px;
+}
+
+[data-workspace='admin'] .panel {
+  top: calc(100% - 2px);
+}
+
 .menu {
   width: 254px;
 }
@@ -117,6 +126,17 @@
 .option:hover {
   background: var(--card);
   color: var(--foreground);
+}
+
+/* The chosen option (check + blue label), as in the Figma Languages list. */
+.optionSelected,
+.optionSelected:hover {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  padding-left: 16px;
+  background: var(--card);
+  color: var(--primary-hover);
 }
 
 .optionsNote {

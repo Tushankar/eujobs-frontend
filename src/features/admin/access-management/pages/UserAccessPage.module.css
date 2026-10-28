@@ -1,0 +1,36 @@
+.results {
+  padding-top: 24px;
+}
+
+.table {
+  --table-row-height: 74px;
+  --table-cell-padding: 0 24px;
+  --table-header-bg: var(--muted);
+}
+
+.name {
+  font-size: 12px;
+  font-weight: 600;
+  line-height: 16px;
+  color: var(--foreground);
+}
+
+.email {
+  padding-top: 4px;
+  font-size: 10px;
+  line-height: 13.3px;
+  color: var(--muted-foreground);
+}
+
+.role {
+  font-size: 12px;
+  font-weight: 600;
+  line-height: 16px;
+  color: var(--foreground);
+}
+
+.muted {
+  font-size: 12px;
+  line-height: 16px;
+  color: var(--muted-foreground);
+}

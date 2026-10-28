@@ -86,6 +86,7 @@ export const WORKSPACES = {
     headerAvatar: candidateAvatar,
     showWorkspaceSwitch: false,
     showLocation: false,
+    profilePath: 'settings',
     nav: [
       { label: 'Overview', to: '', icon: LayoutDashboard, end: true },
       { label: 'Candidates', to: 'candidates', icon: Users },

@@ -69,11 +69,7 @@ export default function AiMatchingPage() {
         }
       />
 
-      {notice && (
-        <p className={styles.notice} role="status">
-          {notice}
-        </p>
-      )}
+      <div role="status">{notice && <p className={styles.notice}>{notice}</p>}</div>
 
       <div className={styles.grid}>
         <PolicyEditor

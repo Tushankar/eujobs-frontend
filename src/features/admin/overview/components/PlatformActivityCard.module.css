@@ -1,0 +1,213 @@
+.card {
+  display: flex;
+  flex-direction: column;
+}
+
+.controls {
+  display: flex;
+  align-items: flex-start;
+  gap: 14px;
+}
+
+.toggle {
+  display: flex;
+  height: 28px;
+  padding: 3px 4px;
+  border: 1px solid var(--border);
+  border-radius: var(--radius-lg);
+  background: var(--card);
+}
+
+.toggleButton {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  padding: 3px 10px;
+  border: 0;
+  border-radius: var(--radius-md);
+  background: transparent;
+  color: var(--muted-foreground);
+}
+
+.toggleButton:hover {
+  color: var(--foreground);
+}
+
+.toggleActive,
+.toggleActive:hover {
+  padding: 3px 9px;
+  background: var(--primary);
+  box-shadow: var(--shadow-segment);
+  color: var(--primary-foreground);
+}
+
+/* Figma's "chart bar outline" glyph is not in Lucide: drawn from the exported SVG as a mask. */
+.barsIcon {
+  width: 12px;
+  height: 12px;
+  background: currentColor;
+  mask: url('../../../../assets/icons/overview-chart-bars.svg') center / contain no-repeat;
+}
+
+.period {
+  position: relative;
+  display: block;
+}
+
+.select {
+  height: 28px;
+  padding: 0 28px 0 12px;
+  border: 1px solid var(--border);
+  border-radius: var(--radius-md);
+  background: var(--card);
+  font-size: 10px;
+  color: var(--muted-foreground);
+  appearance: none;
+  cursor: pointer;
+}
+
+.chevron {
+  position: absolute;
+  top: 9px;
+  right: 10px;
+  color: var(--muted-foreground);
+  pointer-events: none;
+}
+
+.legend {
+  display: flex;
+  gap: 20px;
+  padding-top: 20px;
+}
+
+.legendItem {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  font-size: 10px;
+  line-height: 15px;
+  color: var(--muted-foreground);
+}
+
+.swatch {
+  width: 8px;
+  height: 8px;
+  border-radius: 4px;
+}
+
+.registrationSwatch,
+.registrationBar {
+  background: var(--primary);
+}
+
+.applicationSwatch,
+.applicationBar {
+  background: var(--accent);
+}
+
+.chart {
+  margin-top: 20px;
+}
+
+.bars {
+  display: flex;
+  align-items: flex-end;
+  gap: 20px;
+  height: 176px;
+  padding: 0 16px;
+  border-bottom: 1px solid var(--border);
+}
+
+.barColumn {
+  display: flex;
+  flex: 1 1 0;
+  align-items: flex-end;
+  justify-content: center;
+  gap: 6px;
+  min-width: 0;
+  height: 175px;
+}
+
+.bar {
+  width: 20px;
+  border-radius: 4px 4px 0 0;
+}
+
+.barLabels {
+  display: flex;
+  gap: 20px;
+  padding: 12px 16px 0;
+}
+
+.barLabel {
+  flex: 1 1 0;
+  font-size: 9px;
+  line-height: 13.5px;
+  text-align: center;
+  color: var(--muted-foreground);
+}
+
+.lineSvg {
+  display: block;
+  width: 100%;
+  height: auto;
+}
+
+.grid {
+  stroke: #c9ccd4;
+  stroke-width: 1;
+  stroke-dasharray: 1.5 2.5;
+}
+
+.axis {
+  stroke: #8d919c;
+  stroke-width: 1;
+}
+
+.tick {
+  font-size: 13px;
+  fill: #4b5162;
+}
+
+.registrationLine,
+.applicationLine {
+  fill: none;
+  stroke-width: 1.5;
+  stroke-linejoin: round;
+}
+
+.registrationLine {
+  stroke: var(--primary);
+}
+
+.applicationLine {
+  stroke: #e3effd;
+}
+
+.registrationHalo {
+  fill: rgba(0, 132, 255, 0.25);
+}
+
+.registrationDot {
+  fill: var(--primary);
+}
+
+.applicationHalo {
+  fill: rgba(0, 132, 255, 0.04);
+}
+
+.applicationDot {
+  fill: #e3effd;
+}
+
+@media (max-width: 639px) {
+  .bars,
+  .barLabels {
+    gap: 8px;
+    padding-inline: 4px;
+  }
+
+  .bar {
+    width: 10px;
+  }
+}

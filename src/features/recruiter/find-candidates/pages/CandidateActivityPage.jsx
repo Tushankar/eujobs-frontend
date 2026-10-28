@@ -15,7 +15,7 @@ export default function CandidateActivityPage() {
     <ProfileSection labelledBy="activity-title">
       <SectionTitle id="activity-title" title="Candidate activity" />
       <p className={styles.stage}>
-        <Icon as={CircleCheck} size={16} className={styles.icon} />
+        <Icon as={CircleCheck} size={16} strokeWidth={2} className={styles.icon} />
         <span>
           Current stage: <strong>{stageName}</strong>
         </span>

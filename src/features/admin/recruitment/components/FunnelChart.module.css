@@ -1,0 +1,92 @@
+.panel {
+  position: relative;
+  /* The Figma funnel panel sits 5px closer to the section heading and 7px further from the table than the stage cards do. */
+  margin: -5px 0 7px;
+  overflow: hidden;
+  border-radius: var(--radius-xl);
+  background: var(--card);
+}
+
+.title {
+  position: absolute;
+  top: 34px;
+  left: 50px;
+  font-family: var(--font-display);
+  font-size: 18px;
+  font-weight: 700;
+  line-height: 27px;
+  letter-spacing: -0.25px;
+  color: var(--foreground);
+}
+
+.scroll {
+  overflow-x: auto;
+}
+
+.chart {
+  display: block;
+  width: 100%;
+  min-width: 760px;
+  aspect-ratio: 1128 / 477;
+}
+
+.stage {
+  cursor: pointer;
+  outline: none;
+}
+
+.stage:focus-visible {
+  outline: 2px solid var(--ring);
+  outline-offset: 2px;
+}
+
+.ellipse {
+  transition: opacity var(--transition);
+}
+
+.stage:hover .ellipse {
+  opacity: 0.88;
+}
+
+.stem {
+  stroke: #48648f;
+  stroke-width: 3;
+}
+
+.ring {
+  fill: none;
+  stroke: #48648f;
+  stroke-width: 3;
+}
+
+.outline {
+  fill: none;
+  stroke: var(--primary);
+  stroke-width: 3;
+}
+
+.label {
+  font-family: var(--font-body);
+  font-size: 14px;
+  font-weight: 500;
+  fill: var(--card-foreground);
+}
+
+.count {
+  font-family: var(--font-body);
+  font-size: 16px;
+  font-weight: 700;
+  fill: var(--card-foreground);
+}
+
+.selected .label,
+.selected .count {
+  fill: var(--primary);
+}
+
+@media (max-width: 1023px) {
+  .title {
+    left: 24px;
+    top: 20px;
+  }
+}

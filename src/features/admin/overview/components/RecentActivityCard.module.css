@@ -1,0 +1,44 @@
+.link {
+  font-size: 12px;
+  line-height: 16px;
+  color: var(--primary);
+}
+
+.link:hover {
+  text-decoration: underline;
+}
+
+.list {
+  padding-top: 20px;
+}
+
+.item {
+  display: flex;
+  gap: 12px;
+  font-size: 11px;
+  line-height: 24px;
+  color: var(--muted-foreground);
+}
+
+.itemIcon {
+  flex-shrink: 0;
+  margin-top: 4px;
+  color: var(--primary);
+}
+
+.note {
+  display: flex;
+  gap: 5px;
+  margin-top: 28px;
+  padding: 16px;
+  border-radius: var(--radius-xl);
+  background: var(--accent);
+  font-size: 11px;
+  line-height: 24px;
+  color: var(--primary-hover);
+}
+
+.noteIcon {
+  flex-shrink: 0;
+  margin-top: 4px;
+}

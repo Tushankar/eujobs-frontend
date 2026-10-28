@@ -1,0 +1,127 @@
+.field {
+  padding-top: 20px;
+}
+
+.brief {
+  padding-top: 20px;
+}
+
+.brief textarea {
+  min-height: 80px;
+}
+
+/* Figma sets this helper text at 11px, a touch smaller than the shared field hint. */
+.brief > p {
+  font-size: 11px;
+  line-height: 14.667px;
+}
+
+.label {
+  padding-bottom: 8px;
+  font-size: 12px;
+  font-weight: 600;
+  line-height: 16px;
+  color: var(--text-label);
+}
+
+.drop {
+  position: relative;
+  display: flex;
+  align-items: center;
+  gap: 16px;
+  min-height: 96px;
+  padding: 16px;
+  border: 1px dashed var(--border);
+  border-radius: var(--radius-xl);
+  background: var(--muted);
+}
+
+.dropIcon {
+  display: inline-flex;
+  flex-shrink: 0;
+  align-items: center;
+  justify-content: center;
+  width: 40px;
+  height: 40px;
+  border-radius: var(--radius-xl);
+  background: var(--card);
+  color: var(--primary);
+}
+
+.dropButton {
+  display: flex;
+  flex: 1;
+  flex-direction: column;
+  min-width: 0;
+  padding: 0;
+  border: 0;
+  background: transparent;
+  text-align: left;
+}
+
+.dropButton::after {
+  position: absolute;
+  inset: 0;
+  border-radius: var(--radius-xl);
+  content: '';
+}
+
+.dropButton:focus-visible {
+  outline: 0;
+}
+
+.dropButton:focus-visible::after {
+  outline: 2px solid var(--ring);
+  outline-offset: 2px;
+}
+
+.dropTitle {
+  overflow: hidden;
+  font-size: 12px;
+  font-weight: 600;
+  line-height: 16px;
+  color: var(--text-label);
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+.dropHint {
+  padding-top: 4px;
+  font-size: 10px;
+  line-height: 13.3px;
+  color: var(--muted-foreground);
+}
+
+.drop > button:not(.dropButton) {
+  position: relative;
+  z-index: 1;
+}
+
+.fileInput {
+  display: none;
+}
+
+.hint,
+.error {
+  padding-top: 8px;
+  font-size: 11px;
+  line-height: 14.7px;
+}
+
+.hint {
+  color: var(--muted-foreground);
+}
+
+.error {
+  color: var(--destructive);
+}
+
+.scope {
+  margin: 20px 0;
+  padding: 16px;
+  border-radius: var(--radius-xl);
+  background: var(--muted);
+  font-size: 12px;
+  line-height: 24px;
+  color: var(--muted-foreground);
+}

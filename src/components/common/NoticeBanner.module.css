@@ -1,0 +1,10 @@
+.notice {
+  margin-top: 24px;
+  padding: 12px 16px;
+  border: 1px solid #cfe7d8;
+  border-radius: var(--radius-xl);
+  background: var(--success-bg);
+  font-size: 12px;
+  line-height: 16px;
+  color: var(--success-fg);
+}

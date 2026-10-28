@@ -1,0 +1,80 @@
+.title {
+  padding-bottom: 32px;
+}
+
+.toolbar {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: 16px 24px;
+}
+
+.search {
+  width: 320px;
+  max-width: 100%;
+}
+
+.status {
+  margin-top: 16px;
+  padding: 12px 16px;
+  border: 1px solid rgba(0, 132, 255, 0.2);
+  border-radius: var(--radius-xl);
+  background: var(--accent);
+  font-size: 12px;
+  line-height: 20px;
+  color: var(--primary-hover);
+}
+
+.card {
+  display: flex;
+  flex-direction: column;
+  min-height: 622px;
+  margin-top: 24px;
+  padding: 24px;
+  border: 1px solid var(--border);
+  border-radius: var(--radius-xl);
+  background: var(--card);
+}
+
+.list {
+  list-style: none;
+}
+
+.notice {
+  margin-top: 28px;
+  padding: 16px;
+  border-radius: var(--radius-xl);
+  background: var(--muted);
+  font-size: 11px;
+  line-height: 24px;
+  color: var(--muted-foreground);
+}
+
+.pager {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  justify-content: space-between;
+  gap: 12px;
+  margin-top: auto;
+  padding-top: 24px;
+}
+
+.range,
+.pageNumber {
+  font-size: 11px;
+  line-height: 16px;
+  color: var(--muted-foreground);
+}
+
+.pagerButtons {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+}
+
+@media (max-width: 767px) {
+  .title {
+    padding-bottom: 24px;
+  }
+}

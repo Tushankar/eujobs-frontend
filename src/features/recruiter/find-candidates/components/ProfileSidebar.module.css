@@ -15,6 +15,25 @@
   padding-top: 12px;
 }
 
+/* Figma sidebar selects are 44px tall with grey text and a bolder chevron. */
+.stage > div,
+.job > div {
+  min-height: 44px;
+  padding-top: 10px;
+  padding-bottom: 10px;
+}
+
+.stage select,
+.job select {
+  color: var(--text-label);
+}
+
+.stage svg,
+.job svg {
+  color: var(--text-label);
+  stroke-width: 2.4;
+}
+
 .notice {
   padding-top: 12px;
   font-size: 11px;

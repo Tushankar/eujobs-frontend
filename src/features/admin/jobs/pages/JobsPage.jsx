@@ -14,12 +14,13 @@ import JobSummaryModal from '../components/JobSummaryModal.jsx'
 import styles from './JobsPage.module.css'
 
 const COLUMNS = [
-  { key: 'title', header: 'Role', render: (job) => <span className={styles.title}>{job.title}</span> },
-  { key: 'company', header: 'Company', render: (job) => <span className={styles.muted}>{job.company}</span> },
-  { key: 'salary', header: 'Salary', render: (job) => <span className={styles.muted}>{formatSalary(job) || '—'}</span> },
-  { key: 'status', header: 'Status', render: (job) => <JobStatusBadge status={job.status} /> },
+  { key: 'title', header: 'Role', width: 263, render: (job) => <span className={styles.title}>{job.title}</span> },
+  { key: 'company', header: 'Company', width: 161, render: (job) => <span className={styles.muted}>{job.company}</span> },
+  { key: 'salary', header: 'Salary', width: 173, render: (job) => <span className={styles.muted}>{formatSalary(job) || '—'}</span> },
+  { key: 'status', header: 'Status', width: 162, render: (job) => <JobStatusBadge status={job.status} /> },
   {
     key: 'actions',
+    width: 367,
     header: <span className="sr-only">Actions</span>,
     render: (job) => (
       <div className={styles.actions}>

@@ -222,6 +222,13 @@
   color: var(--muted-foreground);
 }
 
+/* Admin frames space the header actions by 24px (the other roles use 20px). */
+@media (min-width: 1024px) {
+  .header[data-workspace='admin'] .actions {
+    gap: 24px;
+  }
+}
+
 @media (max-width: 1279px) {
   .hideBelowWide {
     display: none;

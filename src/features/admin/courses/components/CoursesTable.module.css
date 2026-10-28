@@ -1,0 +1,38 @@
+.table {
+  --table-row-height: 74px;
+  --table-header-bg: var(--muted);
+}
+
+.title {
+  font-size: 12px;
+  font-weight: 600;
+  line-height: 16px;
+  color: var(--foreground);
+}
+
+.meta {
+  padding-top: 4px;
+  font-size: 10px;
+  line-height: 13.3px;
+  color: var(--muted-foreground);
+}
+
+.muted {
+  white-space: nowrap;
+  font-size: 12px;
+  line-height: 16px;
+  color: var(--muted-foreground);
+}
+
+.actions {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  /* The Figma buttons end 16px (not 24px) from the card edge. */
+  margin-right: -8px;
+}
+
+/* Doubled selector: wins over the Button variant colour regardless of stylesheet order. */
+.manage.manage {
+  color: #737989;
+}

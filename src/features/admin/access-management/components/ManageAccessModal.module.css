@@ -1,0 +1,42 @@
+.form {
+  display: flex;
+  flex-direction: column;
+  gap: 24px;
+}
+
+.pair {
+  display: grid;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  gap: 20px;
+}
+
+.tiles {
+  display: grid;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  gap: 12px;
+  padding-top: 20px;
+}
+
+/* Revoke sits at the left edge of the footer, the other actions stay on the right. */
+/* Doubled selectors win over the Button variant colours regardless of stylesheet order. */
+.revoke.revoke {
+  margin-right: auto;
+  border-color: #ffc9c9;
+  background: #fef2f2;
+  color: #c10007;
+}
+
+.revoke.revoke:hover {
+  background: #fde4e4;
+}
+
+.pushRight {
+  margin-left: auto;
+}
+
+@media (max-width: 719px) {
+  .pair,
+  .tiles {
+    grid-template-columns: minmax(0, 1fr);
+  }
+}

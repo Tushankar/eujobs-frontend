@@ -16,6 +16,12 @@
   min-height: 80px;
 }
 
+/* Figma sets this helper text at 11px, a touch smaller than the shared field hint. */
+.descriptionField > p {
+  font-size: 11px;
+  line-height: 14.667px;
+}
+
 .assist {
   display: flex;
   align-items: flex-start;

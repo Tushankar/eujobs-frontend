@@ -1,0 +1,45 @@
+.rows {
+  margin: 0;
+  padding-top: 20px;
+}
+
+.row {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 12px;
+  padding-top: 24px;
+}
+
+.row:first-child {
+  padding-top: 0;
+}
+
+.label {
+  font-size: 11px;
+  line-height: 16.5px;
+  color: var(--muted-foreground);
+}
+
+.value {
+  margin: 0;
+  font-size: 14px;
+  font-weight: 600;
+  line-height: 20px;
+  color: var(--foreground);
+}
+
+.link {
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+  margin-top: 24px;
+  font-size: 11px;
+  font-weight: 600;
+  line-height: 16.5px;
+  color: var(--primary);
+}
+
+.link:hover {
+  text-decoration: underline;
+}

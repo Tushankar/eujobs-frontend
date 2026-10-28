@@ -62,15 +62,6 @@
   min-height: 24px;
 }
 
-/* Figma uses a slightly different green and weight than the stock green Badge. */
-.badgeRow .demoBadge {
-  padding: 4px 8px;
-  background: #edf7f1;
-  font-weight: 500;
-  line-height: 15px;
-  color: #398460;
-}
-
 .form {
   display: flex;
   flex-direction: column;

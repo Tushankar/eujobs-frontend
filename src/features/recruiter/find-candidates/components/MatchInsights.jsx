@@ -32,7 +32,7 @@ export default function MatchInsights({ candidate, job, defaultOpen = false }) {
           <img src={aiMatchIcon} alt="" width={14} height={14} />
           AI Match Insights
         </span>
-        <Icon as={open ? ChevronUp : ChevronDown} size={14} />
+        <Icon as={open ? ChevronUp : ChevronDown} size={14} strokeWidth={2} />
       </button>
       <p className={styles.summary}>{summarizeMatch(candidate, evidence, Boolean(job))}</p>
 
@@ -52,7 +52,7 @@ export default function MatchInsights({ candidate, job, defaultOpen = false }) {
             </>
           )}
           <p className={styles.experience}>
-            <Icon as={Check} size={13} />
+            <Icon as={Check} size={13} strokeWidth={2} />
             {candidate.experienceYears} years of experience reported in the profile. Verify role-specific experience
             during review.
           </p>

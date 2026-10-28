@@ -3,7 +3,7 @@ import styles from './PillBadge.module.css'
 
 /**
  * Small rounded-rect label used for statuses, tags and skills (10px / 500). `dot` prepends a status dot.
- * tone = success | warning | neutral | accent | primary | info.
+ * tone = success | warning | neutral | accent | primary | info | danger.
  */
 export default function PillBadge({ tone = 'neutral', dot = false, className, children }) {
   return (

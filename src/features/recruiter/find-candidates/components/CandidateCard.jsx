@@ -43,11 +43,11 @@ export default function CandidateCard({
       <p className={styles.meta}>
         <span>{candidate.experienceYears} years experience</span>
         <span className={styles.metaItem}>
-          <Icon as={Earth} size={11} />
+          <Icon as={Earth} size={11} strokeWidth={2} />
           {candidate.workMode}
         </span>
         <span className={styles.metaItem}>
-          <Icon as={MapPin} size={11} />
+          <Icon as={MapPin} size={11} strokeWidth={2} />
           {candidate.location}
         </span>
       </p>
@@ -82,7 +82,7 @@ export default function CandidateCard({
         </Checkbox>
         <Link to={profilePath} className={styles.view}>
           View profile
-          <Icon as={ArrowUpRight} size={12} />
+          <Icon as={ArrowUpRight} size={12} strokeWidth={2} />
         </Link>
       </div>
     </article>

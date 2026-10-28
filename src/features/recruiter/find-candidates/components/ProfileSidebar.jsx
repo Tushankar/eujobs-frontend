@@ -24,13 +24,13 @@ export default function ProfileSidebar({
     <aside className={styles.sidebar}>
       <Panel padding={20}>
         <div className={styles.actions}>
-          <Button fullWidth leftIcon={<Icon as={Mail} size={14} />} onClick={onStartConversation}>
+          <Button fullWidth leftIcon={<Icon as={Mail} size={14} strokeWidth={2} />} onClick={onStartConversation}>
             Start a conversation
           </Button>
           <Button
             variant="outline"
             fullWidth
-            leftIcon={<Icon as={Bookmark} size={14} />}
+            leftIcon={<Icon as={Bookmark} size={14} strokeWidth={2} />}
             aria-pressed={shortlisted}
             onClick={onToggleShortlist}
           >
@@ -64,7 +64,7 @@ export default function ProfileSidebar({
       </Panel>
 
       <p className={styles.reminder}>
-        <Icon as={ShieldCheck} size={17} />
+        <Icon as={ShieldCheck} size={17} strokeWidth={2} />
         Review fairly. Profile evidence is a starting point, not a final assessment.
       </p>
     </aside>

@@ -14,7 +14,7 @@ export default function CandidateEducationPage() {
     <ProfileSection labelledBy="education-title">
       <SectionTitle id="education-title" title="Education" />
       <div className={styles.entry}>
-        <Icon as={GraduationCap} size={22} className={styles.icon} />
+        <Icon as={GraduationCap} size={22} strokeWidth={2} className={styles.icon} />
         <div>
           <h3 className={styles.degree}>{education.degree}</h3>
           <p className={styles.meta}>Sample education · {education.period}</p>

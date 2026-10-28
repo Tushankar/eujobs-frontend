@@ -14,6 +14,11 @@
   flex: 0 0 192px;
 }
 
+/* Figma insets the selected label 20px from the border (the DS field uses 16px). */
+.filter select {
+  padding-left: 4px;
+}
+
 .results {
   padding-top: 24px;
 }
@@ -24,6 +29,7 @@
 }
 
 .name {
+  white-space: nowrap;
   font-size: 12px;
   font-weight: 600;
   line-height: 16px;
@@ -31,6 +37,7 @@
 }
 
 .email {
+  white-space: nowrap;
   padding-top: 4px;
   font-size: 10px;
   line-height: 13.3px;
@@ -38,6 +45,7 @@
 }
 
 .muted {
+  white-space: nowrap;
   font-size: 12px;
   line-height: 16px;
   color: var(--muted-foreground);

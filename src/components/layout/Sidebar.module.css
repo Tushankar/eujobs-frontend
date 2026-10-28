@@ -191,8 +191,11 @@
   border-top: 1px solid var(--border);
 }
 
+/* The 32px avatar sits in a 40px box in Figma (the identity block is 81px tall). */
 .avatar {
   flex-shrink: 0;
+  box-sizing: content-box;
+  padding: 4px;
   border-radius: var(--radius-full);
 }
 

@@ -1,21 +1,22 @@
 import { useState } from 'react'
 import { Link } from 'react-router-dom'
-import { ChevronDown, ChevronRight, Earth, MapPin, Users } from 'lucide-react'
+import { Check, ChevronDown, ChevronRight, Earth, MapPin, Users } from 'lucide-react'
 import { cx } from '@/utils/cx.js'
 import { Dropdown, Icon } from '@/components/ui'
 import { workspacePath } from '@/app/workspaces.js'
-import { LOCATIONS, useWorkspacePreferences } from './WorkspacePreferences.jsx'
+import { LANGUAGES, LOCATIONS, useWorkspacePreferences } from './WorkspacePreferences.jsx'
 import styles from './ProfileMenu.module.css'
 
 /** Avatar dropdown (Figma "Menu - Profile menu"): identity, profile link, location and language rows. */
 export default function ProfileMenu({ workspace }) {
-  const { location, setLocation, language } = useWorkspacePreferences()
+  const { location, setLocation, language, setLanguage } = useWorkspacePreferences()
   const [locationOpen, setLocationOpen] = useState(false)
   const [languageOpen, setLanguageOpen] = useState(false)
   const { user, profilePath } = workspace
 
   return (
     <Dropdown
+      panelClassName={styles.panel}
       trigger={(props) => (
         <button type="button" className={styles.trigger} aria-label="Open profile menu" {...props}>
           <img src={workspace.headerAvatar} alt="" width={32} height={32} />
@@ -85,9 +86,24 @@ export default function ProfileMenu({ workspace }) {
             </button>
             {languageOpen && (
               <div className={styles.options}>
-                <button type="button" className={styles.option} onClick={() => setLanguageOpen(false)}>
-                  {language}
-                </button>
+                {LANGUAGES.map((option) => {
+                  const selected = option === language
+                  return (
+                    <button
+                      key={option}
+                      type="button"
+                      className={cx(styles.option, selected && styles.optionSelected)}
+                      aria-current={selected || undefined}
+                      onClick={() => {
+                        setLanguage(option)
+                        setLanguageOpen(false)
+                      }}
+                    >
+                      {selected && <Icon as={Check} size={13} />}
+                      {option}
+                    </button>
+                  )
+                })}
               </div>
             )}
           </div>

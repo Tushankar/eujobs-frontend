@@ -28,7 +28,7 @@ export default function DiscoveryToolbar({ query, onQueryChange, jobs, job, onJo
           onChange={(event) => onQueryChange(event.target.value)}
           placeholder="Name, role, skill, or ‘senior Figma remote’"
           aria-label="Search candidates"
-          leftIcon={<Icon as={Search} size={16} />}
+          leftIcon={<Icon as={Search} size={16} strokeWidth={2} />}
         />
         <SelectField
           className={styles.job}
@@ -41,7 +41,7 @@ export default function DiscoveryToolbar({ query, onQueryChange, jobs, job, onJo
         <Button
           variant="outline"
           className={styles.filtersButton}
-          leftIcon={<Icon as={SlidersHorizontal} size={14} />}
+          leftIcon={<Icon as={SlidersHorizontal} size={14} strokeWidth={2} />}
           aria-expanded={filtersOpen}
           aria-controls="candidate-filters"
           onClick={() => setFiltersOpen((open) => !open)}

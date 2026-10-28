@@ -13,7 +13,7 @@ export default function SortSelect({ options, value, onChange, label }) {
           </option>
         ))}
       </select>
-      <Icon as={ChevronDown} size={12} className={styles.chevron} />
+      <Icon as={ChevronDown} size={12} strokeWidth={2} className={styles.chevron} />
     </div>
   )
 }

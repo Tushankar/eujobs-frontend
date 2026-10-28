@@ -8,6 +8,7 @@
 }
 
 .strong {
+  white-space: nowrap;
   font-size: 12px;
   font-weight: 600;
   line-height: 16px;
@@ -15,6 +16,7 @@
 }
 
 .muted {
+  white-space: nowrap;
   font-size: 12px;
   line-height: 16px;
   color: var(--muted-foreground);

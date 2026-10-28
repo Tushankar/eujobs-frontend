@@ -1,0 +1,66 @@
+.svg {
+  display: block;
+  width: 100%;
+  height: auto;
+  overflow: visible;
+}
+
+.baseline {
+  stroke: var(--border);
+  stroke-width: 1;
+}
+
+.registrations {
+  fill: var(--primary);
+}
+
+.applications {
+  fill: var(--accent);
+}
+
+.barLabel {
+  font-size: 9px;
+  fill: var(--muted-foreground);
+}
+
+.axisLabel {
+  font-size: 12px;
+  fill: rgba(0, 0, 0, 0.7);
+}
+
+.grid {
+  stroke: #000;
+  stroke-opacity: 0.25;
+  stroke-dasharray: 1 2;
+}
+
+/* Registrations are drawn in brand blue, applications in the pale accent blue. */
+.registrationsSeries {
+  --series: var(--primary);
+}
+
+.applicationsSeries {
+  --series: var(--accent);
+}
+
+.line {
+  fill: none;
+  stroke: var(--series);
+  stroke-width: 1;
+}
+
+.ripple {
+  fill: var(--series);
+  opacity: 0.25;
+}
+
+.node {
+  fill: var(--series);
+  stroke: #fff;
+  stroke-width: 1;
+}
+
+.axisBaseline {
+  stroke: #000;
+  stroke-opacity: 0.5;
+}

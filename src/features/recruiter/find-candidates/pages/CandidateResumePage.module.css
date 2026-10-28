@@ -1,0 +1,97 @@
+.inner {
+  padding: 20px 0;
+}
+
+.header {
+  display: flex;
+  align-items: center;
+  gap: 15px;
+  height: 69px;
+}
+
+.bigIcon {
+  display: inline-flex;
+  align-self: flex-start;
+  flex-shrink: 0;
+  padding: 16px;
+  border-radius: 16px;
+  background: var(--accent);
+  color: var(--accent-foreground);
+}
+
+.file {
+  margin-top: 20px;
+  padding: 20px;
+  border: 1px solid var(--border);
+  border-radius: var(--radius-xl);
+}
+
+.fileRow {
+  display: flex;
+  align-items: center;
+  gap: 16px;
+}
+
+.fileIcon {
+  display: inline-flex;
+  flex-shrink: 0;
+  padding: 12px;
+  border-radius: var(--radius-xl);
+  background: var(--accent);
+  color: var(--accent-foreground);
+}
+
+.fileText {
+  flex: 1;
+  min-width: 0;
+}
+
+.fileName {
+  font-size: 14px;
+  font-weight: 600;
+  line-height: 20px;
+  color: var(--foreground);
+}
+
+.fileMeta {
+  padding-top: 4px;
+  font-size: 12px;
+  line-height: 16px;
+  color: var(--muted-foreground);
+}
+
+.fileActions {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 12px;
+  padding-top: 20px;
+}
+
+.request {
+  max-width: 672px;
+  padding-top: 24px;
+  font-size: 14px;
+  line-height: 28px;
+  color: var(--muted-foreground);
+}
+
+.requestAction {
+  padding-top: 24px;
+}
+
+.status {
+  padding-top: 16px;
+  font-size: 12px;
+  line-height: 18px;
+  color: var(--accent-foreground);
+}
+
+.policy {
+  margin-top: 20px;
+  padding: 16px;
+  border-radius: var(--radius-xl);
+  background: var(--muted);
+  font-size: 11px;
+  line-height: 24px;
+  color: var(--muted-foreground);
+}

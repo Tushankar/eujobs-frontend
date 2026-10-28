@@ -6,6 +6,7 @@
 }
 
 .scroll {
+  position: relative; /* contains the absolutely-positioned .sr-only caption / header text so it can't widen the page */
   overflow-x: auto;
 }
 

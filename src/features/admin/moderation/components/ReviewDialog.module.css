@@ -1,0 +1,44 @@
+.actions {
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: flex-end;
+  gap: 12px;
+  padding-top: 24px;
+}
+
+/* Restrictive decisions use the soft red button from the Figma dialogs. */
+.danger,
+.danger:hover {
+  border-color: #ffc9c9;
+  background: #fef2f2;
+  color: #c10007;
+}
+
+.previous {
+  margin-top: 20px;
+  padding: 12px 16px;
+  border-radius: var(--radius-xl);
+  background: var(--muted);
+  font-size: 12px;
+  line-height: 20px;
+  color: var(--muted-foreground);
+}
+
+.confirmTitle {
+  font-family: var(--font-display);
+  font-size: 16px;
+  font-weight: 700;
+  line-height: 24px;
+  color: var(--foreground);
+}
+
+.confirmText {
+  padding-top: 8px;
+  font-size: 12px;
+  line-height: 20px;
+  color: var(--muted-foreground);
+}
+
+.reason {
+  padding-top: 20px;
+}

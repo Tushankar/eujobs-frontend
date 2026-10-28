@@ -12,7 +12,6 @@
 .grid {
   display: grid;
   grid-template-columns: minmax(0, 1fr) 300px;
-  align-items: start;
   gap: 24px;
   padding-top: 32px;
 }

@@ -1,7 +1,8 @@
 import { useState } from 'react'
 import { Link } from 'react-router-dom'
 import { ArrowRight, Check, CircleCheck, ShieldCheck } from 'lucide-react'
-import { Badge, Button, Icon, Panel, SelectField, TextareaField, TextField } from '@/components/ui'
+import { Button, Icon, Panel, SelectField, TextareaField, TextField } from '@/components/ui'
+import PillBadge from '@/components/common/PillBadge.jsx'
 import { useLocalStorage } from '@/hooks/useLocalStorage.js'
 import { COMPANY_SIZES, COMPANY_STORAGE_KEY, INITIAL_COMPANY } from '../data/company.js'
 import styles from './CompanyPage.module.css'
@@ -76,10 +77,10 @@ export default function CompanyPage() {
           <div>
             <h2 className={styles.companyName}>{company.name}</h2>
             <div className={styles.badgeRow}>
-              <Badge tone="green" className={styles.demoBadge}>
+              <PillBadge tone="success">
                 <Icon as={ShieldCheck} size={10} />
                 Demo company
-              </Badge>
+              </PillBadge>
             </div>
           </div>
         </div>

@@ -25,12 +25,12 @@ export default function ProfileSummary({ candidate }) {
 
       <p className={styles.facts}>
         <span className={styles.fact}>
-          <Icon as={MapPin} size={13} />
+          <Icon as={MapPin} size={13} strokeWidth={2} />
           {candidate.location}
         </span>
         <span>{candidate.experienceYears} years of experience</span>
         <span className={styles.fact}>
-          <Icon as={Earth} size={13} />
+          <Icon as={Earth} size={13} strokeWidth={2} />
           {candidate.workMode}
         </span>
       </p>

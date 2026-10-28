@@ -1,0 +1,52 @@
+.list {
+  padding-top: 20px;
+}
+
+.row {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  padding-top: 16px;
+}
+
+.row:first-child {
+  padding-top: 0;
+}
+
+.label {
+  flex: 0 0 128px;
+  font-size: 11px;
+  line-height: 16.5px;
+  color: var(--muted-foreground);
+}
+
+.track {
+  flex: 1 1 0;
+  min-width: 0;
+  height: 8px;
+  overflow: hidden;
+  border-radius: 4px;
+  background: var(--muted);
+}
+
+.fill {
+  display: block;
+  height: 100%;
+  border-radius: 4px;
+  background: var(--primary);
+}
+
+.count {
+  flex: 0 0 20px;
+  font-size: 12px;
+  font-weight: 500;
+  line-height: 16px;
+  text-align: right;
+  color: var(--foreground);
+}
+
+@media (max-width: 479px) {
+  .label {
+    flex-basis: 96px;
+  }
+}

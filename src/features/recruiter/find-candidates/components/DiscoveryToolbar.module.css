@@ -13,6 +13,11 @@
   flex-shrink: 0;
 }
 
+.job svg {
+  color: var(--foreground);
+  stroke-width: 2.4;
+}
+
 .filtersButton {
   flex-shrink: 0;
   height: 46px;

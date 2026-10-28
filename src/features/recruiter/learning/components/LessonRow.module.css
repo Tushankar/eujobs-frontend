@@ -1,0 +1,76 @@
+.row {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  width: 100%;
+  min-height: 64px;
+  padding: 10px 16px;
+  border: 1px solid var(--border);
+  border-radius: var(--radius-xl);
+  background: var(--card);
+  text-align: left;
+  transition: background-color var(--transition);
+}
+
+.row:hover {
+  background: var(--muted);
+}
+
+.locked {
+  opacity: 0.4;
+}
+
+.circle {
+  display: inline-flex;
+  flex-shrink: 0;
+  align-items: center;
+  justify-content: center;
+  width: 36px;
+  height: 36px;
+  border-radius: var(--radius-full);
+  background: var(--muted);
+  color: var(--muted-foreground);
+}
+
+.row:not(.locked) .circle {
+  background: var(--accent);
+  color: var(--primary);
+}
+
+.row:not(.locked) .circle.done {
+  background: var(--success-bg);
+  color: var(--success-fg);
+}
+
+.text {
+  display: flex;
+  flex: 1;
+  flex-direction: column;
+  min-width: 0;
+}
+
+.title {
+  font-size: 14px;
+  font-weight: 600;
+  line-height: 20px;
+  color: var(--foreground);
+}
+
+.subtitle {
+  padding-top: 4px;
+  font-size: 10px;
+  line-height: 15px;
+  color: var(--muted-foreground);
+}
+
+.state {
+  flex-shrink: 0;
+  font-size: 10px;
+  line-height: 15px;
+  color: var(--muted-foreground);
+}
+
+.stateDone {
+  font-weight: 600;
+  color: var(--success-fg);
+}

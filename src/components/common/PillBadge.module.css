@@ -46,3 +46,13 @@
   background: #edf2fd;
   color: #577fba;
 }
+
+.violet {
+  background: #f0edfd;
+  color: #7364bd;
+}
+
+.danger {
+  background: #fef2f2;
+  color: #c10007;
+}

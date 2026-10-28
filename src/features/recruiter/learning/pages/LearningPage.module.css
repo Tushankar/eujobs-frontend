@@ -1,0 +1,131 @@
+.stats {
+  display: grid;
+  grid-template-columns: repeat(3, minmax(0, 1fr));
+  gap: 16px;
+  padding-top: 32px;
+}
+
+.suggestions {
+  padding-top: 32px;
+}
+
+.suggestionsHead {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 16px;
+}
+
+.eyebrow {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  font-size: 10px;
+  font-weight: 600;
+  line-height: 15px;
+  letter-spacing: 1px;
+  text-transform: uppercase;
+  color: var(--primary);
+}
+
+.suggestionsTitle {
+  padding-top: 4px;
+  font-family: var(--font-display);
+  font-size: 20px;
+  font-weight: 800;
+  line-height: 28px;
+  color: var(--foreground);
+}
+
+.tags {
+  display: flex;
+  gap: 8px;
+}
+
+.suggestionGrid {
+  display: grid;
+  grid-template-columns: repeat(3, minmax(0, 1fr));
+  gap: 16px;
+  padding-top: 16px;
+}
+
+.aiNote {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  padding-top: 12px;
+  font-size: 10px;
+  line-height: 20px;
+  color: var(--muted-foreground);
+}
+
+.filters {
+  display: flex;
+  gap: 12px;
+  margin-top: 32px;
+  padding: 16px;
+  border: 1px solid var(--border);
+  border-radius: var(--radius-xl);
+  background: var(--card);
+}
+
+.search {
+  flex: 1;
+}
+
+.stream {
+  width: 240px;
+  flex-shrink: 0;
+}
+
+.library {
+  padding-top: 28px;
+}
+
+.grid {
+  display: grid;
+  grid-template-columns: repeat(3, minmax(0, 1fr));
+  gap: 20px;
+  padding-top: 20px;
+}
+
+.empty {
+  grid-column: 1 / -1;
+}
+
+.notice {
+  margin-top: 32px;
+  padding: 20px;
+  border: 1px solid var(--border);
+  border-radius: var(--radius-xl);
+  background: var(--muted);
+  font-size: 12px;
+  line-height: 24px;
+  color: var(--muted-foreground);
+}
+
+@media (max-width: 1023px) {
+  .stats,
+  .suggestionGrid,
+  .grid {
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+  }
+}
+
+@media (max-width: 719px) {
+  .stats,
+  .suggestionGrid,
+  .grid {
+    grid-template-columns: minmax(0, 1fr);
+  }
+
+  .suggestionsHead,
+  .filters {
+    flex-direction: column;
+    align-items: stretch;
+  }
+
+  .stream {
+    width: 100%;
+  }
+}
