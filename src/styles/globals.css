@@ -71,7 +71,9 @@ svg {
   background: var(--selection);
 }
 
-:focus-visible {
+/* :where() keeps this default ring at zero specificity, so a component's own `outline` (e.g. text inputs
+   whose wrapper draws the focus ring) always wins instead of depending on stylesheet order. */
+:where(:focus-visible) {
   outline: 2px solid var(--ring);
   outline-offset: 2px;
 }
