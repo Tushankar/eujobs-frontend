@@ -185,6 +185,22 @@
   min-width: 0;
 }
 
+/* Wide layouts: the rail stays pinned under the header so only the job list moves with the
+   page. It is taller than most screens, so it scrolls inside itself (scrollbar hidden). */
+@media (min-width: 1200px) {
+  .rail {
+    position: sticky;
+    top: calc(var(--header-height) + 24px);
+    max-height: calc(100vh - var(--header-height) - 48px);
+    overflow-y: auto;
+    scrollbar-width: none;
+  }
+
+  .rail::-webkit-scrollbar {
+    display: none;
+  }
+}
+
 @media (max-width: 1199px) {
   .columns {
     grid-template-columns: minmax(0, 1fr);
