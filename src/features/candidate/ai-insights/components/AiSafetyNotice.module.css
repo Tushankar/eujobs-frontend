@@ -1,0 +1,17 @@
+.notice {
+  display: flex;
+  align-items: flex-start;
+  gap: 12px;
+}
+
+.icon {
+  display: inline-flex;
+  padding-top: 4px;
+  color: var(--primary);
+}
+
+.text {
+  font-size: 12px;
+  line-height: 24px;
+  color: var(--muted-foreground);
+}

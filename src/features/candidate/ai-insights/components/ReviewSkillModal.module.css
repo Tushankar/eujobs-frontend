@@ -1,0 +1,55 @@
+/* The Figma dialog separates the title bar from the body with a hairline and uses 24px padding throughout. */
+.dialog > header {
+  align-items: center;
+  padding: 24px;
+  border-bottom: 1px solid var(--border);
+}
+
+.dialog > header h2 {
+  padding-top: 0;
+  font-weight: 700;
+}
+
+.dialog > div {
+  padding: 24px;
+}
+
+.body {
+  display: flex;
+  flex-direction: column;
+}
+
+.text {
+  font-size: 14px;
+  line-height: 28px;
+  color: var(--muted-foreground);
+}
+
+.chips {
+  display: flex;
+  gap: 8px;
+  padding-top: 20px;
+}
+
+.body .confirm {
+  align-items: flex-start;
+  margin-top: 20px;
+  font-size: 12px;
+  line-height: 24px;
+  color: var(--muted-foreground);
+}
+
+.actions {
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: flex-end;
+  gap: 12px;
+  padding-top: 20px;
+}
+
+/* Not yet confirmed: the primary button stays blue but faded, as in the Figma frame. */
+.actions .add:disabled {
+  background: var(--primary);
+  color: var(--primary-foreground);
+  opacity: 0.4;
+}

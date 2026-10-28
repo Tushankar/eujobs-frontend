@@ -1,0 +1,59 @@
+.signals {
+  padding-top: 20px;
+}
+
+.row {
+  display: flex;
+  align-items: flex-start;
+  justify-content: space-between;
+  gap: 24px;
+  padding: 20px 0;
+  border-bottom: 1px solid var(--border);
+}
+
+.row:last-child {
+  border-bottom: 0;
+}
+
+.copy {
+  min-width: 0;
+  max-width: 512px;
+}
+
+.label {
+  font-size: 12px;
+  font-weight: 600;
+  line-height: 16px;
+  color: var(--foreground);
+}
+
+.description {
+  padding-top: 8px;
+  font-size: 11px;
+  line-height: 24px;
+  color: var(--muted-foreground);
+}
+
+.actions {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 12px;
+  padding-top: 24px;
+}
+
+.note {
+  padding-top: 16px;
+  font-size: 11px;
+  line-height: 24px;
+  color: var(--muted-foreground);
+}
+
+.message {
+  font-size: 11px;
+  line-height: 16px;
+  color: var(--success-fg);
+}
+
+.message:not(:empty) {
+  padding-top: 4px;
+}

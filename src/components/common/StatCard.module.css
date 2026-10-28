@@ -1,0 +1,56 @@
+.card {
+  display: flex;
+  flex-direction: column;
+  min-width: 0;
+  padding: 20px;
+  border: 1px solid var(--border);
+  border-radius: var(--radius-xl);
+  background: var(--card);
+}
+
+.head {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 8px;
+}
+
+.label {
+  font-size: 11px;
+  line-height: 16.5px;
+  color: var(--muted-foreground);
+}
+
+.icon {
+  display: inline-flex;
+  color: #9ca1b1;
+}
+
+.valueRow {
+  display: flex;
+  align-items: flex-end;
+  gap: 12px;
+  padding-top: 16px;
+}
+
+.value {
+  font-family: var(--font-display);
+  font-size: 28px;
+  font-weight: 700;
+  line-height: 28px;
+  letter-spacing: -0.7px;
+  color: var(--foreground);
+}
+
+.delta {
+  font-size: 9px;
+  line-height: 13.5px;
+  color: #429570;
+}
+
+.caption {
+  padding-top: 12px;
+  font-size: 10px;
+  line-height: 15px;
+  color: #767d8c;
+}

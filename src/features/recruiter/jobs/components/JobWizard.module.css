@@ -1,0 +1,169 @@
+.wizard {
+  display: grid;
+  grid-template-columns: 230px minmax(0, 1fr);
+  gap: 24px;
+  align-items: stretch;
+}
+
+.sidebar {
+  align-self: start;
+  padding: 20px;
+  border: 1px solid var(--border);
+  border-radius: var(--radius-xl);
+  background: var(--card);
+}
+
+.steps {
+  display: grid;
+  gap: 8px;
+}
+
+.stepButton {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  width: 100%;
+  height: 44px;
+  padding: 10px;
+  border: 1px solid transparent;
+  border-radius: var(--radius-xl);
+  background: transparent;
+  text-align: left;
+  color: var(--muted-foreground);
+  transition: background-color var(--transition);
+}
+
+.stepButton:not(:disabled):hover {
+  background: var(--muted);
+}
+
+.stepLocked {
+  opacity: 0.6;
+}
+
+.stepActive,
+.stepActive:not(:disabled):hover {
+  border-color: #b9e6fe;
+  background: var(--accent);
+  color: var(--primary);
+}
+
+.stepNumber {
+  display: inline-flex;
+  flex-shrink: 0;
+  align-items: center;
+  justify-content: center;
+  width: 24px;
+  height: 24px;
+  border: 1px solid var(--border);
+  border-radius: var(--radius-full);
+  font-size: 9px;
+  line-height: 13.5px;
+}
+
+.stepActive .stepNumber {
+  border-color: rgba(0, 132, 255, 0.2);
+  background: var(--card);
+  font-weight: 600;
+}
+
+.stepLabel {
+  font-size: 10px;
+  line-height: 15px;
+}
+
+.stepActive .stepLabel {
+  font-weight: 600;
+}
+
+.note {
+  margin-top: 20px;
+  padding-top: 16px;
+  border-top: 1px solid var(--border);
+  font-size: 10px;
+  line-height: 20px;
+  color: var(--muted-foreground);
+}
+
+.form {
+  display: flex;
+  flex-direction: column;
+  min-width: 0;
+  padding: 32px;
+  border: 1px solid var(--border);
+  border-radius: var(--radius-xl);
+  background: var(--card);
+}
+
+.eyebrow {
+  font-size: 10px;
+  line-height: 15px;
+  letter-spacing: 1px;
+  text-transform: uppercase;
+  color: var(--primary);
+}
+
+.title {
+  padding-top: 8px;
+  font-family: var(--font-display);
+  font-size: 24px;
+  font-weight: 700;
+  line-height: 32px;
+  color: var(--foreground);
+  outline: 0;
+}
+
+.body {
+  min-height: 224px;
+  padding-top: 28px;
+}
+
+.footer {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 12px;
+  margin-top: 32px;
+  padding-top: 24px;
+  border-top: 1px solid var(--border);
+}
+
+.back,
+.back:hover {
+  color: #737989;
+}
+
+.finish {
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: flex-end;
+  gap: 12px;
+}
+
+@media (max-width: 1023px) {
+  .wizard {
+    grid-template-columns: minmax(0, 1fr);
+  }
+
+  .steps {
+    display: flex;
+    gap: 8px;
+    overflow-x: auto;
+    padding-bottom: 4px;
+  }
+
+  .stepButton {
+    width: auto;
+    white-space: nowrap;
+  }
+
+  .note {
+    display: none;
+  }
+}
+
+@media (max-width: 639px) {
+  .form {
+    padding: 20px;
+  }
+}

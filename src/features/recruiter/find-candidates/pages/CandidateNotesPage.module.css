@@ -1,0 +1,16 @@
+.form {
+  padding-top: 20px;
+}
+
+.footer {
+  display: flex;
+  align-items: center;
+  gap: 16px;
+  padding-top: 22px;
+}
+
+.status {
+  font-size: 11px;
+  line-height: 16.5px;
+  color: var(--success-fg);
+}

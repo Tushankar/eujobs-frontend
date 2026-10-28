@@ -1,0 +1,33 @@
+.list {
+  display: flex;
+  flex-direction: column;
+  gap: 24px;
+  padding: 20px 0 24px;
+  list-style: none;
+}
+
+.entry {
+  padding-left: 20px;
+  border-left: 1px solid rgba(0, 132, 255, 0.2);
+}
+
+.role {
+  font-size: 14px;
+  font-weight: 600;
+  line-height: 20px;
+  color: var(--foreground);
+}
+
+.meta {
+  padding-top: 8px;
+  font-size: 12px;
+  line-height: 16px;
+  color: var(--muted-foreground);
+}
+
+.summary {
+  padding-top: 16px;
+  font-size: 12px;
+  line-height: 24px;
+  color: var(--muted-foreground);
+}

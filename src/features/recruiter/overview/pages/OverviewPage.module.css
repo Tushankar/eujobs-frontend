@@ -1,0 +1,93 @@
+.actions {
+  display: flex;
+  align-items: center;
+  gap: 20px;
+}
+
+.stats {
+  display: grid;
+  grid-template-columns: repeat(4, minmax(0, 1fr));
+  gap: 16px;
+  padding-top: 32px;
+}
+
+.statLink {
+  display: block;
+  border-radius: var(--radius-xl);
+}
+
+.statLink:hover > * {
+  border-color: #cdd0d9;
+}
+
+.statLink > * {
+  height: 100%;
+  transition: border-color var(--transition);
+}
+
+.momentum {
+  display: grid;
+  grid-template-columns: minmax(0, 1fr) 300px;
+  gap: 24px;
+  padding-top: 32px;
+}
+
+.sectionHead,
+.rolesHead {
+  display: flex;
+  align-items: flex-start;
+  justify-content: space-between;
+  gap: 16px;
+  padding-top: 32px;
+}
+
+.sectionLink {
+  display: inline-flex;
+  align-items: center;
+  gap: 4px;
+  padding-top: 5px;
+  font-size: 12px;
+  line-height: 16px;
+  color: var(--primary);
+}
+
+.sectionLink:hover {
+  text-decoration: underline;
+}
+
+.talent {
+  display: grid;
+  grid-template-columns: repeat(3, minmax(0, 1fr));
+  gap: 16px;
+  padding-top: 20px;
+}
+
+.roles {
+  padding-top: 20px;
+}
+
+@media (max-width: 1099px) {
+  .momentum {
+    grid-template-columns: minmax(0, 1fr);
+  }
+
+  .stats {
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+  }
+
+  .talent {
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+  }
+}
+
+@media (max-width: 639px) {
+  .stats,
+  .talent {
+    grid-template-columns: minmax(0, 1fr);
+  }
+
+  .actions {
+    flex-wrap: wrap;
+    gap: 12px;
+  }
+}

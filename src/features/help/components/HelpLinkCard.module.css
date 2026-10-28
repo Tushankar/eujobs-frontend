@@ -1,0 +1,30 @@
+.card {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 16px;
+  padding: 24px;
+  border: 1px solid var(--border);
+  border-radius: var(--radius-xl);
+  background: var(--card);
+  font-size: 12px;
+  font-weight: 600;
+  line-height: 16px;
+  color: var(--foreground);
+  transition: background-color var(--transition);
+}
+
+.card:hover {
+  background: var(--muted);
+}
+
+.content {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+}
+
+.glyph {
+  flex-shrink: 0;
+  color: var(--primary);
+}

@@ -1,0 +1,62 @@
+.root {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  padding: 48px 24px;
+  border: 1px dashed var(--border);
+  border-radius: var(--radius-xl);
+  background: var(--card);
+  text-align: center;
+}
+
+.icon {
+  display: inline-flex;
+  padding: 12px;
+  margin-bottom: 16px;
+  border-radius: var(--radius-xl);
+  background: var(--accent);
+  color: var(--primary);
+}
+
+.title {
+  font-family: var(--font-display);
+  font-size: 16px;
+  font-weight: 700;
+  line-height: 24px;
+  color: var(--foreground);
+}
+
+.description {
+  max-width: 420px;
+  padding-top: 4px;
+  font-size: 12px;
+  line-height: 18px;
+  color: var(--muted-foreground);
+}
+
+.action {
+  padding-top: 20px;
+}
+
+.large {
+  padding: 64px 24px;
+  border-style: solid;
+}
+
+.large .icon {
+  padding: 16px;
+  margin-bottom: 20px;
+  border-radius: 16px;
+}
+
+.large .title {
+  font-size: 18px;
+  line-height: 28px;
+}
+
+.large .description {
+  max-width: 384px;
+  padding: 8px 0 20px;
+  font-size: 14px;
+  line-height: 24px;
+}

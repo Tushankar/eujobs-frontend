@@ -1,0 +1,88 @@
+.row {
+  display: flex;
+  align-items: flex-start;
+  gap: 16px;
+  padding: 20px;
+  border-bottom: 1px solid var(--border);
+  transition: background-color var(--transition);
+}
+
+.row:last-child {
+  border-bottom: 0;
+}
+
+.comparing {
+  background: #f6faff;
+}
+
+.tile {
+  display: inline-flex;
+  flex-shrink: 0;
+  padding: 12px;
+  border-radius: var(--radius-xl);
+  background: var(--accent);
+  color: var(--primary-hover);
+}
+
+.body {
+  flex: 1;
+  min-width: 0;
+}
+
+.titleLine {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: 8px;
+}
+
+.title {
+  overflow-wrap: anywhere;
+  font-size: 14px;
+  font-weight: 600;
+  line-height: 20px;
+  color: var(--foreground);
+}
+
+.status {
+  display: flex;
+  padding-top: 8px;
+}
+
+.meta {
+  padding-top: 8px;
+  font-size: 11px;
+  line-height: 16.5px;
+  color: var(--muted-foreground);
+}
+
+.note {
+  padding-top: 12px;
+  font-size: 12px;
+  line-height: 24px;
+  color: var(--muted-foreground);
+}
+
+.actions {
+  display: flex;
+  flex-shrink: 0;
+  gap: 8px;
+}
+
+.actions .comparePressed,
+.actions .comparePressed:hover {
+  border-color: rgba(0, 132, 255, 0.5);
+  background: var(--accent);
+  color: var(--primary-hover);
+}
+
+@media (max-width: 767px) {
+  .row {
+    flex-wrap: wrap;
+  }
+
+  .actions {
+    flex-basis: 100%;
+    flex-wrap: wrap;
+  }
+}

@@ -1,0 +1,143 @@
+.hero {
+  display: grid;
+  grid-template-columns: repeat(12, minmax(0, 1fr));
+  align-items: center;
+  gap: 24px;
+}
+
+.heroText {
+  grid-column: span 8;
+  min-width: 0;
+}
+
+.completeness {
+  grid-column: span 4;
+}
+
+.badgeRow {
+  display: flex;
+  align-items: center;
+  height: 24px;
+}
+
+.heroTitle {
+  padding-top: 16px;
+  font-family: var(--font-display);
+  font-size: 24px;
+  font-weight: 700;
+  line-height: 32px;
+  color: var(--foreground);
+}
+
+.heroCopy {
+  max-width: 512px;
+  padding-top: 12px;
+  font-size: 14px;
+  line-height: 28px;
+  color: var(--muted-foreground);
+}
+
+.completenessLabel {
+  font-size: 12px;
+  line-height: 16px;
+  color: var(--muted-foreground);
+}
+
+.percent {
+  padding: 12px 0;
+  font-family: var(--font-display);
+  font-size: 36px;
+  font-weight: 700;
+  line-height: 40px;
+  color: var(--foreground);
+}
+
+.percent span {
+  font-size: 20px;
+  line-height: 28px;
+  color: var(--muted-foreground);
+}
+
+.bar {
+  height: 6px;
+  margin: 8px 0 12px;
+  border-radius: var(--radius-full);
+  background: var(--border);
+  overflow: hidden;
+}
+
+.fill {
+  display: block;
+  height: 100%;
+  border-radius: inherit;
+  background: var(--primary);
+}
+
+.heading {
+  margin-top: 24px;
+}
+
+.grid {
+  display: grid;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  gap: 16px;
+  margin-top: 20px;
+}
+
+.card {
+  display: flex;
+  flex-direction: column;
+  height: 100%;
+}
+
+.cardHead {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding-bottom: 16px;
+}
+
+.iconBox {
+  display: inline-flex;
+  padding: 12px;
+  border-radius: var(--radius-xl);
+  background: var(--accent);
+  color: var(--primary);
+}
+
+.cardTitle {
+  padding-bottom: 20px;
+  font-family: var(--font-display);
+  font-size: 18px;
+  font-weight: 700;
+  line-height: 27px;
+  letter-spacing: -0.25px;
+  color: var(--foreground);
+}
+
+.cardText {
+  flex: 1;
+  padding-bottom: 20px;
+  font-size: 14px;
+  line-height: 28px;
+  color: var(--muted-foreground);
+}
+
+.cardAction {
+  align-self: flex-start;
+}
+
+.plan {
+  margin-top: 28px;
+}
+
+@media (max-width: 1023px) {
+  .grid {
+    grid-template-columns: minmax(0, 1fr);
+  }
+
+  .heroText,
+  .completeness {
+    grid-column: 1 / -1;
+  }
+}

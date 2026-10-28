@@ -1,0 +1,54 @@
+.title {
+  font-family: var(--font-display);
+  font-size: 34px;
+  font-weight: 800;
+  line-height: 42.5px;
+  letter-spacing: -0.7px;
+  color: var(--foreground);
+}
+
+.lead {
+  padding-top: 8px;
+  font-size: 13px;
+  line-height: 24px;
+  color: var(--muted-foreground);
+}
+
+.tabs {
+  display: flex;
+  gap: 20px;
+  margin-top: 32px;
+  border-bottom: 1px solid var(--border);
+  overflow-x: auto;
+}
+
+.tab {
+  padding-bottom: 12px;
+  border-bottom: 1px solid transparent;
+  font-size: 12px;
+  line-height: 16px;
+  white-space: nowrap;
+  color: var(--muted-foreground);
+}
+
+.tab:hover {
+  color: var(--foreground);
+}
+
+.tabActive,
+.tabActive:hover {
+  border-bottom-color: var(--primary);
+  font-weight: 600;
+  color: var(--primary);
+}
+
+.body {
+  margin-top: 24px;
+}
+
+@media (max-width: 639px) {
+  .title {
+    font-size: 28px;
+    line-height: 36px;
+  }
+}

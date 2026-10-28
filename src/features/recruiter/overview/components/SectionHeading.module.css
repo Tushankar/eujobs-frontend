@@ -1,0 +1,15 @@
+.title {
+  font-family: var(--font-display);
+  font-size: 18px;
+  font-weight: 700;
+  line-height: 27px;
+  letter-spacing: -0.25px;
+  color: var(--foreground);
+}
+
+.description {
+  padding-top: 4px;
+  font-size: 11px;
+  line-height: 16.5px;
+  color: var(--muted-foreground);
+}

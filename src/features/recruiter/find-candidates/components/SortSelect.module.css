@@ -1,0 +1,27 @@
+.root {
+  position: relative;
+  display: inline-flex;
+  align-items: center;
+}
+
+.select {
+  height: 31px;
+  padding: 0 32px 0 12px;
+  border: 1px solid var(--border);
+  border-radius: var(--radius-md);
+  background: var(--card);
+  font-size: 11px;
+  color: var(--muted-foreground);
+  appearance: none;
+}
+
+.select:hover {
+  color: var(--foreground);
+}
+
+.chevron {
+  position: absolute;
+  right: 11px;
+  color: var(--foreground);
+  pointer-events: none;
+}

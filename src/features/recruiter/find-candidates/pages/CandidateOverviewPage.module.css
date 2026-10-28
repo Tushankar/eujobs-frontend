@@ -1,0 +1,45 @@
+.about {
+  padding-top: 20px;
+  font-size: 14px;
+  line-height: 28px;
+  color: var(--muted-foreground);
+}
+
+.next {
+  padding-top: 28px;
+}
+
+.role {
+  margin-top: 20px;
+  padding: 20px;
+  border-radius: var(--radius-xl);
+  background: var(--muted);
+}
+
+.roleTitle {
+  font-size: 14px;
+  font-weight: 600;
+  line-height: 20px;
+  color: var(--foreground);
+}
+
+.roleMeta {
+  padding-top: 4px;
+  font-size: 12px;
+  line-height: 16px;
+  color: var(--muted-foreground);
+}
+
+.roleSummary {
+  padding-top: 12px;
+  font-size: 12px;
+  line-height: 24px;
+  color: var(--muted-foreground);
+}
+
+.nextStep {
+  padding-top: 20px;
+  font-size: 12px;
+  line-height: 24px;
+  color: var(--muted-foreground);
+}

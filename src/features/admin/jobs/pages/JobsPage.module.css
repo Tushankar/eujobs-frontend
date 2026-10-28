@@ -1,0 +1,40 @@
+.toolbar {
+  padding-top: 32px;
+}
+
+.search {
+  max-width: 320px;
+}
+
+.results {
+  padding-top: 24px;
+}
+
+.table {
+  --table-row-height: 57px;
+  --table-cell-padding: 8px 24px;
+}
+
+.title {
+  font-size: 12px;
+  font-weight: 600;
+  line-height: 16px;
+  color: var(--foreground);
+}
+
+.muted {
+  font-size: 12px;
+  line-height: 16px;
+  color: var(--muted-foreground);
+}
+
+.actions {
+  display: flex;
+  align-items: center;
+  gap: 50px;
+}
+
+.summaryLink.summaryLink {
+  padding-inline: 12px;
+  color: var(--primary);
+}

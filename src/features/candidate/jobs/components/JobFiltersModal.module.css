@@ -1,0 +1,26 @@
+.groups {
+  display: flex;
+  flex-direction: column;
+  gap: 20px;
+}
+
+.group {
+  min-width: 0;
+  margin: 0;
+  padding: 0;
+  border: 0;
+}
+
+.legend {
+  padding: 0 0 10px;
+  font-size: 12px;
+  font-weight: 600;
+  line-height: 16px;
+  color: var(--text-label);
+}
+
+.options {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 12px 24px;
+}

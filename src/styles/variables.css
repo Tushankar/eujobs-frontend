@@ -1,0 +1,69 @@
+/*
+ * Design tokens extracted from the Figma "D S" page (matchpoint. Design System)
+ * via get_variable_defs, plus values read directly from the "Final" screens.
+ * Names follow the semantic color contract documented in Foundations.
+ */
+:root {
+  /* Semantic color — Figma variables */
+  --background: #f8f9fb;
+  --foreground: #202534;
+  --card: #ffffff;
+  --card-foreground: #202534;
+  --primary: #0084ff;
+  --primary-foreground: #ffffff;
+  --primary-hover: #0066c4;
+  --secondary: #eef0f5;
+  --secondary-foreground: #202534;
+  --muted: #f5f6f8;
+  --muted-foreground: #687184;
+  --accent: #eaf4ff;
+  --accent-foreground: #0066c4;
+  --border: #e8eaf0;
+  --destructive: #bf4545;
+  --ring: #0084ff;
+  --selection: #cce6ff;
+  --blue-light-100: #e0f2fe;
+
+  /* Neutrals read from screens (not exposed as Figma variables) */
+  --text-label: #555b6d;
+  --text-placeholder: #7b8292;
+  --text-nav: #73798a;
+  --text-nav-heading: #a2a6b2;
+  --text-breadcrumb: #767d8c;
+  --text-faint: #9398a5;
+  --text-footer: #737b8c;
+
+  /* Status palette proposed by the DS Badge spec */
+  --success-bg: #edf7f0;
+  --success-fg: #28734b;
+  --warning-bg: #fff5e5;
+  --warning-fg: #8a5a16;
+
+  /* Typography */
+  --font-display: 'Manrope', system-ui, sans-serif;
+  --font-body: 'Inter', system-ui, -apple-system, 'Segoe UI', sans-serif;
+
+  /* Radius (radius/md, radius/lg, radius/xl) */
+  --radius-md: 6px;
+  --radius-lg: 8px;
+  --radius-xl: 12px;
+  --radius-full: 9999px;
+
+  /* Elevation */
+  --shadow-button: 0 2px 1.5px rgba(98, 89, 219, 0.08);
+  --shadow-segment: 0 1px 1.5px rgba(0, 0, 0, 0.1), 0 1px 1px rgba(0, 0, 0, 0.1);
+  --shadow-popover: 0 20px 25px -5px rgba(0, 0, 0, 0.1), 0 8px 10px -6px rgba(0, 0, 0, 0.1);
+  --backdrop: rgba(32, 37, 52, 0.6);
+
+  /* Layout */
+  --sidebar-width: 232px;
+  --header-height: 72px;
+  --content-padding: 40px;
+  --transition: 150ms ease;
+}
+
+@media (max-width: 1023px) {
+  :root {
+    --content-padding: 20px;
+  }
+}

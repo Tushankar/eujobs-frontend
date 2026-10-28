@@ -1,0 +1,48 @@
+.pageTitle h1 {
+  padding-top: 0; /* Figma: no eyebrow, so the title sits flush with the top of the block. */
+}
+
+.actions {
+  display: flex;
+  align-items: center;
+  gap: 20px;
+}
+
+.toolbar {
+  display: flex;
+  align-items: stretch;
+  justify-content: space-between;
+  gap: 16px;
+  padding-top: 32px;
+}
+
+/* Figma stretches the chips to the 46px search field. */
+.chips button {
+  display: inline-flex;
+  align-items: center;
+  min-height: 46px;
+}
+
+.search {
+  width: 224px;
+  flex-shrink: 0;
+}
+
+.table {
+  padding-top: 24px;
+}
+
+@media (max-width: 719px) {
+  .actions {
+    flex-wrap: wrap;
+    gap: 12px;
+  }
+
+  .toolbar {
+    flex-direction: column;
+  }
+
+  .search {
+    width: 100%;
+  }
+}

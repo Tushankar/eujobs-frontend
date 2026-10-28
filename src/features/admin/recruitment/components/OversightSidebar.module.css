@@ -1,0 +1,101 @@
+.column {
+  display: flex;
+  flex-direction: column;
+  gap: 24px;
+  min-width: 0;
+}
+
+.link {
+  font-size: 12px;
+  font-weight: 600;
+  line-height: 16px;
+  color: var(--primary);
+}
+
+.link:hover {
+  text-decoration: underline;
+}
+
+.list {
+  padding-top: 20px;
+}
+
+.row,
+.dividedRow {
+  display: flex;
+  align-items: flex-start;
+  justify-content: space-between;
+  gap: 12px;
+}
+
+.row + .row {
+  padding-top: 16px;
+}
+
+/* Role activity separates its rows with a hairline; application coverage does not. */
+.dividedRow {
+  padding-bottom: 16px;
+  border-bottom: 1px solid var(--border);
+}
+
+.dividedRow + .dividedRow {
+  padding-top: 16px;
+}
+
+.dividedRow:last-child {
+  padding-bottom: 0;
+  border-bottom: 0;
+}
+
+.rowText {
+  min-width: 0;
+}
+
+.rowTitle {
+  font-size: 12px;
+  font-weight: 600;
+  line-height: 16px;
+  color: var(--foreground);
+}
+
+.rowMeta {
+  padding-top: 4px;
+  font-size: 10px;
+  line-height: 15px;
+  color: var(--muted-foreground);
+}
+
+.note {
+  border-color: rgba(0, 132, 255, 0.2);
+  background: var(--accent);
+}
+
+.noteTitle {
+  padding-top: 16px;
+  font-size: 16px;
+  font-weight: 700;
+  line-height: 24px;
+  color: var(--foreground);
+}
+
+.noteText {
+  padding-top: 12px;
+  font-size: 11px;
+  line-height: 24px;
+  color: var(--primary-hover);
+}
+
+.noteLink {
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+  padding-top: 16px;
+  font-size: 11px;
+  font-weight: 600;
+  line-height: 16.5px;
+  color: var(--primary-hover);
+}
+
+.noteLink:hover {
+  text-decoration: underline;
+}

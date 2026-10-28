@@ -1,0 +1,5 @@
+/* Field hints are 11px / 14.667px in the Figma auth and onboarding frames (the shared Field hint is 12px) */
+.compactHint p:not([role='alert']) {
+  font-size: 11px;
+  line-height: 14.667px;
+}

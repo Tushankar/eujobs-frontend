@@ -1,0 +1,10 @@
+.note {
+  margin-top: 32px;
+  padding: 16px;
+  border: 1px solid var(--border);
+  border-radius: var(--radius-xl);
+  background: var(--muted);
+  font-size: 10px;
+  line-height: 24px;
+  color: var(--muted-foreground);
+}

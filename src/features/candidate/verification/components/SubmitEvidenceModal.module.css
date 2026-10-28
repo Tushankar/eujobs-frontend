@@ -1,0 +1,39 @@
+.form {
+  display: flex;
+  flex-direction: column;
+  gap: 16px;
+}
+
+.file {
+  width: 100%;
+  min-width: 0;
+  padding: 10px 12px;
+  border: 1px solid var(--border);
+  border-radius: var(--radius-xl);
+  background: var(--card);
+  font-size: 12px;
+  color: var(--muted-foreground);
+}
+
+.file::file-selector-button {
+  margin-right: 12px;
+  padding: 6px 12px;
+  border: 0;
+  border-radius: var(--radius-lg);
+  background: var(--secondary);
+  font-size: 12px;
+  font-weight: 600;
+  color: var(--foreground);
+  cursor: pointer;
+}
+
+.file[aria-invalid='true'] {
+  border-color: var(--destructive);
+}
+
+.error {
+  padding-top: 8px;
+  font-size: 12px;
+  line-height: 16px;
+  color: var(--destructive);
+}

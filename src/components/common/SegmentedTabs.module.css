@@ -1,0 +1,35 @@
+.tray {
+  display: inline-flex;
+  gap: 4px;
+  padding: 4px;
+  border-radius: var(--radius-xl);
+  background: #eef0f4;
+}
+
+.tab {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  padding: 6px 12px;
+  border: 0;
+  border-radius: var(--radius-md);
+  background: transparent;
+  font-size: 10px;
+  line-height: 15px;
+  color: #6e7687;
+  transition:
+    background-color var(--transition),
+    color var(--transition);
+}
+
+.tab:hover {
+  color: var(--foreground);
+}
+
+.active,
+.active:hover {
+  background: var(--card);
+  box-shadow: var(--shadow-segment);
+  font-weight: 600;
+  color: var(--foreground);
+}

@@ -1,0 +1,143 @@
+.button {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: 8px;
+  min-height: 40px;
+  padding: 10px 16px;
+  border: 1px solid transparent;
+  border-radius: var(--radius-xl);
+  font-family: var(--font-body);
+  font-size: 12px;
+  font-weight: 600;
+  line-height: 18px;
+  text-align: center;
+  white-space: nowrap;
+  transition:
+    background-color var(--transition),
+    border-color var(--transition),
+    color var(--transition);
+}
+
+.button:disabled,
+.button[aria-disabled='true'] {
+  background: var(--secondary);
+  color: var(--text-faint);
+  box-shadow: none;
+  pointer-events: none;
+}
+
+.button[aria-busy='true'] {
+  pointer-events: none;
+}
+
+.sm {
+  min-height: 32px;
+  padding: 6px 12px;
+}
+
+.fullWidth {
+  width: 100%;
+}
+
+.primary {
+  background: var(--primary);
+  color: var(--primary-foreground);
+  box-shadow: var(--shadow-button);
+}
+
+.primary:hover {
+  background: var(--primary-hover);
+}
+
+.primary:active {
+  background: #005bb0;
+}
+
+.primary[aria-busy='true'] {
+  background: var(--primary);
+  color: var(--primary-foreground);
+}
+
+.secondary {
+  background: var(--secondary);
+  color: var(--foreground);
+}
+
+.secondary:hover {
+  background: #e3e6ee;
+}
+
+.secondary:active {
+  background: #d9dde8;
+}
+
+.ghost {
+  background: transparent;
+  color: var(--foreground);
+}
+
+.ghost:hover {
+  background: var(--muted);
+}
+
+.ghost:active {
+  background: var(--secondary);
+}
+
+/* White button with a hairline border (Back / "Sign in" in the auth and onboarding frames) */
+.outline {
+  border-color: var(--border);
+  background: var(--card);
+  color: var(--foreground);
+}
+
+.outline:hover {
+  background: var(--muted);
+}
+
+.outline:active {
+  background: var(--secondary);
+}
+
+.outline:disabled,
+.outline[aria-disabled='true'] {
+  border-color: var(--border);
+  background: var(--card);
+  color: var(--foreground);
+  opacity: 0.4;
+}
+
+.danger {
+  background: var(--destructive);
+  color: var(--primary-foreground);
+}
+
+.danger:hover {
+  background: #a93a3a;
+}
+
+.danger:active {
+  background: #933131;
+}
+
+.danger[aria-busy='true'] {
+  background: var(--destructive);
+  color: var(--primary-foreground);
+}
+
+.spinner {
+  animation: spin 0.9s linear infinite;
+}
+
+@keyframes spin {
+  to {
+    transform: rotate(360deg);
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .spinner {
+    animation-duration: 2.4s;
+  }
+}

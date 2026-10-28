@@ -1,0 +1,88 @@
+.intro {
+  font-size: 14px;
+  line-height: 28px;
+  color: var(--muted-foreground);
+}
+
+.field {
+  padding-top: 20px;
+}
+
+.descriptionField {
+  padding-top: 20px;
+}
+
+.descriptionField textarea {
+  min-height: 80px;
+}
+
+.assist {
+  display: flex;
+  align-items: flex-start;
+  gap: 12px;
+  margin-top: 20px;
+  padding: 16px;
+  border: 1px solid rgba(0, 132, 255, 0.2);
+  border-radius: var(--radius-xl);
+  background: var(--accent);
+}
+
+.assistIcon {
+  display: inline-flex;
+  flex-shrink: 0;
+  align-items: center;
+  justify-content: center;
+  width: 36px;
+  height: 36px;
+  border-radius: var(--radius-xl);
+  background: var(--card);
+}
+
+.assistBody {
+  display: flex;
+  flex: 1;
+  flex-direction: column;
+  align-items: flex-start;
+  min-width: 0;
+}
+
+.assistTitle {
+  font-size: 12px;
+  font-weight: 600;
+  line-height: 16px;
+  color: var(--primary-hover);
+}
+
+.assistText {
+  padding-top: 4px;
+  font-size: 11px;
+  line-height: 20px;
+  color: var(--primary-hover);
+}
+
+.improve {
+  margin-top: 12px;
+}
+
+.assistNote {
+  padding-top: 8px;
+  font-size: 10px;
+  line-height: 20px;
+  color: var(--muted-foreground);
+}
+
+.footer {
+  display: flex;
+  justify-content: flex-end;
+  gap: 12px;
+  margin-top: 20px;
+  padding-top: 20px;
+  border-top: 1px solid var(--border);
+}
+
+/* Figma shows the disabled primary as the brand blue at 40% rather than the grey disabled button. */
+.footer .create:disabled {
+  background: var(--primary);
+  color: var(--primary-foreground);
+  opacity: 0.4;
+}

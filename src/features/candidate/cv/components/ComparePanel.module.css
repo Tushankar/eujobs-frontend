@@ -1,0 +1,102 @@
+.panel {
+  display: flex;
+  flex-direction: column;
+}
+
+.heading {
+  font-family: var(--font-display);
+  font-size: 18px;
+  font-weight: 700;
+  line-height: 27px;
+  letter-spacing: -0.25px;
+  color: var(--foreground);
+}
+
+.lead {
+  padding-top: 4px;
+  font-size: 11px;
+  line-height: 16.5px;
+  color: var(--muted-foreground);
+}
+
+.empty,
+.snapshots {
+  margin-top: 20px;
+}
+
+.empty {
+  padding: 16px;
+  border-radius: var(--radius-xl);
+  background: var(--muted);
+  font-size: 12px;
+  line-height: 24px;
+  color: var(--muted-foreground);
+}
+
+.snapshots {
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+}
+
+.snapshot {
+  padding: 16px;
+  border-radius: var(--radius-xl);
+  background: var(--muted);
+}
+
+.snapshotTitle {
+  font-size: 12px;
+  font-weight: 600;
+  line-height: 16px;
+  color: var(--foreground);
+}
+
+.facts {
+  margin: 0;
+  display: grid;
+  grid-template-columns: auto minmax(0, 1fr);
+  gap: 8px 12px;
+  padding-top: 12px;
+  font-size: 12px;
+  line-height: 20px;
+}
+
+.facts dt {
+  color: var(--muted-foreground);
+}
+
+.facts dd {
+  margin: 0;
+  color: var(--foreground);
+}
+
+.skills {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 6px;
+}
+
+.difference {
+  font-size: 12px;
+  line-height: 20px;
+  color: var(--muted-foreground);
+}
+
+.notice {
+  display: flex;
+  gap: 12px;
+  margin-top: 20px;
+  padding: 16px;
+  border-radius: var(--radius-xl);
+  background: var(--accent);
+  font-size: 12px;
+  line-height: 24px;
+  color: var(--primary-hover);
+}
+
+.noticeIcon {
+  display: inline-flex;
+  flex-shrink: 0;
+  padding-top: 4px;
+}

@@ -1,0 +1,129 @@
+.back {
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+  font-size: 12px;
+  line-height: 20px;
+  color: var(--muted-foreground);
+}
+
+.back:hover {
+  color: var(--foreground);
+}
+
+.title {
+  padding-top: 23px;
+}
+
+.actions {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+}
+
+.notice {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 12px;
+  margin-top: 16px;
+  padding: 6px 8px 6px 16px;
+  border: 1px solid rgba(0, 132, 255, 0.2);
+  border-radius: var(--radius-xl);
+  background: var(--accent);
+  font-size: 12px;
+  line-height: 18px;
+  color: var(--accent-foreground);
+}
+
+a.edit,
+button.edit {
+  border: 1px solid var(--border);
+  background: var(--card);
+}
+
+a.edit:hover,
+button.edit:hover {
+  background: var(--muted);
+}
+
+.layout {
+  display: grid;
+  grid-template-columns: minmax(0, 1fr) 300px;
+  gap: 24px;
+  align-items: start;
+  padding-top: 32px;
+}
+
+.card,
+.activity {
+  padding: 28px;
+  border: 1px solid var(--border);
+  border-radius: var(--radius-xl);
+  background: var(--card);
+}
+
+.activity {
+  padding: 24px;
+}
+
+.cardTitle {
+  font-family: var(--font-display);
+  font-size: 18px;
+  font-weight: 700;
+  line-height: 27px;
+  letter-spacing: -0.25px;
+  color: var(--foreground);
+}
+
+.aside {
+  display: flex;
+  flex-direction: column;
+  gap: 20px;
+}
+
+.activityText {
+  padding-top: 20px;
+  font-size: 12px;
+  line-height: 24px;
+  color: var(--muted-foreground);
+}
+
+.buttons {
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+  padding-top: 20px;
+}
+
+a.outlined {
+  border: 1px solid var(--border);
+  background: var(--card);
+}
+
+a.outlined:hover {
+  background: var(--muted);
+}
+
+.tip {
+  display: flex;
+  flex-direction: column;
+  padding: 24px;
+  border-radius: var(--radius-xl);
+  background: var(--accent);
+  font-size: 12px;
+  line-height: 24px;
+  color: var(--primary);
+}
+
+@media (max-width: 1023px) {
+  .layout {
+    grid-template-columns: minmax(0, 1fr);
+  }
+}
+
+@media (max-width: 639px) {
+  .card {
+    padding: 20px;
+  }
+}

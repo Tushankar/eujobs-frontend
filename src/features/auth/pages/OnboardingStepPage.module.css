@@ -1,0 +1,40 @@
+/* Shared by the five onboarding step pages */
+.form {
+  padding-top: 28px;
+}
+
+/* Content that follows a grey group card */
+.afterGroup {
+  padding-top: 24px;
+}
+
+.fieldGrid {
+  display: grid;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  gap: 20px;
+  align-items: start;
+}
+
+.fullWidth {
+  grid-column: 1 / -1;
+}
+
+/* Figma's business-address box is 106px tall (the shared textarea is 122px) */
+div.fullWidth textarea {
+  min-height: 80px;
+}
+
+.note {
+  padding: 16px;
+  border-radius: var(--radius-xl);
+  background: var(--muted);
+  font-size: 11px;
+  line-height: 24px;
+  color: var(--muted-foreground);
+}
+
+@media (max-width: 767px) {
+  .fieldGrid {
+    grid-template-columns: minmax(0, 1fr);
+  }
+}

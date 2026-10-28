@@ -1,0 +1,118 @@
+.result {
+  display: flex;
+  align-items: center;
+  gap: 24px;
+  padding-top: 48px;
+}
+
+.status {
+  display: flex;
+  flex-shrink: 0;
+  flex-direction: column;
+  align-items: center;
+  gap: 16px;
+}
+
+.statusIcon {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 64px;
+  height: 64px;
+  border-radius: 16px;
+  background: var(--accent);
+  color: var(--primary);
+}
+
+.statusBadge {
+  padding: 4px 8px;
+  border-radius: var(--radius-md);
+  background: #fdf5e6;
+  font-size: 10px;
+  font-weight: 500;
+  line-height: 15px;
+  color: #a47d2e;
+}
+
+.resultTitle {
+  padding-top: 20px;
+  font-family: var(--font-display);
+  font-size: 30px;
+  font-weight: 800;
+  line-height: 36px;
+  color: var(--foreground);
+}
+
+.resultText {
+  max-width: 576px;
+  padding-top: 16px;
+  font-size: 14px;
+  line-height: 28px;
+  color: var(--muted-foreground);
+}
+
+.summary {
+  display: grid;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  gap: 12px;
+  margin: 0;
+  padding-top: 24px;
+}
+
+.summaryItem {
+  min-width: 0;
+  padding: 16px;
+  border: 1px solid var(--border);
+  border-radius: var(--radius-xl);
+  background: var(--muted);
+}
+
+.summaryLabel {
+  font-size: 10px;
+  line-height: 15px;
+  color: var(--muted-foreground);
+}
+
+.summaryValue {
+  margin: 0;
+  padding-top: 4px;
+  font-size: 12px;
+  font-weight: 600;
+  line-height: 16px;
+  color: var(--foreground);
+  overflow-wrap: anywhere;
+}
+
+.actions {
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: flex-end;
+  gap: 12px;
+  padding: 28px 0 20px;
+}
+
+/* Figma shows the locked action as the primary button at 40% opacity */
+.locked.locked:disabled {
+  background: var(--primary);
+  color: var(--primary-foreground);
+  box-shadow: var(--shadow-button);
+  opacity: 0.4;
+}
+
+@media (max-width: 767px) {
+  .result {
+    flex-direction: column;
+    align-items: flex-start;
+    padding-top: 32px;
+  }
+
+  .resultTitle {
+    padding-top: 0;
+    font-size: 24px;
+    line-height: 32px;
+  }
+
+  .summary {
+    grid-template-columns: minmax(0, 1fr);
+  }
+}

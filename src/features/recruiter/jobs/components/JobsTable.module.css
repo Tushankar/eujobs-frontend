@@ -1,0 +1,137 @@
+.card {
+  border: 1px solid var(--border);
+  border-radius: var(--radius-xl);
+  background: var(--card);
+}
+
+/* Wide layouts keep overflow visible so the manage menu can extend past the card. */
+@media (max-width: 1171px) {
+  .card {
+    overflow: hidden;
+  }
+
+  /* Positioned so the sr-only header/caption text is clipped with the scrolled table. */
+  .scroll {
+    position: relative;
+    overflow-x: auto;
+  }
+}
+
+.table {
+  width: 100%;
+  min-width: 860px;
+  border-collapse: collapse;
+  table-layout: fixed;
+  text-align: left;
+}
+
+.th {
+  height: 46px;
+  padding: 0 24px;
+  border-bottom: 1px solid var(--border);
+  background: #fafbfc;
+  font-size: 10px;
+  font-weight: 500;
+  line-height: 13.333px;
+  color: var(--muted-foreground);
+}
+
+.th:first-child {
+  border-top-left-radius: 11px;
+}
+
+.th:last-child {
+  border-top-right-radius: 11px;
+}
+
+.sortButton {
+  display: inline-flex;
+  align-items: center;
+  gap: 4px;
+  padding: 0;
+  border: 0;
+  background: transparent;
+  font: inherit;
+  color: inherit;
+}
+
+.sortButton:hover {
+  color: var(--foreground);
+}
+
+.td {
+  height: 74px;
+  padding: 0 24px;
+  border-bottom: 1px solid var(--border);
+  font-size: 12px;
+  line-height: 16px;
+  vertical-align: middle;
+}
+
+.row:last-child .td {
+  border-bottom: 0;
+}
+
+.roleTitle {
+  display: block;
+  font-weight: 600;
+  line-height: 16px;
+  color: var(--foreground);
+}
+
+.roleTitle:hover {
+  color: var(--primary);
+}
+
+.roleMeta {
+  padding-top: 4px;
+  font-size: 10px;
+  line-height: 13.333px;
+  color: var(--muted-foreground);
+}
+
+.muted {
+  color: var(--muted-foreground);
+}
+
+.relevant {
+  color: var(--ring);
+}
+
+.relevant:hover {
+  text-decoration: underline;
+}
+
+.actions {
+  display: flex;
+  gap: 4px;
+}
+
+.menuPanel {
+  min-width: 192px;
+}
+
+.menu {
+  padding: 6px;
+}
+
+.menuItem {
+  display: block;
+  width: 100%;
+  padding: 9px 10px;
+  border: 0;
+  border-radius: var(--radius-lg);
+  background: transparent;
+  font-size: 12px;
+  line-height: 16px;
+  text-align: left;
+  color: var(--foreground);
+}
+
+.menuItem:hover {
+  background: var(--muted);
+}
+
+.menuDanger {
+  color: var(--destructive);
+}

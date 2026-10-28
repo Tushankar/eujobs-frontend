@@ -1,0 +1,21 @@
+.results {
+  padding-top: 32px;
+}
+
+.table {
+  --table-row-height: 57px;
+  --table-cell-padding: 0 24px;
+}
+
+.strong {
+  font-size: 12px;
+  font-weight: 600;
+  line-height: 16px;
+  color: var(--foreground);
+}
+
+.muted {
+  font-size: 12px;
+  line-height: 16px;
+  color: var(--muted-foreground);
+}

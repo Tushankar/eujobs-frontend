@@ -1,0 +1,35 @@
+.list {
+  margin-top: 20px;
+  list-style: none;
+}
+
+.row {
+  display: flex;
+  align-items: flex-start;
+  justify-content: space-between;
+  gap: 24px;
+  padding: 20px 0;
+  border-bottom: 1px solid var(--border);
+}
+
+.row:last-child {
+  border-bottom: 0;
+}
+
+.text {
+  max-width: 512px;
+}
+
+.label {
+  font-size: 12px;
+  font-weight: 600;
+  line-height: 16px;
+  color: var(--foreground);
+}
+
+.description {
+  padding-top: 8px;
+  font-size: 11px;
+  line-height: 24px;
+  color: var(--muted-foreground);
+}

@@ -1,0 +1,73 @@
+.link {
+  font-size: 12px;
+  font-weight: 600;
+  line-height: 16px;
+  color: var(--primary);
+}
+
+.link:hover {
+  text-decoration: underline;
+}
+
+.body {
+  padding-top: 20px;
+}
+
+.filter {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: 8px;
+  padding-bottom: 12px;
+  font-size: 12px;
+  line-height: 16px;
+  color: var(--muted-foreground);
+}
+
+.filter strong {
+  color: var(--foreground);
+}
+
+.table {
+  --table-row-height: 77px;
+  --table-header-bg: var(--muted);
+}
+
+.person {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+}
+
+.avatar {
+  display: inline-flex;
+  flex-shrink: 0;
+  align-items: center;
+  justify-content: center;
+  width: 36px;
+  height: 36px;
+  border-radius: var(--radius-full);
+  font-size: 12px;
+  font-weight: 600;
+  line-height: 16px;
+}
+
+.name {
+  font-size: 12px;
+  font-weight: 600;
+  line-height: 16px;
+  color: var(--foreground);
+}
+
+.title {
+  padding-top: 4px;
+  font-size: 10px;
+  line-height: 13.3px;
+  color: var(--muted-foreground);
+}
+
+.outreach {
+  font-size: 12px;
+  line-height: 16px;
+  color: var(--muted-foreground);
+}

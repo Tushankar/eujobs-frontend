@@ -1,0 +1,82 @@
+.list {
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+  list-style: none;
+}
+
+.row {
+  display: flex;
+  align-items: center;
+  gap: 4px;
+  padding: 10px 16px;
+  border: 1.2px solid var(--border);
+  border-radius: var(--radius-xl);
+}
+
+.index {
+  font-size: 12px;
+  line-height: 16px;
+  color: var(--foreground);
+}
+
+.name {
+  flex: 1;
+  min-width: 0;
+  margin-left: 2px;
+  padding: 2px 4px;
+  border: 0;
+  border-radius: var(--radius-md);
+  background: transparent;
+  font-size: 12px;
+  line-height: 16px;
+  color: var(--foreground);
+}
+
+.name:hover {
+  background: var(--muted);
+}
+
+.name:focus {
+  background: var(--card);
+  outline: 2px solid var(--ring);
+}
+
+.name[aria-invalid='true'] {
+  outline: 2px solid var(--destructive);
+}
+
+.reorder {
+  width: 28px;
+  height: 28px;
+  border-radius: var(--radius-lg);
+}
+
+.error {
+  padding: 6px 4px 0;
+  font-size: 12px;
+  line-height: 16px;
+  color: var(--destructive);
+}
+
+.add {
+  display: flex;
+  align-items: flex-start;
+  gap: 12px;
+  padding-top: 20px;
+}
+
+.newName {
+  flex: 1;
+}
+
+.addButton {
+  min-height: 46px;
+}
+
+.note {
+  padding-top: 16px;
+  font-size: 10px;
+  line-height: 20px;
+  color: var(--muted-foreground);
+}

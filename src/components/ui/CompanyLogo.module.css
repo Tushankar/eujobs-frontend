@@ -1,0 +1,29 @@
+.logo {
+  display: inline-flex;
+  flex-shrink: 0;
+  align-items: center;
+  justify-content: center;
+  border-radius: var(--radius-lg);
+  font-weight: 700;
+  object-fit: cover;
+}
+
+.green {
+  background: #e1f1e8;
+  color: #2c6b46;
+}
+
+.orange {
+  background: #fbe9dc;
+  color: #a2511f;
+}
+
+.violet {
+  background: #ebe7f8;
+  color: #5b4ba8;
+}
+
+.blue {
+  background: #e3f0fd;
+  color: #1f5fa8;
+}

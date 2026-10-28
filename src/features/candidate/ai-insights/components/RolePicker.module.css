@@ -1,0 +1,40 @@
+.picker {
+  display: grid;
+  grid-template-columns: repeat(12, minmax(0, 1fr));
+  align-items: center;
+  gap: 20px;
+}
+
+.summary {
+  display: flex;
+  grid-column: span 7;
+  align-items: center;
+  gap: 12px;
+  min-width: 0;
+}
+
+.title {
+  font-family: var(--font-display);
+  font-size: 16px;
+  font-weight: 700;
+  line-height: 24px;
+  color: var(--foreground);
+}
+
+.meta {
+  padding-top: 4px;
+  font-size: 12px;
+  line-height: 16px;
+  color: var(--muted-foreground);
+}
+
+.field {
+  grid-column: span 5;
+}
+
+@media (max-width: 1023px) {
+  .summary,
+  .field {
+    grid-column: 1 / -1;
+  }
+}

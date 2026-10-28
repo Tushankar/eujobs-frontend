@@ -1,0 +1,84 @@
+.pageTitle h1 {
+  padding-top: 0; /* Figma: no eyebrow, so the title sits flush with the top of the block. */
+}
+
+.filters {
+  display: flex;
+  gap: 12px;
+  padding-top: 32px;
+}
+
+.search {
+  width: 288px;
+  flex-shrink: 0;
+}
+
+.stageFilter {
+  width: 192px;
+  flex-shrink: 0;
+}
+
+.table {
+  --table-row-height: 77px;
+  padding-top: 24px;
+}
+
+.candidate {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  width: fit-content;
+  max-width: 100%;
+}
+
+.avatar {
+  font-weight: 600;
+}
+
+.name {
+  font-size: 12px;
+  font-weight: 600;
+  line-height: 16px;
+  color: var(--foreground);
+}
+
+.candidate:hover .name {
+  color: var(--primary-hover);
+}
+
+.cell {
+  font-size: 12px;
+  line-height: 16px;
+  color: var(--muted-foreground);
+}
+
+.profileLink {
+  display: inline-flex;
+  padding: 4px;
+  margin: -4px;
+  border-radius: var(--radius-md);
+  color: var(--primary);
+}
+
+.profileLink:hover {
+  background: var(--accent);
+}
+
+.activity {
+  padding-top: 32px;
+}
+
+.activityBody {
+  padding-top: 20px;
+}
+
+@media (max-width: 719px) {
+  .filters {
+    flex-direction: column;
+  }
+
+  .search,
+  .stageFilter {
+    width: 100%;
+  }
+}

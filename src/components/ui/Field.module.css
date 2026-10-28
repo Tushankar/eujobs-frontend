@@ -1,0 +1,96 @@
+.field {
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+  min-width: 0;
+}
+
+.label {
+  font-size: 12px;
+  font-weight: 600;
+  line-height: 16px;
+  color: var(--text-label);
+}
+
+.control {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  min-height: 46px;
+  padding: 12px 16px;
+  border: 1px solid var(--border);
+  border-radius: var(--radius-xl);
+  background: var(--card);
+  transition:
+    border-color var(--transition),
+    box-shadow var(--transition);
+}
+
+.control:focus-within {
+  border-color: var(--ring);
+  box-shadow: 0 0 0 2px rgba(0, 132, 255, 0.25);
+}
+
+.invalid,
+.invalid:focus-within {
+  border-color: var(--destructive);
+  box-shadow: none;
+}
+
+.disabled {
+  background: var(--muted);
+}
+
+.input {
+  flex: 1;
+  min-width: 0;
+  padding: 0;
+  border: 0;
+  outline: 0;
+  background: transparent;
+  font-size: 14px;
+  line-height: 20px;
+}
+
+.input::placeholder {
+  color: var(--text-placeholder);
+}
+
+.input:disabled {
+  color: var(--muted-foreground);
+  cursor: not-allowed;
+}
+
+.leading,
+.trailing {
+  display: inline-flex;
+  align-items: center;
+  color: var(--text-placeholder);
+}
+
+/* IconButtons sitting in the trailing slot overhang the control's padding, as in the Figma password field. */
+.trailing {
+  margin: -8px -8px -8px 0;
+}
+
+.hint {
+  font-size: 12px;
+  line-height: 16px;
+  color: var(--muted-foreground);
+}
+
+.error {
+  font-size: 12px;
+  line-height: 16px;
+  color: var(--destructive);
+}
+
+textarea.input {
+  min-height: 96px;
+  resize: vertical;
+}
+
+select.input {
+  appearance: none;
+  cursor: pointer;
+}

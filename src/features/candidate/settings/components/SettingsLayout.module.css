@@ -1,0 +1,37 @@
+/* PageTitle always reserves 8px above the h1 for an eyebrow; these frames have none. */
+.title {
+  margin-top: -8px;
+}
+
+.tabs {
+  display: flex;
+  gap: 20px;
+  min-height: 31px;
+  margin-top: 32px;
+  border-bottom: 1px solid var(--border);
+  overflow-x: auto;
+}
+
+.tab {
+  padding-bottom: 12px;
+  border-bottom: 1.5px solid transparent;
+  font-size: 12px;
+  line-height: 16px;
+  white-space: nowrap;
+  color: var(--muted-foreground);
+}
+
+.tab:hover {
+  color: var(--foreground);
+}
+
+.tabActive,
+.tabActive:hover {
+  border-bottom-color: var(--primary);
+  font-weight: 600;
+  color: var(--primary);
+}
+
+.body {
+  margin-top: 24px;
+}

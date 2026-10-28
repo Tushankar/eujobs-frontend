@@ -1,0 +1,317 @@
+/* Shared styles for the four Overview side-rail cards. */
+.card {
+  padding: 20px;
+  border: 1px solid var(--border);
+  border-radius: var(--radius-xl);
+  background: var(--card);
+}
+
+.head {
+  display: flex;
+  align-items: flex-start;
+  justify-content: space-between;
+  gap: 16px;
+}
+
+.cardTitle {
+  font-family: var(--font-display);
+  font-size: 14px;
+  font-weight: 700;
+  line-height: 21px;
+  color: var(--foreground);
+}
+
+.tile {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  width: 28px;
+  height: 28px;
+  border-radius: var(--radius-md);
+  background: var(--accent);
+  color: var(--primary);
+}
+
+.roundTile {
+  display: inline-flex;
+  flex-shrink: 0;
+  align-items: center;
+  justify-content: center;
+  width: 32px;
+  height: 32px;
+  border-radius: var(--radius-full);
+  background: var(--accent);
+  color: var(--primary);
+}
+
+.muted {
+  font-size: 10px;
+  line-height: 15px;
+  color: var(--muted-foreground);
+}
+
+.strong {
+  font-size: 10px;
+  font-weight: 600;
+  line-height: 15px;
+  color: var(--primary);
+}
+
+.meterRow,
+.progressRow {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding-top: 20px;
+}
+
+.lead {
+  padding-top: 12px;
+  font-size: 10px;
+  line-height: 20px;
+  color: var(--muted-foreground);
+}
+
+/* Figma leaves an 18px gap where the strength meter would be. */
+.afterMeter {
+  padding-top: 30px;
+}
+
+.checklist {
+  padding: 16px 0 20px;
+}
+
+.checkItem {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  height: 27px;
+  padding-top: 12px;
+  font-size: 10px;
+  line-height: 15px;
+  color: #727a8b;
+}
+
+.checkItem:first-child {
+  height: 15px;
+  padding-top: 0;
+}
+
+.checkDone {
+  color: #5da27e;
+}
+
+.checkOpen {
+  width: 12px;
+  height: 12px;
+  border: 1px solid #cdd0d9;
+  border-radius: var(--radius-full);
+}
+
+.boost {
+  margin-left: auto;
+  font-size: 9px;
+  line-height: 13.5px;
+  color: #9d91c5;
+}
+
+.cardButton.cardButton {
+  border-color: var(--border);
+  background: var(--card);
+  font-size: 10px;
+  line-height: 15px;
+}
+
+.cardButton.cardButton:hover,
+.verifyButton.verifyButton:hover {
+  background: var(--muted);
+}
+
+.verifyButton.verifyButton {
+  border-color: var(--border);
+  background: var(--card);
+}
+
+.verifyText {
+  max-width: 204px;
+  padding-top: 4px;
+  font-size: 10px;
+  line-height: 20px;
+  color: var(--muted-foreground);
+}
+
+.checks {
+  margin-top: 16px;
+  padding: 16px 0;
+  border-top: 1px solid var(--border);
+  border-bottom: 1px solid var(--border);
+}
+
+.checkRow {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 8px;
+  padding-top: 12px;
+}
+
+.checkRow:first-child {
+  padding-top: 0;
+}
+
+.checkLabel {
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+  font-size: 11px;
+  line-height: 16.5px;
+  color: var(--foreground);
+}
+
+.checkIdle {
+  color: var(--muted-foreground);
+}
+
+.progressRow {
+  padding-top: 16px;
+}
+
+.locked {
+  display: flex;
+  width: fit-content;
+  margin: 40.5px 0 16px;
+}
+
+.insight {
+  padding: 20px;
+  border: 1px solid #e5e0f3;
+  border-radius: var(--radius-xl);
+  background: var(--accent);
+}
+
+.insightHead {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 8px;
+}
+
+.insightLabel {
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+  font-size: 11px;
+  font-weight: 600;
+  line-height: 16.5px;
+  color: var(--primary);
+}
+
+.dismiss {
+  width: 20px;
+  height: 20px;
+  color: #7f8593;
+}
+
+.insightTitle {
+  padding-top: 16px;
+  font-family: var(--font-display);
+  font-size: 16px;
+  font-weight: 700;
+  line-height: 24px;
+  color: var(--foreground);
+}
+
+.insightText {
+  padding-top: 8px;
+  font-size: 10px;
+  line-height: 19px;
+  color: var(--primary-hover);
+}
+
+.insightLink {
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+  padding-top: 16px;
+  font-size: 10px;
+  font-weight: 600;
+  line-height: 15px;
+  color: var(--primary);
+}
+
+.activityTitle {
+  font-family: var(--font-display);
+  font-size: 18px;
+  font-weight: 700;
+  line-height: 27px;
+  letter-spacing: -0.25px;
+  color: var(--foreground);
+}
+
+.openLink {
+  display: inline-flex;
+  color: var(--muted-foreground);
+}
+
+.openLink:hover {
+  color: var(--foreground);
+}
+
+.activityList {
+  display: flex;
+  flex-direction: column;
+  gap: 20px;
+  padding-top: 20px;
+}
+
+.activityRow {
+  display: flex;
+  align-items: flex-start;
+  gap: 12px;
+}
+
+.activityText {
+  display: flex;
+  flex-direction: column;
+  align-items: flex-start;
+  min-width: 0;
+}
+
+.activityRole {
+  font-size: 10px;
+  font-weight: 600;
+  line-height: 15px;
+  color: var(--foreground);
+}
+
+.activityRow:hover .activityRole {
+  color: var(--primary);
+}
+
+.activityCompany {
+  padding: 4px 0 8px;
+  font-size: 9px;
+  line-height: 13.5px;
+  color: var(--muted-foreground);
+}
+
+.activityBadge {
+  padding: 4px 8px;
+}
+
+.trackLink {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 8px;
+  margin-top: 20px;
+  padding-top: 16px;
+  border-top: 1px solid var(--border);
+  font-size: 10px;
+  line-height: 15px;
+  color: var(--muted-foreground);
+}
+
+.trackLink:hover {
+  color: var(--foreground);
+}

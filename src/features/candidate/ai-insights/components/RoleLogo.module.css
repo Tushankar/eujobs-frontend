@@ -1,0 +1,33 @@
+.logo {
+  display: inline-flex;
+  flex-shrink: 0;
+  align-items: center;
+  justify-content: center;
+  border-radius: var(--radius-xl);
+  font-family: var(--font-display);
+  font-weight: 800;
+  line-height: 1;
+}
+
+.serif {
+  font-family: Georgia, 'Times New Roman', serif;
+  font-weight: 700;
+}
+
+/* Round mark with a thin gap near the top, drawn in CSS instead of a Unicode glyph. */
+.mark {
+  position: relative;
+  width: var(--mark-size);
+  height: var(--mark-size);
+  border-radius: var(--radius-full);
+  background: currentColor;
+  overflow: hidden;
+}
+
+.mark::after {
+  content: '';
+  position: absolute;
+  inset: 38% 0 auto;
+  height: 1.5px;
+  background: var(--logo-bg);
+}

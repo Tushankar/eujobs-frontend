@@ -1,0 +1,17 @@
+.button.button {
+  border-color: rgba(0, 132, 255, 0.5);
+  background: var(--card);
+  box-shadow: var(--shadow-segment);
+  color: var(--primary);
+}
+
+.button.button:hover {
+  background: var(--accent);
+}
+
+.button.button:disabled {
+  border-color: var(--border);
+  background: var(--secondary);
+  box-shadow: none;
+  color: var(--text-faint);
+}

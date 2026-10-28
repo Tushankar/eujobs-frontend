@@ -1,0 +1,29 @@
+.avatar {
+  display: inline-flex;
+  flex-shrink: 0;
+  align-items: center;
+  justify-content: center;
+  border-radius: var(--radius-full);
+  font-weight: 700;
+  object-fit: cover;
+}
+
+.peach {
+  background: #f6e7dc;
+  color: #9a5b2e;
+}
+
+.mint {
+  background: #e1f1e8;
+  color: #2c6b46;
+}
+
+.lilac {
+  background: #ebe7f8;
+  color: #5b4ba8;
+}
+
+.sky {
+  background: #e3f0fd;
+  color: #1f5fa8;
+}

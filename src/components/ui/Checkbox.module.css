@@ -1,0 +1,46 @@
+.checkbox {
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+  cursor: pointer;
+  font-size: 12px;
+  line-height: 16px;
+  color: var(--foreground);
+}
+
+.input {
+  position: absolute;
+  opacity: 0;
+  width: 0;
+  height: 0;
+}
+
+.box {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  width: 16px;
+  height: 16px;
+  border: 1px solid #c9ceda;
+  border-radius: 4px;
+  background: var(--card);
+  color: transparent;
+  transition:
+    background-color var(--transition),
+    border-color var(--transition);
+}
+
+.input:checked + .box {
+  border-color: var(--primary);
+  background: var(--primary);
+  color: var(--primary-foreground);
+}
+
+.input:focus-visible + .box {
+  outline: 2px solid var(--ring);
+  outline-offset: 2px;
+}
+
+.input:disabled + .box {
+  opacity: 0.5;
+}

@@ -1,0 +1,51 @@
+.pageTitle.pageTitle {
+  align-items: center;
+}
+
+.chips {
+  padding-top: 32px;
+}
+
+.table {
+  padding-top: 24px;
+}
+
+.opportunity {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+}
+
+.opportunity:hover .title {
+  color: var(--primary);
+}
+
+.title {
+  display: block;
+  font-size: 12px;
+  font-weight: 600;
+  line-height: 16px;
+  color: var(--foreground);
+}
+
+.sub {
+  display: block;
+  padding-top: 4px;
+  font-size: 10px;
+  line-height: 13.3px;
+  color: var(--muted-foreground);
+}
+
+.date {
+  font-size: 12px;
+  line-height: 16px;
+  color: var(--muted-foreground);
+}
+
+.activity.activity {
+  color: #737989;
+}
+
+.activity.activity:hover {
+  color: var(--foreground);
+}

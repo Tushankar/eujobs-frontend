@@ -1,0 +1,14 @@
+.logo {
+  display: inline-flex;
+  flex-shrink: 0;
+  align-items: center;
+  justify-content: center;
+  border-radius: var(--radius-xl);
+  font-family: var(--font-display);
+  font-weight: 800;
+}
+
+.serif {
+  font-family: Georgia, 'Times New Roman', serif;
+  font-weight: 700;
+}

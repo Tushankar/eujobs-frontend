@@ -1,0 +1,36 @@
+.pageTitle h1 {
+  padding-top: 0; /* Figma: no eyebrow, so the title sits flush with the top of the block. */
+}
+
+.summary {
+  display: flex;
+  align-items: center;
+  flex-wrap: wrap;
+  gap: 12px;
+  padding-top: 32px;
+}
+
+.chip {
+  padding: 8px 12px;
+  border: 1.2px solid var(--border);
+  border-radius: var(--radius-md);
+  background: var(--card);
+  font-size: 11px;
+  line-height: 16.5px;
+  color: var(--muted-foreground);
+}
+
+.count {
+  font-size: 11px;
+  line-height: 16.5px;
+  color: var(--muted-foreground);
+}
+
+/* Wide board: scrolls sideways inside the page, bleeding 4px past the content column like the Figma frame. */
+.board {
+  display: flex;
+  gap: 16px;
+  margin: 20px -4px 0;
+  padding: 0 4px 32px;
+  overflow-x: auto;
+}

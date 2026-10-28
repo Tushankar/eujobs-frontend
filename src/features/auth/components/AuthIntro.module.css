@@ -1,0 +1,24 @@
+.eyebrow {
+  padding: 5px 0 4px;
+  font-size: 10px;
+  line-height: 15px;
+  letter-spacing: 1px;
+  text-transform: uppercase;
+  color: var(--primary);
+}
+
+.title {
+  padding-top: 12px;
+  font-family: var(--font-display);
+  font-size: 32px;
+  font-weight: 800;
+  line-height: 48px;
+  color: var(--foreground);
+}
+
+.lead {
+  padding-top: 12px;
+  font-size: 12px;
+  line-height: 24px;
+  color: var(--muted-foreground);
+}

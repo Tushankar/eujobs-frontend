@@ -1,0 +1,229 @@
+.card {
+  display: flex;
+  flex-direction: column;
+  min-width: 0;
+  padding: 24px;
+  border: 1px solid var(--border);
+  border-radius: var(--radius-xl);
+  background: var(--card);
+}
+
+.head {
+  display: flex;
+  align-items: flex-start;
+  justify-content: space-between;
+  gap: 16px;
+}
+
+.controls {
+  display: flex;
+  align-items: flex-start;
+  gap: 14px;
+}
+
+.toggle {
+  display: flex;
+  height: 28px;
+  padding: 3px 4px;
+  border: 1px solid var(--border);
+  border-radius: var(--radius-lg);
+  background: var(--card);
+}
+
+.toggleButton {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  padding: 3px 10px;
+  border: 0;
+  border-radius: var(--radius-md);
+  background: transparent;
+  color: var(--text-faint);
+}
+
+.toggleButton:hover {
+  color: var(--foreground);
+}
+
+.toggleActive,
+.toggleActive:hover {
+  padding: 3px 9px;
+  background: var(--primary);
+  box-shadow: var(--shadow-segment);
+  color: var(--primary-foreground);
+}
+
+/* Figma's "chart bar outline" glyph is not in Lucide: drawn from the exported SVG as a mask. */
+.barsIcon {
+  width: 12px;
+  height: 12px;
+  background: currentColor;
+  mask: url('../../../../assets/icons/overview-chart-bars.svg') center / contain no-repeat;
+}
+
+.period {
+  position: relative;
+  display: block;
+}
+
+.select {
+  height: 28px;
+  padding: 0 24px 0 12px;
+  border: 1px solid var(--border);
+  border-radius: var(--radius-md);
+  background: var(--card);
+  font-size: 10px;
+  color: var(--muted-foreground);
+  appearance: none;
+  cursor: pointer;
+}
+
+.chevron {
+  position: absolute;
+  top: 9px;
+  right: 8px;
+  color: var(--muted-foreground);
+  pointer-events: none;
+}
+
+.legend {
+  display: flex;
+  gap: 20px;
+  padding-top: 20px;
+}
+
+.legendItem {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  font-size: 10px;
+  line-height: 15px;
+  color: var(--muted-foreground);
+}
+
+.swatch {
+  width: 8px;
+  height: 8px;
+  border-radius: 4px;
+}
+
+.applicationSwatch,
+.applicationBar,
+.applicationDot {
+  background: var(--primary);
+}
+
+.shortlistSwatch,
+.shortlistBar {
+  background: var(--accent);
+}
+
+.chart {
+  margin-top: 20px;
+  border-bottom: 1px solid var(--border);
+}
+
+.plot {
+  position: relative;
+  display: flex;
+  align-items: flex-end;
+  gap: 20px;
+  height: 175px;
+  padding: 0 16px;
+}
+
+.plotLine {
+  gap: 0;
+}
+
+.column {
+  display: flex;
+  flex: 1 1 0;
+  align-items: flex-end;
+  justify-content: center;
+  gap: 6px;
+  min-width: 0;
+  height: 100%;
+}
+
+.bar {
+  width: 20px;
+  border-radius: 4px 4px 0 0;
+}
+
+.lineLayer {
+  position: absolute;
+  inset: 0 16px;
+}
+
+.lineSvg {
+  width: 100%;
+  height: 100%;
+  overflow: visible;
+}
+
+.applicationLine,
+.shortlistLine {
+  fill: none;
+  stroke-width: 2;
+  stroke-linejoin: round;
+  vector-effect: non-scaling-stroke;
+}
+
+.applicationLine {
+  stroke: var(--primary);
+}
+
+.shortlistLine {
+  stroke: #99ccff;
+}
+
+.dot {
+  position: absolute;
+  width: 8px;
+  height: 8px;
+  border-radius: 50%;
+  transform: translate(-50%, 50%);
+}
+
+.shortlistDot {
+  background: #99ccff;
+}
+
+.labels {
+  display: flex;
+  gap: 20px;
+  padding: 12px 16px 0;
+}
+
+.labelsLine {
+  gap: 0;
+}
+
+.label {
+  flex: 1 1 0;
+  font-size: 9px;
+  line-height: 13.5px;
+  text-align: center;
+  color: var(--muted-foreground);
+}
+
+@media (max-width: 639px) {
+  .head {
+    flex-direction: column;
+  }
+
+  .plot,
+  .labels {
+    gap: 8px;
+    padding-inline: 4px;
+  }
+
+  .bar {
+    width: 10px;
+  }
+
+  .lineLayer {
+    inset-inline: 4px;
+  }
+}

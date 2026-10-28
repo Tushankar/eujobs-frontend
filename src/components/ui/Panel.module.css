@@ -1,0 +1,11 @@
+.panel {
+  min-width: 0;
+  border: 1px solid var(--border);
+  border-radius: var(--radius-xl);
+  background: var(--card);
+}
+
+.selected {
+  border-color: rgba(0, 132, 255, 0.2);
+  background: var(--accent);
+}

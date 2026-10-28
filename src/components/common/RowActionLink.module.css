@@ -1,0 +1,4 @@
+/* Doubled selector: wins over the Button variant colour regardless of stylesheet order. */
+.link.link {
+  color: #737989;
+}

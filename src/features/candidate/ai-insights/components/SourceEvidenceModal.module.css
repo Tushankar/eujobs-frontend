@@ -1,0 +1,47 @@
+.body {
+  display: flex;
+  flex-direction: column;
+  gap: 20px;
+}
+
+.heading {
+  font-size: 12px;
+  font-weight: 600;
+  line-height: 16px;
+  color: var(--foreground);
+}
+
+.list {
+  margin: 8px 0 0;
+  border: 1px solid var(--border);
+  border-radius: var(--radius-xl);
+}
+
+.row {
+  display: grid;
+  grid-template-columns: 140px minmax(0, 1fr);
+  gap: 12px;
+  padding: 10px 14px;
+  font-size: 12px;
+  line-height: 20px;
+}
+
+.row + .row {
+  border-top: 1px solid var(--border);
+}
+
+.row dt {
+  color: var(--muted-foreground);
+}
+
+.row dd {
+  margin: 0;
+  color: var(--foreground);
+}
+
+.actions {
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: flex-end;
+  gap: 12px;
+}

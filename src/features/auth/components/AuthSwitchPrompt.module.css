@@ -1,0 +1,16 @@
+.prompt {
+  padding-top: 28px;
+  font-size: 12px;
+  line-height: 16px;
+  text-align: center;
+  color: var(--muted-foreground);
+}
+
+.link {
+  font-weight: 600;
+  color: var(--primary);
+}
+
+.link:hover {
+  text-decoration: underline;
+}

@@ -1,0 +1,146 @@
+.pageTitle {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: flex-end;
+  justify-content: space-between;
+  gap: 16px;
+}
+
+.title {
+  font-family: var(--font-display);
+  font-size: 34px;
+  font-weight: 800;
+  line-height: 42.5px;
+  letter-spacing: -0.7px;
+  color: var(--foreground);
+}
+
+.lead {
+  padding-top: 8px;
+  font-size: 13px;
+  line-height: 24px;
+  color: var(--muted-foreground);
+}
+
+.panel {
+  margin-top: 32px;
+}
+
+.identity {
+  display: flex;
+  align-items: center;
+  gap: 16px;
+}
+
+.logo {
+  display: inline-flex;
+  flex-shrink: 0;
+  align-items: center;
+  justify-content: center;
+  width: 64px;
+  height: 64px;
+  border-radius: var(--radius-xl);
+  background: var(--accent);
+  font-family: var(--font-display);
+  font-size: 24px;
+  font-weight: 700;
+  line-height: 32px;
+  color: var(--primary);
+}
+
+.companyName {
+  font-family: var(--font-display);
+  font-size: 20px;
+  font-weight: 700;
+  line-height: 28px;
+  color: var(--foreground);
+}
+
+.badgeRow {
+  display: flex;
+  align-items: center;
+  min-height: 24px;
+}
+
+/* Figma uses a slightly different green and weight than the stock green Badge. */
+.badgeRow .demoBadge {
+  padding: 4px 8px;
+  background: #edf7f1;
+  font-weight: 500;
+  line-height: 15px;
+  color: #398460;
+}
+
+.form {
+  display: flex;
+  flex-direction: column;
+  gap: 24px;
+  margin-top: 16px;
+}
+
+/* Filled values read in the label grey, as in the Figma frame. */
+.form input,
+.form select,
+.form textarea {
+  color: var(--text-label);
+}
+
+.grid {
+  display: grid;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  align-items: start;
+  gap: 20px;
+}
+
+/* Figma's select: value indented 4px more, chevron is a 10x6 label-grey stroke (ChevronDown at 20px). */
+.grid select {
+  padding-left: 4px;
+}
+
+.grid select + span {
+  color: var(--text-label);
+}
+
+.grid select + span svg {
+  width: 20px;
+  height: 20px;
+}
+
+/* In Figma the description field is 701px wide inside the 1061px form column. */
+.description {
+  max-width: 701px;
+}
+
+.form textarea[name='description'] {
+  min-height: 120px;
+}
+
+.actions {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: 16px;
+}
+
+.success {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  font-size: 12px;
+  font-weight: 500;
+  line-height: 16px;
+  color: var(--success-fg);
+}
+
+@media (max-width: 1023px) {
+  .grid {
+    grid-template-columns: minmax(0, 1fr);
+  }
+}
+
+@media (max-width: 639px) {
+  .title {
+    font-size: 28px;
+    line-height: 36px;
+  }
+}

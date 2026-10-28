@@ -1,0 +1,32 @@
+.row {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 8px;
+}
+
+.chip {
+  padding: 8px 16px;
+  border: 1px solid var(--border);
+  border-radius: var(--radius-xl);
+  background: var(--card);
+  font-size: 12px;
+  line-height: 16px;
+  color: var(--muted-foreground);
+  transition:
+    background-color var(--transition),
+    border-color var(--transition),
+    color var(--transition);
+}
+
+.chip:hover {
+  border-color: #cdd0d9;
+  color: var(--foreground);
+}
+
+.active,
+.active:hover {
+  border-color: #bbdeff;
+  background: var(--accent);
+  font-weight: 600;
+  color: var(--primary);
+}

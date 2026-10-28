@@ -1,0 +1,48 @@
+.root {
+  position: relative;
+  display: inline-flex;
+  align-items: center;
+  max-width: 100%;
+}
+
+.select {
+  width: 100%;
+  appearance: none;
+  border: 1.2px solid var(--border);
+  background: var(--card);
+  cursor: pointer;
+  transition: border-color var(--transition);
+}
+
+.select:hover {
+  border-color: #cdd0d9;
+}
+
+.chevron {
+  position: absolute;
+  top: 50%;
+  right: 4px;
+  transform: translateY(-50%);
+  color: var(--muted-foreground);
+  pointer-events: none;
+}
+
+.table .select {
+  height: 31px;
+  padding: 0 28px 0 12px;
+  border-radius: var(--radius-md);
+  font-size: 11px;
+  color: var(--foreground);
+}
+
+.card {
+  display: flex;
+}
+
+.card .select {
+  height: 32px;
+  padding: 0 28px 0 12px;
+  border-radius: 4px;
+  font-size: 10px;
+  color: var(--muted-foreground);
+}

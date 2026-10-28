@@ -1,0 +1,7 @@
+/* Figma shows the unavailable state as the primary button at 40% opacity */
+.button.button:disabled:not([aria-busy='true']) {
+  background: var(--primary);
+  color: var(--primary-foreground);
+  box-shadow: var(--shadow-button);
+  opacity: 0.4;
+}

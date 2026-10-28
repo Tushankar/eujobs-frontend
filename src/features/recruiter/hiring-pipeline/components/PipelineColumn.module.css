@@ -1,0 +1,74 @@
+.column {
+  flex: 0 0 252px;
+  align-self: flex-start;
+  min-height: 384px;
+  padding: 12px;
+  border: 1.2px solid var(--border);
+  border-radius: var(--radius-xl);
+  background: #f1f3f7;
+  transition: border-color var(--transition);
+}
+
+.dropTarget {
+  border-color: var(--primary);
+  background: var(--accent);
+}
+
+.header {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  padding: 8px 4px;
+}
+
+.dot {
+  width: 6px;
+  height: 6px;
+  border-radius: var(--radius-full);
+}
+
+.neutral {
+  background: #939aa9;
+}
+
+.primary {
+  background: var(--primary);
+}
+
+.success {
+  background: #5b9d7a;
+}
+
+.name {
+  flex: 1;
+  min-width: 0;
+  font-family: var(--font-body);
+  font-size: 12px;
+  font-weight: 600;
+  line-height: 16px;
+  color: var(--foreground);
+}
+
+.count {
+  padding: 2px 8px;
+  border-radius: 4px;
+  background: var(--card);
+  font-size: 10px;
+  line-height: 15px;
+  color: var(--muted-foreground);
+}
+
+.cards {
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+  padding-top: 16px;
+}
+
+.empty {
+  padding-top: 32px;
+  font-size: 10px;
+  line-height: 20px;
+  text-align: center;
+  color: #a1a6b3;
+}

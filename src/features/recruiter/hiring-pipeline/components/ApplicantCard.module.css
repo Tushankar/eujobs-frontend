@@ -1,0 +1,68 @@
+.card {
+  display: flex;
+  flex-direction: column;
+  padding: 16px;
+  border: 1.2px solid var(--border);
+  border-radius: var(--radius-xl);
+  background: var(--card);
+  box-shadow: 0 2px 1.5px rgba(32, 37, 52, 0.01);
+  cursor: grab;
+}
+
+.dragging {
+  opacity: 0.5;
+}
+
+.head {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+}
+
+.avatar {
+  font-weight: 600;
+}
+
+.name {
+  font-size: 12px;
+  font-weight: 600;
+  line-height: 16px;
+  color: var(--foreground);
+}
+
+.name:hover {
+  color: var(--primary-hover);
+}
+
+.role,
+.meta {
+  font-size: 10px;
+  line-height: 15px;
+  color: var(--muted-foreground);
+}
+
+.role {
+  padding-top: 12px;
+}
+
+.meta {
+  padding: 8px 0 12px;
+}
+
+.footer {
+  display: flex;
+  flex-direction: column;
+  margin-top: 16px;
+  padding-top: 12px;
+  border-top: 1.2px solid var(--border);
+}
+
+.activity {
+  display: flex;
+  align-items: center;
+  gap: 4px;
+  padding-top: 8px;
+  font-size: 9px;
+  line-height: 13.5px;
+  color: #a0a5b1;
+}
