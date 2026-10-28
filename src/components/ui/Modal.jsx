@@ -54,14 +54,6 @@ export default function Modal({ open, onClose, title, description, children, foo
   const descriptionId = useId()
   const { mounted, closing } = usePresence(open, EXIT_MS)
 
-  // Callers usually clear the data behind a dialog (the selected item, its title) as they close it, so the
-  // exit animation keeps showing what the dialog last had instead of collapsing to an empty shell.
-  const [lastOpen, setLastOpen] = useState({ title, description, children, footer })
-  useEffect(() => {
-    if (open) setLastOpen({ title, description, children, footer })
-  }, [open, title, description, children, footer])
-  const shown = open ? { title, description, children, footer } : lastOpen
-
   useEffect(() => {
     if (!open) return undefined
     const opener = document.activeElement
@@ -110,29 +102,23 @@ export default function Modal({ open, onClose, title, description, children, foo
         ref={dialogRef}
         role="dialog"
         aria-modal="true"
-        aria-labelledby={shown.title ? titleId : undefined}
-        aria-describedby={shown.description ? descriptionId : undefined}
+        aria-labelledby={title ? titleId : undefined}
+        aria-describedby={description ? descriptionId : undefined}
         tabIndex={-1}
         className={cx(styles.dialog, divided && styles.divided, className)}
         style={{ maxWidth: width }}
       >
-        <header className={styles.header}>
-          <div>
-            {shown.title && (
-              <h2 className={styles.title} id={titleId}>
-                {shown.title}
-              </h2>
-            )}
-            {shown.description && (
-              <p className={styles.description} id={descriptionId}>
-                {shown.description}
-              </p>
-            )}
-          </div>
-          <IconButton icon={X} label="Close dialog" onClick={onClose} />
-        </header>
-        <div className={styles.body}>{shown.children}</div>
-        {shown.footer && <footer className={styles.footer}>{shown.footer}</footer>}
+        <DialogContent
+          title={title}
+          titleId={titleId}
+          description={description}
+          descriptionId={descriptionId}
+          footer={footer}
+          onClose={onClose}
+          frozen={closing}
+        >
+          {children}
+        </DialogContent>
       </div>
     </div>,
     document.body,
