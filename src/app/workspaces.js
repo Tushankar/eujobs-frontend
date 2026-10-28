@@ -94,7 +94,7 @@ export const WORKSPACES = {
       { label: 'Jobs', to: 'jobs', icon: BriefcaseBusiness },
       { label: 'Applications', to: 'applications', icon: FileText },
       { label: 'Recruitment', to: 'recruitment', icon: Layers },
-      { label: 'Access Management', to: 'access-management', iconSrc: accessManagementIcon },
+      { label: 'Access Management', to: 'access-management', iconSrc: accessManagementIcon, activeIcon: ShieldCheck },
       { label: 'Courses', to: 'courses', icon: BookOpen },
       { label: 'AI & matching', to: 'ai-matching', iconSrc: aiNavIcon },
       { label: 'Analytics', to: 'analytics', icon: TrendingUp },

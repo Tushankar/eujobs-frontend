@@ -199,6 +199,15 @@
   border-radius: var(--radius-full);
 }
 
+/* Recruiter frames draw the avatar at x=28 with the name at x=72 (no 4px inset); the block is 4px shorter. */
+.sidebar[data-workspace='recruiter'] .user {
+  padding-block: 18px;
+}
+
+.sidebar[data-workspace='recruiter'] .avatar {
+  padding: 4px 0;
+}
+
 .userText {
   flex: 1;
   min-width: 0;

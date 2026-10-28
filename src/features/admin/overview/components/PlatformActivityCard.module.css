@@ -109,6 +109,16 @@
   margin-top: 20px;
 }
 
+/* Figma's line view sits a little higher and its legend is indented 8px */
+.lineView .legend {
+  padding-top: 9px;
+  padding-left: 8px;
+}
+
+.lineView .chart {
+  margin-top: 22px;
+}
+
 .bars {
   display: flex;
   align-items: flex-end;

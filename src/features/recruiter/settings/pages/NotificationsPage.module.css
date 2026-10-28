@@ -1,3 +1,8 @@
+/* The Figma card is 1100px wide (the tab rule above it spans the full 1128px). */
+.card {
+  max-width: 1100px;
+}
+
 .list {
   margin-top: 20px;
   list-style: none;

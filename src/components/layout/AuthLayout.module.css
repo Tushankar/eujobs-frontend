@@ -11,7 +11,7 @@
   display: flex;
   flex-direction: column;
   justify-content: center;
-  padding: 64px;
+  padding: 82px 64px 64px;
   overflow: hidden;
   background: #fff url('@/assets/images/auth-hero.png') 35.8% 0 / cover no-repeat;
 }

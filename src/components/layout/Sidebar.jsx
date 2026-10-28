@@ -19,16 +19,20 @@ function NavItem({ workspace, item }) {
       end={item.end}
       className={({ isActive }) => cx(styles.link, isActive && styles.active)}
     >
-      {item.icon ? (
-        <Icon as={item.icon} size={17} />
-      ) : (
-        <img src={item.iconSrc} alt="" className={styles.customIcon} />
-      )}
-      <span className={styles.linkLabel}>{item.label}</span>
-      {item.badge && (
-        <span className={cx(styles.badge, item.badge.tone === 'ai' && styles.badgeAi)}>
-          {item.badge.useText ? <LiveBadgeText useText={item.badge.useText} /> : item.badge.text}
-        </span>
+      {({ isActive }) => (
+        <>
+          {item.icon || (isActive && item.activeIcon) ? (
+            <Icon as={isActive && item.activeIcon ? item.activeIcon : item.icon} size={17} />
+          ) : (
+            <img src={item.iconSrc} alt="" className={styles.customIcon} />
+          )}
+          <span className={styles.linkLabel}>{item.label}</span>
+          {item.badge && (
+            <span className={cx(styles.badge, item.badge.tone === 'ai' && styles.badgeAi)}>
+              {item.badge.useText ? <LiveBadgeText useText={item.badge.useText} /> : item.badge.text}
+            </span>
+          )}
+        </>
       )}
     </NavLink>
   )

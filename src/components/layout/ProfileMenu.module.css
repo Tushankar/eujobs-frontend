@@ -21,6 +21,11 @@
   top: calc(100% - 2px);
 }
 
+/* The recruiter frame places its menu at y=68 (16px below the avatar). */
+[data-workspace='recruiter'] .panel {
+  top: calc(100% + 16px);
+}
+
 .menu {
   width: 254px;
 }

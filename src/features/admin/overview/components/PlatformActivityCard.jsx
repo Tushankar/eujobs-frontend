@@ -92,7 +92,7 @@ function LineChart({ data }) {
       {TICKS.map((tick) => (
         <g key={tick}>
           {tick > 0 && <line x1={PLOT.left} x2={PLOT.right} y1={yOf(tick)} y2={yOf(tick)} className={styles.grid} />}
-          <text x={PLOT.left - 10} y={yOf(tick)} dy="0.35em" textAnchor="end" className={styles.tick}>
+          <text x={PLOT.left - 6} y={yOf(tick)} dy="0.35em" textAnchor="end" className={styles.tick}>
             {tick}
           </text>
         </g>
@@ -139,7 +139,7 @@ export default function PlatformActivityCard() {
   const summary = `${period.label} activity by day. Registrations: ${data.registrations.join(', ')}. Applications: ${data.applications.join(', ')}.`
 
   return (
-    <Panel padding={24} aria-labelledby="platform-activity-title" className={styles.card}>
+    <Panel padding={24} aria-labelledby="platform-activity-title" className={cx(styles.card, view === 'line' && styles.lineView)}>
       <SectionTitle id="platform-activity-title" title="Platform activity" description="Illustrative registrations and applications">
         <div className={styles.controls}>
           <ViewToggle view={view} onChange={setView} />

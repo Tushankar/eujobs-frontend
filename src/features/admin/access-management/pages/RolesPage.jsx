@@ -1,6 +1,6 @@
 import { useState } from 'react'
 import { useLocation, useNavigate } from 'react-router-dom'
-import { ShieldCheck, SlidersHorizontal, Users } from 'lucide-react'
+import { Settings2, ShieldCheck, Users } from 'lucide-react'
 import EmptyState from '@/components/common/EmptyState.jsx'
 import NoticeBanner from '@/components/common/NoticeBanner.jsx'
 import StatCard from '@/components/common/StatCard.jsx'
@@ -50,7 +50,7 @@ export default function RolesPage() {
 
       <div className={styles.stats}>
         <StatCard label="Active roles" value={roles.length} caption="System templates and custom roles" icon={ShieldCheck} />
-        <StatCard label="Custom roles" value={customCount} caption="Reusable roles created by admins" icon={SlidersHorizontal} />
+        <StatCard label="Custom roles" value={customCount} caption="Reusable roles created by admins" icon={Settings2} />
         <StatCard label="Assigned users" value={assignedCount} caption="Users with configured frontend access" icon={Users} />
       </div>
 

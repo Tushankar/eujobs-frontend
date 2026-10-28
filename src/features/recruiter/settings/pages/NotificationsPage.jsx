@@ -11,24 +11,26 @@ export default function NotificationsPage() {
 
   return (
     <SettingsLayout>
-      <SettingsCard title="Useful updates. Less noise.">
-        <ul className={styles.list}>
-          {NOTIFICATION_OPTIONS.map((option) => (
-            <li key={option.id} className={styles.row}>
-              <div className={styles.text}>
-                <p className={styles.label}>{option.label}</p>
-                <p className={styles.description}>{option.description}</p>
-              </div>
-              <Switch
-                size="lg"
-                label={option.label}
-                checked={preferences[option.id] ?? DEFAULT_NOTIFICATIONS[option.id]}
-                onChange={(checked) => setPreferences((current) => ({ ...current, [option.id]: checked }))}
-              />
-            </li>
-          ))}
-        </ul>
-      </SettingsCard>
+      <div className={styles.card}>
+        <SettingsCard title="Useful updates. Less noise.">
+          <ul className={styles.list}>
+            {NOTIFICATION_OPTIONS.map((option) => (
+              <li key={option.id} className={styles.row}>
+                <div className={styles.text}>
+                  <p className={styles.label}>{option.label}</p>
+                  <p className={styles.description}>{option.description}</p>
+                </div>
+                <Switch
+                  size="lg"
+                  label={option.label}
+                  checked={preferences[option.id] ?? DEFAULT_NOTIFICATIONS[option.id]}
+                  onChange={(checked) => setPreferences((current) => ({ ...current, [option.id]: checked }))}
+                />
+              </li>
+            ))}
+          </ul>
+        </SettingsCard>
+      </div>
     </SettingsLayout>
   )
 }
