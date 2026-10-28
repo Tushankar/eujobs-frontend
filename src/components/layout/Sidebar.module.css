@@ -17,10 +17,6 @@
   display: none;
 }
 
-.sidebar[data-workspace='candidate'] {
-  --nav-active-bg: #edf2fd;
-}
-
 .brand {
   display: block;
   padding: 26px 20px;

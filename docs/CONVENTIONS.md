@@ -16,11 +16,11 @@ src/
   app/            router.jsx, App.jsx, workspaces.js (nav + identity per role), lazyPage.js, NotFoundPage
   assets/         images/ (photos, logos, avatars), icons/ (custom Figma glyphs that are not in Lucide)
   components/
-    ui/           DS primitives: Button, IconButton, Badge, Avatar, CompanyLogo, Panel, TextField,
+    ui/           DS primitives: Button, IconButton, Avatar, CompanyLogo, Panel, TextField,
                   PasswordField, TextareaField, SelectField, Checkbox, Switch, Modal, Dropdown, Icon
     layout/       AuthLayout, WorkspaceLayout (Sidebar + Header + ProfileMenu + footer), GlobalSearch
-    common/       generic, reusable-across-features components built on top of ui/ (tables, tabs, page
-                  headers, stat cards...). Create here when a component is (or will clearly be) used by
+    common/       generic, reusable-across-features components built on top of ui/ (PillBadge — the one
+                  badge, DataTable, SegmentedTabs/ViewToggle, PageTitle, StatCard, EmptyState, ConfirmDialog...). Create here when a component is (or will clearly be) used by
                   more than one feature.
   features/
     auth/                 public routes (sign in / up, recruiter onboarding)
