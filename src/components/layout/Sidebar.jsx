@@ -46,7 +46,7 @@ export default function Sidebar({ workspace, open, onClose }) {
 
   return (
     <>
-      {open && <div className={styles.scrim} onClick={onClose} aria-hidden="true" />}
+      <div className={cx(styles.scrim, open && styles.scrimOpen)} onClick={onClose} aria-hidden="true" />
       <aside
         id="workspace-sidebar"
         className={cx(styles.sidebar, open && styles.open)}
@@ -59,7 +59,7 @@ export default function Sidebar({ workspace, open, onClose }) {
 
         <div className={styles.navArea}>
           <p className={styles.sectionLabel}>Workspace</p>
-          <nav className={styles.nav} aria-label="Workspace">
+          <nav className={cx(styles.nav, 'stagger')} aria-label="Workspace">
             {workspace.nav.map((item) => (
               <NavItem key={item.label} workspace={workspace} item={item} />
             ))}

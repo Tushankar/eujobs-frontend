@@ -1,6 +1,7 @@
 import { useState } from 'react'
 import { Outlet, useLocation } from 'react-router-dom'
 import { WORKSPACES } from '@/app/workspaces.js'
+import { cx } from '@/utils/cx.js'
 import Header from './Header.jsx'
 import Sidebar from './Sidebar.jsx'
 import { WorkspacePreferencesProvider } from './WorkspacePreferences.jsx'
@@ -20,7 +21,8 @@ export default function WorkspaceLayout({ workspaceId }) {
       <div className={styles.platform}>
         <Header workspace={workspace} onOpenMenu={() => setDrawerPath(pathname)} />
         <main className={styles.main}>
-          <div className={styles.content} key={pathname}>
+          {/* Keyed by path so each page's sections cascade in again on navigation (utilities.css). */}
+          <div className={cx(styles.content, 'stagger-page')} key={pathname}>
             <Outlet context={{ workspace }} />
           </div>
           <footer className={styles.footer}>

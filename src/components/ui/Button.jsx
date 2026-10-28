@@ -36,7 +36,7 @@ export default function Button({
     >
       {loading ? <Icon as={LoaderCircle} size={14} className={styles.spinner} /> : leftIcon}
       {children}
-      {!loading && rightIcon}
+      {!loading && rightIcon && <span className={styles.trailing}>{rightIcon}</span>}
     </Component>
   )
 }

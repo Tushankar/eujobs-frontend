@@ -249,7 +249,7 @@
 @media (max-width: 1023px) {
   .sidebar {
     transform: translateX(-100%);
-    transition: transform 200ms ease;
+    transition: transform var(--duration-slow) var(--ease-out);
     box-shadow: var(--shadow-popover);
   }
 
@@ -257,11 +257,20 @@
     transform: translateX(0);
   }
 
+  /* Always mounted so it can fade out with the drawer; inert while closed. */
   .scrim {
     position: fixed;
     inset: 0;
     z-index: 39;
     display: block;
     background: var(--backdrop);
+    opacity: 0;
+    pointer-events: none;
+    transition: opacity var(--duration-slow) var(--ease-out);
+  }
+
+  .scrimOpen {
+    opacity: 1;
+    pointer-events: auto;
   }
 }

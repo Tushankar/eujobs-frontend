@@ -17,11 +17,24 @@
     background-color var(--transition),
     border-color var(--transition),
     color var(--transition),
+    box-shadow var(--transition),
     transform var(--transition);
 }
 
 .button:active {
   transform: scale(0.98);
+}
+
+/* Trailing arrows lean into the direction of travel on hover. */
+.trailing {
+  display: inline-flex;
+  transition: transform var(--duration-base) var(--ease-out);
+}
+
+@media (hover: hover) and (prefers-reduced-motion: no-preference) {
+  .button:hover .trailing {
+    transform: translateX(3px);
+  }
 }
 
 .button:disabled,
@@ -53,6 +66,14 @@
 
 .primary:hover {
   background: var(--primary-hover);
+}
+
+/* Primary lifts a pixel on a soft blue glow; pressing it (below) drops it back. */
+@media (hover: hover) and (prefers-reduced-motion: no-preference) {
+  .primary:hover:not(:active) {
+    box-shadow: 0 8px 18px -8px rgba(0, 102, 196, 0.6);
+    transform: translateY(-1px);
+  }
 }
 
 .primary:active {
@@ -138,6 +159,22 @@
 @keyframes spin {
   to {
     transform: rotate(360deg);
+  }
+}
+
+/* Swapping the label's icon for the spinner fades it in rather than popping. */
+@media (prefers-reduced-motion: no-preference) {
+  .spinner {
+    animation:
+      spin 0.9s linear infinite,
+      spinner-in var(--duration-base) var(--ease-out);
+  }
+}
+
+@keyframes spinner-in {
+  from {
+    opacity: 0;
+    scale: 0.4;
   }
 }
 

@@ -12,6 +12,20 @@
   backdrop-filter: blur(8px);
 }
 
+/* The shell settles in when a workspace opens (the layout stays mounted between its pages). */
+@media (prefers-reduced-motion: no-preference) {
+  .header {
+    animation: header-in var(--duration-enter) var(--ease-out) backwards;
+  }
+}
+
+@keyframes header-in {
+  from {
+    opacity: 0;
+    transform: translateY(-10px);
+  }
+}
+
 .menuButton {
   display: none;
 }

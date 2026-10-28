@@ -1,8 +1,14 @@
+import { useEffect, useState } from 'react'
 import { Link } from 'react-router-dom'
+import { cx } from '@/utils/cx.js'
 import logo from '@/assets/images/logo.png'
 import brandMark from '@/assets/images/auth-admin-brand-mark.png'
 import aiSparkleWhite from '@/assets/icons/ai-sparkle-white.svg'
 import styles from './AuthLayout.module.css'
+
+// Every auth screen mounts its own AuthLayout, so the hero's intro would replay on each sign-in / sign-up
+// switch. It only plays on the first one of the session; later screens keep the hero still and animate the form.
+let heroIntroPlayed = false
 
 /**
  * Split-screen shell for the Authentication frames: brand hero on the left (720px
@@ -15,9 +21,14 @@ import styles from './AuthLayout.module.css'
  * logoTo       - where the form logo links to
  */
 export default function AuthLayout({ children, hero, showLogo = true, logoTo = '/sign-in' }) {
+  const [playHeroIntro] = useState(() => !heroIntroPlayed)
+  useEffect(() => {
+    heroIntroPlayed = true
+  }, [])
+
   return (
     <div className={styles.layout}>
-      <section className={styles.hero} aria-hidden="true">
+      <section className={cx(styles.hero, playHeroIntro && styles.heroIntro)} aria-hidden="true">
         <div className={styles.heroOverlay} />
         {hero?.brand && (
           <p className={styles.heroBrand}>
@@ -50,7 +61,7 @@ export default function AuthLayout({ children, hero, showLogo = true, logoTo = '
       </section>
 
       <section className={styles.formSection}>
-        <div className={styles.formColumn}>
+        <div className={cx(styles.formColumn, 'stagger')}>
           {showLogo && (
             <Link to={logoTo} className={styles.logo} aria-label="Local Worksmen — AI Job Portal">
               <img src={logo} alt="Local Worksmen, AI Job Portal" width={210} height={50} />

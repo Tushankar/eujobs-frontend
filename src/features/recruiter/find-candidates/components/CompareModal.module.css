@@ -16,8 +16,9 @@
   font-weight: 400;
 }
 
+/* Avatar and name sit on separate rows. `flex` (not `block`) keeps the avatar's initials centred. */
 .person > * {
-  display: block;
+  display: flex;
 }
 
 .name {

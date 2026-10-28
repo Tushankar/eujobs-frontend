@@ -15,3 +15,74 @@
   text-overflow: ellipsis;
   white-space: nowrap;
 }
+
+/*
+ * Entrances. `stagger` cascades its direct children in; `stagger-page` does the same for a routed
+ * page, which renders either one wrapper element or several sibling sections (see WorkspaceLayout).
+ * From the 8th child on they all share the last delay. Put the class on an element that is remounted (keyed)
+ * whenever the content should replay.
+ */
+@media (prefers-reduced-motion: no-preference) {
+  :is(.stagger > *, .stagger-page > :only-child > *, .stagger-page > :not(:only-child)) {
+    animation: rise var(--duration-enter) var(--ease-out) backwards;
+    animation-delay: calc(var(--i, 7) * var(--stagger-step));
+
+    &:nth-child(1) {
+      --i: 0;
+    }
+
+    &:nth-child(2) {
+      --i: 1;
+    }
+
+    &:nth-child(3) {
+      --i: 2;
+    }
+
+    &:nth-child(4) {
+      --i: 3;
+    }
+
+    &:nth-child(5) {
+      --i: 4;
+    }
+
+    &:nth-child(6) {
+      --i: 5;
+    }
+
+    &:nth-child(7) {
+      --i: 6;
+    }
+  }
+
+  /* Bars: put on the filled element of a progress or bar chart so it grows in from its baseline. */
+  .grow-x {
+    transform-origin: left;
+    animation: grow-x 700ms var(--ease-out) 150ms backwards;
+  }
+
+  .grow-y {
+    transform-origin: bottom;
+    animation: grow-y 700ms var(--ease-out) 150ms backwards;
+  }
+}
+
+@keyframes rise {
+  from {
+    opacity: 0;
+    transform: translateY(14px);
+  }
+}
+
+@keyframes grow-x {
+  from {
+    transform: scaleX(0);
+  }
+}
+
+@keyframes grow-y {
+  from {
+    transform: scaleY(0);
+  }
+}

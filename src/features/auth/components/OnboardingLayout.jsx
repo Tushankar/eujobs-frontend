@@ -27,6 +27,11 @@ export default function OnboardingLayout() {
 
   const currentId = pathname.replace(/\/+$/, '').split('/').pop()
   const currentIndex = ONBOARDING_STEPS.findIndex((step) => step.id === currentId)
+  // Moving back slides the next step in from the left, moving forward from the right.
+  const [travel, setTravel] = useState({ index: currentIndex, direction: 'forward' })
+  if (travel.index !== currentIndex) {
+    setTravel({ index: currentIndex, direction: currentIndex < travel.index ? 'back' : 'forward' })
+  }
   const firstOpenIndex = ONBOARDING_STEPS.findIndex((step, index) => index < REVIEW_INDEX && !completed.includes(step.id))
   const furthestIndex = firstOpenIndex === -1 ? REVIEW_INDEX : firstOpenIndex
 
@@ -80,7 +85,7 @@ export default function OnboardingLayout() {
                     aria-current={state === 'current' ? 'step' : undefined}
                   >
                     <span className={cx(styles.marker, styles[`marker_${state}`])}>
-                      {state === 'done' ? <Icon as={Check} size={13} strokeWidth={2.2} /> : index + 1}
+                      {state === 'done' ? <Icon as={Check} size={13} strokeWidth={2.2} className={styles.markerCheck} /> : index + 1}
                     </span>
                     <span>
                       <span className={cx(styles.stepLabel, styles[`label_${state}`])}>{step.label}</span>
@@ -108,10 +113,10 @@ export default function OnboardingLayout() {
         <section className={styles.card}>
           <div className={styles.cardHeader}>
             <div className={styles.progressRow}>
-              <p className={styles.stepCount}>
+              <p className={styles.stepCount} key={currentIndex}>
                 Step {currentIndex + 1} of {ONBOARDING_STEPS.length}
               </p>
-              <span className={cx(styles.percentBadge, isLastStep && styles.percentBadgeReview)}>
+              <span className={cx(styles.percentBadge, isLastStep && styles.percentBadgeReview)} key={`percent-${currentIndex}`}>
                 {percent}% complete
               </span>
             </div>
@@ -123,10 +128,10 @@ export default function OnboardingLayout() {
               aria-valuemax={100}
               aria-valuenow={percent}
             >
-              <div className={styles.fill} style={{ width: `${percent}%` }} />
+              <div className={cx(styles.fill, 'grow-x')} style={{ width: `${percent}%` }} />
             </div>
           </div>
-          <div className={styles.cardBody}>
+          <div className={styles.cardBody} key={currentId} data-direction={travel.direction}>
             <Outlet context={{ data, saveData, completed, completeStep, secrets, saveSecrets }} />
           </div>
         </section>
