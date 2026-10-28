@@ -73,6 +73,43 @@
   margin: -8px -8px -8px 0;
 }
 
+/* Feedback line (hint / error). Collapsed it takes no space: the -8px margin cancels the field's gap. */
+.feedback {
+  display: grid;
+  grid-template-rows: 0fr;
+  margin-top: -8px;
+  opacity: 0;
+  transition:
+    grid-template-rows var(--duration-base) var(--ease-out),
+    margin-top var(--duration-base) var(--ease-out),
+    opacity var(--transition);
+}
+
+.feedback[data-open='true'] {
+  grid-template-rows: 1fr;
+  margin-top: 0;
+  opacity: 1;
+}
+
+.feedbackInner {
+  min-height: 0;
+  overflow: hidden;
+}
+
+@keyframes feedback-in {
+  from {
+    grid-template-rows: 0fr;
+    margin-top: -8px;
+    opacity: 0;
+  }
+}
+
+@media (prefers-reduced-motion: no-preference) {
+  .feedback[data-open='true']:not(.instant) {
+    animation: feedback-in var(--duration-base) var(--ease-out);
+  }
+}
+
 .hint {
   font-size: 12px;
   line-height: 16px;
@@ -83,6 +120,18 @@
   font-size: 12px;
   line-height: 16px;
   color: var(--destructive);
+}
+
+@media (prefers-reduced-motion: no-preference) {
+  .error {
+    animation: error-in var(--duration-base) var(--ease-out);
+  }
+}
+
+@keyframes error-in {
+  from {
+    transform: translateY(-4px);
+  }
 }
 
 textarea.input {

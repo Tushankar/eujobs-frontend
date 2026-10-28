@@ -1,3 +1,10 @@
+/* Anchored near the top instead of centred, so filtering the list never moves the search box. */
+.palette.palette {
+  align-self: flex-start;
+  margin-top: 12vh;
+  max-height: calc(100vh - 12vh - 24px);
+}
+
 .inputWrap {
   display: flex;
   align-items: center;

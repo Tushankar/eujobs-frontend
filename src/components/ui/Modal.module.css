@@ -22,6 +22,29 @@
   outline: 0;
 }
 
+@media (prefers-reduced-motion: no-preference) {
+  .backdrop {
+    animation: modal-fade var(--duration-base) var(--ease-out);
+  }
+
+  .dialog {
+    animation: modal-rise var(--duration-slow) var(--ease-out);
+  }
+}
+
+@keyframes modal-fade {
+  from {
+    opacity: 0;
+  }
+}
+
+@keyframes modal-rise {
+  from {
+    opacity: 0;
+    transform: translateY(12px) scale(0.98);
+  }
+}
+
 .header {
   display: flex;
   align-items: flex-start;

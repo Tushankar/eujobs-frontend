@@ -27,13 +27,18 @@
   color: transparent;
   transition:
     background-color var(--transition),
-    border-color var(--transition);
+    border-color var(--transition),
+    transform var(--transition);
 }
 
 .input:checked + .box {
   border-color: var(--primary);
   background: var(--primary);
   color: var(--primary-foreground);
+}
+
+.checkbox:active .input:not(:disabled) + .box {
+  transform: scale(0.9);
 }
 
 .input:focus-visible + .box {

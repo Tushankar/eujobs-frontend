@@ -64,7 +64,12 @@
   --sidebar-width: 232px;
   --header-height: 72px;
   --content-padding: 40px;
-  --transition: 150ms ease;
+  --transition: 180ms var(--ease-out);
+
+  /* Motion: one decelerating curve for everything that enters or responds, so the UI feels like one system. */
+  --ease-out: cubic-bezier(0.22, 1, 0.36, 1);
+  --duration-base: 240ms;
+  --duration-slow: 320ms;
 }
 
 @media (max-width: 1023px) {

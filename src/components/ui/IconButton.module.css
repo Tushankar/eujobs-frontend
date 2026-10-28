@@ -12,7 +12,8 @@
   color: var(--muted-foreground);
   transition:
     background-color var(--transition),
-    color var(--transition);
+    color var(--transition),
+    transform var(--transition);
 }
 
 .iconButton:hover {
@@ -22,6 +23,7 @@
 
 .iconButton:active {
   background: var(--secondary);
+  transform: scale(0.94);
 }
 
 .iconButton:disabled {

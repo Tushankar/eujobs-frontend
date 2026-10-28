@@ -16,7 +16,12 @@
   transition:
     background-color var(--transition),
     border-color var(--transition),
-    color var(--transition);
+    color var(--transition),
+    transform var(--transition);
+}
+
+.button:active {
+  transform: scale(0.98);
 }
 
 .button:disabled,

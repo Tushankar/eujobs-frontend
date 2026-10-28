@@ -34,7 +34,14 @@ export default function GlobalSearch({ workspace, open, onClose }) {
   }
 
   return (
-    <Modal open={open} onClose={close} title="Search anything" description="Jump to a page in this workspace." width={520}>
+    <Modal
+      open={open}
+      onClose={close}
+      title="Search anything"
+      description="Jump to a page in this workspace."
+      width={520}
+      className={styles.palette}
+    >
       <form
         onSubmit={(event) => {
           event.preventDefault()

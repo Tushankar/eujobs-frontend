@@ -6,6 +6,9 @@
 
 html {
   -webkit-text-size-adjust: 100%;
+  /* Reserve the scrollbar's width so the page doesn't shift sideways when content grows past the
+     viewport (live search, validation) or a modal locks scrolling. */
+  scrollbar-gutter: stable;
 }
 
 body {
