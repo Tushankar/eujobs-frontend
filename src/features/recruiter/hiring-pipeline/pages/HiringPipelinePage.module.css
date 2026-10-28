@@ -1,7 +1,3 @@
-.pageTitle h1 {
-  padding-top: 0; /* Figma: no eyebrow, so the title sits flush with the top of the block. */
-}
-
 .summary {
   display: flex;
   align-items: center;

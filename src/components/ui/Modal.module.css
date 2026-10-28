@@ -6,8 +6,8 @@
   align-items: center;
   justify-content: center;
   padding: 24px;
-  background: var(--backdrop);
-  backdrop-filter: blur(4px);
+  background: var(--modal-backdrop);
+  backdrop-filter: blur(var(--modal-blur));
 }
 
 .dialog {

@@ -4,5 +4,12 @@
   "rules": {
     "react/rules-of-hooks": "error",
     "react/only-export-components": ["warn", { "allowConstantExport": true }]
-  }
+  },
+  "overrides": [
+    {
+      // routes.jsx files export route-config arrays (not components) and are collected with import.meta.glob.
+      "files": ["**/routes.jsx"],
+      "rules": { "react/only-export-components": "off" }
+    }
+  ]
 }

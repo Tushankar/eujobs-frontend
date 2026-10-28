@@ -53,7 +53,12 @@
   --shadow-button: 0 2px 1.5px rgba(98, 89, 219, 0.08);
   --shadow-segment: 0 1px 1.5px rgba(0, 0, 0, 0.1), 0 1px 1px rgba(0, 0, 0, 0.1);
   --shadow-popover: 0 20px 25px -5px rgba(0, 0, 0, 0.1), 0 8px 10px -6px rgba(0, 0, 0, 0.1);
-  --backdrop: rgba(32, 37, 52, 0.6);
+  --backdrop: rgba(32, 37, 52, 0.6); /* mobile nav drawer scrim */
+  /* Figma's modal frames show no scrim or blur (sampled pixels under the overlay equal the page colours).
+     The D S page documents ink #20253499 + blur; set --modal-backdrop to var(--backdrop) and
+     --modal-blur to 4px to switch to that recipe. */
+  --modal-backdrop: transparent;
+  --modal-blur: 0;
 
   /* Layout */
   --sidebar-width: 232px;

@@ -4,7 +4,7 @@ import { Check, ChevronDown, ChevronRight, Earth, MapPin, Users } from 'lucide-r
 import { cx } from '@/utils/cx.js'
 import { Dropdown, Icon } from '@/components/ui'
 import { workspacePath } from '@/app/workspaces.js'
-import { LANGUAGES, LOCATIONS, useWorkspacePreferences } from './WorkspacePreferences.jsx'
+import { LANGUAGES, LOCATIONS, useWorkspacePreferences } from './preferencesContext.js'
 import styles from './ProfileMenu.module.css'
 
 /** Avatar dropdown (Figma "Menu - Profile menu"): identity, profile link, location and language rows. */

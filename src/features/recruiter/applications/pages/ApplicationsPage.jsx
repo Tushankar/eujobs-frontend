@@ -79,7 +79,6 @@ export default function ApplicationsPage() {
   return (
     <div>
       <PageTitle
-        className={styles.pageTitle}
         title="Every application deserves a fair look."
         description="Review evidence, move people forward, and keep your process clear."
       />

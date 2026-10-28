@@ -55,7 +55,7 @@ Figma text styles found: Inter 11/12/13/14/15 Regular, Inter 12/14 Semi Bold, Ma
 
 * Gaps favour 8 / 12 / 16 / 24; panel padding 16 / 20 / 24.
 * Radius: `--radius-md` 6 (badges, segmented option), `--radius-lg` 8 (company logo), `--radius-xl` 12 (**panels and — as drawn in the screens — buttons and inputs**; the DS page labels controls `lg`, but every Final frame uses 12), avatar full.
-* Panel: white, 1px `--border`, `radius-xl`; selected/AI variant: `--accent` fill with a 20 % primary border. Shadows are subtle and purposeful: button `0 2px 1.5px rgba(98,89,219,.08)`, segmented-active `0 1px 1.5px rgba(0,0,0,.1)`, popover `0 20px 25px -5px / 0 8px 10px -6px rgba(0,0,0,.1)`. Dialog backdrop: ink `#20253499` + blur.
+* Panel: white, 1px `--border`, `radius-xl`; selected/AI variant: `--accent` fill with a 20 % primary border. Shadows are subtle and purposeful: button `0 2px 1.5px rgba(98,89,219,.08)`, segmented-active `0 1px 1.5px rgba(0,0,0,.1)`, popover `0 20px 25px -5px / 0 8px 10px -6px rgba(0,0,0,.1)`. Dialog backdrop: the D S page documents ink `#20253499` + blur, but **none of the Figma modal frames draw a scrim or blur** (pixels under the overlay equal the page colours), so `--modal-backdrop` is transparent to match the screens; set it to `var(--backdrop)` and `--modal-blur` to `4px` to restore the documented recipe.
 * Layout: sidebar 232 px, header 72 px (blur 8 px, 95 % white), content padding 40 px (1128 px column at 1440). Auth: 720 + 720 split.
 
 ## Components (`src/components/ui`)
@@ -64,7 +64,7 @@ Figma text styles found: Inter 11/12/13/14/15 Regular, Inter 12/14 Semi Bold, Ma
 |---|---|---|
 | `Button` | DS Button (Primary/Secondary/Ghost/Danger × Default/Hover/Pressed/Focus/Disabled/Loading) | 40 px min height, 12 px/600 label, 150 ms transitions, native `disabled`, loading disables + `aria-busy` |
 | `IconButton` | DS IconButton | 36 px, Lucide 17 px, required accessible `label` |
-| `Badge` | DS Badge (gray/green/violet/amber/blue, optional dot) | word labels, never colour alone |
+| `PillBadge` (`components/common`; `StatusBadge` is a dot-always wrapper) | DS Badge, with the colours measured from the screens (success/warning/neutral/accent/primary/info/violet/danger, optional dot) | word labels, never colour alone. The first-draft `ui/Badge` was removed: its guessed palette did not match the frames |
 | `Avatar`, `CompanyLogo` | DS Avatar initials / Company logo initials | rounded-full vs rounded-square, palette from name |
 | `TextField`, `PasswordField`, `TextareaField`, `SelectField` | DS Field (Default/Focus/Error/Disabled) | persistent label, nearby hint/error (`role="alert"`), `aria-describedby`/`aria-invalid` |
 | `Checkbox`, `Switch` | not specified in DS; follow the screens | accessible native/`role="switch"` |

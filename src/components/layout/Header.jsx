@@ -6,7 +6,7 @@ import { Dropdown, Icon, IconButton } from '@/components/ui'
 import { WORKSPACES, workspacePath } from '@/app/workspaces.js'
 import GlobalSearch from './GlobalSearch.jsx'
 import ProfileMenu from './ProfileMenu.jsx'
-import { LANGUAGES, LOCATIONS, useWorkspacePreferences } from './WorkspacePreferences.jsx'
+import { LANGUAGES, LOCATIONS, useWorkspacePreferences } from './preferencesContext.js'
 import styles from './Header.module.css'
 
 const SWITCH_ICONS = { candidate: Users, recruiter: BriefcaseBusiness }

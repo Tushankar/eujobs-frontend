@@ -34,7 +34,6 @@ export default function HiringPipelinePage() {
   return (
     <div>
       <PageTitle
-        className={styles.pageTitle}
         title="Keep good people moving forward."
         description="A clear, human-led hiring process. Drag to move, or use the stage menu on each card."
         actions={
