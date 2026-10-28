@@ -14,7 +14,6 @@ export default function SettingsLayout() {
   return (
     <>
       <PageTitle
-        className={styles.title}
         title="Your workspace. Your terms."
         description="Simple controls for your privacy, notifications, and personal information."
       />

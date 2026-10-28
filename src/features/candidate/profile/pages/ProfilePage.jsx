@@ -35,7 +35,6 @@ export default function ProfilePage() {
   return (
     <>
       <PageTitle
-        className={styles.title}
         title="A profile that feels like you."
         description="Your experience is more than a list. Tell the story behind it."
         actions={

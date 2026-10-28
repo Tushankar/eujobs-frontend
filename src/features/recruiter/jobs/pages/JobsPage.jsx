@@ -55,7 +55,6 @@ export default function JobsPage() {
   return (
     <>
       <PageTitle
-        className={styles.pageTitle}
         title="The right brief. The right people."
         description="Create, manage, and refine the roles that will shape your team."
         actions={
