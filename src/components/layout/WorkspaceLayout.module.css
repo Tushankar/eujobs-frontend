@@ -13,6 +13,20 @@
   min-width: 0;
 }
 
+/* Each page eases in on navigation (keyed by path in WorkspaceLayout). */
+@media (prefers-reduced-motion: no-preference) {
+  .content {
+    animation: page-in var(--duration-slow) var(--ease-out);
+  }
+}
+
+@keyframes page-in {
+  from {
+    opacity: 0;
+    transform: translateY(8px);
+  }
+}
+
 .footer {
   margin-top: auto;
   padding-top: 48px;

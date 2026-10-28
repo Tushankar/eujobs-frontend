@@ -20,7 +20,7 @@ export default function WorkspaceLayout({ workspaceId }) {
       <div className={styles.platform}>
         <Header workspace={workspace} onOpenMenu={() => setDrawerPath(pathname)} />
         <main className={styles.main}>
-          <div className={styles.content}>
+          <div className={styles.content} key={pathname}>
             <Outlet context={{ workspace }} />
           </div>
           <footer className={styles.footer}>
