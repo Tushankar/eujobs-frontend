@@ -162,7 +162,12 @@ export default function Header({ workspace, onOpenMenu }) {
 
         <div className={styles.identity}>
           <span className={styles.bell}>
-            <IconButton icon={Bell} label="Notifications" />
+            <IconButton
+              as={Link}
+              to={workspacePath(workspace, workspace.id === 'admin' ? 'settings' : 'settings/notifications')}
+              icon={Bell}
+              label="Notifications"
+            />
             <span className={styles.bellDot} aria-hidden="true" />
           </span>
         </div>

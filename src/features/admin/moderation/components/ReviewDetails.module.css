@@ -44,6 +44,24 @@
   color: var(--muted-foreground);
 }
 
+.facts {
+  display: grid;
+  grid-template-columns: 72px minmax(0, 1fr);
+  gap: 8px 12px;
+  padding-top: 12px;
+  font-size: 12px;
+  line-height: 18px;
+}
+
+.facts dt {
+  color: var(--muted-foreground);
+}
+
+.facts dd {
+  color: var(--foreground);
+  overflow-wrap: anywhere;
+}
+
 .notice {
   margin-top: 20px;
   padding: 16px;

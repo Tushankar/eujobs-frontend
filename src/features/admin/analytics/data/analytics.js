@@ -48,11 +48,14 @@ export const ACTIVITY_BY_RANGE = {
     labels: DAYS,
     registrations: [8, 12, 9, 18, 14, 21, 17],
     applications: [9, 18, 14, 21, 17, 8, 12],
+    // The line view plots a 0-100 index Mon to Sat, as in the Figma line-graph frame.
+    line: { labels: DAYS.slice(0, 6), registrations: [56, 64, 76, 78, 70, 37], applications: [39, 80, 15, 17, 65, 15] },
   },
   'last-week': {
     labels: DAYS,
     registrations: [11, 7, 15, 12, 19, 10, 6],
     applications: [14, 10, 12, 20, 16, 9, 5],
+    line: { labels: DAYS.slice(0, 6), registrations: [48, 55, 62, 70, 66, 41], applications: [30, 52, 24, 28, 58, 20] },
   },
   'last-month': {
     labels: ['Week 1', 'Week 2', 'Week 3', 'Week 4'],

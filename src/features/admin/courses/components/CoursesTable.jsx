@@ -1,11 +1,15 @@
 import DataTable from '@/components/common/DataTable.jsx'
 import PillBadge from '@/components/common/PillBadge.jsx'
 import { Button } from '@/components/ui'
+import { cx } from '@/utils/cx.js'
 import { formatPrice, formatUpdated } from '../utils/courseFormat.js'
 import styles from './CoursesTable.module.css'
 
-/** Course list with per-row Manage (opens the edit dialog) and Publish / Unpublish. */
-export default function CoursesTable({ courses, onManage, onToggleStatus }) {
+/**
+ * Course list with per-row Manage (opens the edit dialog) and Publish / Unpublish.
+ * `accentActions` paints both row actions in the primary blue (the Recruiter courses frame).
+ */
+export default function CoursesTable({ courses, accentActions = false, onManage, onToggleStatus }) {
   const columns = [
     {
       key: 'course',
@@ -63,6 +67,7 @@ export default function CoursesTable({ courses, onManage, onToggleStatus }) {
           </Button>
           <Button
             variant="outline"
+            className={styles.toggle}
             onClick={() => onToggleStatus(course)}
             aria-label={`${course.status === 'published' ? 'Unpublish' : 'Publish'} ${course.title}`}
           >
@@ -74,6 +79,6 @@ export default function CoursesTable({ courses, onManage, onToggleStatus }) {
   ]
 
   return (
-    <DataTable className={styles.table} columns={columns} rows={courses} getRowKey={(course) => course.id} caption="Courses" />
+    <DataTable className={cx(styles.table, accentActions && styles.accent)} columns={columns} rows={courses} getRowKey={(course) => course.id} caption="Courses" />
   )
 }

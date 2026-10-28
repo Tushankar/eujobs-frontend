@@ -16,7 +16,7 @@ export default function JobTalentList({ relevant = 0 }) {
         <ul className={styles.list}>
           {talent.map((person) => (
             <li key={person.id}>
-              <Link to="/recruiter/find-candidates" className={styles.row} aria-label={`Open ${person.name} in Find candidates`}>
+              <Link to={`/recruiter/find-candidates/${person.id}`} className={styles.row} aria-label={`Open ${person.name} in Find candidates`}>
                 <span className={`${styles.avatar} ${styles[person.tone]}`} aria-hidden="true">
                   {person.initials}
                 </span>

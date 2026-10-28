@@ -5,6 +5,8 @@ import { Icon, IconButton } from '@/components/ui'
 import { workspacePath } from '@/app/workspaces.js'
 import logo from '@/assets/images/logo.png'
 import aiSparkle from '@/assets/icons/ai-sparkle-blue.svg'
+import aiNavIcon from '@/assets/icons/ai-nav.svg'
+import aiNavIconActive from '@/assets/icons/ai-sparkle-blue-16.svg'
 import styles from './Sidebar.module.css'
 
 /** Badge text computed by a hook (e.g. the live count of active applications). */
@@ -24,7 +26,7 @@ function NavItem({ workspace, item }) {
           {item.icon || (isActive && item.activeIcon) ? (
             <Icon as={isActive && item.activeIcon ? item.activeIcon : item.icon} size={17} />
           ) : (
-            <img src={item.iconSrc} alt="" className={styles.customIcon} />
+            <img src={isActive && item.iconSrc === aiNavIcon ? aiNavIconActive : item.iconSrc} alt="" className={styles.customIcon} />
           )}
           <span className={styles.linkLabel}>{item.label}</span>
           {item.badge && (

@@ -56,3 +56,36 @@ button.choiceActive:hover {
   line-height: 20px;
   color: var(--muted-foreground);
 }
+
+/* Short desktop windows: see AuthLayout. */
+@media (min-width: 1024px) and (max-height: 899px) {
+  .picker {
+    padding-top: 20px;
+  }
+
+  .choices {
+    padding-top: 8px;
+  }
+
+  .choice {
+    padding: 12px;
+  }
+
+  .helper {
+    padding: 8px 0 12px;
+  }
+}
+
+@media (min-width: 1024px) and (max-height: 759px) {
+  .picker {
+    padding-top: 14px;
+  }
+
+  .choice {
+    padding: 8px;
+  }
+
+  .helper {
+    padding: 6px 0 8px;
+  }
+}

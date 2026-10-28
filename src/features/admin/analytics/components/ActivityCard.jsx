@@ -12,7 +12,7 @@ export default function ActivityCard({ view, range, onViewChange, onRangeChange 
   const Chart = view === 'line' ? LineChart : BarChart
 
   return (
-    <Panel padding={24} className={styles.card}>
+    <Panel padding={24} className={cx(styles.card, view === 'line' && styles.lineView)}>
       <SectionTitle title="Platform activity" description="Illustrative registrations and applications">
         <div className={styles.controls}>
           <div className={styles.toggle} role="group" aria-label="Chart type">
@@ -63,7 +63,7 @@ export default function ActivityCard({ view, range, onViewChange, onRangeChange 
       </ul>
 
       <div className={styles.chart}>
-        <Chart {...activity} />
+        <Chart {...(view === 'line' && activity.line ? activity.line : activity)} />
       </div>
     </Panel>
   )

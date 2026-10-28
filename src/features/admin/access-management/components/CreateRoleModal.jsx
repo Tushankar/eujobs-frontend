@@ -29,6 +29,7 @@ export default function CreateRoleModal({ existingNames, onClose, onCreate }) {
     <Modal
       open
       divided
+      className={styles.dialog}
       width={896}
       title="Create custom role"
       onClose={onClose}

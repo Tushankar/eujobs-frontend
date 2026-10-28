@@ -8,3 +8,20 @@
   line-height: 24px;
   color: var(--muted-foreground);
 }
+
+/* Short desktop windows: see AuthLayout. */
+@media (min-width: 1024px) and (max-height: 899px) {
+  .note {
+    margin-top: 20px;
+    padding: 12px 16px;
+    line-height: 20px;
+  }
+}
+
+@media (min-width: 1024px) and (max-height: 759px) {
+  .note {
+    margin-top: 12px;
+    padding: 8px 16px;
+    line-height: 16px;
+  }
+}

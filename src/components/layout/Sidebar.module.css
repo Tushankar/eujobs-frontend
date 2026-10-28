@@ -8,8 +8,13 @@
   flex-direction: column;
   width: var(--sidebar-width);
   overflow-y: auto;
+  scrollbar-width: none;
   border-right: 1px solid var(--border);
   background: var(--card);
+}
+
+.sidebar::-webkit-scrollbar {
+  display: none;
 }
 
 .sidebar[data-workspace='candidate'] {
@@ -92,6 +97,16 @@
   font-weight: 400;
   line-height: 13.5px;
   color: var(--text-nav);
+}
+
+/* Figma active row: white badge, count in primary. */
+.active .badge {
+  background: #fbfdff;
+}
+
+.active .badge:not(.badgeAi) {
+  font-weight: 600;
+  color: var(--primary);
 }
 
 .badgeAi {

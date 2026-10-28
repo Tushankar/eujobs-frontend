@@ -17,7 +17,7 @@ export default function MatchCard({ role, match }) {
   const count = match.listed.length
   return (
     <Panel as="article" padding={20}>
-      <Link to="/candidate/jobs" className={styles.role}>
+      <Link to={`/candidate/jobs/${role.jobId}`} className={styles.role}>
         <RoleLogo role={role} />
         <span>
           <span className={styles.title}>{role.title}</span>

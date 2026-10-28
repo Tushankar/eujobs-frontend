@@ -68,6 +68,7 @@ export default function ManageAccessModal({ user, roles, onClose, onSave, onRevo
       <Modal
         open={confirming === null}
         divided
+        className={styles.dialog}
         width={896}
         title={`${hasRole ? 'Manage access' : 'Assign role'} · ${user.name}`}
         onClose={onClose}

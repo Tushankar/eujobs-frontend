@@ -2,8 +2,11 @@ import PillBadge from '@/components/common/PillBadge.jsx'
 import { formatDate, formatDateTime } from '@/features/admin/audit-logs/utils/formatDate.js'
 import styles from './ReviewDetails.module.css'
 
-/** Body of the "Review reported content" dialog. */
+const NOT_PROVIDED = 'Not provided'
+
+/** Body of the "Review reported content" dialog: a reported item, or a job opened from the Jobs list (`item.details`). */
 export function ContentDetails({ item }) {
+  const { details } = item
   return (
     <>
       <div className={styles.badges}>
@@ -14,11 +17,29 @@ export function ContentDetails({ item }) {
       </div>
       <h3 className={styles.title}>{item.title}</h3>
       <p className={styles.subtitle}>
-        {item.reason} · Reported {formatDateTime(item.reportedAt)}
+        {details
+          ? 'Opened for review from the Jobs list. No report was filed for this listing.'
+          : `${item.reason} · Reported ${formatDateTime(item.reportedAt)}`}
       </p>
       <div className={styles.context}>
-        <p className={styles.eyebrow}>Report context</p>
-        <p className={styles.contextText}>{item.summary}</p>
+        <p className={styles.eyebrow}>{details ? 'Listing details' : 'Report context'}</p>
+        {details ? (
+          <>
+            <dl className={styles.facts}>
+              <dt>Company</dt>
+              <dd>{details.company || NOT_PROVIDED}</dd>
+              <dt>Location</dt>
+              <dd>{details.location || NOT_PROVIDED}</dd>
+              <dt>Salary</dt>
+              <dd>{details.salary || NOT_PROVIDED}</dd>
+              <dt>Skills</dt>
+              <dd>{details.skills.length > 0 ? details.skills.join(', ') : NOT_PROVIDED}</dd>
+            </dl>
+            <p className={styles.contextText}>{details.description || 'This listing has no description.'}</p>
+          </>
+        ) : (
+          <p className={styles.contextText}>{item.summary}</p>
+        )}
       </div>
       <p className={styles.notice}>
         No automated policy verdict is available. Review the content in context and apply documented marketplace rules

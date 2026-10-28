@@ -34,6 +34,7 @@ export const SKILL_DEMAND = {
 export const ROLES = [
   {
     id: 'linear',
+    jobId: 'linear-senior-product-designer',
     title: 'Senior Product Designer',
     company: 'Linear',
     workMode: 'Remote',
@@ -45,6 +46,7 @@ export const ROLES = [
   },
   {
     id: 'figma',
+    jobId: 'figma-product-designer',
     title: 'Product Designer',
     company: 'Figma',
     workMode: 'Remote',
@@ -56,6 +58,7 @@ export const ROLES = [
   },
   {
     id: 'acme',
+    jobId: 'acme-senior-product-designer',
     title: 'Senior Product Designer',
     company: 'Acme Studio',
     workMode: 'Remote',
@@ -67,6 +70,7 @@ export const ROLES = [
   },
   {
     id: 'notion',
+    jobId: 'notion-product-designer-growth',
     title: 'Product Designer, Growth',
     company: 'Notion',
     workMode: 'Hybrid',
@@ -78,6 +82,7 @@ export const ROLES = [
   },
   {
     id: 'stripe',
+    jobId: 'stripe-senior-ux-designer',
     title: 'Senior UX Designer',
     company: 'Stripe',
     workMode: 'Remote',

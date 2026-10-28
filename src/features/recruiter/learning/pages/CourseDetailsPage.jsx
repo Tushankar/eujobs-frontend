@@ -127,7 +127,7 @@ export default function CourseDetailsPage() {
             <ul className={styles.included}>
               {INCLUDED.map((item) => (
                 <li key={item}>
-                  <Icon as={Check} size={13} />
+                  <Icon as={Check} size={13} strokeWidth={2.2} />
                   {item}
                 </li>
               ))}

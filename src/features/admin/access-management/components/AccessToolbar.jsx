@@ -1,7 +1,7 @@
 import { useNavigate } from 'react-router-dom'
-import { Search, ShieldCheck, Users } from 'lucide-react'
+import { ShieldCheck, Users } from 'lucide-react'
 import ViewToggle from '@/components/common/ViewToggle.jsx'
-import { Icon, TextField } from '@/components/ui'
+import { TextField } from '@/components/ui'
 import { WORKSPACES, workspacePath } from '@/app/workspaces.js'
 import styles from './AccessToolbar.module.css'
 
@@ -12,7 +12,10 @@ const TABS = [
 
 const PATHS = { roles: 'access-management', users: 'access-management/users' }
 
-/** Roles / User access switch (each is its own route) plus the page's search box. */
+/**
+ * Roles / User access switch (each is its own route) plus the page's search box. Neither Figma frame shows a
+ * magnifier (it is hidden behind the input), so the box has none; the text sits 20px (Roles) / 40px (User access) in.
+ */
 export default function AccessToolbar({ active, searchLabel, query, onQueryChange }) {
   const navigate = useNavigate()
 
@@ -29,7 +32,7 @@ export default function AccessToolbar({ active, searchLabel, query, onQueryChang
         type="search"
         aria-label={searchLabel}
         placeholder={searchLabel}
-        leftIcon={<Icon as={Search} size={15} />}
+        style={{ paddingLeft: active === 'users' ? 24 : 4 }}
         value={query}
         onChange={(event) => onQueryChange(event.target.value)}
       />

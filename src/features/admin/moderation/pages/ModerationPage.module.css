@@ -25,20 +25,12 @@
 }
 
 .header {
-  padding: 24px;
+  padding: 24px 24px 44px;
   border-bottom: 1px solid var(--border);
-}
-
-.filters {
-  padding-top: 16px;
 }
 
 .list {
   list-style: none;
-}
-
-.empty {
-  padding: 24px;
 }
 
 @media (max-width: 1279px) {

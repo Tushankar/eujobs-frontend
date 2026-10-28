@@ -3,6 +3,8 @@ import styles from './ActivityCharts.module.css'
 const WIDTH = 502
 const HEIGHT = 202
 const BASELINE = 176
+/* The line view's plot is taller than the bars' (Figma: 189px vs 168px). */
+const LINE_BASELINE = 197
 const PLOT_LEFT = 29
 const PLOT_TOP = 8
 
@@ -74,7 +76,7 @@ export function LineChart({ labels, registrations, applications }) {
   const ceiling = niceCeiling(Math.max(...registrations, ...applications))
   const plotWidth = WIDTH - PLOT_LEFT
   const band = plotWidth / labels.length
-  const plotHeight = BASELINE - PLOT_TOP
+  const plotHeight = LINE_BASELINE - PLOT_TOP
   const xAt = (index) => PLOT_LEFT + band * (index + 0.5)
   const yAt = (value) => PLOT_TOP + plotHeight * (1 - value / ceiling)
   const ticks = Array.from({ length: 6 }, (_, index) => (ceiling / 5) * index)
@@ -82,7 +84,7 @@ export function LineChart({ labels, registrations, applications }) {
   function series(values, key, className, gradientId) {
     const points = values.map((value, index) => [xAt(index), yAt(value)])
     const line = points.map(([x, y], index) => `${index === 0 ? 'M' : 'L'}${x} ${y}`).join('')
-    const area = `${line}L${points[points.length - 1][0]} ${BASELINE}L${points[0][0]} ${BASELINE}Z`
+    const area = `${line}L${points[points.length - 1][0]} ${LINE_BASELINE}L${points[0][0]} ${LINE_BASELINE}Z`
     return (
       <g className={className} key={key}>
         <path d={area} fill={`url(#${gradientId})`} />
@@ -102,7 +104,7 @@ export function LineChart({ labels, registrations, applications }) {
   return (
     <svg
       className={styles.svg}
-      viewBox={`0 0 ${WIDTH} ${HEIGHT}`}
+      viewBox={`0 0 ${WIDTH} ${LINE_BASELINE + HEIGHT - BASELINE - 2}`}
       role="img"
       aria-label={`Line chart. ${describe(labels, registrations, applications)}`}
     >
@@ -136,14 +138,14 @@ export function LineChart({ labels, registrations, applications }) {
           x1={PLOT_LEFT + 1 + ((plotWidth - 2) / labels.length) * index}
           x2={PLOT_LEFT + 1 + ((plotWidth - 2) / labels.length) * index}
           y1={PLOT_TOP}
-          y2={BASELINE}
+          y2={LINE_BASELINE}
           className={styles.grid}
         />
       ))}
       {series(applications, 'applications', styles.applicationsSeries, 'activity-applications')}
       {series(registrations, 'registrations', styles.registrationsSeries, 'activity-registrations')}
       {labels.map((label, index) => (
-        <text key={label} x={xAt(index)} y={BASELINE + 22} textAnchor="middle" className={styles.axisLabel}>
+        <text key={label} x={xAt(index)} y={LINE_BASELINE + 22} textAnchor="middle" className={styles.axisLabel}>
           {label}
         </text>
       ))}

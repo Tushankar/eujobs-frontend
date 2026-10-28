@@ -150,3 +150,68 @@
     display: none;
   }
 }
+
+/* Desktop: the split is exactly one screen tall, so the hero image always fits and only the
+   form column scrolls (long forms such as sign-up). Auto margins centre the form while it
+   fits and keep its top reachable once it overflows. */
+@media (min-width: 1024px) {
+  .layout {
+    grid-template-rows: minmax(0, 1fr);
+    height: 100vh;
+  }
+
+  .formSection {
+    overflow-y: auto;
+  }
+
+  .formColumn {
+    margin: auto;
+  }
+}
+
+/* Short desktop windows: tighten the vertical rhythm so the form fits without page scroll. */
+@media (min-width: 1024px) and (max-height: 899px) {
+  .formSection {
+    padding-block: 24px;
+  }
+
+  .logo {
+    padding: 12px 0;
+  }
+}
+
+@media (min-width: 1024px) and (max-height: 759px) {
+  .hero {
+    padding-block: 48px;
+  }
+
+  .heroBrand {
+    top: 24px;
+  }
+
+  .heroFooter {
+    bottom: 24px;
+  }
+
+  .formSection {
+    padding-block: 12px;
+  }
+
+  .logo {
+    padding: 4px 0;
+  }
+}
+
+@media (min-width: 1024px) and (max-height: 619px) {
+  .heroBrand {
+    top: 12px;
+  }
+
+  .formSection {
+    padding-block: 4px;
+  }
+
+  .logo {
+    padding: 0;
+  }
+}

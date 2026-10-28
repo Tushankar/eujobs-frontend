@@ -4,8 +4,8 @@ import EmptyState from '@/components/common/EmptyState.jsx'
 import PageTitle from '@/components/common/PageTitle.jsx'
 import StatCard from '@/components/common/StatCard.jsx'
 import { Button, Icon } from '@/components/ui'
-import { useLocalStorage } from '@/hooks/useLocalStorage.js'
 import aiNavIcon from '@/assets/icons/ai-nav.svg'
+import { useShortlist } from '../../find-candidates/hooks/useShortlist.js'
 import AiJobSummary from '../../jobs/components/AiJobSummary.jsx'
 import JobsTable from '../../jobs/components/JobsTable.jsx'
 import { useJobs } from '../../jobs/hooks/useJobs.js'
@@ -13,14 +13,14 @@ import HiringFunnelCard from '../components/HiringFunnelCard.jsx'
 import HiringMomentumCard from '../components/HiringMomentumCard.jsx'
 import SectionHeading from '../components/SectionHeading.jsx'
 import TalentCard from '../components/TalentCard.jsx'
-import { INITIAL_SAVED_TALENT, OVERVIEW_STATS, TALENT } from '../data/overview.js'
+import { OVERVIEW_STATS, TALENT } from '../data/overview.js'
 import styles from './OverviewPage.module.css'
 
 const ROLES_SHOWN = 5
 
 export default function OverviewPage() {
   const { jobs, setStatus } = useJobs()
-  const [savedTalent, setSavedTalent] = useLocalStorage('lwm.recruiter.overview.savedTalent', INITIAL_SAVED_TALENT)
+  const { shortlistedIds, isShortlisted, toggle: toggleSaved } = useShortlist()
 
   const openRoles = jobs.filter((job) => job.status === 'published')
   const stats = [
@@ -47,16 +47,12 @@ export default function OverviewPage() {
     },
     {
       label: 'Shortlisted candidates',
-      value: OVERVIEW_STATS.shortlistedCandidates,
+      value: shortlistedIds.length,
       caption: 'A considered selection',
       icon: Bookmark,
       to: '/recruiter/shortlists',
     },
   ]
-
-  function toggleSaved(id) {
-    setSavedTalent((current) => (current.includes(id) ? current.filter((item) => item !== id) : [...current, id]))
-  }
 
   return (
     <>
@@ -102,7 +98,7 @@ export default function OverviewPage() {
           <TalentCard
             key={person.id}
             person={person}
-            saved={savedTalent.includes(person.id)}
+            saved={isShortlisted(person.id)}
             onToggleSaved={() => toggleSaved(person.id)}
           />
         ))}

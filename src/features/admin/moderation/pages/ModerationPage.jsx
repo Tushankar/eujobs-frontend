@@ -1,14 +1,13 @@
 import { useState } from 'react'
 import { Navigate, useNavigate, useParams } from 'react-router-dom'
 import { CircleCheck, ShieldCheck, TriangleAlert, Users } from 'lucide-react'
-import EmptyState from '@/components/common/EmptyState.jsx'
-import FilterChips from '@/components/common/FilterChips.jsx'
 import PageTitle from '@/components/common/PageTitle.jsx'
 import PillBadge from '@/components/common/PillBadge.jsx'
 import SectionTitle from '@/components/common/SectionTitle.jsx'
 import StatCard from '@/components/common/StatCard.jsx'
 import { useAuditLog } from '@/features/admin/audit-logs/hooks/useAuditLog.js'
 import { formatDate, formatDateTime } from '@/features/admin/audit-logs/utils/formatDate.js'
+import { useJobs } from '@/features/recruiter/jobs/hooks/useJobs.js'
 import QueueRow from '../components/QueueRow.jsx'
 import QueueTabs from '../components/QueueTabs.jsx'
 import ReviewDialog from '../components/ReviewDialog.jsx'
@@ -19,9 +18,9 @@ import {
   CONTENT_ITEMS,
   DECISION_BADGES,
   PENDING_ACCOUNTS,
-  QUEUE_FILTERS,
 } from '../data/moderation.js'
 import { useModerationDecisions } from '../hooks/useModerationDecisions.js'
+import { jobToReviewItem } from '../utils/jobReviewItem.js'
 import styles from './ModerationPage.module.css'
 
 const BASE_PATH = '/admin/moderation'
@@ -31,7 +30,6 @@ const AUDIT_TITLES = {
   restricted: 'Content restricted',
   approved: 'Account approved',
   suspended: 'Account suspended for review',
-  escalated: 'Moderation item escalated',
 }
 
 const TABS = {
@@ -54,25 +52,27 @@ const TABS = {
  * Moderation. One page serves four URLs: /admin/moderation (content queue), /admin/moderation/accounts (account
  * queue), and .../content/:itemId and .../accounts/:accountId, which open the matching review dialog over its
  * queue (the Figma frames show those dialogs over the page). Closing a dialog returns to the queue.
+ * The Jobs page links every recruiter job to .../content/:jobId: a job with no queue entry is reviewed from its own details.
  */
 export default function ModerationPage() {
   const navigate = useNavigate()
   const [kind, openId] = (useParams()['*'] ?? '').split('/').filter(Boolean)
   const tabId = kind === 'accounts' ? 'accounts' : 'content'
   const tab = TABS[tabId]
-  const { decisions, decide, stageOf } = useModerationDecisions()
+  const { decisions, decide } = useModerationDecisions()
   const { record } = useAuditLog()
-  const [filters, setFilters] = useState({ content: 'all', accounts: 'all' })
+  const { getJob } = useJobs()
   const [status, setStatus] = useState('')
 
   const items = tabId === 'content' ? CONTENT_ITEMS : PENDING_ACCOUNTS
   const keyOf = (item) => `${tab.key}:${item.id}`
-  const openItem = openId && (kind === 'content' || kind === 'accounts') ? items.find((item) => item.id === openId) : null
-  const shown = items.filter((item) => filters[tabId] === 'all' || stageOf(keyOf(item)) === filters[tabId])
+  const queued = openId ? items.find((item) => item.id === openId) : null
+  const job = tabId === 'content' && openId && !queued ? getJob(openId) : null
+  const openItem = queued ?? (job ? jobToReviewItem(job) : null)
 
-  const openContent = CONTENT_ITEMS.filter((item) => stageOf(`content:${item.id}`) !== 'resolved').length
-  const openAccounts = PENDING_ACCOUNTS.filter((item) => stageOf(`account:${item.id}`) !== 'resolved').length
-  const contentDecisions = CONTENT_ITEMS.filter((item) => decisions[`content:${item.id}`]).length
+  const openContent = CONTENT_ITEMS.filter((item) => !decisions[`content:${item.id}`]).length
+  const openAccounts = PENDING_ACCOUNTS.filter((item) => !decisions[`account:${item.id}`]).length
+  const contentDecisions = Object.keys(decisions).filter((key) => key.startsWith('content:')).length
 
   if (openId && !openItem) return <Navigate to={tab.path} replace />
 
@@ -166,25 +166,8 @@ export default function ModerationPage() {
       <section className={styles.queue} role="tabpanel" aria-label={tab.title}>
         <div className={styles.header}>
           <SectionTitle title={tab.title} description={tab.description} />
-          <FilterChips
-            className={styles.filters}
-            label="Filter by status"
-            options={QUEUE_FILTERS}
-            value={filters[tabId]}
-            onChange={(next) => setFilters((current) => ({ ...current, [tabId]: next }))}
-          />
         </div>
-        {shown.length > 0 ? (
-          <ul className={styles.list}>{shown.map(renderRow)}</ul>
-        ) : (
-          <div className={styles.empty}>
-            <EmptyState
-              icon={CircleCheck}
-              title="Nothing in this view"
-              description="No items match this filter. Choose another status to see the rest of the queue."
-            />
-          </div>
-        )}
+        <ul className={styles.list}>{items.map(renderRow)}</ul>
       </section>
 
       {openItem && tabId === 'content' && (
@@ -202,6 +185,7 @@ export default function ModerationPage() {
         <ReviewDialog
           title="Review pending account"
           actions={ACCOUNT_ACTIONS}
+          actionsAlign="start"
           previous={decisions[keyOf(openItem)] && previousOf(decisions[keyOf(openItem)])}
           onDecide={handleDecide}
           onClose={() => navigate(tab.path)}

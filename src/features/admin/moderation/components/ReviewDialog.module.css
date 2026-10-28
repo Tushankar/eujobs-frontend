@@ -6,6 +6,10 @@
   padding-top: 24px;
 }
 
+.actionsStart {
+  justify-content: flex-start;
+}
+
 /* Restrictive decisions use the soft red button from the Figma dialogs. */
 .danger,
 .danger:hover {

@@ -24,11 +24,20 @@ function workspaceRoute(id, children) {
  * folder beneath it (see features/<role>/routes.jsx), so adding a screen never
  * requires editing this file.
  */
-export const router = createBrowserRouter([
+const routes = [
   { path: '/', element: <Navigate to="/sign-in" replace /> },
   ...authRoutes,
   workspaceRoute('candidate', candidateRoutes),
   workspaceRoute('recruiter', recruiterRoutes),
   workspaceRoute('admin', adminRoutes),
   { path: '*', element: <NotFoundPage /> },
-])
+]
+
+// Pages are lazy-loaded, so the first render needs a fallback while the matched page chunk loads.
+const hydrateFallbackElement = (
+  <p className="sr-only" role="status">
+    Loading…
+  </p>
+)
+
+export const router = createBrowserRouter(routes.map((route) => ({ ...route, hydrateFallbackElement })))

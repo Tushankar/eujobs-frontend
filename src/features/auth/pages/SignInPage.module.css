@@ -24,3 +24,18 @@
   margin-top: 2px;
   color: var(--primary);
 }
+
+/* Short desktop windows: see AuthLayout. */
+@media (min-width: 1024px) and (max-height: 899px) {
+  .form {
+    gap: 16px;
+    padding-top: 12px;
+  }
+}
+
+@media (min-width: 1024px) and (max-height: 759px) {
+  .form {
+    gap: 12px;
+    padding-top: 0;
+  }
+}

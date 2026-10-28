@@ -1,9 +1,12 @@
 .table {
   --table-row-height: 74px;
+  --table-cell-padding: 0 24px;
   --table-header-bg: var(--muted);
 }
 
+/* 20px above and below the course text: single-line rows stay 74px, wrapped titles grow the row (Figma: 90px). */
 .title {
+  padding-top: 20px;
   font-size: 12px;
   font-weight: 600;
   line-height: 16px;
@@ -11,7 +14,7 @@
 }
 
 .meta {
-  padding-top: 4px;
+  padding: 4px 0 20px;
   font-size: 10px;
   line-height: 13.3px;
   color: var(--muted-foreground);
@@ -35,4 +38,10 @@
 /* Doubled selector: wins over the Button variant colour regardless of stylesheet order. */
 .manage.manage {
   color: #737989;
+}
+
+/* Recruiter courses frame: Manage and Unpublish are both primary blue. */
+.accent .manage.manage,
+.accent .toggle.toggle {
+  color: var(--primary);
 }

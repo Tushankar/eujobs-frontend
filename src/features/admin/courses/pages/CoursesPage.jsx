@@ -12,6 +12,7 @@ import CourseFormModal from '../components/CourseFormModal.jsx'
 import CoursesTable from '../components/CoursesTable.jsx'
 import { AUDIENCES, STATUS_OPTIONS } from '../data/courses.js'
 import { useCourses } from '../hooks/useCourses.js'
+import { cx } from '@/utils/cx.js'
 import styles from './CoursesPage.module.css'
 
 const TABS = [
@@ -113,9 +114,9 @@ export default function CoursesPage() {
 
       {notice && <NoticeBanner>{notice}</NoticeBanner>}
 
-      <div className={styles.results}>
+      <div className={cx(styles.results, audience === 'recruiter' && styles.recruiterResults)}>
         {visible.length > 0 ? (
-          <CoursesTable courses={visible} onManage={(course) => setDialog({ course })} onToggleStatus={handleToggleStatus} />
+          <CoursesTable courses={visible} accentActions={audience === 'recruiter'} onManage={(course) => setDialog({ course })} onToggleStatus={handleToggleStatus} />
         ) : (
           <EmptyState icon={Search} title="No courses match your filters" description="Try a different search or choose All statuses." />
         )}

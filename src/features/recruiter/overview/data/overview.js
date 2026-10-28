@@ -1,10 +1,9 @@
 /* Mock data for the recruiter Overview (copy and numbers from the Figma frame). */
 
-/** KPI cards. `openPositions` is derived from the jobs store; the rest are illustrative demo numbers. */
+/** KPI cards. `openPositions` is derived from the jobs store and `shortlistedCandidates` from the shortlist; the rest are illustrative demo numbers. */
 export const OVERVIEW_STATS = {
   recommendedCandidates: 6,
   applications: 6,
-  shortlistedCandidates: 2,
 }
 
 /** "Your hiring funnel": current candidates per stage. */
@@ -77,6 +76,3 @@ export const TALENT = [
     availability: 'Open to opportunities',
   },
 ]
-
-/** Candidates shown as already shortlisted when the page is first opened. */
-export const INITIAL_SAVED_TALENT = ['james-chen']

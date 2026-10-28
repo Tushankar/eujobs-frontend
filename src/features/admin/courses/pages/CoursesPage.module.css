@@ -29,6 +29,11 @@
   padding-top: 24px;
 }
 
+/* The Recruiter courses frame nests the table in two 24px margins. */
+.recruiterResults {
+  padding-top: 48px;
+}
+
 .note {
   margin-top: 24px;
   padding: 20px;

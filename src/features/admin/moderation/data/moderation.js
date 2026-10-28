@@ -1,4 +1,4 @@
-import { ArrowUpRight, Check, EyeOff } from 'lucide-react'
+import { Check, EyeOff } from 'lucide-react'
 
 /** Reported content waiting for a human decision. `id` is the URL segment of /admin/moderation/content/:itemId. */
 export const CONTENT_ITEMS = [
@@ -55,16 +55,6 @@ export const CONTENT_ACTIONS = [
     confirmText: 'Restricting a job pauses it; restricting the current candidate profile removes it from recruiter discovery.',
     confirmLabel: 'Restrict content',
   },
-  {
-    id: 'escalated',
-    label: 'Escalate',
-    icon: ArrowUpRight,
-    variant: 'ghost',
-    reasonRequired: true,
-    confirmTitle: 'Escalate for a second review?',
-    confirmText: 'The report stays open and is marked for a second human reviewer.',
-    confirmLabel: 'Escalate',
-  },
 ]
 
 export const ACCOUNT_ACTIONS = [
@@ -86,16 +76,6 @@ export const ACCOUNT_ACTIONS = [
     confirmText: 'The registration is approved in this demo record.',
     confirmLabel: 'Approve account',
   },
-  {
-    id: 'escalated',
-    label: 'Escalate',
-    icon: ArrowUpRight,
-    variant: 'ghost',
-    reasonRequired: true,
-    confirmTitle: 'Escalate for a second review?',
-    confirmText: 'The registration stays pending and is marked for a second human reviewer.',
-    confirmLabel: 'Escalate',
-  },
 ]
 
 /** Badge label and tone per decision; `pending` is the default state of every queue item. */
@@ -105,12 +85,4 @@ export const DECISION_BADGES = {
   restricted: { label: 'Content restricted', tone: 'danger' },
   approved: { label: 'Account approved', tone: 'success' },
   suspended: { label: 'Account suspended', tone: 'danger' },
-  escalated: { label: 'Escalated', tone: 'info' },
 }
-
-export const QUEUE_FILTERS = [
-  { id: 'all', label: 'All' },
-  { id: 'pending', label: 'Pending review' },
-  { id: 'escalated', label: 'Escalated' },
-  { id: 'resolved', label: 'Resolved' },
-]

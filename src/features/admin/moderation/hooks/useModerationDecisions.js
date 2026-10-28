@@ -17,15 +17,6 @@ export function useModerationDecisions() {
     [setDecisions],
   )
 
-  /** 'pending' | 'escalated' | 'resolved' */
-  const stageOf = useCallback(
-    (key) => {
-      const status = decisions[key]?.status
-      if (!status) return 'pending'
-      return status === 'escalated' ? 'escalated' : 'resolved'
-    },
-    [decisions],
-  )
 
-  return { decisions, decide, stageOf }
+  return { decisions, decide }
 }

@@ -119,6 +119,7 @@ export default function ApplicationsPage() {
           <EmptyState
             size="lg"
             icon={FileText}
+            iconSize={24}
             title="Room for your next great application"
             description="Applications to roles you publish appear here. Only applications shared with your company are visible in this workspace."
           />

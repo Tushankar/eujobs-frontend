@@ -111,3 +111,12 @@
 .chart {
   padding-top: 20px;
 }
+
+/* Figma's line view starts its legend and plot higher (the plot is 21px taller, ending on the same baseline). */
+.lineView .legend {
+  padding-top: 12px;
+}
+
+.lineView .chart {
+  padding-top: 9px;
+}

@@ -29,7 +29,7 @@ export default function TalentCard({ person, saved, onToggleSaved }) {
       </div>
 
       <h3 className={styles.name}>
-        <Link to="/recruiter/find-candidates" className={styles.nameLink}>
+        <Link to={`/recruiter/find-candidates/${person.id}`} className={styles.nameLink}>
           {person.name}
         </Link>
       </h3>
@@ -93,7 +93,7 @@ export default function TalentCard({ person, saved, onToggleSaved }) {
         >
           Compare
         </Checkbox>
-        <Link to="/recruiter/find-candidates" className={styles.view}>
+        <Link to={`/recruiter/find-candidates/${person.id}`} className={styles.view}>
           View profile
           <Icon as={ArrowUpRight} size={12} />
         </Link>

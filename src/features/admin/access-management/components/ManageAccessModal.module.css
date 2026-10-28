@@ -1,3 +1,10 @@
+/* Figma: the footer rule is inset 24px, with 20px above and 32px below the buttons. */
+.dialog > footer {
+  gap: 12px;
+  margin: 0 24px;
+  padding: 20px 0 32px;
+}
+
 .form {
   display: flex;
   flex-direction: column;

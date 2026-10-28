@@ -136,7 +136,7 @@ export default function JobMatchPage() {
             <h2 className={styles.title}>Your next step is yours.</h2>
             <p className={styles.sideText}>Read the full brief, check the evidence, and decide whether this opportunity feels right.</p>
             <div className={styles.sideActions}>
-              <Button as={Link} to="/candidate/jobs" fullWidth rightIcon={<Icon as={ArrowUpRight} size={13} strokeWidth={2} />}>
+              <Button as={Link} to={`/candidate/jobs/${role.jobId}`} fullWidth rightIcon={<Icon as={ArrowUpRight} size={13} strokeWidth={2} />}>
                 View role &amp; apply
               </Button>
               <Button

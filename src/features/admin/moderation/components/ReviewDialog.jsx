@@ -7,11 +7,12 @@ const MAX_REASON_LENGTH = 300
 
 /**
  * Review dialog shared by reported content and pending accounts. Step 1 shows the details (`children`) and the
- * decision buttons; choosing one opens step 2, where the admin writes a reason (required for restrictive or
- * escalating decisions) and confirms. Nothing is saved until step 2 is confirmed.
+ * decision buttons; choosing one opens step 2, where the admin writes a reason (required for restrictive
+ * decisions) and confirms. Nothing is saved until step 2 is confirmed.
+ * `actionsAlign` = 'start' left-aligns the decision buttons (the pending-account frame); default 'end'.
  * `actions` = [{ id, label, icon, variant, reasonRequired, confirmTitle, confirmText, confirmLabel }].
  */
-export default function ReviewDialog({ title, actions, previous, onDecide, onClose, children }) {
+export default function ReviewDialog({ title, actions, previous, actionsAlign = 'end', onDecide, onClose, children }) {
   const [pending, setPending] = useState(null)
   const [reason, setReason] = useState('')
   const [error, setError] = useState('')
@@ -72,7 +73,7 @@ export default function ReviewDialog({ title, actions, previous, onDecide, onClo
               can record a new decision below.
             </p>
           )}
-          <div className={styles.actions}>
+          <div className={cx(styles.actions, actionsAlign === 'start' && styles.actionsStart)}>
             {actions.map((action) => (
               <Button
                 key={action.id}
