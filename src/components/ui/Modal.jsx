@@ -1,4 +1,4 @@
-import { useEffect, useId, useRef } from 'react'
+import { memo, useEffect, useId, useRef } from 'react'
 import { createPortal } from 'react-dom'
 import { X } from 'lucide-react'
 import { usePresence } from '@/hooks/usePresence.js'
@@ -10,6 +10,38 @@ import styles from './Modal.module.css'
 const EXIT_MS = 180
 
 const FOCUSABLE = 'a[href], button:not([disabled]), input:not([disabled]), select:not([disabled]), textarea:not([disabled]), [tabindex]:not([tabindex="-1"])'
+
+/**
+ * Header, body and footer of the dialog. Callers usually clear the data behind a dialog (the selected item, its
+ * title) as they close it, so while the dialog animates out (`frozen`) this stops updating and keeps showing what it
+ * last had, instead of collapsing to an empty shell mid-exit.
+ */
+const DialogContent = memo(
+  function DialogContent({ title, titleId, description, descriptionId, children, footer, onClose }) {
+    return (
+      <>
+        <header className={styles.header}>
+          <div>
+            {title && (
+              <h2 className={styles.title} id={titleId}>
+                {title}
+              </h2>
+            )}
+            {description && (
+              <p className={styles.description} id={descriptionId}>
+                {description}
+              </p>
+            )}
+          </div>
+          <IconButton icon={X} label="Close dialog" onClick={onClose} />
+        </header>
+        <div className={styles.body}>{children}</div>
+        {footer && <footer className={styles.footer}>{footer}</footer>}
+      </>
+    )
+  },
+  (_, next) => next.frozen,
+)
 
 /**
  * Dialog with the DS translucent-ink backdrop. Closes on Escape, backdrop click
@@ -24,10 +56,11 @@ export default function Modal({ open, onClose, title, description, children, foo
 
   // Callers usually clear the data behind a dialog (the selected item, its title) as they close it, so the
   // exit animation keeps showing what the dialog last had instead of collapsing to an empty shell.
-  const latest = useRef(null)
-  const live = { title, description, children, footer }
-  if (open) latest.current = live
-  const shown = open ? live : (latest.current ?? live)
+  const [lastOpen, setLastOpen] = useState({ title, description, children, footer })
+  useEffect(() => {
+    if (open) setLastOpen({ title, description, children, footer })
+  }, [open, title, description, children, footer])
+  const shown = open ? { title, description, children, footer } : lastOpen
 
   useEffect(() => {
     if (!open) return undefined
