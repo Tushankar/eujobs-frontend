@@ -19,13 +19,13 @@
 /*
  * Entrances. `stagger` cascades its direct children in; `stagger-page` does the same for a routed
  * page, which renders either one wrapper element or several sibling sections (see WorkspaceLayout).
- * From the 8th child on they all share the last delay. Put the class on an element that is remounted (keyed)
- * whenever the content should replay.
+ * From the 5th child on they all share the last delay, so a long page never waits on its tail. Put the class
+ * on an element that is remounted (keyed) whenever the content should replay.
  */
 @media (prefers-reduced-motion: no-preference) {
   :is(.stagger > *, .stagger-page > :only-child > *, .stagger-page > :not(:only-child)) {
     animation: rise var(--duration-enter) var(--ease-out) backwards;
-    animation-delay: calc(var(--i, 7) * var(--stagger-step));
+    animation-delay: calc(var(--i, 4) * var(--stagger-step));
 
     &:nth-child(1) {
       --i: 0;
@@ -42,29 +42,17 @@
     &:nth-child(4) {
       --i: 3;
     }
-
-    &:nth-child(5) {
-      --i: 4;
-    }
-
-    &:nth-child(6) {
-      --i: 5;
-    }
-
-    &:nth-child(7) {
-      --i: 6;
-    }
   }
 
   /* Bars: put on the filled element of a progress or bar chart so it grows in from its baseline. */
   .grow-x {
     transform-origin: left;
-    animation: grow-x 700ms var(--ease-out) 150ms backwards;
+    animation: grow-x 450ms var(--ease-out) 60ms backwards;
   }
 
   .grow-y {
     transform-origin: bottom;
-    animation: grow-y 700ms var(--ease-out) 150ms backwards;
+    animation: grow-y 450ms var(--ease-out) 60ms backwards;
   }
 }
 
@@ -78,7 +66,7 @@
 
 @media (prefers-reduced-motion: no-preference) {
   ::view-transition-group(page-flip) {
-    animation-duration: 760ms;
+    animation-duration: 400ms;
     animation-timing-function: var(--ease-out);
   }
 
@@ -88,11 +76,11 @@
   }
 
   ::view-transition-old(page-flip) {
-    animation: flip-out 320ms cubic-bezier(0.5, 0, 0.75, 0) both;
+    animation: flip-out 150ms cubic-bezier(0.5, 0, 0.75, 0) both;
   }
 
   ::view-transition-new(page-flip) {
-    animation: flip-in 440ms var(--ease-out) 320ms both;
+    animation: flip-in 250ms var(--ease-out) 150ms both;
   }
 }
 
@@ -111,7 +99,7 @@
 @keyframes rise {
   from {
     opacity: 0;
-    transform: translateY(14px);
+    transform: translateY(8px);
   }
 }
 
