@@ -1,0 +1,32 @@
+.column {
+  margin: 32px auto 0;
+}
+
+.wide {
+  max-width: 768px;
+}
+
+.narrow {
+  max-width: 672px;
+}
+
+.wide .card {
+  padding: 40px;
+}
+
+.narrow .card {
+  padding: 32px;
+}
+
+.footer {
+  display: flex;
+  justify-content: center;
+  padding-top: 20px;
+}
+
+@media (max-width: 639px) {
+  .wide .card,
+  .narrow .card {
+    padding: 20px;
+  }
+}

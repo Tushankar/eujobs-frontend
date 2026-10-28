@@ -1,0 +1,67 @@
+.error {
+  margin-top: 16px;
+  padding: 12px 16px;
+  border-radius: var(--radius-xl);
+  background: #fbeaea;
+  font-size: 12px;
+  line-height: 18px;
+  color: var(--destructive);
+}
+
+.file {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  margin-top: 16px;
+  padding: 8px 8px 8px 16px;
+  border: 1px solid var(--border);
+  border-radius: var(--radius-xl);
+  background: var(--card);
+}
+
+.fileIcon {
+  flex-shrink: 0;
+  color: var(--primary);
+}
+
+.fileName {
+  min-width: 0;
+  overflow: hidden;
+  font-size: 12px;
+  font-weight: 600;
+  line-height: 18px;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+  color: var(--foreground);
+}
+
+.fileSize {
+  flex-shrink: 0;
+  font-size: 11px;
+  line-height: 16px;
+  color: var(--muted-foreground);
+}
+
+.remove {
+  flex-shrink: 0;
+  margin-left: auto;
+}
+
+.privacy {
+  display: flex;
+  gap: 12px;
+  padding-top: 28px;
+  font-size: 12px;
+  line-height: 24px;
+  color: var(--muted-foreground);
+}
+
+.privacyIcon {
+  flex-shrink: 0;
+  margin-top: 4px;
+  color: var(--primary);
+}
+
+.skip {
+  color: var(--text-nav);
+}

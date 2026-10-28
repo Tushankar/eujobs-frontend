@@ -30,7 +30,7 @@ export default function SignUpPage() {
     setErrors(nextErrors)
     if (Object.keys(nextErrors).length > 0) return
     setSubmitting(true)
-    window.setTimeout(() => navigate(WORKSPACES.candidate.basePath), 500)
+    window.setTimeout(() => navigate(`${WORKSPACES.candidate.basePath}/onboarding`), 500)
   }
 
   return (

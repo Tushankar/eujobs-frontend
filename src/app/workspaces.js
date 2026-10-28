@@ -42,7 +42,7 @@ export const WORKSPACES = {
       title: 'Your next move, smarter.',
       text: 'A stronger profile means more relevant opportunities.',
       linkLabel: 'Complete your profile',
-      to: 'profile',
+      to: 'onboarding/story',
     },
     nav: [
       { label: 'Overview', to: '', icon: LayoutDashboard, end: true },
