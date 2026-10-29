@@ -3,6 +3,7 @@ import { ArrowRight, ArrowUpRight, CircleHelp, LogOut, Settings2 } from 'lucide-
 import { cx } from '@/utils/cx.js'
 import { Icon, IconButton } from '@/components/ui'
 import { workspacePath } from '@/app/workspaces.js'
+import { endSession } from '@/features/auth/utils/session.js'
 import logo from '@/assets/images/logo.png'
 import aiSparkle from '@/assets/icons/ai-sparkle-blue.svg'
 import aiNavIcon from '@/assets/icons/ai-nav.svg'
@@ -103,7 +104,7 @@ export default function Sidebar({ workspace, open, onClose }) {
               <p className={styles.userName}>{user.name}</p>
               <p className={styles.userSubtitle}>{user.subtitle}</p>
             </div>
-            <IconButton icon={LogOut} label="Sign out" onClick={() => navigate(workspace.signInPath)} />
+            <IconButton icon={LogOut} label="Sign out" onClick={() => { endSession(); navigate(workspace.signInPath) }} />
           </div>
         </div>
       </aside>

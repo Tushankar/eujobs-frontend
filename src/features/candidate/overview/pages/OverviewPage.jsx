@@ -8,9 +8,9 @@ import StatCard from '@/components/common/StatCard.jsx'
 import aiGlyph from '@/assets/icons/ai-glyph-blue.svg'
 import aiNavGlyph from '@/assets/icons/ai-nav.svg'
 import JobCard from '@/features/candidate/jobs/components/JobCard.jsx'
-import { JOBS } from '@/features/candidate/jobs/data/jobs.js'
 import { jobPath } from '@/features/candidate/jobs/data/jobUtils.js'
 import { useApplications } from '@/features/candidate/jobs/hooks/useApplications.js'
+import { useJobListings } from '@/features/candidate/jobs/hooks/useJobListings.js'
 import { useSavedJobs } from '@/features/candidate/jobs/hooks/useSavedJobs.js'
 import ApplicationActivityCard from '../components/ApplicationActivityCard.jsx'
 import InsightCard from '../components/InsightCard.jsx'
@@ -31,12 +31,13 @@ export default function OverviewPage() {
   const [tab, setTab] = useState('for-you')
   const { savedIds, isSaved, toggleSaved } = useSavedJobs()
   const { activeCount, hasApplied, applyTo } = useApplications()
+  const { jobs: listings } = useJobListings()
 
   const jobs = useMemo(() => {
-    if (tab === 'recent') return [...JOBS].sort((a, b) => a.postedHoursAgo - b.postedHoursAgo).slice(0, SHOWN)
-    if (tab === 'saved') return JOBS.filter((job) => savedIds.includes(job.id)).slice(0, SHOWN)
-    return JOBS.slice(0, SHOWN)
-  }, [tab, savedIds])
+    if (tab === 'recent') return [...listings].sort((a, b) => a.postedHoursAgo - b.postedHoursAgo).slice(0, SHOWN)
+    if (tab === 'saved') return listings.filter((job) => savedIds.includes(job.id)).slice(0, SHOWN)
+    return listings.slice(0, SHOWN)
+  }, [listings, tab, savedIds])
 
   return (
     <div>

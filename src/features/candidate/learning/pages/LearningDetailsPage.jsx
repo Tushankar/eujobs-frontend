@@ -7,7 +7,6 @@ import PageTitle from '@/components/common/PageTitle.jsx'
 import PillBadge from '@/components/common/PillBadge.jsx'
 import LessonRow from '../components/LessonRow.jsx'
 import PurchaseDialog from '../components/PurchaseDialog.jsx'
-import { findCourse } from '../data/courses.js'
 import { formatPrice, useLearning } from '../hooks/useLearning.js'
 import styles from './LearningDetailsPage.module.css'
 
@@ -16,8 +15,8 @@ const INCLUDED = ['pre-recorded lessons', 'Completion assessment', 'Course-compl
 /** Course details: free introduction, outcomes, curriculum with lesson completion, price and progress. */
 export default function LearningDetailsPage() {
   const { courseId } = useParams()
-  const course = findCourse(courseId)
   const learning = useLearning()
+  const course = learning.courses.find((item) => item.id === courseId)
   const [buying, setBuying] = useState(null)
   const [introOpen, setIntroOpen] = useState(false)
   const [message, setMessage] = useState('')

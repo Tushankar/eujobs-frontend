@@ -12,9 +12,9 @@ import AiJobSummaryModal from '@/features/candidate/jobs/components/AiJobSummary
 import AiSummaryButton from '@/features/candidate/jobs/components/AiSummaryButton.jsx'
 import JobLogo from '@/features/candidate/jobs/components/JobLogo.jsx'
 import { APPLICATION_STATUS, formatApplied } from '@/features/candidate/jobs/data/applications.js'
-import { getJob } from '@/features/candidate/jobs/data/jobs.js'
 import { jobPath } from '@/features/candidate/jobs/data/jobUtils.js'
 import { useApplications } from '@/features/candidate/jobs/hooks/useApplications.js'
+import { useJobListings } from '@/features/candidate/jobs/hooks/useJobListings.js'
 import ApplicationActivityModal from '../components/ApplicationActivityModal.jsx'
 import styles from './ApplicationsPage.module.css'
 
@@ -29,6 +29,7 @@ const FILTERS = [
 /** Applications: status filters over the persisted applications, with an activity dialog and withdraw. */
 export default function ApplicationsPage() {
   const { applications, hasApplied, applyTo, withdraw } = useApplications()
+  const { getJob } = useJobListings()
   const [filter, setFilter] = useState('all')
   const [activityId, setActivityId] = useState(null)
   const [withdrawing, setWithdrawing] = useState(null)
@@ -39,7 +40,7 @@ export default function ApplicationsPage() {
       applications
         .map((application) => ({ ...application, job: getJob(application.jobId) }))
         .filter((row) => row.job && (filter === 'all' || row.status === filter)),
-    [applications, filter],
+    [applications, filter, getJob],
   )
   const activity = rows.find((row) => row.id === activityId) ?? applications.find((item) => item.id === activityId)
   const latest = applications.find((item) => item.status !== 'withdrawn')

@@ -1,0 +1,66 @@
+.column {
+  max-width: 880px;
+  margin: 0 auto;
+  display: grid;
+  gap: 16px;
+}
+
+.grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+  gap: 16px;
+}
+
+.card {
+  display: grid;
+  gap: 16px;
+  padding: 24px;
+}
+
+.name {
+  margin: 0;
+  font-size: 18px;
+  font-weight: 700;
+}
+
+.price {
+  margin: 0;
+  font-size: 28px;
+  font-weight: 800;
+}
+
+.price span {
+  font-size: 14px;
+  font-weight: 500;
+  color: var(--color-text-muted, #5b6472);
+}
+
+.features {
+  margin: 0;
+  padding: 0;
+  list-style: none;
+  display: grid;
+  gap: 8px;
+}
+
+.features li {
+  display: flex;
+  gap: 8px;
+  align-items: flex-start;
+}
+
+.confirm {
+  display: grid;
+  gap: 8px;
+}
+
+.note {
+  margin: 0;
+  font-size: 13px;
+  color: var(--color-text-muted, #5b6472);
+}
+
+.footer {
+  display: flex;
+  justify-content: flex-start;
+}

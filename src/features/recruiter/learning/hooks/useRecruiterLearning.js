@@ -1,5 +1,6 @@
 import { useLocalStorage } from '@/hooks/useLocalStorage.js'
-import { COURSES, INITIAL_LEARNING, LEARNING_STORAGE_KEY } from '../data/courses.js'
+import { INITIAL_LEARNING, LEARNING_STORAGE_KEY } from '../data/courses.js'
+import { useCourseCatalogue } from './useCourseCatalogue.js'
 
 export const formatPrice = (price) => `£${price.toFixed(2)}`
 
@@ -15,9 +16,10 @@ function courseProgress(course, state) {
 /** Purchased courses and completed lessons (persisted on this device) plus the stats derived from them. */
 export function useRecruiterLearning() {
   const [state, setState] = useLocalStorage(LEARNING_STORAGE_KEY, INITIAL_LEARNING)
+  const courses = useCourseCatalogue()
 
   const progress = (course) => courseProgress(course, state)
-  const all = COURSES.map(progress)
+  const all = courses.map(progress)
 
   function purchase(courseId) {
     setState((current) =>
@@ -36,6 +38,7 @@ export function useRecruiterLearning() {
   const isLessonDone = (courseId, lessonId) => (state.completedLessons[courseId] ?? []).includes(lessonId)
 
   return {
+    courses,
     progress,
     isLessonDone,
     purchase,

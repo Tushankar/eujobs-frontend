@@ -7,6 +7,7 @@ import {
   PIPELINE_STORAGE_KEY,
   REJECTED,
 } from '../data/pipeline.js'
+import { useLiveApplicant } from './useLiveApplicant.js'
 
 /** Validates a stage name against the other stages; returns an error message or null. */
 function stageNameError(name, stages, ignoreId) {
@@ -23,12 +24,12 @@ function stageNameError(name, stages, ignoreId) {
  */
 export function usePipeline() {
   const [{ stages, placements }, setPipeline] = useLocalStorage(PIPELINE_STORAGE_KEY, INITIAL_PIPELINE)
+  const liveApplicant = useLiveApplicant()
 
-  const applicants = APPLICANTS.map(({ id, alignedSkills }) => ({
-    ...getCandidate(id),
-    alignedSkills,
-    stageId: placements[id] ?? stages[0].id,
-  }))
+  const applicants = [
+    ...APPLICANTS.map(({ id, alignedSkills }) => ({ ...getCandidate(id), alignedSkills })),
+    ...(liveApplicant ? [liveApplicant] : []),
+  ].map((applicant) => ({ ...applicant, stageId: placements[applicant.id] ?? stages[0].id }))
 
   const countIn = (stageId) => applicants.filter((applicant) => applicant.stageId === stageId).length
 

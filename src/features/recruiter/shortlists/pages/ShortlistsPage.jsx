@@ -12,6 +12,7 @@ import { candidates } from '@/features/recruiter/find-candidates/data/candidates
 import { useMatchJob } from '@/features/recruiter/find-candidates/hooks/useMatchJob.js'
 import { useShortlist } from '@/features/recruiter/find-candidates/hooks/useShortlist.js'
 import { EMPTY_FILTERS, findCandidates, SORT_OPTIONS } from '@/features/recruiter/find-candidates/utils/discovery.js'
+import { useLiveApplicant } from '@/features/recruiter/hiring-pipeline/hooks/useLiveApplicant.js'
 import styles from './ShortlistsPage.module.css'
 
 const MAX_COMPARED = 3
@@ -29,7 +30,9 @@ export default function ShortlistsPage() {
   const { jobs, job, setJobId } = useMatchJob()
   const { shortlistedIds, isShortlisted, toggle } = useShortlist()
 
-  const shortlisted = candidates.filter((candidate) => shortlistedIds.includes(candidate.id))
+  const liveApplicant = useLiveApplicant()
+
+  const shortlisted = [...candidates, ...(liveApplicant ? [liveApplicant] : [])].filter((candidate) => shortlistedIds.includes(candidate.id))
   const results = findCandidates(shortlisted, { query, filters, sort, job })
   const compared = comparedIds.map((id) => shortlisted.find((candidate) => candidate.id === id)).filter(Boolean)
 

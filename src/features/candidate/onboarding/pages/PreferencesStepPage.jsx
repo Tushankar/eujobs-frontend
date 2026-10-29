@@ -44,7 +44,7 @@ export default function PreferencesStepPage() {
     setOnboarding((current) => ({ ...current, ...preferences }))
     // A profile deleted from this device stays deleted; the choices are still kept under the onboarding key.
     setProfile((current) => (current ? { ...current, ...preferences } : current))
-    navigate('/candidate/jobs')
+    navigate('/candidate/onboarding/plan')
   }
 
   return (

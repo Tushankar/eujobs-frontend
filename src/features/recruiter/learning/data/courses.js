@@ -185,8 +185,6 @@ export const COURSES = [
   },
 ]
 
-export const STREAMS = [...new Set(COURSES.map((course) => course.stream))]
-
 /** The "Recommended for you" cards: a course, its overlay tag and why it is suggested (static prototype copy). */
 export const SUGGESTIONS = [
   {
@@ -208,7 +206,3 @@ export const SUGGESTIONS = [
     reason: 'You are managing 3 published roles, so prioritisation and pipeline planning may be useful now.',
   },
 ]
-
-export function getCourse(id) {
-  return COURSES.find((course) => course.id === id)
-}

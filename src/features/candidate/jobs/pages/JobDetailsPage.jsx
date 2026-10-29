@@ -23,9 +23,10 @@ import aiGlyph from '@/assets/icons/ai-glyph-blue.svg'
 import AiJobSummaryModal from '../components/AiJobSummaryModal.jsx'
 import AiSummaryButton from '../components/AiSummaryButton.jsx'
 import JobLogo from '../components/JobLogo.jsx'
-import { ROLE_DETAILS, getJob } from '../data/jobs.js'
+import { ROLE_DETAILS } from '../data/jobs.js'
 import { formatPosted, formatSalary, matchTone, profileMatch } from '../data/jobUtils.js'
 import { useApplications } from '../hooks/useApplications.js'
+import { useJobListings } from '../hooks/useJobListings.js'
 import { useSavedJobs } from '../hooks/useSavedJobs.js'
 import styles from './JobDetailsPage.module.css'
 
@@ -120,6 +121,7 @@ function MatchInsights({ job }) {
 
 export default function JobDetailsPage() {
   const { jobId } = useParams()
+  const { getJob } = useJobListings()
   const job = getJob(jobId)
   const [summaryOpen, setSummaryOpen] = useState(false)
   const { isSaved, toggleSaved } = useSavedJobs()
@@ -148,6 +150,7 @@ export default function JobDetailsPage() {
 
   const saved = isSaved(job.id)
   const applied = hasApplied(job.id)
+  const details = job.details ?? ROLE_DETAILS
 
   return (
     <div className={styles.page}>
@@ -192,7 +195,7 @@ export default function JobDetailsPage() {
               <Icon as={BriefcaseBusiness} size={14} />
               {job.type}
             </span>
-            <span className={styles.salary}>{formatSalary(job)} / year</span>
+            {job.salaryMin != null && <span className={styles.salary}>{formatSalary(job)} / year</span>}
           </div>
 
           <section className={styles.why}>
@@ -208,10 +211,10 @@ export default function JobDetailsPage() {
 
           <section className={styles.section}>
             <h2 className={styles.h2}>About the role</h2>
-            <p className={styles.about}>{ROLE_DETAILS.about}</p>
+            <p className={styles.about}>{details.about}</p>
           </section>
-          <BulletSection title="The impact you’ll make" items={ROLE_DETAILS.impact} />
-          <BulletSection title="What you’ll bring" items={ROLE_DETAILS.bring} />
+          <BulletSection title="The impact you’ll make" items={details.impact} />
+          <BulletSection title="What you’ll bring" items={details.bring} />
           <section className={styles.section}>
             <h2 className={styles.h2}>Required skills</h2>
             <ul className={styles.skills}>
@@ -222,8 +225,8 @@ export default function JobDetailsPage() {
               ))}
             </ul>
           </section>
-          <BulletSection title="Nice to have" items={ROLE_DETAILS.niceToHave} />
-          <BulletSection title="Room to do your best work" items={ROLE_DETAILS.perks} />
+          <BulletSection title="Nice to have" items={details.niceToHave} />
+          <BulletSection title="Room to do your best work" items={details.perks} />
         </article>
 
         <aside className={styles.rail} aria-label="Apply and company">

@@ -8,9 +8,9 @@ import AiJobSummaryModal from '../components/AiJobSummaryModal.jsx'
 import AiSummaryButton from '../components/AiSummaryButton.jsx'
 import JobCard from '../components/JobCard.jsx'
 import JobFiltersModal from '../components/JobFiltersModal.jsx'
-import { JOBS } from '../data/jobs.js'
 import { EMPTY_FILTERS, SORT_OPTIONS, jobPath, searchJobs, sortJobs } from '../data/jobUtils.js'
 import { useApplications } from '../hooks/useApplications.js'
+import { useJobListings } from '../hooks/useJobListings.js'
 import { useSavedJobs } from '../hooks/useSavedJobs.js'
 import styles from './FindJobsPage.module.css'
 
@@ -27,8 +27,9 @@ export default function FindJobsPage() {
   const [summaryOpen, setSummaryOpen] = useState(false)
   const { isSaved, toggleSaved } = useSavedJobs()
   const { hasApplied, applyTo } = useApplications()
+  const { jobs } = useJobListings()
 
-  const results = useMemo(() => sortJobs(searchJobs(JOBS, { query, location, filters }), sort), [query, location, filters, sort])
+  const results = useMemo(() => sortJobs(searchJobs(jobs, { query, location, filters }), sort), [jobs, query, location, filters, sort])
   const shown = results.slice(0, visible)
   const activeFilters = filters.workModes.length + filters.levels.length + filters.matches.length
   const topJob = results[0]

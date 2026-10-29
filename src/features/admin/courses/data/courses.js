@@ -20,7 +20,7 @@ export const INITIAL_COURSES = [
   course('candidate', 'designing-for-developer-workflows', 'Designing for developer workflows', 'Developer Tools', 4, 'Advanced', 59, '2026-09-30T09:00:00.000Z'),
   course('candidate', 'evidence-led-user-interviews', 'Evidence-led user interviews', 'User Interviews', 4, 'Foundation', 0, '2026-09-30T09:00:00.000Z'),
   course('recruiter', 'hiring-technology-product-talent', 'Hiring Technology & Product Talent', 'SaaS & Technology', 5, 'Intermediate', 0, '2026-10-27T15:26:39.000Z'),
-  course('recruiter', 'fair-inclusive-responsible-hiring', 'Fair, Inclusive & Responsible Hiring', 'Ethical Hiring', 5, 'Foundation', 0, '2026-10-01T09:00:00.000Z'),
+  course('recruiter', 'fair-hiring-inclusive-selection','Fair, Inclusive & Responsible Hiring', 'Ethical Hiring', 5, 'Foundation', 0, '2026-10-01T09:00:00.000Z'),
   course('recruiter', 'structured-interviewing-better-evidence', 'Structured Interviewing & Better Evidence', 'Interviewing', 5, 'Intermediate', 0, '2026-10-01T09:00:00.000Z'),
   course('recruiter', 'talent-strategy-workforce-planning', 'Talent Strategy & Workforce Planning', 'Talent Strategy', 5, 'Advanced', 0, '2026-10-01T09:00:00.000Z'),
   course('recruiter', 'employer-brand-candidate-experience', 'Employer Brand & Candidate Experience', 'Employer Brand', 5, 'Foundation', 0, '2026-10-01T09:00:00.000Z'),

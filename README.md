@@ -9,7 +9,7 @@ npm run build    # production build into dist/
 npm run lint     # oxlint
 ```
 
-Sign in at `/sign-in` (Candidate or Recruiter) or `/admin/sign-in` with any well-formed email and a non-empty password (demo only).
+Sign in at `/sign-in` (Candidate or Recruiter) or `/admin/sign-in` with any well-formed email and a non-empty password (demo only). Workspace pages need you to sign in first; the session is kept in this browser until you sign out.
 
 ## Docs
 

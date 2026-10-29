@@ -4,11 +4,13 @@ export function jobPath(jobId) {
   return `/candidate/jobs/${jobId}`
 }
 
+/** Recruiter postings may list a single figure; callers skip the salary when `salaryMin` is null. */
 export function formatSalary(job) {
-  return `$${job.salaryMin}k – $${job.salaryMax}k`
+  return job.salaryMax > job.salaryMin ? `$${job.salaryMin}k – $${job.salaryMax}k` : `$${job.salaryMin}k`
 }
 
 export function formatPosted(hoursAgo) {
+  if (hoursAgo === 1) return '1 hour ago'
   if (hoursAgo < 24) return `${hoursAgo} hours ago`
   const days = Math.floor(hoursAgo / 24)
   return days === 1 ? '1 day ago' : `${days} days ago`

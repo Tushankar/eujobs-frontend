@@ -1,11 +1,11 @@
 import { Button, Modal } from '@/components/ui'
 import PillBadge from '@/components/common/PillBadge.jsx'
-import { candidateDetails } from '../data/candidateDetails.js'
+import { getCandidateDetails } from '../data/candidateDetails.js'
 import styles from './ResumePreviewModal.module.css'
 
 /** On-screen rendering of the candidate's live CV content (there is no PDF file in this demo). */
 export default function ResumePreviewModal({ open, onClose, candidate }) {
-  const { about, roles, education } = candidateDetails[candidate.id]
+  const { about, roles, education } = getCandidateDetails(candidate)
 
   return (
     <Modal

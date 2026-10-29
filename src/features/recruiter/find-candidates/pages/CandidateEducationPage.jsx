@@ -3,12 +3,12 @@ import { GraduationCap } from 'lucide-react'
 import { Icon } from '@/components/ui'
 import SectionTitle from '@/components/common/SectionTitle.jsx'
 import ProfileSection from '../components/ProfileSection.jsx'
-import { candidateDetails } from '../data/candidateDetails.js'
+import { getCandidateDetails } from '../data/candidateDetails.js'
 import styles from './CandidateEducationPage.module.css'
 
 export default function CandidateEducationPage() {
   const { candidate } = useOutletContext()
-  const { education } = candidateDetails[candidate.id]
+  const { education } = getCandidateDetails(candidate)
 
   return (
     <ProfileSection labelledBy="education-title">

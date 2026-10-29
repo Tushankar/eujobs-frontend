@@ -70,3 +70,8 @@ export const candidateDetails = {
     potentialGap: 'Design tooling experience not confirmed',
   },
 }
+
+/** Detail for a sample candidate, or the `details` carried by an applicant built from a real candidate profile. */
+export function getCandidateDetails(candidate) {
+  return candidateDetails[candidate.id] ?? candidate.details
+}

@@ -3,7 +3,7 @@ import { Check, ChevronDown, ChevronUp } from 'lucide-react'
 import { Icon } from '@/components/ui'
 import aiMatchIcon from '@/assets/icons/find-candidates-ai-match.svg'
 import { getMatchEvidence, summarizeMatch } from '../utils/matchEvidence.js'
-import { candidateDetails } from '../data/candidateDetails.js'
+import { getCandidateDetails } from '../data/candidateDetails.js'
 import styles from './MatchInsights.module.css'
 
 /**
@@ -16,7 +16,7 @@ export default function MatchInsights({ candidate, job, defaultOpen = false }) {
   const evidence = getMatchEvidence(candidate, job)
   const gaps = [
     evidence.missingSkills.length > 0 && `No evidence listed yet for ${evidence.missingSkills.join(', ')}`,
-    candidateDetails[candidate.id]?.potentialGap,
+    getCandidateDetails(candidate)?.potentialGap,
   ].filter(Boolean)
 
   return (

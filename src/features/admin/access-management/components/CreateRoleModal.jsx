@@ -62,7 +62,7 @@ export default function CreateRoleModal({ existingNames, onClose, onCreate }) {
           <SectionTitle
             id="role-permissions"
             title="Permissions"
-            description={`${permissions.length} selected · Apply least privilege and choose only what this role needs.`}
+            description={`${permissions.length} selected · ${permissions.length === 0 ? 'Choose at least one permission to save this role.' : 'Apply least privilege and choose only what this role needs.'}`}
           />
           <div className={styles.matrix}>
             {PERMISSION_GROUPS.map((group) => (

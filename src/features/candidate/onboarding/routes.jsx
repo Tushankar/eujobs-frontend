@@ -8,6 +8,7 @@ export default [
       { index: true, element: <Navigate replace to="story" /> },
       { path: 'story', lazy: lazyPage(() => import('./pages/StoryStepPage.jsx')), handle: { title: 'Onboarding' } },
       { path: 'preferences', lazy: lazyPage(() => import('./pages/PreferencesStepPage.jsx')), handle: { title: 'Preferences' } },
+      { path: 'plan', lazy: lazyPage(() => import('./pages/PlanStepPage.jsx')), handle: { title: 'Choose a plan' } },
     ],
   },
 ]

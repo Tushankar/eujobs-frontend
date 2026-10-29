@@ -6,8 +6,8 @@ import PillBadge from '@/components/common/PillBadge.jsx'
 import { Button, Icon } from '@/components/ui'
 import { downloadCsv } from '@/utils/downloadCsv.js'
 import { APPLICATION_STATUS } from '@/features/candidate/jobs/data/applications.js'
-import { JOBS } from '@/features/candidate/jobs/data/jobs.js'
 import { useApplications } from '@/features/candidate/jobs/hooks/useApplications.js'
+import { useJobListings } from '@/features/candidate/jobs/hooks/useJobListings.js'
 import { ADMIN_USERS } from '../../shared/data/users.js'
 import styles from './ApplicationsPage.module.css'
 
@@ -30,9 +30,10 @@ const COLUMNS = [
 
 export default function ApplicationsPage() {
   const { applications } = useApplications()
+  const { getJob } = useJobListings()
 
   const rows = applications.flatMap((application) => {
-    const job = JOBS.find((item) => item.id === application.jobId)
+    const job = getJob(application.jobId)
     return job
       ? [{ id: application.id, candidate: APPLICANT, role: job.title, company: job.company, appliedAt: application.appliedAt, status: application.status }]
       : []

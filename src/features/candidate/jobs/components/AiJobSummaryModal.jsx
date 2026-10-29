@@ -44,8 +44,8 @@ export default function AiJobSummaryModal({ job, open, onClose, applied, onApply
         </h3>
         <p className={styles.previewText}>
           This {job.level.toLowerCase()} {job.type.toLowerCase()} role focuses on {job.skills.join(', ')}. It is based in{' '}
-          {job.location} with a {job.workMode.toLowerCase()} working model and lists compensation of {formatSalary(job)} per
-          year.
+          {job.location} with a {job.workMode.toLowerCase()} working model
+          {job.salaryMin == null ? '.' : ` and lists compensation of ${formatSalary(job)} per year.`}
         </p>
       </div>
 

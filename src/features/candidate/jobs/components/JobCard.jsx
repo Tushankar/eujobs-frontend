@@ -72,9 +72,11 @@ export default function JobCard({ job, saved, applied, onToggleSave, onApply, sh
           <Icon as={BriefcaseBusiness} size={12} />
           {job.type}
         </span>
-        <span className={styles.salary}>
-          {formatSalary(job)} <span className={styles.salaryUnit}>/ year</span>
-        </span>
+        {job.salaryMin != null && (
+          <span className={styles.salary}>
+            {formatSalary(job)} <span className={styles.salaryUnit}>/ year</span>
+          </span>
+        )}
       </div>
 
       <ul className={styles.tags} aria-label="Role requirements">

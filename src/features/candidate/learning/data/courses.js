@@ -161,7 +161,3 @@ export const COURSES = [
     ]),
   },
 ]
-
-export function findCourse(courseId) {
-  return COURSES.find((course) => course.id === courseId)
-}

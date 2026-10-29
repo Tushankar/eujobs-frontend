@@ -8,7 +8,6 @@ import PillBadge from '@/components/common/PillBadge.jsx'
 import SectionHeading from '@/features/recruiter/overview/components/SectionHeading.jsx'
 import LessonRow from '../components/LessonRow.jsx'
 import PurchaseDialog from '../components/PurchaseDialog.jsx'
-import { getCourse } from '../data/courses.js'
 import { formatPrice, useRecruiterLearning } from '../hooks/useRecruiterLearning.js'
 import styles from './CourseDetailsPage.module.css'
 
@@ -17,8 +16,9 @@ const INCLUDED = ['4 pre-recorded lessons', 'Completion assessment', 'Course-com
 
 /** Recruiter learning, course view: hero, outcomes, curriculum with unlock/complete states, details and the price card. */
 export default function CourseDetailsPage() {
-  const course = getCourse(useParams().courseId)
-  const { progress, isLessonDone, purchase, toggleLesson } = useRecruiterLearning()
+  const { courses, progress, isLessonDone, purchase, toggleLesson } = useRecruiterLearning()
+  const courseId = useParams().courseId
+  const course = courses.find((item) => item.id === courseId)
   const [buying, setBuying] = useState(false)
 
   const backLink = (

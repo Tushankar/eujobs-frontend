@@ -1,12 +1,12 @@
 import { useOutletContext } from 'react-router-dom'
 import SectionTitle from '@/components/common/SectionTitle.jsx'
 import ProfileSection from '../components/ProfileSection.jsx'
-import { candidateDetails } from '../data/candidateDetails.js'
+import { getCandidateDetails } from '../data/candidateDetails.js'
 import styles from './CandidateOverviewPage.module.css'
 
 export default function CandidateOverviewPage() {
   const { candidate } = useOutletContext()
-  const { about, roles } = candidateDetails[candidate.id]
+  const { about, roles } = getCandidateDetails(candidate)
   const current = roles[0]
 
   return (

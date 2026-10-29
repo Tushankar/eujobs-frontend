@@ -10,13 +10,14 @@ import DemoNote from '../components/DemoNote.jsx'
 import WorkspacePicker from '../components/WorkspacePicker.jsx'
 import { SIGN_UP_CHOICES } from '../data/workspaceChoices.js'
 import hintStyles from '../components/compactHint.module.css'
+import { startSession } from '../utils/session.js'
 import { useFormState } from '../utils/useFormState.js'
 import { validateCandidateSignUp } from '../utils/validation.js'
 import styles from './SignUpPage.module.css'
 
 /**
  * Candidate sign-up. Demo only (as stated in the Figma frame): no account is created and
- * nothing is stored; a valid form opens the candidate workspace.
+ * nothing is stored but a browser-only session; a valid form opens the candidate workspace.
  */
 export default function SignUpPage() {
   const navigate = useNavigate()
@@ -30,6 +31,7 @@ export default function SignUpPage() {
     setErrors(nextErrors)
     if (Object.keys(nextErrors).length > 0) return
     setSubmitting(true)
+    startSession('candidate')
     window.setTimeout(() => navigate(`${WORKSPACES.candidate.basePath}/onboarding`), 500)
   }
 

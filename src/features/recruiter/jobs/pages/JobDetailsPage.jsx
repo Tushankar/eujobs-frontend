@@ -4,6 +4,8 @@ import { ArrowLeft, ArrowRight, Settings2, X } from 'lucide-react'
 import PageTitle from '@/components/common/PageTitle.jsx'
 import { Button, Icon, IconButton } from '@/components/ui'
 import aiSparkle from '@/assets/icons/ai-sparkle-blue.svg'
+import { candidateJobId } from '@/features/candidate/jobs/data/recruiterJobs.js'
+import { useApplications } from '@/features/candidate/jobs/hooks/useApplications.js'
 import AiJobSummary from '../components/AiJobSummary.jsx'
 import JobNotFound from '../components/JobNotFound.jsx'
 import JobPosting from '../components/JobPosting.jsx'
@@ -16,6 +18,7 @@ import styles from './JobDetailsPage.module.css'
 export default function JobDetailsPage() {
   const { jobId } = useParams()
   const { getJob } = useJobs()
+  const { applications } = useApplications()
   const location = useLocation()
   const navigate = useNavigate()
   // One-off message from Create / Edit job (e.g. "Job published"), cleared from history so a refresh does not repeat it.
@@ -27,6 +30,10 @@ export default function JobDetailsPage() {
   }, [location.pathname, location.state, navigate])
 
   if (!job) return <JobNotFound />
+
+  const candidateApplications = applications.filter(
+    (application) => application.jobId === candidateJobId(job.id) && application.status !== 'withdrawn',
+  ).length
 
   return (
     <>
@@ -78,7 +85,7 @@ export default function JobDetailsPage() {
               Role activity
             </h2>
             <p className={styles.activityText}>
-              {job.applications ?? 0} local applications · {job.relevant} profiles with relevant listed skills
+              {(job.applications ?? 0) + candidateApplications} local applications · {job.relevant} profiles with relevant listed skills
             </p>
             <div className={styles.buttons}>
               <Button

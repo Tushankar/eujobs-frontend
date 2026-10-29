@@ -25,6 +25,7 @@ export default function CvVersionsPage() {
   function handleFile(file) {
     const problem = validateCvFile(file)
     setUploadError(problem)
+    setHistoryMessage('')
     if (problem) {
       setUploadMessage('')
       return
@@ -34,13 +35,20 @@ export default function CvVersionsPage() {
     setUploadMessage(`${file.name} was added as Version ${entry.version} and is now your live CV. Only the file name is kept in this browser.`)
   }
 
+  function clearUploadFeedback() {
+    setUploadError('')
+    setUploadMessage('')
+  }
+
   function handleCreateDraft() {
     const { entry, cv: next } = addDraft(cv)
+    clearUploadFeedback()
     setCv(next)
     setHistoryMessage(`Version ${entry.version} was drafted on this device. It stays pending until you approve it as your live CV.`)
   }
 
   function handleApprove(version) {
+    clearUploadFeedback()
     setCv(approveVersion(cv, version.id))
     setHistoryMessage(`Version ${version.version} is now your live CV.`)
   }

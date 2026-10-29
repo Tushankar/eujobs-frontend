@@ -4,14 +4,15 @@ import { Icon } from '@/components/ui'
 import StatusBadge from '@/components/common/StatusBadge.jsx'
 import JobLogo from '@/features/candidate/jobs/components/JobLogo.jsx'
 import { APPLICATION_STATUS } from '@/features/candidate/jobs/data/applications.js'
-import { getJob } from '@/features/candidate/jobs/data/jobs.js'
 import { jobPath } from '@/features/candidate/jobs/data/jobUtils.js'
 import { useApplications } from '@/features/candidate/jobs/hooks/useApplications.js'
+import { useJobListings } from '@/features/candidate/jobs/hooks/useJobListings.js'
 import styles from './RailCards.module.css'
 
 /** Latest three live applications, each linking to its job; footer links to the full Applications page. */
 export default function ApplicationActivityCard() {
   const { applications } = useApplications()
+  const { getJob } = useJobListings()
   const recent = applications.filter((item) => item.status !== 'withdrawn').slice(0, 3)
 
   return (

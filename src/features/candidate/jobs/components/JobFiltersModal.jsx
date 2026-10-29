@@ -4,7 +4,7 @@ import styles from './JobFiltersModal.module.css'
 
 const GROUPS = [
   { key: 'workModes', label: 'Work model', options: ['Remote', 'Hybrid', 'On-site'] },
-  { key: 'levels', label: 'Experience level', options: ['Mid-level', 'Senior', 'Lead'] },
+  { key: 'levels', label: 'Experience level', options: ['Junior', 'Mid-level', 'Senior', 'Lead'] },
   { key: 'matches', label: 'Match strength', options: ['Strong match', 'Good match'] },
 ]
 

@@ -1,5 +1,6 @@
-import { createBrowserRouter, Navigate } from 'react-router-dom'
+import { createBrowserRouter, Navigate, redirect } from 'react-router-dom'
 import WorkspaceLayout from '@/components/layout/WorkspaceLayout.jsx'
+import { hasSession } from '@/features/auth/utils/session.js'
 import { WORKSPACES } from './workspaces.js'
 import NotFoundPage from './NotFoundPage.jsx'
 import authRoutes from '@/features/auth/routes.jsx'
@@ -11,6 +12,8 @@ function workspaceRoute(id, children) {
   const workspace = WORKSPACES[id]
   return {
     path: workspace.basePath,
+    // Signed-out visitors (any page under the workspace, including unknown URLs) go to its sign-in.
+    loader: () => (hasSession(id) ? null : redirect(workspace.signInPath)),
     element: <WorkspaceLayout workspaceId={id} />,
     children: [
       ...children,

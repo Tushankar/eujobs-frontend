@@ -20,10 +20,11 @@ const LIST_PATH = '/recruiter/find-candidates'
 /** Shared layout of the candidate profile: summary, tabs (nested routes) and the evidence / actions sidebar. */
 export default function CandidateProfilePage() {
   const { candidateId } = useParams()
-  const candidate = getCandidate(candidateId)
+  const { stages, applicants, moveTo } = usePipeline()
+  // A candidate who applied through the candidate workspace is an applicant, not one of the sample profiles.
+  const candidate = getCandidate(candidateId) ?? applicants.find((applicant) => applicant.id === candidateId)
   const { jobs, job, setJobId } = useMatchJob()
   const { isShortlisted, toggle } = useShortlist()
-  const { stages, applicants, moveTo } = usePipeline()
   const { getActivity, addActivity } = useCandidateActivity()
   const [messageOpen, setMessageOpen] = useState(false)
   const [notice, setNotice] = useState('')

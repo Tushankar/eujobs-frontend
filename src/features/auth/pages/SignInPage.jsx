@@ -10,6 +10,7 @@ import DemoNote from '../components/DemoNote.jsx'
 import WorkspacePicker from '../components/WorkspacePicker.jsx'
 import { LOCAL_WORKMAN_HERO } from '../data/hero.js'
 import { ADMIN_CHOICES, SIGN_IN_CHOICES } from '../data/workspaceChoices.js'
+import { startSession } from '../utils/session.js'
 import { useFormState } from '../utils/useFormState.js'
 import { validateSignIn } from '../utils/validation.js'
 import styles from './SignInPage.module.css'
@@ -43,7 +44,8 @@ const SIGN_IN_COPY = {
 
 /**
  * Sign-in for a workspace (candidate, recruiter or admin). Demo only (as stated in the
- * Figma frames): nothing is sent or stored; a valid form simply opens the chosen workspace.
+ * Figma frames): credentials are never sent or stored; a valid form starts a browser-only
+ * session and opens the chosen workspace.
  */
 export default function SignInPage({ workspace = 'candidate' }) {
   const navigate = useNavigate()
@@ -57,6 +59,7 @@ export default function SignInPage({ workspace = 'candidate' }) {
     setErrors(nextErrors)
     if (Object.keys(nextErrors).length > 0) return
     setSubmitting(true)
+    startSession(workspace)
     window.setTimeout(() => navigate(WORKSPACES[workspace].basePath), 500)
   }
 

@@ -319,7 +319,3 @@ export const ROLE_DETAILS = {
     'Equity and a transparent compensation philosophy.',
   ],
 }
-
-export function getJob(jobId) {
-  return JOBS.find((job) => job.id === jobId)
-}

@@ -15,7 +15,7 @@ export default function ProfileSummary({ candidate }) {
             {candidate.name}
           </h1>
           <p className={styles.role}>
-            {candidate.title} at {candidate.company}
+            {candidate.company ? `${candidate.title} at ${candidate.company}` : candidate.title}
           </p>
         </div>
         <PillBadge tone="success" dot className={styles.availability}>

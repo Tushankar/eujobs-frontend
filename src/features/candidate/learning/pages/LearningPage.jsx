@@ -7,11 +7,9 @@ import StatCard from '@/components/common/StatCard.jsx'
 import CourseCard from '../components/CourseCard.jsx'
 import LevelTabs from '../components/LevelTabs.jsx'
 import PurchaseDialog from '../components/PurchaseDialog.jsx'
-import { COURSES, GAP_SKILL, LEVELS, SKILLS_TO_EXPLORE } from '../data/courses.js'
+import { GAP_SKILL, LEVELS, SKILLS_TO_EXPLORE } from '../data/courses.js'
 import { useLearning } from '../hooks/useLearning.js'
 import styles from './LearningPage.module.css'
-
-const RECOMMENDED = COURSES.filter((course) => course.recommended)
 
 /** "Learning": stats, courses suggested for the skill gap, and the full catalogue filtered by level. */
 export default function LearningPage() {
@@ -20,7 +18,8 @@ export default function LearningPage() {
   const [buying, setBuying] = useState(null)
   const [message, setMessage] = useState('')
 
-  const visible = level === 'All levels' ? COURSES : COURSES.filter((course) => course.level === level)
+  const gapCourses = learning.courses.filter((course) => course.recommended)
+  const visible = level === 'All levels' ? learning.courses : learning.courses.filter((course) => course.level === level)
 
   function confirmPurchase(course) {
     learning.purchase(course.id)
@@ -90,7 +89,7 @@ export default function LearningPage() {
             Review gap evidence
           </Link>
         </div>
-        <div className={styles.grid}>{RECOMMENDED.map((course) => renderCard(course, true))}</div>
+        <div className={styles.grid}>{gapCourses.map((course) => renderCard(course, true))}</div>
       </section>
 
       <section className={styles.explore} aria-labelledby="all-courses-heading">
