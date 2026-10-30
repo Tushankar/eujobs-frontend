@@ -25,7 +25,9 @@ Payments use a demo checkout (no payment provider, nothing is charged): card `42
 
 | File | What it covers |
 |---|---|
-| [IMPLEMENTATION_PLAN.md](IMPLEMENTATION_PLAN.md) | plan, build order, per-screen checklist, validation log |
+| [docs/BACKEND_PLAN.md](docs/BACKEND_PLAN.md) | **backend build plan**: decisions, architecture, data model, API, phases with browser checks |
+| [docs/backend/DECISIONS.md](docs/backend/DECISIONS.md) | the 210 final product decisions (audits and review in `docs/backend/`) |
+| [IMPLEMENTATION_PLAN.md](IMPLEMENTATION_PLAN.md) | frontend plan, build order, per-screen checklist, validation log |
 | [docs/FIGMA_SCREEN_INVENTORY.md](docs/FIGMA_SCREEN_INVENTORY.md) | every Figma frame → node id, route, role, status |
 | [docs/DESIGN_SYSTEM.md](docs/DESIGN_SYSTEM.md) | tokens, typography, components extracted from Figma |
 | [docs/USER_FLOW.md](docs/USER_FLOW.md) | screen flow per role (Mermaid) |
