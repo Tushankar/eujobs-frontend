@@ -1,82 +1,74 @@
 import { useEffect, useState } from 'react'
+import { useTranslation } from 'react-i18next'
 import { Link, matchPath, useLocation, useMatches } from 'react-router-dom'
-import { Bell, BriefcaseBusiness, Check, ChevronRight, Earth, Menu, MapPin, Search, Users } from 'lucide-react'
-import { cx } from '@/utils/cx.js'
+import { Bell, Check, ChevronRight, Earth, Menu, MapPin, Search } from 'lucide-react'
 import { Dropdown, Icon, IconButton } from '@/components/ui'
-import { WORKSPACES, workspacePath } from '@/app/workspaces.js'
+import { workspacePath } from '@/app/workspaces.js'
+import { LANGUAGES, languageName } from '@/i18n/index.js'
+import { useCountryOptions } from '@/lib/countries.js'
+import { usePreferences, useFormat } from '@/lib/preferences.js'
 import GlobalSearch from './GlobalSearch.jsx'
 import ProfileMenu from './ProfileMenu.jsx'
-import { LANGUAGES, LOCATIONS, useWorkspacePreferences } from './preferencesContext.js'
+import { useDocumentTitle } from './useDocumentTitle.js'
 import styles from './Header.module.css'
 
-const SWITCH_ICONS = { candidate: Users, recruiter: BriefcaseBusiness }
+// Ctrl K on Windows and Linux, ⌘ K on Apple devices (M-194).
+const IS_APPLE = /mac|iphone|ipad/i.test(navigator.userAgentData?.platform ?? navigator.platform)
 
-/** Current page title: a route `handle.title` wins, otherwise the matching sidebar item. */
+/** Current page title: a route `handle.titleKey` wins, otherwise the matching sidebar item. */
 function usePageTitle(workspace) {
+  const { t } = useTranslation()
   const { pathname } = useLocation()
   const matches = useMatches()
-  const fromHandle = [...matches].reverse().find((match) => match.handle?.title)?.handle.title
-  if (fromHandle) return fromHandle
-  const item = workspace.nav.find((entry) =>
-    matchPath({ path: workspacePath(workspace, entry.to), end: Boolean(entry.end) }, pathname),
-  )
-  return item?.label ?? 'Overview'
+  const titleKey = [...matches].reverse().find((match) => match.handle?.titleKey)?.handle.titleKey
+  if (titleKey) return t(`shell:${titleKey}`)
+  const item = workspace.nav.find((entry) => matchPath({ path: workspacePath(workspace, entry.to), end: Boolean(entry.end) }, pathname))
+  return t(`shell:nav.${item?.key ?? 'overview'}`)
 }
 
-function WorkspaceSwitch({ workspace }) {
+function MenuOption({ selected, onSelect, children }) {
   return (
-    <div className={styles.switch} role="group" aria-label="Switch workspace">
-      {['candidate', 'recruiter'].map((id) => {
-        const target = WORKSPACES[id]
-        const active = id === workspace.id
-        return (
-          <Link
-            key={id}
-            to={target.basePath}
-            className={cx(styles.switchOption, active && styles.switchActive)}
-            aria-current={active ? 'true' : undefined}
-          >
-            <Icon as={SWITCH_ICONS[id]} size={12} />
-            {target.label}
-          </Link>
-        )
-      })}
-    </div>
+    <button type="button" className={styles.menuItem} aria-current={selected || undefined} onClick={onSelect}>
+      <span className={styles.menuCheck}>{selected && <Icon as={Check} size={14} />}</span>
+      {children}
+    </button>
   )
 }
 
-function LocationDropdown() {
-  const { location, setLocation } = useWorkspacePreferences()
+/** M-135, M-137: the header country sets discovery, currency and formats. */
+function CountryDropdown() {
+  const { t } = useTranslation()
+  const { country, setCountry } = usePreferences()
+  const format = useFormat()
+  const options = useCountryOptions()
   return (
     <Dropdown
       className={styles.hideBelowWide}
       trigger={(props) => (
-        <button type="button" className={styles.pill} {...props}>
+        <button type="button" className={styles.pill} aria-label={t('shell:country.label')} {...props}>
           <Icon as={MapPin} size={15} />
-          <span className={styles.pillLabel}>{location}</span>
+          <span className={styles.pillLabel}>{country ? format.country(country) : t('shell:country.choose')}</span>
         </button>
       )}
     >
       {({ close }) => (
         <div className={styles.menu}>
-          <ul>
-            {LOCATIONS.map((option) => (
-              <li key={option}>
-                <button
-                  type="button"
-                  className={styles.menuItem}
-                  onClick={() => {
-                    setLocation(option)
+          <ul className={styles.menuScroll}>
+            {options.map((option) => (
+              <li key={option.code}>
+                <MenuOption
+                  selected={option.code === country}
+                  onSelect={() => {
+                    setCountry(option.code)
                     close()
                   }}
                 >
-                  <span className={styles.menuCheck}>{option === location && <Icon as={Check} size={14} />}</span>
-                  {option}
-                </button>
+                  {option.name}
+                </MenuOption>
               </li>
             ))}
           </ul>
-          <p className={styles.menuNote}>Local marketplace preference for this workspace.</p>
+          <p className={styles.menuNote}>{t('shell:country.note')}</p>
         </div>
       )}
     </Dropdown>
@@ -84,32 +76,31 @@ function LocationDropdown() {
 }
 
 function LanguageDropdown() {
-  const { language, setLanguage } = useWorkspacePreferences()
+  const { t } = useTranslation()
+  const { language, setLanguage } = usePreferences()
   return (
     <Dropdown
       className={styles.hideBelowWide}
       trigger={(props) => (
-        <button type="button" className={styles.pill} {...props}>
+        <button type="button" className={styles.pill} aria-label={t('shell:language.label')} {...props}>
           <Icon as={Earth} size={15} />
-          {language}
+          {languageName(language)}
         </button>
       )}
     >
       {({ close }) => (
         <div className={styles.menu}>
           {LANGUAGES.map((option) => (
-            <button
+            <MenuOption
               key={option}
-              type="button"
-              className={styles.menuItem}
-              onClick={() => {
+              selected={option === language}
+              onSelect={() => {
                 setLanguage(option)
                 close()
               }}
             >
-              <span className={styles.menuCheck}>{option === language && <Icon as={Check} size={14} />}</span>
-              {option}
-            </button>
+              <span lang={option}>{languageName(option)}</span>
+            </MenuOption>
           ))}
         </div>
       )}
@@ -118,8 +109,10 @@ function LanguageDropdown() {
 }
 
 export default function Header({ workspace, onOpenMenu }) {
+  const { t } = useTranslation()
   const title = usePageTitle(workspace)
   const [searchOpen, setSearchOpen] = useState(false)
+  useDocumentTitle(title)
 
   useEffect(() => {
     function onKeyDown(event) {
@@ -134,15 +127,9 @@ export default function Header({ workspace, onOpenMenu }) {
 
   return (
     <header className={styles.header} data-workspace={workspace.id}>
-      <IconButton
-        icon={Menu}
-        label="Open navigation"
-        className={styles.menuButton}
-        onClick={onOpenMenu}
-        aria-controls="workspace-sidebar"
-      />
-      <nav className={styles.breadcrumb} aria-label="Breadcrumb">
-        <span className={styles.crumbRoot}>{workspace.label} workspace</span>
+      <IconButton icon={Menu} label={t('shell:openNavigation')} className={styles.menuButton} onClick={onOpenMenu} aria-controls="workspace-sidebar" />
+      <nav className={styles.breadcrumb} aria-label={t('shell:breadcrumb')}>
+        <span className={styles.crumbRoot}>{t(`shell:workspaces.${workspace.id}.name`)}</span>
         <Icon as={ChevronRight} size={12} />
         <span className={styles.crumbCurrent} aria-current="page">
           {title}
@@ -152,24 +139,21 @@ export default function Header({ workspace, onOpenMenu }) {
       <div className={styles.actions}>
         <button type="button" className={styles.search} onClick={() => setSearchOpen(true)}>
           <Icon as={Search} size={16} />
-          <span className={styles.searchLabel}>Search anything...</span>
-          <kbd className={styles.kbd}>⌘ K</kbd>
+          <span className={styles.searchLabel}>{t('shell:search.trigger')}</span>
+          <kbd className={styles.kbd}>{IS_APPLE ? '⌘ K' : t('shell:search.shortcut')}</kbd>
         </button>
 
-        {workspace.showWorkspaceSwitch && <WorkspaceSwitch workspace={workspace} />}
         <LanguageDropdown />
-        {workspace.showLocation && <LocationDropdown />}
+        {workspace.showLocation && <CountryDropdown />}
 
         <div className={styles.identity}>
-          <span className={styles.bell}>
-            <IconButton
-              as={Link}
-              to={workspacePath(workspace, workspace.id === 'admin' ? 'settings' : 'settings/notifications')}
-              icon={Bell}
-              label="Notifications"
-            />
-            <span className={styles.bellDot} aria-hidden="true" />
-          </span>
+          {/* M-093, OD6: no dot; the bell opens the notification settings (admin Settings for admins). */}
+          <IconButton
+            as={Link}
+            to={workspacePath(workspace, workspace.id === 'admin' ? 'settings' : 'settings/notifications')}
+            icon={Bell}
+            label={t('shell:notifications')}
+          />
         </div>
         <ProfileMenu workspace={workspace} />
       </div>

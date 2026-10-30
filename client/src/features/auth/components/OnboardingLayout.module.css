@@ -19,11 +19,6 @@
   padding: 16px 32px;
 }
 
-.headerInner img {
-  width: 126px;
-  height: 30px;
-}
-
 .headerAside {
   display: flex;
   align-items: center;

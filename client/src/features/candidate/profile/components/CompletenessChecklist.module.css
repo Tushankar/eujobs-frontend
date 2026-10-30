@@ -1,0 +1,71 @@
+.checklist {
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+}
+
+.head {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  justify-content: space-between;
+  gap: 8px;
+}
+
+.count {
+  font-size: 12px;
+  font-weight: 600;
+  line-height: 16px;
+  color: var(--foreground);
+}
+
+.meter {
+  height: 6px;
+  overflow: hidden;
+  border-radius: var(--radius-full);
+  background: var(--muted);
+}
+
+.fill {
+  display: block;
+  height: 100%;
+  border-radius: inherit;
+  background: var(--primary);
+}
+
+.items {
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+}
+
+.item {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  font-size: 12px;
+  line-height: 16px;
+  color: var(--muted-foreground);
+}
+
+.item a {
+  color: var(--primary);
+  font-weight: 500;
+}
+
+.item a:hover {
+  text-decoration: underline;
+}
+
+.done {
+  flex-shrink: 0;
+  color: var(--success-fg);
+}
+
+.open {
+  flex-shrink: 0;
+  width: 14px;
+  height: 14px;
+  border: 1.5px solid var(--border);
+  border-radius: var(--radius-full);
+}

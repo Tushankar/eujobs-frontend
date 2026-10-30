@@ -1,27 +1,27 @@
 import { useMemo, useState } from 'react'
+import { useTranslation } from 'react-i18next'
 import { useNavigate } from 'react-router-dom'
 import { CircleHelp, Search, Settings2 } from 'lucide-react'
 import { Icon, Modal } from '@/components/ui'
 import { workspacePath } from '@/app/workspaces.js'
+import { foldText } from '@/lib/text.js'
 import styles from './GlobalSearch.module.css'
 
-/**
- * "Search anything…" (⌘/Ctrl+K). The design shows only the trigger, so the smallest
- * sensible behaviour is a quick-jump list over this workspace's pages.
- */
+/** "Search anything" (Ctrl/⌘+K): a quick jump between this workspace's pages, by their translated labels (M-194). */
 export default function GlobalSearch({ workspace, open, onClose }) {
+  const { t } = useTranslation()
   const navigate = useNavigate()
   const [query, setQuery] = useState('')
 
   const destinations = useMemo(
     () => [
-      ...workspace.nav.map((item) => ({ label: item.label, to: workspacePath(workspace, item.to), icon: item.icon })),
-      { label: 'Settings', to: workspacePath(workspace, 'settings'), icon: Settings2 },
-      { label: 'Help & resources', to: workspacePath(workspace, 'help'), icon: CircleHelp },
+      ...workspace.nav.map((item) => ({ label: t(`shell:nav.${item.key}`), to: workspacePath(workspace, item.to), icon: item.icon })),
+      { label: t('shell:sidebar.settings'), to: workspacePath(workspace, 'settings'), icon: Settings2 },
+      { label: t('shell:sidebar.help'), to: workspacePath(workspace, 'help'), icon: CircleHelp },
     ],
-    [workspace],
+    [workspace, t],
   )
-  const results = destinations.filter((item) => item.label.toLowerCase().includes(query.trim().toLowerCase()))
+  const results = destinations.filter((item) => foldText(item.label).includes(foldText(query.trim())))
 
   function close() {
     setQuery('')
@@ -34,14 +34,7 @@ export default function GlobalSearch({ workspace, open, onClose }) {
   }
 
   return (
-    <Modal
-      open={open}
-      onClose={close}
-      title="Search anything"
-      description="Jump to a page in this workspace."
-      width={520}
-      className={styles.palette}
-    >
+    <Modal open={open} onClose={close} title={t('shell:search.title')} description={t('shell:search.description')} width={520} className={styles.palette}>
       <form
         onSubmit={(event) => {
           event.preventDefault()
@@ -49,7 +42,7 @@ export default function GlobalSearch({ workspace, open, onClose }) {
         }}
       >
         <label className="sr-only" htmlFor="global-search-input">
-          Search pages
+          {t('shell:search.inputLabel')}
         </label>
         <div className={styles.inputWrap}>
           <Icon as={Search} size={16} />
@@ -57,7 +50,7 @@ export default function GlobalSearch({ workspace, open, onClose }) {
             id="global-search-input"
             data-autofocus
             className={styles.input}
-            placeholder="Search anything..."
+            placeholder={t('shell:search.trigger')}
             value={query}
             onChange={(event) => setQuery(event.target.value)}
             autoComplete="off"
@@ -76,7 +69,7 @@ export default function GlobalSearch({ workspace, open, onClose }) {
           ))}
         </ul>
       ) : (
-        <p className={styles.empty}>No pages match “{query}”.</p>
+        <p className={styles.empty}>{t('shell:search.empty', { query })}</p>
       )}
     </Modal>
   )

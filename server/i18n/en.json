@@ -1,0 +1,77 @@
+{
+  "email": {
+    "layout": {
+      "linkHint": "If the button does not work, copy this link into your browser:",
+      "footer": "This is an automated message from Local WorkMan."
+    },
+    "verify_email": {
+      "subject": "Confirm your email address",
+      "heading": "Confirm your email address",
+      "body": [
+        "Hi {{name}},",
+        "Thanks for signing up to Local WorkMan. Confirm your email address to finish creating your account. The link works once and expires in 24 hours."
+      ],
+      "action": "Confirm email address",
+      "note": "If you did not sign up, you can ignore this email."
+    },
+    "already_registered": {
+      "subject": "You already have a Local WorkMan account",
+      "heading": "You already have an account",
+      "body": [
+        "Hi {{name}},",
+        "Someone tried to sign up to Local WorkMan with this email address. You already have an account, so no new one was created."
+      ],
+      "action": "Sign in",
+      "secondary": "Forgot your password? Reset it here:",
+      "note": "If this was not you, you can ignore this email. Your account has not changed."
+    },
+    "recruiter_email_code": {
+      "subject": "Your Local WorkMan verification code",
+      "heading": "Your verification code",
+      "body": [
+        "Hi {{name}},",
+        "Enter this code to verify your work email address. It expires in 10 minutes."
+      ],
+      "note": "If you did not sign up, you can ignore this email."
+    },
+    "password_reset": {
+      "subject": "Reset your Local WorkMan password",
+      "heading": "Reset your password",
+      "body": [
+        "Hi {{name}},",
+        "We received a request to reset your password. The link works once and expires in 1 hour. Resetting your password signs you out on every device."
+      ],
+      "action": "Reset password",
+      "note": "If you did not ask for this, you can ignore this email. Your password stays the same."
+    },
+    "verification_approved": {
+      "subject": "Your {{check}} check is approved",
+      "heading": "Check approved",
+      "body": [
+        "Hi {{name}},",
+        "An administrator reviewed your {{check}} evidence and approved it. The check now shows as verified on your profile."
+      ],
+      "action": "Open verification"
+    },
+    "verification_rejected": {
+      "subject": "Your {{check}} check needs new evidence",
+      "heading": "Evidence not approved",
+      "body": [
+        "Hi {{name}},",
+        "An administrator reviewed your {{check}} evidence and could not approve it.",
+        "Reason: {{reason}}",
+        "You can submit new evidence from your verification page."
+      ],
+      "action": "Open verification"
+    }
+  },
+  "verification": {
+    "category": {
+      "identity": "identity",
+      "academic": "academic qualification",
+      "employment": "employment",
+      "right_to_work": "right to work",
+      "certificate": "certificate"
+    }
+  }
+}

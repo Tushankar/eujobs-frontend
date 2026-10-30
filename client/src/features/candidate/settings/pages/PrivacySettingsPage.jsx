@@ -1,34 +1,52 @@
+import { useState } from 'react'
+import { useTranslation } from 'react-i18next'
 import { ShieldCheck } from 'lucide-react'
 import { Icon } from '@/components/ui'
-import { useLocalStorage } from '@/hooks/useLocalStorage.js'
+import { useErrorText } from '@/lib/forms.js'
+import { useGetPrivacyQuery, useUpdatePrivacyMutation } from '../api.js'
 import SettingsCard from '../components/SettingsCard.jsx'
 import ToggleRow from '../components/ToggleRow.jsx'
-import { DEFAULT_PRIVACY, PRIVACY_OPTIONS, PRIVACY_STORAGE_KEY } from '../data/settings.js'
 import styles from './SettingsPage.module.css'
 
-/** Settings > Privacy & visibility: each switch applies immediately and is kept on this device. */
+// M-187: the three flags, enforced by discovery, CV access and matching.
+const FLAGS = ['discoverable', 'resumeVisible', 'matchingConsent']
+
+/** Settings > Privacy & visibility: each switch is saved on the server at once. */
 export default function PrivacySettingsPage() {
-  const [privacy, setPrivacy] = useLocalStorage(PRIVACY_STORAGE_KEY, DEFAULT_PRIVACY)
+  const { t } = useTranslation()
+  const errorText = useErrorText()
+  const { data: privacy } = useGetPrivacyQuery()
+  const [updatePrivacy] = useUpdatePrivacyMutation()
+  const [failure, setFailure] = useState(null)
+
+  async function toggle(flag, checked) {
+    setFailure(null)
+    try {
+      await updatePrivacy({ [flag]: checked }).unwrap()
+    } catch (error) {
+      setFailure(error)
+    }
+  }
 
   return (
-    <SettingsCard
-      title="Choose how you’re discovered"
-      description="Your resume isn’t shared just because your profile is visible."
-    >
-      <ul className={styles.list}>
-        {PRIVACY_OPTIONS.map((option) => (
-          <ToggleRow
-            key={option.id}
-            label={option.label}
-            description={option.description}
-            checked={privacy[option.id] ?? DEFAULT_PRIVACY[option.id]}
-            onChange={(checked) => setPrivacy((current) => ({ ...current, [option.id]: checked }))}
-          />
-        ))}
-      </ul>
+    <SettingsCard title={t('account:privacy.title')} description={t('account:privacy.description')}>
+      {privacy && (
+        <ul className={styles.list}>
+          {FLAGS.map((flag) => (
+            <ToggleRow
+              key={flag}
+              label={t(`account:privacy.${flag}.label`)}
+              description={t(`account:privacy.${flag}.description`)}
+              checked={privacy[flag]}
+              onChange={(checked) => toggle(flag, checked)}
+            />
+          ))}
+        </ul>
+      )}
+      {failure && <p role="alert">{errorText.code(failure)}</p>}
       <p className={styles.note}>
         <Icon as={ShieldCheck} size={15} />
-        These are local prototype preferences. No personal information is transmitted to a recruitment service.
+        {t('account:privacy.note')}
       </p>
     </SettingsCard>
   )

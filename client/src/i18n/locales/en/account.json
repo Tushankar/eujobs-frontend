@@ -1,0 +1,42 @@
+{
+  "password": {
+    "title": "Change password",
+    "description": "Enter your current password, then the new one. You stay signed in on your other devices.",
+    "current": "Current password",
+    "new": "New password",
+    "confirm": "Confirm new password",
+    "submit": "Change password",
+    "saved": "Your password has been changed."
+  },
+  "notifications": {
+    "title": "Useful updates. Less noise.",
+    "email": "Email updates",
+    "candidate": "Job alerts, application updates and new messages by email. Account and security emails are always sent.",
+    "recruiter": "New applications and new messages by email. Account and security emails are always sent."
+  },
+  "admin": {
+    "title": "Settings",
+    "description": "Your name, password and language.",
+    "profile": "Your profile",
+    "saveName": "Save name",
+    "nameSaved": "Your name has been saved.",
+    "language": "Language of the workspace"
+  },
+  "privacy": {
+    "title": "Choose how you’re discovered",
+    "description": "Your resume isn’t shared just because your profile is visible.",
+    "discoverable": {
+      "label": "Profile visibility & recruiter discovery",
+      "description": "Allow recruiters to find your profile, listed skills and career preferences. Turn this off to keep your profile private. Companies you applied to still see your application."
+    },
+    "resumeVisible": {
+      "label": "Resume visibility",
+      "description": "Allow recruiters who find your profile to open your live CV. Companies you applied to can always open the CV you sent."
+    },
+    "matchingConsent": {
+      "label": "Matching consent",
+      "description": "Allow your profile to be used in AI matching. No protected characteristics are used."
+    },
+    "note": "Every download of your CV is logged."
+  }
+}

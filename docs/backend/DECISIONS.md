@@ -386,6 +386,8 @@ Job, profile, onboarding and alert locations are free text today. How are they s
 
 **Decision:** Country + city text; remote list. Country (EU 27 + UK) + free-text city; remote jobs flagged, with a list of eligible countries.
 
+**Changed 2026-10-30 by the owner (G-1 in BACKEND_PLAN.md):** the city is no longer free text. Every city field is picked through Google Places (New) via the server proxy and stored as `{ countryCode, city, placeId }`, without coordinates. Remote jobs and their eligible-country list are unchanged.
+
 *Context:* Decision: the country picker (EU 27 + UK + Remote) controls which jobs/candidates are shown, so every job and profile needs a country code. REC-RQ-15 and CAN-Q11 agree.
 
 *Rejected:* Country + city from a gazetteer; Keep free text.

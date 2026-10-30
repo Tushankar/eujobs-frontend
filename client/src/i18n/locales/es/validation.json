@@ -1,0 +1,102 @@
+{
+  "required": "Este campo es obligatorio.",
+  "invalid": "Revisa este valor.",
+  "too_short": "Usa al menos {{min}} caracteres.",
+  "too_long": "Usa como máximo {{max}} caracteres.",
+  "too_small": "Introduce {{min}} o más.",
+  "too_big": "Introduce {{max}} o menos.",
+  "too_few": "Añade al menos {{min}}.",
+  "too_many": "Añade como máximo {{max}}.",
+  "not_allowed": "Este cambio no está permitido.",
+  "too_common": "Esta contraseña es demasiado común. Elige otra.",
+  "matches_email": "No uses el nombre de tu correo electrónico como contraseña.",
+  "mismatch": "Los valores no coinciden.",
+  "duplicate": "Ya está en la lista.",
+  "before_start": "Elige una fecha de fin posterior a la de inicio.",
+  "no_file": "Añade primero un archivo.",
+  "fields": {
+    "email": {
+      "required": "Introduce tu correo electrónico.",
+      "invalid": "Introduce un correo válido, como tu@ejemplo.com."
+    },
+    "password": {
+      "required": "Introduce tu contraseña.",
+      "too_long": "Usa una contraseña más corta."
+    },
+    "newPassword": {
+      "required": "Introduce una nueva contraseña.",
+      "too_long": "Usa una contraseña más corta."
+    },
+    "currentPassword": {
+      "required": "Introduce tu contraseña actual.",
+      "invalid": "Esta no es tu contraseña actual."
+    },
+    "confirmPassword": {
+      "required": "Vuelve a introducir la contraseña.",
+      "mismatch": "Las contraseñas no coinciden."
+    },
+    "fullName": {
+      "required": "Introduce tu nombre completo."
+    },
+    "jobTitle": {
+      "required": "Introduce tu cargo o puesto."
+    },
+    "phone": {
+      "required": "Introduce tu número de teléfono.",
+      "invalid": "Introduce un teléfono válido, como +34 912 345 678."
+    },
+    "country": {
+      "required": "Elige un país.",
+      "invalid": "Elige un país de la lista."
+    },
+    "acceptTerms": {
+      "required": "Acepta las Condiciones del servicio y la Política de privacidad para continuar.",
+      "invalid": "Acepta las Condiciones del servicio y la Política de privacidad para continuar."
+    },
+    "skills": {
+      "duplicate": "{{skill}} ya está en tus competencias."
+    },
+    "placeId": {
+      "required": "Elige una ciudad de las sugerencias.",
+      "invalid": "Elige una ciudad de las sugerencias.",
+      "not_allowed": "Elige una ciudad de la UE o el Reino Unido."
+    },
+    "headline": {
+      "required": "Indica tu puesto actual o un titular."
+    },
+    "about": {
+      "too_short": "Cuenta tu historia en al menos {{min}} caracteres."
+    },
+    "end": {
+      "required": "Indica el mes de fin o marca la casilla si sigue en curso."
+    },
+    "linkedin": {
+      "invalid": "Usa el enlace de un perfil de LinkedIn, como https://www.linkedin.com/in/tu-nombre."
+    },
+    "portfolio": {
+      "invalid": "Usa un enlace completo que empiece por https://."
+    },
+    "reason": {
+      "required": "Indica el motivo del rechazo."
+    },
+    "file": {
+      "required": "Elige un archivo.",
+      "too_many": "Puedes guardar hasta {{max}} versiones. Elimina una primero."
+    },
+    "workPreference": {
+      "required": "Elige cómo te gusta trabajar."
+    },
+    "confirmed": {
+      "required": "Confirma que esta documentación es tuya y es exacta."
+    },
+    "entryId": {
+      "required": "Elige la entrada del perfil a la que corresponde."
+    },
+    "evidenceType": {
+      "required": "Elige el tipo de documentación."
+    },
+    "code": {
+      "required": "Introduce el código."
+    }
+  }
+}

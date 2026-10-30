@@ -1,0 +1,120 @@
+{
+  "brandHome": "Inicio de Local WorkMan",
+  "nav": {
+    "overview": "Resumen",
+    "findJobs": "Buscar empleo",
+    "applications": "Candidaturas",
+    "jobAlerts": "Alertas de empleo",
+    "myProfile": "Mi perfil",
+    "cvVersions": "CV y versiones",
+    "verification": "Verificación",
+    "aiInsights": "Análisis con IA",
+    "learning": "Formación",
+    "jobs": "Ofertas",
+    "findCandidates": "Buscar candidatos",
+    "shortlists": "Preselecciones",
+    "hiringPipeline": "Proceso de selección",
+    "recruiterLearning": "Formación para reclutadores",
+    "company": "Empresa",
+    "candidates": "Candidatos",
+    "recruiters": "Reclutadores",
+    "recruitment": "Selección",
+    "accessManagement": "Gestión de accesos",
+    "courses": "Cursos",
+    "payments": "Pagos",
+    "aiMatching": "IA y compatibilidad",
+    "analytics": "Analítica",
+    "reports": "Informes",
+    "moderation": "Moderación",
+    "auditLogs": "Registro de auditoría",
+    "aiBadge": "IA"
+  },
+  "titles": {
+    "settings": "Configuración",
+    "aiProfileInsights": "Análisis del perfil con IA",
+    "skillGap": "Habilidades que faltan",
+    "profileImprovement": "Mejora del perfil",
+    "jobMatchInsights": "Compatibilidad con ofertas",
+    "aiRecommendationExplanation": "Por qué te lo recomienda la IA",
+    "onboarding": "Primeros pasos",
+    "preferences": "Preferencias",
+    "choosePlan": "Elige un plan",
+    "help": "Ayuda",
+    "createJob": "Crear oferta",
+    "editJob": "Editar oferta",
+    "signIn": "Iniciar sesión",
+    "signUp": "Crea tu cuenta",
+    "adminSignIn": "Acceso de administración",
+    "checkEmail": "Revisa tu correo",
+    "verifyEmail": "Confirma tu correo electrónico",
+    "forgotPassword": "Contraseña olvidada",
+    "resetPassword": "Restablecer contraseña",
+    "emailCode": "Verifica tu correo de trabajo"
+  },
+  "workspaces": {
+    "candidate": {
+      "name": "Espacio de candidato",
+      "navigation": "Navegación del candidato",
+      "home": "Volver al resumen del candidato"
+    },
+    "recruiter": {
+      "name": "Espacio de reclutador",
+      "navigation": "Navegación del reclutador",
+      "home": "Volver al resumen del reclutador"
+    },
+    "admin": {
+      "name": "Espacio de administración",
+      "navigation": "Navegación de administración",
+      "home": "Volver al resumen de administración"
+    }
+  },
+  "sidebar": {
+    "section": "Espacio de trabajo",
+    "settings": "Configuración",
+    "help": "Ayuda y recursos"
+  },
+  "promo": {
+    "title": "Tu próximo paso, más inteligente.",
+    "text": "Un perfil más completo te acerca a oportunidades más relevantes.",
+    "link": "Completa tu perfil"
+  },
+  "signOut": "Cerrar sesión",
+  "identity": {
+    "owner": "Propietario",
+    "noRole": "Sin rol asignado"
+  },
+  "notices": {
+    "wrongPortal": "Esta cuenta usa este espacio de trabajo, así que lo hemos abierto para ti."
+  },
+  "footer": {
+    "legal": "Información legal"
+  },
+  "notFound": {
+    "title": "Página no encontrada",
+    "text": "No hay nada en",
+    "signIn": "Ir a iniciar sesión"
+  },
+  "country": {
+    "label": "País",
+    "choose": "Elige un país",
+    "note": "Tu país determina qué ofertas y candidatos ves, la moneda y el formato de fechas y números."
+  },
+  "language": {
+    "label": "Idioma"
+  },
+  "openNavigation": "Abrir la navegación",
+  "breadcrumb": "Ruta de navegación",
+  "notifications": "Configuración de notificaciones",
+  "search": {
+    "trigger": "Buscar...",
+    "shortcut": "Ctrl K",
+    "title": "Buscar",
+    "description": "Ve a una página de este espacio de trabajo.",
+    "inputLabel": "Buscar páginas",
+    "empty": "Ninguna página coincide con «{{query}}»."
+  },
+  "profileMenu": {
+    "open": "Abrir el menú de perfil",
+    "profile": "Perfil"
+  }
+}

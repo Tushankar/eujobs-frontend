@@ -1,0 +1,91 @@
+{
+  "eyebrow": "Trust, with context",
+  "title": "Verification you can understand.",
+  "description": "Confirm your contact details, see what each check means, and send evidence when you are ready.",
+  "basic": {
+    "title": "Basic verification",
+    "lead": "Contact checks support account integrity. They do not verify skills, identity, education, or employment.",
+    "email": "Email address"
+  },
+  "verified": "Verified",
+  "notVerified": "Not verified",
+  "phone": {
+    "label": "Phone number",
+    "country": "Country",
+    "number": "Phone number",
+    "numberHint": "Your number, with or without the country code.",
+    "send": "Send code",
+    "resend": "Send a new code",
+    "resendIn": "Send a new code in {{count}} s",
+    "codeShown": "Your code is {{code}}. Enter it below within {{minutes}} minutes.",
+    "codeNote": "We show the code here instead of sending a text message.",
+    "code": "Code",
+    "confirm": "Confirm",
+    "verifiedNumber": "{{phone}} is verified.",
+    "change": "Use another number"
+  },
+  "checks": {
+    "title": "Profile verification",
+    "lead": "An administrator reviews each check. Recruiters see a tick for every approved one.",
+    "bannerTitle": "Checks your profile needs",
+    "bannerLead": "Identity is always needed. Education and employment checks are needed when your profile lists them.",
+    "progress": "{{done}} of {{total}} verified"
+  },
+  "check": {
+    "identity": {
+      "label": "Identity",
+      "description": "Government-issued photo ID reviewed against the account holder’s details.",
+      "accepted": "Accepted evidence: passport, driving licence or national identity card."
+    },
+    "academic": {
+      "label": "Academic qualifications",
+      "description": "Qualification evidence reviewed against an education entry on your profile.",
+      "accepted": "Accepted evidence: degree certificate, diploma or official transcript.",
+      "notNeeded": "Needed once your profile lists education."
+    },
+    "employment": {
+      "label": "Employment documents",
+      "description": "Employment evidence reviewed against a role on your profile.",
+      "accepted": "Accepted evidence: employment letter, contract page or verified reference.",
+      "notNeeded": "Needed once your profile lists work history."
+    }
+  },
+  "submitted": "Submitted {{date}} · {{file}}",
+  "submittedType": "Submitted {{date}} · {{type}} · {{file}}",
+  "reason": "Not approved: {{reason}}",
+  "submit": "Submit evidence",
+  "resubmit": "Submit new evidence",
+  "submitLabel": "Submit evidence for {{check}}",
+  "rightToWork": {
+    "title": "Right to work",
+    "lead": "Optional: evidence for a right-to-work entry, reviewed by an administrator.",
+    "empty": "Add your right to work on My profile first."
+  },
+  "certificates": {
+    "title": "External certificates",
+    "lead": "Optional: ask an administrator to review a certificate file. Recruiters see “Verified” only for reviewed certificates.",
+    "empty": "Add certificates on My profile first.",
+    "noFile": "Add a file to this certificate on My profile to request a review.",
+    "request": "Request review",
+    "requestLabel": "Request a review of {{name}}"
+  },
+  "dialog": {
+    "title": "Submit evidence: {{check}}",
+    "description": "An administrator reviews the file against your profile. Evidence files are deleted 30 days after the decision.",
+    "type": "Evidence type",
+    "entry": "Profile entry it supports",
+    "file": "Evidence file",
+    "confirm": "This evidence is mine and accurate.",
+    "submit": "Submit for review"
+  },
+  "summary": {
+    "title": "Your current status",
+    "email": "Email",
+    "phone": "Phone",
+    "checks": "Credential checks"
+  },
+  "badge": {
+    "title": "What a badge means",
+    "text": "A badge represents only the checks named beside it. It is not an endorsement, hiring recommendation, or guarantee that profile claims are accurate."
+  }
+}

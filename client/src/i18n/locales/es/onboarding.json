@@ -1,0 +1,36 @@
+{
+  "step": "Paso {{step}} de {{total}} · {{name}}",
+  "story": {
+    "name": "Tu historia",
+    "title": "Un mejor encaje empieza por ti.",
+    "lead": "Sube tu currículum, revisa tu experiencia y decide qué compartir.",
+    "uploading": "Subiendo {{name}}…",
+    "uploaded": "{{name}} es la versión {{number}} y tu CV activo.",
+    "continue": "Continuar",
+    "skip": "Añadiré mi currículum más tarde",
+    "privacy": "Tu currículum se guarda de forma privada en Local WorkMan. Los reclutadores solo pueden abrirlo según tu configuración de privacidad, y cada descarga queda registrada."
+  },
+  "preferences": {
+    "name": "Tus preferencias",
+    "title": "¿Cómo es tu próximo capítulo?",
+    "lead": "Cuéntanos qué te importa. Puedes cambiar tus preferencias cuando quieras.",
+    "workMode": "¿Cómo te gusta trabajar?",
+    "city": "¿Dónde vives?",
+    "salary": "Salario mínimo en {{currency}} (opcional)",
+    "salaryNoCurrency": "Salario mínimo (opcional)",
+    "salaryNeedsCity": "Elige primero tu ciudad para fijar la moneda.",
+    "period": "Periodo del salario",
+    "submit": "Buscar mi próximo capítulo",
+    "back": "Atrás"
+  },
+  "plan": {
+    "eyebrow": "Último paso · Elige un plan",
+    "title": "Elige cómo quieres continuar",
+    "lead": "Plus añade las candidaturas, los mensajes, las alertas de empleo y la compatibilidad con IA. Puedes cambiar de plan más adelante en Facturación.",
+    "forever": "para siempre",
+    "perMonth": "al mes",
+    "continueFree": "Continuar con Gratis",
+    "startPlus": "Empezar Plus",
+    "back": "Atrás"
+  }
+}

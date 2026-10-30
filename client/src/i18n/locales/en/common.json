@@ -1,0 +1,28 @@
+{
+  "loading": "Loading…",
+  "remote": "Remote",
+  "closeDialog": "Close dialog",
+  "hidePassword": "Hide password",
+  "showPassword": "Show password",
+  "cancel": "Cancel",
+  "confirm": "Confirm",
+  "city": {
+    "label": "City",
+    "placeholder": "Start typing a city",
+    "hint": "Cities in the EU and the UK.",
+    "searching": "Searching…",
+    "noResults": "No matching city in the EU or the UK.",
+    "retry": "Try again",
+    "value": "{{city}}, {{country}}"
+  },
+  "cvUpload": {
+    "title": "Drop your resume here",
+    "hint": "or click to choose a file"
+  },
+  "upload": {
+    "limits": "{{types}} · Up to {{size}}",
+    "wrongType": "{{name}} is not a {{types}} file.",
+    "tooLarge": "{{name}} is larger than {{size}}.",
+    "empty": "{{name}} is empty. Choose a different file."
+  }
+}

@@ -17,13 +17,11 @@ import {
 } from 'lucide-react'
 import aiNavIcon from '@/assets/icons/ai-nav.svg'
 import accessManagementIcon from '@/assets/icons/access-management.svg'
-import candidateAvatar from '@/assets/images/avatar-candidate.svg'
-import recruiterAvatar from '@/assets/images/avatar-recruiter.svg'
 import { useActiveApplicationsBadge } from '@/features/candidate/jobs/hooks/useApplications.js'
 
 /*
- * Per-role workspace configuration: sidebar navigation, identity block and header
- * variant, as seen in the Figma Overview frames for each role.
+ * Per-role workspace configuration: sidebar navigation and header variant, as seen in the Figma
+ * Overview frames for each role. Labels are `shell:nav.<key>` translations; identity comes from /me.
  * `to` is relative to the workspace basePath ('' = the overview/index route).
  * Nav icons are the lucide equivalents of the exported Figma SVGs (verified on a
  * contact sheet); `iconSrc` is used where Figma ships a custom (non-Lucide) glyph.
@@ -31,78 +29,62 @@ import { useActiveApplicationsBadge } from '@/features/candidate/jobs/hooks/useA
 export const WORKSPACES = {
   candidate: {
     id: 'candidate',
-    label: 'Candidate',
     basePath: '/candidate',
     signInPath: '/sign-in',
-    user: { name: 'Alex Morgan', subtitle: 'Personal account', avatar: candidateAvatar },
-    headerAvatar: candidateAvatar,
-    showWorkspaceSwitch: true,
     showLocation: true,
     profilePath: 'profile',
-    promo: {
-      title: 'Your next move, smarter.',
-      text: 'A stronger profile means more relevant opportunities.',
-      linkLabel: 'Complete your profile',
-      to: 'onboarding/story',
-    },
+    promo: { to: 'onboarding/story' },
     nav: [
-      { label: 'Overview', to: '', icon: LayoutDashboard, end: true },
-      { label: 'Find jobs', to: 'jobs', icon: Search },
-      { label: 'Applications', to: 'applications', icon: BriefcaseBusiness, badge: { useText: useActiveApplicationsBadge } },
-      { label: 'Job alerts', to: 'job-alerts', icon: Bell },
-      { label: 'My profile', to: 'profile', icon: Users },
-      { label: 'CV & versions', to: 'cv-versions', icon: FileText },
-      { label: 'Verification', to: 'verification', icon: ShieldCheck },
-      { label: 'AI insights', to: 'ai-insights', iconSrc: aiNavIcon, badge: { text: 'AI', tone: 'ai' } },
-      { label: 'Learning', to: 'learning', icon: GraduationCap },
+      { key: 'overview', to: '', icon: LayoutDashboard, end: true },
+      { key: 'findJobs', to: 'jobs', icon: Search },
+      { key: 'applications', to: 'applications', icon: BriefcaseBusiness, badge: { useText: useActiveApplicationsBadge } },
+      { key: 'jobAlerts', to: 'job-alerts', icon: Bell },
+      { key: 'myProfile', to: 'profile', icon: Users },
+      { key: 'cvVersions', to: 'cv-versions', icon: FileText },
+      { key: 'verification', to: 'verification', icon: ShieldCheck },
+      { key: 'aiInsights', to: 'ai-insights', iconSrc: aiNavIcon, badge: { textKey: 'nav.aiBadge', tone: 'ai' } },
+      { key: 'learning', to: 'learning', icon: GraduationCap },
     ],
   },
   recruiter: {
     id: 'recruiter',
-    label: 'Recruiter',
     basePath: '/recruiter',
     signInPath: '/recruiter/sign-in',
-    user: { name: 'Sarah Miller', subtitle: 'Acme Studio', avatar: recruiterAvatar },
-    headerAvatar: recruiterAvatar,
-    showWorkspaceSwitch: true,
     showLocation: true,
     profilePath: 'company',
     nav: [
-      { label: 'Overview', to: '', icon: LayoutDashboard, end: true },
-      { label: 'Jobs', to: 'jobs', icon: BriefcaseBusiness },
-      { label: 'Find candidates', to: 'find-candidates', icon: Search },
-      { label: 'Shortlists', to: 'shortlists', icon: Bookmark },
-      { label: 'Applications', to: 'applications', icon: FileText },
-      { label: 'Hiring pipeline', to: 'hiring-pipeline', icon: Layers },
-      { label: 'Recruiter learning', to: 'learning', icon: GraduationCap },
-      { label: 'Company', to: 'company', icon: Building2 },
+      { key: 'overview', to: '', icon: LayoutDashboard, end: true },
+      { key: 'jobs', to: 'jobs', icon: BriefcaseBusiness },
+      { key: 'findCandidates', to: 'find-candidates', icon: Search },
+      { key: 'shortlists', to: 'shortlists', icon: Bookmark },
+      { key: 'applications', to: 'applications', icon: FileText },
+      { key: 'hiringPipeline', to: 'hiring-pipeline', icon: Layers },
+      { key: 'recruiterLearning', to: 'learning', icon: GraduationCap },
+      { key: 'company', to: 'company', icon: Building2 },
     ],
   },
   admin: {
     id: 'admin',
-    label: 'Admin',
     basePath: '/admin',
     signInPath: '/admin/sign-in',
-    user: { name: 'Workspace admin', subtitle: 'Acme Studio', avatar: candidateAvatar },
-    headerAvatar: candidateAvatar,
-    showWorkspaceSwitch: false,
+    // Admins have no country picker (M-138).
     showLocation: false,
     profilePath: 'settings',
     nav: [
-      { label: 'Overview', to: '', icon: LayoutDashboard, end: true },
-      { label: 'Candidates', to: 'candidates', icon: Users },
-      { label: 'Recruiters', to: 'recruiters', icon: BriefcaseBusiness },
-      { label: 'Jobs', to: 'jobs', icon: BriefcaseBusiness },
-      { label: 'Applications', to: 'applications', icon: FileText },
-      { label: 'Recruitment', to: 'recruitment', icon: Layers },
-      { label: 'Access Management', to: 'access-management', iconSrc: accessManagementIcon, activeIcon: ShieldCheck },
-      { label: 'Courses', to: 'courses', icon: BookOpen },
-      { label: 'Payments', to: 'payments', icon: CreditCard },
-      { label: 'AI & matching', to: 'ai-matching', iconSrc: aiNavIcon },
-      { label: 'Analytics', to: 'analytics', icon: TrendingUp },
-      { label: 'Reports', to: 'reports', icon: FileText },
-      { label: 'Moderation', to: 'moderation', icon: ShieldCheck },
-      { label: 'Audit logs', to: 'audit-logs', icon: Clock },
+      { key: 'overview', to: '', icon: LayoutDashboard, end: true },
+      { key: 'candidates', to: 'candidates', icon: Users },
+      { key: 'recruiters', to: 'recruiters', icon: BriefcaseBusiness },
+      { key: 'jobs', to: 'jobs', icon: BriefcaseBusiness },
+      { key: 'applications', to: 'applications', icon: FileText },
+      { key: 'recruitment', to: 'recruitment', icon: Layers },
+      { key: 'accessManagement', to: 'access-management', iconSrc: accessManagementIcon, activeIcon: ShieldCheck },
+      { key: 'courses', to: 'courses', icon: BookOpen },
+      { key: 'payments', to: 'payments', icon: CreditCard },
+      { key: 'aiMatching', to: 'ai-matching', iconSrc: aiNavIcon },
+      { key: 'analytics', to: 'analytics', icon: TrendingUp },
+      { key: 'reports', to: 'reports', icon: FileText },
+      { key: 'moderation', to: 'moderation', icon: ShieldCheck },
+      { key: 'auditLogs', to: 'audit-logs', icon: Clock },
     ],
   },
 }

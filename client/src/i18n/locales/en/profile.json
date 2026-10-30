@@ -1,0 +1,166 @@
+{
+  "title": "A profile that feels like you.",
+  "description": "Your experience is more than a list. Tell the story behind it.",
+  "edit": "Edit profile",
+  "saved": "Profile saved.",
+  "photo": {
+    "upload": "Upload photo",
+    "change": "Change photo",
+    "remove": "Remove photo",
+    "hint": "{{limits}}. The photo is cropped to a square."
+  },
+  "about": {
+    "title": "A little about me",
+    "empty": "Tell recruiters a little about yourself in Edit profile."
+  },
+  "strengths": {
+    "title": "Experience & strengths",
+    "years_one": "{{count}} year of professional experience",
+    "years_other": "{{count}} years of professional experience",
+    "empty": "Add your years of experience and skills in Edit profile."
+  },
+  "workHistory": {
+    "title": "Work history",
+    "add": "Add a role",
+    "empty": "Add the roles you have held, or tell us you have no work experience yet.",
+    "none": "No work experience yet"
+  },
+  "education": {
+    "title": "Education",
+    "add": "Add education",
+    "empty": "Add your qualifications, or tell us you have no formal qualification.",
+    "none": "No formal qualification"
+  },
+  "period": "{{start}} – {{end}}",
+  "present": "Present",
+  "stillStudying": "Still studying",
+  "languages": {
+    "title": "Languages",
+    "edit": "Edit languages",
+    "empty": "Add the languages you speak and your level."
+  },
+  "rightToWork": {
+    "title": "Right to work",
+    "edit": "Edit right to work",
+    "empty": "Add your right to work in the EU, the UK or both.",
+    "validUntil": "Valid until {{date}}",
+    "expired": "Permit expired"
+  },
+  "links": {
+    "title": "Links",
+    "edit": "Edit links",
+    "empty": "Add a LinkedIn profile or a portfolio link.",
+    "linkedin": "LinkedIn",
+    "portfolio": "Portfolio"
+  },
+  "certificates": {
+    "title": "Certificates",
+    "add": "Add a certificate",
+    "empty": "Optional: certificates from outside Local WorkMan.",
+    "issued": "Issued {{date}}",
+    "expires": "Expires {{date}}",
+    "link": "View credential",
+    "file": "Open file"
+  },
+  "nextStep": {
+    "title": "The right next step",
+    "salary": "From {{amount}} {{period}}"
+  },
+  "resume": {
+    "title": "Your resume",
+    "none": "No resume uploaded yet",
+    "update": "Update resume"
+  },
+  "control": {
+    "title": "Your story. Your control.",
+    "text": "Choose who can discover your profile and when your resume is shared.",
+    "link": "Manage privacy"
+  },
+  "actions": {
+    "edit": "Edit {{name}}",
+    "delete": "Delete {{name}}"
+  },
+  "deleteDialog": {
+    "title": "Delete this entry?",
+    "body": "{{name}} will be removed from your profile. A verification linked to it no longer counts.",
+    "confirm": "Delete"
+  },
+  "form": {
+    "save": "Save",
+    "core": {
+      "title": "Edit profile",
+      "fullName": "Full name",
+      "headline": "Current role or headline",
+      "city": "Where you are based",
+      "about": "A little about me",
+      "count": "{{count}} / {{max}} characters",
+      "years": "Years of experience",
+      "skills": "Strengths",
+      "skillsHint": "Add up to {{max}} skills. Press Enter to add one.",
+      "skillPlaceholder": "Add a skill",
+      "addSkill": "Add",
+      "removeSkill": "Remove {{skill}}",
+      "workPreference": "Work preference",
+      "availability": "Availability",
+      "salary": "Minimum salary in {{currency}} (optional)",
+      "salaryNoCurrency": "Minimum salary (optional)",
+      "salaryNeedsCity": "Choose your city first to set the currency.",
+      "period": "Salary period"
+    },
+    "work": {
+      "addTitle": "Add a role",
+      "editTitle": "Edit role",
+      "title": "Job title",
+      "employer": "Employer",
+      "start": "Start month",
+      "end": "End month",
+      "current": "I currently work here",
+      "description": "What you did (optional)"
+    },
+    "education": {
+      "addTitle": "Add education",
+      "editTitle": "Edit education",
+      "institution": "Institution",
+      "degree": "Degree or qualification",
+      "start": "Start month",
+      "end": "End month",
+      "stillStudying": "Still studying"
+    },
+    "languages": {
+      "title": "Languages",
+      "language": "Language",
+      "level": "Level",
+      "choose": "Choose a language",
+      "add": "Add a language",
+      "remove": "Remove {{language}}"
+    },
+    "rightToWork": {
+      "title": "Right to work",
+      "hint": "One entry for the EU, the UK, or both. Your nationality is never asked.",
+      "status": "Status",
+      "expires": "Permit valid until",
+      "add": "Add {{region}}",
+      "remove": "Remove {{region}}"
+    },
+    "links": {
+      "title": "Links",
+      "linkedin": "LinkedIn profile",
+      "linkedinHint": "Like https://www.linkedin.com/in/your-name",
+      "portfolio": "Portfolio",
+      "portfolioHint": "Any link that starts with https://"
+    },
+    "certificate": {
+      "addTitle": "Add a certificate",
+      "editTitle": "Edit certificate",
+      "name": "Certificate name",
+      "issuer": "Issued by",
+      "issuedOn": "Issue month",
+      "expiresOn": "Expiry month (optional)",
+      "url": "Credential link (optional)",
+      "file": "Certificate file (optional)",
+      "fileHint": "{{limits}}. With a file you can ask for verification.",
+      "currentFile": "Current file: {{name}}",
+      "removeFile": "Remove the file"
+    }
+  }
+}

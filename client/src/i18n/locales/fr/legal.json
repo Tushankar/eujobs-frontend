@@ -1,0 +1,16 @@
+{
+  "docs": {
+    "terms": "Conditions",
+    "privacy": "Confidentialité",
+    "imprint": "Mentions légales"
+  },
+  "nav": "Documents juridiques",
+  "unavailable": "Impossible de charger ce document. Réessayez dans un instant.",
+  "draft": "Brouillon : ce texte n’est pas définitif et sera remplacé avant la mise en service.",
+  "meta": "Version {{version}} · Publiée le {{date}}",
+  "reaccept": {
+    "title": "Nous avons mis à jour nos conditions",
+    "text": "Veuillez lire les <terms>Conditions d’utilisation</terms> et la <privacy>Politique de confidentialité</privacy> mises à jour. Acceptez-les pour continuer à utiliser votre espace de travail.",
+    "accept": "Accepter et continuer"
+  }
+}

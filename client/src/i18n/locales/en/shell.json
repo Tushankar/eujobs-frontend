@@ -1,0 +1,120 @@
+{
+  "brandHome": "Local WorkMan home",
+  "nav": {
+    "overview": "Overview",
+    "findJobs": "Find jobs",
+    "applications": "Applications",
+    "jobAlerts": "Job alerts",
+    "myProfile": "My profile",
+    "cvVersions": "CV & versions",
+    "verification": "Verification",
+    "aiInsights": "AI insights",
+    "learning": "Learning",
+    "jobs": "Jobs",
+    "findCandidates": "Find candidates",
+    "shortlists": "Shortlists",
+    "hiringPipeline": "Hiring pipeline",
+    "recruiterLearning": "Recruiter learning",
+    "company": "Company",
+    "candidates": "Candidates",
+    "recruiters": "Recruiters",
+    "recruitment": "Recruitment",
+    "accessManagement": "Access management",
+    "courses": "Courses",
+    "payments": "Payments",
+    "aiMatching": "AI & matching",
+    "analytics": "Analytics",
+    "reports": "Reports",
+    "moderation": "Moderation",
+    "auditLogs": "Audit logs",
+    "aiBadge": "AI"
+  },
+  "titles": {
+    "settings": "Settings",
+    "aiProfileInsights": "AI profile insights",
+    "skillGap": "Skill gap",
+    "profileImprovement": "Profile improvement",
+    "jobMatchInsights": "Job match insights",
+    "aiRecommendationExplanation": "AI recommendation explanation",
+    "onboarding": "Onboarding",
+    "preferences": "Preferences",
+    "choosePlan": "Choose a plan",
+    "help": "Help",
+    "createJob": "Create job",
+    "editJob": "Edit job",
+    "signIn": "Sign in",
+    "signUp": "Create your account",
+    "adminSignIn": "Admin sign-in",
+    "checkEmail": "Check your inbox",
+    "verifyEmail": "Confirm your email",
+    "forgotPassword": "Forgot password",
+    "resetPassword": "Reset password",
+    "emailCode": "Verify your work email"
+  },
+  "workspaces": {
+    "candidate": {
+      "name": "Candidate workspace",
+      "navigation": "Candidate navigation",
+      "home": "Back to the candidate overview"
+    },
+    "recruiter": {
+      "name": "Recruiter workspace",
+      "navigation": "Recruiter navigation",
+      "home": "Back to the recruiter overview"
+    },
+    "admin": {
+      "name": "Admin workspace",
+      "navigation": "Admin navigation",
+      "home": "Back to the admin overview"
+    }
+  },
+  "sidebar": {
+    "section": "Workspace",
+    "settings": "Settings",
+    "help": "Help & resources"
+  },
+  "promo": {
+    "title": "Your next move, smarter.",
+    "text": "A stronger profile means more relevant opportunities.",
+    "link": "Complete your profile"
+  },
+  "signOut": "Sign out",
+  "identity": {
+    "owner": "Owner",
+    "noRole": "No role assigned"
+  },
+  "notices": {
+    "wrongPortal": "This account uses this workspace, so we opened it for you."
+  },
+  "footer": {
+    "legal": "Legal"
+  },
+  "notFound": {
+    "title": "Page not found",
+    "text": "There is nothing at",
+    "signIn": "Go to sign in"
+  },
+  "country": {
+    "label": "Country",
+    "choose": "Choose a country",
+    "note": "Your country sets the jobs and candidates you see, the currency and the date and number formats."
+  },
+  "language": {
+    "label": "Language"
+  },
+  "openNavigation": "Open navigation",
+  "breadcrumb": "Breadcrumb",
+  "notifications": "Notification settings",
+  "search": {
+    "trigger": "Search anything...",
+    "shortcut": "Ctrl K",
+    "title": "Search anything",
+    "description": "Jump to a page in this workspace.",
+    "inputLabel": "Search pages",
+    "empty": "No pages match “{{query}}”."
+  },
+  "profileMenu": {
+    "open": "Open profile menu",
+    "profile": "Profile"
+  }
+}

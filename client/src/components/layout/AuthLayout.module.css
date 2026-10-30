@@ -68,25 +68,15 @@
   font-weight: 800;
   line-height: 33px;
   letter-spacing: -0.6px;
+  text-transform: uppercase;
   color: #fff;
 }
 
-/* The mark is the "AI" glyph cropped out of the full logo image */
+/* The "AI" mark cropped from the logo (OD11) */
 .heroBrandMark {
-  position: relative;
   flex-shrink: 0;
   width: 32px;
-  height: 27px;
-  overflow: hidden;
-}
-
-.heroBrandMark img {
-  position: absolute;
-  top: -30%;
-  left: -26.6%;
-  width: 280.85%;
-  height: 165%;
-  max-width: none;
+  height: auto;
 }
 
 .heroContent {
@@ -163,14 +153,21 @@
   max-width: 448px;
 }
 
+/* Logo on the left (when shown) and the language picker on the right (M-140). */
+.topBar {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 12px;
+}
+
+.topBar > :only-child {
+  margin-left: auto;
+}
+
 .logo {
   display: block;
   padding: 20px 0;
-}
-
-.logo img {
-  width: 210px;
-  height: 50px;
 }
 
 @media (max-width: 1023px) {

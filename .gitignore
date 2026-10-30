@@ -23,6 +23,9 @@ dist-ssr
 *.sln
 *.sw?
 
+# e2e screenshots and logs (§2.13)
+e2e/artifacts/
+
 # Environment files (secrets) and server uploads
 .env
 .env.*

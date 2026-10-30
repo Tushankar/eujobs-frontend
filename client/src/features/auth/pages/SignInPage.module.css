@@ -39,3 +39,13 @@
     padding-top: 0;
   }
 }
+
+/* "Forgot password?" under the password field, on all three portals (M-009). */
+.forgot {
+  align-self: flex-end;
+  margin-top: -8px;
+  font-size: 12px;
+  font-weight: 600;
+  line-height: 18px;
+  color: var(--primary-hover);
+}

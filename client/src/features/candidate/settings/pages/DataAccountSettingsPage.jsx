@@ -1,21 +1,18 @@
 import { useEffect, useState } from 'react'
-import { Download, Trash2 } from 'lucide-react'
+import { useTranslation } from 'react-i18next'
+import { Download } from 'lucide-react'
 import { Button, Icon } from '@/components/ui'
 import ConfirmDialog from '@/components/common/ConfirmDialog.jsx'
 import { useLocalStorage } from '@/hooks/useLocalStorage.js'
 import { cx } from '@/utils/cx.js'
 import { downloadCsv } from '@/utils/downloadCsv.js'
-import { CV_STORAGE_KEY, EMPTY_CV, INITIAL_CV } from '../../cv/data/cvVersions.js'
+import { CV_STORAGE_KEY, INITIAL_CV } from '../../cv/data/cvVersions.js'
 import { INITIAL_PROFILE, PROFILE_STORAGE_KEY } from '../../profile/data/profile.js'
 import { INITIAL_VERIFICATION, VERIFICATION_STORAGE_KEY } from '../../verification/data/verification.js'
+import ChangePasswordForm from '@/features/account/components/ChangePasswordForm.jsx'
+import { usePreferences } from '@/lib/preferences.js'
 import SettingsCard from '../components/SettingsCard.jsx'
-import {
-  DATA_NOTICE,
-  DEFAULT_NOTIFICATIONS,
-  DEFAULT_PRIVACY,
-  NOTIFICATIONS_STORAGE_KEY,
-  PRIVACY_STORAGE_KEY,
-} from '../data/settings.js'
+import { DATA_NOTICE, DEFAULT_PRIVACY, PRIVACY_STORAGE_KEY } from '../data/settings.js'
 import {
   clearResultFlag,
   deleteCandidateData,
@@ -27,11 +24,6 @@ import {
 import styles from './DataAccountSettingsPage.module.css'
 
 const CONFIRMATIONS = {
-  resume: {
-    title: 'Delete resume reference?',
-    body: 'This removes every local CV reference and version snapshot from this device. Your profile is kept. This can’t be undone.',
-    confirmLabel: 'Delete resume',
-  },
   data: {
     title: 'Delete local candidate information?',
     body: 'This removes your profile, CV versions, verification progress, learning progress, saved jobs, applications, and alerts from this device, and your plan goes back to Free. Your settings are kept. Payment records are kept as finance records; only Reset demo clears them. This can’t be undone.',
@@ -59,27 +51,25 @@ function ActionRow({ label, description, tone, children }) {
 /** Settings > Data & account: export the saved profile as CSV, delete what is stored here, or reset the demo. */
 export default function DataAccountSettingsPage() {
   const [profile] = useLocalStorage(PROFILE_STORAGE_KEY, INITIAL_PROFILE)
-  const [cv, setCv] = useLocalStorage(CV_STORAGE_KEY, INITIAL_CV)
+  const [cv] = useLocalStorage(CV_STORAGE_KEY, INITIAL_CV)
   const [verification] = useLocalStorage(VERIFICATION_STORAGE_KEY, INITIAL_VERIFICATION)
   const [privacy] = useLocalStorage(PRIVACY_STORAGE_KEY, DEFAULT_PRIVACY)
-  const [notifications] = useLocalStorage(NOTIFICATIONS_STORAGE_KEY, DEFAULT_NOTIFICATIONS)
+  const { t } = useTranslation()
+  const { me } = usePreferences()
   const [confirming, setConfirming] = useState(null)
   const [status, setStatus] = useState(() => RESULT_MESSAGES[readResultFlag()] ?? '')
 
   useEffect(clearResultFlag, [])
 
   function handleExport() {
-    downloadCsv(profileExportRows({ profile, cv, verification, privacy, notifications }), 'candidate-profile.csv')
+    downloadCsv(profileExportRows({ profile, cv, verification, privacy, notifyEmail: me.notifyEmail }), 'candidate-profile.csv')
     setStatus('Profile exported as candidate-profile.csv. The file was created in your browser and not sent anywhere.')
   }
 
   function handleConfirm() {
     const action = confirming
     setConfirming(null)
-    if (action === 'resume') {
-      setCv(EMPTY_CV)
-      setStatus('Resume reference and version snapshots were removed from this device. Your profile is unchanged.')
-    } else if (action === 'data') {
+    if (action === 'data') {
       deleteCandidateData()
     } else if (action === 'reset') {
       resetDemoData()
@@ -89,58 +79,50 @@ export default function DataAccountSettingsPage() {
   const dialog = confirming ? CONFIRMATIONS[confirming] : null
 
   return (
-    <SettingsCard title="Understand and control your data">
-      <p className={styles.notice}>{DATA_NOTICE}</p>
+    <>
+      <SettingsCard title={t('account:password.title')} description={t('account:password.description')}>
+        <ChangePasswordForm />
+      </SettingsCard>
+      <SettingsCard title="Understand and control your data">
+        <p className={styles.notice}>{DATA_NOTICE}</p>
 
-      <ul className={styles.actions}>
-        <ActionRow label="Download your profile" description="A portable CSV of your reviewed information.">
-          <Button variant="outline" leftIcon={<Icon as={Download} size={13} />} onClick={handleExport}>
-            Export data
-          </Button>
-        </ActionRow>
-        <ActionRow
-          label="Delete resume reference"
-          description="Keep your profile. Remove every local CV reference and version snapshot."
-        >
-          <Button
-            variant="outline"
-            className={styles.dangerButton}
-            leftIcon={<Icon as={Trash2} size={13} />}
-            onClick={() => setConfirming('resume')}
+        <ul className={styles.actions}>
+          <ActionRow label="Download your profile" description="A portable CSV of your reviewed information.">
+            <Button variant="outline" leftIcon={<Icon as={Download} size={13} />} onClick={handleExport}>
+              Export data
+            </Button>
+          </ActionRow>
+          <ActionRow
+            tone="danger"
+            label="Delete local candidate information"
+            description="Remove your profile, saved jobs, applications, and alerts. Payment records are kept."
           >
-            Delete resume
-          </Button>
-        </ActionRow>
-        <ActionRow
+            <Button variant="outline" className={styles.dangerButton} onClick={() => setConfirming('data')}>
+              Delete my data
+            </Button>
+          </ActionRow>
+          <ActionRow label="Reset demo workspace" description="Restore sample data across all three workspaces.">
+            <Button variant="outline" onClick={() => setConfirming('reset')}>
+              Reset demo
+            </Button>
+          </ActionRow>
+        </ul>
+
+        <p className={styles.status} role="status">
+          {status}
+        </p>
+
+        <ConfirmDialog
+          open={Boolean(dialog)}
+          title={dialog?.title ?? ''}
+          confirmLabel={dialog?.confirmLabel}
           tone="danger"
-          label="Delete local candidate information"
-          description="Remove your profile, saved jobs, applications, and alerts. Payment records are kept."
+          onConfirm={handleConfirm}
+          onClose={() => setConfirming(null)}
         >
-          <Button variant="outline" className={styles.dangerButton} onClick={() => setConfirming('data')}>
-            Delete my data
-          </Button>
-        </ActionRow>
-        <ActionRow label="Reset demo workspace" description="Restore sample data across all three workspaces.">
-          <Button variant="outline" onClick={() => setConfirming('reset')}>
-            Reset demo
-          </Button>
-        </ActionRow>
-      </ul>
-
-      <p className={styles.status} role="status">
-        {status}
-      </p>
-
-      <ConfirmDialog
-        open={Boolean(dialog)}
-        title={dialog?.title ?? ''}
-        confirmLabel={dialog?.confirmLabel}
-        tone="danger"
-        onConfirm={handleConfirm}
-        onClose={() => setConfirming(null)}
-      >
-        <p className={styles.confirmText}>{dialog?.body}</p>
-      </ConfirmDialog>
-    </SettingsCard>
+          <p className={styles.confirmText}>{dialog?.body}</p>
+        </ConfirmDialog>
+      </SettingsCard>
+    </>
   )
 }

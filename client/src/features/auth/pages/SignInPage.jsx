@@ -1,111 +1,114 @@
 import { useState } from 'react'
-import { useNavigate } from 'react-router-dom'
+import { useTranslation } from 'react-i18next'
+import { Link, useNavigate, useSearchParams } from 'react-router-dom'
 import { ArrowRight, ShieldCheck } from 'lucide-react'
 import { Button, Icon, PasswordField, TextField } from '@/components/ui'
 import AuthLayout from '@/components/layout/AuthLayout.jsx'
-import { WORKSPACES } from '@/app/workspaces.js'
+import { errorCode } from '@/app/api.js'
+import { BRAND } from '@/app/brand.js'
+import { landingPath, signIn, SIGN_IN_PATH } from '@/app/session.js'
+import { browserTimeZone, check, compact, serverFieldErrors, useErrorText } from '@/lib/forms.js'
+import { useLoginMutation } from '../api.js'
 import AuthIntro from '../components/AuthIntro.jsx'
 import AuthSwitchPrompt from '../components/AuthSwitchPrompt.jsx'
-import DemoNote from '../components/DemoNote.jsx'
+import FormAlert from '../components/FormAlert.jsx'
+import ResendVerification from '../components/ResendVerification.jsx'
 import WorkspacePicker from '../components/WorkspacePicker.jsx'
-import { LOCAL_WORKMAN_HERO } from '../data/hero.js'
 import { ADMIN_CHOICES, SIGN_IN_CHOICES } from '../data/workspaceChoices.js'
-import { startSession } from '../utils/session.js'
 import { useFormState } from '../utils/useFormState.js'
-import { validateSignIn } from '../utils/validation.js'
 import styles from './SignInPage.module.css'
 
-/** Copy per workspace, taken from the Figma sign-in frames. */
-const SIGN_IN_COPY = {
-  candidate: {
-    choices: SIGN_IN_CHOICES,
-    helper: 'Find opportunities that fit your skills, experience, and ambitions.',
-    lead: 'Sign in to your workspace. Your next chapter is waiting.',
-    emailPlaceholder: 'you@example.com',
-    signUpPath: '/sign-up',
-  },
-  recruiter: {
-    choices: SIGN_IN_CHOICES,
-    helper: 'Discover relevant talent and build your next great team.',
-    lead: 'Sign in to your workspace. Your next chapter is waiting.',
-    emailPlaceholder: 'you@company.com',
-    signUpPath: '/recruiter/sign-up',
-    hero: LOCAL_WORKMAN_HERO,
-  },
-  admin: {
-    choices: ADMIN_CHOICES,
-    helper: 'Manage your marketplace, people, and responsible AI policies.',
-    emailPlaceholder: 'you@company.com',
-    notice:
-      'Admin access is for authorized workspace owners. Production accounts require an invitation and server-side approval; this opens the demo only.',
-    hero: { ...LOCAL_WORKMAN_HERO, brand: true },
-  },
+/** Per portal: tiles, sign-up link and hero variant (from the Figma sign-in frames). */
+const PORTALS = {
+  candidate: { choices: SIGN_IN_CHOICES, signUpPath: '/sign-up' },
+  recruiter: { choices: SIGN_IN_CHOICES, signUpPath: '/recruiter/sign-up' },
+  admin: { choices: ADMIN_CHOICES, hero: { brand: true } },
 }
 
 /**
- * Sign-in for a workspace (candidate, recruiter or admin). Demo only (as stated in the
- * Figma frames): credentials are never sent or stored; a valid form starts a browser-only
- * session and opens the chosen workspace.
+ * Sign-in for a portal (M-005). One login for every account: a candidate on the recruiter page
+ * (or the reverse) lands in their own workspace with a notice; the admin page is for admins only.
  */
 export default function SignInPage({ workspace = 'candidate' }) {
+  const { t } = useTranslation()
   const navigate = useNavigate()
-  const copy = SIGN_IN_COPY[workspace]
+  const [searchParams] = useSearchParams()
+  const portal = PORTALS[workspace]
+  const errorText = useErrorText()
   const { values, errors, setErrors, field } = useFormState({ email: '', password: '' })
-  const [submitting, setSubmitting] = useState(false)
+  const [login, { isLoading }] = useLoginMutation()
+  const [failure, setFailure] = useState(null)
 
-  function handleSubmit(event) {
+  async function handleSubmit(event) {
     event.preventDefault()
-    const nextErrors = validateSignIn(values, copy.emailPlaceholder)
+    const nextErrors = compact({ email: check.email(values.email), password: check.required(values.password) })
     setErrors(nextErrors)
+    setFailure(null)
     if (Object.keys(nextErrors).length > 0) return
-    setSubmitting(true)
-    startSession(workspace)
-    window.setTimeout(() => navigate(WORKSPACES[workspace].basePath), 500)
+    try {
+      const { token, me } = await login({ ...values, portal: workspace, timezone: browserTimeZone() }).unwrap()
+      await signIn(token, me)
+      const wrongPortal = workspace !== 'admin' && me.role !== workspace
+      navigate(landingPath(me, searchParams.get('next')), { replace: true, state: wrongPortal ? { notice: 'wrongPortal' } : undefined })
+    } catch (error) {
+      setErrors(serverFieldErrors(error))
+      setFailure(error)
+    }
   }
 
+  const failureCode = failure && errorCode(failure)
+
   return (
-    <AuthLayout hero={copy.hero} showLogo={workspace !== 'admin'} logoTo={WORKSPACES[workspace].signInPath}>
-      <AuthIntro title="Welcome back." lead={copy.lead} />
-      <WorkspacePicker choices={copy.choices} activeId={workspace} helper={copy.helper} />
+    <AuthLayout hero={portal.hero} showLogo={workspace !== 'admin'} logoTo={SIGN_IN_PATH[workspace]}>
+      <AuthIntro title={t('auth:signIn.title')} lead={workspace !== 'admin' ? t('auth:signIn.lead') : undefined} />
+      <WorkspacePicker choices={portal.choices} activeId={workspace} helper={t(`auth:signIn.helper.${workspace}`)} />
 
       <form className={styles.form} onSubmit={handleSubmit} noValidate>
+        {failureCode === 'EMAIL_UNVERIFIED' && (
+          <FormAlert>
+            <span>{t('auth:signIn.unverified', { email: values.email })}</span>
+            <ResendVerification email={values.email} />
+          </FormAlert>
+        )}
+        {failureCode && failureCode !== 'EMAIL_UNVERIFIED' && failureCode !== 'VALIDATION_FAILED' && <FormAlert>{errorText.code(failure)}</FormAlert>}
         <TextField
-          label="Email address"
+          label={t('auth:fields.email')}
           name="email"
           type="email"
           autoComplete="email"
-          placeholder={copy.emailPlaceholder}
+          placeholder={t(`auth:fields.emailPlaceholder.${workspace}`)}
           value={values.email}
           onChange={field('email')}
-          error={errors.email}
+          error={errorText.field('email', errors.email)}
         />
         <PasswordField
-          label="Password"
+          label={t('auth:fields.password')}
           name="password"
           autoComplete="current-password"
-          placeholder="Enter your password"
+          placeholder={t('auth:fields.passwordPlaceholder')}
           value={values.password}
           onChange={field('password')}
-          error={errors.password}
+          error={errorText.field('password', errors.password)}
         />
-        {copy.notice && (
+        <Link to="/forgot-password" className={styles.forgot}>
+          {t('auth:signIn.forgot')}
+        </Link>
+        {workspace === 'admin' && (
           <p className={styles.notice}>
             <Icon as={ShieldCheck} size={16} className={styles.noticeIcon} />
-            {copy.notice}
+            {t('auth:signIn.adminNotice')}
           </p>
         )}
-        <Button type="submit" fullWidth loading={submitting} rightIcon={<Icon as={ArrowRight} size={14} />}>
-          {submitting ? 'Signing in…' : 'Sign in'}
+        <Button type="submit" fullWidth loading={isLoading} rightIcon={<Icon as={ArrowRight} size={14} />}>
+          {isLoading ? t('auth:signIn.submitting') : t('auth:signIn.submit')}
         </Button>
       </form>
 
-      {copy.signUpPath && (
-        <AuthSwitchPrompt linkTo={copy.signUpPath} linkLabel="Sign up">
-          New to matchpoint?
+      {portal.signUpPath && (
+        <AuthSwitchPrompt linkTo={portal.signUpPath} linkLabel={t('auth:signIn.signUpLink')}>
+          {t('auth:signIn.newHere', { brand: BRAND.name })}
         </AuthSwitchPrompt>
       )}
-
-      <DemoNote />
     </AuthLayout>
   )
 }

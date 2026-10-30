@@ -1,0 +1,9 @@
+.resend {
+  display: flex;
+  flex-direction: column;
+  gap: 4px;
+}
+
+.button {
+  align-self: flex-start;
+}

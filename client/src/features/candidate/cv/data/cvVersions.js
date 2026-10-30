@@ -1,8 +1,6 @@
 export const CV_STORAGE_KEY = 'lwm.candidate.cv'
 
-export const CV_FILE_NAME = 'Alex_Morgan_Resume.pdf'
-export const MAX_CV_SIZE_MB = 10
-export const ACCEPTED_CV_EXTENSIONS = ['.pdf', '.docx']
+const CV_FILE_NAME = 'Alex_Morgan_Resume.pdf'
 
 const BASE_SNAPSHOT = {
   role: 'Product Designer',
@@ -10,9 +8,12 @@ const BASE_SNAPSHOT = {
   skills: ['Product Design', 'Figma', 'Design Systems', 'UX Research', 'Prototyping'],
 }
 
-export const DRAFT_NOTE = 'Draft suggestion: clarify impact statements and group related skills. No profile fields were changed.'
+const DRAFT_NOTE = 'Draft suggestion: clarify impact statements and group related skills. No profile fields were changed.'
 
 /**
+ * The device-only CV mock. The CV page reads the server since Phase 3; Data & account still reads this
+ * until Phase 12 (P3-D10).
+ *
  * Version history as shown in the Figma "CV & versions" frame, newest first.
  * Only file names and recorded profile snapshots are kept; file contents are never retained.
  * `approved: false` drafts stay pending until the candidate approves them as the live CV.

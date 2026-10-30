@@ -1,0 +1,10 @@
+{
+  "name": "local-workman-e2e",
+  "private": true,
+  "version": "0.0.0",
+  "type": "module",
+  "description": "Browser verification in the local Chrome: node run.js <phase-N | sweep | scenario-name>",
+  "dependencies": {
+    "puppeteer-core": "^25.16.0"
+  }
+}

@@ -42,9 +42,11 @@
   color: var(--muted-foreground);
 }
 
-.remove {
-  flex-shrink: 0;
-  margin-left: auto;
+.progress {
+  margin-top: 12px;
+  font-size: 12px;
+  line-height: 18px;
+  color: var(--muted-foreground);
 }
 
 .privacy {

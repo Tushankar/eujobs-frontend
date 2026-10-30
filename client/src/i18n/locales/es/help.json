@@ -1,0 +1,18 @@
+{
+  "title": "Un poco de claridad ayuda mucho.",
+  "lead": "Respuestas prácticas, orientación clara y margen para dar tu próximo paso con confianza.",
+  "search": "Buscar en la ayuda",
+  "found_one": "{{count}} tema de ayuda encontrado",
+  "found_many": "{{count}} temas de ayuda encontrados",
+  "found_other": "{{count}} temas de ayuda encontrados",
+  "unavailable": "No se han podido cargar los temas de ayuda. Inténtalo de nuevo en breve.",
+  "empty": {
+    "title": "Ningún tema de ayuda coincide con «{{query}}»",
+    "text": "Prueba con otra palabra o borra la búsqueda para ver todos los temas.",
+    "clear": "Borrar la búsqueda"
+  },
+  "links": {
+    "privacy": "Privacidad y control de tus datos",
+    "matches": "Entiende tus coincidencias"
+  }
+}

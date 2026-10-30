@@ -1,6 +1,10 @@
 export const PROFILE_STORAGE_KEY = 'lwm.candidate.profile'
 
-/** Candidate profile as shown in the Figma "My profile" frame. */
+/**
+ * The device-only candidate profile. My profile reads the server since Phase 3; these stay for the screens
+ * that still read the mock until their phase: Find jobs (4), the recruiter applicant view (6) and
+ * Data & account (12) (P3-D10).
+ */
 export const INITIAL_PROFILE = {
   name: 'Alex Morgan',
   headline: 'Product Designer',
@@ -15,19 +19,3 @@ export const INITIAL_PROFILE = {
   workMode: 'Remote',
   salaryMin: 120,
 }
-
-/** Blank form values for a profile that has been deleted from this device. */
-export const BLANK_PROFILE = {
-  ...INITIAL_PROFILE,
-  headline: '',
-  location: '',
-  openToOpportunities: true,
-  about: '',
-  yearsExperience: '',
-  skills: [],
-  degree: '',
-  institution: '',
-  salaryMin: '',
-}
-
-export const WORK_MODES = ['Remote', 'Hybrid', 'On-site']

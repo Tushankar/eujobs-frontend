@@ -30,17 +30,18 @@
   color: var(--text-footer);
 }
 
-.footerNote {
+.footerLinks {
   display: flex;
-  align-items: center;
-  gap: 6px;
+  flex-wrap: wrap;
+  gap: 16px;
 }
 
-.footerDot {
-  width: 4px;
-  height: 4px;
-  border-radius: var(--radius-full);
-  background: #afa7ca;
+.footerLinks a {
+  color: inherit;
+}
+
+.footerLinks a:hover {
+  color: var(--foreground);
 }
 
 @media (max-width: 1023px) {

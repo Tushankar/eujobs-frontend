@@ -1,0 +1,16 @@
+{
+  "docs": {
+    "terms": "Condiciones",
+    "privacy": "Privacidad",
+    "imprint": "Aviso legal"
+  },
+  "nav": "Documentos legales",
+  "unavailable": "No se ha podido cargar este documento. Inténtalo de nuevo en breve.",
+  "draft": "Borrador: este texto no es definitivo y se sustituirá antes de que el servicio se ponga en marcha.",
+  "meta": "Versión {{version}} · Publicada el {{date}}",
+  "reaccept": {
+    "title": "Hemos actualizado nuestras condiciones",
+    "text": "Lee las <terms>Condiciones del servicio</terms> y la <privacy>Política de privacidad</privacy> actualizadas. Acéptalas para seguir usando tu espacio de trabajo.",
+    "accept": "Aceptar y continuar"
+  }
+}

@@ -1,13 +1,12 @@
 import { useEffect, useState } from 'react'
-import { useOutletContext } from 'react-router-dom'
+import { useTranslation } from 'react-i18next'
 import { Download } from 'lucide-react'
 import { Button, Icon, Modal } from '@/components/ui'
-import { useWorkspacePreferences } from '@/components/layout/preferencesContext.js'
-import { useLocalStorage } from '@/hooks/useLocalStorage.js'
+import ChangePasswordForm from '@/features/account/components/ChangePasswordForm.jsx'
+import { usePreferences, useFormat } from '@/lib/preferences.js'
 import SettingsCard from '../components/SettingsCard.jsx'
 import SettingsLayout from '../components/SettingsLayout.jsx'
 import { DATA_NOTICE, RESET_FLAG_KEY, STORAGE_PREFIX } from '../data/account.js'
-import { DEFAULT_NOTIFICATIONS, NOTIFICATIONS_STORAGE_KEY } from '../data/notifications.js'
 import styles from './DataAccountPage.module.css'
 
 function csvCell(value) {
@@ -58,9 +57,9 @@ function clearResetFlag() {
 
 /** Settings > Data & account: export the reviewed profile as CSV, or reset the demo data stored on this device. */
 export default function DataAccountPage() {
-  const { workspace } = useOutletContext()
-  const { location } = useWorkspacePreferences()
-  const [notifications] = useLocalStorage(NOTIFICATIONS_STORAGE_KEY, DEFAULT_NOTIFICATIONS)
+  const { t } = useTranslation()
+  const { me } = usePreferences()
+  const format = useFormat()
   const [confirmingReset, setConfirmingReset] = useState(false)
   const [status, setStatus] = useState(() => (readResetFlag() ? 'Demo workspace reset. Sample data is back in all three workspaces.' : ''))
 
@@ -70,12 +69,10 @@ export default function DataAccountPage() {
     downloadCsv(
       [
         ['Field', 'Value'],
-        ['Name', workspace.user.name],
-        ['Company', workspace.user.subtitle],
-        ['Workspace', workspace.label],
-        ['Market location', location],
-        ['In-app notifications', notifications.inApp ? 'On' : 'Off'],
-        ['Email alerts', notifications.email ? 'On' : 'Off'],
+        ['Name', me.fullName],
+        ['Email', me.email],
+        ['Market location', me.pickerCountry ? format.country(me.pickerCountry) : ''],
+        ['Email alerts', me.notifyEmail ? 'On' : 'Off'],
       ],
       'recruiter-profile.csv',
     )
@@ -84,6 +81,10 @@ export default function DataAccountPage() {
 
   return (
     <SettingsLayout>
+      <SettingsCard title={t('account:password.title')}>
+        <p className={styles.description}>{t('account:password.description')}</p>
+        <ChangePasswordForm />
+      </SettingsCard>
       <SettingsCard title="Understand and control your data">
         <p className={styles.notice}>{DATA_NOTICE}</p>
 

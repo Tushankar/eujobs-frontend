@@ -1,7 +1,7 @@
 import { Navigate } from 'react-router-dom'
 import { lazyPage } from '@/app/lazyPage.js'
 
-const handle = { title: 'Settings' }
+const handle = { titleKey: 'titles.settings' }
 
 export default [
   { path: 'settings', element: <Navigate to="notifications" replace /> },

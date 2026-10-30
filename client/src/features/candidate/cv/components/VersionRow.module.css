@@ -11,10 +11,6 @@
   border-bottom: 0;
 }
 
-.comparing {
-  background: #f6faff;
-}
-
 .tile {
   display: inline-flex;
   flex-shrink: 0;
@@ -67,13 +63,6 @@
   display: flex;
   flex-shrink: 0;
   gap: 8px;
-}
-
-.actions .comparePressed,
-.actions .comparePressed:hover {
-  border-color: rgba(0, 132, 255, 0.5);
-  background: var(--accent);
-  color: var(--primary-hover);
 }
 
 @media (max-width: 767px) {

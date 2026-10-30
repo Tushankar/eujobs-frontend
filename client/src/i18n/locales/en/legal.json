@@ -1,0 +1,16 @@
+{
+  "docs": {
+    "terms": "Terms",
+    "privacy": "Privacy",
+    "imprint": "Imprint"
+  },
+  "nav": "Legal documents",
+  "unavailable": "This document couldn't be loaded. Try again shortly.",
+  "draft": "Draft: this text is not final and will be replaced before the service goes live.",
+  "meta": "Version {{version}} · Published {{date}}",
+  "reaccept": {
+    "title": "We've updated our terms",
+    "text": "Please read the updated <terms>Terms of Service</terms> and <privacy>Privacy Policy</privacy>. Accept them to keep using your workspace.",
+    "accept": "Accept and continue"
+  }
+}

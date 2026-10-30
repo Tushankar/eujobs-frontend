@@ -1,0 +1,17 @@
+{
+  "title": "A little clarity goes a long way.",
+  "lead": "Practical answers, clear guidance, and room to take your next step with confidence.",
+  "search": "Search help resources",
+  "found_one": "{{count}} help topic found",
+  "found_other": "{{count}} help topics found",
+  "unavailable": "The help topics couldn't be loaded. Try again shortly.",
+  "empty": {
+    "title": "No help topics match “{{query}}”",
+    "text": "Try a different keyword, or clear the search to see every topic.",
+    "clear": "Clear search"
+  },
+  "links": {
+    "privacy": "Privacy & data controls",
+    "matches": "Understand your matches"
+  }
+}

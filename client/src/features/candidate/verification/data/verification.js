@@ -1,8 +1,9 @@
 export const VERIFICATION_STORAGE_KEY = 'lwm.candidate.verification'
 
-export const ACCOUNT_EMAIL = 'alex@example.com'
-
 /**
+ * The device-only verification mock. The Verification page reads the server since Phase 3; Data & account still
+ * reads this until Phase 12 (P3-D10).
+ *
  * Persisted verification state. `phone` is the field value, `verifiedPhone` the (normalised) number that was
  * confirmed. Each credential entry is null (not started) or { status, evidenceType, fileName, submittedAt }
  * with status `in-review` | `verified`.
@@ -37,6 +38,3 @@ export const CREDENTIAL_CHECKS = [
     evidenceTypes: ['Employment letter', 'Contract page', 'Verified reference'],
   },
 ]
-
-export const EVIDENCE_EXTENSIONS = ['.pdf', '.jpg', '.jpeg', '.png']
-export const MAX_EVIDENCE_SIZE_MB = 10

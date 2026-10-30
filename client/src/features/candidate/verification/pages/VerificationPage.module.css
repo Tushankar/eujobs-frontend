@@ -76,22 +76,19 @@
   font-size: 12px;
   line-height: 16px;
   color: var(--muted-foreground);
+  overflow-wrap: anywhere;
 }
 
-.phoneField {
-  flex: 1;
-  min-width: 224px;
+.empty,
+.failure {
+  padding-top: 16px;
+  font-size: 12px;
+  line-height: 18px;
+  color: var(--muted-foreground);
 }
 
-.confirm {
-  flex-shrink: 0;
-}
-
-.phoneBadge {
-  display: inline-flex;
-  flex-shrink: 0;
-  align-items: center;
-  min-height: 40px;
+.failure {
+  color: var(--destructive);
 }
 
 .banner {
@@ -183,16 +180,21 @@
   padding-top: 12px;
 }
 
-.status-not-started {
+.status-not_started,
+.status-not_needed {
   color: var(--muted-foreground);
 }
 
-.status-in-review {
+.status-in_review {
   color: #a47d2e;
 }
 
-.status-verified {
+.status-approved {
   color: #398460;
+}
+
+.status-rejected {
+  color: var(--destructive);
 }
 
 .badgeNote {
@@ -228,7 +230,8 @@
 }
 
 @media (max-width: 767px) {
-  .phoneRow {
+  .phoneRow,
+  .emailRow {
     flex-wrap: wrap;
   }
 

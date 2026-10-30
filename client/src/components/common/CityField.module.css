@@ -1,0 +1,59 @@
+.root {
+  position: relative;
+}
+
+.list {
+  position: absolute;
+  top: calc(100% + 6px);
+  left: 0;
+  right: 0;
+  z-index: 60;
+  max-height: 280px;
+  overflow-y: auto;
+  margin: 0;
+  padding: 6px;
+  list-style: none;
+  border: 1.2px solid var(--border);
+  border-radius: var(--radius-xl);
+  background: var(--card);
+  box-shadow: var(--shadow-popover);
+}
+
+.option {
+  display: flex;
+  flex-direction: column;
+  gap: 2px;
+  padding: 8px 10px;
+  border-radius: var(--radius-lg);
+  cursor: pointer;
+}
+
+.option:hover,
+.active {
+  background: var(--accent);
+}
+
+.city {
+  font-size: 14px;
+  font-weight: 600;
+  line-height: 20px;
+  color: var(--foreground);
+}
+
+.secondary {
+  font-size: 12px;
+  line-height: 16px;
+  color: var(--muted-foreground);
+}
+
+.status {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  justify-content: space-between;
+  gap: 8px;
+  padding: 8px 10px;
+  font-size: 13px;
+  line-height: 18px;
+  color: var(--muted-foreground);
+}

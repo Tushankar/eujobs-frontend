@@ -1,0 +1,42 @@
+{
+  "password": {
+    "title": "Modifier le mot de passe",
+    "description": "Saisissez votre mot de passe actuel, puis le nouveau. Vous restez connecté sur vos autres appareils.",
+    "current": "Mot de passe actuel",
+    "new": "Nouveau mot de passe",
+    "confirm": "Confirmez le nouveau mot de passe",
+    "submit": "Modifier le mot de passe",
+    "saved": "Votre mot de passe a été modifié."
+  },
+  "notifications": {
+    "title": "Des nouvelles utiles. Moins de bruit.",
+    "email": "Notifications par e-mail",
+    "candidate": "Alertes emploi, suivi de vos candidatures et nouveaux messages par e-mail. Les e-mails liés au compte et à la sécurité sont toujours envoyés.",
+    "recruiter": "Nouvelles candidatures et nouveaux messages par e-mail. Les e-mails liés au compte et à la sécurité sont toujours envoyés."
+  },
+  "admin": {
+    "title": "Paramètres",
+    "description": "Votre nom, votre mot de passe et la langue.",
+    "profile": "Votre profil",
+    "saveName": "Enregistrer le nom",
+    "nameSaved": "Votre nom a été enregistré.",
+    "language": "Langue de l’espace de travail"
+  },
+  "privacy": {
+    "title": "Choisissez comment on vous trouve",
+    "description": "Votre CV n’est pas partagé simplement parce que votre profil est visible.",
+    "discoverable": {
+      "label": "Visibilité du profil et recherche par les recruteurs",
+      "description": "Autorisez les recruteurs à trouver votre profil, vos compétences et vos préférences professionnelles. Désactivez cette option pour garder votre profil privé. Les entreprises auprès desquelles vous avez postulé voient toujours votre candidature."
+    },
+    "resumeVisible": {
+      "label": "Visibilité du CV",
+      "description": "Autorisez les recruteurs qui trouvent votre profil à ouvrir votre CV actif. Les entreprises auprès desquelles vous avez postulé peuvent toujours ouvrir le CV envoyé."
+    },
+    "matchingConsent": {
+      "label": "Consentement à la mise en correspondance",
+      "description": "Autorisez l’utilisation de votre profil pour la mise en correspondance par IA. Aucune caractéristique protégée n’est utilisée."
+    },
+    "note": "Chaque téléchargement de votre CV est enregistré."
+  }
+}

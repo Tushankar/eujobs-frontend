@@ -1,0 +1,77 @@
+{
+  "email": {
+    "layout": {
+      "linkHint": "Si le bouton ne fonctionne pas, copiez ce lien dans votre navigateur :",
+      "footer": "Ceci est un message automatique de Local WorkMan."
+    },
+    "verify_email": {
+      "subject": "Confirmez votre adresse e-mail",
+      "heading": "Confirmez votre adresse e-mail",
+      "body": [
+        "Bonjour {{name}},",
+        "Merci de vous être inscrit sur Local WorkMan. Confirmez votre adresse e-mail pour finaliser la création de votre compte. Le lien ne fonctionne qu’une fois et expire dans 24 heures."
+      ],
+      "action": "Confirmer l’adresse e-mail",
+      "note": "Si vous ne vous êtes pas inscrit, vous pouvez ignorer cet e-mail."
+    },
+    "already_registered": {
+      "subject": "Vous avez déjà un compte Local WorkMan",
+      "heading": "Vous avez déjà un compte",
+      "body": [
+        "Bonjour {{name}},",
+        "Quelqu’un a essayé de s’inscrire sur Local WorkMan avec cette adresse e-mail. Vous avez déjà un compte, aucun nouveau compte n’a donc été créé."
+      ],
+      "action": "Se connecter",
+      "secondary": "Mot de passe oublié ? Réinitialisez-le ici :",
+      "note": "Si ce n’était pas vous, vous pouvez ignorer cet e-mail. Votre compte n’a pas changé."
+    },
+    "recruiter_email_code": {
+      "subject": "Votre code de vérification Local WorkMan",
+      "heading": "Votre code de vérification",
+      "body": [
+        "Bonjour {{name}},",
+        "Saisissez ce code pour vérifier votre adresse e-mail professionnelle. Il expire dans 10 minutes."
+      ],
+      "note": "Si vous ne vous êtes pas inscrit, vous pouvez ignorer cet e-mail."
+    },
+    "password_reset": {
+      "subject": "Réinitialisez votre mot de passe Local WorkMan",
+      "heading": "Réinitialisez votre mot de passe",
+      "body": [
+        "Bonjour {{name}},",
+        "Nous avons reçu une demande de réinitialisation de votre mot de passe. Le lien ne fonctionne qu’une fois et expire dans 1 heure. La réinitialisation vous déconnecte sur tous vos appareils."
+      ],
+      "action": "Réinitialiser le mot de passe",
+      "note": "Si vous n’êtes pas à l’origine de cette demande, vous pouvez ignorer cet e-mail. Votre mot de passe reste inchangé."
+    },
+    "verification_approved": {
+      "subject": "Votre vérification « {{check}} » est approuvée",
+      "heading": "Vérification approuvée",
+      "body": [
+        "Bonjour {{name}},",
+        "Un administrateur a examiné votre justificatif ({{check}}) et l’a approuvé. La vérification apparaît désormais comme validée sur votre profil."
+      ],
+      "action": "Ouvrir la vérification"
+    },
+    "verification_rejected": {
+      "subject": "Votre vérification « {{check}} » nécessite un nouveau justificatif",
+      "heading": "Justificatif non approuvé",
+      "body": [
+        "Bonjour {{name}},",
+        "Un administrateur a examiné votre justificatif ({{check}}) et n’a pas pu l’approuver.",
+        "Motif : {{reason}}",
+        "Vous pouvez envoyer un nouveau justificatif depuis votre page de vérification."
+      ],
+      "action": "Ouvrir la vérification"
+    }
+  },
+  "verification": {
+    "category": {
+      "identity": "identité",
+      "academic": "diplôme",
+      "employment": "emploi",
+      "right_to_work": "droit au travail",
+      "certificate": "certificat"
+    }
+  }
+}

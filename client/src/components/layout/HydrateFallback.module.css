@@ -1,0 +1,9 @@
+.loading {
+  display: grid;
+  place-items: center;
+  min-height: 100vh;
+  margin: 0;
+  font-size: 14px;
+  color: var(--muted-foreground);
+  background: var(--background);
+}

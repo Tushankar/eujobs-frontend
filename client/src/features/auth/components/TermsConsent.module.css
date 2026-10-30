@@ -23,3 +23,9 @@
   line-height: 16px;
   color: var(--destructive);
 }
+
+.link {
+  font-weight: 600;
+  color: var(--primary-hover);
+  text-decoration: underline;
+}

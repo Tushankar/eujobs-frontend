@@ -1,108 +1,105 @@
-import { useState } from 'react'
-import { Button, Checkbox, Modal, SelectField } from '@/components/ui'
+import { useTranslation } from 'react-i18next'
+import { useGetConfigQuery } from '@/app/api.js'
+import { Checkbox, SelectField } from '@/components/ui'
 import { Field } from '@/components/ui/TextField.jsx'
-import { EVIDENCE_EXTENSIONS, MAX_EVIDENCE_SIZE_MB } from '../data/verification.js'
+import FormDialog from '@/features/candidate/profile/components/FormDialog.jsx'
+import { checkUpload, useErrorText, useFormState, useUploadText } from '@/lib/forms.js'
+import { useSubmitEvidenceMutation } from '../api.js'
 import styles from './SubmitEvidenceModal.module.css'
 
-const FORM_ID = 'submit-evidence-form'
+/**
+ * Evidence for one check (M-166): the type (identity, academic, employment), the profile entry it supports
+ * (academic, employment), or a fixed entry (right to work); then the file and the accuracy confirmation.
+ * `request` = { category, title, evidenceTypes?, entries? [{ id, label }], entryId? }.
+ */
+export default function SubmitEvidenceModal({ open, request, onSubmitted, onClose }) {
+  const { t } = useTranslation()
+  const errorText = useErrorText()
+  const { data: config } = useGetConfigQuery()
+  const rule = config?.limits.uploads.evidence
+  const uploadText = useUploadText(rule)
+  const [submitEvidence, { isLoading }] = useSubmitEvidenceMutation()
+  const { values, set, errors, setErrors, failure, run } = useFormState(() => ({
+    evidenceType: request?.evidenceTypes?.[0] ?? '',
+    entryId: request?.entryId ?? request?.entries?.[0]?.id ?? '',
+    file: null,
+    confirmed: false,
+  }))
+  if (!request || !rule) return null
+  const { category, evidenceTypes, entries } = request
 
-function fileProblem(file) {
-  if (!file) return 'Choose the evidence file you want to submit.'
-  const extension = file.name.includes('.') ? file.name.slice(file.name.lastIndexOf('.')).toLowerCase() : ''
-  if (!EVIDENCE_EXTENSIONS.includes(extension)) return `${file.name} must be a PDF, JPG, or PNG file.`
-  if (file.size === 0) return `${file.name} is empty. Choose a different file.`
-  if (file.size > MAX_EVIDENCE_SIZE_MB * 1024 * 1024) return `${file.name} is larger than ${MAX_EVIDENCE_SIZE_MB} MB.`
-  return ''
-}
-
-function EvidenceForm({ check, onSubmit }) {
-  const [evidenceType, setEvidenceType] = useState(check.evidenceTypes[0])
-  const [file, setFile] = useState(null)
-  const [confirmed, setConfirmed] = useState(false)
-  const [errors, setErrors] = useState({})
-
-  function handleSubmit(event) {
-    event.preventDefault()
-    const nextErrors = {}
-    const problem = fileProblem(file)
-    if (problem) nextErrors.file = problem
-    if (!confirmed) nextErrors.confirmed = 'Confirm that this evidence is yours and accurate.'
-    setErrors(nextErrors)
-    if (Object.keys(nextErrors).length > 0) return
-    onSubmit({ evidenceType, fileName: file.name })
+  async function handleSubmit() {
+    const checks = {
+      entryId: entries && !values.entryId ? { key: 'required' } : undefined,
+      file: values.file ? undefined : { key: 'required' },
+      confirmed: values.confirmed ? undefined : { key: 'required' },
+    }
+    const body = { category, evidenceType: evidenceTypes ? values.evidenceType : undefined, entryId: values.entryId || undefined, file: values.file }
+    if (await run(checks, () => submitEvidence(body).unwrap())) onSubmitted()
   }
 
   return (
-    <form id={FORM_ID} className={styles.form} onSubmit={handleSubmit} noValidate>
-      <SelectField
-        label="Evidence type"
-        options={check.evidenceTypes}
-        value={evidenceType}
-        onChange={(event) => setEvidenceType(event.target.value)}
-        data-autofocus
-      />
-      <Field
-        id="evidence-file"
-        label="Evidence file"
-        hint={`PDF, JPG, or PNG, up to ${MAX_EVIDENCE_SIZE_MB} MB.`}
-        error={errors.file}
-      >
+    <FormDialog
+      open={open}
+      title={t('verification:dialog.title', { check: request.title })}
+      description={t('verification:dialog.description')}
+      submitLabel={t('verification:dialog.submit')}
+      width={520}
+      busy={isLoading}
+      failure={failure}
+      onClose={onClose}
+      onSubmit={handleSubmit}
+    >
+      {evidenceTypes && (
+        <SelectField
+          label={t('verification:dialog.type')}
+          name="evidenceType"
+          options={evidenceTypes.map((type) => ({ value: type, label: t(`enums:evidenceType.${type}`) }))}
+          value={values.evidenceType}
+          onChange={(event) => set('evidenceType', event.target.value)}
+          error={errorText.field('evidenceType', errors.evidenceType)}
+          data-autofocus
+        />
+      )}
+      {entries && (
+        <SelectField
+          label={t('verification:dialog.entry')}
+          name="entryId"
+          options={entries.map((entry) => ({ value: entry.id, label: entry.label }))}
+          value={values.entryId}
+          onChange={(event) => set('entryId', event.target.value)}
+          error={errorText.field('entryId', errors.entryId)}
+        />
+      )}
+      <Field id="evidence-file" label={t('verification:dialog.file')} hint={uploadText.limits} error={errors.file && (errors.file.text ?? errorText.field('file', errors.file))}>
         {({ describedBy, invalid }) => (
           <input
             id="evidence-file"
             type="file"
+            name="evidenceFile"
             className={styles.file}
-            accept={EVIDENCE_EXTENSIONS.join(',')}
+            accept={rule.types.map((type) => `.${type}`).join(',')}
             aria-invalid={invalid || undefined}
             aria-describedby={describedBy}
             onChange={(event) => {
-              setFile(event.target.files?.[0] ?? null)
-              setErrors((current) => ({ ...current, file: undefined }))
+              const file = event.target.files?.[0] ?? null
+              const problem = file && checkUpload(file, rule)
+              set('file', problem ? null : file)
+              if (problem) setErrors((current) => ({ ...current, file: { text: uploadText.problem(problem, file) } }))
             }}
           />
         )}
       </Field>
       <div>
-        <Checkbox
-          checked={confirmed}
-          onChange={(event) => {
-            setConfirmed(event.target.checked)
-            setErrors((current) => ({ ...current, confirmed: undefined }))
-          }}
-        >
-          This evidence is mine and accurate.
+        <Checkbox name="confirmed" checked={values.confirmed} onChange={(event) => set('confirmed', event.target.checked)}>
+          {t('verification:dialog.confirm')}
         </Checkbox>
         {errors.confirmed && (
           <p className={styles.error} role="alert">
-            {errors.confirmed}
+            {errorText.field('confirmed', errors.confirmed)}
           </p>
         )}
       </div>
-    </form>
-  )
-}
-
-/** Collects the evidence type and file for one credential check. The file never leaves this device. */
-export default function SubmitEvidenceModal({ check, onSubmit, onClose }) {
-  return (
-    <Modal
-      open={Boolean(check)}
-      onClose={onClose}
-      width={480}
-      title={check ? `Submit ${check.label.toLowerCase()} for review` : ''}
-      description="Demo only. The file stays on this device and no reviewer receives it. Only the file name is kept."
-      footer={
-        <>
-          <Button variant="secondary" onClick={onClose}>
-            Cancel
-          </Button>
-          <Button type="submit" form={FORM_ID}>
-            Submit for review
-          </Button>
-        </>
-      }
-    >
-      {check && <EvidenceForm check={check} onSubmit={onSubmit} />}
-    </Modal>
+    </FormDialog>
   )
 }

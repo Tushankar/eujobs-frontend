@@ -1,0 +1,42 @@
+{
+  "password": {
+    "title": "Cambiar la contraseña",
+    "description": "Introduce tu contraseña actual y después la nueva. Seguirás con la sesión iniciada en tus otros dispositivos.",
+    "current": "Contraseña actual",
+    "new": "Nueva contraseña",
+    "confirm": "Confirma la nueva contraseña",
+    "submit": "Cambiar la contraseña",
+    "saved": "Tu contraseña se ha cambiado."
+  },
+  "notifications": {
+    "title": "Avisos útiles. Menos ruido.",
+    "email": "Avisos por correo",
+    "candidate": "Alertas de empleo, novedades de tus candidaturas y mensajes nuevos por correo. Los correos de cuenta y seguridad se envían siempre.",
+    "recruiter": "Nuevas candidaturas y mensajes nuevos por correo. Los correos de cuenta y seguridad se envían siempre."
+  },
+  "admin": {
+    "title": "Configuración",
+    "description": "Tu nombre, tu contraseña y el idioma.",
+    "profile": "Tu perfil",
+    "saveName": "Guardar el nombre",
+    "nameSaved": "Tu nombre se ha guardado.",
+    "language": "Idioma del espacio de trabajo"
+  },
+  "privacy": {
+    "title": "Elige cómo te encuentran",
+    "description": "Tu currículum no se comparte solo porque tu perfil sea visible.",
+    "discoverable": {
+      "label": "Visibilidad del perfil y búsqueda de reclutadores",
+      "description": "Permite que los reclutadores encuentren tu perfil, tus competencias y tus preferencias profesionales. Desactívalo para mantener tu perfil privado. Las empresas a las que te has postulado siguen viendo tu candidatura."
+    },
+    "resumeVisible": {
+      "label": "Visibilidad del currículum",
+      "description": "Permite que los reclutadores que encuentran tu perfil abran tu CV activo. Las empresas a las que te has postulado siempre pueden abrir el CV que enviaste."
+    },
+    "matchingConsent": {
+      "label": "Consentimiento para la compatibilidad",
+      "description": "Permite usar tu perfil en la compatibilidad con IA. No se usa ninguna característica protegida."
+    },
+    "note": "Cada descarga de tu CV queda registrada."
+  }
+}

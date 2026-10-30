@@ -1,0 +1,36 @@
+{
+  "step": "Step {{step}} of {{total}} · {{name}}",
+  "story": {
+    "name": "Your story",
+    "title": "A better match starts with you.",
+    "lead": "Upload your resume, review your experience, and decide what to share.",
+    "uploading": "Uploading {{name}}…",
+    "uploaded": "{{name}} is version {{number}} and your live CV.",
+    "continue": "Continue",
+    "skip": "I’ll add my resume later",
+    "privacy": "Your resume is stored privately on Local WorkMan. Recruiters can open it only as your privacy settings allow, and every download is logged."
+  },
+  "preferences": {
+    "name": "Your preferences",
+    "title": "What does your next chapter look like?",
+    "lead": "Tell us what matters. You can change your preferences anytime.",
+    "workMode": "How do you like to work?",
+    "city": "Where are you based?",
+    "salary": "Minimum salary in {{currency}} (optional)",
+    "salaryNoCurrency": "Minimum salary (optional)",
+    "salaryNeedsCity": "Choose your city first to set the currency.",
+    "period": "Salary period",
+    "submit": "Find my next chapter",
+    "back": "Back"
+  },
+  "plan": {
+    "eyebrow": "Last step · Choose a plan",
+    "title": "Choose how you want to continue",
+    "lead": "Plus adds applying, messaging, job alerts and AI matching. You can change your plan later in Billing.",
+    "forever": "forever",
+    "perMonth": "per month",
+    "continueFree": "Continue with Free",
+    "startPlus": "Start Plus",
+    "back": "Back"
+  }
+}

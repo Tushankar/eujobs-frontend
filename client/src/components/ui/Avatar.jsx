@@ -1,3 +1,4 @@
+import { useState } from 'react'
 import { cx } from '@/utils/cx.js'
 import styles from './Avatar.module.css'
 
@@ -19,13 +20,15 @@ function paletteFor(name) {
 
 /**
  * DS Avatar: rounded-full initials chip. Pass `src` to show a supplied
- * illustration/photo instead (alt is then the person's name). `colors` = { bg, fg } overrides the
+ * illustration/photo instead (alt is then the person's name); a photo that fails to load (an expired
+ * signed URL, U39) falls back to the initials. `colors` = { bg, fg } overrides the
  * name-derived palette (used where the data carries the Figma chip colours).
  */
 export default function Avatar({ name, src, size = 40, colors, className }) {
+  const [failedSrc, setFailedSrc] = useState(null)
   const style = { width: size, height: size, fontSize: Math.round(size * 0.32) }
-  if (src) {
-    return <img src={src} alt={name} className={cx(styles.avatar, className)} style={style} />
+  if (src && src !== failedSrc) {
+    return <img src={src} alt={name} className={cx(styles.avatar, className)} style={style} onError={() => setFailedSrc(src)} />
   }
   return (
     <span

@@ -1,0 +1,34 @@
+.sections {
+  display: flex;
+  flex-direction: column;
+  gap: 20px;
+  max-width: 768px;
+  margin-top: 32px;
+}
+
+.heading {
+  font-family: var(--font-display);
+  font-size: 18px;
+  font-weight: 800;
+  line-height: 24px;
+  color: var(--foreground);
+}
+
+.description {
+  padding-top: 6px;
+  font-size: 12px;
+  line-height: 18px;
+  color: var(--muted-foreground);
+}
+
+.form {
+  display: flex;
+  flex-direction: column;
+  gap: 16px;
+  max-width: 420px;
+  padding-top: 16px;
+}
+
+.submit {
+  align-self: flex-start;
+}

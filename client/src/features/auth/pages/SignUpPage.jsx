@@ -1,100 +1,135 @@
 import { useState } from 'react'
+import { useTranslation } from 'react-i18next'
 import { useNavigate } from 'react-router-dom'
-import { Checkbox, PasswordField, TextField } from '@/components/ui'
+import { PasswordField, SelectField, TextField } from '@/components/ui'
 import AuthLayout from '@/components/layout/AuthLayout.jsx'
-import { WORKSPACES } from '@/app/workspaces.js'
+import { errorCode, useGetConfigQuery } from '@/app/api.js'
+import { browserCountry, useCountryOptions } from '@/lib/countries.js'
+import { browserTimeZone, check, compact, serverFieldErrors, useErrorText } from '@/lib/forms.js'
+import { readAnonymousPreference } from '@/lib/preferences.js'
+import { useRegisterCandidateMutation } from '../api.js'
 import AuthIntro from '../components/AuthIntro.jsx'
 import AuthSwitchPrompt from '../components/AuthSwitchPrompt.jsx'
 import CreateAccountButton from '../components/CreateAccountButton.jsx'
-import DemoNote from '../components/DemoNote.jsx'
+import FormAlert from '../components/FormAlert.jsx'
+import TermsConsent from '../components/TermsConsent.jsx'
 import WorkspacePicker from '../components/WorkspacePicker.jsx'
 import { SIGN_UP_CHOICES } from '../data/workspaceChoices.js'
 import hintStyles from '../components/compactHint.module.css'
-import { startSession } from '../utils/session.js'
 import { useFormState } from '../utils/useFormState.js'
-import { validateCandidateSignUp } from '../utils/validation.js'
 import styles from './SignUpPage.module.css'
 
-/**
- * Candidate sign-up. Demo only (as stated in the Figma frame): no account is created and
- * nothing is stored but a browser-only session; a valid form opens the candidate workspace.
- */
+/** M-001: no account is signed in here; the email link must be opened first. */
 export default function SignUpPage() {
+  const { t, i18n } = useTranslation()
   const navigate = useNavigate()
-  const { values, errors, setErrors, field } = useFormState({ fullName: '', email: '', password: '', confirmPassword: '' })
-  const [understood, setUnderstood] = useState(false)
-  const [submitting, setSubmitting] = useState(false)
+  const errorText = useErrorText()
+  const { data: config } = useGetConfigQuery()
+  const countries = useCountryOptions()
+  const { values, errors, setErrors, field } = useFormState({
+    fullName: '',
+    email: '',
+    password: '',
+    confirmPassword: '',
+    country: '',
+    acceptTerms: false,
+  })
+  const [register, { isLoading }] = useRegisterCandidateMutation()
+  const [failure, setFailure] = useState(null)
+  const country = values.country || (countries.length ? browserCountry(countries) : '')
 
-  function handleSubmit(event) {
+  async function handleSubmit(event) {
     event.preventDefault()
-    const nextErrors = validateCandidateSignUp(values)
+    const nextErrors = compact({
+      fullName: check.required(values.fullName),
+      email: check.email(values.email),
+      password: check.newPassword(values.password, config?.limits),
+      confirmPassword: check.confirm(values.confirmPassword, values.password),
+      country: check.required(country),
+      acceptTerms: values.acceptTerms ? undefined : { key: 'required' },
+    })
     setErrors(nextErrors)
+    setFailure(null)
     if (Object.keys(nextErrors).length > 0) return
-    setSubmitting(true)
-    startSession('candidate')
-    window.setTimeout(() => navigate(`${WORKSPACES.candidate.basePath}/onboarding`), 500)
+    try {
+      const { email } = await register({
+        fullName: values.fullName,
+        email: values.email,
+        password: values.password,
+        acceptTerms: true,
+        language: i18n.language,
+        languageExplicit: Boolean(readAnonymousPreference('language')),
+        country,
+        timezone: browserTimeZone(),
+      }).unwrap()
+      navigate('/sign-up/check-email', { state: { email } })
+    } catch (error) {
+      setErrors(serverFieldErrors(error))
+      setFailure(error)
+    }
   }
 
   return (
     <AuthLayout>
-      <AuthIntro title="Create your account." lead="One platform. The right workspace for your next move." />
-      <WorkspacePicker
-        choices={SIGN_UP_CHOICES}
-        activeId="candidate"
-        helper="Find opportunities that fit your skills, experience, and ambitions."
-      />
+      <AuthIntro title={t('auth:signUp.title')} lead={t('auth:signUp.lead')} />
+      <WorkspacePicker choices={SIGN_UP_CHOICES} activeId="candidate" helper={t('auth:signIn.helper.candidate')} />
 
       <form className={styles.form} onSubmit={handleSubmit} noValidate>
+        {failure && errorCode(failure) !== 'VALIDATION_FAILED' && <FormAlert>{errorText.code(failure)}</FormAlert>}
         <TextField
-          label="Full name"
+          label={t('auth:fields.fullName')}
           name="fullName"
           autoComplete="name"
-          placeholder="Alex Morgan"
           value={values.fullName}
           onChange={field('fullName')}
-          error={errors.fullName}
+          error={errorText.field('fullName', errors.fullName)}
         />
         <TextField
-          label="Email address"
+          label={t('auth:fields.email')}
           name="email"
           type="email"
           autoComplete="email"
-          placeholder="you@example.com"
+          placeholder={t('auth:fields.emailPlaceholder.candidate')}
           value={values.email}
           onChange={field('email')}
-          error={errors.email}
+          error={errorText.field('email', errors.email)}
+        />
+        <SelectField
+          label={t('auth:fields.country')}
+          name="country"
+          hint={t('auth:fields.countryHint')}
+          options={countries.map((option) => ({ value: option.code, label: option.name }))}
+          value={country}
+          onChange={field('country')}
+          error={errorText.field('country', errors.country)}
         />
         <PasswordField
           className={hintStyles.compactHint}
-          label="Password"
+          label={t('auth:fields.password')}
           name="password"
           autoComplete="new-password"
-          placeholder="Enter your password"
-          hint="Use at least 8 characters. Don’t use a real password in this demo."
+          placeholder={t('auth:fields.passwordPlaceholder')}
+          hint={t('auth:fields.passwordHint', { min: config?.limits.password.min })}
           value={values.password}
           onChange={field('password')}
-          error={errors.password}
+          error={errorText.field('password', errors.password)}
         />
         <PasswordField
-          label="Confirm password"
+          label={t('auth:fields.confirmPassword')}
           name="confirmPassword"
           autoComplete="new-password"
-          placeholder="Re-enter your password"
+          placeholder={t('auth:fields.confirmPlaceholder')}
           value={values.confirmPassword}
           onChange={field('confirmPassword')}
-          error={errors.confirmPassword}
+          error={errorText.field('confirmPassword', errors.confirmPassword)}
         />
-        <Checkbox className={styles.consent} checked={understood} onChange={(event) => setUnderstood(event.target.checked)}>
-          I understand that this demo saves profile changes on this device. No real account is created.
-        </Checkbox>
-        <CreateAccountButton loading={submitting} disabled={!understood} />
+        <TermsConsent checked={values.acceptTerms} onChange={field('acceptTerms')} error={errorText.field('acceptTerms', errors.acceptTerms)} />
+        <CreateAccountButton loading={isLoading} disabled={!values.acceptTerms} />
       </form>
 
-      <AuthSwitchPrompt linkTo="/sign-in" linkLabel="Sign in">
-        Already have an account?
+      <AuthSwitchPrompt linkTo="/sign-in" linkLabel={t('auth:signUp.signInLink')}>
+        {t('auth:signUp.haveAccount')}
       </AuthSwitchPrompt>
-
-      <DemoNote />
     </AuthLayout>
   )
 }

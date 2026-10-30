@@ -1,0 +1,62 @@
+.verified {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: 8px 12px;
+}
+
+.numberRow {
+  display: grid;
+  grid-template-columns: minmax(0, 200px) minmax(0, 1fr);
+  align-items: start;
+  gap: 12px;
+  padding-top: 12px;
+}
+
+.actions {
+  padding-top: 12px;
+}
+
+.error {
+  padding-top: 8px;
+  font-size: 12px;
+  line-height: 18px;
+  color: var(--destructive);
+}
+
+.codeForm {
+  padding-top: 16px;
+}
+
+.codeShown {
+  display: flex;
+  flex-direction: column;
+  gap: 4px;
+  padding: 12px 16px;
+  border-radius: var(--radius-xl);
+  background: var(--accent);
+  font-size: 13px;
+  font-weight: 600;
+  line-height: 20px;
+  color: var(--primary-hover);
+}
+
+.codeNote {
+  font-size: 12px;
+  font-weight: 400;
+  color: var(--muted-foreground);
+}
+
+.confirm {
+  padding-top: 24px;
+}
+
+@media (max-width: 559px) {
+  .numberRow {
+    grid-template-columns: minmax(0, 1fr);
+  }
+
+  .confirm {
+    padding-top: 0;
+  }
+}

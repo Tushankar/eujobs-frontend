@@ -64,6 +64,14 @@
   overflow-wrap: anywhere;
 }
 
+.reason {
+  padding-top: 4px;
+  font-size: 11px;
+  line-height: 16px;
+  overflow-wrap: anywhere;
+  color: var(--destructive);
+}
+
 .action {
   display: flex;
   flex-shrink: 0;

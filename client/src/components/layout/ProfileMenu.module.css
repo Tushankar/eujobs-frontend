@@ -6,10 +6,8 @@
   background: transparent;
 }
 
-.trigger img {
-  width: 32px;
-  height: 32px;
-  border-radius: var(--radius-full);
+.trigger > * {
+  display: flex;
 }
 
 /* The admin avatar sits in a 40px box in Figma and its menu opens at y=54 (just inside the box's bottom edge). */
@@ -42,12 +40,19 @@
   color: var(--foreground);
 }
 
+.email,
 .role {
   padding-top: 4px;
+  overflow: hidden;
   font-size: 10px;
   line-height: 15px;
-  text-transform: capitalize;
+  text-overflow: ellipsis;
+  white-space: nowrap;
   color: var(--muted-foreground);
+}
+
+.role {
+  color: var(--primary-hover);
 }
 
 .body {
@@ -87,7 +92,7 @@
 }
 
 .rowValue {
-  max-width: 96px;
+  max-width: 110px;
   overflow: hidden;
   font-size: 10px;
   font-weight: 400;
@@ -113,6 +118,12 @@
   padding: 8px;
   border-radius: var(--radius-xl);
   background: var(--muted);
+}
+
+/* The country list holds 29 entries, so it scrolls inside the menu. */
+.scroll {
+  max-height: min(280px, 45vh);
+  overflow-y: auto;
 }
 
 .option {

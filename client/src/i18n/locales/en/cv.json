@@ -1,0 +1,34 @@
+{
+  "eyebrow": "Your experience, understood",
+  "title": "A better match starts with you.",
+  "description": "Upload your resume, review your versions, and decide which one recruiters see.",
+  "privacy": "Your resume is stored privately. Recruiters can open it only as your privacy settings allow, and every download is logged.",
+  "uploading": "Uploading {{name}}…",
+  "uploaded": "{{name}} was added as version {{number}} and is now your live CV.",
+  "liveSet": "Version {{number}} is now your live CV.",
+  "deleted": "Version {{number}} was deleted.",
+  "history": {
+    "title": "CV version history",
+    "lead": "Each upload is a separate version. Choose which one is your live CV.",
+    "empty": "No CV uploaded yet",
+    "emptyLead": "Upload a resume above to create the first version."
+  },
+  "version": {
+    "title": "Version {{number}} · {{name}}",
+    "live": "Current live CV",
+    "noText": "No readable text",
+    "noTextHint": "We couldn't read text in this file, so matching uses your profile instead.",
+    "meta": "{{date}} · {{size}}",
+    "setLive": "Set as live",
+    "setLiveLabel": "Set version {{number}} as live",
+    "download": "Download",
+    "downloadLabel": "Download version {{number}}",
+    "delete": "Delete",
+    "deleteLabel": "Delete version {{number}}"
+  },
+  "deleteDialog": {
+    "title": "Delete this version?",
+    "body": "Version {{number}} and its file will be deleted. This can't be undone.",
+    "confirm": "Delete version"
+  }
+}

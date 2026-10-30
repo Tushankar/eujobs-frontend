@@ -5,6 +5,6 @@ export default [
   {
     path: 'moderation/*',
     lazy: lazyPage(() => import('./pages/ModerationPage.jsx')),
-    handle: { title: 'Moderation' },
+    handle: { titleKey: 'nav.moderation' },
   },
 ]

@@ -1,0 +1,36 @@
+{
+  "step": "Étape {{step}} sur {{total}} · {{name}}",
+  "story": {
+    "name": "Votre parcours",
+    "title": "Une meilleure correspondance commence par vous.",
+    "lead": "Importez votre CV, vérifiez votre expérience et choisissez ce que vous partagez.",
+    "uploading": "Importation de {{name}}…",
+    "uploaded": "{{name}} est la version {{number}} et votre CV actif.",
+    "continue": "Continuer",
+    "skip": "J’ajouterai mon CV plus tard",
+    "privacy": "Votre CV est conservé de façon privée sur Local WorkMan. Les recruteurs ne peuvent l’ouvrir que selon vos paramètres de confidentialité, et chaque téléchargement est enregistré."
+  },
+  "preferences": {
+    "name": "Vos préférences",
+    "title": "À quoi ressemble votre prochain chapitre ?",
+    "lead": "Dites-nous ce qui compte pour vous. Vous pourrez modifier vos préférences à tout moment.",
+    "workMode": "Comment aimez-vous travailler ?",
+    "city": "Où habitez-vous ?",
+    "salary": "Salaire minimum en {{currency}} (facultatif)",
+    "salaryNoCurrency": "Salaire minimum (facultatif)",
+    "salaryNeedsCity": "Choisissez d’abord votre ville pour définir la devise.",
+    "period": "Période du salaire",
+    "submit": "Trouver mon prochain chapitre",
+    "back": "Retour"
+  },
+  "plan": {
+    "eyebrow": "Dernière étape · Choisissez une offre",
+    "title": "Choisissez comment continuer",
+    "lead": "Plus ajoute les candidatures, la messagerie, les alertes emploi et la compatibilité par IA. Vous pourrez changer d’offre plus tard dans Facturation.",
+    "forever": "pour toujours",
+    "perMonth": "par mois",
+    "continueFree": "Continuer avec Gratuit",
+    "startPlus": "Démarrer Plus",
+    "back": "Retour"
+  }
+}

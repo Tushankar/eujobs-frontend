@@ -1,89 +1,92 @@
 import { useState } from 'react'
+import { useTranslation } from 'react-i18next'
 import { FileText, ShieldCheck } from 'lucide-react'
-import { Button, Icon, Panel } from '@/components/ui'
-import PageTitle from '@/components/common/PageTitle.jsx'
+import { useGetConfigQuery } from '@/app/api.js'
+import { Icon, Panel } from '@/components/ui'
+import ConfirmDialog from '@/components/common/ConfirmDialog.jsx'
 import EmptyState from '@/components/common/EmptyState.jsx'
-import { useLocalStorage } from '@/hooks/useLocalStorage.js'
-import aiSparkle from '@/assets/icons/cv-ai-sparkle-ink.svg'
-import ComparePanel from '../components/ComparePanel.jsx'
+import PageTitle from '@/components/common/PageTitle.jsx'
+import { checkUpload, serverFieldErrors, useErrorText, useUploadText } from '@/lib/forms.js'
+import { useDeleteCvMutation, useGetCvDownloadUrlMutation, useGetCvVersionsQuery, useSetLiveCvMutation, useUploadCvMutation } from '../api.js'
 import UploadDropzone from '../components/UploadDropzone.jsx'
 import VersionRow from '../components/VersionRow.jsx'
-import { CV_STORAGE_KEY, INITIAL_CV } from '../data/cvVersions.js'
-import { addDraft, addUpload, approveVersion, validateCvFile } from '../utils/cvVersions.js'
 import styles from './CvVersionsPage.module.css'
 
-/** "CV & versions": upload a resume, review the snapshot history, compare versions and approve one as live. */
+/**
+ * "CV & versions" (M-027 … M-031, U18): upload (text extracted on the server), the version history, the live
+ * choice, downloads through signed URLs and deleting non-live versions. The AI snapshot, assisted draft and
+ * Compare panel come with Phase 9 (P3-Q3).
+ */
 export default function CvVersionsPage() {
-  const [cv, setCv] = useLocalStorage(CV_STORAGE_KEY, INITIAL_CV)
-  const [compareIds, setCompareIds] = useState([])
-  const [uploadError, setUploadError] = useState('')
-  const [uploadMessage, setUploadMessage] = useState('')
-  const [historyMessage, setHistoryMessage] = useState('')
+  const { t } = useTranslation()
+  const errorText = useErrorText()
+  const { data: config } = useGetConfigQuery()
+  const rule = config?.limits.uploads.cv
+  const uploadText = useUploadText(rule)
+  const { data: cv } = useGetCvVersionsQuery()
+  const [uploadCv, { isLoading: uploading, originalArgs: uploadingFile }] = useUploadCvMutation()
+  const [setLiveCv] = useSetLiveCvMutation()
+  const [deleteCv] = useDeleteCvMutation()
+  const [getDownloadUrl] = useGetCvDownloadUrlMutation()
+  const [error, setError] = useState('')
+  const [message, setMessage] = useState('')
+  const [deleting, setDeleting] = useState(null)
+  const versions = cv?.items ?? []
 
-  const compared = cv.versions.filter((version) => compareIds.includes(version.id))
+  const report = (failure) => {
+    const fields = serverFieldErrors(failure)
+    setError(fields.file ? errorText.field('file', fields.file) : errorText.code(failure))
+  }
 
-  function handleFile(file) {
-    const problem = validateCvFile(file)
-    setUploadError(problem)
-    setHistoryMessage('')
-    if (problem) {
-      setUploadMessage('')
-      return
+  async function handleFile(file) {
+    setMessage('')
+    const problem = checkUpload(file, rule)
+    setError(problem ? uploadText.problem(problem, file) : '')
+    if (problem) return
+    try {
+      const { items } = await uploadCv(file).unwrap()
+      setMessage(t('cv:uploaded', { name: file.name, number: items[0].number }))
+    } catch (failure) {
+      report(failure)
     }
-    const { entry, cv: next } = addUpload(cv, file.name)
-    setCv(next)
-    setUploadMessage(`${file.name} was added as Version ${entry.version} and is now your live CV. Only the file name is kept in this browser.`)
   }
 
-  function clearUploadFeedback() {
-    setUploadError('')
-    setUploadMessage('')
+  async function act(work, success) {
+    setError('')
+    setMessage('')
+    try {
+      await work()
+      if (success) setMessage(success)
+    } catch (failure) {
+      report(failure)
+    }
   }
 
-  function handleCreateDraft() {
-    const { entry, cv: next } = addDraft(cv)
-    clearUploadFeedback()
-    setCv(next)
-    setHistoryMessage(`Version ${entry.version} was drafted on this device. It stays pending until you approve it as your live CV.`)
-  }
-
-  function handleApprove(version) {
-    clearUploadFeedback()
-    setCv(approveVersion(cv, version.id))
-    setHistoryMessage(`Version ${version.version} is now your live CV.`)
-  }
-
-  function toggleCompare(id) {
-    setCompareIds((current) => {
-      if (current.includes(id)) return current.filter((item) => item !== id)
-      return [...current, id].slice(-2)
+  async function download(version) {
+    await act(async () => {
+      const { url } = await getDownloadUrl(version.id).unwrap()
+      window.location.assign(`${import.meta.env.VITE_API_URL ?? ''}${url}`)
     })
   }
 
   return (
     <>
-      <PageTitle
-        eyebrow="Your experience, understood"
-        title="A better match starts with you."
-        description="Upload your resume, review your experience, and decide what to share."
-      />
+      <PageTitle eyebrow={t('cv:eyebrow')} title={t('cv:title')} description={t('cv:description')} />
 
       <Panel padding={40} className={styles.upload}>
-        <UploadDropzone onFile={handleFile} />
-        {uploadError && (
+        <UploadDropzone onFile={handleFile} disabled={uploading || !rule} />
+        <div role="status">
+          {uploading && <p className={styles.success}>{t('cv:uploading', { name: uploadingFile.name })}</p>}
+          {message && <p className={styles.success}>{message}</p>}
+        </div>
+        {error && (
           <p className={styles.error} role="alert">
-            {uploadError}
-          </p>
-        )}
-        {uploadMessage && (
-          <p className={styles.success} role="status">
-            {uploadMessage}
+            {error}
           </p>
         )}
         <p className={styles.privacy}>
           <Icon as={ShieldCheck} size={17} className={styles.privacyIcon} />
-          Your resume is processed in your browser. We don’t upload the file or share it with anyone. Local text
-          extraction is a preview, not a connected AI service.
+          {t('cv:privacy')}
         </p>
       </Panel>
 
@@ -91,54 +94,44 @@ export default function CvVersionsPage() {
         <div className={styles.historyHeader}>
           <div className={styles.historyText}>
             <h2 className={styles.historyTitle} id="cv-history-heading">
-              CV version history
+              {t('cv:history.title')}
             </h2>
-            <p className={styles.historyLead}>
-              Every approved upload is a separate snapshot. AI-assisted drafts stay pending until you explicitly approve
-              one as your live CV.
-            </p>
+            <p className={styles.historyLead}>{t('cv:history.lead')}</p>
           </div>
-          <Button
-            variant="outline"
-            disabled={cv.versions.length === 0}
-            onClick={handleCreateDraft}
-          >
-            <img src={aiSparkle} alt="" width={16} height={16} />
-            Create assisted draft
-          </Button>
         </div>
-        {historyMessage && (
-          <p className={styles.success} role="status">
-            {historyMessage}
-          </p>
-        )}
-
-        {cv.versions.length === 0 ? (
-          <div className={styles.historyBody}>
-            <EmptyState
-              icon={FileText}
-              title="No CV versions on this device"
-              description="Upload a resume above to create the first snapshot."
-            />
-          </div>
-        ) : (
-          <div className={styles.historyBody}>
+        <div className={styles.historyBody}>
+          {cv && versions.length === 0 ? (
+            <EmptyState icon={FileText} title={t('cv:history.empty')} description={t('cv:history.emptyLead')} />
+          ) : (
             <Panel padding={0} className={styles.versions}>
-              {cv.versions.map((version) => (
+              {versions.map((version) => (
                 <VersionRow
                   key={version.id}
                   version={version}
-                  live={version.id === cv.liveId}
-                  comparing={compareIds.includes(version.id)}
-                  onToggleCompare={() => toggleCompare(version.id)}
-                  onApprove={() => handleApprove(version)}
+                  onDownload={() => download(version)}
+                  onSetLive={() => act(() => setLiveCv(version.id).unwrap(), t('cv:liveSet', { number: version.number }))}
+                  onDelete={() => setDeleting(version)}
                 />
               ))}
             </Panel>
-            <ComparePanel selected={compared} />
-          </div>
-        )}
+          )}
+        </div>
       </section>
+
+      <ConfirmDialog
+        open={Boolean(deleting)}
+        title={t('cv:deleteDialog.title')}
+        confirmLabel={t('cv:deleteDialog.confirm')}
+        tone="danger"
+        onConfirm={() => {
+          const version = deleting
+          setDeleting(null)
+          act(() => deleteCv(version.id).unwrap(), t('cv:deleted', { number: version.number }))
+        }}
+        onClose={() => setDeleting(null)}
+      >
+        <p className={styles.historyLead}>{deleting && t('cv:deleteDialog.body', { number: deleting.number })}</p>
+      </ConfirmDialog>
     </>
   )
 }

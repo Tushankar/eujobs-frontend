@@ -1,17 +1,15 @@
 import { useEffect, useRef, useState } from 'react'
 
-const NUMBER = /^(\D*)(\d[\d,]*)(\D*)$/
 const DURATION_MS = 600
 
 /**
- * Counts a stat up from zero when it first appears, and from its old value to the new one when it changes.
- * Handles numbers and strings like "18", "1,284" or "7 yrs"; anything else (or reduced motion) is returned as is.
+ * Counts a number up from zero when it first appears, and from its old value to the new one when it changes.
+ * Works on numbers only (formatting is the caller's job, so no locale is guessed here); anything else, or
+ * reduced motion, is returned as is.
  */
 export function useCountUp(value) {
-  const match = NUMBER.exec(String(value))
-  const target = match ? Number(match[2].replaceAll(',', '')) : null
   const [reduced] = useState(() => window.matchMedia('(prefers-reduced-motion: reduce)').matches)
-  const animate = target !== null && !reduced
+  const animate = typeof value === 'number' && Number.isFinite(value) && !reduced
 
   const [shown, setShown] = useState(0)
   const shownRef = useRef(0)
@@ -25,16 +23,15 @@ export function useCountUp(value) {
     function tick(now) {
       const progress = Math.min((now - start) / DURATION_MS, 1)
       const eased = 1 - (1 - progress) ** 3
-      shownRef.current = Math.round(from + (target - from) * eased)
+      // Keep the target's precision so decimals (e.g. 12.5) land exactly.
+      shownRef.current = progress === 1 ? value : from + (value - from) * eased
       setShown(shownRef.current)
       if (progress < 1) frame = requestAnimationFrame(tick)
     }
 
     frame = requestAnimationFrame(tick)
     return () => cancelAnimationFrame(frame)
-  }, [animate, target])
+  }, [animate, value])
 
-  if (!animate) return value
-  const digits = match[2].includes(',') ? shown.toLocaleString('en-US') : String(shown)
-  return `${match[1]}${digits}${match[3]}`
+  return animate ? shown : value
 }

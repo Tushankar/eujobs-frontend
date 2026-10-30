@@ -1,33 +1,34 @@
+import { useTranslation } from 'react-i18next'
 import { Switch } from '@/components/ui'
-import { useLocalStorage } from '@/hooks/useLocalStorage.js'
+import { useSetNotificationsMutation } from '@/features/account/api.js'
+import { usePreferences } from '@/lib/preferences.js'
 import SettingsCard from '../components/SettingsCard.jsx'
 import SettingsLayout from '../components/SettingsLayout.jsx'
-import { DEFAULT_NOTIFICATIONS, NOTIFICATIONS_STORAGE_KEY, NOTIFICATION_OPTIONS } from '../data/notifications.js'
 import styles from './NotificationsPage.module.css'
 
-/** Settings > Notifications: each switch applies immediately and is kept on this device. */
+/** Settings > Notifications: only the email toggle (OD6, M-095); account and security emails are always sent. */
 export default function NotificationsPage() {
-  const [preferences, setPreferences] = useLocalStorage(NOTIFICATIONS_STORAGE_KEY, DEFAULT_NOTIFICATIONS)
+  const { t } = useTranslation()
+  const { me } = usePreferences()
+  const [setNotifications] = useSetNotificationsMutation()
 
   return (
     <SettingsLayout>
       <div className={styles.card}>
-        <SettingsCard title="Useful updates. Less noise.">
+        <SettingsCard title={t('account:notifications.title')}>
           <ul className={styles.list}>
-            {NOTIFICATION_OPTIONS.map((option) => (
-              <li key={option.id} className={styles.row}>
-                <div className={styles.text}>
-                  <p className={styles.label}>{option.label}</p>
-                  <p className={styles.description}>{option.description}</p>
-                </div>
-                <Switch
-                  size="lg"
-                  label={option.label}
-                  checked={preferences[option.id] ?? DEFAULT_NOTIFICATIONS[option.id]}
-                  onChange={(checked) => setPreferences((current) => ({ ...current, [option.id]: checked }))}
-                />
-              </li>
-            ))}
+            <li className={styles.row}>
+              <div className={styles.text}>
+                <p className={styles.label}>{t('account:notifications.email')}</p>
+                <p className={styles.description}>{t('account:notifications.recruiter')}</p>
+              </div>
+              <Switch
+                size="lg"
+                label={t('account:notifications.email')}
+                checked={me.notifyEmail}
+                onChange={(checked) => setNotifications({ notifyEmail: checked })}
+              />
+            </li>
           </ul>
         </SettingsCard>
       </div>

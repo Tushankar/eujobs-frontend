@@ -1,0 +1,77 @@
+{
+  "email": {
+    "layout": {
+      "linkHint": "Si el botón no funciona, copia este enlace en tu navegador:",
+      "footer": "Este es un mensaje automático de Local WorkMan."
+    },
+    "verify_email": {
+      "subject": "Confirma tu dirección de correo electrónico",
+      "heading": "Confirma tu dirección de correo electrónico",
+      "body": [
+        "Hola, {{name}}:",
+        "Gracias por registrarte en Local WorkMan. Confirma tu dirección de correo electrónico para terminar de crear tu cuenta. El enlace solo se puede usar una vez y caduca en 24 horas."
+      ],
+      "action": "Confirmar correo electrónico",
+      "note": "Si no te has registrado, puedes ignorar este correo."
+    },
+    "already_registered": {
+      "subject": "Ya tienes una cuenta en Local WorkMan",
+      "heading": "Ya tienes una cuenta",
+      "body": [
+        "Hola, {{name}}:",
+        "Alguien ha intentado registrarse en Local WorkMan con esta dirección de correo electrónico. Ya tienes una cuenta, así que no se ha creado ninguna nueva."
+      ],
+      "action": "Iniciar sesión",
+      "secondary": "¿Has olvidado tu contraseña? Restablécela aquí:",
+      "note": "Si no has sido tú, puedes ignorar este correo. Tu cuenta no ha cambiado."
+    },
+    "recruiter_email_code": {
+      "subject": "Tu código de verificación de Local WorkMan",
+      "heading": "Tu código de verificación",
+      "body": [
+        "Hola, {{name}}:",
+        "Introduce este código para verificar tu correo electrónico de trabajo. Caduca en 10 minutos."
+      ],
+      "note": "Si no te has registrado, puedes ignorar este correo."
+    },
+    "password_reset": {
+      "subject": "Restablece tu contraseña de Local WorkMan",
+      "heading": "Restablece tu contraseña",
+      "body": [
+        "Hola, {{name}}:",
+        "Hemos recibido una solicitud para restablecer tu contraseña. El enlace solo se puede usar una vez y caduca en 1 hora. Al restablecer la contraseña, se cerrará tu sesión en todos los dispositivos."
+      ],
+      "action": "Restablecer contraseña",
+      "note": "Si no lo has solicitado, puedes ignorar este correo. Tu contraseña no cambiará."
+    },
+    "verification_approved": {
+      "subject": "Tu verificación de {{check}} está aprobada",
+      "heading": "Verificación aprobada",
+      "body": [
+        "Hola, {{name}}:",
+        "Un administrador ha revisado tu documentación de {{check}} y la ha aprobado. La verificación ya aparece como verificada en tu perfil."
+      ],
+      "action": "Abrir verificación"
+    },
+    "verification_rejected": {
+      "subject": "Tu verificación de {{check}} necesita nueva documentación",
+      "heading": "Documentación no aprobada",
+      "body": [
+        "Hola, {{name}}:",
+        "Un administrador ha revisado tu documentación de {{check}} y no ha podido aprobarla.",
+        "Motivo: {{reason}}",
+        "Puedes enviar nueva documentación desde tu página de verificación."
+      ],
+      "action": "Abrir verificación"
+    }
+  },
+  "verification": {
+    "category": {
+      "identity": "identidad",
+      "academic": "titulación académica",
+      "employment": "empleo",
+      "right_to_work": "derecho a trabajar",
+      "certificate": "certificado"
+    }
+  }
+}

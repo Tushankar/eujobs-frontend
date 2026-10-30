@@ -1,0 +1,102 @@
+{
+  "required": "Ce champ est obligatoire.",
+  "invalid": "Vérifiez cette valeur.",
+  "too_short": "Utilisez au moins {{min}} caractères.",
+  "too_long": "Utilisez au maximum {{max}} caractères.",
+  "too_small": "Saisissez {{min}} ou plus.",
+  "too_big": "Saisissez {{max}} ou moins.",
+  "too_few": "Ajoutez-en au moins {{min}}.",
+  "too_many": "Ajoutez-en au maximum {{max}}.",
+  "not_allowed": "Cette modification n’est pas autorisée.",
+  "too_common": "Ce mot de passe est trop courant. Choisissez-en un autre.",
+  "matches_email": "N’utilisez pas le nom de votre adresse e-mail comme mot de passe.",
+  "mismatch": "Les valeurs ne correspondent pas.",
+  "duplicate": "Cet élément figure déjà dans la liste.",
+  "before_start": "Choisissez une date de fin postérieure à la date de début.",
+  "no_file": "Ajoutez d’abord un fichier.",
+  "fields": {
+    "email": {
+      "required": "Saisissez votre adresse e-mail.",
+      "invalid": "Saisissez une adresse e-mail valide, comme vous@exemple.com."
+    },
+    "password": {
+      "required": "Saisissez votre mot de passe.",
+      "too_long": "Utilisez un mot de passe plus court."
+    },
+    "newPassword": {
+      "required": "Saisissez un nouveau mot de passe.",
+      "too_long": "Utilisez un mot de passe plus court."
+    },
+    "currentPassword": {
+      "required": "Saisissez votre mot de passe actuel.",
+      "invalid": "Ce n’est pas votre mot de passe actuel."
+    },
+    "confirmPassword": {
+      "required": "Saisissez à nouveau le mot de passe.",
+      "mismatch": "Les mots de passe ne correspondent pas."
+    },
+    "fullName": {
+      "required": "Saisissez votre nom complet."
+    },
+    "jobTitle": {
+      "required": "Saisissez votre intitulé de poste ou votre fonction."
+    },
+    "phone": {
+      "required": "Saisissez votre numéro de téléphone.",
+      "invalid": "Saisissez un numéro valide, comme +33 1 23 45 67 89."
+    },
+    "country": {
+      "required": "Choisissez un pays.",
+      "invalid": "Choisissez un pays dans la liste."
+    },
+    "acceptTerms": {
+      "required": "Acceptez les Conditions d’utilisation et la Politique de confidentialité pour continuer.",
+      "invalid": "Acceptez les Conditions d’utilisation et la Politique de confidentialité pour continuer."
+    },
+    "skills": {
+      "duplicate": "{{skill}} figure déjà dans vos compétences."
+    },
+    "placeId": {
+      "required": "Choisissez une ville parmi les suggestions.",
+      "invalid": "Choisissez une ville parmi les suggestions.",
+      "not_allowed": "Choisissez une ville de l’UE ou du Royaume-Uni."
+    },
+    "headline": {
+      "required": "Indiquez votre poste actuel ou un titre."
+    },
+    "about": {
+      "too_short": "Racontez votre parcours en au moins {{min}} caractères."
+    },
+    "end": {
+      "required": "Indiquez le mois de fin ou cochez la case si c’est en cours."
+    },
+    "linkedin": {
+      "invalid": "Utilisez le lien d’un profil LinkedIn, comme https://www.linkedin.com/in/votre-nom."
+    },
+    "portfolio": {
+      "invalid": "Utilisez un lien complet commençant par https://."
+    },
+    "reason": {
+      "required": "Indiquez le motif du refus."
+    },
+    "file": {
+      "required": "Choisissez un fichier.",
+      "too_many": "Vous pouvez conserver jusqu’à {{max}} versions. Supprimez-en une d’abord."
+    },
+    "workPreference": {
+      "required": "Choisissez votre façon de travailler."
+    },
+    "confirmed": {
+      "required": "Confirmez que ce justificatif vous appartient et qu’il est exact."
+    },
+    "entryId": {
+      "required": "Choisissez l’élément du profil concerné."
+    },
+    "evidenceType": {
+      "required": "Choisissez le type de justificatif."
+    },
+    "code": {
+      "required": "Saisissez le code."
+    }
+  }
+}

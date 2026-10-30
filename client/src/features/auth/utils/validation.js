@@ -51,23 +51,8 @@ function compact(errors) {
   return Object.fromEntries(Object.entries(errors).filter(([, message]) => message))
 }
 
-export function validateSignIn({ email, password }, exampleEmail = 'you@example.com') {
-  return compact({
-    email: checkEmail(email, { missing: 'Enter your email address.', example: exampleEmail }),
-    password: password ? undefined : 'Enter your password.',
-  })
-}
-
-export function validateCandidateSignUp({ fullName, email, password, confirmPassword }) {
-  return compact({
-    fullName: isBlank(fullName) ? 'Enter your full name.' : undefined,
-    email: checkEmail(email, { missing: 'Enter your email address.', example: 'you@example.com' }),
-    ...checkPasswordPair({ password, confirmPassword }),
-  })
-}
-
 /**
- * Recruiter account fields (recruiter sign-up and onboarding step 1). `optional` passwords
+ * Recruiter account fields (onboarding step 1, mock until Phase 4). `optional` passwords
  * apply when the account step was already completed in this session.
  */
 export function validateRecruiterAccount(values, options) {

@@ -88,3 +88,10 @@ input:focus-visible + .tile {
     padding: 16px 8px;
   }
 }
+
+.error {
+  margin: 8px 0 0;
+  font-size: 12px;
+  line-height: 16px;
+  color: var(--destructive);
+}

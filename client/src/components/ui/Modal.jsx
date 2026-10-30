@@ -1,5 +1,6 @@
 import { memo, useEffect, useId, useRef } from 'react'
 import { createPortal } from 'react-dom'
+import { useTranslation } from 'react-i18next'
 import { X } from 'lucide-react'
 import { usePresence } from '@/hooks/usePresence.js'
 import { cx } from '@/utils/cx.js'
@@ -17,7 +18,8 @@ const FOCUSABLE = 'a[href], button:not([disabled]), input:not([disabled]), selec
  * last had, instead of collapsing to an empty shell mid-exit.
  */
 const DialogContent = memo(
-  function DialogContent({ title, titleId, description, descriptionId, children, footer, onClose }) {
+  function DialogContent({ title, titleId, description, descriptionId, children, footer, onClose, dismissible }) {
+    const { t } = useTranslation()
     return (
       <>
         <header className={styles.header}>
@@ -33,7 +35,7 @@ const DialogContent = memo(
               </p>
             )}
           </div>
-          <IconButton icon={X} label="Close dialog" onClick={onClose} />
+          {dismissible && <IconButton icon={X} label={t('common:closeDialog')} onClick={onClose} />}
         </header>
         <div className={styles.body}>{children}</div>
         {footer && <footer className={styles.footer}>{footer}</footer>}
@@ -47,8 +49,20 @@ const DialogContent = memo(
  * Dialog with the DS translucent-ink backdrop. Closes on Escape, backdrop click
  * and the close button; traps Tab focus and restores focus to the opener.
  * `divided` switches to the header-rule layout (24px header with a bottom border, 24px body).
+ * `dismissible={false}` makes a blocking dialog: no close button, Escape and the backdrop do nothing.
  */
-export default function Modal({ open, onClose, title, description, children, footer, width = 480, divided = false, className }) {
+export default function Modal({
+  open,
+  onClose,
+  title,
+  description,
+  children,
+  footer,
+  width = 480,
+  divided = false,
+  dismissible = true,
+  className,
+}) {
   const dialogRef = useRef(null)
   const titleId = useId()
   const descriptionId = useId()
@@ -65,7 +79,7 @@ export default function Modal({ open, onClose, title, description, children, foo
 
     function onKeyDown(event) {
       if (event.key === 'Escape') {
-        onClose()
+        if (dismissible) onClose()
         return
       }
       if (event.key !== 'Tab' || !dialog) return
@@ -88,7 +102,7 @@ export default function Modal({ open, onClose, title, description, children, foo
       document.body.style.overflow = previousOverflow
       opener?.focus?.()
     }
-  }, [open, onClose])
+  }, [open, onClose, dismissible])
 
   if (!mounted) return null
 
@@ -96,7 +110,7 @@ export default function Modal({ open, onClose, title, description, children, foo
     <div
       className={cx(styles.backdrop, closing && styles.closing)}
       inert={closing}
-      onMouseDown={(event) => event.target === event.currentTarget && onClose()}
+      onMouseDown={(event) => dismissible && event.target === event.currentTarget && onClose()}
     >
       <div
         ref={dialogRef}
@@ -115,6 +129,7 @@ export default function Modal({ open, onClose, title, description, children, foo
           descriptionId={descriptionId}
           footer={footer}
           onClose={onClose}
+          dismissible={dismissible}
           frozen={closing}
         >
           {children}

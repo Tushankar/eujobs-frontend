@@ -1,0 +1,50 @@
+/* Proportions follow the original raster: the mark is as tall as the logo, the name about 42% of it. */
+.logo {
+  display: inline-flex;
+  align-items: center;
+  gap: calc(var(--logo-height) * 0.2);
+  height: var(--logo-height);
+  font-family: var(--font-display);
+  white-space: nowrap;
+}
+
+.mark {
+  height: 100%;
+  width: auto;
+  flex-shrink: 0;
+}
+
+.text {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: calc(var(--logo-height) * 0.04);
+}
+
+.name {
+  font-size: calc(var(--logo-height) * 0.42);
+  font-weight: 800;
+  line-height: 1;
+  letter-spacing: -0.01em;
+  color: var(--primary-hover);
+}
+
+.tagline {
+  display: flex;
+  align-items: center;
+  gap: 0.6em;
+  font-size: calc(var(--logo-height) * 0.2);
+  font-weight: 700;
+  font-style: italic;
+  letter-spacing: 0.08em;
+  line-height: 1;
+  color: var(--primary);
+}
+
+.tagline::before,
+.tagline::after {
+  content: '';
+  width: 1.6em;
+  height: 1px;
+  background: currentColor;
+}

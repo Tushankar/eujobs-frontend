@@ -1,0 +1,102 @@
+{
+  "required": "This field is required.",
+  "invalid": "Check this value.",
+  "too_short": "Use at least {{min}} characters.",
+  "too_long": "Use at most {{max}} characters.",
+  "too_small": "Enter {{min}} or more.",
+  "too_big": "Enter {{max}} or less.",
+  "too_few": "Add at least {{min}}.",
+  "too_many": "Add at most {{max}}.",
+  "not_allowed": "This change isn't allowed.",
+  "too_common": "This password is too common. Choose another one.",
+  "matches_email": "Don't use the name in your email address as the password.",
+  "mismatch": "The values don't match.",
+  "duplicate": "This is already in the list.",
+  "before_start": "Choose an end date after the start date.",
+  "no_file": "Add a file first.",
+  "fields": {
+    "email": {
+      "required": "Enter your email address.",
+      "invalid": "Enter a valid email address, like you@example.com."
+    },
+    "password": {
+      "required": "Enter your password.",
+      "too_long": "Use a shorter password."
+    },
+    "newPassword": {
+      "required": "Enter a new password.",
+      "too_long": "Use a shorter password."
+    },
+    "currentPassword": {
+      "required": "Enter your current password.",
+      "invalid": "This isn't your current password."
+    },
+    "confirmPassword": {
+      "required": "Re-enter the password.",
+      "mismatch": "The passwords don't match."
+    },
+    "fullName": {
+      "required": "Enter your full name."
+    },
+    "jobTitle": {
+      "required": "Enter your job title or role."
+    },
+    "phone": {
+      "required": "Enter your phone number.",
+      "invalid": "Enter a valid phone number, like +44 20 7946 0958."
+    },
+    "country": {
+      "required": "Choose a country.",
+      "invalid": "Choose a country from the list."
+    },
+    "acceptTerms": {
+      "required": "Accept the Terms of Service and the Privacy Policy to continue.",
+      "invalid": "Accept the Terms of Service and the Privacy Policy to continue."
+    },
+    "skills": {
+      "duplicate": "{{skill}} is already in your skills."
+    },
+    "placeId": {
+      "required": "Choose a city from the suggestions.",
+      "invalid": "Choose a city from the suggestions.",
+      "not_allowed": "Choose a city in the EU or the UK."
+    },
+    "headline": {
+      "required": "Enter your current role or headline."
+    },
+    "about": {
+      "too_short": "Tell your story in at least {{min}} characters."
+    },
+    "end": {
+      "required": "Enter the end month, or tick the box if it's ongoing."
+    },
+    "linkedin": {
+      "invalid": "Use a LinkedIn profile link, like https://www.linkedin.com/in/your-name."
+    },
+    "portfolio": {
+      "invalid": "Use a full link that starts with https://."
+    },
+    "reason": {
+      "required": "Give a reason for the rejection."
+    },
+    "file": {
+      "required": "Choose a file.",
+      "too_many": "You can keep up to {{max}} versions. Delete one first."
+    },
+    "workPreference": {
+      "required": "Choose how you like to work."
+    },
+    "confirmed": {
+      "required": "Confirm that this evidence is yours and accurate."
+    },
+    "entryId": {
+      "required": "Choose the profile entry it supports."
+    },
+    "evidenceType": {
+      "required": "Choose the evidence type."
+    },
+    "code": {
+      "required": "Enter the code."
+    }
+  }
+}

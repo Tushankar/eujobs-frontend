@@ -1,4 +1,5 @@
 import { useId } from 'react'
+import { useTranslation } from 'react-i18next'
 import { useNavigate } from 'react-router-dom'
 import { cx } from '@/utils/cx.js'
 import { Icon } from '@/components/ui'
@@ -11,6 +12,7 @@ import styles from './WorkspacePicker.module.css'
  * (admin sign-in) is shown selected and static.
  */
 export default function WorkspacePicker({ choices, activeId, helper }) {
+  const { t } = useTranslation()
   const navigate = useNavigate()
   const labelId = useId()
   const isSingle = choices.length === 1
@@ -18,7 +20,7 @@ export default function WorkspacePicker({ choices, activeId, helper }) {
   return (
     <div className={styles.picker}>
       <p className={styles.label} id={labelId}>
-        Choose your workspace
+        {t('auth:portals.label')}
       </p>
       <div className={cx(styles.choices, isSingle && styles.single)} role="radiogroup" aria-labelledby={labelId}>
         {choices.map((choice) => {
@@ -26,7 +28,7 @@ export default function WorkspacePicker({ choices, activeId, helper }) {
           const content = (
             <>
               <Icon as={choice.icon} size={20} />
-              {choice.label}
+              {t(`auth:portals.${choice.id}`)}
             </>
           )
           return isSingle ? (

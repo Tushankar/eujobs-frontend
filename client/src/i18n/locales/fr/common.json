@@ -1,0 +1,28 @@
+{
+  "loading": "Chargement…",
+  "remote": "À distance",
+  "closeDialog": "Fermer la boîte de dialogue",
+  "hidePassword": "Masquer le mot de passe",
+  "showPassword": "Afficher le mot de passe",
+  "cancel": "Annuler",
+  "confirm": "Confirmer",
+  "city": {
+    "label": "Ville",
+    "placeholder": "Commencez à saisir une ville",
+    "hint": "Villes de l’UE et du Royaume-Uni.",
+    "searching": "Recherche…",
+    "noResults": "Aucune ville correspondante dans l’UE ou au Royaume-Uni.",
+    "retry": "Réessayer",
+    "value": "{{city}}, {{country}}"
+  },
+  "cvUpload": {
+    "title": "Déposez votre CV ici",
+    "hint": "ou cliquez pour choisir un fichier"
+  },
+  "upload": {
+    "limits": "{{types}} · Jusqu’à {{size}}",
+    "wrongType": "{{name}} n’est pas un fichier {{types}}.",
+    "tooLarge": "{{name}} dépasse {{size}}.",
+    "empty": "{{name}} est vide. Choisissez un autre fichier."
+  }
+}

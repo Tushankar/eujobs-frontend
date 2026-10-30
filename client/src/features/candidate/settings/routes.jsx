@@ -5,7 +5,7 @@ export default [
   {
     path: 'settings',
     lazy: lazyPage(() => import('./components/SettingsLayout.jsx')),
-    handle: { title: 'Settings' },
+    handle: { titleKey: 'titles.settings' },
     children: [
       { index: true, element: <Navigate to="privacy" replace /> },
       { path: 'privacy', lazy: lazyPage(() => import('./pages/PrivacySettingsPage.jsx')) },

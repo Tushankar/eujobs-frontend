@@ -5,6 +5,6 @@ export default [
   {
     path: 'ai-matching/*',
     lazy: lazyPage(() => import('./pages/AiMatchingPage.jsx')),
-    handle: { title: 'AI & matching' },
+    handle: { titleKey: 'nav.aiMatching' },
   },
 ]

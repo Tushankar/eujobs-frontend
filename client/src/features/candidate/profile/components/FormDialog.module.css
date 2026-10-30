@@ -1,0 +1,46 @@
+.form {
+  display: flex;
+  flex-direction: column;
+  gap: 16px;
+}
+
+.row {
+  display: grid;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  gap: 16px;
+}
+
+/* A repeated row of a list editor (languages, right to work): fields plus a remove button. */
+.listRow {
+  display: grid;
+  grid-template-columns: minmax(0, 1fr) minmax(0, 1fr) auto;
+  align-items: end;
+  gap: 12px;
+}
+
+.remove {
+  margin-bottom: 4px;
+}
+
+.failure {
+  font-size: 12px;
+  line-height: 18px;
+  color: var(--destructive);
+}
+
+.note {
+  font-size: 12px;
+  line-height: 18px;
+  color: var(--muted-foreground);
+}
+
+@media (max-width: 559px) {
+  .row,
+  .listRow {
+    grid-template-columns: minmax(0, 1fr);
+  }
+
+  .remove {
+    justify-self: start;
+  }
+}

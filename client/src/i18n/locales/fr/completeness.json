@@ -1,0 +1,46 @@
+{
+  "title": "Liste de votre profil",
+  "progress": "{{done}} sur {{total}} terminés",
+  "complete": "Complet",
+  "items": {
+    "basics": "Informations de base",
+    "work_history": "Expérience professionnelle",
+    "education": "Formation",
+    "languages": "Langues",
+    "right_to_work": "Droit au travail",
+    "photo": "Photo de profil",
+    "links": "Lien LinkedIn ou portfolio",
+    "live_cv": "CV actif",
+    "phone": "Téléphone vérifié",
+    "check_identity": "Vérification d’identité approuvée",
+    "check_academic": "Vérification de formation approuvée",
+    "check_employment": "Vérification d’emploi approuvée"
+  },
+  "strength": {
+    "title": "Faites ressortir votre profil",
+    "label": "Force du profil",
+    "lead": "Un peu plus sur vous. Beaucoup plus de possibilités.",
+    "completeLead": "Votre profil est complet.",
+    "button": "Améliorer mon profil"
+  },
+  "verification": {
+    "title": "Vérification du profil",
+    "lead": "Un administrateur examine chaque vérification. Les recruteurs voient une coche pour chaque vérification approuvée.",
+    "progress": "Progression de la vérification",
+    "count": "{{done}} sur {{total}}",
+    "verified": "Vérifié",
+    "button": "Vérifier mon profil",
+    "checks": {
+      "identity": "Identité",
+      "academic": "Diplômes",
+      "employment": "Documents d’emploi"
+    },
+    "status": {
+      "not_started": "Non commencée",
+      "in_review": "En cours d’examen",
+      "approved": "Approuvée",
+      "rejected": "Refusée",
+      "not_needed": "Non requise"
+    }
+  }
+}

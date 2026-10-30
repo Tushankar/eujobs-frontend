@@ -1,180 +1,168 @@
 import { useState } from 'react'
+import { useTranslation } from 'react-i18next'
 import { Plus, X } from 'lucide-react'
-import { Button, Checkbox, Icon, IconButton, Modal, SelectField, TextareaField, TextField } from '@/components/ui'
+import { useGetConfigQuery, useGetCountriesQuery } from '@/app/api.js'
+import { Button, Icon, IconButton, SelectField, TextareaField, TextField } from '@/components/ui'
 import { Field } from '@/components/ui/TextField.jsx'
-import { BLANK_PROFILE, INITIAL_PROFILE, WORK_MODES } from '../data/profile.js'
+import CityField from '@/components/common/CityField.jsx'
+import { check, useErrorText, useFormState } from '@/lib/forms.js'
+import { useUpdateProfileMutation } from '../api.js'
+import FormDialog from './FormDialog.jsx'
+import dialogStyles from './FormDialog.module.css'
 import styles from './EditProfileModal.module.css'
 
-const FORM_ID = 'edit-profile-form'
-const MAX_SKILLS = 12
+const toForm = (profile) => ({
+  fullName: profile.fullName,
+  headline: profile.headline,
+  place: profile.location,
+  about: profile.about,
+  yearsExperience: profile.yearsExperience == null ? '' : String(profile.yearsExperience),
+  skills: profile.skills,
+  workPreference: profile.workPreference ?? '',
+  availability: profile.availability,
+  salaryAmount: profile.salaryMin ? String(profile.salaryMin.amount) : '',
+  salaryPeriod: profile.salaryMin?.period ?? 'year',
+})
 
-function toForm(profile) {
-  const source = profile ?? BLANK_PROFILE
-  return {
-    headline: source.headline,
-    location: source.location,
-    openToOpportunities: source.openToOpportunities,
-    about: source.about,
-    yearsExperience: String(source.yearsExperience),
-    skills: source.skills,
-    skillDraft: '',
-    degree: source.degree,
-    institution: source.institution,
-    workMode: source.workMode,
-    salaryMin: String(source.salaryMin),
-  }
-}
+/** The core fields (P3-D9): name, headline, city, about, years, skills, work preference, availability, salary. */
+export default function EditProfileModal({ open, profile, onSaved, onClose }) {
+  const { t } = useTranslation()
+  const errorText = useErrorText()
+  const { data: config } = useGetConfigQuery()
+  const { data: countries = [] } = useGetCountriesQuery()
+  const [updateProfile, { isLoading }] = useUpdateProfileMutation()
+  const { values, set, errors, setErrors, failure, run } = useFormState(() => toForm(profile))
+  const [skillDraft, setSkillDraft] = useState('')
+  const limits = config?.limits
+  const enums = config?.enums
+  const currency = values.place && countries.find((country) => country.code === values.place.countryCode)?.currency
+  const options = (name) => (enums?.[name] ?? []).map((key) => ({ value: key, label: t(`enums:${name}.${key}`) }))
 
-function skillError(skill, existing) {
-  if (skill.length > 30) return 'Keep each skill to 30 characters or fewer.'
-  if (existing.some((item) => item.toLowerCase() === skill.toLowerCase())) return `${skill} is already in your skills.`
-  if (existing.length >= MAX_SKILLS) return `You can list up to ${MAX_SKILLS} skills.`
-  return ''
-}
-
-function validate(values, skills) {
-  const errors = {}
-  const headline = values.headline.trim()
-  if (!headline) errors.headline = 'Enter your current role or headline.'
-  else if (headline.length > 60) errors.headline = 'Keep your headline to 60 characters or fewer.'
-
-  const location = values.location.trim()
-  if (!location) errors.location = 'Enter where you are based.'
-  else if (location.length > 60) errors.location = 'Keep your location to 60 characters or fewer.'
-
-  const about = values.about.trim()
-  if (about.length < 20) errors.about = 'Tell your story in at least 20 characters.'
-  else if (about.length > 600) errors.about = 'Keep your story to 600 characters or fewer.'
-
-  const years = values.yearsExperience.trim()
-  if (years === '') errors.yearsExperience = 'Enter your years of experience.'
-  else if (!/^\d+$/.test(years) || Number(years) > 50) errors.yearsExperience = 'Enter a whole number from 0 to 50.'
-
-  if (skills.length === 0) errors.skills = 'Add at least one skill.'
-
-  if (!values.degree.trim()) errors.degree = 'Enter your qualification, like BFA, Interaction Design.'
-  if (!values.institution.trim()) errors.institution = 'Enter the institution.'
-
-  const salary = values.salaryMin.trim()
-  if (salary !== '' && (!/^\d+$/.test(salary) || Number(salary) > 1000)) {
-    errors.salaryMin = 'Enter thousands as a whole number, from 0 to 1000.'
-  }
-  return errors
-}
-
-function ProfileForm({ profile, onSave }) {
-  const [values, setValues] = useState(() => toForm(profile))
-  const [errors, setErrors] = useState({})
-
-  function setField(name) {
-    return (event) => {
-      const value = event.target.type === 'checkbox' ? event.target.checked : event.target.value
-      setValues((current) => ({ ...current, [name]: value }))
-      if (errors[name]) setErrors((current) => ({ ...current, [name]: undefined }))
-    }
-  }
-
-  /** Moves the typed skill into the list; returns the resulting list (or null if it was invalid). */
-  function commitSkillDraft() {
-    const skill = values.skillDraft.trim()
+  /** M-064: 1–12 skills, each ≤ 30 characters, unique case-insensitively. Returns the list, or null. */
+  function commitSkill() {
+    const skill = skillDraft.trim()
     if (!skill) return values.skills
-    const problem = skillError(skill, values.skills)
+    const { max, itemMax } = limits.profile.skills
+    let problem
+    if (skill.length > itemMax) problem = { key: 'too_long', params: { max: itemMax } }
+    else if (values.skills.some((item) => item.toLowerCase() === skill.toLowerCase())) problem = { key: 'duplicate', params: { skill } }
+    else if (values.skills.length >= max) problem = { key: 'too_many', params: { max } }
     if (problem) {
       setErrors((current) => ({ ...current, skills: problem }))
       return null
     }
     const skills = [...values.skills, skill]
-    setValues((current) => ({ ...current, skills, skillDraft: '' }))
-    setErrors((current) => ({ ...current, skills: undefined }))
+    set('skills', skills)
+    setSkillDraft('')
     return skills
   }
 
-  function removeSkill(skill) {
-    setValues((current) => ({ ...current, skills: current.skills.filter((item) => item !== skill) }))
+  async function handleSubmit() {
+    const skills = commitSkill()
+    if (skills === null) return
+    const P = limits.profile
+    const about = values.about.trim()
+    const years = values.yearsExperience.trim()
+    const amount = values.salaryAmount.trim()
+    const saved = await run(
+      {
+        fullName: check.text(values.fullName, limits.fullName.max),
+        headline: check.text(values.headline, P.headline.max),
+        placeId: values.place ? undefined : { key: 'required' },
+        about: about.length < P.about.min ? { key: 'too_short', params: { min: P.about.min } } : check.maxLength(about, P.about.max),
+        yearsExperience: years === '' ? { key: 'required' } : check.wholeNumber(years, P.yearsExperience),
+        skills: skills.length < P.skills.min ? { key: 'too_few', params: { min: P.skills.min } } : undefined,
+        workPreference: values.workPreference ? undefined : { key: 'required' },
+        salaryMin: check.wholeNumber(amount, P.salary),
+      },
+      () =>
+        updateProfile({
+          fullName: values.fullName.trim(),
+          headline: values.headline.trim(),
+          placeId: values.place.placeId,
+          about,
+          yearsExperience: Number(years),
+          skills,
+          workPreference: values.workPreference,
+          availability: values.availability,
+          salaryMin: amount ? { amount: Number(amount), currency, period: values.salaryPeriod } : null,
+        }).unwrap(),
+    )
+    if (saved) onSaved()
   }
 
-  function handleSubmit(event) {
-    event.preventDefault()
-    const skills = commitSkillDraft()
-    if (skills === null) return
-    const nextErrors = validate(values, skills)
-    setErrors(nextErrors)
-    if (Object.keys(nextErrors).length > 0) return
-    const salary = values.salaryMin.trim()
-    onSave({
-      name: profile?.name ?? INITIAL_PROFILE.name,
-      headline: values.headline.trim(),
-      location: values.location.trim(),
-      openToOpportunities: values.openToOpportunities,
-      about: values.about.trim(),
-      yearsExperience: Number(values.yearsExperience),
-      skills,
-      degree: values.degree.trim(),
-      institution: values.institution.trim(),
-      workMode: values.workMode,
-      salaryMin: salary === '' ? '' : Number(salary),
-    })
-  }
+  if (!limits) return null
+  const fieldError = (name) => errorText.field(name, errors[name])
 
   return (
-    <form id={FORM_ID} className={styles.form} onSubmit={handleSubmit} noValidate>
-      <div className={styles.row}>
+    <FormDialog open={open} title={t('profile:form.core.title')} width={640} busy={isLoading} failure={failure} onClose={onClose} onSubmit={handleSubmit}>
+      <div className={dialogStyles.row}>
         <TextField
-          label="Current role"
-          value={values.headline}
-          onChange={setField('headline')}
-          error={errors.headline}
-          placeholder="Product Designer"
+          label={t('profile:form.core.fullName')}
+          name="fullName"
+          autoComplete="name"
+          value={values.fullName}
+          onChange={(event) => set('fullName', event.target.value)}
+          error={fieldError('fullName')}
           data-autofocus
         />
+        <TextField label={t('profile:form.core.headline')} name="headline" value={values.headline} onChange={(event) => set('headline', event.target.value)} error={fieldError('headline')} />
+      </div>
+      <CityField label={t('profile:form.core.city')} value={values.place} onChange={(place) => set('place', place)} error={errors.placeId && errorText.field('placeId', errors.placeId)} />
+      <TextareaField
+        label={t('profile:form.core.about')}
+        name="about"
+        rows={4}
+        value={values.about}
+        onChange={(event) => set('about', event.target.value)}
+        error={fieldError('about')}
+        hint={t('profile:form.core.count', { count: values.about.trim().length, max: limits.profile.about.max })}
+      />
+      <div className={dialogStyles.row}>
         <TextField
-          label="Location"
-          value={values.location}
-          onChange={setField('location')}
-          error={errors.location}
-          placeholder="San Francisco, US"
+          label={t('profile:form.core.years')}
+          name="yearsExperience"
+          inputMode="numeric"
+          value={values.yearsExperience}
+          onChange={(event) => set('yearsExperience', event.target.value)}
+          error={fieldError('yearsExperience')}
+        />
+        <SelectField
+          label={t('profile:form.core.workPreference')}
+          name="workPreference"
+          placeholder={t('profile:form.core.workPreference')}
+          options={options('workPreference')}
+          value={values.workPreference}
+          onChange={(event) => set('workPreference', event.target.value)}
+          error={fieldError('workPreference')}
         />
       </div>
-      <Checkbox checked={values.openToOpportunities} onChange={setField('openToOpportunities')}>
-        Open to opportunities
-      </Checkbox>
-      <TextareaField
-        label="A little about me"
-        value={values.about}
-        onChange={setField('about')}
-        error={errors.about}
-        hint={`${values.about.trim().length} / 600 characters`}
-        rows={4}
-      />
-      <TextField
-        label="Years of experience"
-        inputMode="numeric"
-        value={values.yearsExperience}
-        onChange={setField('yearsExperience')}
-        error={errors.yearsExperience}
-      />
 
-      <Field id="profile-skill-draft" label="Strengths" hint="Add up to 12 skills. Press Enter to add one." error={errors.skills}>
+      <Field id="profile-skill-draft" label={t('profile:form.core.skills')} hint={t('profile:form.core.skillsHint', { max: limits.profile.skills.max })} error={fieldError('skills')}>
         {({ describedBy, invalid }) => (
           <div className={styles.skills}>
             <div className={styles.skillInput}>
               <input
                 id="profile-skill-draft"
+                name="skillDraft"
                 className={styles.skillField}
-                value={values.skillDraft}
+                value={skillDraft}
                 aria-invalid={invalid || undefined}
                 aria-describedby={describedBy}
-                placeholder="Add a skill"
-                onChange={setField('skillDraft')}
+                placeholder={t('profile:form.core.skillPlaceholder')}
+                onChange={(event) => {
+                  setSkillDraft(event.target.value)
+                  setErrors((current) => ({ ...current, skills: undefined }))
+                }}
                 onKeyDown={(event) => {
                   if (event.key === 'Enter') {
                     event.preventDefault()
-                    commitSkillDraft()
+                    commitSkill()
                   }
                 }}
               />
-              <Button variant="secondary" size="sm" leftIcon={<Icon as={Plus} size={14} />} onClick={commitSkillDraft}>
-                Add
+              <Button variant="secondary" size="sm" leftIcon={<Icon as={Plus} size={14} />} onClick={commitSkill}>
+                {t('profile:form.core.addSkill')}
               </Button>
             </div>
             {values.skills.length > 0 && (
@@ -185,9 +173,9 @@ function ProfileForm({ profile, onSave }) {
                     <IconButton
                       icon={X}
                       iconSize={12}
-                      label={`Remove ${skill}`}
+                      label={t('profile:form.core.removeSkill', { skill })}
                       className={styles.chipRemove}
-                      onClick={() => removeSkill(skill)}
+                      onClick={() => set('skills', values.skills.filter((item) => item !== skill))}
                     />
                   </li>
                 ))}
@@ -197,51 +185,33 @@ function ProfileForm({ profile, onSave }) {
         )}
       </Field>
 
-      <div className={styles.row}>
-        <TextField label="Qualification" value={values.degree} onChange={setField('degree')} error={errors.degree} />
+      <SelectField
+        label={t('profile:form.core.availability')}
+        name="availability"
+        options={options('availability')}
+        value={values.availability}
+        onChange={(event) => set('availability', event.target.value)}
+      />
+      <div className={dialogStyles.row}>
         <TextField
-          label="Institution"
-          value={values.institution}
-          onChange={setField('institution')}
-          error={errors.institution}
-        />
-      </div>
-      <div className={styles.row}>
-        <SelectField label="Work preference" options={WORK_MODES} value={values.workMode} onChange={setField('workMode')} />
-        <TextField
-          label="Minimum salary (thousands per year)"
+          label={currency ? t('profile:form.core.salary', { currency }) : t('profile:form.core.salaryNoCurrency')}
+          name="salaryAmount"
           inputMode="numeric"
-          value={values.salaryMin}
-          onChange={setField('salaryMin')}
-          error={errors.salaryMin}
-          hint="Optional. 120 shows as $120k+ / year."
+          disabled={!currency}
+          hint={currency ? undefined : t('profile:form.core.salaryNeedsCity')}
+          value={values.salaryAmount}
+          onChange={(event) => set('salaryAmount', event.target.value)}
+          error={errorText.field('salaryMin', errors.salaryMin ?? errors['salaryMin.amount'] ?? errors['salaryMin.currency'])}
+        />
+        <SelectField
+          label={t('profile:form.core.period')}
+          name="salaryPeriod"
+          disabled={!currency}
+          options={options('salaryPeriod')}
+          value={values.salaryPeriod}
+          onChange={(event) => set('salaryPeriod', event.target.value)}
         />
       </div>
-    </form>
-  )
-}
-
-/** Edit (or create) dialog for the whole profile. Saving persists on this device only. */
-export default function EditProfileModal({ open, profile, onSave, onClose }) {
-  return (
-    <Modal
-      open={open}
-      onClose={onClose}
-      width={600}
-      title={profile ? 'Edit profile' : 'Create profile'}
-      description="Changes are saved on this device only."
-      footer={
-        <>
-          <Button variant="secondary" onClick={onClose}>
-            Cancel
-          </Button>
-          <Button type="submit" form={FORM_ID}>
-            Save changes
-          </Button>
-        </>
-      }
-    >
-      <ProfileForm profile={profile} onSave={onSave} />
-    </Modal>
+    </FormDialog>
   )
 }

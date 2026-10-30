@@ -1,13 +1,16 @@
+import { useTranslation } from 'react-i18next'
 import { Link, NavLink, useNavigate } from 'react-router-dom'
 import { ArrowRight, ArrowUpRight, CircleHelp, LogOut, Settings2 } from 'lucide-react'
 import { cx } from '@/utils/cx.js'
-import { Icon, IconButton } from '@/components/ui'
+import { Avatar, Icon, IconButton } from '@/components/ui'
 import { workspacePath } from '@/app/workspaces.js'
-import { endSession } from '@/features/auth/utils/session.js'
-import logo from '@/assets/images/logo.png'
+import { signOut } from '@/app/session.js'
+import { usePreferences } from '@/lib/preferences.js'
 import aiSparkle from '@/assets/icons/ai-sparkle-blue.svg'
 import aiNavIcon from '@/assets/icons/ai-nav.svg'
 import aiNavIconActive from '@/assets/icons/ai-sparkle-blue-16.svg'
+import BrandLogo from './BrandLogo.jsx'
+import { identitySubtitle } from './identity.js'
 import styles from './Sidebar.module.css'
 
 /** Badge text computed by a hook (e.g. the live count of active applications). */
@@ -16,6 +19,7 @@ function LiveBadgeText({ useText }) {
 }
 
 function NavItem({ workspace, item }) {
+  const { t } = useTranslation()
   return (
     <NavLink
       to={workspacePath(workspace, item.to)}
@@ -29,10 +33,10 @@ function NavItem({ workspace, item }) {
           ) : (
             <img src={isActive && item.iconSrc === aiNavIcon ? aiNavIconActive : item.iconSrc} alt="" className={styles.customIcon} />
           )}
-          <span className={styles.linkLabel}>{item.label}</span>
+          <span className={styles.linkLabel}>{t(`shell:nav.${item.key}`)}</span>
           {item.badge && (
             <span className={cx(styles.badge, item.badge.tone === 'ai' && styles.badgeAi)}>
-              {item.badge.useText ? <LiveBadgeText useText={item.badge.useText} /> : item.badge.text}
+              {item.badge.useText ? <LiveBadgeText useText={item.badge.useText} /> : t(`shell:${item.badge.textKey}`)}
             </span>
           )}
         </>
@@ -42,8 +46,15 @@ function NavItem({ workspace, item }) {
 }
 
 export default function Sidebar({ workspace, open, onClose }) {
+  const { t } = useTranslation()
   const navigate = useNavigate()
-  const { promo, user } = workspace
+  const { me } = usePreferences()
+  const { promo } = workspace
+
+  function handleSignOut() {
+    signOut()
+    navigate(workspace.signInPath)
+  }
 
   return (
     <>
@@ -52,17 +63,17 @@ export default function Sidebar({ workspace, open, onClose }) {
         id="workspace-sidebar"
         className={cx(styles.sidebar, open && styles.open)}
         data-workspace={workspace.id}
-        aria-label={`${workspace.label} navigation`}
+        aria-label={t(`shell:workspaces.${workspace.id}.navigation`)}
       >
-        <Link to={workspace.basePath} className={styles.brand} aria-label="Local Worksmen — AI Job Portal home">
-          <img src={logo} alt="Local Worksmen, AI Job Portal" width={189} height={45} />
+        <Link to={workspace.basePath} className={styles.brand} aria-label={t('shell:brandHome')}>
+          <BrandLogo height={45} />
         </Link>
 
         <div className={styles.navArea}>
-          <p className={styles.sectionLabel}>Workspace</p>
-          <nav className={cx(styles.nav, 'stagger')} aria-label="Workspace">
+          <p className={styles.sectionLabel}>{t('shell:sidebar.section')}</p>
+          <nav className={cx(styles.nav, 'stagger')} aria-label={t('shell:sidebar.section')}>
             {workspace.nav.map((item) => (
-              <NavItem key={item.label} workspace={workspace} item={item} />
+              <NavItem key={item.to} workspace={workspace} item={item} />
             ))}
           </nav>
         </div>
@@ -72,11 +83,11 @@ export default function Sidebar({ workspace, open, onClose }) {
             <div className={styles.promo}>
               <div className={styles.promoTitle}>
                 <img src={aiSparkle} alt="" width={14} height={14} />
-                <p>{promo.title}</p>
+                <p>{t('shell:promo.title')}</p>
               </div>
-              <p className={styles.promoText}>{promo.text}</p>
+              <p className={styles.promoText}>{t('shell:promo.text')}</p>
               <Link to={workspacePath(workspace, promo.to)} className={styles.promoLink}>
-                {promo.linkLabel}
+                {t('shell:promo.link')}
                 <Icon as={ArrowRight} size={12} />
               </Link>
             </div>
@@ -87,25 +98,27 @@ export default function Sidebar({ workspace, open, onClose }) {
             className={({ isActive }) => cx(styles.utility, promo && styles.utilityAfterPromo, isActive && styles.utilityActive)}
           >
             <Icon as={Settings2} size={17} />
-            Settings
+            {t('shell:sidebar.settings')}
           </NavLink>
           <NavLink
             to={workspacePath(workspace, 'help')}
             className={({ isActive }) => cx(styles.utility, isActive && styles.utilityActive)}
           >
             <Icon as={CircleHelp} size={17} />
-            <span className={styles.utilityLabel}>Help &amp; resources</span>
+            <span className={styles.utilityLabel}>{t('shell:sidebar.help')}</span>
             <Icon as={ArrowUpRight} size={13} />
           </NavLink>
 
-          <div className={styles.user}>
-            <img src={user.avatar} alt="" width={32} height={32} className={styles.avatar} />
-            <div className={styles.userText}>
-              <p className={styles.userName}>{user.name}</p>
-              <p className={styles.userSubtitle}>{user.subtitle}</p>
+          {me && (
+            <div className={styles.user}>
+              <Avatar name={me.fullName} src={me.photoUrl ?? undefined} size={32} className={styles.avatar} />
+              <div className={styles.userText}>
+                <p className={styles.userName}>{me.fullName}</p>
+                <p className={styles.userSubtitle}>{identitySubtitle(me, t)}</p>
+              </div>
+              <IconButton icon={LogOut} label={t('shell:signOut')} onClick={handleSignOut} />
             </div>
-            <IconButton icon={LogOut} label="Sign out" onClick={() => { endSession(); navigate(workspace.signInPath) }} />
-          </div>
+          )}
         </div>
       </aside>
     </>

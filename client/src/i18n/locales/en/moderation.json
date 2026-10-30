@@ -1,0 +1,48 @@
+{
+  "verification": {
+    "tab": "Candidate verification",
+    "title": "Candidate verification queue",
+    "description": "Review candidate evidence against the profile entry it supports. Approve it, or reject it with a reason the candidate can act on.",
+    "statusFilter": "Filter by status",
+    "empty": "Nothing in this queue.",
+    "noPermission": "This queue needs the {{permission}} permission.",
+    "submitted": "Submitted {{date}}",
+    "review": "Review evidence",
+    "stat": {
+      "label": "Credential reviews",
+      "caption": "Candidate checks awaiting review"
+    },
+    "dialog": {
+      "title": "Review candidate evidence",
+      "candidate": "Candidate",
+      "check": "Check",
+      "evidence": "Evidence",
+      "submitted": "Submitted",
+      "claim": "What the evidence must match",
+      "claimName": "Account name: {{name}}",
+      "claimMissing": "The linked profile entry was removed.",
+      "file": "File",
+      "openFile": "Open {{name}}",
+      "noPreview": "Previews need the {{permission}} permission.",
+      "previewAlt": "Evidence file {{name}}",
+      "history": "Earlier submissions",
+      "decided": "{{status}} by {{name}}, {{date}}",
+      "reason": "Reason: {{reason}}",
+      "approve": "Approve",
+      "reject": "Reject",
+      "back": "Back",
+      "approveTitle": "Approve this evidence?",
+      "approveText": "The check counts for the candidate's profile, and recruiters see a tick. The candidate gets an email.",
+      "confirmApprove": "Approve evidence",
+      "rejectTitle": "Reject this evidence?",
+      "rejectText": "The candidate sees the reason by email and on the Verification page, and can send new evidence.",
+      "reasonLabel": "Reason",
+      "reasonHint": "Up to {{max}} characters.",
+      "confirmReject": "Reject evidence",
+      "decidedNow": "Decision saved and emailed to the candidate.",
+      "period": "{{start}} – {{end}}",
+      "present": "present",
+      "validUntil": "valid until {{date}}"
+    }
+  }
+}

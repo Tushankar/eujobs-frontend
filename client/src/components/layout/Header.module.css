@@ -43,11 +43,6 @@
   color: var(--text-breadcrumb);
 }
 
-.crumbRoot,
-.crumbCurrent {
-  text-transform: capitalize;
-}
-
 .breadcrumb svg {
   flex-shrink: 0;
 }
@@ -112,35 +107,6 @@
   line-height: 13.5px;
 }
 
-.switch {
-  display: flex;
-  align-items: center;
-  gap: 4px;
-  padding: 6px;
-  border: 1px solid var(--border);
-  border-radius: var(--radius-xl);
-  background: var(--secondary);
-}
-
-.switchOption {
-  display: flex;
-  align-items: center;
-  gap: 6px;
-  padding: 10px;
-  border-radius: var(--radius-md);
-  font-size: 12px;
-  font-weight: 600;
-  line-height: 14px;
-  color: var(--muted-foreground);
-}
-
-.switchActive {
-  border-radius: 9px;
-  background: var(--card);
-  box-shadow: var(--shadow-segment);
-  color: var(--primary-hover);
-}
-
 .pill {
   display: flex;
   align-items: center;
@@ -180,25 +146,15 @@
   border-left: 1px solid var(--border);
 }
 
-.bell {
-  position: relative;
-  display: inline-flex;
-}
-
-.bellDot {
-  position: absolute;
-  top: 6px;
-  right: 6px;
-  width: 6px;
-  height: 6px;
-  border: 1px solid #fff;
-  border-radius: var(--radius-full);
-  background: var(--primary);
-}
-
 .menu {
   min-width: 200px;
   padding: 8px;
+}
+
+/* 29 countries: the list scrolls inside the sticky header instead of running off-screen. */
+.menuScroll {
+  max-height: min(360px, 60vh);
+  overflow-y: auto;
 }
 
 .menuItem {
@@ -230,9 +186,10 @@
 }
 
 .menuNote {
+  max-width: 240px;
   padding: 8px 12px 4px;
   font-size: 10px;
-  line-height: 20px;
+  line-height: 15px;
   color: var(--muted-foreground);
 }
 
@@ -266,8 +223,7 @@
 @media (max-width: 767px) {
   .breadcrumb .crumbRoot,
   .breadcrumb svg,
-  .searchLabel,
-  .switch {
+  .searchLabel {
     display: none;
   }
 

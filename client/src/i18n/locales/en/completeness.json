@@ -1,0 +1,46 @@
+{
+  "title": "Profile checklist",
+  "progress": "{{done}} of {{total}} complete",
+  "complete": "Complete",
+  "items": {
+    "basics": "Profile basics",
+    "work_history": "Work history",
+    "education": "Education",
+    "languages": "Languages",
+    "right_to_work": "Right to work",
+    "photo": "Profile photo",
+    "links": "LinkedIn or portfolio link",
+    "live_cv": "Live CV",
+    "phone": "Verified phone",
+    "check_identity": "Identity check approved",
+    "check_academic": "Education check approved",
+    "check_employment": "Employment check approved"
+  },
+  "strength": {
+    "title": "Make your profile stand out",
+    "label": "Profile strength",
+    "lead": "A little more about you. A lot more possibilities.",
+    "completeLead": "Your profile is complete.",
+    "button": "Improve my profile"
+  },
+  "verification": {
+    "title": "Profile verification",
+    "lead": "An administrator reviews each check. Recruiters see a tick for every approved one.",
+    "progress": "Verification progress",
+    "count": "{{done}} of {{total}}",
+    "verified": "Verified",
+    "button": "Verify profile",
+    "checks": {
+      "identity": "Identity",
+      "academic": "Academic qualifications",
+      "employment": "Employment documents"
+    },
+    "status": {
+      "not_started": "Not started",
+      "in_review": "In review",
+      "approved": "Approved",
+      "rejected": "Rejected",
+      "not_needed": "Not needed"
+    }
+  }
+}

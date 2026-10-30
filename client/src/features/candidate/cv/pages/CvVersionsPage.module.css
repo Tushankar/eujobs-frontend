@@ -69,18 +69,9 @@
 }
 
 .historyBody {
-  display: grid;
-  grid-template-columns: minmax(0, 1fr) 340px;
-  gap: 24px;
   margin-top: 20px;
 }
 
 .versions {
   overflow: hidden;
-}
-
-@media (max-width: 1023px) {
-  .historyBody {
-    grid-template-columns: minmax(0, 1fr);
-  }
 }

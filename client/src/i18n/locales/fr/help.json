@@ -1,0 +1,18 @@
+{
+  "title": "Un peu de clarté change tout.",
+  "lead": "Des réponses concrètes, des conseils clairs et de quoi avancer sereinement vers votre prochaine étape.",
+  "search": "Rechercher dans l’aide",
+  "found_one": "{{count}} sujet d’aide trouvé",
+  "found_many": "{{count}} sujets d’aide trouvés",
+  "found_other": "{{count}} sujets d’aide trouvés",
+  "unavailable": "Impossible de charger les sujets d’aide. Réessayez dans un instant.",
+  "empty": {
+    "title": "Aucun sujet d’aide ne correspond à « {{query}} »",
+    "text": "Essayez un autre mot-clé, ou effacez la recherche pour voir tous les sujets.",
+    "clear": "Effacer la recherche"
+  },
+  "links": {
+    "privacy": "Confidentialité et contrôle des données",
+    "matches": "Comprendre vos correspondances"
+  }
+}

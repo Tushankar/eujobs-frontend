@@ -1,0 +1,28 @@
+{
+  "loading": "Cargando…",
+  "remote": "Remoto",
+  "closeDialog": "Cerrar el cuadro de diálogo",
+  "hidePassword": "Ocultar contraseña",
+  "showPassword": "Mostrar contraseña",
+  "cancel": "Cancelar",
+  "confirm": "Confirmar",
+  "city": {
+    "label": "Ciudad",
+    "placeholder": "Empieza a escribir una ciudad",
+    "hint": "Ciudades de la UE y el Reino Unido.",
+    "searching": "Buscando…",
+    "noResults": "No hay ninguna ciudad de la UE o el Reino Unido que coincida.",
+    "retry": "Reintentar",
+    "value": "{{city}}, {{country}}"
+  },
+  "cvUpload": {
+    "title": "Suelta aquí tu currículum",
+    "hint": "o haz clic para elegir un archivo"
+  },
+  "upload": {
+    "limits": "{{types}} · Hasta {{size}}",
+    "wrongType": "{{name}} no es un archivo {{types}}.",
+    "tooLarge": "{{name}} pesa más de {{size}}.",
+    "empty": "{{name}} está vacío. Elige otro archivo."
+  }
+}

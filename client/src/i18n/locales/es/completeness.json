@@ -1,0 +1,46 @@
+{
+  "title": "Lista de tu perfil",
+  "progress": "{{done}} de {{total}} completados",
+  "complete": "Completo",
+  "items": {
+    "basics": "Datos básicos del perfil",
+    "work_history": "Experiencia laboral",
+    "education": "Formación",
+    "languages": "Idiomas",
+    "right_to_work": "Permiso de trabajo",
+    "photo": "Foto de perfil",
+    "links": "Enlace de LinkedIn o portafolio",
+    "live_cv": "CV activo",
+    "phone": "Teléfono verificado",
+    "check_identity": "Verificación de identidad aprobada",
+    "check_academic": "Verificación de formación aprobada",
+    "check_employment": "Verificación de empleo aprobada"
+  },
+  "strength": {
+    "title": "Haz que tu perfil destaque",
+    "label": "Fuerza del perfil",
+    "lead": "Un poco más sobre ti. Muchas más posibilidades.",
+    "completeLead": "Tu perfil está completo.",
+    "button": "Mejorar mi perfil"
+  },
+  "verification": {
+    "title": "Verificación del perfil",
+    "lead": "Un administrador revisa cada verificación. Los reclutadores ven una marca por cada una aprobada.",
+    "progress": "Progreso de la verificación",
+    "count": "{{done}} de {{total}}",
+    "verified": "Verificado",
+    "button": "Verificar perfil",
+    "checks": {
+      "identity": "Identidad",
+      "academic": "Titulación académica",
+      "employment": "Documentos de empleo"
+    },
+    "status": {
+      "not_started": "Sin empezar",
+      "in_review": "En revisión",
+      "approved": "Aprobada",
+      "rejected": "Rechazada",
+      "not_needed": "No necesaria"
+    }
+  }
+}

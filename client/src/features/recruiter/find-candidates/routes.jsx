@@ -6,7 +6,7 @@ export default [
   {
     path: 'find-candidates/:candidateId',
     lazy: lazyPage(() => import('./pages/CandidateProfilePage.jsx')),
-    handle: { title: 'Find candidates' },
+    handle: { titleKey: 'nav.findCandidates' },
     children: [
       { index: true, lazy: lazyPage(() => import('./pages/CandidateOverviewPage.jsx')) },
       { path: 'experience', lazy: lazyPage(() => import('./pages/CandidateExperiencePage.jsx')) },

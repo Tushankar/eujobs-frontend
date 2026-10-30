@@ -22,11 +22,6 @@
   padding: 26px 20px;
 }
 
-.brand img {
-  width: 189px;
-  height: 45px;
-}
-
 .navArea {
   padding: 0 20px;
 }
@@ -82,6 +77,8 @@
 .linkLabel {
   flex: 1;
   min-width: 0;
+  overflow: hidden;
+  text-overflow: ellipsis;
   white-space: nowrap;
 }
 
@@ -205,9 +202,7 @@
 /* The 32px avatar sits in a 40px box in Figma (the identity block is 81px tall). */
 .avatar {
   flex-shrink: 0;
-  box-sizing: content-box;
-  padding: 4px;
-  border-radius: var(--radius-full);
+  margin: 4px;
 }
 
 /* Recruiter frames draw the avatar at x=28 with the name at x=72 (no 4px inset); the block is 4px shorter. */
@@ -216,7 +211,7 @@
 }
 
 .sidebar[data-workspace='recruiter'] .avatar {
-  padding: 4px 0;
+  margin: 4px 0;
 }
 
 .userText {

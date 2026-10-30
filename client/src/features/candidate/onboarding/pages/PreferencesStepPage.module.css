@@ -7,3 +7,16 @@
 .back {
   color: var(--text-nav);
 }
+
+.salary {
+  display: grid;
+  grid-template-columns: minmax(0, 1fr) minmax(0, 180px);
+  gap: 12px;
+  align-items: start;
+}
+
+@media (max-width: 560px) {
+  .salary {
+    grid-template-columns: minmax(0, 1fr);
+  }
+}

@@ -1,110 +1,113 @@
 import { useState } from 'react'
+import { useTranslation } from 'react-i18next'
 import { Link } from 'react-router-dom'
 import { Check, ChevronDown, ChevronRight, Earth, MapPin, Users } from 'lucide-react'
 import { cx } from '@/utils/cx.js'
-import { Dropdown, Icon } from '@/components/ui'
+import { Avatar, Dropdown, Icon } from '@/components/ui'
 import { workspacePath } from '@/app/workspaces.js'
-import { LANGUAGES, LOCATIONS, useWorkspacePreferences } from './preferencesContext.js'
+import { LANGUAGES, languageName } from '@/i18n/index.js'
+import { useCountryOptions } from '@/lib/countries.js'
+import { usePreferences, useFormat } from '@/lib/preferences.js'
+import { identitySubtitle } from './identity.js'
 import styles from './ProfileMenu.module.css'
 
-/** Avatar dropdown (Figma "Menu - Profile menu"): identity, profile link, location and language rows. */
+function OptionList({ options, selected, onSelect, className }) {
+  return (
+    <div className={cx(styles.options, className)}>
+      {options.map((option) => {
+        const isSelected = option.value === selected
+        return (
+          <button
+            key={option.value}
+            type="button"
+            lang={option.lang}
+            className={cx(styles.option, isSelected && styles.optionSelected)}
+            aria-current={isSelected || undefined}
+            onClick={() => onSelect(option.value)}
+          >
+            {isSelected && <Icon as={Check} size={13} />}
+            {option.label}
+          </button>
+        )
+      })}
+    </div>
+  )
+}
+
+/** Avatar dropdown (Figma "Menu - Profile menu"): identity (M-195), profile link, country and language. */
 export default function ProfileMenu({ workspace }) {
-  const { location, setLocation, language, setLanguage } = useWorkspacePreferences()
-  const [locationOpen, setLocationOpen] = useState(false)
-  const [languageOpen, setLanguageOpen] = useState(false)
-  const { user, profilePath } = workspace
+  const { t } = useTranslation()
+  const { me, country, language, setCountry, setLanguage } = usePreferences()
+  const format = useFormat()
+  const countries = useCountryOptions()
+  const [open, setOpen] = useState(null)
+  const toggle = (row) => setOpen((current) => (current === row ? null : row))
+  if (!me) return null
 
   return (
     <Dropdown
       panelClassName={styles.panel}
       trigger={(props) => (
-        <button type="button" className={styles.trigger} aria-label="Open profile menu" {...props}>
-          <img src={workspace.headerAvatar} alt="" width={32} height={32} />
+        <button type="button" className={styles.trigger} aria-label={t('shell:profileMenu.open')} {...props}>
+          <Avatar name={me.fullName} src={me.photoUrl ?? undefined} size={32} />
         </button>
       )}
     >
       {({ close }) => (
         <div className={styles.menu}>
           <div className={styles.identity}>
-            <p className={styles.name}>{user.name}</p>
-            <p className={styles.role}>{workspace.label} workspace</p>
+            <p className={styles.name}>{me.fullName}</p>
+            <p className={styles.email}>{me.email}</p>
+            <p className={styles.role}>{identitySubtitle(me, t)}</p>
           </div>
 
           <div className={styles.body}>
-            {profilePath && (
-              <Link to={workspacePath(workspace, profilePath)} className={styles.row} onClick={close}>
-                <Icon as={Users} size={16} />
-                <span className={styles.rowLabel}>Profile</span>
-                <Icon as={ChevronRight} size={14} />
-              </Link>
-            )}
+            <Link to={workspacePath(workspace, workspace.profilePath)} className={styles.row} onClick={close}>
+              <Icon as={Users} size={16} />
+              <span className={styles.rowLabel}>{t('shell:profileMenu.profile')}</span>
+              <Icon as={ChevronRight} size={14} />
+            </Link>
 
             {workspace.showLocation && (
               <>
-                <button
-                  type="button"
-                  className={cx(styles.row, styles.rowTall)}
-                  aria-expanded={locationOpen}
-                  onClick={() => setLocationOpen((current) => !current)}
-                >
+                <button type="button" className={cx(styles.row, styles.rowTall)} aria-expanded={open === 'country'} onClick={() => toggle('country')}>
                   <Icon as={MapPin} size={16} />
-                  <span className={styles.rowLabel}>Location</span>
-                  <span className={styles.rowValue}>{location}</span>
-                  <Icon as={ChevronDown} size={14} className={cx(locationOpen && styles.flipped)} />
+                  <span className={styles.rowLabel}>{t('shell:country.label')}</span>
+                  <span className={styles.rowValue}>{country && format.country(country)}</span>
+                  <Icon as={ChevronDown} size={14} className={cx(open === 'country' && styles.flipped)} />
                 </button>
-                {locationOpen && (
-                  <div className={styles.options}>
-                    {LOCATIONS.filter((option) => option !== location).map((option) => (
-                      <button
-                        key={option}
-                        type="button"
-                        className={styles.option}
-                        onClick={() => {
-                          setLocation(option)
-                          setLocationOpen(false)
-                        }}
-                      >
-                        {option}
-                      </button>
-                    ))}
-                    <p className={styles.optionsNote}>Local marketplace preference for this workspace.</p>
-                  </div>
+                {open === 'country' && (
+                  <>
+                    <OptionList
+                      className={styles.scroll}
+                      options={countries.map((option) => ({ value: option.code, label: option.name }))}
+                      selected={country}
+                      onSelect={(code) => {
+                        setCountry(code)
+                        setOpen(null)
+                      }}
+                    />
+                    <p className={styles.optionsNote}>{t('shell:country.note')}</p>
+                  </>
                 )}
               </>
             )}
 
-            <button
-              type="button"
-              className={styles.row}
-              aria-expanded={languageOpen}
-              onClick={() => setLanguageOpen((current) => !current)}
-            >
+            <button type="button" className={styles.row} aria-expanded={open === 'language'} onClick={() => toggle('language')}>
               <Icon as={Earth} size={16} />
-              <span className={styles.rowLabel}>Languages</span>
-              <span className={styles.rowValue}>{language}</span>
-              <Icon as={ChevronDown} size={14} className={cx(languageOpen && styles.flipped)} />
+              <span className={styles.rowLabel}>{t('shell:language.label')}</span>
+              <span className={styles.rowValue}>{languageName(language)}</span>
+              <Icon as={ChevronDown} size={14} className={cx(open === 'language' && styles.flipped)} />
             </button>
-            {languageOpen && (
-              <div className={styles.options}>
-                {LANGUAGES.map((option) => {
-                  const selected = option === language
-                  return (
-                    <button
-                      key={option}
-                      type="button"
-                      className={cx(styles.option, selected && styles.optionSelected)}
-                      aria-current={selected || undefined}
-                      onClick={() => {
-                        setLanguage(option)
-                        setLanguageOpen(false)
-                      }}
-                    >
-                      {selected && <Icon as={Check} size={13} />}
-                      {option}
-                    </button>
-                  )
-                })}
-              </div>
+            {open === 'language' && (
+              <OptionList
+                options={LANGUAGES.map((code) => ({ value: code, label: languageName(code), lang: code }))}
+                selected={language}
+                onSelect={(code) => {
+                  setLanguage(code)
+                  setOpen(null)
+                }}
+              />
             )}
           </div>
         </div>

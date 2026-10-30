@@ -1,15 +1,3 @@
-.form {
-  display: flex;
-  flex-direction: column;
-  gap: 16px;
-}
-
-.row {
-  display: grid;
-  grid-template-columns: repeat(2, minmax(0, 1fr));
-  gap: 16px;
-}
-
 .skills {
   display: flex;
   flex-direction: column;
@@ -75,10 +63,4 @@
   height: 24px;
   border-radius: var(--radius-md);
   color: var(--primary);
-}
-
-@media (max-width: 559px) {
-  .row {
-    grid-template-columns: minmax(0, 1fr);
-  }
 }

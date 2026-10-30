@@ -3,7 +3,8 @@ import { Link, Navigate, Outlet, useLocation } from 'react-router-dom'
 import { ArrowRight, Building2, Check, ShieldCheck } from 'lucide-react'
 import { cx } from '@/utils/cx.js'
 import { Button, Icon } from '@/components/ui'
-import logo from '@/assets/images/logo.png'
+import { BRAND } from '@/app/brand.js'
+import BrandLogo from '@/components/layout/BrandLogo.jsx'
 import { ONBOARDING_STEPS } from '../data/onboarding.js'
 import { useOnboardingState } from '../utils/useOnboardingState.js'
 import styles from './OnboardingLayout.module.css'
@@ -51,8 +52,8 @@ export default function OnboardingLayout() {
     <div className={styles.page}>
       <header className={styles.header}>
         <div className={styles.headerInner}>
-          <Link to="/recruiter/sign-in" aria-label="Local Worksmen — sign in">
-            <img src={logo} alt="Local Worksmen, AI Job Portal" width={126} height={30} />
+          <Link to="/recruiter/sign-in" aria-label={BRAND.name}>
+            <BrandLogo height={30} />
           </Link>
           <div className={styles.headerAside}>
             <span>Already registered?</span>

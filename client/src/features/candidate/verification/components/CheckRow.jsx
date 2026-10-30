@@ -1,57 +1,45 @@
-import { ArrowRight, BadgeCheck } from 'lucide-react'
-import { Button, Icon } from '@/components/ui'
+import { useTranslation } from 'react-i18next'
+import { BadgeCheck } from 'lucide-react'
+import { Icon } from '@/components/ui'
 import PillBadge from '@/components/common/PillBadge.jsx'
+import { useFormat } from '@/lib/preferences.js'
 import styles from './CheckRow.module.css'
 
-/** One credential check: copy, accepted evidence, and the action that fits its current status. */
-export default function CheckRow({ check, icon, entry, onSubmit, onMarkReviewed }) {
-  const status = entry?.status ?? 'not-started'
+const STATUS_TONES = { approved: 'success', in_review: 'warning', rejected: 'danger', not_started: 'neutral', not_needed: 'neutral' }
+
+/**
+ * One reviewed check (M-166): copy, its state from the server, the latest submission with a rejection reason,
+ * and `action` (the submit button where a new submission is allowed, P3-D8). Self-approval is gone (M-016).
+ */
+export default function CheckRow({ icon, title, description, accepted, status, latest, note, action }) {
+  const { t } = useTranslation()
+  const format = useFormat()
+  const submittedParams = latest && { date: format.date(latest.submittedAt), file: latest.fileName, type: latest.evidenceType && t(`enums:evidenceType.${latest.evidenceType}`) }
   return (
-    <li className={styles.row}>
+    <li className={styles.row} data-status={status}>
       <span className={styles.tile}>
         <Icon as={icon} size={18} />
       </span>
       <div className={styles.body}>
         <h3 className={styles.title}>
-          {check.label}
-          {status === 'verified' && (
-            <span className={styles.tick} role="img" aria-label="Reviewed">
+          {title}
+          {status === 'approved' && (
+            <span className={styles.tick} role="img" aria-label={t('verification:verified')}>
               <Icon as={BadgeCheck} size={16} />
             </span>
           )}
         </h3>
-        <p className={styles.description}>{check.description}</p>
-        <p className={styles.accepted}>{check.accepted}</p>
-        {entry && (
-          <p className={styles.submitted}>
-            Submitted: {entry.evidenceType} · {entry.fileName}
-          </p>
-        )}
+        {description && <p className={styles.description}>{description}</p>}
+        {accepted && <p className={styles.accepted}>{accepted}</p>}
+        {note && <p className={styles.accepted}>{note}</p>}
+        {latest && <p className={styles.submitted}>{t(latest.evidenceType ? 'verification:submittedType' : 'verification:submitted', submittedParams)}</p>}
+        {latest?.status === 'rejected' && latest.reason && <p className={styles.reason}>{t('verification:reason', { reason: latest.reason })}</p>}
       </div>
       <div className={styles.action}>
-        {status === 'not-started' && (
-          <Button
-            variant="outline"
-            rightIcon={<Icon as={ArrowRight} size={13} />}
-            aria-label={`Submit ${check.label.toLowerCase()} for review`}
-            onClick={onSubmit}
-          >
-            Submit for review
-          </Button>
-        )}
-        {status === 'in-review' && (
-          <>
-            <PillBadge tone="warning">In review</PillBadge>
-            <Button variant="ghost" size="sm" onClick={onMarkReviewed}>
-              Mark as reviewed (demo)
-            </Button>
-          </>
-        )}
-        {status === 'verified' && (
-          <PillBadge tone="success" dot>
-            Verified
-          </PillBadge>
-        )}
+        <PillBadge tone={STATUS_TONES[status]} dot={status === 'approved'}>
+          {t(`completeness:verification.status.${status}`)}
+        </PillBadge>
+        {action}
       </div>
     </li>
   )

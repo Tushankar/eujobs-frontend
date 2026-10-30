@@ -74,7 +74,7 @@ export function clearResultFlag() {
 const STATUS_LABEL = { 'in-review': 'In review', verified: 'Verified' }
 
 /** Rows of the "Download your profile" CSV, built from what is saved on this device. */
-export function profileExportRows({ profile, cv, verification, privacy, notifications }) {
+export function profileExportRows({ profile, cv, verification, privacy, notifyEmail }) {
   const live = cv.versions.find((version) => version.id === cv.liveId)
   const onOff = (value) => (value ? 'On' : 'Off')
   const rows = [['Field', 'Value']]
@@ -104,8 +104,7 @@ export function profileExportRows({ profile, cv, verification, privacy, notifica
     ['Profile visible to recruiters', onOff(privacy.discoverable)],
     ['Resume visibility', onOff(privacy.resumeVisible)],
     ['Matching consent', onOff(privacy.matchingConsent)],
-    ['In-app notifications', onOff(notifications.inApp)],
-    ['Email alerts', onOff(notifications.email)],
+    ['Email alerts', onOff(notifyEmail)],
   )
   return rows
 }

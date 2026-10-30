@@ -14,5 +14,33 @@
     "seed:demo": "node --env-file=.env seed/demo.js",
     "mail:test": "node --env-file=.env scripts/mailTest.js",
     "lint": "oxlint"
+  },
+  "dependencies": {
+    "archiver": "^8.0.0",
+    "bcryptjs": "^3.0.3",
+    "cors": "^2.8.6",
+    "dompurify": "^3.4.17",
+    "express": "^5.3.0",
+    "express-rate-limit": "^8.7.2",
+    "file-type": "^22.3.0",
+    "helmet": "^8.3.0",
+    "iso-639-1": "^3.1.6",
+    "jsdom": "^30.1.3",
+    "jsonwebtoken": "^9.0.3",
+    "libphonenumber-js": "^1.13.15",
+    "luxon": "^3.7.2",
+    "mammoth": "^1.13.0",
+    "marked": "^18.1.2",
+    "mongoose": "^9.11.4",
+    "multer": "^2.5.0",
+    "nodemailer": "^10.3.1",
+    "pdfjs-dist": "^6.4.299",
+    "pdfkit": "^0.20.2",
+    "sharp": "^0.35.5",
+    "zod": "^4.6.7"
+  },
+  "devDependencies": {
+    "oxlint": "^1.90.0",
+    "supertest": "^7.3.1"
   }
 }

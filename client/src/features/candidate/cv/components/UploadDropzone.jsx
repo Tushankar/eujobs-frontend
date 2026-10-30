@@ -1,12 +1,18 @@
 import { useState } from 'react'
+import { useTranslation } from 'react-i18next'
 import { Upload } from 'lucide-react'
+import { useGetConfigQuery } from '@/app/api.js'
 import { Icon } from '@/components/ui'
+import { useUploadText } from '@/lib/forms.js'
 import { cx } from '@/utils/cx.js'
-import { ACCEPTED_CV_EXTENSIONS, MAX_CV_SIZE_MB } from '../data/cvVersions.js'
 import styles from './UploadDropzone.module.css'
 
-/** Real file picker + drag-and-drop target. Hands the chosen file to `onFile`; nothing is uploaded anywhere. */
-export default function UploadDropzone({ onFile }) {
+/** File picker + drag-and-drop target for a CV (types and size from GET /meta/config). Hands the chosen file to `onFile`. */
+export default function UploadDropzone({ onFile, disabled = false }) {
+  const { t } = useTranslation()
+  const { data: config } = useGetConfigQuery()
+  const rule = config?.limits.uploads.cv
+  const uploadText = useUploadText(rule)
   const [dragging, setDragging] = useState(false)
 
   function handleChange(event) {
@@ -19,7 +25,7 @@ export default function UploadDropzone({ onFile }) {
     event.preventDefault()
     setDragging(false)
     const file = event.dataTransfer.files?.[0]
-    if (file) onFile(file)
+    if (file && !disabled) onFile(file)
   }
 
   return (
@@ -32,13 +38,19 @@ export default function UploadDropzone({ onFile }) {
       onDragLeave={() => setDragging(false)}
       onDrop={handleDrop}
     >
-      <input type="file" className="sr-only" accept={ACCEPTED_CV_EXTENSIONS.join(',')} onChange={handleChange} />
+      <input
+        type="file"
+        className="sr-only"
+        accept={rule?.types.map((type) => `.${type}`).join(',')}
+        disabled={disabled}
+        onChange={handleChange}
+      />
       <span className={styles.iconTile}>
         <Icon as={Upload} size={25} />
       </span>
-      <span className={styles.title}>Drop your resume here</span>
-      <span className={styles.hint}>or click to choose a file</span>
-      <span className={styles.limits}>PDF or DOCX · Up to {MAX_CV_SIZE_MB} MB</span>
+      <span className={styles.title}>{t('common:cvUpload.title')}</span>
+      <span className={styles.hint}>{t('common:cvUpload.hint')}</span>
+      <span className={styles.limits}>{uploadText.limits}</span>
     </label>
   )
 }

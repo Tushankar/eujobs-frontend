@@ -1,6 +1,6 @@
 import { useCallback, useEffect, useRef, useState } from 'react'
 import { Button, Modal, TextField } from '@/components/ui'
-import { WORKSPACES } from '@/app/workspaces.js'
+import { useGetMeQuery } from '@/app/api.js'
 import { formatMoney } from '../data/payments.js'
 import { usePayments } from '../hooks/usePayments.js'
 import { DECLINE_CARD, cardBrand, digitsOf, formatCardNumber, formatExpiry, validateCheckout } from '../utils/card.js'
@@ -18,6 +18,7 @@ const EMPTY_VALUES = { name: '', number: '', expiry: '', cvc: '' }
  */
 export default function CheckoutDialog({ item, payerRole, onPaid, onClose }) {
   const { record } = usePayments()
+  const { data: me } = useGetMeQuery()
   const [values, setValues] = useState(EMPTY_VALUES)
   const [errors, setErrors] = useState({})
   const [failure, setFailure] = useState('')
@@ -63,7 +64,7 @@ export default function CheckoutDialog({ item, payerRole, onPaid, onClose }) {
       const declined = digits === DECLINE_CARD
       const payment = record({
         payerRole,
-        payerName: WORKSPACES[payerRole].user.name,
+        payerName: me.fullName,
         kind: item.kind,
         itemId: item.id,
         itemName: item.name,

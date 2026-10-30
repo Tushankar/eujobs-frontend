@@ -115,6 +115,41 @@ M-164 lets users report jobs, profiles, companies and messages. M-167 defines "R
 | P1-Q1 permission groups | keep the 5 Figma groups; new ids appended: `dashboard.view` → Finance & reporting, `jobs.view` → Recruitment, `documents.view`, `learning.view`, `ai.view`, `ai.manage` → Governance | 2026-10-30 |
 | P1-Q2 Owner name | the seeded Owner admin is named "Workspace admin" | 2026-10-30 |
 | P1-Q3 demo cities | Alex, Emma and Sarah (Acme Studio) in London (GB); James's applicant company in Dublin (IE) | 2026-10-30 |
+| P1-D1 recruiter sign-up fields | `jobTitle` (≤ 100) is stored on the recruiter's user; the phone is collected at recruiter sign-up and stored in E.164, unverified until onboarding step 4 (A: recruiter A2, Part C). `libphonenumber-js` is therefore installed in Phase 1. | 2026-10-30 |
+| P1-D2 unexpected errors | `INTERNAL_ERROR` (500) is the code for unexpected failures, alongside the §2.3 codes | 2026-10-30 |
+| P1-D3 reset on an unverified account | a password reset marks the email verified and advances the status: candidate `unverified` → `active`, recruiter `unverified` → `onboarding`. Invited admins get no reset email; they use their invite link. | 2026-10-30 |
+| P1-D4 seed behaviour | `seed:demo` keeps `emaillogs` and `jobruns`, so re-seeding never resets the Gmail cap. `seed:catalog` creates the three system roles only when missing, so admin edits to them survive a re-seed. | 2026-10-30 |
+| P1-D5 plan feature text | the Free and Plus feature lists in en/es/fr in `server/seed/data/catalog.js`, derived from §3.3 | 2026-10-30 |
+| P1-D6 deferred items | built in the phase that first uses them: `requireApprovedRecruiter` (Phase 4), `requireEntitlement` (Phase 5), `/_test/ai/fail-next` (Phase 9), admin invite routes (Phase 10), `/meta/countries` (Phase 2) | 2026-10-30 |
+| G-1 location autocomplete (decided after the plan; changes M-032) | Every city field uses Google Places (New) through a **backend proxy only** (`places` module, §2.16), replacing free text: candidate profile and onboarding location, recruiter job location, company city, job alert location and the discovery filters. `GOOGLE_PLACES_API_KEY` (in `server/.env`, verified) never reaches the browser; it is the Housbe server key, so it shares Housbe's Google billing and quota and can be swapped for an own key by changing the setting. Endpoints: autocomplete and place details, with a per-user rate limit, a small cache and one Google session token per typing session. Stored as `{ countryCode, city, placeId }` only, never coordinates. Google accepts at most 15 region codes, so the proxy asks Google for cities and keeps only EU 27 + UK on the server. Google's `languageCode` = the user's UI language (en/es/fr). The header country picker stays the seeded 29-country list (not Google). Google Translation is not enabled and not used; content translation stays on OpenAI (M-144). First needed in Phase 3 (browser check: type a few letters, pick a city, see it saved; API test with Google stubbed). The draft Privacy text says typed place searches are sent to Google. | 2026-10-30 |
+| P2-Q1 recruiter sweep before approval | until Phase 4 approves Sarah, the e2e sweep sets her `active` in `eujobs_test` through `/_test/db` just before visiting the recruiter workspace; James (`onboarding`) covers the onboarding pages. Seed and product rules are unchanged. | 2026-10-30 |
+| P3-Q1 Places search area | every autocomplete call sends one fixed Europe rectangle as Google's `locationRestriction` (lat 27.5 to 71, lng −31.5 to 35), and the server still keeps only EU 27 + UK. The box covers Cyprus, Malta, the Canary Islands, Madeira and the Azores (none excluded). No user location is sent or stored. Live check (P18): "Las Palmas", "Funchal", "Limassol" and "Valletta" each return results in en/es/fr. | 2026-10-30 |
+| P3-Q2 Spanish part of P3-13 | the UI part runs in English; the Spanish part runs in the signed-in browser page: a Spanish user's city request returns Spanish names ("Lond" → "Londres"). The Phase 11 Spanish sweep covers the Spanish screen. | 2026-10-30 |
+| P3-Q3 AI-only UI before Phase 9 | the My profile "Ai Job Summary" button and its template code are removed, and the CV page's Compare buttons and panel are hidden, until Phase 9 adds both with the real AI (M-062, M-027) | 2026-10-30 |
+| P3-D1 Places country (P18 result) | a suggestion's country = the last part of Google's secondary text matched against the EU 27 + UK names in the request language (`Intl.DisplayNames`, plus Google's "UK" in English); without secondary text the main text is used (Luxembourg). Live: 84 of 84 cities matched in en/es/fr. Place details confirm the ISO code before anything is saved. | 2026-10-30 |
+| P3-D2 onboarding preferences | work preference and city required, salary optional. At completion the header country = the profile country, and the language follows it unless explicit (M-134). | 2026-10-30 |
+| P3-D3 external certificates | name and issuer required, ≤ 100 each; issued month required, expiry month optional; an https URL and/or a file (PDF/JPEG/PNG ≤ 10 MB) optional; at most 20 | 2026-10-30 |
+| P3-D4 right to work | one entry per region (EU, UK), so at most 2; the expiry date is required for `visa_permit` | 2026-10-30 |
+| P3-D5 languages | unique codes, at most 20 | 2026-10-30 |
+| P3-D6 minimum salary | whole number 1–100,000,000 in the currency of the profile city's country, period `year` or `month`; another currency is refused | 2026-10-30 |
+| P3-D7 CV versions | "No readable text" when fewer than 50 non-space characters are extracted. Deleted versions leave the list and do not count toward the 20; version numbers are never reused. | 2026-10-30 |
+| P3-D8 evidence submissions | a new submission for an entry only when its last one was rejected or reset (U27). The admin queue lists the oldest first, default filter "In review". | 2026-10-30 |
+| P3-D9 Edit profile dialog | holds full name, headline, city, about, years, skills, work preference, availability and minimum salary; availability defaults to `open_to_opportunities` | 2026-10-30 |
+| P3-D10 mocks still in use | mock exports still imported by Find jobs (Phase 4), the recruiter applicant view (Phase 6) and Data & account (Phase 12) stay until those phases. The Data & account "Delete resume reference" row is removed now (CV versions live on the server; M-028 forbids deleting the live CV). | 2026-10-30 |
+| P3-D11 seeded people | Alex, Emma and Sofia in London; Oliver in Berlin; James Chen (candidate) in Amsterdam; Daniel in Paris; Aisha in Stockholm. The 6 recruiter-mock candidates are complete; Alex stays incomplete. Right to work `citizen_settled` in their region (Sofia also EU). English plus the local language. Portfolio links on `<name>.example.com` (no LinkedIn URLs that could be real people). Verified phones from Ofcom's fictional London range +44 20 7946 0xxx (the +44 7700 900xxx mobile range was planned, but libphonenumber rejects it, so M-004 normalisation would fail). Generated sample evidence files. Alex's $120k → £90,000 a year (OQ-4). | 2026-10-30 |
+| P3-D12 seed photos | generated 400×400 initials images in the Figma avatar colours (the client assets hold no candidate photos) | 2026-10-30 |
+| P3-D13 fixture packages | `e2e/fixtures/make.js` builds the files with the server's test helpers (`server/test/helpers/fixtures.js`: pdfkit, sharp, archiver from the server's packages), so the API tests and the browser checks use the same builders and nothing extra is installed in `e2e/` (the accepted plan was to install the three packages in `e2e/`) | 2026-10-30 |
+| P3-C1 builder call: translations shipped early | onboarding, the completeness checklist cards, the city field, the privacy settings and the new shared `errors`/`validation`/`common` keys ship in en/es/fr, because P2-01 (French) and P2-11 (Spanish) open those screens with the missing-key check. The new `cv`, `profile`, `verification` and `moderation` namespaces stay English until Phase 11. Awaiting owner review. | 2026-10-30 |
+| P3-C2 builder call: Phase 2 checks adjusted | P2-12 expects Emma's seeded photo in the header (initials are checked on the Owner). P2-19 checks only namespaces that have an es/fr file and lists the English-only ones: a temporary exception, removed in Phase 11 (task 5). Awaiting owner review. | 2026-10-30 |
+| P3-C3 builder call: signed URL lifetime | the expiry is rounded down to 5-minute steps, so a URL is valid 10 to 15 minutes (U39 said 15) and repeated `/me` answers give the same avatar URL; a new URL on every `/me` reloaded the image and left a request hanging (P2-11 flake). Awaiting owner review. | 2026-10-30 |
+| P3-C4 builder call: file serving robustness | a request the browser cancels (`ECONNABORTED`) is ignored by `GET /files/:id`; a file still locked by a download (Windows `EBUSY`) is logged and left on disk instead of failing the delete. Awaiting owner review. | 2026-10-30 |
+| P3-C5 builder call: seed institutions | the recruiter mocks name no institutions, so the seed uses University of the Arts London (Emma), Berlin University of the Arts (Oliver), Parsons School of Design (James Chen), Royal College of Art (Sofia), ArtCenter College of Design (Daniel), University College London (Aisha); Alex keeps California College of the Arts from his mock. Roles start in January, education runs September to June of the mock years. Awaiting owner review. | 2026-10-30 |
+| P3-C6 builder call: U27 details | deleting a profile entry also withdraws its evidence still in review; a changed full name resets the identity check (identity is linked to the account name, §3.2); re-saving an entry unchanged resets nothing. A reset is stored as `resetAt` on the submission (field added to §4.2's `verificationsubmissions`); reset submissions leave the "In review" queue. Awaiting owner review. | 2026-10-30 |
+| P3-C7 builder call: CV rules | a new upload becomes the live version (the CV page's behaviour before the backend); extracted text is capped at 100,000 characters; a file that passes the type checks but cannot be parsed counts as "No readable text". The Compare component was deleted rather than hidden (P3-Q3); Phase 9 rebuilds it. Download-log rows are written now (one per view; Range requests after byte 0 are not logged); `GET /candidate/cv/downloads` and its screen come with Phase 4 (P4-13). Awaiting owner review. | 2026-10-30 |
+| P3-C8 builder call: endpoints beyond §5 | `PUT`/`DELETE /candidate/profile/certificates/:id/file` (attach or remove a certificate file), `GET /admin/moderation/verification/:id` (submission detail), `PUT /candidate/onboarding/preferences` as the only step endpoint (the story step uses the CV upload). `GET /candidate/verification` returns each check's accepted `evidenceTypes`, so the client holds no mapping. `GET /plans` uses the session when one is sent (a bad token counts as anonymous); currency = the `currency` query, else the header country's currency, else EUR. Awaiting owner review. | 2026-10-30 |
+| P3-C9 builder call: field and flow details | certificate verification uses the certificate's own file (no upload); replacing or removing that file resets its check. A phone number becomes unverified as soon as a code is requested for a different number (M-004); the phone form takes one of the 28 countries plus the number (no calling-code list). The "No work experience yet" / "No formal qualification" opt-outs are allowed only while the list is empty, and adding an entry clears them. LinkedIn links may use a country subdomain (`uk.linkedin.com/in/…`); links and URLs are at most 300 characters (new limit `profile.url`). Photos are stored as WebP. A declared MIME of `application/octet-stream` is accepted when extension and magic bytes agree. An unchanged city keeps its stored name without a Google call. Completeness stores `{ done, total, complete, missing }`; the item list is computed per request. Awaiting owner review. | 2026-10-30 |
+| P3-C10 builder call: onboarding plan step | "Continue with Free" no longer writes a local Free plan (that silently downgraded subscribers, M-129); after the demo Plus checkout, onboarding is completed and the page opens `/candidate/ai-insights`. Awaiting owner review. | 2026-10-30 |
+| P3-C11 builder call: seed files | `seed:demo` deletes every purpose folder under the upload root before recreating files (the `_test` folder is not a purpose folder, so development seeding never touches it). Awaiting owner review. | 2026-10-30 |
 
 _(Answers to any new question asked during the build are appended to this table.)_
 
@@ -139,11 +174,12 @@ Paths in the audits are relative to `client/` (shared audit) or start with `clie
 
 | Service | What was verified | When | Used for |
 |---|---|---|---|
-| MongoDB Atlas | Reachable; database `eujobs` exists and is empty | planning session | `MONGODB_URI`. Tests use database `eujobs_test` on the same cluster. |
+| MongoDB Atlas, the stuti cluster (`cluster0.6bhj96m`) | Reachable; `seed:catalog`, `seed:demo` and the 68 Phase 1 server tests pass on it. The cluster is shared with about 20 other projects and has about 194 MB used (P13 settled). | 2026-10-30 (replaced the planning-session cluster) | `MONGODB_URI`, database `eujobs`. Tests use database `eujobs_test` on the same cluster. **Only ever touch `eujobs` and `eujobs_test`, and keep seed and test data small.** |
 | Stripe sandbox `acct_1QxYbXLUXYC1nS7o` (US, default USD), test mode | Checkout in EUR, GBP, PLN, SEK, DKK, CZK, HUF and RON. Subscription in PLN, then cancel and re-subscribe the same Customer in EUR. `adaptive_pricing[enabled]=false` accepted. No Customer Portal configuration exists yet. | 2026-10-30 | Hosted Checkout + webhook (S); the Stripe CLI forwards webhooks using the secret key (§2.10), so no CLI browser login is ever needed |
 | OpenAI | `gpt-5.5`, `gpt-5.4-mini`, `text-embedding-3-large` (3072 dims), `gpt-4o-mini-transcribe` with `whisper-1` as fallback; a real transcription test passed | planning session | OD7 is resolved (P4 done) |
 | Gmail SMTP | Sends mail (personal Gmail, about 500 recipients per day) | planning session | All email (S) |
 | Uploads folder | `C:/eujobs-data/uploads` exists outside OneDrive | P2 | `UPLOAD_DIR` (C17) |
+| Google Places (New) | The owner verified `GOOGLE_PLACES_API_KEY` (the Housbe server key: shared billing and quota). Google Translation is not enabled on it. The first call through the proxy is P18. | 2026-10-30 | City autocomplete and place details through the server proxy only (G-1, §2.16) |
 
 ### 1.3 Environment variables (`server/.env`)
 
@@ -154,7 +190,7 @@ Names only. Never print values. Node's `--env-file` loads them; variables alread
 | `NODE_ENV` | `development` or `test`. `test` switches to database `eujobs_test`, captured mail, uploads under `UPLOAD_DIR/_test`, the `/_test` routes, and no automatic scheduler timer. | Phase 1 |
 | `PORT` | API port (5000 in development; the e2e harness overrides it with 5100) | 1 |
 | `CLIENT_ORIGIN` | `http://localhost:5173`. CORS origin and the base of every link in emails, Stripe return URLs and the certificate QR (M-204). The e2e harness overrides it with `http://localhost:5174`. | 1 |
-| `MONGODB_URI` | Atlas connection string | 1 |
+| `MONGODB_URI` | Atlas connection string of the shared stuti cluster (`cluster0.6bhj96m`, §1.2). The code selects the database by name (`eujobs`, or `eujobs_test` in test mode) and never touches any other database. | 1 |
 | `JWT_SECRET`, `JWT_EXPIRES_IN` | HS256 signing key; token lifetime (7d, M-007) | 1 |
 | `SMTP_HOST`, `SMTP_PORT`, `SMTP_USER`, `SMTP_PASS`, `MAIL_FROM` | Gmail SMTP transport and sender | 1 |
 | `SEED_PASSWORD` | Password of every seeded account. It must pass the password rules (M-006, U2); the seed refuses to run otherwise. | 1 |
@@ -168,6 +204,7 @@ Names only. Never print values. Node's `--env-file` loads them; variables alread
 | `OPENAI_FAST_MODEL` | `gpt-5.4-mini` (U4 "fast" features) | 9 |
 | `OPENAI_EMBEDDING_MODEL` | `text-embedding-3-large`, 3072 dims | 9 |
 | `OPENAI_TRANSCRIBE_MODEL` | `gpt-4o-mini-transcribe`; the code falls back to `whisper-1` (OD7) | 10 |
+| `GOOGLE_PLACES_API_KEY` | Google Places (New) server key, used only by the `places` proxy (G-1, §2.16); it never goes to the browser. It is the Housbe server key, so it shares Housbe's Google billing and quota; swapping it for an own key means changing only this setting. Added by the owner on 2026-10-30, so `server/.env` now holds 23 variables. | 3 |
 
 Do not add new server variables without asking the owner. The client dev server reads one non-secret variable, `VITE_API_PROXY` (the proxy target; default `http://localhost:5000`), which the e2e harness sets.
 
@@ -192,10 +229,11 @@ Node 24.19, npm 11, Git, Chrome at `C:\Program Files\Google\Chrome\Application\c
 |---|---|---|---|
 | P5 (rest: end-to-end paid Checkout per currency) | 5 | P11 test fixtures | 3, 4, 8, 10 |
 | P6 Customer Portal configuration | 5 | P12 plus-alias demo accounts | 1 (seed derives them) |
-| P7 failed-payment settings (owner, Dashboard) | optional; not a prerequisite | P13 Atlas headroom check | 1 (and again in 9) |
+| P7 failed-payment settings (owner, Dashboard) | optional; not a prerequisite | P13 Atlas headroom check | done (§1.2): shared cluster, keep data small; Phase 9 embeddings included |
 | P8 `stripe listen --api-key` signing-secret check | 5 | P14 logo file | not needed (OD11) |
 | P9 fonts | 2 (client), 8 (server PDFs) | P15 Imprint identity | before go-live (§8) |
 | P10 common-password list | 1 | P16 npm packages | per phase (§2.14) |
+| P18 Google Places proxy check | 3 | | |
 | P17 cloudflared | not needed now (§8) | P1–P4 | done |
 
 ---
@@ -242,6 +280,7 @@ server/
 | `auth` | register (candidate, recruiter), login, email link and code, forgot/reset, admin invite acceptance |
 | `users` | `/me`, preferences, password change, notification toggle, legal acceptance, counters |
 | `meta` | countries, languages, config (limits and enums), plans list, legal texts, FAQs |
+| `places` | Google Places (New) proxy: city autocomplete and place details, per-user rate limit, cache, session tokens (G-1, §2.16) |
 | `files` | the signed file endpoint and the File model |
 | `candidates` | profile, sections, photo, onboarding, privacy, completeness, overview |
 | `cv` | CV versions, extraction, earlier-version requests, download log |
@@ -314,6 +353,7 @@ Local run: `cd server && npm run dev`; `cd client && npm run dev` (Vite proxies 
 | `AI_DAILY_LIMIT` | 429 | Payload `{ resetAt }` (OD13) |
 | `AI_UNAVAILABLE` | 503 | The OpenAI call failed |
 | `PAYMENT_PROVIDER_ERROR` | 502 | A Stripe call failed |
+| `PLACES_UNAVAILABLE` | 503 | A Google Places call failed (G-1); city fields show a retry message |
 
 ### 2.4 Validation
 
@@ -509,6 +549,19 @@ Install each package in the phase that first needs it. Record exact versions in 
 - **Plan gates:** `usePlan()` reads `me.plan` and `me.entitlements`. `RequirePlan` (route layout, generalised `PlusGate`) and `PlanGate` (inline) gate the UI. A global `PLAN_REQUIRED` handler opens the upgrade dialog (A: shared §8.3).
 - **Mock removal:** each phase deletes the `data/` files, hooks and storage call sites it replaces. `useSharedLocalStorage.js` and `utils/downloadCsv.js` are deleted when their last caller goes (Phase 12 at the latest).
 
+### 2.16 Places proxy (G-1)
+
+- **Server only.** Google Places (New) is called by the `places` module with `fetch` (no SDK). `GOOGLE_PLACES_API_KEY` never reaches the browser, a response, a log or an error.
+- **Autocomplete:** `GET /places/autocomplete?input=&sessionToken=` (input 2–60 characters). The proxy asks Google for cities with `languageCode` = the user's UI language (en/es/fr) and the client's session token, and keeps only EU 27 + UK results. It returns `{ items: [{ placeId, city, secondary }] }`.
+- **Details:** `GET /places/:placeId?sessionToken=` → `{ placeId, city, countryCode }`. A place outside EU 27 + UK → 422 `VALIDATION_FAILED` (`placeId: not_allowed`). The same token ends the typing session, so Google bills it as one session.
+- **Session token:** the client creates one (`crypto.randomUUID()`) when a city field gets focus and drops it after a pick.
+- **Region filter.** Google accepts at most 15 region codes, so none are sent and the server filters. Each autocomplete call sends one fixed Europe rectangle as `locationRestriction` (lat 27.5 to 71, lng −31.5 to 35; it covers Cyprus, Malta, the Canary Islands, Madeira and the Azores), so Europe fills the 5 suggestions (P3-Q1). Suggestions carry no ISO country code: the last part of the secondary text is matched against the EU 27 + UK names in the request language, plus Google's "UK" in English, and the main text is used when there is no secondary text (P3-D1, verified by P18). Place details always confirm the country before anything is saved.
+- **Saving a city.** Forms send a `placeId` only. The service resolves it through details (cached) and stores `{ countryCode, city, placeId }`, never coordinates. The city name is kept in the language it was picked in; filters and matching compare `placeId`.
+- **Rate limit per user** (in memory): autocomplete 60 per minute, details 30 per minute → `RATE_LIMITED`.
+- **Cache** (in memory, small): autocomplete by (lower-cased input, language) for 10 minutes; details by (placeId, language) for 24 hours; at most 1,000 entries each, oldest out first.
+- **Errors and tests.** A failed Google call → 503 `PLACES_UNAVAILABLE`. API tests inject a fake Places client, so they never call Google; the Phase 3 browser check uses the real proxy.
+- **Not Google.** The header country picker stays the seeded 29-country list (M-139). Translation stays on OpenAI (M-144); Google Translation is not enabled and not used.
+
 ---
 
 ## 3. Product rules
@@ -566,7 +619,7 @@ Every recruiter workspace endpoint returns `RECRUITER_NOT_APPROVED` unless the s
 |---|---|---|
 | Full name | on `User.fullName`, from sign-up, editable in Edit profile, ≤ 100 | M-012, A: recruiter Part C |
 | Headline | required, ≤ 60 | A: candidate §26 |
-| Location | country (EU 27 + UK) + free-text city ≤ 60 | M-032, M-031 |
+| Location | a city picked through the Places proxy, stored as `{ countryCode, city, placeId }` (EU 27 + UK; no coordinates) | M-032 as changed by G-1 |
 | About | 20–600 | A: candidate §26 |
 | Years of experience | integer 0–50, separate from work history | M-018 |
 | Skills | 1–12, each ≤ 30, unique case-insensitive | M-064, A: candidate §26 |
@@ -686,12 +739,12 @@ Every recruiter workspace endpoint returns `RECRUITER_NOT_APPROVED` unless the s
 
 ### 3.6 Job alerts
 
-- Plan-gated (S). At most 10 alerts; name ≤ 80, keywords ≤ 120, location ≤ 60 (M-031).
+- Plan-gated (S). At most 10 alerts; name ≤ 80, keywords ≤ 120 (M-031). The location is optional: a city picked through the Places proxy inside the alert's country, stored as `{ countryCode, city, placeId }` (G-1).
 - **Frequencies (M-096, U12).** Instant, daily at 08:00, weekly on Monday at 08:00, in `User.timezone`. A digest lists jobs first published since the last digest. Empty digests are not sent; missed slots go out at the next tick.
 - **Trigger (M-097).** First publish only (`firstPublishedAt`). Resume, reopen and edit do not trigger (M-037).
 - **Matching (M-098, U35).**
-  - Every keyword must appear in the job's title, company, skills, location, work mode, level or industry. Labels are also matched in the alert's language.
-  - The location matches as a substring.
+  - Every keyword must appear in the job's title, company, skills, city, work mode, level or industry. Labels are also matched in the alert's language.
+  - A city alert matches jobs with the same `placeId` (G-1); without a city, the whole alert country matches.
   - The alert stores the picker country when it is created (Remote allowed) and matches only that country.
 - **Lapse (M-119).** Paused while Free; resumes on re-subscribing.
 
@@ -706,7 +759,7 @@ Every recruiter workspace endpoint returns `RECRUITER_NOT_APPROVED` unless the s
   - Employment type: `full_time`, `part_time`, `contract`, `internship`.
   - Level: `junior`, `mid`, `senior`, `lead`.
   - Work preference: `remote`, `hybrid`, `on_site`.
-- **Location (M-032, OD2, OQ-6i).** On-site and hybrid jobs have a country (EU 27 + UK) and a city. Remote jobs have country `REMOTE` and an optional list of eligible countries; empty means all EU 27 + UK. The list shows as a badge on cards and details, and as an "Eligible in" filter inside the Remote view.
+- **Location (M-032 as changed by G-1, OD2, OQ-6i).** On-site and hybrid jobs have a city picked through the Places proxy, stored as `{ countryCode, city, placeId }`; its country (EU 27 + UK) is the job's country. Remote jobs have country `REMOTE` and an optional list of eligible countries; empty means all EU 27 + UK. The list shows as a badge on cards and details, and as an "Eligible in" filter inside the Remote view.
 - **Salary currency (M-131).** Locked to the job country's currency; remote jobs use EUR. Stored as integer + currency + period (`year` or `month`).
 - **Skills (M-034).** Free text, normalised case-insensitively. Suggestions are the most-used skills per market and language.
 - **Wizard (M-041, M-060, M-039).**
@@ -729,7 +782,7 @@ Every recruiter workspace endpoint returns `RECRUITER_NOT_APPROVED` unless the s
 - **Find jobs (M-137, OD2, U25).**
   - Uses the header country. The Remote view lists remote-flagged jobs only; a country view lists on-site and hybrid jobs located there.
   - The salary filter is in the view's currency, with monthly salary × 12. Candidate minimum salary is compared only within the same currency.
-  - Keyword rules are those of §3.6.
+  - Keyword rules are those of §3.6. An optional city filter (picked through the Places proxy) keeps jobs with the same `placeId` (G-1).
 - **Find candidates (M-054, M-055, OQ-6a).**
   - Lists email-verified, discoverable, matching-consenting, complete candidates in the selected country.
   - "In the country" means the residence country, or a right to work there (citizen/settled or a valid permit, for the EU or UK region). Remote means open-to-remote candidates (profile work preference `remote`) in any country (OQ-6a).
@@ -739,6 +792,7 @@ Every recruiter workspace endpoint returns `RECRUITER_NOT_APPROVED` unless the s
   - Language with a minimum level.
   - Verified: every check M-023 requires for that candidate is approved (OQ-6f).
   - Availability (M-024).
+  - City (optional): picked through the Places proxy; keeps candidates whose profile city has the same `placeId` (G-1).
 - **Shortlist (M-079).** One list per company with `addedBy` and `createdAt`; the candidate is not notified. Candidates who turned discovery off are hidden, with a "no longer available" count.
 - **Notes (M-080).** One per company + candidate, ≤ 5,000, with `updatedBy` and `updatedAt`, visible to the company.
 - **Profile views (M-184).** One view per approved recruiter per day. The candidate sees the last 30 days compared with the previous 30.
@@ -822,7 +876,7 @@ Every recruiter workspace endpoint returns `RECRUITER_NOT_APPROVED` unless the s
 
 ### 3.11 Country, language and formats
 
-- **Countries (M-139, D16).** A seeded collection of 29 rows (EU 27 + `GB` + `REMOTE`) with ISO code, currency, default language, `isRemote`, order and `enabled`. 21 countries use EUR, including BG since 2026. CZ, DK, HU, PL, RO and SE use their own currencies, GB uses GBP, and Remote uses EUR. Names come from `Intl.DisplayNames`. The picker sorts by translated name with Remote last.
+- **Countries (M-139, D16).** A seeded collection of 29 rows (EU 27 + `GB` + `REMOTE`) with ISO code, currency, default language, `isRemote`, order and `enabled`. 21 countries use EUR, including BG since 2026. CZ, DK, HU, PL, RO and SE use their own currencies, GB uses GBP, and Remote uses EUR. Names come from `Intl.DisplayNames`. The picker sorts by translated name with Remote last. It is not Google: only city fields use the Places proxy (G-1).
 - **Default language (M-134).** ES → es; FR, BE, LU → fr; every other country → en. It applies until the user picks a language (`languageExplicit`); changing the country never overrides an explicit choice.
 - **Storage (M-135).**
   - The server is the source of truth; anonymous visitors use localStorage.
@@ -836,7 +890,7 @@ Every recruiter workspace endpoint returns `RECRUITER_NOT_APPROVED` unless the s
   - Remote and admins: en-IE, es-ES, fr-FR by language (M-132, OQ-6b).
   - Dates use the browser time zone, and date-only values are stored without a time.
 - **Text (M-141, M-142, M-143).** UI text lives in translation files; business data and staff content live in the database. Enums are stored as keys. The server sends codes, and localises only emails, AI output and PDFs. Server-built CSV files are of the same kind: headers and labels in the requester's language, with a UTF-8 BOM (OQ-6d).
-- **Translate (M-144).** On-demand Translate exists for job brief and responsibilities, company About, candidate about, work-history descriptions and messages (not skills or names). It is cached per entity + field + language + hash. Paid for candidates, free for recruiters.
+- **Translate (M-144).** On-demand Translate exists for job brief and responsibilities, company About, candidate about, work-history descriptions and messages (not skills or names). It is cached per entity + field + language + hash. Paid for candidates, free for recruiters. It uses OpenAI only; Google Translation is not enabled and not used (G-1).
 - **Public pages (M-140).** A small language picker in the auth layout, on every public page.
 
 ### 3.12 Recruiter onboarding and company
@@ -844,7 +898,7 @@ Every recruiter workspace endpoint returns `RECRUITER_NOT_APPROVED` unless the s
 - **Company (M-145).** One recruiter per company. Company is a separate record, and every recruiter-owned record carries `companyId`.
 - **Names (M-146, M-147).** The legal name is verified in KYC; the display name is public and defaults to the legal name. After approval only these fields are editable: display name, industry, size, city, website, description.
 - **Size (M-148).** Keys `1_10`, `11_50`, `51_200`, `201_500`, `501_1000`, `1000_plus`, with translated labels.
-- **Country (M-149).** EU 27 + UK picker, no Remote. At step 2 it sets the recruiter's header country (and so the currency) and the default language, unless the language was chosen explicitly.
+- **Country and city (M-149, G-1).** The company city is picked through the Places proxy and stored as `{ countryCode, city, placeId }`; its country (EU 27 + UK, no Remote) is the company country. At step 2 the company country sets the recruiter's header country (and so the currency) and the default language, unless the language was chosen explicitly. The business address stays free text for KYC.
 - **Logo (M-150).** PNG/JPG/SVG ≤ 2 MB, SVG sanitised. Without a logo, a letter tile whose colour is derived from the company id.
 - **Steps.**
   1. Sign-up, then the email code.
@@ -1055,7 +1109,7 @@ No other emails exist. Admins receive only invite and reset emails (OD6).
 - **Content (M-208, M-210, M-207, M-209, U42).**
   - Today's client mock data becomes coherent server entities: computed numbers, not Figma numbers.
   - The people shown in recruitment and oversight become seeded candidates. The pending account becomes a recruiter applicant. James Chen exists twice: the candidate (`@example.com`) and the recruiter applicant demo account (OQ-4).
-  - Locations move to London, Manchester, Dublin, Berlin, Munich, Paris, Lyon, Madrid, Barcelona, Amsterdam, Warsaw, Lisbon and Stockholm. Salaries are converted once at 1 USD = 0.75 GBP = 0.87 EUR = 3.75 PLN = 9.6 SEK, rounded to 1,000 (OQ-4).
+  - Locations move to London, Manchester, Dublin, Berlin, Munich, Paris, Lyon, Madrid, Barcelona, Amsterdam, Warsaw, Lisbon and Stockholm. Each is stored as `{ countryCode, city, placeId }` with its real Google place id, looked up once through the proxy and kept in `seed/data`, so the seed never calls Google (G-1). Salaries are converted once at 1 USD = 0.75 GBP = 0.87 EUR = 3.75 PLN = 9.6 SEK, rounded to 1,000 (OQ-4).
   - Courses use the learner catalogue values, with 3 English Markdown lessons (300–600 words) and 5 single-choice questions each; prices follow OD1.
 - **Accounts** (S, OD9; every password = `SEED_PASSWORD`):
 
@@ -1076,7 +1130,7 @@ No other emails exist. Admins receive only invite and reset emails (OD6).
 
 ## 4. Data model
 
-MongoDB database `eujobs` (`eujobs_test` for tests). Every collection has `createdAt` and `updatedAt`. Enums are stored as keys (M-142). The references below are ObjectIds.
+MongoDB database `eujobs` (`eujobs_test` for tests). Every collection has `createdAt` and `updatedAt`. Enums are stored as keys (M-142). The references below are ObjectIds. A **place** is `{ countryCode, city, placeId }` from the Places proxy, never with coordinates (G-1).
 
 ### 4.1 Key catalogue (`config/enums.js`, served by `GET /meta/config`)
 
@@ -1151,12 +1205,12 @@ This catalogue must exist before any schema (ordering item 2). The client has on
 
 | Collection | Key fields | Indexes | Drives |
 |---|---|---|---|
-| `candidateprofiles` | `userId`, `headline`, `location { country, city }`, `about`, `yearsExperience`, `skills [{ name, key }]`, `workPreference`, `availability`, `salaryMin { amount, currency, period }`, `workHistory [{ _id, title, employer, start, end, current, description }]`, `noWorkExperience`, `education [{ _id, institution, degree, start, end, stillStudying }]`, `noFormalQualification`, `languages [{ code, level }]`, `rightToWork [{ _id, region, status, permitExpiresOn }]`, `links { linkedin, portfolio }`, `photo { fileId, smallFileId }`, `certificates [{ _id, name, issuer, issuedOn, expiresOn, url, fileId }]`, `liveCvVersionId`, `completeness { done, total, complete, missing[] }` (recomputed on every change), `restricted { reason, by, at, caseId }` | unique `userId`; `{ 'location.country' }` | M-012 … M-026, M-167, U27 |
+| `candidateprofiles` | `userId`, `headline`, `location` (place, G-1), `about`, `yearsExperience`, `skills [{ name, key }]`, `workPreference`, `availability`, `salaryMin { amount, currency, period }`, `workHistory [{ _id, title, employer, start, end, current, description }]`, `noWorkExperience`, `education [{ _id, institution, degree, start, end, stillStudying }]`, `noFormalQualification`, `languages [{ code, level }]`, `rightToWork [{ _id, region, status, permitExpiresOn }]`, `links { linkedin, portfolio }`, `photo { fileId, smallFileId }`, `certificates [{ _id, name, issuer, issuedOn, expiresOn, url, fileId }]`, `liveCvVersionId`, `completeness { done, total, complete, missing[] }` (recomputed on every change), `restricted { reason, by, at, caseId }` | unique `userId`; `{ 'location.countryCode' }` | M-012 … M-026, M-167, U27 |
 | `cvversions` | `userId`, `number`, `fileId` (null after delete), `originalName`, `mime`, `size`, `extractedText`, `noReadableText`, `snapshot { role, years, skills[] }`, `pendingSnapshot`, `drafts [{ _id, suggestions, revisedSnapshot, createdAt }]` | `{ userId, number }` | M-027 … M-031, M-061, U18 |
 | `cvaccessrequests` | `companyId`, `candidateId`, `requestedBy`, `reason`, `details`, `status`, `cvVersionId` (chosen on approval), `decidedAt` | `{ candidateId, status }` | M-029, U19 |
 | `verificationsubmissions` | `userId`, `category`, `evidenceType`, `fileId` (null after retention), `entryId`, `status`, `submittedAt`, `reviewedBy`, `reviewedAt`, `reason`, `previousSubmissionId` | `{ status, submittedAt }`, `{ userId, category }` | M-166, M-186, U27 |
 | `savedjobs` | `candidateId`, `jobId` | unique pair | M-065 |
-| `jobalerts` | `candidateId`, `name`, `keywords`, `location`, `country`, `language`, `frequency`, `active`, `lastDigestAt` | `{ frequency, active }` | M-096 … M-098, U35 |
+| `jobalerts` | `candidateId`, `name`, `keywords`, `location` (place or null, G-1), `country`, `language`, `frequency`, `active`, `lastDigestAt` | `{ frequency, active }` | M-096 … M-098, U35 |
 | `alertmatches` | `alertId`, `jobId`, `mode` (`instant`, `digest`), `sentAt` | unique `{ alertId, jobId }` | M-097, U12 |
 | `explanationfeedback` | `candidateId`, `jobId`, `value` (`helpful`, `needs_review`) | unique pair | M-067 |
 
@@ -1164,9 +1218,9 @@ This catalogue must exist before any schema (ordering item 2). The client has on
 
 | Collection | Key fields | Indexes | Drives |
 |---|---|---|---|
-| `companies` | `ownerUserId`, `legalName`, `displayName`, `website`, `businessEmail`, `industry`, `size`, `country`, `city`, `businessAddress`, `registrationDetails`, `description`, `logoFileId`, `verifiedAt`, `reviewHistory [{ decision, reason, by, at }]`, `onboardingSteps[]`, `submittedAt` | `ownerUserId` | M-145 … M-153, M-165 |
+| `companies` | `ownerUserId`, `legalName`, `displayName`, `website`, `businessEmail`, `industry`, `size`, `location` (place, G-1; its `countryCode` is the company country), `businessAddress`, `registrationDetails`, `description`, `logoFileId`, `verifiedAt`, `reviewHistory [{ decision, reason, by, at }]`, `onboardingSteps[]`, `submittedAt` | `ownerUserId` | M-145 … M-153, M-165 |
 | `kycdocuments` | `companyId`, `userId`, `type`, `fileId` (null after retention), `uploadedAt` | `companyId` | M-185, M-186 |
-| `jobs` | `companyId`, `createdBy`, `title`, `brief`, `responsibilities[]`, `requiredSkills[]`, `preferredSkills[]`, `experienceYears`, `level`, `employmentType`, `workPreference`, `country` (ISO2 or `REMOTE`), `city`, `remoteCountries[]`, `salary { min, max, currency, period }`, `requiredLanguages [{ code, minLevel }]`, `visaSponsorship`, `status`, `firstPublishedAt`, `publishedAt`, `closedAt`, `restricted { reason, by, at, caseId }`, `relevantCount`, `relevantComputedAt`, `contentHash` | `{ status, country }`, `{ companyId, status }` | M-032 … M-046, M-051, M-097, M-131, M-167, M-205, OD2 |
+| `jobs` | `companyId`, `createdBy`, `title`, `brief`, `responsibilities[]`, `requiredSkills[]`, `preferredSkills[]`, `experienceYears`, `level`, `employmentType`, `workPreference`, `country` (ISO2 or `REMOTE`), `location` (place for on-site and hybrid jobs, null for remote; G-1), `remoteCountries[]`, `salary { min, max, currency, period }`, `requiredLanguages [{ code, minLevel }]`, `visaSponsorship`, `status`, `firstPublishedAt`, `publishedAt`, `closedAt`, `restricted { reason, by, at, caseId }`, `relevantCount`, `relevantComputedAt`, `contentHash` | `{ status, country }`, `{ companyId, status }` | M-032 … M-046, M-051, M-097, M-131, M-167, M-205, OD2 |
 | `applications` | `candidateId`, `jobId`, `companyId`, `status`, `stageId`, `cvVersionId`, `coverNote`, `consentAt`, `appliedAt`, `withdrawnAt`, `notSelectedAt`, `history [{ status, stageId, stageName, category, at, actorId, actorType }]`, `lastEmailedStatus`, `cvRemoved` | unique `{ candidateId, jobId }` where status is not `withdrawn`; `{ companyId, status }` | M-069 … M-078, M-030, U33 |
 | `pipelinestages` | `companyId`, `name`, `nameKey`, `category`, `order`, `isEntry`, `tone` | unique `{ companyId, nameKey }` | M-069 … M-072, OD5 |
 | `shortlistentries` | `companyId`, `candidateId`, `addedBy` | unique pair | M-079, M-083 |
@@ -1246,6 +1300,7 @@ All paths are under `/api/v1`. **Who:**
 |---|---|---|
 | GET `/health` | Pub | `{ status, db }` |
 | GET `/meta/countries` · `/meta/languages` · `/meta/config` | Pub | 29 countries; ISO 639-1 codes; limits and enums |
+| GET `/places/autocomplete?input&sessionToken` · GET `/places/:placeId?sessionToken` | Any (recruiters once the email code is done) | city suggestions in the UI language, EU 27 + UK only; resolve one city to `{ countryCode, city, placeId }` (G-1, §2.16) |
 | GET `/plans` | Pub | plans with the price in the requested or user currency (M-116) |
 | GET `/legal/:doc` | Pub | current version in the requested language (M-191) |
 | GET `/help/faqs` | Any | FAQs for the role, in the user's language (M-200) |
@@ -1493,7 +1548,7 @@ Each phase lists its scope, tasks (with a verify check), decisions, prep, done c
 | P2-09 | Signed-in redirect | D | `/`, `/sign-in` and `/sign-up` while signed in → own workspace. |
 | P2-10 | Recruiter sign-up and code | D, M | `/recruiter/sign-up` → code screen. A wrong code shows attempts left; 5 wrong → locked message; Resend enabled after 60 s; correct → onboarding. Opening `/recruiter` redirects back to onboarding. A duplicate email shows `EMAIL_TAKEN` with sign-in and reset links. |
 | P2-11 | Language and country | D, M | Switch to Español → shell and auth texts in Spanish, `<html lang="es">`, kept after reload (server). Switch the country to Poland → kept. Anonymous: the public-page picker keeps its choice in localStorage. |
-| P2-12 | Shell identity | D, M | Emma: name, email, "Free" subtitle, initials. Owner: "Owner". No workspace switch. The bell has no dot and opens notification settings. Footer "© {current year} Local WorkMan" with three legal links. The country list scrolls at 375 px. |
+| P2-12 | Shell identity | D, M | Emma: name, email, "Free" subtitle, photo (seeded since Phase 3; initials before). Owner: "Owner", initials. No workspace switch. The bell has no dot and opens notification settings. Footer "© {current year} Local WorkMan" with three legal links. The country list scrolls at 375 px. |
 | P2-13 | Legal and re-accept | D, M | `/legal/terms` shows the draft banner and switches language. Terms version bumped via `/_test/db` → the next sign-in shows a blocking dialog; Accept continues. |
 | P2-14 | Help | D | FAQs differ per role and follow the language; search ignores accents. |
 | P2-15 | Change password | D | Wrong current password → error. Success → the new password works at next sign-in. Admin Settings saves the name and language. |
@@ -1505,14 +1560,15 @@ Each phase lists its scope, tasks (with a verify check), decisions, prep, done c
 
 ### Phase 3: Candidate profile, completeness, uploads, CV, verification
 
-**Scope.** The complete-profile model and every editor; onboarding; files and signed URLs; CV versions with extraction; phone and evidence verification; the admin verification queue; privacy settings. The CV AI actions arrive in Phase 9; until then they are hidden, and the rule-based fake draft is deleted.
+**Scope.** The complete-profile model and every editor; onboarding; files and signed URLs; CV versions with extraction; phone and evidence verification; the admin verification queue; privacy settings. The CV AI actions arrive in Phase 9; until then they are hidden, and the rule-based fake draft is deleted. The CV Compare panel and the profile "Ai Job Summary" are hidden too, and the summary template is deleted (P3-Q3).
 
 **Decisions.**
 - Profile: M-012 … M-026, M-027 (extraction part), M-028, M-030, M-031, M-032 (profile location), M-136.
 - Verification and files: M-166, M-168 (data), M-185, M-187 (flags stored), U18, U27, U39.
 - Other: OD3, OQ-4, C16, C17, C21.
+- Places: G-1 (§2.16), first used here.
 
-**Prep.** P11, part 1. Fixtures live outside the repo in `C:/eujobs-data/fixtures`, generated by `e2e/fixtures/make.js`:
+**Prep.** P18 (first live call through the Places proxy). P11, part 1. Fixtures live outside the repo in `C:/eujobs-data/fixtures`, generated by `e2e/fixtures/make.js`:
 - a text PDF (pdfkit) and an image-only PDF (pdfkit with an embedded image);
 - a DOCX (minimal OOXML zipped with archiver);
 - JPG, PNG and WebP photos and an ID-like image (sharp);
@@ -1521,32 +1577,33 @@ Each phase lists its scope, tasks (with a verify check), decisions, prep, done c
 
 **Tasks**
 
-1. Phase 3 packages. `lib/files.js`, the `files` and `fileaccesslogs` models, upload middleware per purpose, and `GET /files/:id`. Verify: tests for tampered signature, expiry, Range.
-2. `candidateprofiles`, the section endpoints and the completeness service (§3.2), embedded in `/me`; the U27 reset rules. Verify: unit tests over every item combination.
-3. Onboarding (M-014):
+1. Places (G-1, §2.16): `config/env.js` validates `GOOGLE_PLACES_API_KEY`; the `places` module with an injectable Google client, the per-user rate limit, the cache and the EU 27 + UK filter; the client city field (debounced autocomplete, one session token per typing session, details on pick). Verify: P18, the places API tests, P3-13.
+2. Phase 3 packages. `lib/files.js`, the `files` and `fileaccesslogs` models, upload middleware per purpose, and `GET /files/:id`. Verify: tests for tampered signature, expiry, Range.
+3. `candidateprofiles`, the section endpoints and the completeness service (§3.2), embedded in `/me`; the U27 reset rules. Verify: unit tests over every item combination.
+4. Onboarding (M-014):
    - story: CV upload creates version 1;
-   - preferences: work preference, country + city, optional salary in the country currency;
+   - preferences: work preference, city through the Places city field (G-1), optional salary in the country currency;
    - plan: plan cards from `/plans`; "Continue with Free". The Plus button keeps today's demo checkout until Phase 5 replaces it.
    `onboardingCompletedAt` is set; the header country takes the profile country (M-136).
-4. My profile: section cards with editors (OD16) for basics, full name, availability, work history (with the opt-out), education (with the opt-out), languages (codes from `/meta/languages`, names via `Intl.DisplayNames`), right to work, links, photo (square crop on the server), external certificates. A completeness checklist panel; the Overview strength card from the server.
-5. CV page:
+5. My profile: section cards (the location through the Places city field) with editors (OD16) for basics, full name, availability, work history (with the opt-out), education (with the opt-out), languages (codes from `/meta/languages`, names via `Intl.DisplayNames`), right to work, links, photo (square crop on the server), external certificates. A completeness checklist panel; the Overview strength card from the server.
+6. CV page:
    - upload (types and sizes; at most 20), extraction (pdfjs-dist, mammoth), "No readable text" flag;
    - live selection, download via a signed URL, delete non-live versions;
-   - the compare panel reads server snapshots.
+   - the Compare buttons and panel are hidden until Phase 9 (P3-Q3).
    Remove `cv/utils/cvVersions.js` and its fake draft.
-6. Verification page:
+7. Verification page:
    - phone (country-code input, on-screen code, M-004 rules);
    - checks with evidence types, statuses and reasons, and resubmission;
    - right-to-work and certificate verification requests linked to their entries;
    - the self-approve button is removed.
-7. Admin: Moderation tab "Candidate verification" (list, detail with file preview through `documents.view`, Approve or Reject with a reason ≤ 300); the emails `verification_approved` and `verification_rejected`; audit events; the "Credential reviews" stat becomes a real count.
-8. Privacy settings stored (M-187). The shell avatar shows the photo through a signed URL.
-9. `seed:demo`:
+8. Admin: Moderation tab "Candidate verification" (list, detail with file preview through `documents.view`, Approve or Reject with a reason ≤ 300); the emails `verification_approved` and `verification_rejected`; audit events; the "Credential reviews" stat becomes a real count.
+9. Privacy settings stored (M-187). The shell avatar shows the photo through a signed URL.
+10. `seed:demo`:
    - Alex's profile from `profile.js` (incomplete by design);
    - seeded candidates from the recruiter `candidates.js` and `candidateDetails.js` as structured profiles. Applicants are complete with approved checks and a verified phone (OQ-4).
    - photos copied from client assets; CV PDFs generated with text;
    - two James Chen accounts (OQ-4): the candidate here, the recruiter applicant in Phase 4.
-10. Delete: the candidate profile, CV, verification, onboarding and privacy-settings mock data and hooks.
+11. Delete: the candidate profile, CV, verification, onboarding and privacy-settings mock data and hooks.
 
 **Done when.** In Chrome, a candidate reaches "Complete" (with admin approvals). The completeness shown always equals the server's. Uploads reject wrong types and sizes. Signed URLs expire. Lint, build, tests and sweep are green.
 
@@ -1566,8 +1623,47 @@ Each phase lists its scope, tasks (with a verify check), decisions, prep, done c
 | P3-10 | U27 reset | D | Editing the education entry linked to an approved academic check → the check resets and the profile is incomplete again. |
 | P3-11 | Expired permit | D | A visa/permit with a past expiry date → "Permit expired"; completeness unchanged. |
 | P3-12 | Privacy | D | The three privacy flags persist after reload. |
+| P3-13 | City field (G-1) | D, M | In My profile, type a few letters of a city → suggestions from the proxy in the UI language, EU 27 + UK only (no request to Google from the browser) → pick one → saved as `{ countryCode, city, placeId }` and shown after reload. "Las Palmas", "Funchal", "Limassol" and "Valletta" each show suggestions (P3-Q1). Spanish (P3-Q2): in the signed-in page, a Spanish user's city request returns Spanish names ("Lond" → "Londres"). |
 
-**API tests.** Completeness (every item, N 10–12, opt-outs, U27); section CRUD validation and limits; files (type, magic bytes, size, signature, expiry, ownership, Range, download log); CV (extraction for each fixture, 20 max, live and delete rules); phone (all M-004 rules); submissions and decisions (permissions, reasons, emails, audit); `/me` completeness.
+**API tests.** Places with Google stubbed (G-1): only EU 27 + UK suggestions (the P3-D1 country rule); `languageCode`, the session token and the Europe rectangle passed through; a cache hit makes no second Google call; the per-user rate limit; details outside EU 27 + UK → `not_allowed`; a Google failure → `PLACES_UNAVAILABLE`; saving a location stores the resolved place and never coordinates. Completeness (every item, N 10–12, opt-outs, U27); section CRUD validation and limits; files (type, magic bytes, size, signature, expiry, ownership, Range, download log); CV (extraction for each fixture, 20 max, live and delete rules); phone (all M-004 rules); submissions and decisions (permissions, reasons, emails, audit); `/me` completeness.
+
+#### Phase 3 handoff (2026-10-30, built, awaiting owner review, uncommitted)
+
+**Built.**
+- Server modules `places` (Google proxy, §2.16, P3-Q1, P3-D1), `files` (storage, type checks, signed URLs, `GET /files/:id`, `GET /admin/files/:id`), `candidates` (profile sections, photo, certificates, onboarding, privacy, completeness in `/me`, U27 resets), `cv`, `verification` (phone code, evidence, admin queue and decisions, `verification_approved`/`_rejected` emails in en/es/fr, audit), plus `GET /meta/languages` and `GET /plans`.
+- Seed: Alex incomplete and the 6 recruiter-mock candidates complete, with generated CVs, initials photos, verified phones and approved sample evidence; place ids in `server/seed/data/places.js`.
+- Client: `CityField`, the three onboarding steps, My profile with its editors and checklist, the Overview strength and verification cards, CV & versions, Verification, Privacy, the shell photo and the admin Moderation tab "Candidate verification". The replaced mocks were deleted except the exports still imported by Find jobs (Phase 4), the recruiter applicant view (Phase 6) and Data & account (Phase 12) (P3-D10).
+- e2e: `e2e/fixtures/make.js` (P11 part 1, run automatically), `e2e/lib/candidates.js`, scenarios P3-01 … P3-13, the route `/admin/moderation/verification` in the sweep.
+
+**Calls the plan did not specify:** owner answers P3-Q1 … Q3 and P3-D1 … D13 (P3-D11 and P3-D13 were changed while building), and builder calls P3-C1 … P3-C11 in the Owner answers table, all awaiting review.
+
+**Results and exact commands** (run from the repo root unless noted; never run the server tests and the e2e at the same time: both use `eujobs_test` and `UPLOAD_DIR/_test`):
+
+| Command | Result |
+|---|---|
+| `cd server && npm test` | 133 of 133 |
+| `cd server && npm run lint` | clean |
+| `cd client && npm run lint && npm run build` | clean, built |
+| `node e2e/run.js phase-2` | 27 of 27 |
+| `node e2e/run.js phase-3` | 19 of 19 |
+| `node e2e/run.js sweep` | D and M pass |
+| `node e2e/run.js p03-13-city-field` (any single scenario by file name) | pass |
+| `cd server && npm run mail:test -- verification_approved +alex` and `… verification_rejected +alex` | sent; the owner has not yet confirmed arrival |
+
+P18 was checked against the dev server (`cd server && npm start`, then a one-off script that signed in as the Owner and called `/places/autocomplete` in en/es/fr plus `/places/:placeId`; the script was not kept). All results were EU 27 + UK, names were in the user's language, the four island and Mediterranean cities were found, and place details returned `{ countryCode, city, placeId }`.
+
+**Flaky or watch.**
+- P2-11 failed intermittently on a hanging avatar request until P3-C3; a run that crosses a 5-minute step mid-scenario can still change the avatar URL once.
+- A test file that left a custom admin role behind made the `seed:catalog` count test fail in the full run; test-created roles are now deleted. The earlier one-off `permissions.test.js` failure may have the same cause.
+- P2-10 (D) takes about 66 s because it waits out the 60 s resend cooldown (unchanged).
+
+**Open.**
+- The owner confirms the two live verification emails.
+- The development database `eujobs` still holds the Phase 2 seed. Run `cd server && npm run seed:catalog && npm run seed:demo` to see Phase 3 data in the dev app; this wipes and recreates the demo data and files.
+- `GET /candidate/cv/downloads` and its screen: Phase 4.
+- The CV snapshot, the Compare panel and the profile AI summary: Phase 9 (P3-Q3).
+- es/fr for the `cv`, `profile`, `verification` and `moderation` namespaces, and restoring P2-19's full check: Phase 11.
+- The Google Maps Platform terms check (§8): before go-live.
 
 ### Phase 4: Recruiter onboarding, company, approval, jobs, discovery
 
@@ -1577,7 +1673,7 @@ Surfaces that depend on the match score use the non-AI path until Phase 9: the M
 
 **Decisions.**
 - Onboarding and company: M-145 … M-153, M-165, OQ-2.
-- Jobs: M-032 … M-046, M-131, M-205, OD2, U26, OQ-6i.
+- Jobs: M-032 (as changed by G-1) … M-046, M-131, M-205, OD2, U26, OQ-6i, G-1.
 - Browsing: M-050, M-051 (fallback), M-052, M-053 (U8 for now), M-059 (removal), M-132, M-137, U8, U25.
 - Discovery: M-024, M-026, M-029, M-054 … M-056, M-079 … M-081, M-167 (publish lock), M-184, M-187, M-201, M-202, OD4, U7 (population), U19, U28, OQ-6a, OQ-6f.
 - Contradictions: C3, C7, C9, C10, C24.
@@ -1588,7 +1684,7 @@ Surfaces that depend on the match score use the non-AI path until Phase 9: the M
 
 1. `companies` and `kycdocuments`. Onboarding endpoints and screens:
    - step 1: details only;
-   - step 2: company, with the EU 27 + UK country, which sets the picker country and the default language unless explicit;
+   - step 2: company, with the city from the Places city field (G-1); its EU 27 + UK country sets the picker country and the default language unless explicit;
    - step 3: KYC uploads, locked after submit;
    - step 4: on-screen phone code, then submit;
    - step 5: status page for pending, rejected (reason + Resubmit) and suspended.
@@ -1602,16 +1698,16 @@ Surfaces that depend on the match score use the non-AI path until Phase 9: the M
 4. Jobs: model, service and endpoints:
    - wizard server draft after step 1, quality-check rules, publish validation with `step`;
    - statuses, the Closed tab and order; delete drafts only; edit live;
-   - skill suggestions; salary currency locked by country (EUR for Remote) with the period; languages and sponsorship; Remote eligible countries (OQ-6i);
+   - the job city from the Places city field for on-site and hybrid jobs (G-1); skill suggestions; salary currency locked by country (EUR for Remote) with the period; languages and sponsorship; Remote eligible countries (OQ-6i);
    - `firstPublishedAt`; the restricted lock respected.
    Recruiter Jobs list and details: "N relevant" via the fallback.
 5. Candidate browsing:
-   - Find jobs: visibility (M-044), picker and Remote view (OD2), filters including salary (U25), keyword rules, sort, pagination, eligible-country badge and filter;
+   - Find jobs: visibility (M-044), picker and Remote view (OD2), filters including salary (U25) and the optional city (Places city field, G-1), keyword rules, sort, pagination, eligible-country badge and filter;
    - job details: hide empty sections, the M-043 states, no static perks or premium copy;
    - saved jobs; the Free overlap label (M-052) for every candidate; Overview "Recommended jobs" and For you via U8;
    - remove the page-level AI summary buttons (per-card buttons come in Phase 9).
 6. Recruiter discovery:
-   - Find candidates: population, country rule, Remote = work preference `remote`, filters (has right to work in country, language + level, Verified, availability), overlap sort;
+   - Find candidates: population, country rule, Remote = work preference `remote`, filters (has right to work in country, language + level, Verified, availability, optional city through the Places city field, G-1), overlap sort;
    - candidate profile tabs (M-026 layout, privacy, ticks per check, certificate badge, records profile views);
    - shortlist, notes, activity (events available now);
    - Resume tab (live CV only when `resumeVisible` or the candidate applied; downloads logged; earlier-version requests with reason and details);
@@ -1780,7 +1876,7 @@ The course-purchase path is built here but verified in Phase 8. AI pages are gat
    - Free candidates read only, with an upgrade prompt in place of the composer (M-118).
 4. Read marking; `/me/counters` returns unread messages (both roles); badges are hidden at 0. The `email.message` task and the `new_message` email follow U13.
 5. Job alerts:
-   - `jobalerts` and `alertmatches`; CRUD with limits;
+   - `jobalerts` and `alertmatches`; CRUD with limits; the optional city through the Places city field (G-1);
    - the page is plan-gated and shows a "Paused" state while Free (M-119);
    - matching (M-098, U35, translated labels); `alerts.instant` on first publish (M-097);
    - daily and weekly digests at 08:00 in the user's time zone (U12);
@@ -1891,7 +1987,7 @@ The course-purchase path is built here but verified in Phase 8. AI pages are gat
    - match explanations and insight narratives (code evidence + narrative; the invented gap texts removed);
    - AI insights pages: overview, role picker (M-063), skill gap with "I have this skill" (M-064), improve profile, job match with "Save this opportunity" (M-065), why recommended with feedback (M-067), skill demand (M-066);
    - recruiter Match insights;
-   - CV snapshot proposal and confirm (M-027); assisted draft (M-061); profile AI summary (M-062);
+   - CV snapshot proposal and confirm (M-027) with the CV Compare panel shown again (P3-Q3); assisted draft (M-061); profile AI summary (M-062) with the My profile button back;
    - Translate (M-144: job brief, responsibilities, company About, candidate about, work descriptions, messages, course text, outreach).
 6. Admin AI & matching page: policies (create, edit name and description, at least 1 signal, archive drafts, versions, activate → recompute); the policy suggestion (`OPENAI_MODEL`); oversight (job picker, top 4, evidence); feedback aggregates; AI status (models, last success).
 7. Delete: `ai-insights/data/insights.js`, `useInsightsState`, `ai-insights/utils/matching.js`, recruiter `matchEvidence` fake texts, the AI summary templates, the admin `matching.js` mock and `useMatchingPolicies`.
@@ -1995,8 +2091,9 @@ The course-purchase path is built here but verified in Phase 8. AI pages are gat
    - Dropdown max-height; the ProfileMenu list;
    - AuthLayout heights; Checkbox alignment.
 4. Review the server texts (emails, PDF, CSV) in es and fr for terminology.
+5. Restore P2-19 to check EVERY namespace with no English-only exceptions: remove the temporary Phase 3 skip (`englishOnly` in `e2e/scenarios/p02-19-formats-and-catalogue.js`, P3-C2), so a namespace without an es or fr file fails the check.
 
-**Done when.** No missing keys and no English leftovers in es or fr; formats are correct per locale; no overflow at 375 px. Lint, build, tests and sweep are green.
+**Done when.** No missing keys and no English leftovers in es or fr; P2-19 checks every namespace with no exceptions; formats are correct per locale; no overflow at 375 px. Lint, build, tests and sweep are green.
 
 **Browser verification**
 
@@ -2068,11 +2165,12 @@ The course-purchase path is built here but verified in Phase 8. AI pages are gat
 | P10 | Common-password list | **Phase 1** | Download SecLists `Passwords/Common-Credentials/10k-most-common.txt` (MIT) into `server/data/common-passwords.txt` and load it into a Set at startup. |
 | P11 | Test fixtures | **Phases 3, 4, 8, 10** | `e2e/fixtures/make.js` writes to `C:/eujobs-data/fixtures`: PDFs and images through pdfkit and sharp; a DOCX zipped with archiver; an SVG with `<script>`; oversized files; WebM (and MP4 where Chrome's `MediaRecorder` supports it) recorded in Chrome; a synthetic 501 MB MP4. Download a small CC0 MP4 only if Chrome cannot record MP4. Voice note: the P4 audio file (ask the owner for its path), or one MP3 made with the OpenAI speech API. |
 | P12 | Plus-alias test accounts | **Phase 1** | `seed:demo` derives `<local>+alex@<domain>`, `+emma`, `+sarah` and `+james` from `SEED_ADMIN_EMAIL`. Keep non-critical test sends under the 400/day cap. |
-| P13 | Atlas tier and headroom | **Phase 1** (+ Phase 9) | Run `db.stats()` and report the storage used. Ask the owner to confirm in Atlas the cluster tier, free storage (embeddings are about 12 KB each) and that the current IP is on the access list. |
+| P13 | Atlas tier and headroom | **done** (2026-10-30) | The stuti cluster (`cluster0.6bhj96m`) is shared with about 20 other projects and has about 194 MB used. Only `eujobs` and `eujobs_test` are ever touched, and seed and test data stay small. Phase 9 keeps the embedded population small (about 12 KB per embedding). |
 | P14 | Logo file | **not needed** | OD11: crop the existing AI mark; live text in Manrope (Phase 2). |
 | P15 | Imprint legal entity details | **before go-live** (§8) | The Imprint stays a marked draft placeholder now (S, OD12). |
 | P16 | npm packages | **per phase** | §2.14 lists each package, with the phase that installs it and the resolved duplicates. |
 | P17 | cloudflared | **not needed now** (§8) | Installed (2026.8.2). Used only for a later Vercel demo: 100 MB request cap, URL changes each run. |
+| P18 | Google Places proxy | key verified by the owner (2026-10-30); **first call in Phase 3** | Through the dev server's proxy (never with the key in a command or log): an autocomplete for a few letters in en/es/fr returns only EU 27 + UK cities, "Las Palmas", "Funchal", "Limassol" and "Valletta" each return results (P3-Q1), and place details for one result return `{ countryCode, city, placeId }`. If Google refuses the key or the API is not enabled on the Housbe project, stop and ask the owner. |
 
 ---
 
@@ -2087,6 +2185,7 @@ The course-purchase path is built here but verified in Phase 8. AI pages are gat
 | Regenerate the stored certificate PDFs with the public base URL in the QR code (codes unchanged, like the U17 re-issue) | at the base-URL switch | M-105, ordering item 13 |
 | Tunnel demos through cloudflared: video uploads only on localhost (100 MB cap); rate limiting by `CF-Connecting-IP` | when demoing | M-204, C26, P17 |
 | A transactional email provider if volume exceeds personal Gmail (about 500/day) | before go-live | C19, OD9 |
+| Google Places: an own key instead of the shared Housbe key; confirm that the Google Maps Platform terms allow keeping the city name and country code with the place id (place ids may be stored indefinitely, other Places content has caching limits) | before go-live | G-1 |
 | SMS phone verification (codes are shown on screen now) | not in v1 | M-003 |
 | Antivirus scanning of uploads | not in v1 | M-185 (rejected option) |
 | OCR for image-only PDFs; video transcoding | not in v1 | U18, M-102 |
