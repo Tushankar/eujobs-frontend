@@ -112,6 +112,9 @@ M-164 lets users report jobs, profiles, companies and messages. M-167 defines "R
 | OQ-4.3 | (a) 1 USD = 0.75 GBP = 0.87 EUR = 3.75 PLN = 9.6 SEK, rounded to 1,000 | 2026-10-30 |
 | OQ-5 | all recommended definitions | 2026-10-30 |
 | OQ-6 a–k | all as recommended | 2026-10-30 |
+| P1-Q1 permission groups | keep the 5 Figma groups; new ids appended: `dashboard.view` → Finance & reporting, `jobs.view` → Recruitment, `documents.view`, `learning.view`, `ai.view`, `ai.manage` → Governance | 2026-10-30 |
+| P1-Q2 Owner name | the seeded Owner admin is named "Workspace admin" | 2026-10-30 |
+| P1-Q3 demo cities | Alex, Emma and Sarah (Acme Studio) in London (GB); James's applicant company in Dublin (IE) | 2026-10-30 |
 
 _(Answers to any new question asked during the build are appended to this table.)_
 

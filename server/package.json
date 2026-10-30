@@ -1,0 +1,18 @@
+{
+  "name": "local-workman-server",
+  "private": true,
+  "version": "0.0.0",
+  "type": "module",
+  "engines": {
+    "node": ">=24"
+  },
+  "scripts": {
+    "dev": "node --watch --env-file=.env server.js",
+    "start": "node --env-file=.env server.js",
+    "test": "node --env-file=.env --import ./test/setup.js --test --test-concurrency=1 \"test/**/*.test.js\"",
+    "seed:catalog": "node --env-file=.env seed/catalog.js",
+    "seed:demo": "node --env-file=.env seed/demo.js",
+    "mail:test": "node --env-file=.env scripts/mailTest.js",
+    "lint": "oxlint"
+  }
+}
