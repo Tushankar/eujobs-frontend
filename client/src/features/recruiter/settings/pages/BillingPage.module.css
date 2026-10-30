@@ -1,0 +1,10 @@
+.lead {
+  margin: 8px 0 0;
+  font-size: 12px;
+  line-height: 20px;
+  color: var(--muted-foreground);
+}
+
+.table {
+  margin-top: 20px;
+}

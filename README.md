@@ -1,15 +1,25 @@
 # Local WorkMan (LWM) — AI Job Portal (frontend)
 
-React + Vite (JavaScript/JSX) implementation of the **Local-WorkMan** Figma design: three role workspaces — **Candidate**, **Recruiter**, **Admin** — plus authentication and recruiter onboarding. It is a front-end demo: all data is mock data kept in the browser (`localStorage`); nothing is sent to a server.
+React + Vite (JavaScript/JSX) implementation of the **Local-WorkMan** Figma design: three role workspaces — **Candidate**, **Recruiter**, **Admin** — plus authentication and recruiter onboarding.
+
+| Folder | What it is |
+|---|---|
+| `client/` | the React app. Today all data is mock data kept in the browser (`localStorage`); nothing is sent to a server. |
+| `server/` | the Node.js API (Express + MongoDB), being built. Its `.env` is local only and never committed. |
 
 ```bash
+cd client
 npm install
 npm run dev      # http://localhost:5173
-npm run build    # production build into dist/
+npm run build    # production build into client/dist/
 npm run lint     # oxlint
 ```
 
+Code paths in the docs (`src/...`) are relative to `client/`. On Vercel, set the project's **Root Directory** to `client`.
+
 Sign in at `/sign-in` (Candidate or Recruiter) or `/admin/sign-in` with any well-formed email and a non-empty password (demo only). Workspace pages need you to sign in first; the session is kept in this browser until you sign out.
+
+Payments use a demo checkout (no payment provider, nothing is charged): card `4242 4242 4242 4242` succeeds and `4000 0000 0000 0002` is declined, with any future expiry and any security code. Candidates and recruiters see their own payments under Settings → Billing; the admin sees all of them under Payments.
 
 ## Docs
 

@@ -1,0 +1,50 @@
+.stack {
+  display: grid;
+  gap: 24px;
+}
+
+.plan {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  justify-content: space-between;
+  gap: 16px;
+  padding-top: 16px;
+}
+
+.planName {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  margin: 0;
+  font-size: 16px;
+  font-weight: 700;
+  color: var(--foreground);
+}
+
+.planMeta {
+  margin: 4px 0 0;
+  font-size: 12px;
+  color: var(--muted-foreground);
+}
+
+.history {
+  padding-top: 16px;
+}
+
+/* The table is wider than this 768px card: tighten its cell padding and keep reference, method and date on one line. */
+.history table {
+  min-width: 0;
+}
+
+.history th,
+.history td {
+  padding-left: 12px;
+  padding-right: 12px;
+}
+
+.history td:nth-child(1),
+.history td:nth-child(5),
+.history td:nth-child(7) {
+  white-space: nowrap;
+}

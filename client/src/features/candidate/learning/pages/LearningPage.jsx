@@ -104,8 +104,8 @@ export default function LearningPage() {
       </section>
 
       <p className={styles.note}>
-        Learning Plus is a local prototype state. No payment method is requested, no subscription is created, and
-        course progress is saved only in this browser.
+        Courses are bought through a demo checkout: no real payment is taken. Your purchases appear under Settings,
+        Billing, and course progress is saved only in this browser.
       </p>
 
       <PurchaseDialog course={buying} onConfirm={confirmPurchase} onClose={() => setBuying(null)} />

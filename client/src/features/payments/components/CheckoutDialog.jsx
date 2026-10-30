@@ -1,4 +1,4 @@
-import { useState } from 'react'
+import { useCallback, useEffect, useRef, useState } from 'react'
 import { Button, Modal, TextField } from '@/components/ui'
 import { WORKSPACES } from '@/app/workspaces.js'
 import { formatMoney } from '../data/payments.js'
@@ -44,6 +44,13 @@ export default function CheckoutDialog({ item, payerRole, onPaid, onClose }) {
     if (!processing) onClose()
   }
 
+  // Modal re-focuses its first field whenever `onClose` changes, so it must not change on every keystroke.
+  const latestClose = useRef(handleClose)
+  useEffect(() => {
+    latestClose.current = handleClose
+  })
+  const stableClose = useCallback(() => latestClose.current(), [])
+
   function handleSubmit(event) {
     event.preventDefault()
     if (processing) return
@@ -74,7 +81,7 @@ export default function CheckoutDialog({ item, payerRole, onPaid, onClose }) {
   return (
     <Modal
       open={Boolean(item)}
-      onClose={handleClose}
+      onClose={stableClose}
       title={item ? `Pay for ${item.name}` : ''}
       description="Demo checkout: no payment provider is connected, nothing is charged, and your card details are never sent or saved."
       width={480}

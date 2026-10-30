@@ -5,6 +5,7 @@ import styles from './SettingsLayout.module.css'
 const TABS = [
   { label: 'Notifications', to: '/recruiter/settings/notifications' },
   { label: 'Data & account', to: '/recruiter/settings/data-account' },
+  { label: 'Billing', to: '/recruiter/settings/billing' },
 ]
 
 /** Shared frame of the settings pages: page title, tab navigation, then the page's card(s). */

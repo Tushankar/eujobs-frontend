@@ -34,7 +34,7 @@ const CONFIRMATIONS = {
   },
   data: {
     title: 'Delete local candidate information?',
-    body: 'This removes your profile, CV versions, verification progress, learning progress, saved jobs, applications, and alerts from this device. Your settings are kept. This can’t be undone.',
+    body: 'This removes your profile, CV versions, verification progress, learning progress, saved jobs, applications, and alerts from this device, and your plan goes back to Free. Your settings are kept. Payment records are kept as finance records; only Reset demo clears them. This can’t be undone.',
     confirmLabel: 'Delete my data',
   },
   reset: {
@@ -114,7 +114,7 @@ export default function DataAccountSettingsPage() {
         <ActionRow
           tone="danger"
           label="Delete local candidate information"
-          description="Remove your profile, saved jobs, applications, and alerts."
+          description="Remove your profile, saved jobs, applications, and alerts. Payment records are kept."
         >
           <Button variant="outline" className={styles.dangerButton} onClick={() => setConfirming('data')}>
             Delete my data

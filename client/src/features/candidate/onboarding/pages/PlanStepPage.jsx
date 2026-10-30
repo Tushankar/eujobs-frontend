@@ -3,28 +3,29 @@ import { Link, useNavigate } from 'react-router-dom'
 import { ArrowLeft, Check, Sparkles } from 'lucide-react'
 import { Button, Icon, Panel } from '@/components/ui'
 import PageTitle from '@/components/common/PageTitle.jsx'
-import { useLocalStorage } from '@/hooks/useLocalStorage.js'
-import { INITIAL_SUBSCRIPTION, PLANS, SUBSCRIPTION_STORAGE_KEY } from '../data/subscription.js'
+import { PLANS, PLUS_CHECKOUT_ITEM } from '@/features/candidate/billing/data/subscription.js'
+import { useSubscription } from '@/features/candidate/billing/hooks/useSubscription.js'
+import CheckoutDialog from '@/features/payments/components/CheckoutDialog.jsx'
 import styles from './PlanStepPage.module.css'
 
 /**
  * Shown after the profile is saved: choose Free or AI Matches Plus for AI job recommendations.
- * Prototype only. The confirmation records the subscription on this device; no payment method
- * is requested and nothing is charged.
+ * Plus is paid through the demo checkout (nothing is really charged) and the plan is recorded on this device.
  */
 export default function PlanStepPage() {
   const navigate = useNavigate()
-  const [, setSubscription] = useLocalStorage(SUBSCRIPTION_STORAGE_KEY, INITIAL_SUBSCRIPTION)
-  const [confirming, setConfirming] = useState(false)
+  const { setPlan } = useSubscription()
+  const [checkingOut, setCheckingOut] = useState(false)
   const plus = PLANS.plus
 
   function chooseFree() {
-    setSubscription({ plan: 'free', status: 'active', startedAt: new Date().toISOString() })
+    setPlan('free')
     navigate('/candidate/jobs')
   }
 
-  function confirmPlus() {
-    setSubscription({ plan: 'plus', status: 'active', startedAt: new Date().toISOString() })
+  function handlePaid(payment) {
+    setPlan('plus', payment.id)
+    setCheckingOut(false)
     navigate('/candidate/ai-insights')
   }
 
@@ -54,15 +55,7 @@ export default function PlanStepPage() {
                   <li key={item}><Icon as={Check} size={14} /> {item}</li>
                 ))}
               </ul>
-              {confirming ? (
-                <div className={styles.confirm} role="region" aria-label="Confirm subscription">
-                  <p className={styles.note}>Prototype: no payment method is requested, nothing is charged, and no subscription is created with a payment provider.</p>
-                  <Button fullWidth onClick={confirmPlus} leftIcon={<Icon as={Sparkles} size={14} />}>Confirm AI Matches Plus</Button>
-                  <Button variant="ghost" fullWidth onClick={() => setConfirming(false)}>Cancel</Button>
-                </div>
-              ) : (
-                <Button fullWidth onClick={() => setConfirming(true)} leftIcon={<Icon as={Sparkles} size={14} />}>Start AI Matches Plus</Button>
-              )}
+              <Button fullWidth onClick={() => setCheckingOut(true)} leftIcon={<Icon as={Sparkles} size={14} />}>Start AI Matches Plus</Button>
             </section>
           </Panel>
         </div>
@@ -70,6 +63,7 @@ export default function PlanStepPage() {
           <Button as={Link} to="/candidate/onboarding/preferences" variant="ghost" leftIcon={<Icon as={ArrowLeft} size={12} />}>Back</Button>
         </div>
       </div>
+      <CheckoutDialog item={checkingOut ? PLUS_CHECKOUT_ITEM : null} payerRole="candidate" onPaid={handlePaid} onClose={() => setCheckingOut(false)} />
     </>
   )
 }

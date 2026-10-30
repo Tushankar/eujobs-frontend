@@ -7,9 +7,10 @@ const TABS = [
   { label: 'Privacy & visibility', to: '/candidate/settings/privacy' },
   { label: 'Notifications', to: '/candidate/settings/notifications' },
   { label: 'Data & account', to: '/candidate/settings/data-account' },
+  { label: 'Billing', to: '/candidate/settings/billing' },
 ]
 
-/** Shared frame of the three settings tabs: page title, tab navigation and the routed tab content. */
+/** Shared frame of the four settings tabs: page title, tab navigation and the routed tab content. */
 export default function SettingsLayout() {
   return (
     <>
