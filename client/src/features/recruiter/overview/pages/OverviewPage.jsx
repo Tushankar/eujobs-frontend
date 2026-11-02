@@ -1,7 +1,7 @@
 import { useState } from 'react'
 import { useTranslation } from 'react-i18next'
 import { Link } from 'react-router-dom'
-import { ArrowRight, BriefcaseBusiness, Bookmark, Plus } from 'lucide-react'
+import { ArrowRight, BriefcaseBusiness, Bookmark, FileText, Plus } from 'lucide-react'
 import { useGetMeQuery } from '@/app/api.js'
 import EmptyState from '@/components/common/EmptyState.jsx'
 import PageTitle from '@/components/common/PageTitle.jsx'
@@ -11,6 +11,8 @@ import aiNavIcon from '@/assets/icons/ai-nav.svg'
 import { useGetRecruiterOverviewQuery, useGetTalentQuery, useShortlistToggle } from '@/features/recruiter/find-candidates/api.js'
 import { useGetRecruiterJobsQuery } from '../../jobs/api.js'
 import JobsTable from '../../jobs/components/JobsTable.jsx'
+import HiringFunnelCard from '../components/HiringFunnelCard.jsx'
+import HiringMomentumCard from '../components/HiringMomentumCard.jsx'
 import SectionHeading from '../components/SectionHeading.jsx'
 import TalentCard from '../components/TalentCard.jsx'
 import styles from './OverviewPage.module.css'
@@ -24,9 +26,9 @@ function partOfDay(hour) {
 }
 
 /**
- * Recruiter Overview (§3.15, A: recruiter A9): open positions, recommended candidates (M-051 fallback until Phase 9)
- * and the shortlist; talent worth meeting; open roles. Applications, momentum and the funnel return with
- * applications in Phase 6 (P4-Q1).
+ * Recruiter Overview (§3.15, A: recruiter A9): open positions, recommended candidates (M-051 fallback until Phase 9),
+ * active applications (M-082) and the shortlist; hiring momentum (M-083, M-170) and the funnel (M-178); talent worth
+ * meeting; open roles.
  */
 export default function OverviewPage() {
   const { t } = useTranslation()
@@ -43,6 +45,7 @@ export default function OverviewPage() {
   const stats = [
     { key: 'openPositions', value: overview?.openPositions, icon: BriefcaseBusiness, to: '/recruiter/jobs' },
     { key: 'recommended', value: overview?.recommendedCandidates, iconSrc: aiNavIcon, to: '/recruiter/find-candidates' },
+    { key: 'applications', value: overview?.applications, icon: FileText, to: '/recruiter/applications' },
     { key: 'shortlisted', value: overview?.shortlisted, icon: Bookmark, to: '/recruiter/shortlists' },
   ]
   const createButton = (
@@ -66,6 +69,11 @@ export default function OverviewPage() {
             <StatCard label={t(`discovery:overview.stats.${key}`)} caption={t(`discovery:overview.stats.${key}Caption`)} value={value ?? 0} {...stat} />
           </Link>
         ))}
+      </div>
+
+      <div className={styles.momentum}>
+        <HiringMomentumCard />
+        <HiringFunnelCard />
       </div>
 
       <div className={styles.sectionHead}>

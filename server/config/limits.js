@@ -71,6 +71,10 @@ export const LIMITS = {
     salary: { min: 0, max: 100_000_000 },
     languages: { max: 10 },
   },
+  // M-073, M-072, M-091, OD14
+  application: { coverNote: { max: 2000 } },
+  pipeline: { stages: { min: 2, max: 12 }, stageName: { min: 1, max: 24 } },
+  applicationEmail: { statusDelayMs: 10 * MINUTE, newApplicationsWindowMs: HOUR },
   // M-080, M-029
   note: { max: 5000 },
   cvRequestDetails: { max: 1000 },

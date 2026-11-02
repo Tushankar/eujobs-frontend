@@ -1,6 +1,7 @@
 import { AppError } from '../../lib/errors.js'
 import { t } from '../../lib/i18n.js'
 import { matchesKeywords, searchText, skillOverlap } from '../../lib/skills.js'
+import { Application } from '../applications/applications.model.js'
 import { CandidateProfile } from '../candidates/candidates.model.js'
 import { Company } from '../companies/companies.model.js'
 import { logoUrls, publicCompanyDto } from '../companies/companies.service.js'
@@ -22,7 +23,7 @@ async function visibleCompanyIds() {
 }
 
 /** Published, not restricted (M-167), from an approved recruiter. */
-async function visibleFilter() {
+export async function visibleFilter() {
   return { status: 'published', 'restricted.at': null, companyId: { $in: await visibleCompanyIds() } }
 }
 
@@ -43,6 +44,9 @@ async function cardContext(user, jobs) {
   const byId = new Map(companies.map((company) => [String(company._id), company]))
   const profile = await CandidateProfile.findOne({ userId: user._id }, 'skills')
   const saved = new Set((await SavedJob.find({ candidateId: user._id, jobId: { $in: jobs.map((job) => job._id) } }, 'jobId')).map((entry) => String(entry.jobId)))
+  const applied = new Map(
+    (await Application.find({ candidateId: user._id, jobId: { $in: jobs.map((job) => job._id) }, status: { $ne: 'withdrawn' } }, 'jobId status')).map((application) => [String(application.jobId), { id: String(application._id), status: application.status }]),
+  )
   const skills = profile?.skills ?? []
   return {
     company: (job) => byId.get(String(job.companyId)),
@@ -54,6 +58,8 @@ async function cardContext(user, jobs) {
         ...jobFieldsDto(job),
         company: publicCompanyDto(company, logos.get(String(company._id))),
         saved: saved.has(String(job._id)),
+        // The candidate's own active application to this job (Phase 6); the Apply button reads it.
+        application: applied.get(String(job._id)) ?? null,
         // M-052: one overlap definition and label for everyone (Plus adds the score in Phase 9).
         overlap: { matched, count: matched.length, total },
       }
@@ -114,16 +120,16 @@ export async function recommendedJobs(user, now = Date.now()) {
   return { items: items.map((job) => context.card(job)), total: items.length, newThisWeek }
 }
 
-async function isVisible(job) {
+export async function isVisible(job) {
   return Boolean(await Job.exists({ _id: job._id, ...(await visibleFilter()) }))
 }
 
-/** M-043: savers of a paused, closed or hidden job see it as no longer accepting; everyone else gets 404. */
+/** M-043: savers and applicants of a paused, closed or hidden job see it as no longer accepting; everyone else gets 404. */
 export async function jobDetails(user, id) {
   const job = await Job.findById(id)
   if (!job || job.status === 'draft') throw new AppError('NOT_FOUND')
   const accepting = await isVisible(job)
-  if (!accepting && !(await SavedJob.exists({ candidateId: user._id, jobId: job._id }))) throw new AppError('NOT_FOUND')
+  if (!accepting && !(await SavedJob.exists({ candidateId: user._id, jobId: job._id })) && !(await Application.exists({ candidateId: user._id, jobId: job._id }))) throw new AppError('NOT_FOUND')
   return { ...(await cardContext(user, [job])).card(job), accepting }
 }
 

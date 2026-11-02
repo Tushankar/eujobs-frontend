@@ -186,7 +186,7 @@ describe('recruiter overview and talent (A: recruiter A9, M-201)', () => {
     await api().patch(`/api/v1/recruiter/jobs/${job.id}/status`).set(auth(user)).send({ status: 'published' })
     await api().put(`/api/v1/recruiter/shortlist/${best._id}`).set(auth(user))
     const overview = (await api().get('/api/v1/recruiter/overview').set(auth(user))).body
-    assert.deepEqual(overview, { openPositions: 1, recommendedCandidates: 2, shortlisted: 1 })
+    assert.deepEqual(overview, { openPositions: 1, recommendedCandidates: 2, shortlisted: 1, applications: 0 })
     const talent = (await api().get('/api/v1/recruiter/overview/talent').set(auth(user))).body.items
     assert.deepEqual(talent.map((item) => [item.fullName, item.bestJob.title]), [['Good', job.title]])
     const relevant = (await api().get(`/api/v1/recruiter/jobs/${job.id}/relevant-talent`).set(auth(user))).body

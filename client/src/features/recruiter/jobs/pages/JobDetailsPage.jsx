@@ -7,12 +7,13 @@ import { Button, Icon, IconButton } from '@/components/ui'
 import aiSparkle from '@/assets/icons/ai-sparkle-blue.svg'
 import { useJobText } from '@/lib/jobText.js'
 import { useGetRecruiterJobQuery } from '../api.js'
+import JobApplicantsList from '../components/JobApplicantsList.jsx'
 import JobNotFound from '../components/JobNotFound.jsx'
 import JobPosting from '../components/JobPosting.jsx'
 import JobTalentList from '../components/JobTalentList.jsx'
 import styles from './JobDetailsPage.module.css'
 
-/** One recruiter job (A: recruiter A14): the posting, the relevant talent (M-051 fallback) and links into discovery. */
+/** One recruiter job (A: recruiter A14): the posting, its applicants, the relevant talent (M-051 fallback) and links into discovery. */
 export default function JobDetailsPage() {
   const { t } = useTranslation()
   const { jobId } = useParams()
@@ -67,6 +68,7 @@ export default function JobDetailsPage() {
             {t('jobs:details.brief')}
           </h2>
           <JobPosting job={job} />
+          <JobApplicantsList jobId={job.id} />
           <JobTalentList jobId={job.id} />
         </section>
 
@@ -80,7 +82,7 @@ export default function JobDetailsPage() {
               <Button as={Link} to={`/recruiter/find-candidates?jobId=${job.id}`} fullWidth rightIcon={<Icon as={ArrowRight} size={13} />}>
                 {t('jobs:details.discover')}
               </Button>
-              <Button as={Link} to="/recruiter/applications" variant="secondary" fullWidth className={styles.outlined}>
+              <Button as={Link} to={`/recruiter/applications?jobId=${job.id}`} variant="secondary" fullWidth className={styles.outlined}>
                 {t('jobs:details.applications')}
               </Button>
             </div>

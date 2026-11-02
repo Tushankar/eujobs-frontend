@@ -6,6 +6,7 @@ import { Button, CompanyLogo, Icon } from '@/components/ui'
 import EmptyState from '@/components/common/EmptyState.jsx'
 import StatusBadge from '@/components/common/StatusBadge.jsx'
 import aiGlyph from '@/assets/icons/ai-glyph-blue.svg'
+import { ApplyButton } from '@/features/candidate/applications/components/ApplyFlow.jsx'
 import { useJobText } from '@/lib/jobText.js'
 import { useFormat } from '@/lib/preferences.js'
 import { useGetJobQuery, useSaveToggle } from '../api.js'
@@ -92,7 +93,7 @@ function SkillEvidence({ job }) {
 /**
  * Job details (M-036, M-043): empty sections are hidden and there are no static perks. A paused, closed or hidden job
  * stays readable for the candidates who saved it, marked as no longer accepting; everyone else gets "no longer
- * available". Apply comes with applications in Phase 6 (P4-Q1).
+ * available". Apply goes through the gate (§3.4).
  */
 export default function JobDetailsPage() {
   const { t } = useTranslation()
@@ -194,6 +195,7 @@ export default function JobDetailsPage() {
             <h2 className={styles.railTitle}>{t('findJobs:details.railTitle')}</h2>
             <p className={styles.railText}>{t('findJobs:details.railText')}</p>
             <div className={styles.railActions}>
+              <ApplyButton job={job} fullWidth />
               <Button
                 variant="secondary"
                 fullWidth
@@ -206,6 +208,7 @@ export default function JobDetailsPage() {
                 {t(job.saved ? 'findJobs:details.saved' : 'findJobs:details.save')}
               </Button>
             </div>
+            {job.application && <p className={styles.railText}>{t('applications:apply.sent')}</p>}
           </section>
 
           <section className={styles.card}>

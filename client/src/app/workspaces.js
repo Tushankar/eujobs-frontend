@@ -17,7 +17,7 @@ import {
 } from 'lucide-react'
 import aiNavIcon from '@/assets/icons/ai-nav.svg'
 import accessManagementIcon from '@/assets/icons/access-management.svg'
-import { useActiveApplicationsBadge } from '@/features/candidate/jobs/hooks/useApplications.js'
+import { useActiveApplicationsBadge } from '@/features/candidate/applications/api.js'
 
 /*
  * Per-role workspace configuration: sidebar navigation and header variant, as seen in the Figma

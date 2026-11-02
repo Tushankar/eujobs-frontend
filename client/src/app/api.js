@@ -77,6 +77,10 @@ export const api = createApi({
     'Subscription',
     'Payments',
     'Enrollments',
+    'Applications',
+    'Counters',
+    'CompanyApplications',
+    'Pipeline',
   ],
   endpoints: (build) => ({
     getMe: build.query({ query: () => '/me', providesTags: ['Me'] }),

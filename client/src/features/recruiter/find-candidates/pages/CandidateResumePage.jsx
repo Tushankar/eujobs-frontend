@@ -45,8 +45,9 @@ function VersionFile({ version, title, meta, live = false }) {
 }
 
 /**
- * Resume tab (M-029, M-187, P4-D12): the live CV only when the candidate shares it (Phase 6 adds applicants), the
- * versions shared through approved requests, and the request flow.
+ * Resume tab (M-029, M-187, P4-D12, M-073, M-030): the live CV only when the candidate shares it, the CV sent with each
+ * application to this company (or "removed" once the candidate deleted it), the versions shared through approved
+ * requests, and the request flow.
  */
 export default function CandidateResumePage() {
   const { t } = useTranslation()
@@ -79,6 +80,26 @@ export default function CandidateResumePage() {
             title={cv.live.originalName}
             meta={t('discovery:resumeTab.uploaded', { date: format.date(cv.live.createdAt), size: format.fileSize(cv.live.size) })}
           />
+        )}
+
+        {cv.applied.length > 0 && (
+          <>
+            <h3 className={styles.subheading}>{t('discovery:resumeTab.applied')}</h3>
+            {cv.applied.map((entry) =>
+              entry.cv ? (
+                <VersionFile
+                  key={entry.applicationId}
+                  version={entry.cv}
+                  title={t('discovery:resumeTab.appliedVersion', { number: entry.cv.number, name: entry.cv.originalName })}
+                  meta={t('discovery:resumeTab.appliedRow', { job: entry.jobTitle, date: format.date(entry.appliedAt) })}
+                />
+              ) : (
+                <p key={entry.applicationId} className={styles.request}>
+                  {t('discovery:resumeTab.appliedRow', { job: entry.jobTitle, date: format.date(entry.appliedAt) })} · {t('discovery:resumeTab.removed')}
+                </p>
+              ),
+            )}
+          </>
         )}
 
         {cv.shared.length > 0 && (

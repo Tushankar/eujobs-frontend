@@ -5,10 +5,10 @@ import { config } from '../config/env.js'
 import { absolutePath } from '../lib/files.js'
 import { stripe } from '../lib/stripe.js'
 import { AdminRole, Permission } from '../modules/admin/admin.model.js'
-import { PipelineStage } from '../modules/applications/applications.model.js'
+import { Application, PipelineStage } from '../modules/applications/applications.model.js'
 import { CandidateProfile } from '../modules/candidates/candidates.model.js'
 import { Company, KycDocument } from '../modules/companies/companies.model.js'
-import { ProfileView, ShortlistEntry } from '../modules/discovery/discovery.model.js'
+import { ProfileView, RecruiterActivity, ShortlistEntry } from '../modules/discovery/discovery.model.js'
 import { Job, SavedJob } from '../modules/jobs/jobs.model.js'
 import { File } from '../modules/files/files.model.js'
 import { Country, Faq, LegalDocument } from '../modules/meta/meta.model.js'
@@ -208,5 +208,38 @@ describe('seed:demo (§3.20, OD9, P12)', () => {
     const again = await User.findOne({ email: demoAddress('emma') })
     assert.notEqual(again.stripeCustomerId, firstCustomer)
     assert.equal(await Payment.countDocuments({}), 9)
+  })
+
+  it('seeds the six pipeline placements as applications with coherent histories, and none for Alex (Phase 6, P6-Q1)', async () => {
+    const applications = await Application.find().populate('candidateId', 'fullName email').populate('jobId', 'title')
+    const placement = (application) => `${application.candidateId.fullName}: ${application.jobId.title}: ${application.status}`
+    assert.deepEqual(applications.map(placement).sort(), [
+      'Aisha Patel: Product Designer, Growth: applied',
+      'Daniel Kim: Senior UX Designer: applied',
+      'Emma Wilson: Senior Product Designer: under_review',
+      'James Chen: Product Designer, Growth: under_review',
+      'Oliver Park: Senior UX Designer: interview',
+      'Sofia Martinez: Senior Product Designer: applied',
+    ])
+    assert.equal(await Application.countDocuments({ candidateId: (await User.findOne({ email: demoAddress('alex') }))._id }), 0)
+
+    const stages = new Map((await PipelineStage.find()).map((stage) => [String(stage._id), stage]))
+    for (const application of applications) {
+      // OQ-4.2: everyone but Emma (a live subscriber) has one historical Plus month, paid before the application.
+      const historical = await Payment.findOne({ userId: application.candidateId._id, kind: 'subscription', 'stripe.invoiceId': null })
+      if (historical) assert.ok(application.appliedAt > historical.paidAt, `${application.candidateId.fullName} applied after paying`)
+      else assert.equal(application.candidateId.fullName, 'Emma Wilson')
+      assert.deepEqual(application.history.map((step) => step.stageName), application.history.map((step) => stages.get(String(step.stageId)).name))
+      assert.equal(application.history[0].status, 'applied')
+      assert.equal(application.history.at(-1).status, application.status)
+      assert.equal(String(application.stageId), String(application.history.at(-1).stageId))
+      assert.equal(application.lastEmailedStatus, application.status)
+      assert.ok(application.history.every((step, index, all) => index === 0 || step.at > all[index - 1].at))
+      assert.ok(application.history.at(-1).at < new Date())
+    }
+    const oliver = applications.find((application) => application.candidateId.fullName === 'Oliver Park')
+    assert.deepEqual(oliver.history.map((step) => step.stageName), ['Applied', 'Screening', 'Shortlisted', 'Interview'])
+    assert.equal(await RecruiterActivity.countDocuments({ type: 'applied' }), 6)
+    assert.equal(await RecruiterActivity.countDocuments({ type: 'stage_changed' }), 6)
   })
 })

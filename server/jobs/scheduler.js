@@ -11,7 +11,7 @@ const TICK_MS = 60 * 1000
 const MAX_ATTEMPTS = 3
 const STALE_RUNNING_MS = 10 * 60 * 1000
 
-/** Task handlers by type (jobs/tasks/<type>.js registers each one in its phase). */
+/** Task handlers by type, called with (payload, task, now) where `now` is the tick time; each module registers its own. */
 export const taskHandlers = {}
 
 /** Daily slots: { name, hour, run(now) } at `hour`:00 server time (U7, U32). */
@@ -36,7 +36,7 @@ function claimNextTask(now) {
 
 async function runTask(task, now) {
   try {
-    await taskHandlers[task.type](task.payload, task)
+    await taskHandlers[task.type](task.payload, task, now)
     await ScheduledTask.updateOne({ _id: task._id }, { status: 'done', lastError: null })
   } catch (error) {
     const failed = task.attempts >= MAX_ATTEMPTS

@@ -38,6 +38,8 @@ const jobSchema = new Schema(
     restricted: { reason: String, by: ObjectId, at: Date, caseId: ObjectId },
     relevantCount: { type: Number, default: 0 },
     relevantComputedAt: Date,
+    // OD14: when the recruiter was last emailed about new applications to this job.
+    applicantsEmailedAt: Date,
   },
   { timestamps: true },
 )

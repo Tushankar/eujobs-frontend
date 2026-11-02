@@ -1,54 +1,50 @@
+import { useTranslation } from 'react-i18next'
 import { Link } from 'react-router-dom'
 import { ArrowRight, ArrowUpRight } from 'lucide-react'
-import { Icon } from '@/components/ui'
+import { CompanyLogo, Icon } from '@/components/ui'
 import StatusBadge from '@/components/common/StatusBadge.jsx'
-import JobLogo from '@/features/candidate/jobs/components/JobLogo.jsx'
-import { APPLICATION_STATUS } from '@/features/candidate/jobs/data/applications.js'
-import { jobPath } from '@/features/candidate/jobs/data/jobUtils.js'
-import { useApplications } from '@/features/candidate/jobs/hooks/useApplications.js'
-import { useJobListings } from '@/features/candidate/jobs/hooks/useJobListings.js'
+import { useGetApplicationsQuery } from '@/features/candidate/applications/api.js'
+import { canWithdraw, STATUS_TONES } from '@/features/candidate/applications/status.js'
 import styles from './RailCards.module.css'
 
-/** Latest three live applications, each linking to its job; footer links to the full Applications page. */
+const SHOWN = 3
+
+/** The latest three active applications, each linking to its job; the footer links to Applications. */
 export default function ApplicationActivityCard() {
-  const { applications } = useApplications()
-  const { getJob } = useJobListings()
-  const recent = applications.filter((item) => item.status !== 'withdrawn').slice(0, 3)
+  const { t } = useTranslation()
+  const { data } = useGetApplicationsQuery()
+  const recent = (data?.items ?? []).filter((application) => canWithdraw(application.status)).slice(0, SHOWN)
 
   return (
-    <section className={styles.card}>
+    <section className={styles.card} data-card="application-activity">
       <div className={styles.head}>
-        <h2 className={styles.activityTitle}>Application activity</h2>
-        <Link to="/candidate/applications" className={styles.openLink} aria-label="Open applications">
+        <h2 className={styles.activityTitle}>{t('applications:card.title')}</h2>
+        <Link to="/candidate/applications" className={styles.openLink} aria-label={t('applications:card.open')}>
           <Icon as={ArrowUpRight} size={15} />
         </Link>
       </div>
-      {recent.length === 0 ? (
-        <p className={styles.lead}>No applications yet. Apply to a role and its progress will show here.</p>
+      {data && recent.length === 0 ? (
+        <p className={styles.lead}>{t('applications:card.empty')}</p>
       ) : (
         <ul className={styles.activityList}>
-          {recent.map((application) => {
-            const job = getJob(application.jobId)
-            const status = APPLICATION_STATUS[application.status]
-            return (
-              <li key={application.id}>
-                <Link to={jobPath(job.id)} className={styles.activityRow}>
-                  <JobLogo company={job.company} logo={job.logo} size={36} />
-                  <span className={styles.activityText}>
-                    <span className={styles.activityRole}>{job.title}</span>
-                    <span className={styles.activityCompany}>{job.company}</span>
-                    <StatusBadge tone={status.tone} className={styles.activityBadge}>
-                      {status.label}
-                    </StatusBadge>
-                  </span>
-                </Link>
-              </li>
-            )
-          })}
+          {recent.map(({ id, job, status }) => (
+            <li key={id}>
+              <Link to={`/candidate/jobs/${job.id}`} className={styles.activityRow}>
+                <CompanyLogo name={job.company.displayName} id={job.company.id} src={job.company.logoUrl ?? undefined} size={36} />
+                <span className={styles.activityText}>
+                  <span className={styles.activityRole}>{job.title}</span>
+                  <span className={styles.activityCompany}>{job.company.displayName}</span>
+                  <StatusBadge tone={STATUS_TONES[status]} className={styles.activityBadge}>
+                    {t(`enums:applicationStatus.${status}`)}
+                  </StatusBadge>
+                </span>
+              </Link>
+            </li>
+          ))}
         </ul>
       )}
       <Link to="/candidate/applications" className={styles.trackLink}>
-        Track your applications
+        {t('applications:card.track')}
         <Icon as={ArrowRight} size={11} />
       </Link>
     </section>

@@ -1,5 +1,5 @@
 import { Router } from 'express'
-import { requireAuth, requireRole, requireVerifiedEmail } from '../../middleware/auth.js'
+import { requireApprovedRecruiter, requireAuth, requireRole, requireVerifiedEmail } from '../../middleware/auth.js'
 import { validate } from '../../lib/validate.js'
 import * as schemas from './users.schemas.js'
 import * as users from './users.service.js'
@@ -16,6 +16,16 @@ router.patch('/', validate({ body: schemas.mePatchBody }), async (req, res) => {
   await users.updateMe(req.user, req.body)
   res.json(await users.meDto(req.user))
 })
+
+// M-094: one call for the badges, polled by the client; the candidate's active applications, unread messages for both roles.
+router.get(
+  '/counters',
+  requireRole('candidate', 'recruiter'),
+  (req, res, next) => (req.user.role === 'recruiter' ? requireApprovedRecruiter(req, res, next) : next()),
+  async (req, res) => {
+    res.json(await users.counters(req.user))
+  },
+)
 
 router.post('/password', requireVerifiedEmail, validate({ body: schemas.passwordChangeBody }), async (req, res) => {
   await users.changePassword(req.user, req.body)

@@ -193,17 +193,21 @@
     "detailsHint": "Up to {{max}} characters.",
     "cancel": "Cancel",
     "send": "Send request",
-    "sent": "Request sent. The candidate has been emailed."
+    "sent": "Request sent. The candidate has been emailed.",
+    "applied": "CVs sent with applications",
+    "appliedRow": "{{job}} · applied {{date}}",
+    "appliedVersion": "Version {{number}} · {{name}}",
+    "removed": "CV removed by the candidate"
   },
   "activityTab": {
     "title": "Candidate activity",
     "empty": "No activity yet.",
     "candidate": "The candidate",
     "events": {
-      "applied": "{{actor}} applied.",
-      "withdrawn": "{{actor}} withdrew the application.",
-      "stage_changed": "{{actor}} moved the application.",
-      "rejected": "{{actor}} marked the application as not selected.",
+      "applied": "{{actor}} applied for {{jobTitle}}.",
+      "withdrawn": "{{actor}} withdrew the application for {{jobTitle}}.",
+      "stage_changed": "{{actor}} moved the application for {{jobTitle}} to {{stage}}.",
+      "rejected": "{{actor}} marked the application for {{jobTitle}} as not selected.",
       "shortlisted": "{{actor}} added the candidate to the shortlist.",
       "unshortlisted": "{{actor}} removed the candidate from the shortlist.",
       "note_updated": "{{actor}} updated the private note.",
@@ -249,6 +253,8 @@
       "openPositionsCaption": "Ready for the right people",
       "recommended": "Recommended candidates",
       "recommendedCaption": "Sharing a required skill with your roles",
+      "applications": "Applications",
+      "applicationsCaption": "Active, across your roles",
       "shortlisted": "Shortlisted candidates",
       "shortlistedCaption": "A considered selection"
     },

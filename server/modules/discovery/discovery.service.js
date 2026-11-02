@@ -5,6 +5,8 @@ import { signedUrl } from '../../lib/files.js'
 import { t } from '../../lib/i18n.js'
 import { sendEmail } from '../../lib/mailer.js'
 import { matchesKeywords, searchText, skillKey, skillOverlap } from '../../lib/skills.js'
+import { ACTIVE_FILTER, Application } from '../applications/applications.model.js'
+import { CandidateProfile } from '../candidates/candidates.model.js'
 import { CvAccessRequest, CvVersion } from '../cv/cv.model.js'
 import { File } from '../files/files.model.js'
 import { Job } from '../jobs/jobs.model.js'
@@ -152,18 +154,25 @@ export async function listCandidates(user, company, query) {
   return { items, total: items.length, page: 1, pageSize: items.length, matchJob: job ? { id: String(job._id), title: job.title } : null }
 }
 
-/** P4-D11: a profile opens when the candidate is listable in some country (Phase 6 adds applicants). */
-async function accessibleCandidate(id) {
+/**
+ * P4-D11: a profile opens when the candidate is listable in some country or has an application to this company
+ * (any status: the recruiter saw it, so the link in the Applications table keeps working).
+ */
+async function accessibleCandidate(id, company) {
   const [entry] = await listableCandidates([id])
-  if (!entry) throw new AppError('NOT_FOUND')
-  return entry
+  if (entry) return entry
+  if (await Application.exists({ candidateId: id, companyId: company._id })) {
+    const [user, profile] = await Promise.all([User.findOne({ _id: id, role: 'candidate', status: 'active' }), CandidateProfile.findOne({ userId: id, 'restricted.at': null })])
+    if (user && profile) return { user, profile }
+  }
+  throw new AppError('NOT_FOUND')
 }
 
 const utcDay = (date) => date.toISOString().slice(0, 10)
 
 /** GET /recruiter/candidates/:id: the full profile (M-026, privacy per M-187); records one view per day (M-184). */
 export async function candidateProfile(user, company, id, jobId) {
-  const entry = await accessibleCandidate(id)
+  const entry = await accessibleCandidate(id, company)
   const { profile } = entry
   const now = new Date()
   await ProfileView.updateOne(
@@ -172,8 +181,12 @@ export async function candidateProfile(user, company, id, jobId) {
     { upsert: true },
   )
   const card = (await cardContext(user, company, [entry], await matchJob(company, jobId)))(entry)
+  const applications = await Application.find({ companyId: company._id, candidateId: entry.user._id }).sort({ appliedAt: -1 })
+  const jobTitles = new Map((await Job.find({ _id: { $in: applications.map((application) => application.jobId) } }, 'title')).map((job) => [String(job._id), job.title]))
   return {
     ...card,
+    // M-071: one stage select per application; the profile of a non-applicant has none.
+    applications: applications.map((application) => ({ id: String(application._id), status: application.status, stageId: String(application.stageId), appliedAt: application.appliedAt, job: { id: String(application.jobId), title: jobTitles.get(String(application.jobId)) } })),
     about: profile.about,
     links: { linkedin: profile.links?.linkedin ?? '', portfolio: profile.links?.portfolio ?? '' },
     workHistory: latest(profile.workHistory, 'current').map(({ title, employer, start, end, current, description }) => ({ title, employer, start, end: end ?? null, current: Boolean(current), description: description ?? '' })),
@@ -203,7 +216,7 @@ export async function shortlist(user, company, query) {
 }
 
 export async function addToShortlist(user, company, candidateId) {
-  await accessibleCandidate(candidateId)
+  await accessibleCandidate(candidateId, company)
   const result = await ShortlistEntry.updateOne(
     { companyId: company._id, candidateId },
     { $setOnInsert: { companyId: company._id, candidateId, addedBy: user._id } },
@@ -220,14 +233,14 @@ export async function removeFromShortlist(user, company, candidateId) {
 const nameOf = async (userId) => (userId ? (await User.findById(userId, 'fullName'))?.fullName ?? null : null)
 
 export async function getNote(company, candidateId) {
-  await accessibleCandidate(candidateId)
+  await accessibleCandidate(candidateId, company)
   const note = await CandidateNote.findOne({ companyId: company._id, candidateId })
   return { text: note?.text ?? '', updatedAt: note?.updatedAt ?? null, updatedBy: await nameOf(note?.updatedBy) }
 }
 
 /** M-080: one note per company and candidate, at most 5,000 characters. */
 export async function saveNote(user, company, candidateId, text) {
-  await accessibleCandidate(candidateId)
+  await accessibleCandidate(candidateId, company)
   await CandidateNote.updateOne({ companyId: company._id, candidateId }, { text, updatedBy: user._id }, { upsert: true })
   await recordActivity({ companyId: company._id, candidateId, actorId: user._id, type: 'note_updated' })
   return getNote(company, candidateId)
@@ -235,7 +248,7 @@ export async function saveNote(user, company, candidateId, text) {
 
 /** M-081: the company-wide timeline, newest first; an event without an actor is the candidate's own. */
 export async function activity(company, candidateId) {
-  await accessibleCandidate(candidateId)
+  await accessibleCandidate(candidateId, company)
   const events = await RecruiterActivity.find({ companyId: company._id, candidateId }).sort({ at: -1 })
   const actors = new Map((await User.find({ _id: { $in: events.map((event) => event.actorId).filter(Boolean) } }, 'fullName')).map((actor) => [String(actor._id), actor.fullName]))
   const items = events.map((event) => ({
@@ -261,9 +274,9 @@ const versionDto = (version, file, viewerId) => ({
   downloadUrl: signedUrl(file, viewerId, { download: true }),
 })
 
-/** The live CV only with `resumeVisible` (Phase 6 adds applicants); versions shared through approved requests. */
+/** The live CV only with `resumeVisible`; versions shared through approved requests; the CVs sent with applications. */
 export async function candidateCv(user, company, candidateId) {
-  const { user: candidate, profile } = await accessibleCandidate(candidateId)
+  const { user: candidate, profile } = await accessibleCandidate(candidateId, company)
   const requests = await CvAccessRequest.find({ companyId: company._id, candidateId }).sort({ createdAt: -1 })
   const sharedIds = requests.filter((request) => request.status === 'approved').map((request) => request.cvVersionId)
   const versionIds = [...sharedIds, ...(candidate.privacy.resumeVisible && profile.liveCvVersionId ? [profile.liveCvVersionId] : [])]
@@ -274,7 +287,18 @@ export async function candidateCv(user, company, candidateId) {
     const file = version && files.get(String(version.fileId))
     return file ? versionDto(version, file, user._id) : null
   }
+  // M-073, M-030: the CV an applicant sent with each application to this company, or "removed" once deleted.
+  const applications = await Application.find({ companyId: company._id, candidateId }).sort({ appliedAt: -1 })
+  const attached = await CvVersion.find({ _id: { $in: applications.map((application) => application.cvVersionId) }, fileId: { $ne: null } })
+  const attachedFiles = new Map((await File.find({ _id: { $in: attached.map((version) => version.fileId) } })).map((file) => [String(file._id), file]))
+  const jobTitles = new Map((await Job.find({ _id: { $in: applications.map((application) => application.jobId) } }, 'title')).map((job) => [String(job._id), job.title]))
+  const applied = applications.map((application) => {
+    const version = attached.find((item) => String(item._id) === String(application.cvVersionId))
+    const file = version && attachedFiles.get(String(version.fileId))
+    return { applicationId: String(application._id), jobTitle: jobTitles.get(String(application.jobId)), appliedAt: application.appliedAt, cv: file ? versionDto(version, file, user._id) : null }
+  })
   return {
+    applied,
     live: candidate.privacy.resumeVisible && profile.liveCvVersionId ? dto(profile.liveCvVersionId) : null,
     resumeVisible: candidate.privacy.resumeVisible,
     shared: [...new Set(sharedIds.map(String))].map(dto).filter(Boolean),
@@ -284,7 +308,7 @@ export async function candidateCv(user, company, candidateId) {
 
 /** M-029, U19: one pending request per company (P4-D12); the candidate is emailed (non-critical, OQ-6c). */
 export async function requestCv(user, company, candidateId, { reason, details }) {
-  const { user: candidate } = await accessibleCandidate(candidateId)
+  const { user: candidate } = await accessibleCandidate(candidateId, company)
   if (await CvAccessRequest.exists({ companyId: company._id, candidateId, status: 'pending' })) throw new AppError('CONFLICT', { params: { reason: 'pending' } })
   await CvAccessRequest.create({ companyId: company._id, candidateId, requestedBy: user._id, reason, details: details || undefined })
   await recordActivity({ companyId: company._id, candidateId, actorId: user._id, type: 'cv_request', params: { reason } })
@@ -335,14 +359,15 @@ async function relevantAcrossJobs(company) {
   return [...best.values()]
 }
 
-/** §3.15 Recruiter Overview KPIs available before applications (P4-Q1). */
+/** §3.15 Recruiter Overview KPIs; Applications = active applications to the company's jobs (M-082). */
 export async function recruiterOverview(company) {
-  const [openPositions, relevant, shortlisted] = await Promise.all([
+  const [openPositions, relevant, shortlisted, applications] = await Promise.all([
     Job.countDocuments({ companyId: company._id, status: 'published' }),
     relevantAcrossJobs(company),
     ShortlistEntry.countDocuments({ companyId: company._id }),
+    Application.countDocuments({ companyId: company._id, ...ACTIVE_FILTER }),
   ])
-  return { openPositions, recommendedCandidates: relevant.length, shortlisted }
+  return { openPositions, recommendedCandidates: relevant.length, shortlisted, applications }
 }
 
 /** "Talent worth meeting": the top 3 relevant candidates not yet shortlisted (A: recruiter A9; applicants in Phase 6). */

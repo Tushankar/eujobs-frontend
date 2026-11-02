@@ -1,143 +1,126 @@
-import { useMemo, useState } from 'react'
-import { Link } from 'react-router-dom'
+import { useState } from 'react'
+import { useTranslation } from 'react-i18next'
+import { Link, useSearchParams } from 'react-router-dom'
 import { ArrowUpRight, FileText, Search } from 'lucide-react'
 import { Avatar, Icon, SelectField, TextField } from '@/components/ui'
-import ConfirmDialog from '@/components/common/ConfirmDialog.jsx'
 import DataTable from '@/components/common/DataTable.jsx'
 import EmptyState from '@/components/common/EmptyState.jsx'
 import PageTitle from '@/components/common/PageTitle.jsx'
-import SectionHeading from '@/features/recruiter/overview/components/SectionHeading.jsx'
-import StageSelect from '@/features/recruiter/hiring-pipeline/components/StageSelect.jsx'
-import { REJECTED } from '@/features/recruiter/hiring-pipeline/data/pipeline.js'
-import { usePipeline } from '@/features/recruiter/hiring-pipeline/hooks/usePipeline.js'
+import { useGetRecruiterJobsQuery } from '@/features/recruiter/jobs/api.js'
+import { useFormat } from '@/lib/preferences.js'
+import { foldText } from '@/lib/text.js'
+import { useGetCompanyApplicationsQuery, useGetPipelineQuery } from '../api.js'
+import ApplicationStageSelect from '../components/ApplicationStageSelect.jsx'
 import styles from './ApplicationsPage.module.css'
 
-const profilePath = (applicantId) => `/recruiter/find-candidates/${applicantId}`
+const profilePath = (candidateId) => `/recruiter/find-candidates/${candidateId}`
+const STATUS_FILTERS = ['not_selected', 'withdrawn']
 
-/** Applications: search and stage filter over the applicants, with a stage menu per row and a confirmed reject. */
+/**
+ * Applications (M-076, M-077, M-090): one row per application with the job and the applied date, a job filter,
+ * a stage filter with "Not selected" and "Withdrawn", a stage select per row and a confirmed rejection.
+ * `?jobId=` opens it filtered (the job details link).
+ */
 export default function ApplicationsPage() {
-  const { stages, applicants, moveTo } = usePipeline()
+  const { t } = useTranslation()
+  const format = useFormat()
+  const [params, setParams] = useSearchParams()
   const [query, setQuery] = useState('')
-  const [stageFilter, setStageFilter] = useState('all')
-  const [rejecting, setRejecting] = useState(null)
+  const jobId = params.get('jobId') ?? ''
+  const stageFilter = params.get('stage') ?? ''
+  const status = STATUS_FILTERS.includes(stageFilter) ? stageFilter : undefined
+  const { data } = useGetCompanyApplicationsQuery({ ...(jobId && { jobId }), ...(status ? { status } : stageFilter && { stageId: stageFilter }) })
+  const { data: pipeline } = useGetPipelineQuery()
+  const { data: jobs } = useGetRecruiterJobsQuery()
+  const stages = pipeline?.items ?? []
 
-  const stageOptions = useMemo(() => [...stages, { id: REJECTED, name: 'Rejected' }], [stages])
-  const filterOptions = useMemo(() => [{ value: 'all', label: 'All stages' }, ...stageOptions.map((stage) => ({ value: stage.id, label: stage.name }))], [stageOptions])
-
-  const rows = useMemo(() => {
-    const needle = query.trim().toLowerCase()
-    return applicants.filter(
-      (applicant) =>
-        (stageFilter === 'all' || applicant.stageId === stageFilter) &&
-        (!needle || `${applicant.name} ${applicant.title}`.toLowerCase().includes(needle)),
-    )
-  }, [applicants, query, stageFilter])
-
-  function changeStage(applicant, stageId) {
-    if (stageId === REJECTED) setRejecting(applicant)
-    else moveTo(applicant.id, stageId)
+  function setFilter(name, value) {
+    const next = new URLSearchParams(params)
+    if (value) next.set(name, value)
+    else next.delete(name)
+    setParams(next, { replace: true })
   }
+
+  const jobOptions = [{ value: '', label: t('applications:recruiter.allJobs') }, ...(jobs?.items ?? []).filter((job) => job.status !== 'draft').map((job) => ({ value: job.id, label: job.title }))]
+  const stageOptions = [
+    { value: '', label: t('applications:recruiter.allStages') },
+    ...stages.map((stage) => ({ value: stage.id, label: stage.name })),
+    { value: 'not_selected', label: t('applications:recruiter.notSelectedFilter', { count: data?.counts.not_selected ?? 0 }) },
+    { value: 'withdrawn', label: t('applications:recruiter.withdrawnFilter', { count: data?.counts.withdrawn ?? 0 }) },
+  ]
+  const needle = foldText(query.trim())
+  const rows = (data?.items ?? []).filter((row) => !needle || foldText(`${row.candidate.fullName} ${row.candidate.headline} ${row.job.title}`).includes(needle))
 
   const columns = [
     {
       key: 'candidate',
-      header: 'Candidate',
-      width: '26.7%',
-      render: (applicant) => (
-        <Link to={profilePath(applicant.id)} className={styles.candidate}>
-          <Avatar name={applicant.name} size={36} colors={applicant.avatar} className={styles.avatar} />
-          <span className={styles.name}>{applicant.name}</span>
+      header: t('applications:recruiter.candidate'),
+      width: '26%',
+      render: (row) => (
+        <Link to={profilePath(row.candidate.id)} className={styles.candidate}>
+          <Avatar name={row.candidate.fullName} src={row.candidate.photoUrl ?? undefined} size={36} className={styles.avatar} />
+          <span>
+            <span className={styles.name}>{row.candidate.fullName}</span>
+            <span className={styles.headline}>{row.candidate.headline}</span>
+          </span>
         </Link>
       ),
     },
-    { key: 'role', header: 'Role', width: '27.6%', render: (applicant) => <span className={styles.cell}>{applicant.title}</span> },
-    { key: 'experience', header: 'Experience', width: '15%', render: (applicant) => <span className={styles.cell}>{applicant.experienceYears} years</span> },
+    { key: 'job', header: t('applications:recruiter.job'), width: '25%', render: (row) => <span className={styles.cell}>{row.job.title}</span> },
+    { key: 'applied', header: t('applications:recruiter.applied'), width: '14%', render: (row) => <span className={styles.cell}>{format.date(row.appliedAt)}</span> },
     {
       key: 'stage',
-      header: 'Stage',
-      width: '21.3%',
-      render: (applicant) => (
-        <StageSelect
-          options={stageOptions}
-          value={applicant.stageId}
-          label={`Update stage for ${applicant.name}`}
-          onChange={(stageId) => changeStage(applicant, stageId)}
+      header: t('applications:recruiter.stage'),
+      width: '22%',
+      render: (row) => (
+        <ApplicationStageSelect
+          application={row}
+          stages={stages}
+          candidateName={row.candidate.fullName}
+          jobTitle={row.job.title}
+          label={t('applications:recruiter.stageLabel', { name: row.candidate.fullName })}
         />
       ),
     },
     {
       key: 'profile',
-      header: <span className="sr-only">Profile</span>,
-      render: (applicant) => (
-        <Link to={profilePath(applicant.id)} className={styles.profileLink} aria-label={`View ${applicant.name}’s profile`}>
+      header: <span className="sr-only">{t('applications:recruiter.profile')}</span>,
+      render: (row) => (
+        <Link to={profilePath(row.candidate.id)} className={styles.profileLink} aria-label={t('applications:recruiter.viewProfile', { name: row.candidate.fullName })}>
           <Icon as={ArrowUpRight} size={15} />
         </Link>
       ),
     },
   ]
 
+  const nothingYet = data && !jobId && !stageFilter && data.counts.active + data.counts.not_selected + data.counts.withdrawn === 0
+
   return (
     <div>
-      <PageTitle
-        title="Every application deserves a fair look."
-        description="Review evidence, move people forward, and keep your process clear."
-      />
+      <PageTitle title={t('applications:recruiter.title')} description={t('applications:recruiter.description')} />
 
       <div className={styles.filters}>
         <TextField
           className={styles.search}
           type="search"
-          aria-label="Search applicants"
-          placeholder="Search applicants"
+          aria-label={t('applications:recruiter.search')}
+          placeholder={t('applications:recruiter.search')}
           value={query}
           onChange={(event) => setQuery(event.target.value)}
         />
-        <SelectField
-          className={styles.stageFilter}
-          aria-label="Filter applicant stage"
-          options={filterOptions}
-          value={stageFilter}
-          onChange={(event) => setStageFilter(event.target.value)}
-        />
+        <SelectField className={styles.stageFilter} aria-label={t('applications:recruiter.jobFilter')} name="jobId" options={jobOptions} value={jobId} onChange={(event) => setFilter('jobId', event.target.value)} />
+        <SelectField className={styles.stageFilter} aria-label={t('applications:recruiter.stageFilter')} name="stage" options={stageOptions} value={stageFilter} onChange={(event) => setFilter('stage', event.target.value)} />
       </div>
 
       <div className={styles.table}>
-        {rows.length === 0 ? (
-          <EmptyState
-            icon={Search}
-            title="No applicants match"
-            description="Try a different name or role, or choose another stage."
-          />
+        {!data ? null : nothingYet ? (
+          <EmptyState icon={FileText} title={t('applications:recruiter.noApplications')} description={t('applications:recruiter.noApplicationsText')} />
+        ) : rows.length === 0 ? (
+          <EmptyState icon={Search} title={t('applications:recruiter.empty')} description={t('applications:recruiter.emptyText')} />
         ) : (
-          <DataTable caption="Applicants" columns={columns} rows={rows} getRowKey={(applicant) => applicant.id} />
+          <DataTable caption={t('applications:recruiter.caption')} columns={columns} rows={rows} getRowKey={(row) => row.id} />
         )}
       </div>
-
-      <section className={styles.activity} aria-labelledby="portal-activity">
-        <SectionHeading id="portal-activity" title="Candidate portal activity" description="Local applications created in this prototype" />
-        <div className={styles.activityBody}>
-          <EmptyState
-            size="lg"
-            icon={FileText}
-            iconSize={24}
-            title="Room for your next great application"
-            description="Applications to roles you publish appear here. Only applications shared with your company are visible in this workspace."
-          />
-        </div>
-      </section>
-
-      <ConfirmDialog
-        open={rejecting !== null}
-        title="Reject this application?"
-        description={rejecting ? `${rejecting.name} will be moved out of your pipeline. You can move them back to a stage from this page at any time.` : undefined}
-        confirmLabel="Reject application"
-        tone="danger"
-        onClose={() => setRejecting(null)}
-        onConfirm={() => {
-          moveTo(rejecting.id, REJECTED)
-          setRejecting(null)
-        }}
-      />
     </div>
   )
 }

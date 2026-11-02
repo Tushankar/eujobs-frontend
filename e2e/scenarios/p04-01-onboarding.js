@@ -1,6 +1,6 @@
 import { readFileSync } from 'node:fs'
 import { fixture } from '../fixtures/make.js'
-import { chooseFile, clickText, fill, pageApi, signInWithForm, waitForPath, waitForText } from '../lib/flows.js'
+import { clickText, fill, pageApi, signInWithForm, waitForPath, waitForText } from '../lib/flows.js'
 import { registeredRecruiter } from '../lib/recruiters.js'
 import { TEST_PASSWORD } from '../lib/testApi.js'
 

@@ -49,3 +49,17 @@
 .activity.activity:hover {
   color: var(--foreground);
 }
+
+.next {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: 4px 12px;
+}
+
+.nextText {
+  max-width: 260px;
+  font-size: 11px;
+  line-height: 16px;
+  color: var(--muted-foreground);
+}

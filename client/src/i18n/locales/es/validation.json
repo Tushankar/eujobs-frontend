@@ -109,6 +109,9 @@
     },
     "size": {
       "required": "Elige el tamaño de la empresa."
+    },
+    "consent": {
+      "required": "Marca la casilla para compartir tu perfil con esta empresa."
     }
   },
   "in_both": "{{skill}} ya es una competencia obligatoria.",

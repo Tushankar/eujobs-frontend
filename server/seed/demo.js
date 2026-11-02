@@ -5,7 +5,7 @@ import { ENUMS } from '../config/enums.js'
 import { ScheduledTask } from '../jobs/models.js'
 import { connectDb, disconnectDb } from '../lib/db.js'
 import { AdminRole, AuditEvent } from '../modules/admin/admin.model.js'
-import { PipelineStage } from '../modules/applications/applications.model.js'
+import { Application, PipelineStage } from '../modules/applications/applications.model.js'
 import { EmailToken, VerificationCode } from '../modules/auth/auth.model.js'
 import { checkPassword, hashPassword } from '../modules/auth/auth.service.js'
 import { CandidateProfile } from '../modules/candidates/candidates.model.js'
@@ -20,6 +20,7 @@ import { currentLegalVersions } from '../modules/meta/meta.service.js'
 import { Counter, Payment, StripeEvent, Subscription } from '../modules/payments/payments.model.js'
 import { User } from '../modules/users/users.model.js'
 import { VerificationSubmission } from '../modules/verification/verification.model.js'
+import { seedApplications } from './applications.js'
 import { seedCandidates } from './candidates.js'
 import { CANDIDATES, CITY_TIME_ZONES } from './data/candidates.js'
 import { DEMO_ACCOUNTS } from './data/demo.js'
@@ -90,6 +91,7 @@ export async function seedDemo() {
     Company.deleteMany({}),
     KycDocument.deleteMany({}),
     PipelineStage.deleteMany({}),
+    Application.deleteMany({}),
     Job.deleteMany({}),
     SavedJob.deleteMany({}),
     ShortlistEntry.deleteMany({}),
@@ -127,6 +129,7 @@ export async function seedDemo() {
   await seedCandidates({ emailOf, owner, now: now.getTime() })
   await seedRecruiters({ emailOf, owner, now: now.getTime() })
   await seedPayments({ emailOf, now: now.getTime() })
+  await seedApplications({ emailOf, now: now.getTime() })
 }
 
 if (import.meta.main) {

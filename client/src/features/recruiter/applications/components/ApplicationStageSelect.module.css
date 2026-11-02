@@ -1,0 +1,6 @@
+.hint {
+  margin: 6px 0 0 28px;
+  font-size: 12px;
+  line-height: 16px;
+  color: var(--muted-foreground);
+}

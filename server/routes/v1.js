@@ -2,6 +2,7 @@ import { Router } from 'express'
 import { config } from '../config/env.js'
 import { dbStatus } from '../lib/db.js'
 import adminRoutes from '../modules/admin/admin.routes.js'
+import * as applicationRoutes from '../modules/applications/applications.routes.js'
 import authRoutes from '../modules/auth/auth.routes.js'
 import candidateRoutes from '../modules/candidates/candidates.routes.js'
 import * as companyRoutes from '../modules/companies/companies.routes.js'
@@ -30,6 +31,7 @@ router.use('/payments', paymentRoutes.paymentsRouter)
 router.use('/files', filesRoutes)
 // Narrower mounts first: each module router checks the session for everything under its path.
 router.use('/candidate/cv', cvRoutes)
+router.use('/candidate/applications', applicationRoutes.candidateRouter)
 router.use('/candidate/verification', verificationRoutes.candidateRouter)
 router.use('/candidate/saved-jobs', jobRoutes.savedRouter)
 router.use('/candidate/subscription', paymentRoutes.subscriptionRouter)
@@ -41,6 +43,9 @@ router.use('/recruiter/jobs', jobRoutes.recruiterRouter)
 router.use('/recruiter/candidates', discoveryRoutes.candidatesRouter)
 router.use('/recruiter/shortlist', discoveryRoutes.shortlistRouter)
 router.use('/recruiter/overview', discoveryRoutes.overviewRouter)
+router.use('/recruiter/overview', applicationRoutes.overviewRouter)
+router.use('/recruiter/applications', applicationRoutes.recruiterRouter)
+router.use('/recruiter/pipeline', applicationRoutes.pipelineRouter)
 router.use('/skills', jobRoutes.skillsRouter)
 router.use('/admin/moderation/verification', verificationRoutes.adminRouter)
 router.use('/admin/moderation/accounts', companyRoutes.adminRouter)

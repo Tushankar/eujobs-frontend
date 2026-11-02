@@ -10,7 +10,7 @@ async function testAdmin(owner, label, permissions) {
     doc: { name: nameLower, nameLower, permissions, status: 'active', system: false, scope: 'team' },
   })
   const email = uniqueEmail(`admin-${label}`)
-  const { _id, isOwner, ...fields } = owner
+  const { _id, isOwner: _isOwner, ...fields } = owner
   await db('users', 'insertOne', { doc: { ...fields, email, fullName: `Test admin ${label}`, isOwner: false, adminAccess: { roleId, granted: [], removed: [] } } })
   return { email, roleId }
 }

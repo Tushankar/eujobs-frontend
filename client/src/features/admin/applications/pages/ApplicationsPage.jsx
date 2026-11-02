@@ -5,16 +5,8 @@ import PageTitle from '@/components/common/PageTitle.jsx'
 import PillBadge from '@/components/common/PillBadge.jsx'
 import { Button, Icon } from '@/components/ui'
 import { downloadCsv } from '@/utils/downloadCsv.js'
-import { APPLICATION_STATUS } from '@/features/candidate/jobs/data/applications.js'
-import { useApplications } from '@/features/candidate/jobs/hooks/useApplications.js'
-import { useJobListings } from '@/features/candidate/jobs/hooks/useJobListings.js'
-import { ADMIN_USERS } from '../../shared/data/users.js'
+import { APPLICATION_STATUS, SAMPLE_APPLICATIONS as rows } from '../data/applications.js'
 import styles from './ApplicationsPage.module.css'
-
-/** Every application in this demo marketplace belongs to the demo candidate. */
-const APPLICANT = ADMIN_USERS.find((user) => user.id === 'alex-morgan').name
-
-const STATUS_TONES = { applied: 'accent', 'under-review': 'accent', interview: 'success', withdrawn: 'neutral' }
 
 const COLUMNS = [
   { key: 'candidate', header: 'Candidate', render: (row) => <span className={styles.strong}>{row.candidate}</span> },
@@ -24,21 +16,11 @@ const COLUMNS = [
   {
     key: 'status',
     header: 'Status',
-    render: (row) => <PillBadge tone={STATUS_TONES[row.status]}>{APPLICATION_STATUS[row.status].label}</PillBadge>,
+    render: (row) => <PillBadge tone={APPLICATION_STATUS[row.status].tone}>{APPLICATION_STATUS[row.status].label}</PillBadge>,
   },
 ]
 
 export default function ApplicationsPage() {
-  const { applications } = useApplications()
-  const { getJob } = useJobListings()
-
-  const rows = applications.flatMap((application) => {
-    const job = getJob(application.jobId)
-    return job
-      ? [{ id: application.id, candidate: APPLICANT, role: job.title, company: job.company, appliedAt: application.appliedAt, status: application.status }]
-      : []
-  })
-
   function exportActivity() {
     downloadCsv(
       [

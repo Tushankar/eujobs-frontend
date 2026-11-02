@@ -1,64 +1,88 @@
+import { useTranslation } from 'react-i18next'
 import { Link } from 'react-router-dom'
 import { Check } from 'lucide-react'
-import { cx } from '@/utils/cx.js'
-import { Button, Icon, Modal } from '@/components/ui'
-import JobLogo from '@/features/candidate/jobs/components/JobLogo.jsx'
-import { APPLICATION_STATUS, APPLICATION_STEPS, formatApplied } from '@/features/candidate/jobs/data/applications.js'
-import { jobPath } from '@/features/candidate/jobs/data/jobUtils.js'
+import { Button, CompanyLogo, Icon, Modal } from '@/components/ui'
+import { useJobText } from '@/lib/jobText.js'
+import { useFormat } from '@/lib/preferences.js'
+import { canWithdraw } from '../status.js'
 import styles from './ApplicationActivityModal.module.css'
 
-/** "View activity": where an application stands in the Applied → Under review → Interview steps. */
-export default function ApplicationActivityModal({ application, job, onClose, onWithdraw }) {
-  if (!application || !job) return null
-  const withdrawn = application.status === 'withdrawn'
-  const reached = APPLICATION_STEPS.indexOf(application.status)
+/**
+ * "View activity" (M-075): the dated status steps, the next step, the CV sent and the cover note, with withdraw
+ * (M-074) or, for a withdrawn application to a job still open, Apply again.
+ */
+export default function ApplicationActivityModal({ application, canReapply, onClose, onWithdraw, onReapply }) {
+  const { t } = useTranslation()
+  const format = useFormat()
+  const jobText = useJobText()
+  if (!application) return null
+  const { job, history, cv } = application
+  const current = history.length - 1
 
   return (
     <Modal
       open
       onClose={onClose}
-      title="Application activity"
-      description={`${job.title} · ${job.company}`}
-      width={440}
+      title={t('applications:activity.title')}
+      description={`${job.title} · ${job.company.displayName}`}
+      width={460}
       footer={
         <>
-          <Button as={Link} to={jobPath(job.id)} variant="secondary" onClick={onClose}>
-            View job
+          <Button as={Link} to={`/candidate/jobs/${job.id}`} variant="secondary" onClick={onClose}>
+            {t('applications:activity.viewJob')}
           </Button>
-          {!withdrawn && (
+          {canWithdraw(application.status) && (
             <Button variant="danger" onClick={() => onWithdraw(application)}>
-              Withdraw application
+              {t('applications:activity.withdraw')}
             </Button>
           )}
+          {canReapply && <Button onClick={() => onReapply(application)}>{t('applications:activity.applyAgain')}</Button>}
         </>
       }
     >
       <div className={styles.job}>
-        <JobLogo company={job.company} logo={job.logo} size={36} />
+        <CompanyLogo name={job.company.displayName} id={job.company.id} src={job.company.logoUrl ?? undefined} size={36} />
         <div>
           <p className={styles.jobTitle}>{job.title}</p>
           <p className={styles.jobMeta}>
-            {job.company} · {job.workMode} · Applied {formatApplied(application.appliedAt)}
+            {[job.company.displayName, jobText.place(job), t('applications:activity.appliedOn', { date: format.date(application.appliedAt) })].filter(Boolean).join(' · ')}
           </p>
         </div>
       </div>
 
-      {withdrawn ? (
-        <p className={styles.withdrawn}>You withdrew this application. You can apply again from the job page.</p>
-      ) : (
-        <ol className={styles.steps} aria-label="Application progress">
-          {APPLICATION_STEPS.map((step, index) => {
-            const done = index <= reached
-            return (
-              <li key={step} className={cx(styles.step, done && styles.done)} aria-current={index === reached ? 'step' : undefined}>
-                <span className={styles.marker}>{done && <Icon as={Check} size={11} strokeWidth={2.4} />}</span>
-                <span className={styles.stepLabel}>{APPLICATION_STATUS[step].label}</span>
-                {index === reached && <span className={styles.current}>Current status</span>}
-              </li>
-            )
-          })}
-        </ol>
-      )}
+      <ol className={styles.steps} aria-label={t('applications:activity.progress')} data-history>
+        {history.map((step, index) => (
+          <li key={`${step.status}-${step.at}`} className={`${styles.step} ${styles.done}`} aria-current={index === current ? 'step' : undefined} data-step={step.status}>
+            <span className={styles.marker}>
+              <Icon as={Check} size={11} strokeWidth={2.4} />
+            </span>
+            <span className={styles.stepLabel}>{t(`enums:applicationStatus.${step.status}`)}</span>
+            <time className={styles.date} dateTime={step.at}>
+              {format.date(step.at)}
+            </time>
+          </li>
+        ))}
+      </ol>
+
+      <dl className={styles.details}>
+        <div>
+          <dt>{t('applications:activity.nextStep')}</dt>
+          <dd>{t(`applications:nextStep.${application.status}`)}</dd>
+        </div>
+        {cv && (
+          <div>
+            <dt>{t('applications:activity.cv')}</dt>
+            <dd>{t(cv.removed ? 'applications:activity.cvRemoved' : 'applications:activity.cvVersion', { number: cv.number, name: cv.originalName })}</dd>
+          </div>
+        )}
+        {application.coverNote && (
+          <div>
+            <dt>{t('applications:activity.coverNote')}</dt>
+            <dd className={styles.note}>{application.coverNote}</dd>
+          </div>
+        )}
+      </dl>
+      {!job.accepting && <p className={styles.closed}>{t('applications:activity.notAccepting')}</p>}
     </Modal>
   )
 }

@@ -60,12 +60,16 @@
   background: var(--accent);
 }
 
-.activity {
-  padding-top: 32px;
+.name,
+.headline {
+  display: block;
 }
 
-.activityBody {
-  padding-top: 20px;
+.headline {
+  padding-top: 2px;
+  font-size: 11px;
+  line-height: 15px;
+  color: var(--muted-foreground);
 }
 
 @media (max-width: 719px) {

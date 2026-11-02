@@ -109,6 +109,9 @@
     },
     "size": {
       "required": "Choisissez la taille de l’entreprise."
+    },
+    "consent": {
+      "required": "Cochez la case pour partager votre profil avec cette entreprise."
     }
   },
   "in_both": "{{skill}} est déjà une compétence requise.",

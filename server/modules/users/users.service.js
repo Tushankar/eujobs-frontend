@@ -1,6 +1,7 @@
 import bcrypt from 'bcryptjs'
 import { fieldError } from '../../lib/errors.js'
 import { AdminRole } from '../admin/admin.model.js'
+import { candidateCounters } from '../applications/applications.stats.js'
 import { candidateSummary, fullNameChanged } from '../candidates/candidates.service.js'
 import { effectivePermissions } from '../admin/admin.service.js'
 import { checkPassword, hashPassword } from '../auth/auth.service.js'
@@ -60,6 +61,11 @@ export async function meDto(user) {
     dto.notifyEmail = user.notifyEmail
   }
   return dto
+}
+
+/** GET /me/counters (M-094): unread messages stay 0 until Phase 7; recruiters have no application badge. */
+export async function counters(user) {
+  return user.role === 'candidate' ? candidateCounters(user) : { unreadMessages: 0 }
 }
 
 /** PATCH /me. Until the language is explicit, the country's default language follows the country (M-134). */

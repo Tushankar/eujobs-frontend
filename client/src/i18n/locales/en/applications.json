@@ -1,0 +1,189 @@
+{
+  "apply": {
+    "button": "Apply now",
+    "applied": "Applied",
+    "appliedLabel": "Applied to {{title}}. Track it in Applications.",
+    "label": "Apply to {{title}} at {{company}}",
+    "closed": "Not accepting applications",
+    "sent": "Application sent. Track it in Applications.",
+    "track": "Track your applications",
+    "consentNote": "Your information, shared with consent."
+  },
+  "gate": {
+    "title": "Before you can apply",
+    "description": "Applying needs a complete profile and the Plus plan, so companies get verified, comparable applications.",
+    "missingTitle": "Finish your profile",
+    "missingText": "These items are still open:",
+    "planTitle": "Plus plan",
+    "planText": "Applying is part of the Plus plan.",
+    "upgrade": "Upgrade to apply",
+    "apply": "Apply",
+    "close": "Close"
+  },
+  "dialog": {
+    "title": "Apply to {{title}}",
+    "description": "{{company}} sees your profile, the CV you choose and your note.",
+    "cv": "CV to send",
+    "cvOption": "Version {{number}} · {{name}}",
+    "cvLive": "Version {{number}} · {{name}} (live)",
+    "coverNote": "Cover note (optional)",
+    "coverNoteHint": "{{count}} of {{max}} characters",
+    "consent": "I agree that {{company}} can see my profile and the CV I send for this application.",
+    "cancel": "Cancel",
+    "submit": "Send application"
+  },
+  "list": {
+    "title": "Every step, in one place.",
+    "description": "Keep your next chapter moving. Track your applications without the guesswork.",
+    "filtersLabel": "Filter applications by status",
+    "all": "All applications",
+    "caption": "Your applications",
+    "opportunity": "Opportunity",
+    "applied": "Applied",
+    "status": "Status",
+    "nextStep": "Next step",
+    "viewActivity": "View activity",
+    "empty": "No applications yet",
+    "emptyText": "Apply to a role and it will show up here with its status.",
+    "emptyFiltered": "No applications with this status",
+    "emptyFilteredText": "Applications with this status will appear here.",
+    "findJobs": "Find jobs"
+  },
+  "nextStep": {
+    "applied": "The company has your application.",
+    "under_review": "The company is reviewing your application.",
+    "interview": "The company will contact you about an interview.",
+    "offer": "The company is preparing an offer.",
+    "hired": "You got the role. Congratulations.",
+    "not_selected": "The company chose not to move forward.",
+    "withdrawn": "You withdrew this application."
+  },
+  "activity": {
+    "title": "Application activity",
+    "progress": "Application progress",
+    "appliedOn": "Applied {{date}}",
+    "nextStep": "Next step",
+    "cv": "CV sent",
+    "cvVersion": "Version {{number}} · {{name}}",
+    "cvRemoved": "Version {{number}} · removed by you",
+    "coverNote": "Your note",
+    "notAccepting": "This role no longer accepts applications.",
+    "viewJob": "View job",
+    "withdraw": "Withdraw application",
+    "applyAgain": "Apply again"
+  },
+  "withdraw": {
+    "title": "Withdraw this application?",
+    "description": "You’ll no longer be considered for {{title}}. You can apply again later while the role is open.",
+    "confirm": "Withdraw application"
+  },
+  "card": {
+    "title": "Application activity",
+    "open": "Open applications",
+    "empty": "No active applications. Apply to a role and its progress will show here.",
+    "track": "Track your applications"
+  },
+  "recruiter": {
+    "title": "Every application deserves a fair look.",
+    "description": "Review evidence, move people forward, and keep your process clear.",
+    "search": "Search applicants",
+    "jobFilter": "Filter by job",
+    "allJobs": "All jobs",
+    "stageFilter": "Filter by stage",
+    "allStages": "All active stages",
+    "notSelectedFilter": "Not selected ({{count}})",
+    "withdrawnFilter": "Withdrawn ({{count}})",
+    "caption": "Applications",
+    "candidate": "Candidate",
+    "job": "Job",
+    "applied": "Applied",
+    "stage": "Stage",
+    "profile": "Profile",
+    "viewProfile": "View {{name}}’s profile",
+    "stageLabel": "Update stage for {{name}}",
+    "notSelected": "Not selected",
+    "withdrawn": "Withdrawn",
+    "empty": "No applications match",
+    "emptyText": "Try a different name or job, or choose another stage.",
+    "noApplications": "No applications yet",
+    "noApplicationsText": "Applications to the roles you publish appear here."
+  },
+  "reject": {
+    "title": "Mark this application as not selected?",
+    "description": "{{name}}’s application for {{job}} leaves your board and shows under “Not selected”. To undo, choose a stage again within 10 minutes and no email is sent.",
+    "notify": "Email the candidate",
+    "notifyHint": "Sent in their language 10 minutes from now.",
+    "confirm": "Mark as not selected"
+  },
+  "board": {
+    "title": "Keep good people moving forward.",
+    "description": "A clear, human-led hiring process. Drag to move, or use the stage menu on each card.",
+    "manage": "Manage stages",
+    "summary_one": "{{count}} active application · {{stages}} stages",
+    "summary_other": "{{count}} active applications · {{stages}} stages",
+    "label": "Hiring pipeline board",
+    "empty": "A little space for your next move.",
+    "emptyDrop": "Drop a candidate here.",
+    "move": "Move {{name}} to stage",
+    "years_one": "{{count}} year",
+    "years_other": "{{count}} years",
+    "aligned_one": "{{count}} aligned skill",
+    "aligned_other": "{{count}} aligned skills",
+    "appliedFor": "{{job}} · applied {{date}}"
+  },
+  "stages": {
+    "title": "Your process. Your stages.",
+    "name": "Name of stage {{index}}",
+    "category": "Candidate status of {{name}}",
+    "categoryHint": "Candidates see a status, not your stage names.",
+    "up": "Move {{name}} up",
+    "down": "Move {{name}} down",
+    "remove": "Remove {{name}}",
+    "new": "New stage name",
+    "newCategory": "Candidate status of the new stage",
+    "add": "Add",
+    "note": "The first stage receives new applications and stays first. Move people out of a stage before removing it. Candidates see the status shown next to each stage.",
+    "inUse_one": "{{count}} active application is in this stage. Move it before removing the stage.",
+    "inUse_other": "{{count}} active applications are in this stage. Move them before removing the stage.",
+    "entry": "The first stage cannot be removed.",
+    "tooMany": "A pipeline has at most {{max}} stages.",
+    "tooFew": "A pipeline needs at least {{min}} stages.",
+    "status": {
+      "applied": "Applied",
+      "screening": "Under review (screening)",
+      "shortlisted": "Under review (shortlisted)",
+      "interview": "Interview",
+      "offer": "Offer",
+      "hired": "Hired"
+    }
+  },
+  "profile": {
+    "title": "Applications to your company",
+    "row": "{{job}} · applied {{date}}",
+    "stage": "Stage of the application for {{job}}"
+  },
+  "jobApplicants": {
+    "title": "Applicants",
+    "empty": "No active applications for this role yet.",
+    "all": "Open in Applications"
+  },
+  "overview": {
+    "funnelTitle": "Your hiring funnel",
+    "funnelDescription": "Applications that reached each stage",
+    "funnelRow": "{{stage}}: {{count}}",
+    "funnelLink": "Open hiring pipeline",
+    "momentumTitle": "Hiring momentum",
+    "momentumDescription": "Applications received and shortlist additions per day",
+    "chartView": "Chart view",
+    "bars": "Bar view",
+    "line": "Line view",
+    "period": "Period",
+    "periods": {
+      "this_week": "This week",
+      "last_week": "Last week"
+    },
+    "applicationsSeries": "Applications",
+    "shortlistedSeries": "Shortlisted",
+    "summary": "{{period}}. Applications: {{applications}}. Shortlisted: {{shortlisted}}."
+  }
+}

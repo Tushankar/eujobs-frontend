@@ -125,6 +125,36 @@
         "Vos candidatures, alertes emploi et messages sont conservés. Vos alertes reprennent quand vous vous abonnez de nouveau."
       ],
       "action": "Ouvrir Facturation"
+    },
+    "application_status": {
+      "subject": "Du nouveau pour votre candidature à {{job}}",
+      "heading": "Le statut de votre candidature a changé",
+      "body": [
+        "Bonjour {{name}},",
+        "Votre candidature à {{job}} chez {{company}} est désormais : {{status}}.",
+        "{{nextStep}}"
+      ],
+      "action": "Voir la candidature"
+    },
+    "application_rejected": {
+      "subject": "Du nouveau pour votre candidature à {{job}}",
+      "heading": "Votre candidature n’a pas été retenue",
+      "body": [
+        "Bonjour {{name}},",
+        "{{company}} a examiné votre candidature à {{job}} et a décidé de ne pas y donner suite.",
+        "Merci de votre intérêt. Vous pouvez continuer à postuler à d’autres offres sur Local WorkMan."
+      ],
+      "action": "Trouver d’autres offres"
+    },
+    "new_applications": {
+      "subject": "{{countLabel}} pour {{job}}",
+      "heading": "Nouvelles candidatures",
+      "body": [
+        "Bonjour {{name}},",
+        "{{countLabel}} pour {{job}} depuis votre dernier message.",
+        "Examinez-les et faites avancer les personnes depuis votre page Candidatures."
+      ],
+      "action": "Ouvrir les candidatures"
     }
   },
   "verification": {
@@ -161,6 +191,28 @@
       "mid": "Confirmé",
       "senior": "Senior",
       "lead": "Lead"
+    },
+    "applicationStatus": {
+      "applied": "Envoyée",
+      "under_review": "En cours d’examen",
+      "interview": "Entretien",
+      "offer": "Offre",
+      "hired": "Embauché",
+      "not_selected": "Non retenue",
+      "withdrawn": "Retirée"
+    },
+    "nextStep": {
+      "applied": "L’entreprise a reçu votre candidature. Vous aurez de ses nouvelles lorsqu’elle avancera.",
+      "under_review": "L’entreprise examine votre candidature. Vous n’avez rien à faire.",
+      "interview": "L’entreprise souhaite échanger avec vous. Elle vous contactera au sujet de l’entretien.",
+      "offer": "L’entreprise prépare une offre. Elle vous contactera avec les détails.",
+      "hired": "Félicitations. L’entreprise vous a choisi pour ce poste.",
+      "not_selected": "L’entreprise a décidé de ne pas donner suite à cette candidature.",
+      "withdrawn": "Vous avez retiré cette candidature."
+    },
+    "newApplications": {
+      "one": "{{count}} nouvelle candidature",
+      "other": "{{count}} nouvelles candidatures"
     }
   }
 }

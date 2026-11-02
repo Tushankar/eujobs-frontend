@@ -6,13 +6,14 @@ import { cx } from '@/utils/cx.js'
 import { CompanyLogo, Icon, IconButton } from '@/components/ui'
 import StatusBadge from '@/components/common/StatusBadge.jsx'
 import aiGlyph from '@/assets/icons/ai-glyph-blue.svg'
+import { ApplyButton } from '@/features/candidate/applications/components/ApplyFlow.jsx'
 import { useJobText } from '@/lib/jobText.js'
 import { useFormat } from '@/lib/preferences.js'
 import styles from './JobCard.module.css'
 
 /**
  * Job listing card (Overview and Find jobs). Every candidate sees the skill-overlap label (M-050, M-052), never a
- * percentage; Plus adds the score in Phase 9. Apply comes with applications in Phase 6 (P4-Q1).
+ * percentage; Plus adds the score in Phase 9. Apply goes through the gate (§3.4).
  */
 export default function JobCard({ job, onToggleSave }) {
   const { t } = useTranslation()
@@ -87,6 +88,7 @@ export default function JobCard({ job, onToggleSave }) {
             {t('findJobs:card.view')}
             <Icon as={ArrowUpRight} size={12} />
           </Link>
+          <ApplyButton job={job} size="sm" />
         </div>
       </div>
       {whyOpen && (

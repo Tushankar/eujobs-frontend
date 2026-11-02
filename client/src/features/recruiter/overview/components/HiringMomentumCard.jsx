@@ -1,22 +1,26 @@
 import { useState } from 'react'
+import { useTranslation } from 'react-i18next'
 import { ChevronDown, TrendingUp } from 'lucide-react'
 import { cx } from '@/utils/cx.js'
 import { Icon } from '@/components/ui'
-import { MOMENTUM_DAYS, MOMENTUM_PERIODS } from '../data/overview.js'
+import { useGetMomentumQuery } from '@/features/recruiter/applications/api.js'
+import { browserTimeZone } from '@/lib/forms.js'
+import { useFormat } from '@/lib/preferences.js'
 import SectionHeading from './SectionHeading.jsx'
 import styles from './HiringMomentumCard.module.css'
 
-const SCALE_MAX = 25
-const percent = (value) => `${(value / SCALE_MAX) * 100}%`
+const PERIODS = ['this_week', 'last_week']
+const DAYS = 7
 
 function ViewToggle({ view, onChange }) {
+  const { t } = useTranslation()
   return (
-    <div className={styles.toggle} role="group" aria-label="Chart view">
+    <div className={styles.toggle} role="group" aria-label={t('applications:overview.chartView')}>
       <button
         type="button"
         className={cx(styles.toggleButton, view === 'bars' && styles.toggleActive)}
         aria-pressed={view === 'bars'}
-        aria-label="Bar view"
+        aria-label={t('applications:overview.bars')}
         onClick={() => onChange('bars')}
       >
         <span className={styles.barsIcon} aria-hidden="true" />
@@ -25,7 +29,7 @@ function ViewToggle({ view, onChange }) {
         type="button"
         className={cx(styles.toggleButton, view === 'line' && styles.toggleActive)}
         aria-pressed={view === 'line'}
-        aria-label="Line view"
+        aria-label={t('applications:overview.line')}
         onClick={() => onChange('line')}
       >
         <Icon as={TrendingUp} size={12} />
@@ -34,9 +38,10 @@ function ViewToggle({ view, onChange }) {
   )
 }
 
-function LineChart({ applications, shortlisted }) {
+function LineChart({ applications, shortlisted, scale }) {
+  const percent = (value) => `${(value / scale) * 100}%`
   const points = (values) =>
-    values.map((value, index) => `${(index + 0.5) * 100},${175 - (value / SCALE_MAX) * 175}`).join(' ')
+    values.map((value, index) => `${(index + 0.5) * 100},${175 - (value / scale) * 175}`).join(' ')
   return (
     <div className={styles.lineLayer} aria-hidden="true">
       <svg viewBox="0 0 700 175" preserveAspectRatio="none" className={styles.lineSvg}>
@@ -51,7 +56,7 @@ function LineChart({ applications, shortlisted }) {
           <span
             key={`${dotClass}-${index}`}
             className={cx(styles.dot, dotClass)}
-            style={{ left: `${((index + 0.5) / 7) * 100}%`, bottom: percent(value) }}
+            style={{ left: `${((index + 0.5) / DAYS) * 100}%`, bottom: percent(value) }}
           />
         )),
       )}
@@ -59,29 +64,36 @@ function LineChart({ applications, shortlisted }) {
   )
 }
 
-/** "Hiring momentum": illustrative applications vs shortlisted activity, as bars or a line, per period. */
+/**
+ * "Hiring momentum" (M-083, M-170): applications received and shortlist additions per day, Monday to Sunday of this
+ * or last week in the browser's time zone, as bars or a line.
+ */
 export default function HiringMomentumCard() {
+  const { t } = useTranslation()
+  const format = useFormat()
   const [view, setView] = useState('bars')
-  const [periodId, setPeriodId] = useState(MOMENTUM_PERIODS[0].id)
-  const period = MOMENTUM_PERIODS.find((item) => item.id === periodId)
-  const summary = `${period.label} activity. Applications: ${period.applications.join(', ')}. Shortlisted: ${period.shortlisted.join(', ')}.`
+  const [period, setPeriod] = useState(PERIODS[0])
+  const { data } = useGetMomentumQuery({ tz: browserTimeZone(), period })
+  const days = data?.days ?? []
+  const applications = days.map((day) => day.applications)
+  const shortlisted = days.map((day) => day.shortlisted)
+  // The scale fits the busiest day, with headroom so the tallest bar stays inside the plot.
+  const scale = Math.max(4, Math.ceil(Math.max(0, ...applications, ...shortlisted) * 1.2))
+  const percent = (value) => `${(value / scale) * 100}%`
+  const summary = t('applications:overview.summary', { period: t(`applications:overview.periods.${period}`), applications: applications.join(', '), shortlisted: shortlisted.join(', ') })
 
   return (
-    <section className={styles.card} aria-labelledby="momentum-title">
+    <section className={styles.card} aria-labelledby="momentum-title" data-card="momentum">
       <div className={styles.head}>
-        <SectionHeading
-          id="momentum-title"
-          title="Hiring momentum"
-          description="Illustrative activity across your open roles"
-        />
+        <SectionHeading id="momentum-title" title={t('applications:overview.momentumTitle')} description={t('applications:overview.momentumDescription')} />
         <div className={styles.controls}>
           <ViewToggle view={view} onChange={setView} />
           <label className={styles.period}>
-            <span className="sr-only">Period</span>
-            <select value={periodId} onChange={(event) => setPeriodId(event.target.value)} className={styles.select}>
-              {MOMENTUM_PERIODS.map((item) => (
-                <option key={item.id} value={item.id}>
-                  {item.label}
+            <span className="sr-only">{t('applications:overview.period')}</span>
+            <select value={period} name="period" onChange={(event) => setPeriod(event.target.value)} className={styles.select}>
+              {PERIODS.map((item) => (
+                <option key={item} value={item}>
+                  {t(`applications:overview.periods.${item}`)}
                 </option>
               ))}
             </select>
@@ -93,39 +105,33 @@ export default function HiringMomentumCard() {
       <ul className={styles.legend}>
         <li className={styles.legendItem}>
           <span className={cx(styles.swatch, styles.applicationSwatch)} />
-          Applications
+          {t('applications:overview.applicationsSeries')}
         </li>
         <li className={styles.legendItem}>
           <span className={cx(styles.swatch, styles.shortlistSwatch)} />
-          Shortlisted
+          {t('applications:overview.shortlistedSeries')}
         </li>
       </ul>
 
-      <div className={styles.chart} role="img" aria-label={summary}>
+      <div className={styles.chart} role="img" aria-label={summary} data-momentum={JSON.stringify(days)}>
         <div className={cx(styles.plot, view === 'line' && styles.plotLine)}>
-          {MOMENTUM_DAYS.map((day, index) => (
-            <div key={day} className={styles.column}>
+          {days.map((day, index) => (
+            <div key={day.date} className={styles.column}>
               {view === 'bars' && (
                 <>
-                  <span
-                    className={cx(styles.bar, styles.applicationBar)}
-                    style={{ height: percent(period.applications[index]) }}
-                  />
-                  <span
-                    className={cx(styles.bar, styles.shortlistBar)}
-                    style={{ height: percent(period.shortlisted[index]) }}
-                  />
+                  <span className={cx(styles.bar, styles.applicationBar)} style={{ height: percent(applications[index]) }} />
+                  <span className={cx(styles.bar, styles.shortlistBar)} style={{ height: percent(shortlisted[index]) }} />
                 </>
               )}
             </div>
           ))}
-          {view === 'line' && <LineChart applications={period.applications} shortlisted={period.shortlisted} />}
+          {view === 'line' && days.length > 0 && <LineChart applications={applications} shortlisted={shortlisted} scale={scale} />}
         </div>
       </div>
       <div className={cx(styles.labels, view === 'line' && styles.labelsLine)} aria-hidden="true">
-        {MOMENTUM_DAYS.map((day) => (
-          <span key={day} className={styles.label}>
-            {day}
+        {days.map((day) => (
+          <span key={day.date} className={styles.label}>
+            {format.date(day.date, { weekday: 'short' })}
           </span>
         ))}
       </div>

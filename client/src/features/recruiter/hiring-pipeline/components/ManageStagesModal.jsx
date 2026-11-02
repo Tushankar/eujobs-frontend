@@ -1,38 +1,73 @@
 import { useState } from 'react'
+import { useTranslation } from 'react-i18next'
 import { ChevronDown, ChevronUp, Plus, Trash2 } from 'lucide-react'
-import { Button, Icon, IconButton, Modal, TextField } from '@/components/ui'
-import { MAX_STAGE_NAME_LENGTH } from '../data/pipeline.js'
+import { useGetConfigQuery } from '@/app/api.js'
+import { Button, Icon, IconButton, Modal, SelectField, TextField } from '@/components/ui'
+import { useErrorText } from '@/lib/forms.js'
+import { useAddStageMutation, useRemoveStageMutation, useReorderStagesMutation, useUpdateStageMutation } from '@/features/recruiter/applications/api.js'
 import styles from './ManageStagesModal.module.css'
 
-/** One numbered stage row. The name edits in place (saved on blur / Enter); reorder and remove sit on the right. */
-function StageRow({ stage, index, total, onRename, onMove, onRemove, error }) {
-  const [draft, setDraft] = useState(stage.name)
-  const [renameError, setRenameError] = useState(null)
-  const message = renameError ?? error
+/** A Manage stages error as text: the M-072 rules come back as codes and field keys from the server. */
+function useStageError() {
+  const { t } = useTranslation()
+  const errorText = useErrorText()
+  return (error) => {
+    const body = error?.data?.error
+    if (body?.code === 'IN_USE') return t('applications:stages.inUse', { count: body.params.count })
+    if (body?.code === 'CONFLICT') return t('applications:stages.entry')
+    if (body?.fields?.stages) return t(body.fields.stages === 'too_many' ? 'applications:stages.tooMany' : 'applications:stages.tooFew', body.params)
+    if (body?.fields?.name) return errorText.field('stageName', { key: body.fields.name, params: body.params })
+    return errorText.code(error)
+  }
+}
 
-  function commit() {
+/** One numbered stage row: the name edits in place (saved on blur / Enter), the candidate status, reorder and remove. */
+function StageRow({ stage, index, total, categoryOptions, onMove, onError, error }) {
+  const { t } = useTranslation()
+  const stageError = useStageError()
+  const [updateStage] = useUpdateStageMutation()
+  const [removeStage] = useRemoveStageMutation()
+  const [draft, setDraft] = useState(stage.name)
+
+  async function save(body) {
+    try {
+      await updateStage({ id: stage.id, ...body }).unwrap()
+      onError(stage.id, null)
+      return true
+    } catch (failure) {
+      onError(stage.id, stageError(failure))
+      return false
+    }
+  }
+
+  async function commit() {
     if (draft.trim() === stage.name) {
       setDraft(stage.name)
-      setRenameError(null)
+      onError(stage.id, null)
       return
     }
-    const failure = onRename(stage.id, draft)
-    setRenameError(failure)
-    if (!failure) setDraft(draft.trim())
+    if (await save({ name: draft })) setDraft(draft.trim())
+  }
+
+  async function remove() {
+    try {
+      await removeStage(stage.id).unwrap()
+    } catch (failure) {
+      onError(stage.id, stageError(failure))
+    }
   }
 
   return (
-    <li className={styles.item}>
+    <li className={styles.item} data-stage={stage.name}>
       <div className={styles.row}>
         <span className={styles.index} aria-hidden="true">
           {index + 1}.
         </span>
         <input
           className={styles.name}
-          aria-label={`Name of stage ${index + 1}`}
-          aria-invalid={message ? true : undefined}
+          aria-label={t('applications:stages.name', { index: index + 1 })}
+          aria-invalid={error ? true : undefined}
           value={draft}
-          maxLength={MAX_STAGE_NAME_LENGTH + 10}
           onChange={(event) => setDraft(event.target.value)}
           onBlur={commit}
           onKeyDown={(event) => {
@@ -40,42 +75,74 @@ function StageRow({ stage, index, total, onRename, onMove, onRemove, error }) {
             if (event.key === 'Escape' && draft !== stage.name) {
               event.stopPropagation()
               setDraft(stage.name)
-              setRenameError(null)
+              onError(stage.id, null)
             }
           }}
         />
-        <IconButton icon={ChevronUp} iconSize={15} label={`Move ${stage.name} up`} className={styles.reorder} disabled={index === 0} onClick={() => onMove(stage.id, -1)} />
-        <IconButton icon={ChevronDown} iconSize={15} label={`Move ${stage.name} down`} className={styles.reorder} disabled={index === total - 1} onClick={() => onMove(stage.id, 1)} />
-        <IconButton icon={Trash2} label={`Remove ${stage.name}`} onClick={() => onRemove(stage.id)} />
+        <select
+          className={styles.category}
+          aria-label={t('applications:stages.category', { name: stage.name })}
+          value={stage.category}
+          disabled={stage.isEntry}
+          onChange={(event) => save({ category: event.target.value })}
+        >
+          {categoryOptions.map((option) => (
+            <option key={option.value} value={option.value}>
+              {option.label}
+            </option>
+          ))}
+        </select>
+        <IconButton icon={ChevronUp} iconSize={15} label={t('applications:stages.up', { name: stage.name })} className={styles.reorder} disabled={stage.isEntry || index <= 1} onClick={() => onMove(index, -1)} />
+        <IconButton icon={ChevronDown} iconSize={15} label={t('applications:stages.down', { name: stage.name })} className={styles.reorder} disabled={stage.isEntry || index === total - 1} onClick={() => onMove(index, 1)} />
+        <IconButton icon={Trash2} label={t('applications:stages.remove', { name: stage.name })} disabled={stage.isEntry} onClick={remove} />
       </div>
-      {message && (
+      {error && (
         <p className={styles.error} role="alert">
-          {message}
+          {error}
         </p>
       )}
     </li>
   )
 }
 
-/** "Your process. Your stages." dialog: rename, reorder, add and remove pipeline stages with validation. */
-export default function ManageStagesModal({ open, onClose, stages, onAdd, onRename, onMove, onRemove }) {
+/**
+ * "Your process. Your stages." (M-072, OD5): 2 to 12 stages, names up to 24 characters and unique, the first stage
+ * fixed in place, each stage with the status candidates see. Every change is saved on the server at once.
+ */
+export default function ManageStagesModal({ open, onClose, stages }) {
+  const { t } = useTranslation()
+  const stageError = useStageError()
+  const { data: config } = useGetConfigQuery()
+  const [addStage, { isLoading }] = useAddStageMutation()
+  const [reorderStages] = useReorderStagesMutation()
   const [newName, setNewName] = useState('')
+  const [newCategory, setNewCategory] = useState('screening')
   const [addError, setAddError] = useState(null)
-  const [removal, setRemoval] = useState(null)
+  const [rowErrors, setRowErrors] = useState({})
+  const categoryOptions = (config?.enums.stageCategory ?? []).map((category) => ({ value: category, label: t(`applications:stages.status.${category}`) }))
 
-  function handleAdd(event) {
+  const setRowError = (id, message) => setRowErrors((current) => ({ ...current, [id]: message }))
+
+  async function handleAdd(event) {
     event.preventDefault()
-    const failure = onAdd(newName)
-    setAddError(failure)
-    if (!failure) setNewName('')
+    try {
+      await addStage({ name: newName, category: newCategory }).unwrap()
+      setNewName('')
+      setNewCategory('screening')
+      setAddError(null)
+    } catch (failure) {
+      setAddError(stageError(failure))
+    }
   }
 
-  function handleRemove(stageId) {
-    setRemoval({ stageId, message: onRemove(stageId) })
+  function move(index, direction) {
+    const ids = stages.map((stage) => stage.id)
+    ;[ids[index], ids[index + direction]] = [ids[index + direction], ids[index]]
+    reorderStages(ids)
   }
 
   return (
-    <Modal open={open} onClose={onClose} title="Your process. Your stages." width={512} divided>
+    <Modal open={open} onClose={onClose} title={t('applications:stages.title')} description={t('applications:stages.categoryHint')} width={600} divided>
       <ol className={styles.list}>
         {stages.map((stage, index) => (
           <StageRow
@@ -83,18 +150,19 @@ export default function ManageStagesModal({ open, onClose, stages, onAdd, onRena
             stage={stage}
             index={index}
             total={stages.length}
-            error={removal?.stageId === stage.id ? removal.message : null}
-            onRename={onRename}
-            onMove={onMove}
-            onRemove={handleRemove}
+            categoryOptions={categoryOptions}
+            error={rowErrors[stage.id]}
+            onError={setRowError}
+            onMove={move}
           />
         ))}
       </ol>
       <form className={styles.add} onSubmit={handleAdd} noValidate>
         <TextField
           className={styles.newName}
-          aria-label="New pipeline stage"
-          placeholder="New stage name"
+          aria-label={t('applications:stages.new')}
+          placeholder={t('applications:stages.new')}
+          name="stageName"
           value={newName}
           error={addError}
           data-autofocus
@@ -103,11 +171,12 @@ export default function ManageStagesModal({ open, onClose, stages, onAdd, onRena
             setAddError(null)
           }}
         />
-        <Button type="submit" className={styles.addButton} leftIcon={<Icon as={Plus} size={14} />}>
-          Add
+        <SelectField className={styles.newCategory} aria-label={t('applications:stages.newCategory')} name="stageCategory" options={categoryOptions} value={newCategory} onChange={(event) => setNewCategory(event.target.value)} />
+        <Button type="submit" className={styles.addButton} loading={isLoading} leftIcon={<Icon as={Plus} size={14} />}>
+          {t('applications:stages.add')}
         </Button>
       </form>
-      <p className={styles.note}>Move candidates out of a stage before removing it. Stage menus offer a keyboard-friendly alternative to dragging.</p>
+      <p className={styles.note}>{t('applications:stages.note')}</p>
     </Modal>
   )
 }

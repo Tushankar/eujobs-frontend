@@ -6,14 +6,9 @@
   padding-top: 32px;
 }
 
-.chip {
-  padding: 8px 12px;
-  border: 1.2px solid var(--border);
-  border-radius: var(--radius-md);
-  background: var(--card);
-  font-size: 11px;
-  line-height: 16.5px;
-  color: var(--muted-foreground);
+.jobFilter {
+  width: 240px;
+  max-width: 100%;
 }
 
 .count {

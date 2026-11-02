@@ -61,7 +61,7 @@
     "unavailableText": "It may have been filled or removed. Browse the latest opportunities instead.",
     "find": "Find jobs",
     "notAccepting": "No longer accepting applications",
-    "notAcceptingText": "The company stopped accepting applications for this role. You saved it, so it stays here for your records.",
+    "notAcceptingText": "The company stopped accepting applications for this role. You saved it or applied to it, so it stays here for your records.",
     "posted": "Posted {{time}}",
     "match": "Your skills and this role",
     "matched": "Skills on your profile",

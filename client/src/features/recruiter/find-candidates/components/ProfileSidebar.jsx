@@ -1,12 +1,43 @@
 import { useTranslation } from 'react-i18next'
 import { Bookmark, ShieldCheck } from 'lucide-react'
 import { Button, Icon, Panel, SelectField } from '@/components/ui'
+import { useGetPipelineQuery } from '@/features/recruiter/applications/api.js'
+import ApplicationStageSelect from '@/features/recruiter/applications/components/ApplicationStageSelect.jsx'
+import { useFormat } from '@/lib/preferences.js'
 import MatchInsights from './MatchInsights.jsx'
 import styles from './ProfileSidebar.module.css'
 
+/** M-071: one stage select per application to this company; a non-applicant has none. */
+function CompanyApplications({ candidate }) {
+  const { t } = useTranslation()
+  const format = useFormat()
+  const { data: pipeline } = useGetPipelineQuery()
+  if (!candidate.applications.length || !pipeline) return null
+  return (
+    <Panel padding={20} className={styles.applications} data-profile-applications>
+      <h2 className={styles.applicationsTitle}>{t('applications:profile.title')}</h2>
+      <ul className={styles.applicationList}>
+        {candidate.applications.map((application) => (
+          <li key={application.id} className={styles.application}>
+            <p className={styles.applicationJob}>{t('applications:profile.row', { job: application.job.title, date: format.date(application.appliedAt) })}</p>
+            <ApplicationStageSelect
+              application={application}
+              stages={pipeline.items}
+              variant="card"
+              candidateName={candidate.fullName}
+              jobTitle={application.job.title}
+              label={t('applications:profile.stage', { job: application.job.title })}
+            />
+          </li>
+        ))}
+      </ul>
+    </Panel>
+  )
+}
+
 /**
- * Right column of the candidate profile: the shortlist action, the job to match against and the evidence panel.
- * Messaging (Phase 7) and the stage select (Phase 6) come with their phases (P4-Q1).
+ * Right column of the candidate profile: the shortlist action, the stage of each application to this company, the
+ * job to match against and the evidence panel. Messaging comes with Phase 7 (P4-Q1).
  */
 export default function ProfileSidebar({ candidate, jobs, job, onJobChange, onToggleShortlist }) {
   const { t } = useTranslation()
@@ -19,6 +50,8 @@ export default function ProfileSidebar({ candidate, jobs, job, onJobChange, onTo
           </Button>
         </div>
       </Panel>
+
+      <CompanyApplications candidate={candidate} />
 
       <Panel padding={20} className={styles.evidence}>
         <SelectField

@@ -12,7 +12,7 @@ import aiNavGlyph from '@/assets/icons/ai-nav.svg'
 import { useFormat } from '@/lib/preferences.js'
 import { useGetCandidateOverviewQuery, useGetRecommendedJobsQuery, useGetSavedJobsQuery, useSaveToggle, useSearchJobsQuery } from '@/features/candidate/jobs/api.js'
 import JobCard from '@/features/candidate/jobs/components/JobCard.jsx'
-import { useApplications } from '@/features/candidate/jobs/hooks/useApplications.js'
+import { useCounters } from '@/features/candidate/applications/api.js'
 import ApplicationActivityCard from '../components/ApplicationActivityCard.jsx'
 import ProfileStrengthCard from '../components/ProfileStrengthCard.jsx'
 import VerificationCard from '../components/VerificationCard.jsx'
@@ -33,8 +33,8 @@ function viewsDelta(views, format) {
 
 /**
  * Candidate Overview: KPIs (Recommended jobs per U8 until Phase 9, saved jobs and profile views from the server),
- * the For you / Recently added / Saved lists and the profile rail. Active applications stay on their mock until
- * Phase 6; the AI teaser returns with the AI in Phase 9 (P4-Q1).
+ * active applications from the counters (M-094), the For you / Recently added / Saved lists and the profile rail. The
+ * AI teaser returns with the AI in Phase 9 (P4-Q1).
  */
 export default function OverviewPage() {
   const { t } = useTranslation()
@@ -47,7 +47,7 @@ export default function OverviewPage() {
   const { data: recent } = useSearchJobsQuery({ sort: 'newest' }, { skip: tab !== 'recent' })
   const { data: saved } = useGetSavedJobsQuery(undefined, { skip: tab !== 'saved' })
   const toggleSave = useSaveToggle()
-  const { activeCount } = useApplications()
+  const counters = useCounters()
   const lists = { 'for-you': recommended, recent, saved }
   const jobs = lists[tab]?.items.slice(0, SHOWN)
   const firstName = me?.fullName.split(/\s+/)[0] ?? ''
@@ -89,7 +89,7 @@ export default function OverviewPage() {
           />
         </Link>
         <Link to="/candidate/applications" className={styles.statLink}>
-          <StatCard label={t('findJobs:overview.stats.applications')} value={activeCount} caption={t('findJobs:overview.stats.applicationsCaption')} icon={BriefcaseBusiness} />
+          <StatCard label={t('findJobs:overview.stats.applications')} value={counters?.activeApplications ?? 0} caption={t('findJobs:overview.stats.applicationsCaption')} icon={BriefcaseBusiness} />
         </Link>
         <Link to="/candidate/jobs" className={styles.statLink} data-stat="saved">
           <StatCard label={t('findJobs:overview.stats.saved')} value={overview?.savedJobs ?? 0} caption={t('findJobs:overview.stats.savedCaption')} icon={Bookmark} />

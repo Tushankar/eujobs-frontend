@@ -1,51 +1,61 @@
+import { useTranslation } from 'react-i18next'
 import { Link } from 'react-router-dom'
 import { Clock, Sparkles } from 'lucide-react'
 import { Avatar, Icon } from '@/components/ui'
 import PillBadge from '@/components/common/PillBadge.jsx'
+import ApplicationStageSelect from '@/features/recruiter/applications/components/ApplicationStageSelect.jsx'
+import { useFormat } from '@/lib/preferences.js'
 import { cx } from '@/utils/cx.js'
-import StageSelect from './StageSelect.jsx'
 import styles from './ApplicantCard.module.css'
 
-/** Board card for one applicant. Draggable; the stage menu is the keyboard-accessible way to move it. */
-export default function ApplicantCard({ applicant, stages, dragging, onStageChange, onDragStart, onDragEnd }) {
+/** Board card for one application (M-069): the candidate, the job, the skill overlap and the stage select. Draggable. */
+export default function ApplicantCard({ application, stages, dragging, onDragStart, onDragEnd }) {
+  const { t } = useTranslation()
+  const format = useFormat()
+  const { candidate, job } = application
+  const meta = [
+    candidate.yearsExperience != null && t('applications:board.years', { count: candidate.yearsExperience }),
+    candidate.workPreference && t(`enums:workPreference.${candidate.workPreference}`),
+  ].filter(Boolean)
+
   return (
     <article
       className={cx(styles.card, dragging && styles.dragging)}
+      data-application={application.id}
       draggable
       onDragStart={(event) => {
         event.dataTransfer.effectAllowed = 'move'
-        event.dataTransfer.setData('text/plain', applicant.id)
-        onDragStart(applicant.id)
+        event.dataTransfer.setData('text/plain', application.id)
+        onDragStart(application.id)
       }}
       onDragEnd={onDragEnd}
     >
       <div className={styles.head}>
-        <Avatar name={applicant.name} size={36} colors={applicant.avatar} className={styles.avatar} />
-        <Link to={`/recruiter/find-candidates/${applicant.id}`} className={styles.name}>
-          {applicant.name}
+        <Avatar name={candidate.fullName} src={candidate.photoUrl ?? undefined} size={36} className={styles.avatar} />
+        <Link to={`/recruiter/find-candidates/${candidate.id}`} className={styles.name}>
+          {candidate.fullName}
         </Link>
       </div>
-      <p className={styles.role}>{applicant.title}</p>
-      <p className={styles.meta}>
-        {applicant.experienceYears} years · {applicant.workMode}
-      </p>
+      <p className={styles.role}>{candidate.headline}</p>
+      {meta.length > 0 && <p className={styles.meta}>{meta.join(' · ')}</p>}
       <div>
         <PillBadge tone="accent">
           <Icon as={Sparkles} size={10} />
-          {applicant.alignedSkills} aligned skills
+          {t('applications:board.aligned', { count: candidate.alignedSkills })}
         </PillBadge>
       </div>
       <div className={styles.footer}>
-        <StageSelect
+        <ApplicationStageSelect
+          application={application}
+          stages={stages}
           variant="card"
-          options={stages}
-          value={applicant.stageId}
-          label={`Move ${applicant.name} to stage`}
-          onChange={onStageChange}
+          candidateName={candidate.fullName}
+          jobTitle={job.title}
+          label={t('applications:board.move', { name: candidate.fullName })}
         />
         <p className={styles.activity}>
           <Icon as={Clock} size={10} />
-          Demo profile activity
+          {t('applications:board.appliedFor', { job: job.title, date: format.date(application.appliedAt) })}
         </p>
       </div>
     </article>

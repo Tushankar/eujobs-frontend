@@ -17,9 +17,14 @@ import BrandLogo from './BrandLogo.jsx'
 import { identitySubtitle } from './identity.js'
 import styles from './Sidebar.module.css'
 
-/** Badge text computed by a hook (e.g. the live count of active applications). */
-function LiveBadgeText({ useText }) {
-  return useText()
+/** A badge whose text a hook computes (e.g. the live count of active applications); none when the hook returns null (M-094). */
+function LiveBadge({ useText, className, name }) {
+  const text = useText()
+  return text ? (
+    <span className={className} data-nav-badge={name}>
+      {text}
+    </span>
+  ) : null
 }
 
 function NavItem({ workspace, item, me }) {
@@ -40,11 +45,8 @@ function NavItem({ workspace, item, me }) {
           )}
           <span className={styles.linkLabel}>{t(`shell:nav.${item.key}`)}</span>
           {locked && <PlanChip className={cx(styles.badge, styles.badgeLock)} />}
-          {!locked && item.badge && (
-            <span className={cx(styles.badge, item.badge.tone === 'ai' && styles.badgeAi)}>
-              {item.badge.useText ? <LiveBadgeText useText={item.badge.useText} /> : t(`shell:${item.badge.textKey}`)}
-            </span>
-          )}
+          {!locked && item.badge?.useText && <LiveBadge useText={item.badge.useText} className={styles.badge} name={item.key} />}
+          {!locked && item.badge?.textKey && <span className={cx(styles.badge, item.badge.tone === 'ai' && styles.badgeAi)}>{t(`shell:${item.badge.textKey}`)}</span>}
         </>
       )}
     </NavLink>

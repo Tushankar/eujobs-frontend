@@ -1,6 +1,6 @@
 import { config } from '../config/env.js'
 import { connectDb, disconnectDb } from '../lib/db.js'
-import { t } from '../lib/i18n.js'
+import { interpolate, t } from '../lib/i18n.js'
 import { sendEmail } from '../lib/mailer.js'
 import { demoAddress } from '../seed/demo.js'
 
@@ -21,6 +21,9 @@ const SAMPLE_PARAMS = {
   cv_request: { company: 'Mail Test Ltd', details: 'We would like to see the CV you used for your 2023 role.', link: `${config.clientOrigin}/candidate/cv-versions` },
   renewal_failed: { plan: 'Plus', amount: '£9', link: `${config.clientOrigin}/candidate/settings/billing` },
   plan_ended: { plan: 'Plus', link: `${config.clientOrigin}/candidate/settings/billing` },
+  application_status: { job: 'Senior Product Designer', company: 'Mail Test Ltd', link: `${config.clientOrigin}/candidate/applications` },
+  application_rejected: { job: 'Senior Product Designer', company: 'Mail Test Ltd', link: `${config.clientOrigin}/candidate/jobs` },
+  new_applications: { job: 'Senior Product Designer', link: `${config.clientOrigin}/recruiter/applications` },
 }
 
 const [type, target, language = 'en'] = process.argv.slice(2)
@@ -35,6 +38,13 @@ await connectDb()
 const check = type.startsWith('verification_') ? { check: t(language, 'verification.category.identity') } : {}
 // So does the reason a recruiter picked for a CV request.
 const reason = type === 'cv_request' ? { reason: t(language, 'cvRequestReason.verify_employment') } : {}
-const status = await sendEmail({ type, to, language, params: { name: 'Mail test', ...check, ...reason, ...SAMPLE_PARAMS[type] } })
+// Application emails carry the status, the next step and the count in the recipient's language, as the tasks do.
+const application =
+  type === 'application_status'
+    ? { status: t(language, 'labels.applicationStatus.interview'), nextStep: t(language, 'labels.nextStep.interview') }
+    : type === 'new_applications'
+      ? { countLabel: interpolate(t(language, 'labels.newApplications.other'), { count: 2 }) }
+      : {}
+const status = await sendEmail({ type, to, language, params: { name: 'Mail test', ...check, ...reason, ...application, ...SAMPLE_PARAMS[type] } })
 console.log(`mail:test ${type} (${language}) to ${target.startsWith('+') ? `the ${target} alias` : 'the given address'}: ${status}`)
 await disconnectDb()

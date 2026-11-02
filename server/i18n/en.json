@@ -125,6 +125,36 @@
         "Your applications, job alerts and messages are kept. Your alerts start again when you subscribe."
       ],
       "action": "Open billing"
+    },
+    "application_status": {
+      "subject": "Update on your {{job}} application",
+      "heading": "Your application status changed",
+      "body": [
+        "Hi {{name}},",
+        "Your application for {{job}} at {{company}} is now: {{status}}.",
+        "{{nextStep}}"
+      ],
+      "action": "View application"
+    },
+    "application_rejected": {
+      "subject": "Update on your {{job}} application",
+      "heading": "Your application was not selected",
+      "body": [
+        "Hi {{name}},",
+        "{{company}} reviewed your application for {{job}} and decided not to move forward with it.",
+        "Thank you for your interest. You can keep applying to other roles on Local WorkMan."
+      ],
+      "action": "Find more jobs"
+    },
+    "new_applications": {
+      "subject": "{{countLabel}} for {{job}}",
+      "heading": "New applications",
+      "body": [
+        "Hi {{name}},",
+        "{{countLabel}} for {{job}} since your last update.",
+        "Review them and move people forward from your Applications page."
+      ],
+      "action": "Open applications"
     }
   },
   "verification": {
@@ -161,6 +191,28 @@
       "mid": "Mid-level",
       "senior": "Senior",
       "lead": "Lead"
+    },
+    "applicationStatus": {
+      "applied": "Applied",
+      "under_review": "Under review",
+      "interview": "Interview",
+      "offer": "Offer",
+      "hired": "Hired",
+      "not_selected": "Not selected",
+      "withdrawn": "Withdrawn"
+    },
+    "nextStep": {
+      "applied": "The company has your application. You will hear from them when it moves forward.",
+      "under_review": "The company is reviewing your application. No action is needed from you.",
+      "interview": "The company would like to talk. They will contact you about the interview.",
+      "offer": "The company is preparing an offer. They will contact you with the details.",
+      "hired": "Congratulations. The company chose you for this role.",
+      "not_selected": "The company chose not to move forward with this application.",
+      "withdrawn": "You withdrew this application."
+    },
+    "newApplications": {
+      "one": "{{count}} new application",
+      "other": "{{count}} new applications"
     }
   }
 }

@@ -109,6 +109,9 @@
     },
     "size": {
       "required": "Select a company size."
+    },
+    "consent": {
+      "required": "Tick the box to share your profile with this company."
     }
   },
   "in_both": "{{skill}} is already a required skill.",
