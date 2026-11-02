@@ -1991,6 +1991,46 @@ The course-purchase path is built here but verified in Phase 8. AI pages are gat
 
 **API tests.** The gate matrix (plan × completeness × job state); duplicates and the partial unique index; withdraw and re-apply; stage rules (M-072) and category mapping; history; U13 collapse with tick(now); rejection undo; OD14 batching; counters; KPI, funnel and momentum aggregations with time zones.
 
+#### Phase 6 handoff (2026-11-02, built, awaiting owner review)
+
+**Built.**
+- Server: the `applications` module, made of the `Application` model, `PipelineStage`, the apply gate (plan → completeness → job state in one request), withdraw and re-apply, recruiter list, stage move, reject with undo, Manage stages, the counters, the funnel and momentum endpoints, and the `email.stage` and `email.new-applications` tasks. The emails `application_status`, `application_rejected` and `new_applications` ship in en/es/fr. Discovery opens applicants' profiles and lists the CV sent with each application, and job cards carry the candidate's application. `GET /me/counters` was added. The scheduler passes the tick time to task handlers. `npm run mail:test` knows the three new types.
+- Seed: the six pipeline placements as Acme applications with dated histories and activity events (P6-C7). Alex has none (P6-Q1).
+- Client:
+  - Candidate: Apply on job cards and job details, the gate, the apply dialog, Applications with history, next step, withdraw and Apply again, the badge (hidden at 0, polled every 15 s, paused in hidden tabs) and the Overview card and KPI.
+  - Recruiter: the Applications table with job, stage, "Not selected" and "Withdrawn" filters, the board with a job filter, Manage stages with a status per stage, the reject dialog with "Email the candidate", stage selects on the candidate profile, the CVs sent with applications on the Resume tab, applicants on job details, and the Overview Applications KPI, funnel and momentum.
+- Deleted:
+  - the candidate mocks `applications.js`, `useApplications`, `useJobListings`, `jobs.js`, `recruiterJobs.js` and `jobUtils.js`, and the mock AI job summary dialog and button (P6-C8);
+  - the recruiter mocks `pipeline.js`, `usePipeline`, `useLiveApplicant`, `overview/data/overview.js` and `company/data/company.js`.
+  The admin Applications sample moved into the admin feature (as P5-Q1).
+- e2e: `e2e/lib/applicants.js`, which builds complete candidates through the API with a real Stripe Plus (P6-C9), and scenarios P6-01 … P6-11.
+
+**Calls the plan did not specify:** owner answers P6-Q1 and P6-Q2, and builder calls P6-C1 … P6-C9 in the Owner answers table, all awaiting review.
+
+**Results and exact commands** (run from the repo root unless noted; never run the server tests and the e2e at the same time):
+
+| Command | Result |
+|---|---|
+| `cd server && npm test` | 216 of 216 |
+| `cd server && npm run lint` | clean |
+| `cd client && npm run lint && npm run build` | clean, built |
+| `npx oxlint .` in `e2e/` | clean (the two Phase 3/4 warnings were fixed first) |
+| `node e2e/run.js phase-6` | 15 of 15 |
+| `node e2e/run.js sweep` | D and M pass |
+| `cd server && npm run mail:test -- application_status +alex`, `… application_rejected +alex`, `… new_applications +alex` | sent; the owner has not yet confirmed arrival |
+
+**Fixed during the browser checks.** "Apply again" could send an empty CV id before the CV list had loaded (422 "Check this value."). The dialog now leaves the id out until a version is chosen, and the server uses the live CV.
+
+**Flaky or watch.**
+- Completing onboarding sets the language from the profile country (M-134). An e2e candidate meant to read Spanish emails must set `languageExplicit`.
+- Phase 2–5 scenarios were not rerun in this phase; the sweep covers every route.
+- In Git Bash, `npm run mail:test` once segfaulted inside npm before sending; `node --env-file=.env scripts/mailTest.js <type> <to>` worked.
+
+**Open.**
+- The owner confirms the three live emails.
+- The development database `eujobs` still holds an older seed. Run `cd server && npm run seed:catalog && npm run seed:demo` to see the Phase 6 data in the dev app.
+- Phase 7 makes the unread-messages counter real (it answers 0 now).
+
 ### Phase 7: Messaging, counters and job alerts
 
 **Scope.** Two-way messages for both roles, with the unread badge and the email; job alerts with instant and digest delivery. "Translate" per message arrives in Phase 9; "Report message" in Phase 10.
