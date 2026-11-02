@@ -7,15 +7,9 @@ import PillBadge from '@/components/common/PillBadge.jsx'
 import StatCard from '@/components/common/StatCard.jsx'
 import { useAuditLog } from '@/features/admin/audit-logs/hooks/useAuditLog.js'
 import { formatDateTime } from '@/features/admin/audit-logs/utils/formatDate.js'
-import {
-  PAYER_ROLE_LABEL,
-  PAYMENT_KIND_LABEL,
-  PAYMENT_STATUS,
-  formatMoney,
-} from '@/features/payments/data/payments.js'
 import PaymentsTable from '@/features/payments/components/PaymentsTable.jsx'
-import { usePayments } from '@/features/payments/hooks/usePayments.js'
 import { downloadCsv } from '@/utils/downloadCsv.js'
+import { PAYER_ROLE_LABEL, PAYMENT_KIND_LABEL, PAYMENT_STATUS, SAMPLE_PAYMENTS, formatMoney } from '../data/payments.js'
 import styles from './PaymentsPage.module.css'
 
 const STATUS_OPTIONS = [
@@ -35,11 +29,11 @@ const KIND_OPTIONS = [
 ]
 
 /**
- * Payments: every payment made through the demo checkout by candidates and recruiters (paid and declined), plus the
- * sample payments. Search and filters narrow the table; "Export payments" saves the matching rows as a CSV.
+ * Payments: sample payments of candidates and recruiters (P5-Q1, until Phase 10). Search and filters narrow the
+ * table; "Export payments" saves the matching rows as a CSV.
  */
 export default function PaymentsPage() {
-  const { payments } = usePayments()
+  const payments = SAMPLE_PAYMENTS
   const { record } = useAuditLog()
   const [query, setQuery] = useState('')
   const [status, setStatus] = useState('all')
@@ -49,7 +43,7 @@ export default function PaymentsPage() {
   const [exportStatus, setExportStatus] = useState('')
 
   const paid = payments.filter((payment) => payment.status === 'paid')
-  const collected = paid.reduce((total, payment) => total + payment.amount, 0)
+  const collected = paid.reduce((total, payment) => total + payment.amountMinor, 0)
 
   const rows = useMemo(() => {
     const needle = query.trim().toLowerCase()
@@ -68,12 +62,12 @@ export default function PaymentsPage() {
         ['Reference', 'Date', 'Payer', 'Role', 'Item', 'Type', 'Amount (GBP)', 'Method', 'Status', 'Failure reason'],
         ...rows.map((payment) => [
           payment.reference,
-          payment.at,
+          payment.paidAt,
           payment.payerName,
           PAYER_ROLE_LABEL[payment.payerRole],
           payment.itemName,
           PAYMENT_KIND_LABEL[payment.kind],
-          payment.amount.toFixed(2),
+          (payment.amountMinor / 100).toFixed(2),
           `${payment.method.brand} ending ${payment.method.last4}`,
           PAYMENT_STATUS[payment.status].label,
           payment.failureReason ?? '',
@@ -169,7 +163,7 @@ export default function PaymentsPage() {
             </div>
             <div className={styles.detail}>
               <dt>Amount</dt>
-              <dd>{formatMoney(selected.amount)}</dd>
+              <dd>{formatMoney(selected.amountMinor)}</dd>
             </div>
             <div className={styles.detail}>
               <dt>Method</dt>
@@ -177,7 +171,7 @@ export default function PaymentsPage() {
             </div>
             <div className={styles.detail}>
               <dt>Date</dt>
-              <dd>{formatDateTime(selected.at)}</dd>
+              <dd>{formatDateTime(selected.paidAt)}</dd>
             </div>
             {selected.failureReason && (
               <div className={styles.detail}>
