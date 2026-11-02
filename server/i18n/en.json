@@ -105,6 +105,26 @@
         "Nothing is shared unless you approve. You can choose which version to share, or decline, on your CV page."
       ],
       "action": "Open CV & versions"
+    },
+    "renewal_failed": {
+      "subject": "We could not renew your {{plan}} plan",
+      "heading": "Payment failed",
+      "body": [
+        "Hi {{name}},",
+        "We could not take the {{amount}} payment for your {{plan}} plan. Stripe will try again over the next days, and you keep {{plan}} while it does.",
+        "Update your card in Billing so you do not lose access."
+      ],
+      "action": "Open billing"
+    },
+    "plan_ended": {
+      "subject": "Your {{plan}} plan has ended",
+      "heading": "Plan ended",
+      "body": [
+        "Hi {{name}},",
+        "Your {{plan}} plan has ended. Applying, messaging recruiters, job alerts and the AI features are locked again.",
+        "Your applications, job alerts and messages are kept. Your alerts start again when you subscribe."
+      ],
+      "action": "Open billing"
     }
   },
   "verification": {

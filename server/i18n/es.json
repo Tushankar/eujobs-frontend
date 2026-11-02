@@ -105,6 +105,26 @@
         "No se comparte nada sin tu aprobación. En tu página de CV puedes elegir qué versión compartir o rechazar la solicitud."
       ],
       "action": "Abrir CV y versiones"
+    },
+    "renewal_failed": {
+      "subject": "No hemos podido renovar tu plan {{plan}}",
+      "heading": "El pago no se ha completado",
+      "body": [
+        "Hola, {{name}}:",
+        "No hemos podido cobrar el pago de {{amount}} de tu plan {{plan}}. Stripe lo volverá a intentar en los próximos días y mientras tanto mantienes {{plan}}.",
+        "Actualiza tu tarjeta en Facturación para no perder el acceso."
+      ],
+      "action": "Abrir Facturación"
+    },
+    "plan_ended": {
+      "subject": "Tu plan {{plan}} ha terminado",
+      "heading": "Plan terminado",
+      "body": [
+        "Hola, {{name}}:",
+        "Tu plan {{plan}} ha terminado. Postularte, escribir a los reclutadores, las alertas de empleo y las funciones de IA vuelven a estar bloqueados.",
+        "Conservas tus candidaturas, alertas de empleo y mensajes. Tus alertas se reanudan cuando vuelvas a suscribirte."
+      ],
+      "action": "Abrir Facturación"
     }
   },
   "verification": {

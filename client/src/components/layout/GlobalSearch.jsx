@@ -4,6 +4,9 @@ import { useNavigate } from 'react-router-dom'
 import { CircleHelp, Search, Settings2 } from 'lucide-react'
 import { Icon, Modal } from '@/components/ui'
 import { workspacePath } from '@/app/workspaces.js'
+import PlanChip from '@/features/candidate/billing/components/PlanChip.jsx'
+import { lacksEntitlement } from '@/features/candidate/billing/usePlan.js'
+import { usePreferences } from '@/lib/preferences.js'
 import { foldText } from '@/lib/text.js'
 import styles from './GlobalSearch.module.css'
 
@@ -11,15 +14,21 @@ import styles from './GlobalSearch.module.css'
 export default function GlobalSearch({ workspace, open, onClose }) {
   const { t } = useTranslation()
   const navigate = useNavigate()
+  const { me } = usePreferences()
   const [query, setQuery] = useState('')
 
   const destinations = useMemo(
     () => [
-      ...workspace.nav.map((item) => ({ label: t(`shell:nav.${item.key}`), to: workspacePath(workspace, item.to), icon: item.icon })),
+      ...workspace.nav.map((item) => ({
+        label: t(`shell:nav.${item.key}`),
+        to: workspacePath(workspace, item.to),
+        icon: item.icon,
+        locked: Boolean(item.entitlement) && lacksEntitlement(me, item.entitlement),
+      })),
       { label: t('shell:sidebar.settings'), to: workspacePath(workspace, 'settings'), icon: Settings2 },
       { label: t('shell:sidebar.help'), to: workspacePath(workspace, 'help'), icon: CircleHelp },
     ],
-    [workspace, t],
+    [workspace, t, me],
   )
   const results = destinations.filter((item) => foldText(item.label).includes(foldText(query.trim())))
 
@@ -64,6 +73,7 @@ export default function GlobalSearch({ workspace, open, onClose }) {
               <button type="button" className={styles.result} onClick={() => go(item)}>
                 {item.icon ? <Icon as={item.icon} size={16} /> : <span className={styles.iconSpacer} />}
                 {item.label}
+                {item.locked && <PlanChip className={styles.chip} />}
               </button>
             </li>
           ))}

@@ -7,7 +7,6 @@ import PillBadge from '@/components/common/PillBadge.jsx'
 import StatCard from '@/components/common/StatCard.jsx'
 import SectionHeading from '@/features/recruiter/overview/components/SectionHeading.jsx'
 import CourseCard from '../components/CourseCard.jsx'
-import PurchaseDialog from '../components/PurchaseDialog.jsx'
 import SuggestionCard from '../components/SuggestionCard.jsx'
 import { SUGGESTIONS } from '../data/courses.js'
 import { useRecruiterLearning } from '../hooks/useRecruiterLearning.js'
@@ -15,10 +14,9 @@ import styles from './LearningPage.module.css'
 
 /** Recruiter learning: progress stats, AI course suggestions and the searchable course library. */
 export default function LearningPage() {
-  const { courses: catalogue, progress, purchase, inProgressCount, certificateCount } = useRecruiterLearning()
+  const { courses: catalogue, progress, inProgressCount, certificateCount } = useRecruiterLearning()
   const [query, setQuery] = useState('')
   const [stream, setStream] = useState('all')
-  const [buying, setBuying] = useState(null)
 
   const streams = useMemo(() => [...new Set(catalogue.map((course) => course.stream))], [catalogue])
   const streamOptions = [{ value: 'all', label: 'All streams' }, ...streams.map((item) => ({ value: item, label: item }))]
@@ -111,7 +109,7 @@ export default function LearningPage() {
               <EmptyState icon={Search} title="No courses match" description="Try a different search or choose another specialist stream." />
             </div>
           ) : (
-            courses.map((course) => <CourseCard key={course.id} course={course} progress={progress(course)} onBuy={() => setBuying(course)} />)
+            courses.map((course) => <CourseCard key={course.id} course={course} progress={progress(course)} />)
           )}
         </div>
       </section>
@@ -119,15 +117,6 @@ export default function LearningPage() {
       <p className={styles.notice}>
         Recruiter learning progress and certificates are local prototype states saved in this browser. Courses provide professional-development guidance and do not replace company policy or jurisdiction-specific legal advice.
       </p>
-
-      <PurchaseDialog
-        course={buying}
-        onClose={() => setBuying(null)}
-        onConfirm={(course) => {
-          purchase(course.id)
-          setBuying(null)
-        }}
-      />
     </div>
   )
 }

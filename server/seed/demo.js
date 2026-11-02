@@ -14,8 +14,10 @@ import { CvAccessRequest, CvVersion } from '../modules/cv/cv.model.js'
 import { CandidateNote, ProfileView, RecruiterActivity, ShortlistEntry } from '../modules/discovery/discovery.model.js'
 import { File, FileAccessLog } from '../modules/files/files.model.js'
 import { Job, SavedJob } from '../modules/jobs/jobs.model.js'
+import { Course, Enrollment } from '../modules/learning/learning.model.js'
 import { Country } from '../modules/meta/meta.model.js'
 import { currentLegalVersions } from '../modules/meta/meta.service.js'
+import { Counter, Payment, StripeEvent, Subscription } from '../modules/payments/payments.model.js'
 import { User } from '../modules/users/users.model.js'
 import { VerificationSubmission } from '../modules/verification/verification.model.js'
 import { seedCandidates } from './candidates.js'
@@ -23,7 +25,9 @@ import { CANDIDATES, CITY_TIME_ZONES } from './data/candidates.js'
 import { DEMO_ACCOUNTS } from './data/demo.js'
 import { PLACES } from './data/places.js'
 import { COMPANIES } from './data/recruiters.js'
+import { seedPayments } from './payments.js'
 import { seedRecruiters } from './recruiters.js'
+import { deleteDatabaseCustomers } from './stripe.js'
 
 /*
  * seed:demo (U41): wipes the demo data and recreates it. Email logs and daily job runs are kept,
@@ -69,6 +73,8 @@ export async function seedDemo() {
     }
   }
 
+  // P5-Q3: the Stripe customers of this database's users go with them (seed ones included, OD8).
+  await deleteDatabaseCustomers(config.dbName, await User.distinct('stripeCustomerId', { stripeCustomerId: { $type: 'string' } }))
   await Promise.all([
     User.deleteMany({}),
     EmailToken.deleteMany({}),
@@ -91,6 +97,12 @@ export async function seedDemo() {
     RecruiterActivity.deleteMany({}),
     ProfileView.deleteMany({}),
     CvAccessRequest.deleteMany({}),
+    Subscription.deleteMany({}),
+    Payment.deleteMany({}),
+    Counter.deleteMany({}),
+    StripeEvent.deleteMany({}),
+    Course.deleteMany({}),
+    Enrollment.deleteMany({}),
   ])
   // Every stored file is demo data: one folder per purpose under the upload root (never another root).
   await Promise.all(ENUMS.filePurpose.map((purpose) => rm(join(config.uploadRoot, purpose), { recursive: true, force: true })))
@@ -114,12 +126,16 @@ export async function seedDemo() {
   const owner = await User.findOne({ isOwner: true })
   await seedCandidates({ emailOf, owner, now: now.getTime() })
   await seedRecruiters({ emailOf, owner, now: now.getTime() })
+  await seedPayments({ emailOf, now: now.getTime() })
 }
 
 if (import.meta.main) {
   await connectDb()
   await seedDemo()
-  const [accounts, profiles, companies, jobs, files] = await Promise.all([User, CandidateProfile, Company, Job, File].map((Model) => Model.countDocuments()))
-  console.log(`seed:demo done: ${accounts} accounts (Owner + ${DEMO_ACCOUNTS.length - 1} demo accounts), ${profiles} candidate profiles, ${companies} companies, ${jobs} jobs, ${files} files`)
+  const models = [User, CandidateProfile, Company, Job, File, Payment]
+  const [accounts, profiles, companies, jobs, files, payments] = await Promise.all(models.map((Model) => Model.countDocuments()))
+  console.log(
+    `seed:demo done: ${accounts} accounts (Owner + ${DEMO_ACCOUNTS.length - 1} demo accounts), ${profiles} candidate profiles, ${companies} companies, ${jobs} jobs, ${files} files, ${payments} payments`,
+  )
   await disconnectDb()
 }

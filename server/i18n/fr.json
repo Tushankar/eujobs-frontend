@@ -105,6 +105,26 @@
         "Rien n’est partagé sans votre accord. Sur votre page CV, vous pouvez choisir la version à partager ou refuser la demande."
       ],
       "action": "Ouvrir CV et versions"
+    },
+    "renewal_failed": {
+      "subject": "Nous n’avons pas pu renouveler votre offre {{plan}}",
+      "heading": "Échec du paiement",
+      "body": [
+        "Bonjour {{name}},",
+        "Nous n’avons pas pu encaisser le paiement de {{amount}} pour votre offre {{plan}}. Stripe va réessayer dans les prochains jours et vous gardez {{plan}} pendant ce temps.",
+        "Mettez à jour votre carte dans Facturation pour ne pas perdre l’accès."
+      ],
+      "action": "Ouvrir Facturation"
+    },
+    "plan_ended": {
+      "subject": "Votre offre {{plan}} est terminée",
+      "heading": "Offre terminée",
+      "body": [
+        "Bonjour {{name}},",
+        "Votre offre {{plan}} est terminée. Postuler, écrire aux recruteurs, les alertes emploi et les fonctions d’IA sont de nouveau verrouillés.",
+        "Vos candidatures, alertes emploi et messages sont conservés. Vos alertes reprennent quand vous vous abonnez de nouveau."
+      ],
+      "action": "Ouvrir Facturation"
     }
   },
   "verification": {

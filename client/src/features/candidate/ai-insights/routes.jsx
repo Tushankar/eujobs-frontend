@@ -1,10 +1,11 @@
 import { lazyPage } from '@/app/lazyPage.js'
 
-// AI insights belongs to AI Matches Plus: PlusGate shows these pages to Plus candidates and an upgrade screen otherwise.
+// AI insights needs the `ai` entitlement (M-118): RequirePlan shows these pages to Plus candidates, the upgrade card otherwise.
 export default [
   {
     path: 'ai-insights',
-    lazy: lazyPage(() => import('../billing/components/PlusGate.jsx')),
+    lazy: lazyPage(() => import('../billing/components/RequirePlan.jsx')),
+    handle: { entitlement: 'ai' },
     children: [
       { index: true, lazy: lazyPage(() => import('./pages/AiInsightsPage.jsx')), handle: { titleKey: 'titles.aiProfileInsights' } },
       { path: 'skill-gap', lazy: lazyPage(() => import('./pages/SkillGapPage.jsx')), handle: { titleKey: 'titles.skillGap' } },

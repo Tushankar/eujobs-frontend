@@ -92,6 +92,15 @@
   color: var(--text-nav);
 }
 
+/* M-118: the plan chip on a page the candidate's plan does not include. */
+.badgeLock {
+  display: inline-flex;
+  align-items: center;
+  gap: 3px;
+  font-weight: 600;
+  white-space: nowrap;
+}
+
 /* Figma active row: white badge, count in primary. */
 .active .badge {
   background: #fbfdff;
@@ -134,7 +143,7 @@
   display: flex;
   align-items: center;
   gap: 8px;
-  height: 17px;
+  min-height: 17px;
   font-size: 11px;
   font-weight: 600;
   line-height: 16.5px;
@@ -157,6 +166,17 @@
   font-weight: 600;
   line-height: 15px;
   color: var(--primary);
+}
+
+.promoButton {
+  padding-right: 0;
+  padding-bottom: 0;
+  padding-left: 0;
+  border: 0;
+  background: none;
+  font-family: inherit;
+  text-align: left;
+  cursor: pointer;
 }
 
 .utility {

@@ -6,7 +6,7 @@ import { formatPrice } from '../hooks/useRecruiterLearning.js'
 import styles from './CourseCard.module.css'
 
 /** Learning library card: photo, stream, summary, price and the View course / Buy now actions. */
-export default function CourseCard({ course, progress, onBuy }) {
+export default function CourseCard({ course, progress }) {
   return (
     <article className={styles.card}>
       <img src={course.photo} alt="" className={styles.photo} width={363} height={203} loading="lazy" />
@@ -41,13 +41,10 @@ export default function CourseCard({ course, progress, onBuy }) {
           >
             {progress.started ? 'Continue course' : 'View course'}
           </Button>
-          {progress.purchased ? (
+          {/* P5-Q2: buying a paid course opens with the real courses in Phase 8. */}
+          {progress.purchased && (
             <Button variant="secondary" disabled leftIcon={<Icon as={Check} size={13} />} aria-label={`${course.title} is purchased`}>
               Purchased
-            </Button>
-          ) : (
-            <Button onClick={onBuy} aria-label={`Buy ${course.title}`}>
-              Buy now
             </Button>
           )}
         </div>

@@ -1,5 +1,6 @@
 import { createApi, fetchBaseQuery } from '@reduxjs/toolkit/query/react'
 import { getToken } from './token.js'
+import { openUpgrade } from './upgrade.js'
 
 /*
  * One RTK Query API (§2.15). Feature groups add endpoints with api.injectEndpoints in their own
@@ -20,10 +21,15 @@ export function setAuthRequiredHandler(handler) {
   onAuthRequired = handler
 }
 
-/** M-011: an expired or revoked session clears the token and returns to sign-in with ?next. */
+/**
+ * M-011: an expired or revoked session clears the token and returns to sign-in with ?next.
+ * M-118: a 402 PLAN_REQUIRED anywhere opens the upgrade dialog.
+ */
 async function baseQueryWithReauth(args, queryApi, extraOptions) {
   const result = await rawBaseQuery(args, queryApi, extraOptions)
-  if (result.error?.data?.error?.code === 'AUTH_REQUIRED' && getToken()) onAuthRequired(queryApi.dispatch)
+  const error = result.error?.data?.error
+  if (error?.code === 'AUTH_REQUIRED' && getToken()) onAuthRequired(queryApi.dispatch)
+  if (error?.code === 'PLAN_REQUIRED') queryApi.dispatch(openUpgrade(error.params?.entitlement))
   return result
 }
 
@@ -67,6 +73,10 @@ export const api = createApi({
     'CandidateCv',
     'CvRequests',
     'RecruiterOverview',
+    'Plans',
+    'Subscription',
+    'Payments',
+    'Enrollments',
   ],
   endpoints: (build) => ({
     getMe: build.query({ query: () => '/me', providesTags: ['Me'] }),

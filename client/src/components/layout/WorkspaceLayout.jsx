@@ -3,6 +3,7 @@ import { useTranslation } from 'react-i18next'
 import { Link, Outlet, useLocation } from 'react-router-dom'
 import { WORKSPACES } from '@/app/workspaces.js'
 import NoticeBanner from '@/components/common/NoticeBanner.jsx'
+import UpgradeDialog from '@/features/candidate/billing/components/UpgradeDialog.jsx'
 import LegalAcceptDialog from '@/features/public/components/LegalAcceptDialog.jsx'
 import { cx } from '@/utils/cx.js'
 import Copyright from './Copyright.jsx'
@@ -50,6 +51,7 @@ export default function WorkspaceLayout({ workspaceId }) {
         </main>
       </div>
       <LegalAcceptDialog />
+      {workspaceId === 'candidate' && <UpgradeDialog />}
     </>
   )
 }

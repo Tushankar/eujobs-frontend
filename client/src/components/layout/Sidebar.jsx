@@ -1,11 +1,15 @@
 import { useTranslation } from 'react-i18next'
+import { useDispatch } from 'react-redux'
 import { Link, NavLink, useNavigate } from 'react-router-dom'
 import { ArrowRight, ArrowUpRight, CircleHelp, LogOut, Settings2 } from 'lucide-react'
 import { cx } from '@/utils/cx.js'
 import { Avatar, Icon, IconButton } from '@/components/ui'
 import { workspacePath } from '@/app/workspaces.js'
 import { signOut } from '@/app/session.js'
-import { usePreferences } from '@/lib/preferences.js'
+import { openUpgrade } from '@/app/upgrade.js'
+import PlanChip from '@/features/candidate/billing/components/PlanChip.jsx'
+import { lacksEntitlement, usePlan } from '@/features/candidate/billing/usePlan.js'
+import { useFormat, usePreferences } from '@/lib/preferences.js'
 import aiSparkle from '@/assets/icons/ai-sparkle-blue.svg'
 import aiNavIcon from '@/assets/icons/ai-nav.svg'
 import aiNavIconActive from '@/assets/icons/ai-sparkle-blue-16.svg'
@@ -18,8 +22,9 @@ function LiveBadgeText({ useText }) {
   return useText()
 }
 
-function NavItem({ workspace, item }) {
+function NavItem({ workspace, item, me }) {
   const { t } = useTranslation()
+  const locked = item.entitlement && lacksEntitlement(me, item.entitlement)
   return (
     <NavLink
       to={workspacePath(workspace, item.to)}
@@ -34,7 +39,8 @@ function NavItem({ workspace, item }) {
             <img src={isActive && item.iconSrc === aiNavIcon ? aiNavIconActive : item.iconSrc} alt="" className={styles.customIcon} />
           )}
           <span className={styles.linkLabel}>{t(`shell:nav.${item.key}`)}</span>
-          {item.badge && (
+          {locked && <PlanChip className={cx(styles.badge, styles.badgeLock)} />}
+          {!locked && item.badge && (
             <span className={cx(styles.badge, item.badge.tone === 'ai' && styles.badgeAi)}>
               {item.badge.useText ? <LiveBadgeText useText={item.badge.useText} /> : t(`shell:${item.badge.textKey}`)}
             </span>
@@ -45,11 +51,52 @@ function NavItem({ workspace, item }) {
   )
 }
 
+/**
+ * M-196: the candidate promo card: the Plus upsell with the price (Free), "Complete your profile" (Plus with an
+ * incomplete profile), or none.
+ */
+function usePromo(workspace, me) {
+  const { isPlus, plus } = usePlan()
+  if (!workspace.promo || me?.role !== 'candidate') return null
+  if (!isPlus) return plus?.price ? { kind: 'upsell', plus } : null
+  return me.completeness?.complete ? null : { kind: 'complete' }
+}
+
+function PromoCard({ workspace, promo }) {
+  const { t } = useTranslation()
+  const format = useFormat()
+  const dispatch = useDispatch()
+  const upsell = promo.kind === 'upsell'
+  const plan = upsell ? promo.plus.name : ''
+  return (
+    <div className={styles.promo} data-promo={promo.kind}>
+      <div className={styles.promoTitle}>
+        <img src={aiSparkle} alt="" width={14} height={14} />
+        <p>{upsell ? t('shell:promo.upsellTitle', { plan }) : t('shell:promo.title')}</p>
+      </div>
+      <p className={styles.promoText}>
+        {upsell ? t('shell:promo.upsellText', { price: format.money(promo.plus.price.amountMinor, promo.plus.price.currency) }) : t('shell:promo.text')}
+      </p>
+      {upsell ? (
+        <button type="button" className={cx(styles.promoLink, styles.promoButton)} onClick={() => dispatch(openUpgrade())}>
+          {t('shell:promo.upsellLink', { plan })}
+          <Icon as={ArrowRight} size={12} />
+        </button>
+      ) : (
+        <Link to={workspacePath(workspace, workspace.promo.to)} className={styles.promoLink}>
+          {t('shell:promo.link')}
+          <Icon as={ArrowRight} size={12} />
+        </Link>
+      )}
+    </div>
+  )
+}
+
 export default function Sidebar({ workspace, open, onClose }) {
   const { t } = useTranslation()
   const navigate = useNavigate()
   const { me } = usePreferences()
-  const { promo } = workspace
+  const promo = usePromo(workspace, me)
 
   function handleSignOut() {
     signOut()
@@ -73,25 +120,13 @@ export default function Sidebar({ workspace, open, onClose }) {
           <p className={styles.sectionLabel}>{t('shell:sidebar.section')}</p>
           <nav className={cx(styles.nav, 'stagger')} aria-label={t('shell:sidebar.section')}>
             {workspace.nav.map((item) => (
-              <NavItem key={item.to} workspace={workspace} item={item} />
+              <NavItem key={item.to} workspace={workspace} item={item} me={me} />
             ))}
           </nav>
         </div>
 
         <div className={styles.footer}>
-          {promo && (
-            <div className={styles.promo}>
-              <div className={styles.promoTitle}>
-                <img src={aiSparkle} alt="" width={14} height={14} />
-                <p>{t('shell:promo.title')}</p>
-              </div>
-              <p className={styles.promoText}>{t('shell:promo.text')}</p>
-              <Link to={workspacePath(workspace, promo.to)} className={styles.promoLink}>
-                {t('shell:promo.link')}
-                <Icon as={ArrowRight} size={12} />
-              </Link>
-            </div>
-          )}
+          {promo && <PromoCard workspace={workspace} promo={promo} />}
 
           <NavLink
             to={workspacePath(workspace, 'settings')}

@@ -7,10 +7,11 @@ import { checkPassword, hashPassword } from '../auth/auth.service.js'
 import { Company } from '../companies/companies.model.js'
 import { logoUrls } from '../companies/companies.service.js'
 import { currentLegalVersions, findEnabledCountry } from '../meta/meta.service.js'
+import { planState } from '../payments/payments.service.js'
 
 /**
  * The session profile (GET /me). Candidates carry the completeness checklist and the shell photo URL,
- * recruiters their company; later phases add plan and entitlements.
+ * plan and entitlements, recruiters their company.
  * `legal.acceptRequired` is true when a newer Terms or Privacy version exists (U22).
  */
 export async function meDto(user) {
@@ -38,8 +39,8 @@ export async function meDto(user) {
   }
   if (user.role === 'candidate') {
     dto.onboardingCompleted = Boolean(user.onboardingCompletedAt)
-    // Every candidate is Free until Phase 5 derives the plan from the Stripe subscription (U38).
-    dto.plan = 'free'
+    // From the Stripe subscription (U38): plan key and entitlement keys (§3.3).
+    Object.assign(dto, await planState(user._id))
     Object.assign(dto, await candidateSummary(user))
   }
   if (user.role === 'recruiter') {

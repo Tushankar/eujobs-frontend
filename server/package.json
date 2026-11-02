@@ -13,7 +13,9 @@
     "seed:catalog": "node --env-file=.env seed/catalog.js",
     "seed:demo": "node --env-file=.env seed/demo.js",
     "mail:test": "node --env-file=.env scripts/mailTest.js",
-    "lint": "oxlint"
+    "lint": "oxlint",
+    "stripe:listen": "node --env-file=.env scripts/stripeListen.js",
+    "stripe:check-secret": "node --env-file=.env scripts/stripeCheckSecret.js"
   },
   "dependencies": {
     "archiver": "^8.0.0",
@@ -37,6 +39,7 @@
     "pdfjs-dist": "^6.4.299",
     "pdfkit": "^0.20.2",
     "sharp": "^0.35.5",
+    "stripe": "^23.1.0",
     "zod": "^4.6.7"
   },
   "devDependencies": {

@@ -33,7 +33,10 @@ export default {
     await ctx.screenshot(page, '1-code-shown')
 
     for (let attempt = 1; attempt <= 5; attempt++) {
-      await fill(page, 'input[name="phoneCode"]', wrong(code))
+      // Clear by keyboard: a re-render after the last answer can restore a value cleared through the DOM.
+      await page.click('input[name="phoneCode"]', { count: 3 })
+      await page.keyboard.press('Backspace')
+      await page.type('input[name="phoneCode"]', wrong(code))
       await clickText(page, 'Confirm', 'button')
       await waitForText(page, attempt < 5 ? `${5 - attempt} attempt` : 'Too many wrong attempts. Send a new code.')
     }

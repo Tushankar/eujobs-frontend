@@ -1,0 +1,55 @@
+import { useState } from 'react'
+import { useTranslation } from 'react-i18next'
+import { Link, Outlet, useMatches } from 'react-router-dom'
+import { Check, Sparkles } from 'lucide-react'
+import { Button, Icon, Panel } from '@/components/ui'
+import PageTitle from '@/components/common/PageTitle.jsx'
+import CheckoutDialog from '@/features/payments/components/CheckoutDialog.jsx'
+import { useFormat, usePreferences } from '@/lib/preferences.js'
+import { lacksEntitlement, PLUS_ITEM, usePlan } from '../usePlan.js'
+import styles from './RequirePlan.module.css'
+
+/**
+ * Route layout for paid pages (M-118, A: shared §8.3): the entitlement comes from the route's `handle.entitlement`.
+ * With it the pages render; without it, the upgrade card with the Plus price in the header country's currency.
+ * The server enforces the same rule (402 PLAN_REQUIRED).
+ */
+export default function RequirePlan() {
+  const { t } = useTranslation('billing')
+  const format = useFormat()
+  const { me } = usePreferences()
+  const { plus } = usePlan()
+  const entitlement = useMatches().findLast((match) => match.handle?.entitlement)?.handle.entitlement
+  const [checkingOut, setCheckingOut] = useState(false)
+
+  if (!lacksEntitlement(me, entitlement)) return <Outlet />
+
+  return (
+    <>
+      <PageTitle eyebrow={plus?.name} title={t(`gate.${entitlement}.title`)} description={t(`gate.${entitlement}.lead`)} />
+      <Panel padding={28} className={styles.card} data-plan-gate={entitlement}>
+        {plus?.price && (
+          <p className={styles.price}>
+            {format.money(plus.price.amountMinor, plus.price.currency)} <span>{t('perMonth')}</span>
+          </p>
+        )}
+        <ul className={styles.features}>
+          {plus?.features.map((feature) => (
+            <li key={feature}>
+              <Icon as={Check} size={14} /> {feature}
+            </li>
+          ))}
+        </ul>
+        <div className={styles.actions}>
+          <Button onClick={() => setCheckingOut(true)} leftIcon={<Icon as={Sparkles} size={14} />}>
+            {t('upgradeTo', { plan: plus?.name ?? '' })}
+          </Button>
+          <Button as={Link} to="/candidate/settings/billing" variant="secondary">
+            {t('manageBilling')}
+          </Button>
+        </div>
+      </Panel>
+      <CheckoutDialog item={checkingOut ? PLUS_ITEM : null} onClose={() => setCheckingOut(false)} />
+    </>
+  )
+}

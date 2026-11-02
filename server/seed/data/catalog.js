@@ -19,7 +19,7 @@ export const COUNTRIES = [
 ]
 
 // OD1 plan prices in major units; stored as integer minor units (U24).
-const PLUS_PRICES = { GBP: 9, EUR: 10, PLN: 45, SEK: 119, DKK: 79, CZK: 259, HUF: 3990, RON: 55 }
+export const PLUS_PRICES = { GBP: 9, EUR: 10, PLN: 45, SEK: 119, DKK: 79, CZK: 259, HUF: 3990, RON: 55 }
 
 // M-115, M-116, §3.3: what each plan unlocks; Free covers everything that is not gated.
 export const PLANS = [

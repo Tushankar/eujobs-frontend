@@ -30,12 +30,6 @@ export function useLearning() {
   const progress = (course) => courseProgress(course, state)
   const all = courses.map(progress)
 
-  function purchase(courseId) {
-    setState((current) =>
-      current.purchased.includes(courseId) ? current : { ...current, purchased: [...current.purchased, courseId] },
-    )
-  }
-
   function toggleLesson(courseId, lessonId) {
     setState((current) => {
       const completed = current.completedLessons[courseId] ?? []
@@ -50,7 +44,6 @@ export function useLearning() {
     courses,
     state,
     progress,
-    purchase,
     toggleLesson,
     inProgressCount: all.filter((item) => item.started && !item.complete).length,
     completedCount: all.filter((item) => item.complete).length,

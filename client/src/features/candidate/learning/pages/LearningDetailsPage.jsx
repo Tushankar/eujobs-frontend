@@ -1,12 +1,11 @@
 import { useState } from 'react'
 import { Link, useParams } from 'react-router-dom'
-import { ArrowLeft, ArrowRight, BookOpen, Check, CirclePlay, GraduationCap, ShieldCheck } from 'lucide-react'
+import { ArrowLeft, BookOpen, Check, CirclePlay, GraduationCap, ShieldCheck } from 'lucide-react'
 import { Button, Icon, Modal, Panel } from '@/components/ui'
 import EmptyState from '@/components/common/EmptyState.jsx'
 import PageTitle from '@/components/common/PageTitle.jsx'
 import PillBadge from '@/components/common/PillBadge.jsx'
 import LessonRow from '../components/LessonRow.jsx'
-import PurchaseDialog from '../components/PurchaseDialog.jsx'
 import { formatPrice, useLearning } from '../hooks/useLearning.js'
 import styles from './LearningDetailsPage.module.css'
 
@@ -17,9 +16,7 @@ export default function LearningDetailsPage() {
   const { courseId } = useParams()
   const learning = useLearning()
   const course = learning.courses.find((item) => item.id === courseId)
-  const [buying, setBuying] = useState(null)
   const [introOpen, setIntroOpen] = useState(false)
-  const [message, setMessage] = useState('')
 
   if (!course) {
     return (
@@ -40,12 +37,6 @@ export default function LearningDetailsPage() {
   const completedIds = learning.state.completedLessons[course.id] ?? []
   const lessonCount = course.lessons.length
 
-  function confirmPurchase() {
-    learning.purchase(course.id)
-    setBuying(null)
-    setMessage('Course purchased. The lessons are now unlocked.')
-  }
-
   return (
     <>
       <Link to="/candidate/learning" className={styles.back}>
@@ -65,12 +56,6 @@ export default function LearningDetailsPage() {
           ) : null
         }
       />
-
-      {message && (
-        <p className={styles.message} role="status">
-          {message}
-        </p>
-      )}
 
       <div className={styles.layout}>
         <div className={styles.main}>
@@ -158,13 +143,10 @@ export default function LearningDetailsPage() {
                 </li>
               ))}
             </ul>
-            {progress.purchased ? (
+            {/* P5-Q2: buying a paid course opens with the real courses in Phase 8. */}
+            {progress.purchased && (
               <Button fullWidth disabled className={styles.purchased}>
                 Purchased
-              </Button>
-            ) : (
-              <Button fullWidth rightIcon={<Icon as={ArrowRight} size={13} />} onClick={() => setBuying(course)}>
-                Buy Now
               </Button>
             )}
           </Panel>
@@ -198,7 +180,6 @@ export default function LearningDetailsPage() {
         </aside>
       </div>
 
-      <PurchaseDialog course={buying} onConfirm={confirmPurchase} onClose={() => setBuying(null)} />
       <Modal
         open={introOpen}
         onClose={() => setIntroOpen(false)}

@@ -3,7 +3,7 @@ import { ENUMS } from '../../config/enums.js'
 
 const { Schema } = mongoose
 
-/* One role per account (S). Fields of later phases (privacy, company, Stripe) are added with them. */
+/* One role per account (S). Fields of later phases are added with them. */
 const userSchema = new Schema(
   {
     role: { type: String, enum: ENUMS.role, required: true },
@@ -38,6 +38,8 @@ const userSchema = new Schema(
       granted: [String],
       removed: [String],
     },
+    // Stripe customer, created at the first checkout (§2.10)
+    stripeCustomerId: String,
     lastLoginAt: Date,
   },
   { timestamps: true },

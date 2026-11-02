@@ -14,6 +14,7 @@ import '../modules/companies/companies.model.js'
 import '../modules/applications/applications.model.js'
 import '../modules/jobs/jobs.model.js'
 import '../modules/discovery/discovery.model.js'
+import '../modules/learning/learning.model.js'
 import './mail/emailLog.model.js'
 import '../jobs/models.js'
 

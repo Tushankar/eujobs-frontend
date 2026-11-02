@@ -11,6 +11,9 @@ import candidateRoutes from '@/features/candidate/routes.jsx'
 import recruiterRoutes from '@/features/recruiter/routes.jsx'
 import adminRoutes from '@/features/admin/routes.jsx'
 
+// M-125, P3-C10: the onboarding plan step comes back from Stripe here before onboarding is complete.
+const OPEN_DURING_ONBOARDING = '/candidate/checkout/return'
+
 const here = (request) => {
   const url = new URL(request.url)
   return url.pathname + url.search
@@ -23,7 +26,8 @@ function workspaceLoader(id) {
     if (!me) return redirect(`${WORKSPACES[id].signInPath}?next=${encodeURIComponent(here(request))}`)
     if (me.role !== id) return redirect(landingPath(me))
     const required = requiredPage(me)
-    if (required && !new URL(request.url).pathname.startsWith(required.prefix)) return redirect(required.path)
+    const { pathname } = new URL(request.url)
+    if (required && !pathname.startsWith(required.prefix) && pathname !== OPEN_DURING_ONBOARDING) return redirect(required.path)
     return null
   }
 }

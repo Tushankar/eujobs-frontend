@@ -21,12 +21,6 @@ export function useRecruiterLearning() {
   const progress = (course) => courseProgress(course, state)
   const all = courses.map(progress)
 
-  function purchase(courseId) {
-    setState((current) =>
-      current.purchased.includes(courseId) ? current : { ...current, purchased: [...current.purchased, courseId] },
-    )
-  }
-
   function toggleLesson(courseId, lessonId) {
     setState((current) => {
       const completed = current.completedLessons[courseId] ?? []
@@ -41,7 +35,6 @@ export function useRecruiterLearning() {
     courses,
     progress,
     isLessonDone,
-    purchase,
     toggleLesson,
     inProgressCount: all.filter((item) => item.started && !item.complete).length,
     certificateCount: all.filter((item) => item.complete).length,

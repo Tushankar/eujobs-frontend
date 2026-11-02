@@ -6,7 +6,6 @@ import PillBadge from '@/components/common/PillBadge.jsx'
 import StatCard from '@/components/common/StatCard.jsx'
 import CourseCard from '../components/CourseCard.jsx'
 import LevelTabs from '../components/LevelTabs.jsx'
-import PurchaseDialog from '../components/PurchaseDialog.jsx'
 import { GAP_SKILL, LEVELS, SKILLS_TO_EXPLORE } from '../data/courses.js'
 import { useLearning } from '../hooks/useLearning.js'
 import styles from './LearningPage.module.css'
@@ -15,17 +14,9 @@ import styles from './LearningPage.module.css'
 export default function LearningPage() {
   const learning = useLearning()
   const [level, setLevel] = useState('All levels')
-  const [buying, setBuying] = useState(null)
-  const [message, setMessage] = useState('')
 
   const gapCourses = learning.courses.filter((course) => course.recommended)
   const visible = level === 'All levels' ? learning.courses : learning.courses.filter((course) => course.level === level)
-
-  function confirmPurchase(course) {
-    learning.purchase(course.id)
-    setBuying(null)
-    setMessage(`${course.title} is now in your learning. Open it to start the lessons.`)
-  }
 
   function renderCard(course, recommended) {
     return (
@@ -34,7 +25,6 @@ export default function LearningPage() {
         course={course}
         recommended={recommended}
         progress={learning.progress(course)}
-        onBuy={() => setBuying(course)}
       />
     )
   }
@@ -47,12 +37,6 @@ export default function LearningPage() {
         description="Courses connected to real role gaps, with practical lessons, short assessments, and completion badges you control."
         actions={<PillBadge tone="accent">Learning Plus active</PillBadge>}
       />
-
-      {message && (
-        <p className={styles.message} role="status">
-          {message}
-        </p>
-      )}
 
       <div className={styles.stats}>
         <StatCard
@@ -108,7 +92,6 @@ export default function LearningPage() {
         Billing, and course progress is saved only in this browser.
       </p>
 
-      <PurchaseDialog course={buying} onConfirm={confirmPurchase} onClose={() => setBuying(null)} />
     </>
   )
 }

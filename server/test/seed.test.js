@@ -3,6 +3,7 @@ import { existsSync } from 'node:fs'
 import { describe, it } from 'node:test'
 import { config } from '../config/env.js'
 import { absolutePath } from '../lib/files.js'
+import { stripe } from '../lib/stripe.js'
 import { AdminRole, Permission } from '../modules/admin/admin.model.js'
 import { PipelineStage } from '../modules/applications/applications.model.js'
 import { CandidateProfile } from '../modules/candidates/candidates.model.js'
@@ -11,7 +12,7 @@ import { ProfileView, ShortlistEntry } from '../modules/discovery/discovery.mode
 import { Job, SavedJob } from '../modules/jobs/jobs.model.js'
 import { File } from '../modules/files/files.model.js'
 import { Country, Faq, LegalDocument } from '../modules/meta/meta.model.js'
-import { Plan } from '../modules/payments/payments.model.js'
+import { Payment, Plan, Subscription } from '../modules/payments/payments.model.js'
 import { User } from '../modules/users/users.model.js'
 import { VerificationSubmission } from '../modules/verification/verification.model.js'
 import { seedCatalog } from '../seed/catalog.js'
@@ -169,5 +170,43 @@ describe('seed:demo (§3.20, OD9, P12)', () => {
     assert.equal(res.body.me.role, 'candidate')
     assert.equal(res.body.me.status, 'active')
     assert.equal(res.body.me.onboardingCompleted, true)
+    assert.equal(res.body.me.plan, 'plus')
+  })
+
+  it('seeds payments and Emma’s real Plus subscription; re-seeding replaces this database’s Stripe customers (OD8, OQ-4.2, P5-Q3, P5-Q4)', async () => {
+    const emma = await User.findOne({ email: demoAddress('emma') })
+    const firstCustomer = emma.stripeCustomerId
+    const customer = await stripe().customers.retrieve(firstCustomer)
+    assert.deepEqual(customer.metadata, { db: 'eujobs_test', userId: String(emma._id), seed: 'true' })
+    const subscription = await Subscription.findOne({ userId: emma._id })
+    assert.deepEqual([subscription.status, subscription.currency, subscription.amountMinor, subscription.source], ['active', 'GBP', 900, 'seed'])
+
+    const rows = await Payment.find({}).sort({ paidAt: 1 })
+    // 3 mock course rows, 5 historical Plus months (every applicant but Emma), Emma's real first invoice.
+    assert.equal(rows.length, 9)
+    assert.deepEqual(
+      rows.map((row) => row.reference),
+      rows.map((_, index) => `LWM-${String(index + 1).padStart(6, '0')}`),
+    )
+    assert.ok(rows.every((row) => row.source === 'seed' && row.status === 'paid'))
+    const emmaPlus = rows.at(-1)
+    assert.deepEqual([String(emmaPlus.userId), emmaPlus.kind, emmaPlus.amountMinor, emmaPlus.currency], [String(emma._id), 'subscription', 900, 'GBP'])
+    assert.match(emmaPlus.receiptUrl, /^https:\/\/invoice\.stripe\.com\//)
+    assert.ok(rows.slice(0, -1).every((row) => !row.receiptUrl))
+    const historical = rows.filter((row) => row.kind === 'subscription' && !row.stripe?.invoiceId)
+    assert.deepEqual(historical.map((row) => `${row.payerName}:${row.amountMinor} ${row.currency}`).sort(), [
+      'Aisha Patel:11900 SEK',
+      'Daniel Kim:1000 EUR',
+      'James Chen:1000 EUR',
+      'Oliver Park:1000 EUR',
+      'Sofia Martinez:900 GBP',
+    ])
+    assert.equal(await Subscription.countDocuments({}), 1)
+
+    await seedDemo()
+    assert.equal((await stripe().customers.retrieve(firstCustomer)).deleted, true)
+    const again = await User.findOne({ email: demoAddress('emma') })
+    assert.notEqual(again.stripeCustomerId, firstCustomer)
+    assert.equal(await Payment.countDocuments({}), 9)
   })
 })

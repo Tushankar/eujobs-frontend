@@ -22,7 +22,8 @@ import { useActiveApplicationsBadge } from '@/features/candidate/jobs/hooks/useA
 /*
  * Per-role workspace configuration: sidebar navigation and header variant, as seen in the Figma
  * Overview frames for each role. Labels are `shell:nav.<key>` translations; identity comes from /me.
- * `to` is relative to the workspace basePath ('' = the overview/index route).
+ * `to` is relative to the workspace basePath ('' = the overview/index route). `entitlement` marks a page that
+ * shows a plan chip to candidates without it (M-118).
  * Nav icons are the lucide equivalents of the exported Figma SVGs (verified on a
  * contact sheet); `iconSrc` is used where Figma ships a custom (non-Lucide) glyph.
  */
@@ -33,16 +34,17 @@ export const WORKSPACES = {
     signInPath: '/sign-in',
     showLocation: true,
     profilePath: 'profile',
-    promo: { to: 'onboarding/story' },
+    // M-196: Free sees the Plus upsell; Plus with an incomplete profile is sent to the checklist.
+    promo: { to: 'profile' },
     nav: [
       { key: 'overview', to: '', icon: LayoutDashboard, end: true },
       { key: 'findJobs', to: 'jobs', icon: Search },
       { key: 'applications', to: 'applications', icon: BriefcaseBusiness, badge: { useText: useActiveApplicationsBadge } },
-      { key: 'jobAlerts', to: 'job-alerts', icon: Bell },
+      { key: 'jobAlerts', to: 'job-alerts', icon: Bell, entitlement: 'job_alerts' },
       { key: 'myProfile', to: 'profile', icon: Users },
       { key: 'cvVersions', to: 'cv-versions', icon: FileText },
       { key: 'verification', to: 'verification', icon: ShieldCheck },
-      { key: 'aiInsights', to: 'ai-insights', iconSrc: aiNavIcon, badge: { textKey: 'nav.aiBadge', tone: 'ai' } },
+      { key: 'aiInsights', to: 'ai-insights', iconSrc: aiNavIcon, badge: { textKey: 'nav.aiBadge', tone: 'ai' }, entitlement: 'ai' },
       { key: 'learning', to: 'learning', icon: GraduationCap },
     ],
   },

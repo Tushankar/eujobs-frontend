@@ -1,13 +1,11 @@
-import { useState } from 'react'
 import { Link, useParams } from 'react-router-dom'
-import { ArrowLeft, ArrowRight, BookOpen, Check, ShieldCheck } from 'lucide-react'
+import { ArrowLeft, BookOpen, Check, ShieldCheck } from 'lucide-react'
 import { Button, Icon } from '@/components/ui'
 import EmptyState from '@/components/common/EmptyState.jsx'
 import PageTitle from '@/components/common/PageTitle.jsx'
 import PillBadge from '@/components/common/PillBadge.jsx'
 import SectionHeading from '@/features/recruiter/overview/components/SectionHeading.jsx'
 import LessonRow from '../components/LessonRow.jsx'
-import PurchaseDialog from '../components/PurchaseDialog.jsx'
 import { formatPrice, useRecruiterLearning } from '../hooks/useRecruiterLearning.js'
 import styles from './CourseDetailsPage.module.css'
 
@@ -16,10 +14,9 @@ const INCLUDED = ['4 pre-recorded lessons', 'Completion assessment', 'Course-com
 
 /** Recruiter learning, course view: hero, outcomes, curriculum with unlock/complete states, details and the price card. */
 export default function CourseDetailsPage() {
-  const { courses, progress, isLessonDone, purchase, toggleLesson } = useRecruiterLearning()
+  const { courses, progress, isLessonDone, toggleLesson } = useRecruiterLearning()
   const courseId = useParams().courseId
   const course = courses.find((item) => item.id === courseId)
-  const [buying, setBuying] = useState(false)
 
   const backLink = (
     <Link to={LIBRARY_PATH} className={styles.back}>
@@ -94,7 +91,7 @@ export default function CourseDetailsPage() {
                     title={lesson.title}
                     unlocked={purchased}
                     done={purchased && isLessonDone(course.id, lesson.id)}
-                    onClick={() => (purchased ? toggleLesson(course.id, lesson.id) : setBuying(true))}
+                    onClick={purchased ? () => toggleLesson(course.id, lesson.id) : undefined}
                   />
                 </li>
               ))}
@@ -132,13 +129,10 @@ export default function CourseDetailsPage() {
                 </li>
               ))}
             </ul>
-            {purchased ? (
+            {/* P5-Q2: buying a paid course opens with the real courses in Phase 8. */}
+            {purchased && (
               <Button variant="secondary" fullWidth disabled leftIcon={<Icon as={Check} size={13} />}>
                 Purchased
-              </Button>
-            ) : (
-              <Button fullWidth rightIcon={<Icon as={ArrowRight} size={13} />} onClick={() => setBuying(true)}>
-                Buy Now
               </Button>
             )}
           </section>
@@ -149,15 +143,6 @@ export default function CourseDetailsPage() {
           </section>
         </aside>
       </div>
-
-      <PurchaseDialog
-        course={buying ? course : null}
-        onClose={() => setBuying(false)}
-        onConfirm={() => {
-          purchase(course.id)
-          setBuying(false)
-        }}
-      />
     </div>
   )
 }

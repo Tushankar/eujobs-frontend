@@ -174,6 +174,13 @@ M-164 lets users report jobs, profiles, companies and messages. M-167 defines "R
 | P4-C4 builder call: shared fixes | `Modal` reads `onClose` through a ref so typing in a dialog no longer moves the focus (the salary filter kept 1 character); `PillBadge` forwards `data-*` attributes; requesting a recruiter phone code no longer refetches the onboarding state (a stale answer overwrote "verified"); phone verification recomputes completeness only for candidates. Awaiting owner review. | 2026-11-02 |
 | P4-C5 builder call: client leftovers | `features/recruiter/company/data/company.js` stays (still imported by `useJobListings` for the Phase 6 pages, as P4-D14). The candidate Overview AI insight card and AI status line were removed with the other AI surfaces (P4-Q1). The job status enum order is now published, paused, draft, closed (the tab order). Awaiting owner review. | 2026-11-02 |
 | P4-C6 builder call: field error keys | the CV request reason and the account decision reason use their own error keys (generic "This field is required.") instead of `reason`, whose text "Give a reason for the rejection." belongs to the verification review. Email templates skip empty body lines (a CV request without details). Awaiting owner review. | 2026-11-02 |
+| P4-Q5 English-only namespaces in P2-11 | temporary exception until Phase 11 (as P3-C2): P2-11 ignores missing Spanish keys in namespaces that have no Spanish file (the candidate Overview now uses `findJobs`, P4-D14), and the 375 px overflow line while those raw keys show. Spanish users see the Overview in English, as before Phase 4. | 2026-11-02 |
+| P4-C7 builder call: earlier-phase checks adjusted | P3-08 allows the 403 of the Account review counts (the Moderation page loads them, refused like the verification queue). P3-06 clears the code field by keyboard (a re-render restored a value cleared through the DOM, so two codes were typed into it). `npm run mail:test` knows `recruiter_approved`, `recruiter_rejected`, `recruiter_suspended` and `cv_request`. Awaiting owner review. | 2026-11-02 |
+| P5-Q1 admin Payments page before Phase 10 | the sample rows move into `features/admin/payments/data` as a plain array in the new row shape (no localStorage, no recording), used only by the admin Payments page until Phase 10 (as P3-D10, P4-D14) | 2026-11-02 |
+| P5-Q2 course buying before Phase 8 | the buy action on paid courses is hidden on the candidate and recruiter Learning pages until Phase 8 (as P4-Q1); free courses still add locally. The server course checkout path is built and API-tested now and wired to the screens in Phase 8. | 2026-11-02 |
+| P5-Q3 Stripe customers of tests and e2e | every Stripe customer the app creates carries `metadata.db` and `metadata.userId`; `seed:demo` deletes all customers of its own database (and their test clocks), because it wipes all users of that database. Seed customers also carry `metadata.seed=true` (P5-10). | 2026-11-02 |
+| P5-Q5 subscription currency on the promo card | a current subscriber's price shows in the subscription's own currency on Billing (C14). The promo card shows a price only to Free users, in the header country's currency, which Checkout also charges. P5-07's last check: Emma switches her country to Poland, Billing still shows £9 and the promo stays hidden. | 2026-11-02 |
+| P5-Q4 Emma's Plus payment row | built from her real first invoice: `source: seed`, the seed date, the hosted-invoice link and the invoice id (a webhook for that invoice adds nothing). The mock's 12 Oct Emma Plus row is dropped; the mock course rows stay `source: seed` rows without links. | 2026-11-02 |
 
 _(Answers to any new question asked during the build are appended to this table.)_
 
@@ -1773,6 +1780,51 @@ Surfaces that depend on the match score use the non-AI path until Phase 9: the M
 
 **API tests.** Onboarding state machine; KYC rules; account decisions (all transitions, reactivation, emails, audit, tokenVersion); company edit rules; every job limit, currency locking, Remote rules, status transitions, 422 with `step`, the restricted lock, delete rules; the visibility query; Find-jobs filters (OD2, U25); saved jobs; discovery population (each exclusion), country rule, filters including permit expiry; CV visibility and the request flow; shortlist, notes, activity, profile-view dedupe; skill suggestions.
 
+#### Phase 4 handoff (2026-11-02, built, awaiting owner review)
+
+**Built.**
+- Server modules `companies` (onboarding, KYC, company page and logo with SVG sanitising, admin Account review with the P4-Q2 status filter, approved/rejected/suspended emails in en/es/fr, default stages, audit), `jobs` (recruiter CRUD, wizard drafts, publish validation with `step`, quality checks, skill suggestions, statuses, the restricted lock, "N relevant" via the fallback and the `relevance-nightly` slot; candidate search, details, For you and saved jobs), `discovery` (population, filters, profile with views, CV access and requests with the `cv_request` email, activity, notes, shortlist, recruiter Overview and talent), `cv` requests and downloads, `GET /candidate/overview`; `requireApprovedRecruiter` (`RECRUITER_NOT_APPROVED`, `ACCOUNT_SUSPENDED`).
+- Seed: Acme Studio and the mock companies with invented recruiters, 12 jobs, James Chen's pending application, shortlist, saved jobs and profile views (P4-C1, P4-C2).
+- Client: recruiter onboarding, admin Account review, Company page, job wizard, Jobs list and details, Find candidates, candidate profile tabs, Shortlists, recruiter Overview, candidate Find jobs, job details, Overview and the CV page requests and download log. The replaced mocks and hooks were deleted except those listed in P4-D14 and P4-C5.
+- e2e: fixtures part 2, `e2e/lib/recruiters.js`, scenarios P4-01 … P4-17, the routes `/recruiter/jobs/:job[/edit]`, the candidate profile tabs and `/admin/moderation/accounts` in the sweep.
+
+**Calls the plan did not specify:** owner answers P4-Q1 … Q5 and P4-D1 … D14, and builder calls P4-C1 … P4-C7 in the Owner answers table, all awaiting review. The builder calls in short:
+- P4-C1 seeded companies: Acme plus one approved company per mock-job company, each with an invented `@example.com` recruiter; James Chen's applicant company in Dublin; Dublin and Lisbon time zones.
+- P4-C2 seeded activity: Acme's shortlist (Oliver, James Chen), Alex's 2 saved jobs, Emma's 18/16 profile views; Sarah's UK default view leaves her shortlist out.
+- P4-C3 endpoints beyond §5: `GET /admin/moderation/accounts/:userId`; status counts on the account list; no `/recruiter/overview/momentum` yet.
+- P4-C4 shared fixes: Modal focus through an `onClose` ref, PillBadge forwards `data-*`, no onboarding refetch on a phone code request, completeness refresh only for candidates.
+- P4-C5 client leftovers: `company/data/company.js` kept for Phase 6, candidate Overview AI card removed, job status order published, paused, draft, closed.
+- P4-C6 field error keys: own keys for the CV request and account decision reasons; email templates skip empty body lines.
+- P4-C7 earlier-phase checks: P3-08 allows the Account review 403, P3-06 clears by keyboard, `mail:test` knows the 4 new email types.
+
+**Results and exact commands** (run from the repo root unless noted; never run the server tests and the e2e at the same time):
+
+| Command | Result |
+|---|---|
+| `cd server && npm test` | 165 of 165 |
+| `cd server && npm run lint` | clean |
+| `cd client && npm run lint && npm run build` | clean, built |
+| `node e2e/run.js phase-2` | 27 of 27 |
+| `node e2e/run.js phase-3` | 19 of 19 |
+| `node e2e/run.js phase-4` | 24 of 24 |
+| `node e2e/run.js sweep` | D and M pass |
+| `cd server && npm run mail:test -- recruiter_approved +alex` (and `recruiter_rejected`, `recruiter_suspended`, `cv_request`) | sent; the owner has not yet confirmed arrival |
+
+**Flaky or watch.**
+- One sweep run timed out at 375 px (`Navigation timeout of 30000 ms exceeded`) waiting for `/recruiter/jobs/:job` to go network-idle; desktop passed in the same run and the next full sweep passed at both widths. Not reproduced; cause unknown.
+- The Phase 1 one-off `server/test/permissions.test.js` failure (see the Phase 3 handoff: possibly a test-created admin role left behind) did not recur in the Phase 4 server runs (last full run 165 of 165), but its cause was never confirmed.
+- P3-06 failed once on mobile (two codes in one field), fixed in the scenario (P4-C7); it then passed 4 runs in a row.
+- The candidate phone form requests a code and then refetches; the recruiter onboarding had a stale-refetch race of this kind (P4-C4). The candidate page has not shown it, but it has the same shape.
+
+**Open.**
+- The owner confirms the four live emails.
+- The development database `eujobs` still holds the Phase 3 seed. Run `cd server && npm run seed:catalog && npm run seed:demo` to see Phase 4 data in the dev app; this wipes and recreates the demo data and files.
+- Sarah's seeded shortlist shows only in the Germany or Netherlands view (P4-C2); optional fix in Phase 11 task 8.
+- The CV request reason reads "Verify employment history" in the email and "Verify employment" on screen (server and client enum labels): Phase 11 task 6.
+- The candidate Overview tabs row does not wrap, so longer es/fr labels may overflow at 375 px: Phase 11 task 7.
+- P2-11's English-only exception (P4-Q5) and P2-19's (P3-C2) are removed in Phase 11 task 5.
+- Applications, conversations, the pipeline and AI surfaces hidden by P4-Q1: their phases.
+
 ### Phase 5: Payments, plan, Stripe, entitlements and gates
 
 **Scope.** The plan catalogue in Stripe; subscription Checkout; the webhook and payment records; entitlements in `/me` and in middleware; the Portal; billing; every plan gate and upsell in the UI.
@@ -2115,9 +2167,14 @@ The course-purchase path is built here but verified in Phase 8. AI pages are gat
    - Dropdown max-height; the ProfileMenu list;
    - AuthLayout heights; Checkbox alignment.
 4. Review the server texts (emails, PDF, CSV) in es and fr for terminology.
-5. Restore P2-19 to check EVERY namespace with no English-only exceptions: remove the temporary Phase 3 skip (`englishOnly` in `e2e/scenarios/p02-19-formats-and-catalogue.js`, P3-C2), so a namespace without an es or fr file fails the check.
+5. Restore P2-11 and P2-19 to check EVERY namespace with no English-only exceptions:
+   - P2-19: remove the temporary Phase 3 skip (`englishOnly` in `e2e/scenarios/p02-19-formats-and-catalogue.js`, P3-C2), so a namespace without an es or fr file fails the check;
+   - P2-11: remove the temporary Phase 4 filter (`notEnglishOnly` and the raw-key overflow skip in `e2e/scenarios/p02-11-language-and-country.js`, P4-Q5), so every missing key and the 375 px overflow fail the check.
+6. Unify the CV-request reason wording: the server's `cvRequestReason` (emails: "Verify employment history") and the client's `enums:cvRequestReason` (screens: "Verify employment") say the same thing in en, es and fr; update P4-13's expected texts to match.
+7. Make the candidate Overview tabs row (`.tabsRow` in `client/src/features/candidate/overview/pages/OverviewPage.module.css`: tabs plus "Preferences") wrap, and re-check it at 375 px in en, es and fr.
+8. Optional: make the demo recruiter's default country show her seeded shortlist (P4-C2), either by seeding Sarah's picker country as Germany or by seeding shortlisted candidates who are in her UK view.
 
-**Done when.** No missing keys and no English leftovers in es or fr; P2-19 checks every namespace with no exceptions; formats are correct per locale; no overflow at 375 px. Lint, build, tests and sweep are green.
+**Done when.** No missing keys and no English leftovers in es or fr; P2-11 and P2-19 check every namespace with no exceptions; formats are correct per locale; no overflow at 375 px. Lint, build, tests and sweep are green.
 
 **Browser verification**
 

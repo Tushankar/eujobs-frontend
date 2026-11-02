@@ -10,6 +10,7 @@ import * as discoveryRoutes from '../modules/discovery/discovery.routes.js'
 import filesRoutes from '../modules/files/files.routes.js'
 import * as jobRoutes from '../modules/jobs/jobs.routes.js'
 import metaRoutes from '../modules/meta/meta.routes.js'
+import * as paymentRoutes from '../modules/payments/payments.routes.js'
 import placesRoutes from '../modules/places/places.routes.js'
 import usersRoutes from '../modules/users/users.routes.js'
 import * as verificationRoutes from '../modules/verification/verification.routes.js'
@@ -21,14 +22,17 @@ router.get('/health', (req, res) => {
 })
 
 router.use('/auth', authRoutes)
+router.use('/me/payments', paymentRoutes.myPaymentsRouter)
 router.use('/me', usersRoutes)
 router.use(metaRoutes)
 router.use('/places', placesRoutes)
+router.use('/payments', paymentRoutes.paymentsRouter)
 router.use('/files', filesRoutes)
 // Narrower mounts first: each module router checks the session for everything under its path.
 router.use('/candidate/cv', cvRoutes)
 router.use('/candidate/verification', verificationRoutes.candidateRouter)
 router.use('/candidate/saved-jobs', jobRoutes.savedRouter)
+router.use('/candidate/subscription', paymentRoutes.subscriptionRouter)
 router.use('/candidate', candidateRoutes)
 router.use('/jobs', jobRoutes.candidateRouter)
 router.use('/recruiter/onboarding', companyRoutes.onboardingRouter)

@@ -32,6 +32,8 @@ export default {
 
       const first = await ctx.newPage()
       first.allow(403, '/api/v1/admin/moderation/verification')
+      // The Moderation page also loads the Account review counts (Phase 4), refused the same way.
+      first.allow(403, '/api/v1/admin/moderation/accounts')
       await signInWithForm(first.page, ctx.webUrl, '/admin/sign-in', reader.email, ctx.seedCredentials.password)
       await first.page.goto(`${ctx.webUrl}/admin/moderation/verification`, { waitUntil: 'networkidle0' })
       await waitForText(first.page, "Your role doesn't include this permission.")

@@ -8,7 +8,7 @@ import { formatPrice } from '../hooks/useLearning.js'
 import styles from './CourseCard.module.css'
 
 /** Catalogue card. `recommended` adds the "Recommended for your gap" tag used in the gap section. */
-export default function CourseCard({ course, progress, recommended = false, onBuy }) {
+export default function CourseCard({ course, progress, recommended = false }) {
   const tierTone = course.tier === 'Plus' ? 'warning' : 'neutral'
   return (
     <article className={styles.card}>
@@ -51,13 +51,10 @@ export default function CourseCard({ course, progress, recommended = false, onBu
           >
             {progress.started ? 'Continue course' : 'View course'}
           </Button>
-          {progress.purchased ? (
+          {/* P5-Q2: buying a paid course opens with the real courses in Phase 8. */}
+          {progress.purchased && (
             <Button className={styles.purchased} disabled aria-label={`${course.title} is purchased`}>
               Purchased
-            </Button>
-          ) : (
-            <Button onClick={onBuy} aria-label={`Buy ${course.title}`}>
-              Buy now
             </Button>
           )}
         </div>
