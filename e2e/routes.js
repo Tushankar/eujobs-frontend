@@ -52,6 +52,8 @@ export const ROUTES = {
     '/candidate/settings/notifications',
     '/candidate/settings/data-account',
     '/candidate/settings/billing',
+    // M-125: without a Stripe session id the return page explains it and links back.
+    '/candidate/checkout/return',
     '/candidate/help',
   ],
   recruiter: [
@@ -78,6 +80,7 @@ export const ROUTES = {
     '/recruiter/settings/notifications',
     '/recruiter/settings/data-account',
     '/recruiter/settings/billing',
+    '/recruiter/checkout/return',
     '/recruiter/help',
   ],
   admin: [

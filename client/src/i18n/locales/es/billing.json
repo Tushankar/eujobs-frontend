@@ -1,0 +1,79 @@
+{
+  "perMonth": "al mes",
+  "upgradeTo": "Pasar a {{plan}}",
+  "manageBilling": "Gestionar la facturación",
+  "checkout": {
+    "title": "Revisa tu compra",
+    "description": "Comprueba el precio y continúa a Stripe para pagar.",
+    "monthly": "Facturación mensual en {{currency}}",
+    "oneTime": "Pago único en {{currency}}",
+    "note": "Pagas en la página segura de Stripe con tarjeta o Link. Los precios incluyen el IVA. Los datos de tu tarjeta nunca llegan a Local WorkMan.",
+    "cancel": "Cancelar",
+    "continue": "Continuar al pago seguro"
+  },
+  "upgrade": {
+    "description": "Plus añade postularte a ofertas, escribir a reclutadores, las alertas de empleo y las funciones de IA.",
+    "needs": "{{feature}} forma parte del plan Plus. Plus añade postularte a ofertas, escribir a reclutadores, las alertas de empleo y las funciones de IA."
+  },
+  "gate": {
+    "ai": {
+      "title": "Desbloquea tus análisis con IA",
+      "lead": "Los análisis de tu perfil, las recomendaciones sobre habilidades que te faltan y las explicaciones de compatibilidad forman parte de Plus."
+    },
+    "job_alerts": {
+      "title": "Recibe alertas de empleo por correo",
+      "lead": "Las alertas de empleo forman parte de Plus. Las alertas que ya creaste se conservan y se reanudan cuando te suscribes."
+    }
+  },
+  "return": {
+    "eyebrow": "Pago",
+    "title": "Confirmando tu pago",
+    "problemTitle": "No hemos podido confirmar un pago",
+    "confirming": "Stripe ha recibido tu pago. Lo estamos confirmando y te llevaremos de vuelta en un momento.",
+    "notPaid": "Este pago no se completó, así que no se ha cobrado nada.",
+    "missing": "Esta página necesita una referencia de pago de Stripe.",
+    "slow": "La confirmación de tu pago está tardando más de lo normal. Aparecerá en Facturación en cuanto Stripe la confirme.",
+    "back": "Volver"
+  },
+  "status": {
+    "active": "Activo",
+    "retrying": "Reintentando el pago",
+    "ending": "Finaliza"
+  },
+  "page": {
+    "planTitle": "Tu plan",
+    "planDescription": "Plus añade postularte a ofertas, escribir a reclutadores, las alertas de empleo y las funciones de IA. Gestionas el plan, tu tarjeta y tus facturas en Stripe.",
+    "renewsOn": "Se renueva el {{date}}",
+    "endsOn": "Finaliza el {{date}}",
+    "retrying": "El último pago de renovación no se completó. Stripe lo volverá a intentar y mientras tanto mantienes Plus. Actualiza tu tarjeta para no perder el acceso.",
+    "upsell": "{{plan}} cuesta {{price}} al mes.",
+    "manage": "Gestionar la suscripción",
+    "historyTitle": "Historial de pagos",
+    "historyDescription": "Planes y cursos que has pagado, con el recibo o la factura de Stripe de cada uno.",
+    "emptyTitle": "Aún no hay pagos",
+    "emptyDescription": "Aquí aparecen los planes y cursos que pagues."
+  },
+  "recruiter": {
+    "lead": "Todos los pagos de cursos de este espacio de trabajo, con el recibo de Stripe de cada uno.",
+    "emptyDescription": "Aquí aparecen los cursos de pago que compres en Formación para reclutadores."
+  },
+  "table": {
+    "caption": "Pagos",
+    "reference": "Referencia",
+    "payer": "Pagador",
+    "item": "Concepto",
+    "type": "Tipo",
+    "amount": "Importe",
+    "method": "Método",
+    "status": "Estado",
+    "date": "Fecha",
+    "receipt": "Recibo",
+    "receiptFor": "Recibo de {{reference}} (se abre en Stripe)",
+    "details": "Detalles",
+    "detailsFor": "Detalles de {{reference}}"
+  },
+  "methods": {
+    "link": "Link",
+    "other": "Otro"
+  }
+}

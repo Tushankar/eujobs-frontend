@@ -31,6 +31,9 @@ export async function until(read, test, { timeout = 60_000, label = 'condition' 
 export const meOf = async (token) => (await api('/me', { token })).body
 export const waitForPlan = (token, plan, timeout) => until(() => meOf(token), (me) => me.plan === plan, { timeout, label: `plan ${plan}` })
 
+/** The Stripe customer id stored on a user (set by the first Checkout). */
+export const stripeCustomerOf = async (userId) => (await db('users', 'find', { filter: { _id: { $oid: userId } } }))[0]?.stripeCustomerId
+
 /** Rows of a collection for one user id (EJSON ids). */
 export const rowsOf = (collection, userId, filter = {}) => db(collection, 'find', { filter: { userId: { $oid: userId }, ...filter } })
 
@@ -47,16 +50,18 @@ export async function openAs(ctx, handle, email, path, password = TEST_PASSWORD)
   await handle.page.goto(`${ctx.webUrl}${path}`, { waitUntil: 'networkidle0' })
 }
 
-/** Stripe's hosted Checkout: waits for the card form, then returns its text and language. */
-export async function checkoutPage(page) {
+/** Stripe's hosted Checkout: waits until it shows `amount` (it renders a skeleton first), then returns its text and language. */
+export async function checkoutPage(page, amount) {
   await page.waitForFunction(() => location.hostname === 'checkout.stripe.com', { timeout: 30_000 })
   await page.waitForSelector('#cardNumber', { visible: true, timeout: 45_000 })
-  return page.evaluate(() => ({ text: document.body.innerText, lang: document.documentElement.lang }))
+  // Stripe puts a no-break space between the currency and the amount.
+  await page.waitForFunction((text) => document.body.innerText.replace(/\s/g, ' ').includes(text), { timeout: 45_000 }, amount)
+  return page.evaluate(() => ({ text: document.body.innerText.replace(/\s/g, ' '), lang: document.documentElement.lang }))
 }
 
 /** Pays on the hosted Checkout with a test card and waits until Stripe sends the browser back to the app. */
 export async function payOnCheckout(page, card = CARDS.visa) {
-  await page.waitForSelector('#cardNumber', { visible: true, timeout: 45_000 })
+  await page.waitForSelector('[data-testid="hosted-payment-submit-button"]', { visible: true, timeout: 45_000 })
   await page.type('#cardNumber', card)
   await page.type('#cardExpiry', '1234')
   await page.type('#cardCvc', '123')
@@ -68,17 +73,17 @@ export async function payOnCheckout(page, card = CARDS.visa) {
   await page.waitForFunction((origin) => location.origin === origin, { timeout: 90_000 }, WEB_URL)
 }
 
-/** Opens the confirm step (M-124) from the current page's upgrade button and returns its summary text. */
+/** Opens the confirm step (M-124) from an upgrade button of the page content and returns its summary text. */
 export async function openUpgrade(page, buttonText) {
-  await clickText(page, buttonText)
+  await clickText(page, buttonText, 'main button')
   await page.waitForSelector('[data-checkout-summary]', { visible: true })
   return page.$eval('[data-checkout-summary]', (element) => element.innerText)
 }
 
-/** Continue to secure payment → Stripe Checkout. */
-export async function continueToStripe(page) {
-  await clickText(page, 'Continue to secure payment')
-  return checkoutPage(page)
+/** Continue to secure payment → Stripe Checkout showing `amount` (e.g. "PLN 45.00"). */
+export async function continueToStripe(page, amount) {
+  await clickText(page, 'Continue to secure payment', '[role="dialog"] button')
+  return checkoutPage(page, amount)
 }
 
 /**

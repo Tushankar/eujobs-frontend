@@ -19,6 +19,8 @@ const SAMPLE_PARAMS = {
   recruiter_rejected: { company: 'Mail Test Ltd', reason: 'The registration document is not readable.', link: `${config.clientOrigin}/recruiter/onboarding/review` },
   recruiter_suspended: { company: 'Mail Test Ltd', reason: 'Jobs on this account broke the posting rules.', link: `${config.clientOrigin}/recruiter/onboarding/review` },
   cv_request: { company: 'Mail Test Ltd', details: 'We would like to see the CV you used for your 2023 role.', link: `${config.clientOrigin}/candidate/cv-versions` },
+  renewal_failed: { plan: 'Plus', amount: '£9', link: `${config.clientOrigin}/candidate/settings/billing` },
+  plan_ended: { plan: 'Plus', link: `${config.clientOrigin}/candidate/settings/billing` },
 }
 
 const [type, target, language = 'en'] = process.argv.slice(2)

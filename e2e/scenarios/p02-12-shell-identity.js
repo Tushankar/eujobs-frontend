@@ -16,12 +16,13 @@ export default {
 
     await page.click('header button[aria-label="Open profile menu"]')
     const menu = await bodyText(page)
-    ctx.check(menu.includes('Emma Wilson') && menu.includes(emma) && menu.includes('Free'), 'profile menu: name, email and the Free plan')
+    // §3.20: Emma is the seeded Plus subscriber (a real Stripe subscription since Phase 5).
+    ctx.check(menu.includes('Emma Wilson') && menu.includes(emma) && menu.includes('Plus'), 'profile menu: name, email and the Plus plan')
     // M-195: Emma has had a seeded photo since Phase 3 (P3-D12); the Owner below shows initials.
     ctx.check(await page.$('header img[alt="Emma Wilson"][src*="/api/v1/files/"]'), 'photo avatar in the header')
     if (ctx.viewport === 'D') {
       const sidebar = await page.$eval('aside', (aside) => aside.innerText)
-      ctx.check(sidebar.includes('Emma Wilson') && sidebar.includes('Free'), 'sidebar identity block')
+      ctx.check(sidebar.includes('Emma Wilson') && sidebar.includes('Plus'), 'sidebar identity block')
     } else {
       await clickText(page, 'Country', 'button')
       const scrolls = await page.$$eval('[class*="scroll"]', (lists) => lists.some((list) => list.scrollHeight > list.clientHeight + 10))

@@ -5,7 +5,7 @@ import { spawn } from 'node:child_process'
  * from the environment into the CLI and is never printed; the signing secret the CLI announces is hidden.
  */
 const port = process.env.PORT
-const child = spawn('stripe', ['listen', '--api-key', process.env.STRIPE_SECRET_KEY, '--forward-to', `http://localhost:${port}/api/v1/stripe/webhook`])
+const child = spawn('stripe', ['listen', '--api-key', process.env.STRIPE_SECRET_KEY, '--all-snapshot', '--forward-to', `http://localhost:${port}/api/v1/stripe/webhook`])
 const redact = (chunk) => chunk.toString().replace(/whsec_\w+/g, 'whsec_…')
 child.stdout.on('data', (chunk) => process.stdout.write(redact(chunk)))
 child.stderr.on('data', (chunk) => process.stderr.write(redact(chunk)))

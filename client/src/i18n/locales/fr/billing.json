@@ -1,0 +1,79 @@
+{
+  "perMonth": "par mois",
+  "upgradeTo": "Passer à {{plan}}",
+  "manageBilling": "Gérer la facturation",
+  "checkout": {
+    "title": "Vérifiez votre achat",
+    "description": "Vérifiez le prix, puis continuez vers Stripe pour payer.",
+    "monthly": "Facturé chaque mois en {{currency}}",
+    "oneTime": "Paiement unique en {{currency}}",
+    "note": "Vous payez sur la page sécurisée de Stripe par carte ou avec Link. Les prix incluent la TVA. Vos données de carte ne parviennent jamais à Local WorkMan.",
+    "cancel": "Annuler",
+    "continue": "Continuer vers le paiement sécurisé"
+  },
+  "upgrade": {
+    "description": "Plus permet de postuler, d’écrire aux recruteurs, de recevoir des alertes emploi et d’utiliser les fonctions d’IA.",
+    "needs": "{{feature}} fait partie de l’offre Plus. Plus permet de postuler, d’écrire aux recruteurs, de recevoir des alertes emploi et d’utiliser les fonctions d’IA."
+  },
+  "gate": {
+    "ai": {
+      "title": "Débloquez vos analyses par IA",
+      "lead": "Les analyses de votre profil, les conseils sur les compétences manquantes et les explications de compatibilité font partie de Plus."
+    },
+    "job_alerts": {
+      "title": "Recevez des alertes emploi par e-mail",
+      "lead": "Les alertes emploi font partie de Plus. Les alertes déjà créées sont conservées et reprennent quand vous vous abonnez."
+    }
+  },
+  "return": {
+    "eyebrow": "Paiement",
+    "title": "Confirmation de votre paiement",
+    "problemTitle": "Nous n’avons pas pu confirmer un paiement",
+    "confirming": "Stripe a reçu votre paiement. Nous le confirmons et vous ramenons dans un instant.",
+    "notPaid": "Ce paiement n’a pas abouti, rien n’a donc été débité.",
+    "missing": "Cette page a besoin d’une référence de paiement Stripe.",
+    "slow": "La confirmation de votre paiement prend plus de temps que d’habitude. Il apparaîtra dans Facturation dès que Stripe l’aura confirmé.",
+    "back": "Retour"
+  },
+  "status": {
+    "active": "Actif",
+    "retrying": "Nouvelle tentative de paiement",
+    "ending": "Se termine"
+  },
+  "page": {
+    "planTitle": "Votre offre",
+    "planDescription": "Plus permet de postuler, d’écrire aux recruteurs, de recevoir des alertes emploi et d’utiliser les fonctions d’IA. Vous gérez l’offre, votre carte et vos factures sur Stripe.",
+    "renewsOn": "Renouvellement le {{date}}",
+    "endsOn": "Se termine le {{date}}",
+    "retrying": "Le dernier paiement de renouvellement a échoué. Stripe va réessayer et vous gardez Plus pendant ce temps. Mettez à jour votre carte pour ne pas perdre l’accès.",
+    "upsell": "{{plan}} coûte {{price}} par mois.",
+    "manage": "Gérer l’abonnement",
+    "historyTitle": "Historique des paiements",
+    "historyDescription": "Les offres et formations que vous avez payées, avec le reçu ou la facture Stripe de chacune.",
+    "emptyTitle": "Aucun paiement pour l’instant",
+    "emptyDescription": "Les offres et formations que vous payez apparaissent ici."
+  },
+  "recruiter": {
+    "lead": "Tous les paiements de formations de cet espace de travail, avec le reçu Stripe de chacun.",
+    "emptyDescription": "Les formations payantes que vous achetez dans Formation recruteurs apparaissent ici."
+  },
+  "table": {
+    "caption": "Paiements",
+    "reference": "Référence",
+    "payer": "Payeur",
+    "item": "Article",
+    "type": "Type",
+    "amount": "Montant",
+    "method": "Moyen de paiement",
+    "status": "Statut",
+    "date": "Date",
+    "receipt": "Reçu",
+    "receiptFor": "Reçu de {{reference}} (s’ouvre sur Stripe)",
+    "details": "Détails",
+    "detailsFor": "Détails de {{reference}}"
+  },
+  "methods": {
+    "link": "Link",
+    "other": "Autre"
+  }
+}

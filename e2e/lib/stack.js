@@ -50,7 +50,7 @@ function start(args, { cwd, env, logFile }) {
  * printed; the signing secret the CLI announces is hidden in stripe.log. Resolves once the CLI is ready.
  */
 function startStripeListen(logFile) {
-  const child = spawn('stripe', ['listen', '--api-key', stripeSecretKey, '--forward-to', `${API_URL}/api/v1/stripe/webhook`], { stdio: ['ignore', 'pipe', 'pipe'] })
+  const child = spawn('stripe', ['listen', '--api-key', stripeSecretKey, '--all-snapshot', '--forward-to', `${API_URL}/api/v1/stripe/webhook`], { stdio: ['ignore', 'pipe', 'pipe'] })
   children.push(child)
   const log = createWriteStream(logFile)
   return new Promise((resolve, reject) => {

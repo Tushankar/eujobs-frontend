@@ -180,6 +180,13 @@ M-164 lets users report jobs, profiles, companies and messages. M-167 defines "R
 | P5-Q2 course buying before Phase 8 | the buy action on paid courses is hidden on the candidate and recruiter Learning pages until Phase 8 (as P4-Q1); free courses still add locally. The server course checkout path is built and API-tested now and wired to the screens in Phase 8. | 2026-11-02 |
 | P5-Q3 Stripe customers of tests and e2e | every Stripe customer the app creates carries `metadata.db` and `metadata.userId`; `seed:demo` deletes all customers of its own database (and their test clocks), because it wipes all users of that database. Seed customers also carry `metadata.seed=true` (P5-10). | 2026-11-02 |
 | P5-Q5 subscription currency on the promo card | a current subscriber's price shows in the subscription's own currency on Billing (C14). The promo card shows a price only to Free users, in the header country's currency, which Checkout also charges. P5-07's last check: Emma switches her country to Poland, Billing still shows £9 and the promo stays hidden. | 2026-11-02 |
+| P5-C1 builder call: Checkout payment methods | the pinned API version `2026-10-28.endive` (the SDK default, §2.10) rejects `payment_method_types` on Checkout ("no longer supported"). Sessions send `allowed_payment_method_types: ['card', 'link']` instead; Stripe then reports `payment_method_types: ['card', 'link']` on the session, so C13 and U40 hold (API test and P5-01). Apple and Google Pay appear as wallets of the card option. Awaiting owner review. | 2026-11-02 |
+| P5-C2 builder call: webhook forwarding and handling | Stripe CLI 1.55.3 needs an event selection, so `npm run stripe:listen` and the e2e harness pass `--all-snapshot`; the server ignores types it does not handle. Each handler fetches the object again by id with the pinned API version, so event order and the account's event API version do not matter. Objects whose user is not in this database (the development and test databases share the sandbox) are ignored. The CLI's announced signing secret is hidden in its output and in `stripe.log`. Awaiting owner review. | 2026-11-02 |
+| P5-C3 builder call: payment row rules | one row per invoice: a renewal that fails and is later paid on retry becomes `paid`; `renewal_failed` is sent once per invoice (first failure); `plan_ended` is sent whenever paid turns into Free (cancel, unpaid or "leave past due"); a charge counts as `refunded` only when fully refunded; a failed row stores Stripe's failure code (e.g. `card_declined`), never its English message. Unique indexes on `stripe.invoiceId` and `stripe.checkoutSessionId` (§4.2 listed them as plain indexes). `subscriptions` also stores `amountMinor` and `startedAt` (Billing; late events of an older subscription never overwrite a newer one). Awaiting owner review. | 2026-11-02 |
+| P5-C4 builder call: endpoints beyond §5 | `GET /candidate/subscription` (the Billing card: status, period, cancel flag, amount in the subscription currency). `POST /payments/checkout-sessions` takes `from`, a path inside the buyer's own workspace; Stripe returns to `/{role}/checkout/return?session_id=…&from=…`, and a cancelled Checkout goes straight back to `from`. `GET /payments/checkout-sessions/:id` answers `fulfilled` once the webhook has applied the purchase. The Portal opens for any candidate with a subscription record (also after it ended, for invoices). Awaiting owner review. | 2026-11-02 |
+| P5-C5 builder call: seed and Stripe catalogue | the Product, the 8 Prices and the Portal configuration are shared by `eujobs` and `eujobs_test` (one sandbox): `seed:catalog` finds them by lookup key and `metadata.app = localworkman` and creates only what is missing (a changed amount gets a new Price that takes over the lookup key). The Portal configuration has customer-detail edits off (P6 did not list them). Seed course rows keep the mock's day offsets before 2 Nov 2026; the 5 historical Plus months (OQ-4.2) are dated 40 days before the seed run, so Phase 6 must date the seeded applications after that; references follow the payment dates and `seed:demo` restarts the sequence. Course and Enrollment models hold only the purchase fields until Phase 8. Awaiting owner review. | 2026-11-02 |
+| P5-C6 builder call: client details | PlusGate became `RequirePlan` (route `handle.entitlement`), used by AI insights and Job alerts. One upgrade dialog per candidate workspace (a small Redux slice) opens on any 402 `PLAN_REQUIRED`, from the promo card and from Billing. The candidate return page is reachable during onboarding (the plan step pays there, then onboarding completes and AI insights open, P3-C10). The new `billing` namespace ships in en/es/fr now, like the new `shell` and `onboarding` keys: the upgrade dialog sits in the shell of every candidate page, so P2-01 (French) and P2-14 (Spanish) request its keys (as P3-C1). The Learning notice about the demo checkout became "Buying courses opens soon." and the admin "Subscriptions" caption reads "Paid Plus plans". `CheckoutDialog` keeps the stable-`onClose` focus fix. Awaiting owner review. | 2026-11-02 |
+| P5-C7 builder call: earlier-phase checks adjusted | P2-12 now expects Emma's subtitle "Plus" (she is the seeded Plus subscriber, §3.20). The e2e page checks ignore Stripe's own pages and requests (hosted Checkout and Portal are other origins). Awaiting owner review. | 2026-11-02 |
 | P5-Q4 Emma's Plus payment row | built from her real first invoice: `source: seed`, the seed date, the hosted-invoice link and the invoice id (a webhook for that invoice adds nothing). The mock's 12 Oct Emma Plus row is dropped; the mock course rows stay `source: seed` rows without links. | 2026-11-02 |
 
 _(Answers to any new question asked during the build are appended to this table.)_
@@ -1886,6 +1893,44 @@ The course-purchase path is built here but verified in Phase 8. AI pages are gat
 - Session parameters (card + Link, adaptive pricing off, locale, currency).
 - The Portal only for subscribers; `requireEntitlement` returns 402 for Free.
 - Seed cleanup scoped by database.
+
+#### Phase 5 handoff (2026-11-02, built, awaiting owner review)
+
+**Built.**
+- Server: `lib/stripe.js` (API version `2026-10-28.endive`, the SDK 23.1.0 default), the `payments` module (quote, Checkout sessions, session status, Portal session, `/me/payments`, `/candidate/subscription`, the webhook with every §2.10 handler and the event marker, the `LWM-` sequence, the entitlement rule with `retrying`), `requireEntitlement`, `me.plan` and `me.entitlements`, the `renewal_failed` and `plan_ended` emails in en/es/fr, minimal `courses` and `enrollments` for the course path, and the scripts `stripe:listen` and `stripe:check-secret` (prints `match`).
+- Seed: `seed:catalog` creates or reuses the Plus Product, the 8 Prices and the Portal configuration (P6). `seed:demo` deletes this database's Stripe customers and test clocks (P5-Q3), gives Emma a real GBP subscription with her first invoice as a seed row (P5-Q4), and writes the 3 mock course rows and the 5 historical Plus months (OQ-4.2).
+- Client: the confirm step before Stripe (`CheckoutDialog`), the return pages `/candidate/checkout/return` and `/recruiter/checkout/return`, candidate and recruiter Billing, `RequirePlan` on AI insights and Job alerts, plan chips in the sidebar and search, the global upgrade dialog on `PLAN_REQUIRED`, the promo card (M-196, P5-Q5), the onboarding plan step (M-129), paid course buying hidden until Phase 8 (P5-Q2), and the admin Payments sample rows moved into the admin feature (P5-Q1). Deleted: `payments/utils/card.js`, `usePayments`, `billing/data/subscription.js`, `useSubscription`, `PlusGate`, both `PurchaseDialog`s.
+- e2e: `stripe listen` in the stack, `e2e/lib/payments.js`, scenarios P5-01 … P5-10 (real hosted Checkout with the test cards), the two return pages in the sweep.
+
+**Calls the plan did not specify:** owner answers P5-Q1 … Q5 and builder calls P5-C1 … P5-C7 in the Owner answers table, all awaiting review. Most important: P5-C1 (`allowed_payment_method_types` replaces `payment_method_types`, which this API version rejects) and P5-C2 (`stripe listen --all-snapshot`).
+
+**Results and exact commands** (run from the repo root unless noted; never run the server tests and the e2e at the same time):
+
+| Command | Result |
+|---|---|
+| `cd server && npm run stripe:check-secret` | match |
+| `cd server && npm test` | 190 of 190 |
+| `cd server && npm run lint` | clean |
+| `cd client && npm run lint && npm run build` | clean, built |
+| `node e2e/run.js phase-5` | 13 of 13 |
+| `node e2e/run.js sweep` | D and M pass |
+| `node e2e/run.js phase-2` | see the report (rerun after the es/fr `billing` files) |
+| `node e2e/run.js phase-3` | 19 of 19 |
+| `node e2e/run.js phase-4` | 24 of 24 |
+| `cd server && npm run mail:test -- renewal_failed +alex` and `… plan_ended +alex` | sent; the owner has not yet confirmed arrival |
+
+**Observed in Stripe.** The sandbox's final retry action after a failed renewal is "cancel subscription" (P5-04 ended `canceled`); the code also handles "mark unpaid" and "leave past due" (API tests). The Customer Portal shows the sandbox business name "New Business" (a Stripe Dashboard setting).
+
+**Flaky or watch.**
+- Stripe's customer search lags up to a minute; P5-10 waits for it (about 90 s).
+- P5-02 takes about 2.5 minutes (8 hosted Checkouts), P5-04 about 1.5 minutes (Test Clock).
+- `npm audit` reports 3 moderate findings in `minimatch` under `archiver` (Phase 3), not in `stripe`.
+
+**Open.**
+- The owner confirms the two live emails.
+- The development database `eujobs` still holds the Phase 4 seed. Run `cd server && npm run seed:catalog && npm run seed:demo` to see Phase 5 data in the dev app (this creates Emma's Stripe subscription), and run `cd server && npm run stripe:listen` next to `npm run dev`, so webhooks reach the dev server.
+- Optional: rename the sandbox business in the Stripe Dashboard; P7 retry settings stay optional.
+- Course purchases: Phase 8 wires the screens to the course checkout path built here.
 
 ### Phase 6: Applications and pipeline
 
