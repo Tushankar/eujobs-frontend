@@ -18,7 +18,8 @@ function check(result, what) {
 /** A complete candidate (all 12 checklist items) with Plus unless `plus: false`; returns { email, token, id, fullName }. */
 export async function completeCandidate(label, { plus = true, language = 'en' } = {}) {
   const { email, token } = await onboardedCandidate(label, { language })
-  const me = check(await api('/me', { token }), 'me')
+  // Completing onboarding sets the language from the profile country (M-134); an explicit choice keeps it.
+  const me = check(await api('/me', { method: 'PATCH', token, body: { language, languageExplicit: true } }), 'language')
   const put = (path, body) => api(path, { method: 'PUT', token, body }).then((result) => check(result, path))
   const post = (path, body) => api(path, { method: 'POST', token, body }).then((result) => check(result, path))
 
