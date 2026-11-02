@@ -31,6 +31,9 @@
     "perMonth": "par mois",
     "continueFree": "Continuer avec Gratuit",
     "startPlus": "Démarrer Plus",
-    "back": "Retour"
+    "back": "Retour",
+    "onPlan": "Vous avez {{plan}}",
+    "onPlanText": "Votre offre ne change pas. Vous pouvez la gérer dans Facturation.",
+    "continue": "Continuer"
   }
 }

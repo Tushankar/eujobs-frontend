@@ -26,7 +26,7 @@ function lessons(courseId, titles) {
 }
 
 /**
- * Course catalogue. Prices are one-time prices paid through the demo checkout: no real payment is ever taken.
+ * Course catalogue (mock until Phase 8). Prices are one-time prices; buying opens in Phase 8 (P5-Q2).
  * `tier` is the Figma "Included" / "Plus" tag; `recommended` marks the courses suggested for the skill gap.
  */
 export const COURSES = [

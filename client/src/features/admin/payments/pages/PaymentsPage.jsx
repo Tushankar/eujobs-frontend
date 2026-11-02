@@ -103,7 +103,7 @@ export default function PaymentsPage() {
         <StatCard
           label="Subscriptions"
           value={paid.filter((payment) => payment.kind === 'subscription').length}
-          caption="Paid AI Matches Plus plans"
+          caption="Paid Plus plans"
           icon={Repeat}
         />
       </div>

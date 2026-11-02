@@ -2,9 +2,9 @@ import { spawn, spawnSync } from 'node:child_process'
 import { createWriteStream } from 'node:fs'
 import { createServer } from 'node:net'
 import { join } from 'node:path'
-import { API_PORT, API_URL, CLIENT_DIR, SERVER_DIR, serverChildEnv, viteChildEnv, WEB_PORT, WEB_URL } from './env.js'
+import { API_PORT, API_URL, CLIENT_DIR, SERVER_DIR, serverChildEnv, stripeSecretKey, viteChildEnv, WEB_PORT, WEB_URL } from './env.js'
 
-/* Seeds eujobs_test, then starts the API (5100, test mode) and Vite (5174) for one run (§2.13). */
+/* Seeds eujobs_test, then starts the API (5100, test mode), Vite (5174) and stripe listen for one run (§2.13). */
 const children = []
 
 export function seedTestDatabase() {
@@ -45,6 +45,30 @@ function start(args, { cwd, env, logFile }) {
   return child
 }
 
+/**
+ * §2.13 step 4, P8: forwards Stripe test-mode webhooks to the test API. The key is passed as an argument and never
+ * printed; the signing secret the CLI announces is hidden in stripe.log. Resolves once the CLI is ready.
+ */
+function startStripeListen(logFile) {
+  const child = spawn('stripe', ['listen', '--api-key', stripeSecretKey, '--forward-to', `${API_URL}/api/v1/stripe/webhook`], { stdio: ['ignore', 'pipe', 'pipe'] })
+  children.push(child)
+  const log = createWriteStream(logFile)
+  return new Promise((resolve, reject) => {
+    const timer = setTimeout(() => reject(new Error('stripe listen was not ready within 60 s')), 60_000)
+    const onData = (chunk) => {
+      const text = chunk.toString()
+      log.write(text.replace(/whsec_\w+/g, 'whsec_…'))
+      if (text.includes('Ready!')) {
+        clearTimeout(timer)
+        resolve()
+      }
+    }
+    child.stdout.on('data', onData)
+    child.stderr.on('data', onData)
+    child.once('exit', (code) => reject(new Error(`stripe listen exited (${code})`)))
+  })
+}
+
 export async function startStack(runDir) {
   await assertPortFree(API_PORT)
   await assertPortFree(WEB_PORT)
@@ -56,6 +80,7 @@ export async function startStack(runDir) {
   })
   await waitFor(`${API_URL}/api/v1/health`, 'The API')
   await waitFor(WEB_URL, 'Vite')
+  await startStripeListen(join(runDir, 'stripe.log'))
 }
 
 export function stopStack() {

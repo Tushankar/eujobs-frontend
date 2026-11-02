@@ -1,0 +1,79 @@
+{
+  "perMonth": "per month",
+  "upgradeTo": "Upgrade to {{plan}}",
+  "manageBilling": "Manage billing",
+  "checkout": {
+    "title": "Review your purchase",
+    "description": "Check the price, then continue to Stripe to pay.",
+    "monthly": "Billed monthly in {{currency}}",
+    "oneTime": "One-time payment in {{currency}}",
+    "note": "You pay on Stripe’s secure page with a card or Link. Prices include VAT. Your card details never reach Local WorkMan.",
+    "cancel": "Cancel",
+    "continue": "Continue to secure payment"
+  },
+  "upgrade": {
+    "description": "Plus adds applying, messaging recruiters, job alerts and the AI features.",
+    "needs": "{{feature}} is part of the Plus plan. Plus adds applying, messaging recruiters, job alerts and the AI features."
+  },
+  "gate": {
+    "ai": {
+      "title": "Unlock your AI insights",
+      "lead": "Profile insights, skill-gap guidance and match explanations are part of Plus."
+    },
+    "job_alerts": {
+      "title": "Get job alerts by email",
+      "lead": "Job alerts are part of Plus. Alerts you already set up are kept and start again when you subscribe."
+    }
+  },
+  "return": {
+    "eyebrow": "Payment",
+    "title": "Confirming your payment",
+    "problemTitle": "We could not confirm a payment",
+    "confirming": "Stripe has your payment. We are confirming it and will take you back in a moment.",
+    "notPaid": "This payment was not completed, so nothing was charged.",
+    "missing": "This page needs a payment reference from Stripe.",
+    "slow": "Your payment is taking longer than usual to confirm. It will show in Billing as soon as Stripe confirms it.",
+    "back": "Go back"
+  },
+  "status": {
+    "active": "Active",
+    "retrying": "Payment retrying",
+    "ending": "Ending"
+  },
+  "page": {
+    "planTitle": "Your plan",
+    "planDescription": "Plus adds applying, messaging recruiters, job alerts and the AI features. You manage it, your card and your invoices on Stripe.",
+    "renewsOn": "Renews on {{date}}",
+    "endsOn": "Ends on {{date}}",
+    "retrying": "Your last renewal payment failed. Stripe will try again, and you keep Plus meanwhile. Update your card to avoid losing access.",
+    "upsell": "{{plan}} costs {{price}} per month.",
+    "manage": "Manage subscription",
+    "historyTitle": "Payment history",
+    "historyDescription": "Plans and courses you paid for, with the Stripe receipt or invoice for each.",
+    "emptyTitle": "No payments yet",
+    "emptyDescription": "Plans and courses you pay for appear here."
+  },
+  "recruiter": {
+    "lead": "Every course payment from this workspace, with the Stripe receipt for each.",
+    "emptyDescription": "Paid courses you buy in Recruiter learning appear here."
+  },
+  "table": {
+    "caption": "Payments",
+    "reference": "Reference",
+    "payer": "Payer",
+    "item": "Item",
+    "type": "Type",
+    "amount": "Amount",
+    "method": "Method",
+    "status": "Status",
+    "date": "Date",
+    "receipt": "Receipt",
+    "receiptFor": "Receipt for {{reference}} (opens Stripe)",
+    "details": "Details",
+    "detailsFor": "Details for {{reference}}"
+  },
+  "methods": {
+    "link": "Link",
+    "other": "Other"
+  }
+}

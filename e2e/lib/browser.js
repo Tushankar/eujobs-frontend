@@ -1,11 +1,12 @@
 import { mkdirSync } from 'node:fs'
 import { join } from 'node:path'
 import puppeteer from 'puppeteer-core'
-import { CHROME } from './env.js'
+import { CHROME, WEB_URL } from './env.js'
 
 /*
  * Page checks shared by every scenario (§2.13): console errors, page errors, unexpected 4xx/5xx
  * responses and, at 375 px, horizontal overflow. A scenario allows an expected status with allow().
+ * Only this app is checked: Stripe's hosted Checkout and Portal pages (and their requests) are not ours.
  */
 export const VIEWPORTS = {
   D: { width: 1440, height: 900 },
@@ -23,16 +24,17 @@ export async function openPage(context, viewport) {
   const allowed = []
   const isAllowed = (status, url = '') => allowed.some((rule) => rule.status === status && url.includes(rule.urlPart))
 
-  page.on('pageerror', (error) => issues.push(`page error: ${error.message}`))
+  const ours = () => page.url().startsWith(WEB_URL)
+  page.on('pageerror', (error) => ours() && issues.push(`page error: ${error.message}`))
   page.on('console', (message) => {
-    if (message.type() !== 'error') return
+    if (message.type() !== 'error' || !ours()) return
     // Chrome also logs every failed response; allowed statuses are not errors.
     const status = Number(message.text().match(/status of (\d{3})/)?.[1])
     if (status && isAllowed(status, message.location()?.url)) return
     issues.push(`console error: ${message.text()}`)
   })
   page.on('response', (response) => {
-    if (response.status() >= 400 && !isAllowed(response.status(), response.url())) {
+    if (response.status() >= 400 && response.url().startsWith(WEB_URL) && !isAllowed(response.status(), response.url())) {
       issues.push(`HTTP ${response.status()} ${response.url()}`)
     }
   })

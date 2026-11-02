@@ -27,7 +27,8 @@
     "reports": "Informes",
     "moderation": "Moderación",
     "auditLogs": "Registro de auditoría",
-    "aiBadge": "IA"
+    "aiBadge": "IA",
+    "planLocked": "Incluido en {{plan}}"
   },
   "titles": {
     "settings": "Configuración",
@@ -49,7 +50,8 @@
     "verifyEmail": "Confirma tu correo electrónico",
     "forgotPassword": "Contraseña olvidada",
     "resetPassword": "Restablecer contraseña",
-    "emailCode": "Verifica tu correo de trabajo"
+    "emailCode": "Verifica tu correo de trabajo",
+    "checkoutReturn": "Pago"
   },
   "workspaces": {
     "candidate": {
@@ -76,7 +78,10 @@
   "promo": {
     "title": "Tu próximo paso, más inteligente.",
     "text": "Un perfil más completo te acerca a oportunidades más relevantes.",
-    "link": "Completa tu perfil"
+    "link": "Completa tu perfil",
+    "upsellTitle": "Consigue más con {{plan}}",
+    "upsellText": "Postúlate a ofertas, escribe a reclutadores y recibe alertas de empleo y compatibilidad con IA por {{price}} al mes.",
+    "upsellLink": "Pasar a {{plan}}"
   },
   "signOut": "Cerrar sesión",
   "identity": {

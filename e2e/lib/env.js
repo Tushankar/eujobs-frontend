@@ -4,9 +4,9 @@ import { fileURLToPath } from 'node:url'
 import { parseEnv } from 'node:util'
 
 /*
- * Harness settings (§2.13). server/.env is parsed here only for the seeded sign-in credentials;
- * the values are never printed and never copied into the environment of the child processes,
- * which read server/.env themselves.
+ * Harness settings (§2.13). server/.env is parsed here only for the seeded sign-in credentials and the Stripe key;
+ * the values are never printed and never copied into the environment of the server and Vite processes,
+ * which read server/.env themselves. `stripe listen` gets the key as its --api-key argument (§2.13 step 4).
  */
 export const ROOT = fileURLToPath(new URL('../..', import.meta.url))
 export const SERVER_DIR = join(ROOT, 'server')
@@ -31,6 +31,9 @@ export const seedCredentials = {
     return `${local}+${tag}@${domain}`
   },
 }
+
+/** Stripe test-mode key for `stripe listen` and the Stripe helpers; held in memory only, never printed (P8). */
+export const stripeSecretKey = serverEnv.STRIPE_SECRET_KEY
 
 /** The API in test mode: test database, captured mail, /_test routes, no scheduler timer. */
 export const serverChildEnv = { ...process.env, NODE_ENV: 'test', PORT: String(API_PORT), CLIENT_ORIGIN: WEB_URL }

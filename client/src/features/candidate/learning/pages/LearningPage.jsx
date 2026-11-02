@@ -88,8 +88,7 @@ export default function LearningPage() {
       </section>
 
       <p className={styles.note}>
-        Courses are bought through a demo checkout: no real payment is taken. Your purchases appear under Settings,
-        Billing, and course progress is saved only in this browser.
+        Buying courses opens soon. Course progress is saved only in this browser.
       </p>
 
     </>

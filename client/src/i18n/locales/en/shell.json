@@ -27,7 +27,8 @@
     "reports": "Reports",
     "moderation": "Moderation",
     "auditLogs": "Audit logs",
-    "aiBadge": "AI"
+    "aiBadge": "AI",
+    "planLocked": "Part of {{plan}}"
   },
   "titles": {
     "settings": "Settings",
@@ -49,7 +50,8 @@
     "verifyEmail": "Confirm your email",
     "forgotPassword": "Forgot password",
     "resetPassword": "Reset password",
-    "emailCode": "Verify your work email"
+    "emailCode": "Verify your work email",
+    "checkoutReturn": "Payment"
   },
   "workspaces": {
     "candidate": {
@@ -76,7 +78,10 @@
   "promo": {
     "title": "Your next move, smarter.",
     "text": "A stronger profile means more relevant opportunities.",
-    "link": "Complete your profile"
+    "link": "Complete your profile",
+    "upsellTitle": "Get more with {{plan}}",
+    "upsellText": "Apply to jobs, message recruiters, get job alerts and AI matching for {{price}} a month.",
+    "upsellLink": "Upgrade to {{plan}}"
   },
   "signOut": "Sign out",
   "identity": {

@@ -1,88 +1,103 @@
-import { useState } from 'react'
-import { CreditCard, Sparkles } from 'lucide-react'
+import { useTranslation } from 'react-i18next'
+import { useDispatch } from 'react-redux'
+import { CreditCard, ExternalLink, Sparkles } from 'lucide-react'
+import { openUpgrade } from '@/app/upgrade.js'
 import { Button, Icon } from '@/components/ui'
-import ConfirmDialog from '@/components/common/ConfirmDialog.jsx'
 import EmptyState from '@/components/common/EmptyState.jsx'
 import PillBadge from '@/components/common/PillBadge.jsx'
-import { PLANS, PLUS_CHECKOUT_ITEM } from '@/features/candidate/billing/data/subscription.js'
-import { useSubscription } from '@/features/candidate/billing/hooks/useSubscription.js'
-import CheckoutDialog from '@/features/payments/components/CheckoutDialog.jsx'
+import { useCreatePortalSessionMutation, useGetSubscriptionQuery } from '@/features/candidate/billing/api.js'
+import { usePlan } from '@/features/candidate/billing/usePlan.js'
+import { useGetMyPaymentsQuery } from '@/features/payments/api.js'
 import PaymentsTable from '@/features/payments/components/PaymentsTable.jsx'
-import { formatPaymentDate } from '@/features/payments/data/payments.js'
-import { usePayments } from '@/features/payments/hooks/usePayments.js'
+import { useErrorText } from '@/lib/forms.js'
+import { useFormat } from '@/lib/preferences.js'
 import SettingsCard from '../components/SettingsCard.jsx'
 import styles from './BillingSettingsPage.module.css'
 
-/** Settings > Billing: the candidate's plan (upgrade or cancel through the demo checkout) and their payment history. */
-export default function BillingSettingsPage() {
-  const { subscription, plan, isPlus, setPlan } = useSubscription()
-  const { payments } = usePayments('candidate')
-  const [checkingOut, setCheckingOut] = useState(false)
-  const [cancelling, setCancelling] = useState(false)
-  const current = PLANS[plan]
+/** The plan pill: active, retrying a failed renewal (M-120) or ending at period end (M-121). */
+function planState(subscription) {
+  if (!subscription?.paid) return 'free'
+  if (subscription.cancelAtPeriodEnd) return 'ending'
+  return subscription.retrying ? 'retrying' : 'active'
+}
+const STATE_TONE = { active: 'success', ending: 'warning', retrying: 'warning' }
 
-  function handleCancel() {
-    setPlan('free')
-    setCancelling(false)
+/**
+ * Settings > Billing (§3.10): the plan in the subscription's own currency (C14), its renewal or end date, the Stripe
+ * Customer Portal for cancelling, cards and invoices (M-121), the Free upsell, and the payment history (M-122).
+ */
+export default function BillingSettingsPage() {
+  const { t } = useTranslation('billing')
+  const format = useFormat()
+  const errorText = useErrorText()
+  const dispatch = useDispatch()
+  const { plus } = usePlan()
+  const { data: subscription } = useGetSubscriptionQuery()
+  const { data: payments = [] } = useGetMyPaymentsQuery()
+  const [createPortal, { isLoading: opening, error: portalError }] = useCreatePortalSessionMutation()
+  const state = planState(subscription)
+  const paid = state !== 'free'
+
+  async function openPortal() {
+    try {
+      const { url } = await createPortal().unwrap()
+      window.location.assign(url)
+    } catch {
+      // The error is shown under the plan.
+    }
   }
 
+  const price = paid
+    ? format.money(subscription.amountMinor, subscription.currency)
+    : plus?.price && format.money(plus.price.amountMinor, plus.price.currency)
   return (
     <div className={styles.stack}>
-      <SettingsCard title="Your plan" description="AI insights is part of AI Matches Plus. Plans are paid through a demo checkout and nothing is really charged.">
-        <div className={styles.plan}>
+      <SettingsCard title={t('page.planTitle')} description={t('page.planDescription')}>
+        <div className={styles.plan} data-billing-state={state}>
           <div>
             <p className={styles.planName}>
-              {current.name}
-              <PillBadge tone="success" dot>
-                Active
-              </PillBadge>
+              {t(`enums:planKey.${paid ? subscription.planKey : 'free'}`)}
+              {paid && (
+                <PillBadge tone={STATE_TONE[state]} dot>
+                  {t(`status.${state}`)}
+                </PillBadge>
+              )}
             </p>
-            <p className={styles.planMeta}>
-              {current.price} {current.period}
-              {subscription?.startedAt && ` · Active since ${formatPaymentDate(subscription.startedAt)}`}
-            </p>
+            {paid ? (
+              <p className={styles.planMeta}>
+                {price} {t('perMonth')} ·{' '}
+                {t(state === 'ending' ? 'page.endsOn' : 'page.renewsOn', { date: format.date(subscription.currentPeriodEnd) })}
+              </p>
+            ) : (
+              price && <p className={styles.planMeta}>{t('page.upsell', { plan: plus.name, price })}</p>
+            )}
+            {state === 'retrying' && <p className={styles.planMeta}>{t('page.retrying')}</p>}
           </div>
-          {isPlus ? (
-            <Button variant="outline" onClick={() => setCancelling(true)}>
-              Cancel plan
-            </Button>
-          ) : (
-            <Button leftIcon={<Icon as={Sparkles} size={14} />} onClick={() => setCheckingOut(true)}>
-              Upgrade to {PLANS.plus.name}
-            </Button>
-          )}
+          <div className={styles.actions}>
+            {subscription && (
+              <Button variant="outline" loading={opening} rightIcon={<Icon as={ExternalLink} size={13} />} onClick={openPortal}>
+                {t('page.manage')}
+              </Button>
+            )}
+            {!paid && plus && (
+              <Button leftIcon={<Icon as={Sparkles} size={14} />} onClick={() => dispatch(openUpgrade())}>
+                {t('upgradeTo', { plan: plus.name })}
+              </Button>
+            )}
+          </div>
         </div>
+        <div role="alert">{portalError && <p className={styles.failure}>{errorText.code(portalError)}</p>}</div>
       </SettingsCard>
 
-      <SettingsCard title="Payment history" description="Courses and plans paid for through the demo checkout. Declined attempts are listed too.">
+      <SettingsCard title={t('page.historyTitle')} description={t('page.historyDescription')}>
         <div className={styles.history}>
           {payments.length > 0 ? (
             <PaymentsTable payments={payments} />
           ) : (
-            <EmptyState icon={CreditCard} title="No payments yet" description="Courses and plans you pay for appear here." />
+            <EmptyState icon={CreditCard} title={t('page.emptyTitle')} description={t('page.emptyDescription')} />
           )}
         </div>
       </SettingsCard>
-
-      <CheckoutDialog
-        item={checkingOut ? PLUS_CHECKOUT_ITEM : null}
-        payerRole="candidate"
-        onPaid={(payment) => {
-          setPlan('plus', payment.id)
-          setCheckingOut(false)
-        }}
-        onClose={() => setCheckingOut(false)}
-      />
-      <ConfirmDialog
-        open={cancelling}
-        title={`Cancel ${PLANS.plus.name}?`}
-        description="AI insights will be locked again. This demo makes no further charges either way."
-        confirmLabel="Cancel plan"
-        cancelLabel="Keep plan"
-        tone="danger"
-        onConfirm={handleCancel}
-        onClose={() => setCancelling(false)}
-      />
     </div>
   )
 }

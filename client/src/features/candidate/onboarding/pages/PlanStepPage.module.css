@@ -53,3 +53,16 @@
   display: flex;
   justify-content: flex-start;
 }
+
+/* M-129: a subscriber sees their plan instead of the cards. */
+.current {
+  display: grid;
+  gap: 12px;
+  justify-items: start;
+}
+
+.currentText {
+  margin: 0;
+  font-size: 14px;
+  color: var(--muted-foreground);
+}
