@@ -15,6 +15,10 @@ const SAMPLE_PARAMS = {
   password_reset: { link: `${config.clientOrigin}/reset-password?token=mail-test` },
   verification_approved: { link: `${config.clientOrigin}/candidate/verification` },
   verification_rejected: { reason: 'The photo page is not readable.', link: `${config.clientOrigin}/candidate/verification` },
+  recruiter_approved: { company: 'Mail Test Ltd', link: `${config.clientOrigin}/recruiter/sign-in` },
+  recruiter_rejected: { company: 'Mail Test Ltd', reason: 'The registration document is not readable.', link: `${config.clientOrigin}/recruiter/onboarding/review` },
+  recruiter_suspended: { company: 'Mail Test Ltd', reason: 'Jobs on this account broke the posting rules.', link: `${config.clientOrigin}/recruiter/onboarding/review` },
+  cv_request: { company: 'Mail Test Ltd', details: 'We would like to see the CV you used for your 2023 role.', link: `${config.clientOrigin}/candidate/cv-versions` },
 }
 
 const [type, target, language = 'en'] = process.argv.slice(2)
@@ -27,6 +31,8 @@ const to = target.startsWith('+') ? demoAddress(target.slice(1)) : target
 await connectDb()
 // Verification emails name the check in the recipient's language, as the decision does.
 const check = type.startsWith('verification_') ? { check: t(language, 'verification.category.identity') } : {}
-const status = await sendEmail({ type, to, language, params: { name: 'Mail test', ...check, ...SAMPLE_PARAMS[type] } })
+// So does the reason a recruiter picked for a CV request.
+const reason = type === 'cv_request' ? { reason: t(language, 'cvRequestReason.verify_employment') } : {}
+const status = await sendEmail({ type, to, language, params: { name: 'Mail test', ...check, ...reason, ...SAMPLE_PARAMS[type] } })
 console.log(`mail:test ${type} (${language}) to ${target.startsWith('+') ? `the ${target} alias` : 'the given address'}: ${status}`)
 await disconnectDb()

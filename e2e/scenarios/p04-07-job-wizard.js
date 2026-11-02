@@ -92,8 +92,11 @@ export default {
     await waitForText(page, 'Senior Product Designer')
 
     // An incomplete draft published from the table menu opens the wizard at the first invalid step (M-039).
+    // Created through the API, so reload to fetch the list again.
     await postJob(await login(recruiter.email), { title: 'Incomplete draft role', employmentType: 'contract' }, { draft: true })
+    await page.reload({ waitUntil: 'networkidle0' })
     await clickText(page, 'All jobs', '[aria-label="Filter jobs by status"] button')
+    await page.waitForSelector('button[aria-label="Manage Incomplete draft role"]')
     await page.click('button[aria-label="Manage Incomplete draft role"]')
     await clickText(page, 'Publish job', 'button')
     await waitForPath(page, () => location.pathname.endsWith('/edit') && location.search.includes('step=1'))

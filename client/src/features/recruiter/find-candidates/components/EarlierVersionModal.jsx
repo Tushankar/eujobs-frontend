@@ -48,7 +48,7 @@ export default function EarlierVersionModal({ candidate, onClose, onSent }) {
           name="reason"
           placeholder={t('discovery:resumeTab.reasonPlaceholder')}
           value={values.reason}
-          error={errorText.field('reason', errors.reason)}
+          error={errorText.field('requestReason', errors.reason)}
           options={(config?.enums.cvRequestReason ?? []).map((reason) => ({ value: reason, label: t(`enums:cvRequestReason.${reason}`) }))}
           data-autofocus
           onChange={(event) => set('reason', event.target.value)}

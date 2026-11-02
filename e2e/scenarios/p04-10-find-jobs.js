@@ -70,7 +70,9 @@ export default {
     )
     await fill(page, 'input[aria-label="Search jobs"]', 'munich junior')
     await page.waitForFunction((id) => !document.querySelector(`article[data-job="${id}"]`), {}, munich.id)
-    await fill(page, 'input[aria-label="Search jobs"]', '')
+    // Clear by keyboard: setting the DOM value directly does not reach React's state.
+    await page.click('input[aria-label="Search jobs"]', { count: 3 })
+    await page.keyboard.press('Backspace')
     await page.waitForSelector(`article[data-job="${berlin.id}"]`)
 
     await page.click(`article[data-job="${berlin.id}"] button[aria-pressed]`)
