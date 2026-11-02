@@ -1914,7 +1914,7 @@ The course-purchase path is built here but verified in Phase 8. AI pages are gat
 | `cd client && npm run lint && npm run build` | clean, built |
 | `node e2e/run.js phase-5` | 13 of 13 |
 | `node e2e/run.js sweep` | D and M pass |
-| `node e2e/run.js phase-2` | see the report (rerun after the es/fr `billing` files) |
+| `node e2e/run.js phase-2` | 27 of 27 (after the es/fr `billing` files; the run before them failed P2-01 and P2-14 on missing es/fr keys) |
 | `node e2e/run.js phase-3` | 19 of 19 |
 | `node e2e/run.js phase-4` | 24 of 24 |
 | `cd server && npm run mail:test -- renewal_failed +alex` and `… plan_ended +alex` | sent; the owner has not yet confirmed arrival |
