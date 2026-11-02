@@ -1,4 +1,5 @@
 import mongoose from 'mongoose'
+import { ENUMS } from '../../config/enums.js'
 
 const { Schema } = mongoose
 const { ObjectId, Mixed } = Schema.Types
@@ -26,4 +27,21 @@ const cvVersionSchema = new Schema(
 )
 cvVersionSchema.index({ userId: 1, number: 1 })
 
+/* Earlier-version requests (M-029, U19, P4-D12): the candidate approves by choosing one version, or declines. */
+const cvAccessRequestSchema = new Schema(
+  {
+    companyId: { type: ObjectId, ref: 'Company', required: true },
+    candidateId: { type: ObjectId, ref: 'User', required: true },
+    requestedBy: { type: ObjectId, ref: 'User', required: true },
+    reason: { type: String, enum: ENUMS.cvRequestReason, required: true },
+    details: String,
+    status: { type: String, enum: ENUMS.cvRequestStatus, default: 'pending' },
+    cvVersionId: ObjectId,
+    decidedAt: Date,
+  },
+  { timestamps: true },
+)
+cvAccessRequestSchema.index({ candidateId: 1, status: 1 })
+
 export const CvVersion = mongoose.model('CvVersion', cvVersionSchema)
+export const CvAccessRequest = mongoose.model('CvAccessRequest', cvAccessRequestSchema)

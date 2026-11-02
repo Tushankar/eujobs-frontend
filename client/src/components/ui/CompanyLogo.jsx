@@ -1,18 +1,22 @@
+import { useTranslation } from 'react-i18next'
 import { cx } from '@/utils/cx.js'
 import styles from './CompanyLogo.module.css'
 
 const PALETTES = ['green', 'orange', 'violet', 'blue']
 
-function paletteFor(name) {
-  const sum = [...name].reduce((total, char) => total + char.charCodeAt(0), 0)
+/** M-150: the letter tile's colour comes from the company id, so it stays the same everywhere and after reloads. */
+function paletteFor(seed) {
+  const sum = [...seed].reduce((total, char) => total + char.charCodeAt(0), 0)
   return PALETTES[sum % PALETTES.length]
 }
 
-/** DS Company logo: compact rounded-square initials. Pass `src` when a source logo exists. */
-export default function CompanyLogo({ name, src, size = 40, className }) {
+/** DS Company logo: the uploaded logo, else a compact rounded-square tile with the initials. `id` seeds the colour. */
+export default function CompanyLogo({ name, id, src, size = 40, className }) {
+  const { t } = useTranslation()
   const style = { width: size, height: size, fontSize: Math.round(size * 0.32) }
+  const label = t('common:companyLogo', { name })
   if (src) {
-    return <img src={src} alt={`${name} logo`} className={cx(styles.logo, className)} style={style} />
+    return <img src={src} alt={label} className={cx(styles.logo, styles.image, className)} style={style} />
   }
   const initials = name
     .split(/\s+/)
@@ -21,7 +25,7 @@ export default function CompanyLogo({ name, src, size = 40, className }) {
     .map((part) => part[0].toUpperCase())
     .join('')
   return (
-    <span className={cx(styles.logo, styles[paletteFor(name)], className)} style={style} role="img" aria-label={`${name} logo`}>
+    <span className={cx(styles.logo, styles[paletteFor(id ?? name)], className)} style={style} role="img" aria-label={label}>
       {initials}
     </span>
   )

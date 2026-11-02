@@ -1,0 +1,161 @@
+import { AppError } from '../../lib/errors.js'
+import { t } from '../../lib/i18n.js'
+import { matchesKeywords, searchText, skillOverlap } from '../../lib/skills.js'
+import { CandidateProfile } from '../candidates/candidates.model.js'
+import { Company } from '../companies/companies.model.js'
+import { logoUrls, publicCompanyDto } from '../companies/companies.service.js'
+import { ProfileView } from '../discovery/discovery.model.js'
+import { Country } from '../meta/meta.model.js'
+import { User } from '../users/users.model.js'
+import { Job, SavedJob } from './jobs.model.js'
+import { jobFieldsDto } from './jobs.service.js'
+
+/*
+ * Candidate job browsing (§3.8, M-043, M-044, M-052, M-053 with U8, M-137, OD2, U25, P4-Q4). The header
+ * country picks the view; every candidate sees the skill-overlap label, never a percentage (M-050).
+ */
+const DAY_MS = 24 * 60 * 60 * 1000
+
+/** M-044: companies whose recruiter is approved and not suspended. */
+async function visibleCompanyIds() {
+  return (await User.find({ role: 'recruiter', status: 'active', companyId: { $ne: null } }, 'companyId')).map((user) => user.companyId)
+}
+
+/** Published, not restricted (M-167), from an approved recruiter. */
+async function visibleFilter() {
+  return { status: 'published', 'restricted.at': null, companyId: { $in: await visibleCompanyIds() } }
+}
+
+/** OD2: the Remote view lists remote jobs; a country view lists the on-site and hybrid jobs located there. */
+const viewFilter = (country) => (country === 'REMOTE' ? { country: 'REMOTE' } : { country, workPreference: { $in: ['on_site', 'hybrid'] } })
+const viewOf = (user) => user.pickerCountry ?? 'REMOTE'
+
+/** U25: a monthly salary counts ×12; P4-Q4: the top end of the range (the minimum when there is no maximum). */
+const annualTop = (salary) => {
+  const amount = salary?.max ?? salary?.min
+  return amount == null ? null : amount * (salary.period === 'month' ? 12 : 1)
+}
+
+/** Everything a card needs for these jobs and this candidate: companies, logos, profile skills, saved ids. */
+async function cardContext(user, jobs) {
+  const companies = await Company.find({ _id: { $in: [...new Set(jobs.map((job) => String(job.companyId)))] } })
+  const logos = await logoUrls(companies, user._id)
+  const byId = new Map(companies.map((company) => [String(company._id), company]))
+  const profile = await CandidateProfile.findOne({ userId: user._id }, 'skills')
+  const saved = new Set((await SavedJob.find({ candidateId: user._id, jobId: { $in: jobs.map((job) => job._id) } }, 'jobId')).map((entry) => String(entry.jobId)))
+  const skills = profile?.skills ?? []
+  return {
+    company: (job) => byId.get(String(job.companyId)),
+    overlap: (job) => skillOverlap(skills, job),
+    card(job) {
+      const company = byId.get(String(job.companyId))
+      const { matched, total } = skillOverlap(skills, job)
+      return {
+        ...jobFieldsDto(job),
+        company: publicCompanyDto(company, logos.get(String(company._id))),
+        saved: saved.has(String(job._id)),
+        // M-052: one overlap definition and label for everyone (Plus adds the score in Phase 9).
+        overlap: { matched, count: matched.length, total },
+      }
+    },
+  }
+}
+
+/** §3.6 keywords: title, company, skills, city, work mode, level or industry; labels in the user's language. */
+function haystack(job, company, language) {
+  return searchText(
+    [
+      job.title,
+      company.displayName,
+      company.industry,
+      ...job.requiredSkills.map((skill) => skill.name),
+      ...job.preferredSkills.map((skill) => skill.name),
+      job.location?.city,
+      job.workPreference && t(language, `labels.workPreference.${job.workPreference}`),
+      job.level && t(language, `labels.jobLevel.${job.level}`),
+    ].join(' '),
+  )
+}
+
+const newest = (a, b) => (b.publishedAt?.getTime() ?? 0) - (a.publishedAt?.getTime() ?? 0)
+
+/** GET /jobs: the view's jobs with filters and sort (all rows, §2.3). */
+export async function searchJobs(user, query) {
+  const view = viewOf(user)
+  const jobs = await Job.find({ ...(await visibleFilter()), ...viewFilter(view) })
+  const context = await cardContext(user, jobs)
+  const kept = jobs.filter((job) => {
+    if (query.workPreference.length && !query.workPreference.includes(job.workPreference)) return false
+    if (query.level.length && !query.level.includes(job.level)) return false
+    if (query.placeId && job.location?.placeId !== query.placeId) return false
+    if (query.eligible && view === 'REMOTE' && job.remoteCountries.length && !job.remoteCountries.includes(query.eligible)) return false
+    if (query.salaryMin != null && !(annualTop(job.salary) >= query.salaryMin)) return false
+    return !query.q || matchesKeywords(query.q, haystack(job, context.company(job), user.language))
+  })
+  const sorters = {
+    recommended: (a, b) => context.overlap(b).matched.length - context.overlap(a).matched.length || newest(a, b),
+    newest,
+    salary: (a, b) => (annualTop(b.salary) ?? -1) - (annualTop(a.salary) ?? -1) || newest(a, b),
+  }
+  const items = kept.sort(sorters[query.sort]).map((job) => context.card(job))
+  const currency = (await Country.findOne({ code: view }, 'currency'))?.currency ?? null
+  return { items, total: items.length, page: 1, pageSize: items.length, view: { country: view, currency } }
+}
+
+/** U8 (every candidate until Phase 9): jobs sharing at least 1 required skill, by overlap, then recency. */
+export async function recommendedJobs(user, now = Date.now()) {
+  const jobs = await Job.find({ ...(await visibleFilter()), ...viewFilter(viewOf(user)) })
+  const context = await cardContext(user, jobs)
+  const items = jobs
+    .filter((job) => context.overlap(job).requiredMatched > 0)
+    .sort((a, b) => context.overlap(b).matched.length - context.overlap(a).matched.length || newest(a, b))
+  // M-053: "+N this week" = published in the last 7 days.
+  const newThisWeek = items.filter((job) => job.publishedAt && job.publishedAt.getTime() >= now - 7 * DAY_MS).length
+  return { items: items.map((job) => context.card(job)), total: items.length, newThisWeek }
+}
+
+async function isVisible(job) {
+  return Boolean(await Job.exists({ _id: job._id, ...(await visibleFilter()) }))
+}
+
+/** M-043: savers of a paused, closed or hidden job see it as no longer accepting; everyone else gets 404. */
+export async function jobDetails(user, id) {
+  const job = await Job.findById(id)
+  if (!job || job.status === 'draft') throw new AppError('NOT_FOUND')
+  const accepting = await isVisible(job)
+  if (!accepting && !(await SavedJob.exists({ candidateId: user._id, jobId: job._id }))) throw new AppError('NOT_FOUND')
+  return { ...(await cardContext(user, [job])).card(job), accepting }
+}
+
+/** M-065: saved jobs, newest first; jobs that stopped accepting stay listed with that state. */
+export async function savedJobs(user) {
+  const entries = await SavedJob.find({ candidateId: user._id }).sort({ createdAt: -1 })
+  const jobs = await Job.find({ _id: { $in: entries.map((entry) => entry.jobId) }, status: { $ne: 'draft' } })
+  const visible = new Set((await Job.find({ _id: { $in: jobs.map((job) => job._id) }, ...(await visibleFilter()) }, '_id')).map((job) => String(job._id)))
+  const byId = new Map(jobs.map((job) => [String(job._id), job]))
+  const ordered = entries.map((entry) => byId.get(String(entry.jobId))).filter(Boolean)
+  const context = await cardContext(user, ordered)
+  const items = ordered.map((job) => ({ ...context.card(job), accepting: visible.has(String(job._id)) }))
+  return { items, total: items.length, page: 1, pageSize: items.length }
+}
+
+export async function saveJob(user, jobId) {
+  const job = await Job.findById(jobId)
+  if (!job || !(await isVisible(job))) throw new AppError('NOT_FOUND')
+  await SavedJob.updateOne({ candidateId: user._id, jobId: job._id }, { $setOnInsert: { candidateId: user._id, jobId: job._id } }, { upsert: true })
+}
+
+export function unsaveJob(user, jobId) {
+  return SavedJob.deleteOne({ candidateId: user._id, jobId })
+}
+
+/** GET /candidate/overview: Recommended jobs (M-053), saved jobs and profile views (M-184). */
+export async function candidateOverview(user, now = Date.now()) {
+  const recommended = await recommendedJobs(user, now)
+  const [savedCount, last30, previous30] = await Promise.all([
+    SavedJob.countDocuments({ candidateId: user._id }),
+    ProfileView.countDocuments({ candidateId: user._id, at: { $gte: new Date(now - 30 * DAY_MS) } }),
+    ProfileView.countDocuments({ candidateId: user._id, at: { $gte: new Date(now - 60 * DAY_MS), $lt: new Date(now - 30 * DAY_MS) } }),
+  ])
+  return { recommended: { count: recommended.total, newThisWeek: recommended.newThisWeek }, savedJobs: savedCount, profileViews: { last30, previous30 } }
+}

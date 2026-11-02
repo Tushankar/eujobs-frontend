@@ -61,7 +61,8 @@ export const ENUMS = {
   workPreference: ['remote', 'hybrid', 'on_site'],
   employmentType: ['full_time', 'part_time', 'contract', 'internship'],
   jobLevel: ['junior', 'mid', 'senior', 'lead'],
-  jobStatus: ['draft', 'published', 'paused', 'closed'],
+  // M-040: also the tab and sort order
+  jobStatus: ['published', 'paused', 'draft', 'closed'],
   salaryPeriod: ['year', 'month'],
   companySize: ['1_10', '11_50', '51_200', '201_500', '501_1000', '1000_plus'],
   availability: ['available_now', 'within_2_weeks', 'within_1_month', 'open_to_opportunities', 'not_looking'],

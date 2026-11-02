@@ -16,8 +16,6 @@ export const SEED_APPLICATIONS = [
   { id: 'app-vercel-lead-product-designer', jobId: 'vercel-lead-product-designer', status: 'applied', appliedAt: '2026-09-24' },
 ]
 
-export const SEED_SAVED_JOB_IDS = ['stripe-senior-ux-designer', 'spotify-ux-researcher']
-
 /** "Sep 28" from an ISO date (read at noon so the local timezone never shifts the day). */
 export function formatApplied(isoDate) {
   return new Date(`${isoDate}T12:00:00`).toLocaleDateString('en-US', { month: 'short', day: 'numeric' })

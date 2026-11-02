@@ -19,25 +19,7 @@
   color: #577fba;
 }
 
-.upToDate {
-  display: inline-flex;
-  align-items: center;
-  gap: 6px;
-  padding: 4px 8px;
-  border-radius: var(--radius-md);
-  background: var(--accent);
-  font-size: 10px;
-  font-weight: 500;
-  line-height: 15px;
-  color: var(--primary-hover);
-}
 
-.upToDateDot {
-  width: 4px;
-  height: 4px;
-  border-radius: var(--radius-full);
-  background: var(--primary);
-}
 
 .hero {
   display: flex;

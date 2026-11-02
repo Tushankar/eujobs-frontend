@@ -1,6 +1,6 @@
 /*
- * Recruiter company profile (mock data). Edits are persisted to localStorage by CompanyPage
- * under COMPANY_STORAGE_KEY, so other recruiter screens can read the saved company the same way.
+ * Recruiter company mock, kept only for the candidate job-listing mock (useJobListings) that the candidate and
+ * admin Applications pages read until Phase 6 (P4-D14). The Company page reads the server since Phase 4.
  */
 export const COMPANY_STORAGE_KEY = 'lwm.recruiter.company'
 

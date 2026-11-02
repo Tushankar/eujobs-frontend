@@ -5,9 +5,9 @@ import styles from './PillBadge.module.css'
  * Small rounded-rect label used for statuses, tags and skills (10px / 500). `dot` prepends a status dot.
  * tone = success | warning | neutral | accent | primary | info | danger.
  */
-export default function PillBadge({ tone = 'neutral', dot = false, className, children }) {
+export default function PillBadge({ tone = 'neutral', dot = false, className, children, ...rest }) {
   return (
-    <span className={cx(styles.badge, styles[tone], className)}>
+    <span className={cx(styles.badge, styles[tone], className)} {...rest}>
       {dot && <span className={styles.dot} aria-hidden="true" />}
       {children}
     </span>

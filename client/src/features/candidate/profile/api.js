@@ -21,7 +21,6 @@ const change = (build, query) => build.mutation({ query, ...writesProfile })
 export const profileApi = api.injectEndpoints({
   endpoints: (build) => ({
     getProfile: build.query({ query: () => '/candidate/profile', providesTags: ['Profile'] }),
-    getLanguageCodes: build.query({ query: () => '/meta/languages', transformResponse: (response) => response.items }),
     updateProfile: change(build, (body) => ({ url: '/candidate/profile', method: 'PUT', body })),
     // `kind` is "work-history" or "education"
     addEntry: change(build, ({ kind, body }) => ({ url: `/candidate/profile/${kind}`, method: 'POST', body })),
@@ -43,7 +42,6 @@ export const profileApi = api.injectEndpoints({
 
 export const {
   useGetProfileQuery,
-  useGetLanguageCodesQuery,
   useUpdateProfileMutation,
   useAddEntryMutation,
   useUpdateEntryMutation,

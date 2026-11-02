@@ -67,6 +67,12 @@ export default function Modal({
   const titleId = useId()
   const descriptionId = useId()
   const { mounted, closing } = usePresence(open, EXIT_MS)
+  // Callers pass a new onClose on every render; read it through a ref so a re-render (typing in a field of the
+  // dialog) does not rerun the focus effect, which would move the focus away from that field.
+  const onCloseRef = useRef(onClose)
+  useEffect(() => {
+    onCloseRef.current = onClose
+  }, [onClose])
 
   useEffect(() => {
     if (!open) return undefined
@@ -79,7 +85,7 @@ export default function Modal({
 
     function onKeyDown(event) {
       if (event.key === 'Escape') {
-        if (dismissible) onClose()
+        if (dismissible) onCloseRef.current()
         return
       }
       if (event.key !== 'Tab' || !dialog) return
@@ -102,7 +108,7 @@ export default function Modal({
       document.body.style.overflow = previousOverflow
       opener?.focus?.()
     }
-  }, [open, onClose, dismissible])
+  }, [open, dismissible])
 
   if (!mounted) return null
 

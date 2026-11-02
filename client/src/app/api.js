@@ -42,12 +42,39 @@ export const writesMe = {
 export const api = createApi({
   reducerPath: 'api',
   baseQuery: baseQueryWithReauth,
-  tagTypes: ['Me', 'Countries', 'Config', 'Faqs', 'Legal', 'Profile', 'Cv', 'Verification', 'Privacy', 'VerificationQueue'],
+  tagTypes: [
+    'Me',
+    'Countries',
+    'Config',
+    'Faqs',
+    'Legal',
+    'Profile',
+    'Cv',
+    'Verification',
+    'Privacy',
+    'VerificationQueue',
+    'Onboarding',
+    'AccountReview',
+    'Company',
+    'RecruiterJobs',
+    'Jobs',
+    'SavedJobs',
+    'CandidateOverview',
+    'Discovery',
+    'Shortlist',
+    'CandidateNote',
+    'CandidateActivity',
+    'CandidateCv',
+    'CvRequests',
+    'RecruiterOverview',
+  ],
   endpoints: (build) => ({
     getMe: build.query({ query: () => '/me', providesTags: ['Me'] }),
     updateMe: build.mutation({ query: (body) => ({ url: '/me', method: 'PATCH', body }), ...writesMe }),
     getConfig: build.query({ query: () => '/meta/config', providesTags: ['Config'] }),
     getCountries: build.query({ query: () => '/meta/countries', transformResponse: (response) => response.items, providesTags: ['Countries'] }),
+    // ISO 639-1 codes (M-020) for profile and job language fields; names come from Intl.DisplayNames.
+    getLanguageCodes: build.query({ query: () => '/meta/languages', transformResponse: (response) => response.items }),
     // City fields of every role (G-1, §2.16): the server proxies Google in the user's language.
     getPlaceSuggestions: build.query({
       query: ({ input, sessionToken }) => ({ url: '/places/autocomplete', params: { input, sessionToken } }),
@@ -57,7 +84,15 @@ export const api = createApi({
   }),
 })
 
-export const { useGetMeQuery, useUpdateMeMutation, useGetConfigQuery, useGetCountriesQuery, useGetPlaceSuggestionsQuery, useLazyGetPlaceQuery } = api
+export const {
+  useGetMeQuery,
+  useUpdateMeMutation,
+  useGetConfigQuery,
+  useGetCountriesQuery,
+  useGetLanguageCodesQuery,
+  useGetPlaceSuggestionsQuery,
+  useLazyGetPlaceQuery,
+} = api
 
 /** A multipart body (§2.6): the file under `file`, plus text fields; empty fields are left out. */
 export function formData(file, fields = {}) {

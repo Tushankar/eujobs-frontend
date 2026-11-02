@@ -1,38 +1,48 @@
-import { useMemo, useState } from 'react'
-import { ChevronDown, MapPin, SearchX, Search, SlidersHorizontal } from 'lucide-react'
+import { useEffect, useState } from 'react'
+import { useTranslation } from 'react-i18next'
+import { ChevronDown, SearchX, Search, SlidersHorizontal } from 'lucide-react'
 import { Button, Icon, TextField } from '@/components/ui'
 import EmptyState from '@/components/common/EmptyState.jsx'
 import PageTitle from '@/components/common/PageTitle.jsx'
 import aiGlyphDark from '@/assets/icons/ai-glyph-blue-dark.svg'
-import AiJobSummaryModal from '../components/AiJobSummaryModal.jsx'
-import AiSummaryButton from '../components/AiSummaryButton.jsx'
+import { useFormat } from '@/lib/preferences.js'
+import { useSaveToggle, useSearchJobsQuery } from '../api.js'
 import JobCard from '../components/JobCard.jsx'
 import JobFiltersModal from '../components/JobFiltersModal.jsx'
-import { EMPTY_FILTERS, SORT_OPTIONS, jobPath, searchJobs, sortJobs } from '../data/jobUtils.js'
-import { useApplications } from '../hooks/useApplications.js'
-import { useJobListings } from '../hooks/useJobListings.js'
-import { useSavedJobs } from '../hooks/useSavedJobs.js'
+import { countActiveFilters, EMPTY_FILTERS, searchParams } from '../utils/jobSearch.js'
 import styles from './FindJobsPage.module.css'
 
 const PAGE_SIZE = 9
+const SORTS = ['recommended', 'newest', 'salary']
+const DEBOUNCE_MS = 300
 
-/** Find jobs: live search, location, filters, sort and "show more" over the mock listings. */
+/**
+ * Find jobs (M-137, OD2, §3.6): the header country's jobs, or the Remote view, from the server with keyword search,
+ * filters and sort; the list shows nine at a time. The page-level AI summary is gone (M-059).
+ */
 export default function FindJobsPage() {
+  const { t } = useTranslation()
+  const format = useFormat()
   const [query, setQuery] = useState('')
-  const [location, setLocation] = useState('')
+  const [debounced, setDebounced] = useState('')
   const [filters, setFilters] = useState(EMPTY_FILTERS)
   const [sort, setSort] = useState('recommended')
   const [visible, setVisible] = useState(PAGE_SIZE)
   const [filtersOpen, setFiltersOpen] = useState(false)
-  const [summaryOpen, setSummaryOpen] = useState(false)
-  const { isSaved, toggleSaved } = useSavedJobs()
-  const { hasApplied, applyTo } = useApplications()
-  const { jobs } = useJobListings()
-
-  const results = useMemo(() => sortJobs(searchJobs(jobs, { query, location, filters }), sort), [jobs, query, location, filters, sort])
+  const toggleSave = useSaveToggle()
+  const { data } = useSearchJobsQuery(searchParams({ query: debounced, filters, sort }))
+  const results = data?.items ?? []
   const shown = results.slice(0, visible)
-  const activeFilters = filters.workModes.length + filters.levels.length + filters.matches.length
-  const topJob = results[0]
+  const activeFilters = countActiveFilters(filters)
+  const remote = data?.view.country === 'REMOTE'
+
+  useEffect(() => {
+    const timer = window.setTimeout(() => {
+      setDebounced(query)
+      setVisible(PAGE_SIZE)
+    }, DEBOUNCE_MS)
+    return () => window.clearTimeout(timer)
+  }, [query])
 
   function change(setter) {
     return (value) => {
@@ -43,69 +53,47 @@ export default function FindJobsPage() {
 
   function reset() {
     setQuery('')
-    setLocation('')
     setFilters(EMPTY_FILTERS)
     setVisible(PAGE_SIZE)
   }
 
   return (
     <div>
-      <PageTitle
-        className={styles.title}
-        eyebrow="Your next chapter"
-        title="Find work that fits you."
-        description="Relevant opportunities. Meaningful connections. A better next move."
-        actions={<AiSummaryButton onClick={() => setSummaryOpen(true)} disabled={!topJob} />}
-      />
+      <PageTitle className={styles.title} eyebrow={t('findJobs:page.eyebrow')} title={t('findJobs:page.title')} description={t('findJobs:page.description')} />
 
       <form className={styles.search} role="search" onSubmit={(event) => event.preventDefault()}>
         <div className={styles.fields}>
           <TextField
             className={styles.query}
-            aria-label="Search jobs"
-            placeholder="Job title, skills, or company"
+            aria-label={t('findJobs:page.search')}
+            placeholder={t('findJobs:page.searchPlaceholder')}
             value={query}
-            onChange={(event) => change(setQuery)(event.target.value)}
+            onChange={(event) => setQuery(event.target.value)}
             leftIcon={<Icon as={Search} size={17} />}
             autoComplete="off"
           />
-          <TextField
-            className={styles.location}
-            aria-label="Job location"
-            placeholder="Location"
-            value={location}
-            onChange={(event) => change(setLocation)(event.target.value)}
-            leftIcon={<Icon as={MapPin} size={16} />}
-            autoComplete="off"
-          />
-          <Button
-            variant="secondary"
-            className={styles.filtersButton}
-            onClick={() => setFiltersOpen(true)}
-            leftIcon={<Icon as={SlidersHorizontal} size={15} />}
-          >
-            {activeFilters ? `Filters · ${activeFilters}` : 'Filters'}
+          <Button variant="secondary" className={styles.filtersButton} onClick={() => setFiltersOpen(true)} leftIcon={<Icon as={SlidersHorizontal} size={15} />}>
+            {activeFilters ? t('findJobs:page.filtersCount', { count: activeFilters }) : t('findJobs:page.filters')}
           </Button>
         </div>
         <p className={styles.hint}>
           <img src={aiGlyphDark} alt="" width={12} height={12} />
-          Try “remote product design” or “Figma fintech”. Search uses listed role evidence.
+          {t('findJobs:page.hint')}
         </p>
+        {data && <p className={styles.hint}>{remote ? t('findJobs:page.viewRemote') : t('findJobs:page.viewCountry', { country: format.country(data.view.country) })}</p>}
       </form>
 
       <div className={styles.resultsBar}>
         <p className={styles.count} aria-live="polite">
-          <strong>
-            {results.length} {results.length === 1 ? 'opportunity' : 'opportunities'}
-          </strong>{' '}
-          worth your attention
+          <strong>{t('findJobs:page.count', { count: results.length })}</strong>
+          {t('findJobs:page.worth')}
         </p>
         <label className={styles.sort}>
-          <span className="sr-only">Sort jobs</span>
+          <span className="sr-only">{t('findJobs:page.sort')}</span>
           <select value={sort} onChange={(event) => change(setSort)(event.target.value)}>
-            {SORT_OPTIONS.map((option) => (
-              <option key={option.value} value={option.value}>
-                {option.label}
+            {SORTS.map((value) => (
+              <option key={value} value={value}>
+                {t(`findJobs:page.sorts.${value}`)}
               </option>
             ))}
           </select>
@@ -113,14 +101,14 @@ export default function FindJobsPage() {
         </label>
       </div>
 
-      {results.length === 0 ? (
+      {data && results.length === 0 ? (
         <EmptyState
           icon={SearchX}
-          title="No jobs match your search"
-          description="Try fewer words, a different location, or clear your filters to see every opportunity."
+          title={t('findJobs:page.empty')}
+          description={t('findJobs:page.emptyText')}
           action={
             <Button variant="secondary" onClick={reset}>
-              Clear search and filters
+              {t('findJobs:page.clear')}
             </Button>
           }
         />
@@ -129,17 +117,15 @@ export default function FindJobsPage() {
           <ul className={styles.list}>
             {shown.map((job) => (
               <li key={job.id}>
-                <JobCard job={job} detailsPath={jobPath(job.id)} saved={isSaved(job.id)} onToggleSave={toggleSaved} />
+                <JobCard job={job} onToggleSave={toggleSave} />
               </li>
             ))}
           </ul>
           {results.length > shown.length && (
             <div className={styles.more}>
-              <p>
-                Showing {shown.length} of {results.length}
-              </p>
+              <p>{t('findJobs:page.showing', { shown: shown.length, total: results.length })}</p>
               <Button variant="secondary" onClick={() => setVisible((count) => count + PAGE_SIZE)}>
-                Show more jobs
+                {t('findJobs:page.more')}
               </Button>
             </div>
           )}
@@ -152,13 +138,8 @@ export default function FindJobsPage() {
         filters={filters}
         onChange={change(setFilters)}
         resultCount={results.length}
-      />
-      <AiJobSummaryModal
-        job={topJob}
-        open={summaryOpen}
-        onClose={() => setSummaryOpen(false)}
-        applied={topJob ? hasApplied(topJob.id) : false}
-        onApply={applyTo}
+        remote={remote}
+        currency={data?.view.currency}
       />
     </div>
   )

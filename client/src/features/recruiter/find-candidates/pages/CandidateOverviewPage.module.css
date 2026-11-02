@@ -43,3 +43,14 @@
   line-height: 24px;
   color: var(--muted-foreground);
 }
+
+/* Right-to-work entries (U27) */
+.rights {
+  display: flex;
+  flex-direction: column;
+  gap: 4px;
+  padding-top: 12px;
+  font-size: 13px;
+  line-height: 22px;
+  color: var(--foreground);
+}

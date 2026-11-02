@@ -27,3 +27,10 @@
   background: #e3f0fd;
   color: #1f5fa8;
 }
+
+/* Uploaded logos keep their proportions on a white tile */
+.image {
+  border: 1px solid var(--border);
+  background: var(--card);
+  object-fit: contain;
+}

@@ -15,32 +15,9 @@
   padding-bottom: 16px;
 }
 
-.avatar {
-  display: inline-flex;
-  align-items: center;
-  justify-content: center;
-  width: 48px;
-  height: 48px;
-  border-radius: var(--radius-full);
-  font-size: 14px;
-  font-weight: 600;
-  line-height: 20px;
-}
 
-.lilac {
-  background: #e8e4f4;
-  color: #6c5b97;
-}
 
-.mint {
-  background: #ddebe8;
-  color: #527b72;
-}
 
-.peach {
-  background: #f3e7dc;
-  color: #a77850;
-}
 
 .bookmark {
   color: var(--text-faint);
@@ -117,6 +94,9 @@
 }
 
 .ready {
+  display: inline-flex;
+  align-items: center;
+  gap: 4px;
   margin-left: auto;
 }
 
@@ -167,16 +147,11 @@
 .footer {
   display: flex;
   align-items: center;
-  justify-content: space-between;
+  justify-content: flex-end;
   gap: 8px;
   padding-top: 16px;
 }
 
-.compare {
-  font-size: 10px;
-  line-height: 15px;
-  color: var(--muted-foreground);
-}
 
 .view {
   display: inline-flex;

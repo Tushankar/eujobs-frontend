@@ -28,6 +28,8 @@ export function requiredPage(me) {
   if (me.role !== 'recruiter' || me.status === 'active') return null
   if (me.status === 'unverified') return { path: '/recruiter/onboarding/email-code', prefix: '/recruiter/onboarding/email-code' }
   if (me.status === 'onboarding') return { path: '/recruiter/onboarding', prefix: '/recruiter/onboarding' }
+  // M-152, P4-D3: a rejected recruiter may reopen every step to fix it, then resubmit from the review page.
+  if (me.status === 'rejected') return { path: '/recruiter/onboarding/review', prefix: '/recruiter/onboarding' }
   return { path: '/recruiter/onboarding/review', prefix: '/recruiter/onboarding/review' }
 }
 
@@ -45,6 +47,13 @@ export async function loadMe() {
   const { data } = await store.dispatch(api.endpoints.getMe.initiate(undefined, { subscribe: false }))
   if (!data) return null
   if (i18n.language !== data.language) await i18n.changeLanguage(data.language)
+  return data
+}
+
+/** Fetches /me again (a change on the server moved the country or language) and follows its language. */
+export async function refreshMe() {
+  const { data } = await store.dispatch(api.endpoints.getMe.initiate(undefined, { subscribe: false, forceRefetch: true }))
+  if (data && i18n.language !== data.language) await i18n.changeLanguage(data.language)
   return data
 }
 

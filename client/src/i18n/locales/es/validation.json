@@ -97,6 +97,20 @@
     },
     "code": {
       "required": "Introduce el código."
+    },
+    "website": {
+      "invalid": "Escribe un sitio web como https://ejemplo.com."
+    },
+    "legalName": {
+      "required": "Escribe la razón social."
+    },
+    "businessAddress": {
+      "required": "Escribe la dirección de la empresa."
+    },
+    "size": {
+      "required": "Elige el tamaño de la empresa."
     }
-  }
+  },
+  "in_both": "{{skill}} ya es una competencia obligatoria.",
+  "below_min": "Usa un importe igual o superior al mínimo."
 }

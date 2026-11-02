@@ -30,14 +30,17 @@ const CHECKS = Object.keys(EVIDENCE_TYPES)
 
 /* ---------- phone ---------- */
 
-/** M-003: the code is returned for the screen (no SMS). A changed number is unverified until confirmed (M-004). */
+/**
+ * M-003: the code is returned for the screen (no SMS). A changed number is unverified until confirmed (M-004).
+ * Candidates (verification page) and recruiters (onboarding step 4) share it.
+ */
 export async function requestPhoneCode(user, { phone, country }) {
   const e164 = normalizePhone(phone, country)
   await assertCodeResendAllowed(user._id, 'phone')
   if (user.phone?.e164 !== e164) {
     user.phone = { e164 }
     await user.save()
-    await refreshCompleteness(user._id)
+    if (user.role === 'candidate') await refreshCompleteness(user._id)
   }
   const code = await issueCode(user._id, 'phone', e164)
   return { phone: e164, code, expiresInSeconds: LIMITS.code.ttlMs / 1000 }
@@ -48,7 +51,7 @@ export async function confirmPhone(user, code) {
   await verifyCode(user._id, 'phone', code)
   user.phone.verifiedAt = new Date()
   await user.save()
-  await refreshCompleteness(user._id)
+  if (user.role === 'candidate') await refreshCompleteness(user._id)
 }
 
 /* ---------- candidate side ---------- */

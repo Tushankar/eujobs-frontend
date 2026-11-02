@@ -63,6 +63,48 @@
         "You can submit new evidence from your verification page."
       ],
       "action": "Open verification"
+    },
+    "recruiter_approved": {
+      "subject": "Your recruiter account is approved",
+      "heading": "Welcome to Local WorkMan",
+      "body": [
+        "Hi {{name}},",
+        "An administrator reviewed {{company}} and approved your recruiter account. Your recruiter workspace is now open: you can post jobs and discover candidates."
+      ],
+      "action": "Sign in"
+    },
+    "recruiter_rejected": {
+      "subject": "Your recruiter account needs changes",
+      "heading": "Your account was not approved yet",
+      "body": [
+        "Hi {{name}},",
+        "An administrator reviewed {{company}} and could not approve your recruiter account.",
+        "Reason: {{reason}}",
+        "You can update your details or documents and submit them again."
+      ],
+      "action": "Review and resubmit"
+    },
+    "recruiter_suspended": {
+      "subject": "Your recruiter account is suspended",
+      "heading": "Account suspended",
+      "body": [
+        "Hi {{name}},",
+        "An administrator suspended your recruiter account for {{company}}. Your jobs are hidden from candidates while it is suspended.",
+        "Reason: {{reason}}"
+      ],
+      "action": "Open account status"
+    },
+    "cv_request": {
+      "subject": "{{company}} asked to see an earlier CV",
+      "heading": "Request for an earlier CV version",
+      "body": [
+        "Hi {{name}},",
+        "{{company}} asked to see an earlier version of your CV.",
+        "Reason: {{reason}}",
+        "{{details}}",
+        "Nothing is shared unless you approve. You can choose which version to share, or decline, on your CV page."
+      ],
+      "action": "Open CV & versions"
     }
   },
   "verification": {
@@ -72,6 +114,33 @@
       "employment": "employment",
       "right_to_work": "right to work",
       "certificate": "certificate"
+    }
+  },
+  "stages": {
+    "applied": "Applied",
+    "screening": "Screening",
+    "shortlisted": "Shortlisted",
+    "interview": "Interview",
+    "offer": "Offer",
+    "hired": "Hired"
+  },
+  "cvRequestReason": {
+    "verify_employment": "Verify employment history",
+    "earlier_role_cv": "Review an earlier role-specific CV",
+    "compliance": "Compliance or audit check",
+    "other": "Other recruitment purpose"
+  },
+  "labels": {
+    "workPreference": {
+      "remote": "Remote",
+      "hybrid": "Hybrid",
+      "on_site": "On-site"
+    },
+    "jobLevel": {
+      "junior": "Junior",
+      "mid": "Mid-level",
+      "senior": "Senior",
+      "lead": "Lead"
     }
   }
 }

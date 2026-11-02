@@ -1,86 +1,107 @@
-import { useMemo, useState } from 'react'
+import { useState } from 'react'
+import { useTranslation } from 'react-i18next'
 import { Link } from 'react-router-dom'
 import { ArrowRight, ArrowUpRight, Bookmark, BriefcaseBusiness, Eye, Search, ShieldCheck, SlidersHorizontal, Sparkle, Sun } from 'lucide-react'
+import { useGetMeQuery } from '@/app/api.js'
 import { Button, Icon } from '@/components/ui'
 import EmptyState from '@/components/common/EmptyState.jsx'
 import SegmentedTabs from '@/components/common/SegmentedTabs.jsx'
 import StatCard from '@/components/common/StatCard.jsx'
 import aiGlyph from '@/assets/icons/ai-glyph-blue.svg'
 import aiNavGlyph from '@/assets/icons/ai-nav.svg'
+import { useFormat } from '@/lib/preferences.js'
+import { useGetCandidateOverviewQuery, useGetRecommendedJobsQuery, useGetSavedJobsQuery, useSaveToggle, useSearchJobsQuery } from '@/features/candidate/jobs/api.js'
 import JobCard from '@/features/candidate/jobs/components/JobCard.jsx'
-import { jobPath } from '@/features/candidate/jobs/data/jobUtils.js'
 import { useApplications } from '@/features/candidate/jobs/hooks/useApplications.js'
-import { useJobListings } from '@/features/candidate/jobs/hooks/useJobListings.js'
-import { useSavedJobs } from '@/features/candidate/jobs/hooks/useSavedJobs.js'
 import ApplicationActivityCard from '../components/ApplicationActivityCard.jsx'
-import InsightCard from '../components/InsightCard.jsx'
 import ProfileStrengthCard from '../components/ProfileStrengthCard.jsx'
 import VerificationCard from '../components/VerificationCard.jsx'
 import styles from './OverviewPage.module.css'
 
-const TABS = [
-  { id: 'for-you', label: 'For you', iconSrc: aiGlyph },
-  { id: 'recent', label: 'Recently added' },
-  { id: 'saved', label: 'Saved' },
-]
-
+const TABS = ['for-you', 'recent', 'saved']
 const SHOWN = 3
+const EMPTY_ICONS = { 'for-you': Search, recent: Search, saved: Bookmark }
 
-/** Candidate Overview: greeting, KPI cards, recommended jobs (For you / Recently added / Saved) and the profile side rail. */
+const partOfDay = (hour) => (hour < 12 ? 'morning' : hour < 18 ? 'afternoon' : 'evening')
+
+/** Profile views over the last 30 days against the 30 before (M-184), as "↑ 12%"; nothing when there is no base. */
+function viewsDelta(views, format) {
+  if (!views?.previous30) return undefined
+  const change = (views.last30 - views.previous30) / views.previous30
+  return `${change >= 0 ? '↑' : '↓'} ${format.number(Math.abs(change), { style: 'percent', maximumFractionDigits: 0 })}`
+}
+
+/**
+ * Candidate Overview: KPIs (Recommended jobs per U8 until Phase 9, saved jobs and profile views from the server),
+ * the For you / Recently added / Saved lists and the profile rail. Active applications stay on their mock until
+ * Phase 6; the AI teaser returns with the AI in Phase 9 (P4-Q1).
+ */
 export default function OverviewPage() {
+  const { t } = useTranslation()
+  const format = useFormat()
   const [tab, setTab] = useState('for-you')
-  const { savedIds, isSaved, toggleSaved } = useSavedJobs()
-  const { activeCount, hasApplied, applyTo } = useApplications()
-  const { jobs: listings } = useJobListings()
-
-  const jobs = useMemo(() => {
-    if (tab === 'recent') return [...listings].sort((a, b) => a.postedHoursAgo - b.postedHoursAgo).slice(0, SHOWN)
-    if (tab === 'saved') return listings.filter((job) => savedIds.includes(job.id)).slice(0, SHOWN)
-    return listings.slice(0, SHOWN)
-  }, [listings, tab, savedIds])
+  const [now] = useState(() => new Date())
+  const { data: me } = useGetMeQuery()
+  const { data: overview } = useGetCandidateOverviewQuery()
+  const { data: recommended } = useGetRecommendedJobsQuery(undefined, { skip: tab !== 'for-you' })
+  const { data: recent } = useSearchJobsQuery({ sort: 'newest' }, { skip: tab !== 'recent' })
+  const { data: saved } = useGetSavedJobsQuery(undefined, { skip: tab !== 'saved' })
+  const toggleSave = useSaveToggle()
+  const { activeCount } = useApplications()
+  const lists = { 'for-you': recommended, recent, saved }
+  const jobs = lists[tab]?.items.slice(0, SHOWN)
+  const firstName = me?.fullName.split(/\s+/)[0] ?? ''
 
   return (
     <div>
       <div className={styles.dateRow}>
         <p className={styles.date}>
           <Icon as={Sparkle} size={11} className={styles.dateStar} fill="currentColor" />
-          Wednesday, September 30, 2026
+          {format.date(now, { weekday: 'long', day: 'numeric', month: 'long', year: 'numeric' })}
         </p>
-        <span className={styles.upToDate}>
-          <span className={styles.upToDateDot} aria-hidden="true" />
-          Your matches are up to date
-        </span>
       </div>
 
       <section className={styles.hero}>
         <div>
           <p className={styles.greeting}>
-            Good morning, Alex <Icon as={Sun} size={13} />
+            {t(`findJobs:overview.${partOfDay(now.getHours())}`, { name: firstName })} <Icon as={Sun} size={13} />
           </p>
           <h1 className={styles.title}>
-            Your next chapter.
+            {t('findJobs:overview.title')}
             <br />
-            <span className={styles.titleMuted}>Matched to you.</span>
+            <span className={styles.titleMuted}>{t('findJobs:overview.titleMuted')}</span>
           </h1>
-          <p className={styles.lead}>Less searching. More possibilities. Find work that fits who you are.</p>
+          <p className={styles.lead}>{t('findJobs:overview.lead')}</p>
         </div>
         <Button as={Link} to="/candidate/jobs" leftIcon={<Icon as={Search} size={14} />} rightIcon={<Icon as={ArrowUpRight} size={13} />}>
-          Explore jobs
+          {t('findJobs:overview.explore')}
         </Button>
       </section>
 
       <div className={styles.stats}>
-        <Link to="/candidate/jobs" className={styles.statLink}>
-          <StatCard label="Recommended jobs" value="6" delta="+6 this week" caption="Curated around your experience" iconSrc={aiNavGlyph} />
+        <Link to="/candidate/jobs" className={styles.statLink} data-stat="recommended">
+          <StatCard
+            label={t('findJobs:overview.stats.recommended')}
+            value={overview?.recommended.count ?? 0}
+            delta={overview?.recommended.newThisWeek ? t('findJobs:overview.stats.recommendedDelta', { count: overview.recommended.newThisWeek }) : undefined}
+            caption={t('findJobs:overview.stats.recommendedCaption')}
+            iconSrc={aiNavGlyph}
+          />
         </Link>
         <Link to="/candidate/applications" className={styles.statLink}>
-          <StatCard label="Active applications" value={activeCount} caption="Your next step is in progress" icon={BriefcaseBusiness} />
+          <StatCard label={t('findJobs:overview.stats.applications')} value={activeCount} caption={t('findJobs:overview.stats.applicationsCaption')} icon={BriefcaseBusiness} />
         </Link>
-        <Link to="/candidate/jobs" className={styles.statLink}>
-          <StatCard label="Saved opportunities" value={savedIds.length} caption="Good things worth coming back to" icon={Bookmark} />
+        <Link to="/candidate/jobs" className={styles.statLink} data-stat="saved">
+          <StatCard label={t('findJobs:overview.stats.saved')} value={overview?.savedJobs ?? 0} caption={t('findJobs:overview.stats.savedCaption')} icon={Bookmark} />
         </Link>
-        <Link to="/candidate/profile" className={styles.statLink}>
-          <StatCard label="Profile views" value="18" delta="↑ 12%" caption="From verified companies" icon={Eye} />
+        <Link to="/candidate/profile" className={styles.statLink} data-stat="views">
+          <StatCard
+            label={t('findJobs:overview.stats.views')}
+            value={overview?.profileViews.last30 ?? 0}
+            delta={viewsDelta(overview?.profileViews, format)}
+            caption={t('findJobs:overview.stats.viewsCaption')}
+            icon={Eye}
+          />
         </Link>
       </div>
 
@@ -88,60 +109,53 @@ export default function OverviewPage() {
         <section className={styles.main}>
           <div className={styles.sectionHead}>
             <div>
-              <h2 className={styles.sectionTitle}>Opportunities for you</h2>
-              <p className={styles.sectionText}>Thoughtfully matched. Not just another list of jobs.</p>
+              <h2 className={styles.sectionTitle}>{t('findJobs:overview.opportunities')}</h2>
+              <p className={styles.sectionText}>{t('findJobs:overview.opportunitiesText')}</p>
             </div>
             <Link to="/candidate/jobs" className={styles.viewAll}>
-              View all
+              {t('findJobs:overview.viewAll')}
               <Icon as={ArrowRight} size={12} />
             </Link>
           </div>
 
           <div className={styles.tabsRow}>
-            <SegmentedTabs label="Opportunity lists" tabs={TABS} value={tab} onChange={setTab} />
+            <SegmentedTabs
+              label={t('findJobs:overview.tabsLabel')}
+              tabs={TABS.map((id) => ({ id, label: t(`findJobs:overview.tabs.${id}`), ...(id === 'for-you' && { iconSrc: aiGlyph }) }))}
+              value={tab}
+              onChange={setTab}
+            />
             <Link to="/candidate/profile" className={styles.preferences}>
               <Icon as={SlidersHorizontal} size={12} />
-              Preferences
+              {t('findJobs:overview.preferences')}
             </Link>
           </div>
 
           <div className={styles.list} role="tabpanel">
-            {jobs.length === 0 ? (
+            {jobs?.length === 0 ? (
               <EmptyState
-                icon={Bookmark}
-                title="No saved jobs yet"
-                description="Tap the bookmark on any opportunity to keep it here."
+                icon={EMPTY_ICONS[tab]}
+                title={t(`findJobs:overview.empty.${tab}`)}
+                description={t(`findJobs:overview.empty.${tab}Text`)}
                 action={
                   <Button as={Link} to="/candidate/jobs" variant="secondary">
-                    Browse jobs
+                    {t('findJobs:overview.browse')}
                   </Button>
                 }
               />
             ) : (
-              jobs.map((job) => (
-                <JobCard
-                  key={job.id}
-                  job={job}
-                  detailsPath={jobPath(job.id)}
-                  showAiMatch
-                  saved={isSaved(job.id)}
-                  applied={hasApplied(job.id)}
-                  onToggleSave={toggleSaved}
-                  onApply={applyTo}
-                />
-              ))
+              jobs?.map((job) => <JobCard key={job.id} job={job} onToggleSave={toggleSave} />)
             )}
           </div>
           <p className={styles.caption}>
             <Icon as={ShieldCheck} size={13} />
-            AI-powered matching. Your decision, always.
+            {t('findJobs:overview.caption')}
           </p>
         </section>
 
-        <aside className={styles.rail} aria-label="Profile progress">
+        <aside className={styles.rail} aria-label={t('findJobs:overview.rail')}>
           <ProfileStrengthCard />
           <VerificationCard />
-          <InsightCard />
           <ApplicationActivityCard />
         </aside>
       </div>

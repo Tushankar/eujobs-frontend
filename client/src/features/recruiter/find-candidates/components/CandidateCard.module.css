@@ -74,6 +74,7 @@
 
 .status {
   display: flex;
+  flex-wrap: wrap;
   align-items: center;
   gap: 8px;
   padding-top: 16px;
@@ -90,7 +91,19 @@
 }
 
 .ready {
+  display: inline-flex;
+  align-items: center;
+  gap: 4px;
   margin-left: auto;
+}
+
+/* Right to work in the picker country, languages, the shortlist date (A: recruiter B2) */
+.facts {
+  padding-top: 8px;
+  font-size: 10px;
+  line-height: 15px;
+  color: var(--muted-foreground);
+  overflow-wrap: anywhere;
 }
 
 .insights {

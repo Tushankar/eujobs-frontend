@@ -58,6 +58,25 @@
   list-style: none;
 }
 
+/* M-168 ticks and the candidate's links */
+.extras {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: 8px 12px;
+  padding-top: 16px;
+}
+
+.link {
+  display: inline-flex;
+  align-items: center;
+  gap: 4px;
+  font-size: 12px;
+  font-weight: 600;
+  line-height: 16px;
+  color: var(--primary);
+}
+
 @media (max-width: 599px) {
   .card {
     padding: 20px;

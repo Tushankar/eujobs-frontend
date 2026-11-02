@@ -7,29 +7,13 @@ import PillBadge from '@/components/common/PillBadge.jsx'
 import { serverFieldErrors, useErrorText } from '@/lib/forms.js'
 import { useFormat } from '@/lib/preferences.js'
 import { cx } from '@/utils/cx.js'
-import { useDecideVerificationMutation, useGetAdminFileUrlQuery, useGetVerificationSubmissionQuery } from '../api.js'
+import { useDecideVerificationMutation, useGetVerificationSubmissionQuery } from '../api.js'
+import FilePreview from './FilePreview.jsx'
 import dialogStyles from './ReviewDialog.module.css'
 import detailStyles from './ReviewDetails.module.css'
 import styles from './VerificationReview.module.css'
 
 const STATUS_TONES = { in_review: 'warning', approved: 'success', rejected: 'danger' }
-
-/** The file preview needs `documents.view` (§2.6): an image inline, a PDF as a link. */
-function EvidenceFile({ file }) {
-  const { t } = useTranslation()
-  const { data, error } = useGetAdminFileUrlQuery(file.id)
-  if (errorCode(error) === 'PERMISSION_DENIED') return <p className={detailStyles.contextText}>{t('moderation:verification.dialog.noPreview', error.data.error.params)}</p>
-  if (!data) return null
-  const url = `${import.meta.env.VITE_API_URL ?? ''}${data.url}`
-  return (
-    <div className={styles.preview}>
-      {file.mime.startsWith('image/') && <img src={url} alt={t('moderation:verification.dialog.previewAlt', { name: file.name })} />}
-      <a href={url} target="_blank" rel="noopener noreferrer">
-        {t('moderation:verification.dialog.openFile', { name: file.name })}
-      </a>
-    </div>
-  )
-}
 
 /** The profile claim the evidence must match (A: admin §9.2), as it is now. */
 function Claim({ category, claim }) {
@@ -157,7 +141,7 @@ export default function VerificationReview({ id, onDecided, onClose }) {
         {item.file && (
           <div className={detailStyles.context}>
             <p className={detailStyles.eyebrow}>{dialog('file')}</p>
-            <EvidenceFile file={item.file} />
+            <FilePreview file={item.file} />
           </div>
         )}
         {!open && item.reviewedAt && (

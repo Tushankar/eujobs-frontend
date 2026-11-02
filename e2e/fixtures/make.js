@@ -4,7 +4,7 @@ import { join } from 'node:path'
 import { docx, executable, image, imagePdf, MB, padded, textPdf } from '../../server/test/helpers/fixtures.js'
 
 /*
- * P11, part 1: test files for the Phase 3 browser checks, written outside the repo. Existing files are kept,
+ * P11: test files for the browser checks (part 1 Phase 3, part 2 Phase 4), written outside the repo. Existing files are kept,
  * so a run only builds what is missing. Run directly with `node e2e/fixtures/make.js`.
  */
 export const FIXTURES_DIR = 'C:/eujobs-data/fixtures'
@@ -24,6 +24,16 @@ const FIXTURES = {
   'evidence.pdf': () => textPdf(['Sample evidence document', 'Created for the browser checks. It is not a real document.']),
   'cv-11mb.pdf': async () => padded(await textPdf('Oversized'), 11 * MB),
   'program.jpg': () => executable(),
+  // P11, part 2 (Phase 4): KYC files, logos and wrong types.
+  'kyc-identity.pdf': () => textPdf(['Identity document (sample)', 'Created for the browser checks. It is not a real document.']),
+  'kyc-registration.png': () => image('png', { width: 800, height: 560, background: '#f8f9fb' }),
+  'logo.png': () => image('png', { width: 256, height: 256, background: '#2c6b46' }),
+  'logo-3mb.png': () => image('png', { width: 1000, height: 1000, noise: true }),
+  'logo-script.svg': () =>
+    Buffer.from(
+      '<?xml version="1.0"?><svg xmlns="http://www.w3.org/2000/svg" width="64" height="64" onload="alert(1)"><script>alert(2)</script><rect width="64" height="64" fill="#5b4ba8" onclick="alert(3)"/></svg>',
+    ),
+  'notes.txt': () => Buffer.from('Plain text is not a KYC document.'),
 }
 
 export async function makeFixtures() {

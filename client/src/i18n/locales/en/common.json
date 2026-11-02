@@ -24,5 +24,6 @@
     "wrongType": "{{name}} is not a {{types}} file.",
     "tooLarge": "{{name}} is larger than {{size}}.",
     "empty": "{{name}} is empty. Choose a different file."
-  }
+  },
+  "companyLogo": "{{name}} logo"
 }

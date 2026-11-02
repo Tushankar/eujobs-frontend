@@ -21,7 +21,30 @@ export const cvApi = api.injectEndpoints({
     deleteCv: build.mutation({ query: (id) => ({ url: `/candidate/cv/versions/${id}`, method: 'DELETE' }), ...writesVersions }),
     // A fresh signed URL for each download (U39)
     getCvDownloadUrl: build.mutation({ query: (id) => `/candidate/cv/versions/${id}/download` }),
+    // Earlier-version requests from companies and the download log (M-029, M-187, P4-D12)
+    getCvRequests: build.query({ query: () => '/candidate/cv/requests', providesTags: ['CvRequests'] }),
+    decideCvRequest: build.mutation({
+      query: ({ id, ...body }) => ({ url: `/candidate/cv/requests/${id}/decision`, method: 'POST', body }),
+      async onQueryStarted(arg, { dispatch, queryFulfilled }) {
+        try {
+          const { data } = await queryFulfilled
+          dispatch(api.util.upsertQueryData('getCvRequests', undefined, data))
+        } catch {
+          // The caller shows the error.
+        }
+      },
+    }),
+    getCvDownloads: build.query({ query: () => '/candidate/cv/downloads', providesTags: ['CvRequests'] }),
   }),
 })
 
-export const { useGetCvVersionsQuery, useUploadCvMutation, useSetLiveCvMutation, useDeleteCvMutation, useGetCvDownloadUrlMutation } = cvApi
+export const {
+  useGetCvVersionsQuery,
+  useUploadCvMutation,
+  useSetLiveCvMutation,
+  useDeleteCvMutation,
+  useGetCvDownloadUrlMutation,
+  useGetCvRequestsQuery,
+  useDecideCvRequestMutation,
+  useGetCvDownloadsQuery,
+} = cvApi

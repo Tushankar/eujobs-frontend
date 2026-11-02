@@ -24,5 +24,6 @@
     "wrongType": "{{name}} no es un archivo {{types}}.",
     "tooLarge": "{{name}} pesa más de {{size}}.",
     "empty": "{{name}} está vacío. Elige otro archivo."
-  }
+  },
+  "companyLogo": "Logotipo de {{name}}"
 }

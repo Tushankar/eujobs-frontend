@@ -1,5 +1,5 @@
 import PillBadge from '@/components/common/PillBadge.jsx'
-import { formatDate, formatDateTime } from '@/features/admin/audit-logs/utils/formatDate.js'
+import { formatDateTime } from '@/features/admin/audit-logs/utils/formatDate.js'
 import styles from './ReviewDetails.module.css'
 
 const NOT_PROVIDED = 'Not provided'
@@ -45,22 +45,6 @@ export function ContentDetails({ item }) {
         No automated policy verdict is available. Review the content in context and apply documented marketplace rules
         consistently. Restricting a job pauses it; restricting the current candidate profile removes it from recruiter
         discovery.
-      </p>
-    </>
-  )
-}
-
-/** Body of the "Review pending account" dialog. */
-export function AccountDetails({ account }) {
-  return (
-    <>
-      <h3 className={styles.accountName}>{account.name}</h3>
-      <p className={styles.accountMeta}>
-        {account.email} · {account.type} · Joined {formatDate(account.joinedAt)}
-      </p>
-      <p className={styles.accountNotice}>
-        No automated risk assessment is available. Verify account details using your approved process before deciding.
-        This action updates a demo record only.
       </p>
     </>
   )

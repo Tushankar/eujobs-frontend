@@ -193,4 +193,6 @@ export const CITY_TIME_ZONES = {
   amsterdam: 'Europe/Amsterdam',
   paris: 'Europe/Paris',
   stockholm: 'Europe/Stockholm',
+  dublin: 'Europe/Dublin',
+  lisbon: 'Europe/Lisbon',
 }

@@ -95,3 +95,38 @@
   line-height: 24px;
   color: var(--muted-foreground);
 }
+
+/* Shared versions and the company's requests (P4-D12) */
+.subheading {
+  padding-top: 24px;
+  font-size: 13px;
+  font-weight: 600;
+  line-height: 20px;
+  color: var(--foreground);
+}
+
+.subheading + .file {
+  margin-top: 12px;
+}
+
+.file + .file {
+  margin-top: 12px;
+}
+
+.requests {
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+  padding-top: 12px;
+}
+
+.requests li {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  justify-content: space-between;
+  gap: 8px;
+  font-size: 12px;
+  line-height: 18px;
+  color: var(--text-label);
+}

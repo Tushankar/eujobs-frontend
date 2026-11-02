@@ -29,3 +29,8 @@
   line-height: 24px;
   color: var(--muted-foreground);
 }
+
+/* Languages and certificates under the skills */
+.section {
+  padding-top: 28px;
+}

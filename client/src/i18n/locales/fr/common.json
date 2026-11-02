@@ -24,5 +24,6 @@
     "wrongType": "{{name}} n’est pas un fichier {{types}}.",
     "tooLarge": "{{name}} dépasse {{size}}.",
     "empty": "{{name}} est vide. Choisissez un autre fichier."
-  }
+  },
+  "companyLogo": "Logo de {{name}}"
 }

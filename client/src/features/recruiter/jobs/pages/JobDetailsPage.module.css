@@ -127,3 +127,14 @@ a.outlined:hover {
     padding: 20px;
   }
 }
+
+/* M-167: why a restricted job cannot be published */
+.restricted {
+  margin-top: 12px;
+  padding: 12px 16px;
+  border-radius: var(--radius-xl);
+  background: #fdeceb;
+  font-size: 13px;
+  line-height: 20px;
+  color: var(--destructive);
+}

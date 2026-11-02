@@ -88,3 +88,25 @@
   line-height: 16px;
   color: var(--destructive);
 }
+
+/* The row and its file actions (View, Remove) */
+.rowWrap {
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+}
+
+.action {
+  flex-shrink: 0;
+  font-size: 12px;
+  font-weight: 600;
+  line-height: 16px;
+  color: var(--primary);
+}
+
+.fileActions {
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: flex-end;
+  gap: 8px;
+}

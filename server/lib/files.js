@@ -6,6 +6,7 @@ import { config } from '../config/env.js'
 import { LIMITS } from '../config/limits.js'
 import { File } from '../modules/files/files.model.js'
 import { AppError } from './errors.js'
+import { looksLikeSvg } from './svg.js'
 
 /*
  * File storage and signed URLs (§2.6, M-185, U39). Files live under the upload root in one folder per
@@ -17,6 +18,7 @@ export const MIME = {
   webp: 'image/webp',
   pdf: 'application/pdf',
   docx: 'application/vnd.openxmlformats-officedocument.wordprocessingml.document',
+  svg: 'image/svg+xml',
 }
 const EXTENSION_ALIASES = { jpeg: 'jpg' }
 
@@ -30,8 +32,9 @@ const extensionOf = (name = '') => {
  * Returns that extension, or throws FILE_TYPE_NOT_ALLOWED.
  */
 export async function detectFileType({ originalname, mimetype, buffer }, allowed) {
-  const detected = await fileTypeFromBuffer(buffer)
   const ext = extensionOf(originalname)
+  // SVG is text, so magic bytes cannot name it; its start is checked instead (M-150).
+  const detected = ext === 'svg' ? (looksLikeSvg(buffer) ? { ext } : undefined) : await fileTypeFromBuffer(buffer)
   const declaredOk = mimetype === MIME[ext] || mimetype === 'application/octet-stream'
   if (!detected || !allowed.includes(ext) || detected.ext !== ext || !declaredOk) {
     throw new AppError('FILE_TYPE_NOT_ALLOWED', { params: { types: allowed } })

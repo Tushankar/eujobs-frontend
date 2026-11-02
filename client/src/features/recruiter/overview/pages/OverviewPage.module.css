@@ -6,7 +6,7 @@
 
 .stats {
   display: grid;
-  grid-template-columns: repeat(4, minmax(0, 1fr));
+  grid-template-columns: repeat(3, minmax(0, 1fr));
   gap: 16px;
   padding-top: 32px;
 }
@@ -25,12 +25,6 @@
   transition: border-color var(--transition);
 }
 
-.momentum {
-  display: grid;
-  grid-template-columns: minmax(0, 1fr) 300px;
-  gap: 24px;
-  padding-top: 32px;
-}
 
 .sectionHead,
 .rolesHead {
@@ -55,6 +49,13 @@
   text-decoration: underline;
 }
 
+.talentEmpty {
+  padding-top: 20px;
+  font-size: 13px;
+  line-height: 20px;
+  color: var(--muted-foreground);
+}
+
 .talent {
   display: grid;
   grid-template-columns: repeat(3, minmax(0, 1fr));
@@ -67,9 +68,6 @@
 }
 
 @media (max-width: 1099px) {
-  .momentum {
-    grid-template-columns: minmax(0, 1fr);
-  }
 
   .stats {
     grid-template-columns: repeat(2, minmax(0, 1fr));

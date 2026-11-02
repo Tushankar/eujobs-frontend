@@ -37,33 +37,9 @@
   background: var(--muted);
 }
 
-.avatar {
-  display: inline-flex;
-  flex-shrink: 0;
-  align-items: center;
-  justify-content: center;
-  width: 36px;
-  height: 36px;
-  border-radius: var(--radius-full);
-  font-size: 12px;
-  font-weight: 600;
-  line-height: 16px;
-}
 
-.lilac {
-  background: #e8e4f4;
-  color: #6c5b97;
-}
 
-.mint {
-  background: #ddebe8;
-  color: #527b72;
-}
 
-.peach {
-  background: #f3e7dc;
-  color: #a77850;
-}
 
 .sky {
   background: #dfe8f4;

@@ -8,14 +8,16 @@ import EmptyState from '@/components/common/EmptyState.jsx'
 import PageTitle from '@/components/common/PageTitle.jsx'
 import { checkUpload, serverFieldErrors, useErrorText, useUploadText } from '@/lib/forms.js'
 import { useDeleteCvMutation, useGetCvDownloadUrlMutation, useGetCvVersionsQuery, useSetLiveCvMutation, useUploadCvMutation } from '../api.js'
+import CvRequests from '../components/CvRequests.jsx'
 import UploadDropzone from '../components/UploadDropzone.jsx'
 import VersionRow from '../components/VersionRow.jsx'
 import styles from './CvVersionsPage.module.css'
 
 /**
  * "CV & versions" (M-027 … M-031, U18): upload (text extracted on the server), the version history, the live
- * choice, downloads through signed URLs and deleting non-live versions. The AI snapshot, assisted draft and
- * Compare panel come with Phase 9 (P3-Q3).
+ * choice, downloads through signed URLs and deleting non-live versions; then companies' requests for earlier
+ * versions and the download log (M-029, M-187). The AI snapshot, assisted draft and Compare panel come with
+ * Phase 9 (P3-Q3).
  */
 export default function CvVersionsPage() {
   const { t } = useTranslation()
@@ -117,6 +119,8 @@ export default function CvVersionsPage() {
           )}
         </div>
       </section>
+
+      <CvRequests versions={versions} />
 
       <ConfirmDialog
         open={Boolean(deleting)}

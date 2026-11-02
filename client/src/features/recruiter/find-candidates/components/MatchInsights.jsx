@@ -1,48 +1,47 @@
 import { useId, useState } from 'react'
+import { useTranslation } from 'react-i18next'
 import { Check, ChevronDown, ChevronUp } from 'lucide-react'
 import { Icon } from '@/components/ui'
 import aiMatchIcon from '@/assets/icons/find-candidates-ai-match.svg'
-import { getMatchEvidence, summarizeMatch } from '../utils/matchEvidence.js'
-import { getCandidateDetails } from '../data/candidateDetails.js'
+import { useFormat } from '@/lib/preferences.js'
 import styles from './MatchInsights.module.css'
 
 /**
- * "AI Match Insights": a collapsible, evidence-first summary of how a candidate's listed skills line up with
- * the selected job. It states what the profile shows, never a score, and says people make the decision.
+ * Match evidence for the chosen job (M-052, M-057 code part): the job's skills the candidate lists, the required
+ * ones not listed, years and work mode, computed on the server. Never a score (C6); the narrative comes in Phase 9.
  */
-export default function MatchInsights({ candidate, job, defaultOpen = false }) {
+export default function MatchInsights({ candidate, hasJob, defaultOpen = false }) {
+  const { t } = useTranslation()
+  const format = useFormat()
   const [open, setOpen] = useState(defaultOpen)
   const detailsId = useId()
-  const evidence = getMatchEvidence(candidate, job)
-  const gaps = [
-    evidence.missingSkills.length > 0 && `No evidence listed yet for ${evidence.missingSkills.join(', ')}`,
-    getCandidateDetails(candidate)?.potentialGap,
-  ].filter(Boolean)
+  const overlap = candidate.overlap
+  const summary = [
+    hasJob && overlap && t('discovery:match.relevant', { count: overlap.count }),
+    t('discovery:match.years', { count: candidate.yearsExperience }),
+    candidate.workPreference && t(`enums:workPreference.${candidate.workPreference}`),
+  ]
+    .filter(Boolean)
+    .join(' · ')
 
   return (
     <div className={styles.root}>
-      <button
-        type="button"
-        className={styles.toggle}
-        aria-expanded={open}
-        aria-controls={detailsId}
-        onClick={() => setOpen((current) => !current)}
-      >
+      <button type="button" className={styles.toggle} aria-expanded={open} aria-controls={detailsId} onClick={() => setOpen((current) => !current)}>
         <span className={styles.title}>
           <img src={aiMatchIcon} alt="" width={14} height={14} />
-          AI Match Insights
+          {t('discovery:match.title')}
         </span>
         <Icon as={open ? ChevronUp : ChevronDown} size={14} strokeWidth={2} />
       </button>
-      <p className={styles.summary}>{summarizeMatch(candidate, evidence, Boolean(job))}</p>
+      <p className={styles.summary}>{summary}</p>
 
       {open && (
         <div className={styles.details} id={detailsId}>
-          {evidence.relevantSkills.length > 0 && (
+          {overlap?.matched.length > 0 && (
             <>
-              <p className={styles.label}>Skills evidence</p>
+              <p className={styles.label}>{t('discovery:match.skillsEvidence')}</p>
               <ul className={styles.chips}>
-                {evidence.relevantSkills.map((skill) => (
+                {overlap.matched.map((skill) => (
                   <li key={skill} className={styles.chip}>
                     <Icon as={Check} size={10} strokeWidth={2} />
                     {skill}
@@ -53,20 +52,15 @@ export default function MatchInsights({ candidate, job, defaultOpen = false }) {
           )}
           <p className={styles.experience}>
             <Icon as={Check} size={13} strokeWidth={2} />
-            {candidate.experienceYears} years of experience reported in the profile. Verify role-specific experience
-            during review.
+            {t('discovery:match.experience', { count: candidate.yearsExperience })}
           </p>
-          {gaps.length > 0 && (
+          {overlap?.missing.length > 0 && (
             <div className={styles.gap}>
-              <p className={styles.gapTitle}>Potential gap</p>
-              {gaps.map((gap) => (
-                <p key={gap}>{gap}</p>
-              ))}
+              <p className={styles.gapTitle}>{t('discovery:match.gapTitle')}</p>
+              <p>{t('discovery:match.missing', { skills: format.list(overlap.missing) })}</p>
             </div>
           )}
-          <p className={styles.disclaimer}>
-            Based on profile evidence and stated preferences, not a hiring decision. You remain in control.
-          </p>
+          <p className={styles.disclaimer}>{t('discovery:match.disclaimer')}</p>
         </div>
       )}
     </div>

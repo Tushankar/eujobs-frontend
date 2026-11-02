@@ -2,6 +2,7 @@ import { Router } from 'express'
 import { validate } from '../../lib/validate.js'
 import { requireAuth, requireRole } from '../../middleware/auth.js'
 import { upload } from '../../middleware/upload.js'
+import { candidateOverview } from '../jobs/jobs.search.js'
 import { meDto, updateMe } from '../users/users.service.js'
 import * as schemas from './candidates.schemas.js'
 import * as candidates from './candidates.service.js'
@@ -64,6 +65,11 @@ router.post('/onboarding/complete', withProfile, async (req, res) => {
   const countryCode = await candidates.completeOnboarding(req.user, req.profile)
   await updateMe(req.user, { pickerCountry: countryCode })
   res.json(await meDto(req.user))
+})
+
+/** Overview KPIs: Recommended jobs (M-053), saved jobs and profile views (M-184). */
+router.get('/overview', async (req, res) => {
+  res.json(await candidateOverview(req.user))
 })
 
 router.get('/settings/privacy', (req, res) => {

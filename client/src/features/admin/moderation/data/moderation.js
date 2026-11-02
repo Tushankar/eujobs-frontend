@@ -24,17 +24,6 @@ export const CONTENT_ITEMS = [
   },
 ]
 
-/** New accounts waiting for approval. `id` is the URL segment of /admin/moderation/accounts/:accountId. */
-export const PENDING_ACCOUNTS = [
-  {
-    id: 'james-chen',
-    name: 'James Chen',
-    email: 'james@example.com',
-    type: 'Candidate',
-    joinedAt: '2026-09-20T09:00:00',
-  },
-]
-
 export const CONTENT_ACTIONS = [
   {
     id: 'dismissed',
@@ -57,32 +46,13 @@ export const CONTENT_ACTIONS = [
   },
 ]
 
-export const ACCOUNT_ACTIONS = [
-  {
-    id: 'suspended',
-    label: 'Suspend for review',
-    variant: 'danger',
-    reasonRequired: true,
-    confirmTitle: 'Suspend this account for review?',
-    confirmText: 'The account stays suspended until a person completes the review.',
-    confirmLabel: 'Suspend account',
-  },
-  {
-    id: 'approved',
-    label: 'Approve account',
-    icon: Check,
-    variant: 'primary',
-    confirmTitle: 'Approve this account?',
-    confirmText: 'The registration is approved in this demo record.',
-    confirmLabel: 'Approve account',
-  },
-]
-
 /** Badge label and tone per decision; `pending` is the default state of every queue item. */
 export const DECISION_BADGES = {
   pending: { label: 'Pending review', tone: 'warning' },
   dismissed: { label: 'Report dismissed', tone: 'success' },
   restricted: { label: 'Content restricted', tone: 'danger' },
-  approved: { label: 'Account approved', tone: 'success' },
-  suspended: { label: 'Account suspended', tone: 'danger' },
 }
+
+/* Account review (P4-Q2): the status filter, in tab order, and the badge tone of each status. */
+export const ACCOUNT_STATUSES = ['pending_review', 'active', 'suspended', 'rejected']
+export const ACCOUNT_TONES = { pending_review: 'warning', active: 'success', suspended: 'danger', rejected: 'danger' }

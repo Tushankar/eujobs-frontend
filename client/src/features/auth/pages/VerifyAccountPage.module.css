@@ -16,6 +16,66 @@
   padding-top: 24px;
 }
 
+/* Phone confirmation (M-003): the number, the on-screen code and its input */
+.phone {
+  margin-top: 24px;
+  padding: 16px;
+  border: 1px solid var(--border);
+  border-radius: var(--radius-xl);
+}
+
+.phoneRow {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  justify-content: space-between;
+  gap: 12px;
+}
+
+.phoneActions {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 8px;
+}
+
+.codeBlock {
+  padding-top: 16px;
+}
+
+.codeBlock .otpGrid {
+  padding-top: 12px;
+}
+
+.codeShown {
+  display: flex;
+  flex-direction: column;
+  gap: 4px;
+  padding: 12px 16px;
+  border-radius: var(--radius-xl);
+  background: var(--accent);
+  font-size: 13px;
+  font-weight: 600;
+  line-height: 20px;
+  color: var(--primary-hover);
+}
+
+.codeNote {
+  font-size: 12px;
+  font-weight: 400;
+  color: var(--muted-foreground);
+}
+
+.confirm {
+  padding-top: 24px;
+}
+
+.error {
+  padding-top: 8px;
+  font-size: 12px;
+  line-height: 18px;
+  color: var(--destructive);
+}
+
 .checklist {
   display: grid;
   grid-template-columns: repeat(2, minmax(0, 1fr));
@@ -74,5 +134,9 @@
   .otpGrid,
   .checklist {
     grid-template-columns: minmax(0, 1fr);
+  }
+
+  .confirm {
+    padding-top: 0;
   }
 }

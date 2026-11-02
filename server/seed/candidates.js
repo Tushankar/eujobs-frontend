@@ -18,7 +18,7 @@ import { PLACES } from './data/places.js'
  */
 const DAY_MS = 24 * 60 * 60 * 1000
 
-function pdf(lines) {
+export function pdf(lines) {
   return new Promise((resolve, reject) => {
     const doc = new PDFDocument({ margin: 56 })
     const chunks = []

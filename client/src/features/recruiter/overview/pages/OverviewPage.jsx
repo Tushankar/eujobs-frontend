@@ -1,132 +1,104 @@
+import { useState } from 'react'
+import { useTranslation } from 'react-i18next'
 import { Link } from 'react-router-dom'
-import { ArrowRight, BriefcaseBusiness, Bookmark, FileText, Plus } from 'lucide-react'
+import { ArrowRight, BriefcaseBusiness, Bookmark, Plus } from 'lucide-react'
+import { useGetMeQuery } from '@/app/api.js'
 import EmptyState from '@/components/common/EmptyState.jsx'
 import PageTitle from '@/components/common/PageTitle.jsx'
 import StatCard from '@/components/common/StatCard.jsx'
 import { Button, Icon } from '@/components/ui'
 import aiNavIcon from '@/assets/icons/ai-nav.svg'
-import { useShortlist } from '../../find-candidates/hooks/useShortlist.js'
-import AiJobSummary from '../../jobs/components/AiJobSummary.jsx'
+import { useGetRecruiterOverviewQuery, useGetTalentQuery, useShortlistToggle } from '@/features/recruiter/find-candidates/api.js'
+import { useGetRecruiterJobsQuery } from '../../jobs/api.js'
 import JobsTable from '../../jobs/components/JobsTable.jsx'
-import { useJobs } from '../../jobs/hooks/useJobs.js'
-import HiringFunnelCard from '../components/HiringFunnelCard.jsx'
-import HiringMomentumCard from '../components/HiringMomentumCard.jsx'
 import SectionHeading from '../components/SectionHeading.jsx'
 import TalentCard from '../components/TalentCard.jsx'
-import { OVERVIEW_STATS, TALENT } from '../data/overview.js'
 import styles from './OverviewPage.module.css'
 
 const ROLES_SHOWN = 5
 
-export default function OverviewPage() {
-  const { jobs, setStatus } = useJobs()
-  const { shortlistedIds, isShortlisted, toggle: toggleSaved } = useShortlist()
+/** M-202: the part of day from the browser's local time. */
+function partOfDay(hour) {
+  if (hour < 12) return 'morning'
+  return hour < 18 ? 'afternoon' : 'evening'
+}
 
-  const openRoles = jobs.filter((job) => job.status === 'published')
+/**
+ * Recruiter Overview (§3.15, A: recruiter A9): open positions, recommended candidates (M-051 fallback until Phase 9)
+ * and the shortlist; talent worth meeting; open roles. Applications, momentum and the funnel return with
+ * applications in Phase 6 (P4-Q1).
+ */
+export default function OverviewPage() {
+  const { t } = useTranslation()
+  const { data: me } = useGetMeQuery()
+  const { data: overview } = useGetRecruiterOverviewQuery()
+  const { data: talent } = useGetTalentQuery()
+  const { data: jobs } = useGetRecruiterJobsQuery()
+  const toggleShortlist = useShortlistToggle()
+  // Read once per visit, so the greeting does not change while the page is open.
+  const [dayPart] = useState(() => partOfDay(new Date().getHours()))
+  const openRoles = (jobs?.items ?? []).filter((job) => job.status === 'published')
+  const firstName = me?.fullName.split(/\s+/)[0] ?? ''
+
   const stats = [
-    {
-      label: 'Open positions',
-      value: openRoles.length,
-      caption: 'Ready for the right people',
-      icon: BriefcaseBusiness,
-      to: '/recruiter/jobs',
-    },
-    {
-      label: 'Recommended candidates',
-      value: OVERVIEW_STATS.recommendedCandidates,
-      caption: 'Evidence-led recommendations',
-      iconSrc: aiNavIcon,
-      to: '/recruiter/find-candidates',
-    },
-    {
-      label: 'Applications',
-      value: OVERVIEW_STATS.applications,
-      caption: 'Across your current workspace',
-      icon: FileText,
-      to: '/recruiter/applications',
-    },
-    {
-      label: 'Shortlisted candidates',
-      value: shortlistedIds.length,
-      caption: 'A considered selection',
-      icon: Bookmark,
-      to: '/recruiter/shortlists',
-    },
+    { key: 'openPositions', value: overview?.openPositions, icon: BriefcaseBusiness, to: '/recruiter/jobs' },
+    { key: 'recommended', value: overview?.recommendedCandidates, iconSrc: aiNavIcon, to: '/recruiter/find-candidates' },
+    { key: 'shortlisted', value: overview?.shortlisted, icon: Bookmark, to: '/recruiter/shortlists' },
   ]
+  const createButton = (
+    <Button as={Link} to="/recruiter/jobs/new" leftIcon={<Icon as={Plus} size={14} />}>
+      {t('discovery:overview.createJob')}
+    </Button>
+  )
 
   return (
     <>
       <PageTitle
-        eyebrow="Good morning, Sarah"
-        title="Great teams start with a good match."
-        description="Less noise. More relevant talent. Move your hiring forward with confidence."
-        actions={
-          <div className={styles.actions}>
-            <AiJobSummary jobs={openRoles} label="Ai Job Summary" />
-            <Button as={Link} to="/recruiter/jobs/new" leftIcon={<Icon as={Plus} size={14} />}>
-              Create a job
-            </Button>
-          </div>
-        }
+        eyebrow={t(`discovery:overview.${dayPart}`, { name: firstName })}
+        title={t('discovery:overview.title')}
+        description={t('discovery:overview.description')}
+        actions={<div className={styles.actions}>{createButton}</div>}
       />
 
       <div className={styles.stats}>
-        {stats.map(({ to, ...stat }) => (
-          <Link key={stat.label} to={to} className={styles.statLink}>
-            <StatCard {...stat} />
+        {stats.map(({ key, to, value, ...stat }) => (
+          <Link key={key} to={to} className={styles.statLink} data-stat={key}>
+            <StatCard label={t(`discovery:overview.stats.${key}`)} caption={t(`discovery:overview.stats.${key}Caption`)} value={value ?? 0} {...stat} />
           </Link>
         ))}
       </div>
 
-      <div className={styles.momentum}>
-        <HiringMomentumCard />
-        <HiringFunnelCard />
-      </div>
-
       <div className={styles.sectionHead}>
-        <SectionHeading
-          title="Talent worth meeting"
-          description="Based on role requirements. Your review makes the difference."
-        />
+        <SectionHeading title={t('discovery:overview.talent')} description={t('discovery:overview.talentDescription')} />
         <Link to="/recruiter/find-candidates" className={styles.sectionLink}>
-          Discover talent
+          {t('discovery:overview.talentLink')}
           <Icon as={ArrowRight} size={12} />
         </Link>
       </div>
-      <div className={styles.talent}>
-        {TALENT.map((person) => (
-          <TalentCard
-            key={person.id}
-            person={person}
-            saved={isShortlisted(person.id)}
-            onToggleSaved={() => toggleSaved(person.id)}
-          />
-        ))}
-      </div>
+      {talent && talent.items.length === 0 ? (
+        <p className={styles.talentEmpty}>{t('discovery:overview.talentEmpty')}</p>
+      ) : (
+        <div className={styles.talent}>
+          {talent?.items.map((person) => (
+            <TalentCard key={person.id} person={person} onToggleSaved={() => toggleShortlist(person)} />
+          ))}
+        </div>
+      )}
 
       <div className={styles.rolesHead}>
-        <SectionHeading title="Your open roles" />
+        <SectionHeading title={t('discovery:overview.openRoles')} />
         {openRoles.length > ROLES_SHOWN && (
           <Link to="/recruiter/jobs" className={styles.sectionLink}>
-            View all jobs
+            {t('discovery:overview.viewAll')}
             <Icon as={ArrowRight} size={12} />
           </Link>
         )}
       </div>
       <div className={styles.roles}>
-        {openRoles.length > 0 ? (
-          <JobsTable jobs={openRoles.slice(0, ROLES_SHOWN)} onStatusChange={setStatus} caption="Your open roles" />
+        {!jobs ? null : openRoles.length > 0 ? (
+          <JobsTable jobs={openRoles.slice(0, ROLES_SHOWN)} caption={t('discovery:overview.openRoles')} />
         ) : (
-          <EmptyState
-            icon={BriefcaseBusiness}
-            title="No open roles"
-            description="Published jobs appear here. Create a job to start meeting relevant talent."
-            action={
-              <Button as={Link} to="/recruiter/jobs/new" leftIcon={<Icon as={Plus} size={14} />}>
-                Create a job
-              </Button>
-            }
-          />
+          <EmptyState icon={BriefcaseBusiness} title={t('discovery:overview.noRoles')} description={t('discovery:overview.noRolesText')} action={createButton} />
         )}
       </div>
     </>

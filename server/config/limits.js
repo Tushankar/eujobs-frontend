@@ -48,12 +48,40 @@ export const LIMITS = {
   cv: { maxVersions: 20, minReadableChars: 50 },
   // M-166
   verificationReason: { max: 300 },
+  // P4-Q3: onboarding step 2 and the Company page
+  company: {
+    name: { min: 2, max: 120 },
+    industry: { min: 2, max: 80 },
+    website: { max: 300 },
+    businessEmail: { max: 254 },
+    businessAddress: { min: 5, max: 300 },
+    registrationDetails: { max: 200 },
+    description: { min: 20, max: 3000 },
+  },
+  // M-165, P4-D4
+  accountDecisionReason: { max: 300 },
+  // M-033, U26, P4-D6
+  job: {
+    title: { min: 3, max: 120 },
+    brief: { min: 40, max: 5000 },
+    responsibilities: { max: 20, itemMax: 300 },
+    requiredSkills: { min: 1, max: 20, itemMax: 50 },
+    preferredSkills: { max: 20, itemMax: 50 },
+    experienceYears: { min: 0, max: 50 },
+    salary: { min: 0, max: 100_000_000 },
+    languages: { max: 10 },
+  },
+  // M-080, M-029
+  note: { max: 5000 },
+  cvRequestDetails: { max: 1000 },
   // M-185, §2.6: types are extensions; sizes in bytes
   uploads: {
     photo: { types: ['jpg', 'png', 'webp'], maxBytes: 5 * MB },
     cv: { types: ['pdf', 'docx'], maxBytes: 10 * MB },
     evidence: { types: ['pdf', 'jpg', 'png'], maxBytes: 10 * MB },
     certificate_file: { types: ['pdf', 'jpg', 'png'], maxBytes: 10 * MB },
+    kyc: { types: ['pdf', 'jpg', 'png'], maxBytes: 10 * MB },
+    company_logo: { types: ['png', 'jpg', 'svg'], maxBytes: 2 * MB },
   },
   // U39
   signedUrlTtlMs: 15 * MINUTE,

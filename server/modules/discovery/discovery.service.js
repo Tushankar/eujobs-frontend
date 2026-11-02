@@ -1,0 +1,361 @@
+import { config } from '../../config/env.js'
+import { ENUMS } from '../../config/enums.js'
+import { AppError } from '../../lib/errors.js'
+import { signedUrl } from '../../lib/files.js'
+import { t } from '../../lib/i18n.js'
+import { sendEmail } from '../../lib/mailer.js'
+import { matchesKeywords, searchText, skillKey, skillOverlap } from '../../lib/skills.js'
+import { CvAccessRequest, CvVersion } from '../cv/cv.model.js'
+import { File } from '../files/files.model.js'
+import { Job } from '../jobs/jobs.model.js'
+import { User } from '../users/users.model.js'
+import { VerificationSubmission } from '../verification/verification.model.js'
+import { CandidateNote, ProfileView, RecruiterActivity, ShortlistEntry } from './discovery.model.js'
+import { hasRightToWorkIn, inMarket, listableCandidates, marketCandidates, validRightToWork } from './discovery.population.js'
+
+/*
+ * Recruiter discovery (§3.8): Find candidates with the M-055 country rule and the M-056 filters, the candidate
+ * profile (M-026, M-168, P4-D11) with profile views (M-184), the shortlist (M-079), notes (M-080), the activity
+ * timeline (M-081), and CV access and earlier-version requests (M-029, M-187, P4-D12). Until Phase 9 the
+ * ranking is the M-052 skill overlap; recruiters never see a score (C6).
+ */
+const LEVELS = ENUMS.languageLevel
+const TALENT_CARDS = 3
+const RELEVANT_TALENT = 4
+
+/* ---------- activity ---------- */
+
+export function recordActivity({ companyId, candidateId, actorId, type, params }) {
+  return RecruiterActivity.create({ companyId, candidateId, actorId, type, params })
+}
+
+/** P4-D13: a new live CV is shown to the companies that shortlisted, noted or requested this candidate. */
+export async function recordCvUpdated(candidateId, versionNumber) {
+  const lists = await Promise.all([ShortlistEntry, CandidateNote, CvAccessRequest].map((Model) => Model.distinct('companyId', { candidateId })))
+  const companies = [...new Set(lists.flat().map(String))]
+  await RecruiterActivity.insertMany(companies.map((companyId) => ({ companyId, candidateId, type: 'cv_updated', params: { version: versionNumber } })))
+}
+
+/* ---------- cards and profiles ---------- */
+
+const place = (location) => (location?.placeId ? { countryCode: location.countryCode, city: location.city, placeId: location.placeId } : null)
+const latest = (entries, ongoing) =>
+  [...entries].sort((a, b) => Number(Boolean(b[ongoing])) - Number(Boolean(a[ongoing])) || (b.end ?? b.start).localeCompare(a.end ?? a.start))
+
+/** M-023, OQ-6f: identity always; academic and employment when such an entry exists. */
+function verificationOf(profile, approved) {
+  const checks = { identity: approved.has('identity'), academic: approved.has('academic'), employment: approved.has('employment') }
+  const required = ['identity', ...(profile.education.length ? ['academic'] : []), ...(profile.workHistory.length ? ['employment'] : [])]
+  const count = required.filter((category) => checks[category]).length
+  return { checks, required: required.length, count, verified: count === required.length }
+}
+
+/** Approved, not reset submissions per candidate: categories and the approved certificate entries (M-025). */
+async function approvalsFor(userIds) {
+  const submissions = await VerificationSubmission.find({ userId: { $in: userIds }, status: 'approved', resetAt: null }, 'userId category entryId')
+  const byUser = new Map(userIds.map((id) => [String(id), { categories: new Set(), certificates: new Set() }]))
+  for (const submission of submissions) {
+    const entry = byUser.get(String(submission.userId))
+    entry.categories.add(submission.category)
+    if (submission.category === 'certificate') entry.certificates.add(String(submission.entryId))
+  }
+  return byUser
+}
+
+/** Everything a candidate card needs for one company, over many candidates (§3.8, A: recruiter B2). */
+async function cardContext(viewer, company, entries, job) {
+  const userIds = entries.map(({ user }) => user._id)
+  const [approvals, shortlist, photos] = await Promise.all([
+    approvalsFor(userIds),
+    ShortlistEntry.find({ companyId: company._id, candidateId: { $in: userIds } }, 'candidateId'),
+    File.find({ _id: { $in: entries.map(({ profile }) => profile.photo?.fileId).filter(Boolean) } }),
+  ])
+  const shortlisted = new Set(shortlist.map((entry) => String(entry.candidateId)))
+  const photoById = new Map(photos.map((file) => [String(file._id), file]))
+  return ({ user, profile }) => {
+    const approved = approvals.get(String(user._id))
+    const photo = profile.photo?.fileId && photoById.get(String(profile.photo.fileId))
+    const [role] = latest(profile.workHistory, 'current')
+    const [study] = latest(profile.education, 'stillStudying')
+    const overlap = job && skillOverlap(profile.skills, job)
+    return {
+      id: String(user._id),
+      fullName: user.fullName,
+      photoUrl: photo ? signedUrl(photo, viewer._id) : null,
+      headline: profile.headline,
+      location: place(profile.location),
+      workPreference: profile.workPreference,
+      yearsExperience: profile.yearsExperience,
+      availability: profile.availability,
+      skills: profile.skills.map((skill) => skill.name),
+      languages: profile.languages.map(({ code, level }) => ({ code, level })),
+      rightToWork: profile.rightToWork.map(({ region, status, permitExpiresOn }) => ({ region, status, permitExpiresOn: permitExpiresOn ?? null, valid: validRightToWork({ status, permitExpiresOn }) })),
+      currentRole: role ? { title: role.title, employer: role.employer, start: role.start, end: role.end ?? null, current: Boolean(role.current) } : null,
+      latestEducation: study ? { degree: study.degree, institution: study.institution, end: study.end ?? null } : null,
+      certificates: profile.certificates.map((certificate) => ({ name: certificate.name, issuer: certificate.issuer, verified: approved.certificates.has(String(certificate._id)) })),
+      verification: verificationOf(profile, approved.categories),
+      shortlisted: shortlisted.has(String(user._id)),
+      overlap: overlap ? { matched: overlap.matched, missing: overlap.missing, count: overlap.matched.length } : null,
+      updatedAt: profile.updatedAt,
+    }
+  }
+}
+
+/** The job used for overlap: the chosen one of this company, else its newest published job (P4-D10). */
+async function matchJob(company, jobId) {
+  if (jobId) return Job.findOne({ _id: jobId, companyId: company._id })
+  return Job.findOne({ companyId: company._id, status: 'published' }).sort({ publishedAt: -1 })
+}
+
+const viewOf = (user) => user.pickerCountry ?? 'REMOTE'
+const levelAtLeast = (level, minimum) => LEVELS.indexOf(level) >= LEVELS.indexOf(minimum)
+
+function searchHaystack({ user, profile }) {
+  return searchText(
+    [user.fullName, profile.headline, profile.location?.city, ...profile.skills.map((skill) => skill.name), ...profile.workHistory.flatMap((entry) => [entry.title, entry.employer])].join(' '),
+  )
+}
+
+/** M-056, OD4: the filters of Find candidates and the shortlist. */
+function keep(query, country) {
+  return ({ user, profile }) => {
+    if (query.workPreference && profile.workPreference !== query.workPreference) return false
+    if (query.availability && profile.availability !== query.availability) return false
+    if (query.minYears != null && !(profile.yearsExperience >= query.minYears)) return false
+    if (query.skill && !profile.skills.some((skill) => skill.key === skillKey(query.skill))) return false
+    if (query.rightToWork && (country === 'REMOTE' || !hasRightToWorkIn(profile, country))) return false
+    if (query.language && !profile.languages.some((language) => language.code === query.language && levelAtLeast(language.level, query.languageLevel ?? LEVELS[0])))
+      return false
+    if (query.placeId && profile.location?.placeId !== query.placeId) return false
+    return !query.q || matchesKeywords(query.q, searchHaystack({ user, profile }))
+  }
+}
+
+function sortCards(cards, sort, language) {
+  const sorters = {
+    recommended: (a, b) => (b.overlap?.count ?? 0) - (a.overlap?.count ?? 0) || new Date(b.updatedAt) - new Date(a.updatedAt),
+    experience: (a, b) => (b.yearsExperience ?? 0) - (a.yearsExperience ?? 0),
+    name: (a, b) => a.fullName.localeCompare(b.fullName, language),
+  }
+  return cards.sort(sorters[sort])
+}
+
+/** GET /recruiter/candidates: the picker country's population (M-054, M-055), filtered and sorted. */
+export async function listCandidates(user, company, query) {
+  const country = viewOf(user)
+  const job = await matchJob(company, query.jobId)
+  const entries = (await marketCandidates(country)).filter(keep(query, country))
+  const card = await cardContext(user, company, entries, job)
+  let items = entries.map(card)
+  if (query.verified) items = items.filter((item) => item.verification.verified)
+  items = sortCards(items, query.sort, user.language)
+  return { items, total: items.length, page: 1, pageSize: items.length, matchJob: job ? { id: String(job._id), title: job.title } : null }
+}
+
+/** P4-D11: a profile opens when the candidate is listable in some country (Phase 6 adds applicants). */
+async function accessibleCandidate(id) {
+  const [entry] = await listableCandidates([id])
+  if (!entry) throw new AppError('NOT_FOUND')
+  return entry
+}
+
+const utcDay = (date) => date.toISOString().slice(0, 10)
+
+/** GET /recruiter/candidates/:id: the full profile (M-026, privacy per M-187); records one view per day (M-184). */
+export async function candidateProfile(user, company, id, jobId) {
+  const entry = await accessibleCandidate(id)
+  const { profile } = entry
+  const now = new Date()
+  await ProfileView.updateOne(
+    { candidateId: entry.user._id, recruiterId: user._id, day: utcDay(now) },
+    { $setOnInsert: { companyId: company._id, at: now } },
+    { upsert: true },
+  )
+  const card = (await cardContext(user, company, [entry], await matchJob(company, jobId)))(entry)
+  return {
+    ...card,
+    about: profile.about,
+    links: { linkedin: profile.links?.linkedin ?? '', portfolio: profile.links?.portfolio ?? '' },
+    workHistory: latest(profile.workHistory, 'current').map(({ title, employer, start, end, current, description }) => ({ title, employer, start, end: end ?? null, current: Boolean(current), description: description ?? '' })),
+    education: latest(profile.education, 'stillStudying').map(({ institution, degree, start, end, stillStudying }) => ({ institution, degree, start, end: end ?? null, stillStudying: Boolean(stillStudying) })),
+    rightToWorkInView: viewOf(user) === 'REMOTE' ? null : hasRightToWorkIn(profile, viewOf(user)),
+  }
+}
+
+/* ---------- shortlist, notes, activity ---------- */
+
+/** M-079, M-137: the company shortlist in the picker country; candidates no longer listable are only counted. */
+export async function shortlist(user, company, query) {
+  const entries = await ShortlistEntry.find({ companyId: company._id }).sort({ createdAt: -1 })
+  const listable = await listableCandidates(entries.map((entry) => entry.candidateId))
+  const country = viewOf(user)
+  const shown = listable.filter(({ profile }) => inMarket(profile, country)).filter(keep(query, country))
+  const card = await cardContext(user, company, shown, await matchJob(company, query.jobId))
+  const adders = new Map((await User.find({ _id: { $in: entries.map((entry) => entry.addedBy) } }, 'fullName')).map((adder) => [String(adder._id), adder.fullName]))
+  const byCandidate = new Map(entries.map((entry) => [String(entry.candidateId), entry]))
+  let items = shown.map((item) => {
+    const entry = byCandidate.get(String(item.user._id))
+    return { ...card(item), addedAt: entry.createdAt, addedBy: adders.get(String(entry.addedBy)) ?? null }
+  })
+  if (query.verified) items = items.filter((item) => item.verification.verified)
+  items = sortCards(items, query.sort, user.language)
+  return { items, total: items.length, page: 1, pageSize: items.length, hiddenCount: entries.length - listable.length }
+}
+
+export async function addToShortlist(user, company, candidateId) {
+  await accessibleCandidate(candidateId)
+  const result = await ShortlistEntry.updateOne(
+    { companyId: company._id, candidateId },
+    { $setOnInsert: { companyId: company._id, candidateId, addedBy: user._id } },
+    { upsert: true },
+  )
+  if (result.upsertedCount) await recordActivity({ companyId: company._id, candidateId, actorId: user._id, type: 'shortlisted' })
+}
+
+export async function removeFromShortlist(user, company, candidateId) {
+  const { deletedCount } = await ShortlistEntry.deleteOne({ companyId: company._id, candidateId })
+  if (deletedCount) await recordActivity({ companyId: company._id, candidateId, actorId: user._id, type: 'unshortlisted' })
+}
+
+const nameOf = async (userId) => (userId ? (await User.findById(userId, 'fullName'))?.fullName ?? null : null)
+
+export async function getNote(company, candidateId) {
+  await accessibleCandidate(candidateId)
+  const note = await CandidateNote.findOne({ companyId: company._id, candidateId })
+  return { text: note?.text ?? '', updatedAt: note?.updatedAt ?? null, updatedBy: await nameOf(note?.updatedBy) }
+}
+
+/** M-080: one note per company and candidate, at most 5,000 characters. */
+export async function saveNote(user, company, candidateId, text) {
+  await accessibleCandidate(candidateId)
+  await CandidateNote.updateOne({ companyId: company._id, candidateId }, { text, updatedBy: user._id }, { upsert: true })
+  await recordActivity({ companyId: company._id, candidateId, actorId: user._id, type: 'note_updated' })
+  return getNote(company, candidateId)
+}
+
+/** M-081: the company-wide timeline, newest first; an event without an actor is the candidate's own. */
+export async function activity(company, candidateId) {
+  await accessibleCandidate(candidateId)
+  const events = await RecruiterActivity.find({ companyId: company._id, candidateId }).sort({ at: -1 })
+  const actors = new Map((await User.find({ _id: { $in: events.map((event) => event.actorId).filter(Boolean) } }, 'fullName')).map((actor) => [String(actor._id), actor.fullName]))
+  const items = events.map((event) => ({
+    id: String(event._id),
+    type: event.type,
+    params: event.params ?? {},
+    at: event.at,
+    actor: event.actorId ? { id: String(event.actorId), name: actors.get(String(event.actorId)) ?? null } : null,
+  }))
+  return { items, total: items.length, page: 1, pageSize: items.length }
+}
+
+/* ---------- CV access and requests (M-029, M-187, U19, P4-D12) ---------- */
+
+const versionDto = (version, file, viewerId) => ({
+  id: String(version._id),
+  number: version.number,
+  originalName: version.originalName,
+  mime: version.mime,
+  size: version.size,
+  createdAt: version.createdAt,
+  url: signedUrl(file, viewerId),
+  downloadUrl: signedUrl(file, viewerId, { download: true }),
+})
+
+/** The live CV only with `resumeVisible` (Phase 6 adds applicants); versions shared through approved requests. */
+export async function candidateCv(user, company, candidateId) {
+  const { user: candidate, profile } = await accessibleCandidate(candidateId)
+  const requests = await CvAccessRequest.find({ companyId: company._id, candidateId }).sort({ createdAt: -1 })
+  const sharedIds = requests.filter((request) => request.status === 'approved').map((request) => request.cvVersionId)
+  const versionIds = [...sharedIds, ...(candidate.privacy.resumeVisible && profile.liveCvVersionId ? [profile.liveCvVersionId] : [])]
+  const versions = await CvVersion.find({ _id: { $in: versionIds }, fileId: { $ne: null } })
+  const files = new Map((await File.find({ _id: { $in: versions.map((version) => version.fileId) } })).map((file) => [String(file._id), file]))
+  const dto = (id) => {
+    const version = versions.find((item) => String(item._id) === String(id))
+    const file = version && files.get(String(version.fileId))
+    return file ? versionDto(version, file, user._id) : null
+  }
+  return {
+    live: candidate.privacy.resumeVisible && profile.liveCvVersionId ? dto(profile.liveCvVersionId) : null,
+    resumeVisible: candidate.privacy.resumeVisible,
+    shared: [...new Set(sharedIds.map(String))].map(dto).filter(Boolean),
+    requests: requests.map((request) => ({ id: String(request._id), reason: request.reason, details: request.details ?? '', status: request.status, createdAt: request.createdAt, decidedAt: request.decidedAt ?? null })),
+  }
+}
+
+/** M-029, U19: one pending request per company (P4-D12); the candidate is emailed (non-critical, OQ-6c). */
+export async function requestCv(user, company, candidateId, { reason, details }) {
+  const { user: candidate } = await accessibleCandidate(candidateId)
+  if (await CvAccessRequest.exists({ companyId: company._id, candidateId, status: 'pending' })) throw new AppError('CONFLICT', { params: { reason: 'pending' } })
+  await CvAccessRequest.create({ companyId: company._id, candidateId, requestedBy: user._id, reason, details: details || undefined })
+  await recordActivity({ companyId: company._id, candidateId, actorId: user._id, type: 'cv_request', params: { reason } })
+  await sendEmail({
+    type: 'cv_request',
+    to: candidate.email,
+    userId: candidate._id,
+    language: candidate.language,
+    params: {
+      name: candidate.fullName,
+      company: company.displayName,
+      reason: t(candidate.language, `cvRequestReason.${reason}`),
+      details,
+      link: `${config.clientOrigin}/candidate/cv-versions`,
+    },
+  })
+}
+
+/* ---------- relevance and the recruiter Overview (fallback until Phase 9) ---------- */
+
+/** Candidates of the job's market sharing at least 1 required skill, by overlap (M-051 fallback, P4-D9). */
+async function relevantFor(job) {
+  if (!job.country) return []
+  return (await marketCandidates(job.country))
+    .map((entry) => ({ entry, overlap: skillOverlap(entry.profile.skills, job) }))
+    .filter(({ overlap }) => overlap.requiredMatched > 0)
+    .sort((a, b) => b.overlap.matched.length - a.overlap.matched.length)
+}
+
+/** GET /recruiter/jobs/:id/relevant-talent */
+export async function relevantTalent(user, company, jobId) {
+  const job = await Job.findOne({ _id: jobId, companyId: company._id })
+  if (!job) throw new AppError('NOT_FOUND')
+  const relevant = (await relevantFor(job)).slice(0, RELEVANT_TALENT).map(({ entry }) => entry)
+  const card = await cardContext(user, company, relevant, job)
+  return { items: relevant.map(card), total: job.relevantCount }
+}
+
+/** Every candidate relevant to at least one published job, with the job of the best overlap. */
+async function relevantAcrossJobs(company) {
+  const best = new Map()
+  for (const job of await Job.find({ companyId: company._id, status: 'published' })) {
+    for (const { entry, overlap } of await relevantFor(job)) {
+      const id = String(entry.user._id)
+      if (!best.has(id) || overlap.matched.length > best.get(id).overlap.matched.length) best.set(id, { entry, overlap, job })
+    }
+  }
+  return [...best.values()]
+}
+
+/** §3.15 Recruiter Overview KPIs available before applications (P4-Q1). */
+export async function recruiterOverview(company) {
+  const [openPositions, relevant, shortlisted] = await Promise.all([
+    Job.countDocuments({ companyId: company._id, status: 'published' }),
+    relevantAcrossJobs(company),
+    ShortlistEntry.countDocuments({ companyId: company._id }),
+  ])
+  return { openPositions, recommendedCandidates: relevant.length, shortlisted }
+}
+
+/** "Talent worth meeting": the top 3 relevant candidates not yet shortlisted (A: recruiter A9; applicants in Phase 6). */
+export async function talentCards(user, company) {
+  const shortlisted = new Set((await ShortlistEntry.distinct('candidateId', { companyId: company._id })).map(String))
+  const top = (await relevantAcrossJobs(company))
+    .filter(({ entry }) => !shortlisted.has(String(entry.user._id)))
+    .sort((a, b) => b.overlap.matched.length - a.overlap.matched.length)
+    .slice(0, TALENT_CARDS)
+  const items = []
+  for (const { entry, job } of top) {
+    const card = await cardContext(user, company, [entry], job)
+    items.push({ ...card(entry), bestJob: { id: String(job._id), title: job.title } })
+  }
+  return { items, total: items.length, page: 1, pageSize: items.length }
+}

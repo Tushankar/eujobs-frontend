@@ -1,36 +1,18 @@
-import { useState } from 'react'
+import { useTranslation } from 'react-i18next'
 import { Link, useParams } from 'react-router-dom'
-import {
-  ArrowLeft,
-  ArrowRight,
-  ArrowUpRight,
-  Bookmark,
-  Building2,
-  BriefcaseBusiness,
-  Check,
-  ChevronUp,
-  Globe,
-  MapPin,
-  SearchX,
-  Sparkles,
-  Users,
-} from 'lucide-react'
+import { ArrowLeft, Bookmark, Building2, BriefcaseBusiness, Check, Globe, MapPin, SearchX, Users } from 'lucide-react'
 import { cx } from '@/utils/cx.js'
-import { Button, Icon } from '@/components/ui'
+import { Button, CompanyLogo, Icon } from '@/components/ui'
 import EmptyState from '@/components/common/EmptyState.jsx'
 import StatusBadge from '@/components/common/StatusBadge.jsx'
 import aiGlyph from '@/assets/icons/ai-glyph-blue.svg'
-import AiJobSummaryModal from '../components/AiJobSummaryModal.jsx'
-import AiSummaryButton from '../components/AiSummaryButton.jsx'
-import JobLogo from '../components/JobLogo.jsx'
-import { ROLE_DETAILS } from '../data/jobs.js'
-import { formatPosted, formatSalary, matchTone, profileMatch } from '../data/jobUtils.js'
-import { useApplications } from '../hooks/useApplications.js'
-import { useJobListings } from '../hooks/useJobListings.js'
-import { useSavedJobs } from '../hooks/useSavedJobs.js'
+import { useJobText } from '@/lib/jobText.js'
+import { useFormat } from '@/lib/preferences.js'
+import { useGetJobQuery, useSaveToggle } from '../api.js'
 import styles from './JobDetailsPage.module.css'
 
-function BulletSection({ title, items }) {
+function ListSection({ title, items }) {
+  if (!items?.length) return null
   return (
     <section className={styles.section}>
       <h2 className={styles.h2}>{title}</h2>
@@ -45,246 +27,207 @@ function BulletSection({ title, items }) {
   )
 }
 
-/** Match breakdown (Job Details Page_5): headline %, collapsible AI insights with skills evidence and a human-review note. */
-function MatchInsights({ job }) {
-  const [open, setOpen] = useState(true)
-  const aligned = job.skills.slice(0, job.matchingSkills)
-  const missing = job.skills.slice(job.matchingSkills)
-  const percent = profileMatch(job)
-
+function SkillSection({ title, skills }) {
+  if (!skills?.length) return null
   return (
-    <>
-      <div className={styles.summaryCard}>
-        <p className={styles.percent}>{percent}%</p>
-        <div>
-          <p className={styles.summaryTitle}>Match summary</p>
-          <p className={styles.summaryText}>
-            Based on {job.matchingSkills} of {job.skills.length} listed skills, your work preference, and reported experience.
-            Review the evidence below before deciding.
-          </p>
-        </div>
+    <section className={styles.section}>
+      <h2 className={styles.h2}>{title}</h2>
+      <ul className={styles.skills}>
+        {skills.map((skill) => (
+          <li key={skill} className={styles.skill}>
+            {skill}
+          </li>
+        ))}
+      </ul>
+    </section>
+  )
+}
+
+/** The skill-overlap evidence every candidate sees (M-050, M-052): no score and no AI until Phase 9. */
+function SkillEvidence({ job }) {
+  const { t } = useTranslation()
+  const format = useFormat()
+  const missing = job.requiredSkills.filter((skill) => !job.overlap.matched.includes(skill))
+  return (
+    <section className={styles.why}>
+      <div className={styles.whyHead}>
+        <h2 className={styles.h2Tight}>{t('findJobs:details.match')}</h2>
       </div>
-
       <div className={styles.insights}>
-        <button
-          type="button"
-          className={styles.insightsToggle}
-          aria-expanded={open}
-          aria-controls="match-insights-body"
-          onClick={() => setOpen((current) => !current)}
-        >
-          <span className={styles.insightsLabel}>
-            <img src={aiGlyph} alt="" width={14} height={14} />
-            AI Match Insights
-          </span>
-          <Icon as={ChevronUp} size={14} className={cx(styles.chevron, !open && styles.chevronClosed)} />
-        </button>
-        <p className={styles.insightsSummary}>
-          {job.matchingSkills} {job.matchingSkills === 1 ? 'skill aligns' : 'skills align'} with your profile · Matches your work
-          preference
+        <p className={styles.insightsLabel}>
+          <img src={aiGlyph} alt="" width={14} height={14} />
+          {t('findJobs:card.overlap', { count: job.overlap.count, total: job.overlap.total })}
         </p>
-
-        {open && (
-          <div id="match-insights-body" className={styles.insightsBody}>
-            <p className={styles.eyebrow}>Skills evidence</p>
-            {aligned.length > 0 && (
-              <ul className={styles.evidence} aria-label="Skills found in your profile">
-                {aligned.map((skill) => (
+        <div className={styles.insightsBody}>
+          {job.overlap.matched.length > 0 && (
+            <>
+              <p className={styles.eyebrow}>{t('findJobs:details.matched')}</p>
+              <ul className={styles.evidence}>
+                {job.overlap.matched.map((skill) => (
                   <li key={skill} className={styles.evidenceChip}>
                     <Icon as={Check} size={10} strokeWidth={2.2} />
                     {skill}
                   </li>
                 ))}
               </ul>
-            )}
+            </>
+          )}
+          {job.experienceYears != null && (
             <p className={styles.experience}>
               <Icon as={Check} size={13} />
-              5 years of experience reported in the profile. Verify role-specific experience during review.
+              {t('findJobs:details.years', { count: job.experienceYears })}
             </p>
-            <div className={styles.gap}>
-              <p className={styles.gapTitle}>Potential gap</p>
-              <p className={styles.gapText}>
-                {missing.length === 0
-                  ? 'All listed required skills appear in your profile. Role-specific depth and proficiency still need human review.'
-                  : `${missing.join(', ')} ${missing.length === 1 ? 'is' : 'are'} not evidenced in your profile yet. Missing profile evidence does not mean you lack a skill.`}
-              </p>
-            </div>
+          )}
+          <div className={styles.gap}>
+            <p className={styles.gapTitle}>{t('findJobs:details.gap')}</p>
+            <p className={styles.gapText}>{missing.length ? t('findJobs:details.gapText', { skills: format.list(missing) }) : t('findJobs:details.noGap')}</p>
           </div>
-        )}
-        <p className={styles.disclaimer}>
-          Based on profile evidence and stated preferences, not a hiring decision. You remain in control.
-        </p>
+        </div>
+        <p className={styles.disclaimer}>{t('findJobs:details.evidence')}</p>
       </div>
-    </>
+    </section>
   )
 }
 
+/**
+ * Job details (M-036, M-043): empty sections are hidden and there are no static perks. A paused, closed or hidden job
+ * stays readable for the candidates who saved it, marked as no longer accepting; everyone else gets "no longer
+ * available". Apply comes with applications in Phase 6 (P4-Q1).
+ */
 export default function JobDetailsPage() {
+  const { t } = useTranslation()
+  const format = useFormat()
+  const jobText = useJobText()
   const { jobId } = useParams()
-  const { getJob } = useJobListings()
-  const job = getJob(jobId)
-  const [summaryOpen, setSummaryOpen] = useState(false)
-  const { isSaved, toggleSaved } = useSavedJobs()
-  const { hasApplied, applyTo } = useApplications()
+  const { data: job, error } = useGetJobQuery(jobId)
+  const toggleSave = useSaveToggle()
 
-  if (!job) {
+  const back = (
+    <Link to="/candidate/jobs" className={styles.back}>
+      <Icon as={ArrowLeft} size={14} />
+      {t('findJobs:details.back')}
+    </Link>
+  )
+  if (error) {
     return (
       <div className={styles.page}>
-        <Link to="/candidate/jobs" className={styles.back}>
-          <Icon as={ArrowLeft} size={14} />
-          Back to opportunities
-        </Link>
+        {back}
         <EmptyState
           icon={SearchX}
-          title="This job is no longer available"
-          description="It may have been filled or removed. Browse the latest opportunities instead."
+          title={t('findJobs:details.unavailable')}
+          description={t('findJobs:details.unavailableText')}
           action={
             <Button as={Link} to="/candidate/jobs">
-              Find jobs
+              {t('findJobs:details.find')}
             </Button>
           }
         />
       </div>
     )
   }
+  if (!job) return <div className={styles.page}>{back}</div>
 
-  const saved = isSaved(job.id)
-  const applied = hasApplied(job.id)
-  const details = job.details ?? ROLE_DETAILS
+  const { company } = job
+  const eligible = jobText.eligible(job)
+  const conditions = [
+    ...job.requiredLanguages.map((language) => t('findJobs:details.languageLevel', { language: format.languageName(language.code), level: t(`enums:languageLevel.${language.minLevel}`) })),
+    eligible && t('findJobs:details.eligible', { countries: eligible }),
+    job.visaSponsorship && t('findJobs:details.visa'),
+  ].filter(Boolean)
 
   return (
     <div className={styles.page}>
-      <Link to="/candidate/jobs" className={styles.back}>
-        <Icon as={ArrowLeft} size={14} />
-        Back to opportunities
-      </Link>
+      {back}
+      {!job.accepting && (
+        <div className={styles.closed} role="status">
+          <strong>{t('findJobs:details.notAccepting')}</strong> {t('findJobs:details.notAcceptingText')}
+        </div>
+      )}
 
       <div className={styles.layout}>
         <article className={styles.article}>
           <header className={styles.hero}>
-            <JobLogo company={job.company} logo={job.logo} />
+            <CompanyLogo name={company.displayName} id={company.id} src={company.logoUrl ?? undefined} size={44} />
             <div className={styles.heroText}>
               <div className={styles.heroRow}>
-                <span className={styles.company}>{job.company}</span>
-                <StatusBadge tone={matchTone(job)}>{job.matchLabel}</StatusBadge>
-                <span className={styles.profileMatch}>
-                  <Icon as={Sparkles} size={11} />
-                  {profileMatch(job)}% profile match
-                </span>
+                <span className={styles.company}>{company.displayName}</span>
+                <StatusBadge tone={job.overlap.count > 0 ? 'info' : 'neutral'}>{t('findJobs:card.overlap', { count: job.overlap.count, total: job.overlap.total })}</StatusBadge>
               </div>
-              <p className={styles.posted}>
-                {job.industry} · Posted {formatPosted(job.postedHoursAgo)}
-              </p>
+              <p className={styles.posted}>{[company.industry, job.publishedAt && t('findJobs:details.posted', { time: format.relative(job.publishedAt) })].filter(Boolean).join(' · ')}</p>
             </div>
-            <AiSummaryButton onClick={() => setSummaryOpen(true)} />
           </header>
 
           <h1 className={styles.title}>{job.title}</h1>
-          <p className={styles.tagline}>{job.tagline}</p>
 
           <div className={styles.meta}>
             <span className={styles.metaItem}>
               <Icon as={MapPin} size={14} />
-              {job.location}
+              {jobText.place(job)}
             </span>
             <span className={styles.metaItem}>
               <Icon as={Globe} size={14} />
-              {job.workMode}
+              {t(`enums:workPreference.${job.workPreference}`)}
             </span>
             <span className={styles.metaItem}>
               <Icon as={BriefcaseBusiness} size={14} />
-              {job.type}
+              {t(`enums:employmentType.${job.employmentType}`)}
             </span>
-            {job.salaryMin != null && <span className={styles.salary}>{formatSalary(job)} / year</span>}
+            {job.salary && <span className={styles.salary}>{jobText.salary(job)}</span>}
           </div>
 
-          <section className={styles.why}>
-            <div className={styles.whyHead}>
-              <h2 className={styles.h2Tight}>Why this job matches you</h2>
-              <Link to="/candidate/ai-insights/job-match" className={styles.insightLink}>
-                View complete match insights
-                <Icon as={ArrowRight} size={12} />
-              </Link>
-            </div>
-            <MatchInsights job={job} />
-          </section>
+          <SkillEvidence job={job} />
 
-          <section className={styles.section}>
-            <h2 className={styles.h2}>About the role</h2>
-            <p className={styles.about}>{details.about}</p>
-          </section>
-          <BulletSection title="The impact you’ll make" items={details.impact} />
-          <BulletSection title="What you’ll bring" items={details.bring} />
-          <section className={styles.section}>
-            <h2 className={styles.h2}>Required skills</h2>
-            <ul className={styles.skills}>
-              {job.skills.map((skill) => (
-                <li key={skill} className={styles.skill}>
-                  {skill}
-                </li>
-              ))}
-            </ul>
-          </section>
-          <BulletSection title="Nice to have" items={details.niceToHave} />
-          <BulletSection title="Room to do your best work" items={details.perks} />
+          {job.brief && (
+            <section className={styles.section}>
+              <h2 className={styles.h2}>{t('findJobs:details.about')}</h2>
+              <p className={styles.about}>{job.brief}</p>
+            </section>
+          )}
+          <ListSection title={t('findJobs:details.responsibilities')} items={job.responsibilities} />
+          <SkillSection title={t('findJobs:details.requiredSkills')} skills={job.requiredSkills} />
+          <SkillSection title={t('findJobs:details.preferredSkills')} skills={job.preferredSkills} />
+          <ListSection title={t('findJobs:details.languages')} items={conditions} />
         </article>
 
-        <aside className={styles.rail} aria-label="Apply and company">
+        <aside className={styles.rail} aria-label={t('findJobs:details.railTitle')}>
           <section className={styles.card}>
-            <h2 className={styles.railTitle}>Could this be your next chapter?</h2>
-            <p className={styles.railText}>A good match is a starting point. The next step is yours.</p>
+            <h2 className={styles.railTitle}>{t('findJobs:details.railTitle')}</h2>
+            <p className={styles.railText}>{t('findJobs:details.railText')}</p>
             <div className={styles.railActions}>
-              {applied ? (
-                <Button fullWidth disabled leftIcon={<Icon as={Check} size={14} />}>
-                  Applied
-                </Button>
-              ) : (
-                <Button fullWidth rightIcon={<Icon as={ArrowUpRight} size={14} />} onClick={() => applyTo(job.id)}>
-                  Apply now
-                </Button>
-              )}
               <Button
                 variant="secondary"
                 fullWidth
-                className={cx(styles.saveButton, saved && styles.saveButtonOn)}
-                aria-pressed={saved}
-                leftIcon={<Icon as={Bookmark} size={14} className={cx(saved && styles.filledIcon)} />}
-                onClick={() => toggleSaved(job.id)}
+                className={cx(styles.saveButton, job.saved && styles.saveButtonOn)}
+                aria-pressed={job.saved}
+                disabled={!job.accepting && !job.saved}
+                leftIcon={<Icon as={Bookmark} size={14} className={cx(job.saved && styles.filledIcon)} />}
+                onClick={() => toggleSave(job)}
               >
-                {saved ? 'Saved for later' : 'Save for later'}
+                {t(job.saved ? 'findJobs:details.saved' : 'findJobs:details.save')}
               </Button>
             </div>
-            {applied ? (
-              <p className={styles.success} role="status">
-                Application submitted. Track it in{' '}
-                <Link to="/candidate/applications" className={styles.successLink}>
-                  Applications
-                </Link>
-                .
-              </p>
-            ) : (
-              <p className={styles.consent}>Your information, shared with consent.</p>
-            )}
           </section>
 
           <section className={styles.card}>
-            <h2 className={styles.aboutTitle}>About {job.company}</h2>
-            <p className={styles.aboutText}>{job.companyAbout}</p>
+            <h2 className={styles.aboutTitle}>{t('findJobs:details.aboutCompany', { company: company.displayName })}</h2>
+            {company.description && <p className={styles.aboutText}>{company.description}</p>}
             <ul className={styles.facts}>
-              <li>
-                <Icon as={Building2} size={13} />
-                {job.industry}
-              </li>
-              <li>
-                <Icon as={Users} size={13} />
-                {job.companySize}
-              </li>
+              {company.industry && (
+                <li>
+                  <Icon as={Building2} size={13} />
+                  {company.industry}
+                </li>
+              )}
+              {company.size && (
+                <li>
+                  <Icon as={Users} size={13} />
+                  {t(`enums:companySize.${company.size}`)}
+                </li>
+              )}
             </ul>
           </section>
         </aside>
       </div>
-
-      <AiJobSummaryModal job={job} open={summaryOpen} onClose={() => setSummaryOpen(false)} applied={applied} onApply={applyTo} />
     </div>
   )
 }

@@ -3,6 +3,14 @@
   padding-top: 28px;
 }
 
+/* Groups the fields so a locked application disables them all at once */
+.fieldset {
+  min-width: 0;
+  margin: 0;
+  padding: 0;
+  border: 0;
+}
+
 /* Content that follows a grey group card */
 .afterGroup {
   padding-top: 24px;
@@ -31,6 +39,10 @@ div.fullWidth textarea {
   font-size: 11px;
   line-height: 24px;
   color: var(--muted-foreground);
+}
+
+.form > .note {
+  margin-top: 20px;
 }
 
 @media (max-width: 767px) {

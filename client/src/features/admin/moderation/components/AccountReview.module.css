@@ -1,0 +1,26 @@
+/* Company facts have longer labels than the evidence facts */
+.facts {
+  grid-template-columns: 136px minmax(0, 1fr);
+}
+
+/* A dt/dd pair keeps its place in the parent grid */
+.fact {
+  display: contents;
+}
+
+.documents {
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+  padding-top: 8px;
+}
+
+@media (max-width: 479px) {
+  .facts {
+    grid-template-columns: minmax(0, 1fr);
+  }
+
+  .facts dd {
+    padding-bottom: 4px;
+  }
+}

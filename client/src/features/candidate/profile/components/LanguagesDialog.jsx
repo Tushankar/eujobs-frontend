@@ -1,11 +1,11 @@
 import { useMemo } from 'react'
 import { useTranslation } from 'react-i18next'
 import { Plus, X } from 'lucide-react'
-import { useGetConfigQuery } from '@/app/api.js'
+import { useGetConfigQuery, useGetLanguageCodesQuery } from '@/app/api.js'
 import { Button, Icon, IconButton, SelectField } from '@/components/ui'
 import { useErrorText, useFormState } from '@/lib/forms.js'
 import { useFormat, usePreferences } from '@/lib/preferences.js'
-import { useGetLanguageCodesQuery, useSetLanguagesMutation } from '../api.js'
+import { useSetLanguagesMutation } from '../api.js'
 import FormDialog from './FormDialog.jsx'
 import dialogStyles from './FormDialog.module.css'
 

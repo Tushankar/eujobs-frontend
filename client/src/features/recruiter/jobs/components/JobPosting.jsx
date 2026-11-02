@@ -1,3 +1,6 @@
+import { useTranslation } from 'react-i18next'
+import { useJobText } from '@/lib/jobText.js'
+import { useFormat } from '@/lib/preferences.js'
 import styles from './JobPosting.module.css'
 
 function SkillGroup({ title, skills }) {
@@ -16,14 +19,18 @@ function SkillGroup({ title, skills }) {
   )
 }
 
-/** The body of a job posting (brief, responsibilities, skills); shared by Job details and the wizard preview. */
+/** The body of a job posting (brief, responsibilities, skills, languages, eligibility); Job details and the wizard preview. */
 export default function JobPosting({ job }) {
+  const { t } = useTranslation()
+  const format = useFormat()
+  const jobText = useJobText()
+  const eligible = jobText.eligible(job)
   return (
     <>
-      <p className={styles.brief}>{job.description || 'No brief has been added yet. Use Edit role to add one.'}</p>
+      <p className={styles.brief}>{job.brief || t('jobs:posting.noBrief')}</p>
       {job.responsibilities?.length > 0 && (
         <>
-          <h3 className={styles.heading}>Responsibilities</h3>
+          <h3 className={styles.heading}>{t('jobs:posting.responsibilities')}</h3>
           <ul className={styles.responsibilities}>
             {job.responsibilities.map((item) => (
               <li key={item}>{item}</li>
@@ -31,8 +38,20 @@ export default function JobPosting({ job }) {
           </ul>
         </>
       )}
-      <SkillGroup title="Required skills" skills={job.requiredSkills} />
-      <SkillGroup title="Preferred skills" skills={job.preferredSkills} />
+      <SkillGroup title={t('jobs:posting.requiredSkills')} skills={job.requiredSkills} />
+      <SkillGroup title={t('jobs:posting.preferredSkills')} skills={job.preferredSkills} />
+      <SkillGroup
+        title={t('jobs:posting.languages')}
+        skills={job.requiredLanguages
+          ?.filter((language) => language.code)
+          .map((language) => t('jobs:posting.languageLevel', { language: format.languageName(language.code), level: t(`enums:languageLevel.${language.minLevel}`) }))}
+      />
+      {(eligible || job.visaSponsorship) && (
+        <ul className={styles.skills}>
+          {eligible && <li className={styles.skill}>{t('jobs:posting.eligible', { countries: eligible })}</li>}
+          {job.visaSponsorship && <li className={styles.skill}>{t('jobs:posting.visa')}</li>}
+        </ul>
+      )}
     </>
   )
 }

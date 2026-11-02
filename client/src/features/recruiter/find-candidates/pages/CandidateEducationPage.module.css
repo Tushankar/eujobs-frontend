@@ -29,3 +29,7 @@
   line-height: 24px;
   color: var(--muted-foreground);
 }
+
+.entry + .entry {
+  margin-top: 16px;
+}

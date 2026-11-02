@@ -3,6 +3,8 @@ import { z } from 'zod'
 import { AppError } from '../../lib/errors.js'
 import { absolutePath, validSignature } from '../../lib/files.js'
 import { objectId, validate } from '../../lib/validate.js'
+import { CvVersion } from '../cv/cv.model.js'
+import { recordActivity } from '../discovery/discovery.service.js'
 import { User } from '../users/users.model.js'
 import { File, FileAccessLog } from './files.model.js'
 
@@ -16,11 +18,16 @@ const signedQuery = z.object({
   download: z.literal('1').optional(),
 })
 
-/** M-187: a CV served to someone other than its owner is logged once per view (not per Range chunk). */
+/** M-187: a CV served to someone other than its owner is logged once per view (not per Range chunk), with company activity. */
 async function logCvAccess(file, accessorId, range) {
   if (file.purpose !== 'cv' || accessorId === String(file.ownerId) || (range && !range.startsWith('bytes=0-'))) return
   const accessor = await User.findById(accessorId, 'companyId')
   await FileAccessLog.create({ fileId: file._id, ownerId: file.ownerId, accessorId, companyId: accessor?.companyId })
+  // M-081: the company timeline shows the download.
+  if (accessor?.companyId) {
+    const version = await CvVersion.findOne({ fileId: file._id }, 'number')
+    await recordActivity({ companyId: accessor.companyId, candidateId: file.ownerId, actorId: accessorId, type: 'cv_download', params: { version: version?.number } })
+  }
 }
 
 router.get('/:fileId', validate({ params: z.object({ fileId: objectId }), query: signedQuery }), async (req, res, next) => {

@@ -1,0 +1,25 @@
+{
+  "title": "Tell the story behind your team.",
+  "lead": "Help the right people understand what you’re building, and why it matters.",
+  "createRole": "Create your next role",
+  "verified": "Verified company",
+  "legalName": "Legal name",
+  "legalNameHint": "Verified in your KYC review, so it cannot be changed here.",
+  "fields": {
+    "displayName": "Company name",
+    "displayNameHint": "The name candidates see on your jobs.",
+    "industry": "Industry",
+    "city": "Company city",
+    "website": "Website",
+    "size": "Company size",
+    "description": "What you’re building"
+  },
+  "logo": {
+    "upload": "Upload logo",
+    "replace": "Replace logo",
+    "remove": "Remove logo",
+    "uploading": "Uploading…"
+  },
+  "save": "Save company profile",
+  "saved": "Company profile saved."
+}

@@ -167,3 +167,10 @@
     padding: 20px;
   }
 }
+
+.failure {
+  padding-top: 16px;
+  font-size: 12px;
+  line-height: 18px;
+  color: var(--destructive);
+}

@@ -43,8 +43,12 @@ export default {
   name: 'Route sweep',
   viewports: ['D', 'M'],
   async run(ctx) {
-    // P2-Q1: until Phase 4 approves Sarah, the test database makes her active for the recruiter workspace.
-    await db('users', 'updateMany', { filter: { email: ctx.seedCredentials.email('sarah') }, update: { $set: { status: 'active' } } })
+    // The seeded ids behind the route placeholders.
+    const [acme] = await db('companies', 'find', { filter: { displayName: 'Acme Studio' } })
+    const [job] = await db('jobs', 'find', { filter: { companyId: acme._id, title: 'Product Designer, Growth' } })
+    const [emma] = await db('users', 'find', { filter: { email: ctx.seedCredentials.email('emma') } })
+    const ids = { job: job._id.$oid ?? job._id, emma: emma._id.$oid ?? emma._id }
+    const resolve = (path) => path.replace(/:(\w+)/g, (match, name) => ids[name] ?? match)
 
     const failures = []
     const counts = []
@@ -54,7 +58,7 @@ export default {
       if (login) {
         await signInWithForm(handle.page, ctx.webUrl, login.signIn, ctx.seedCredentials.email(login.account), ctx.seedCredentials.password)
       }
-      for (const path of paths) {
+      for (const path of paths.map(resolve)) {
         const problems = await visit(ctx, handle, group, path)
         if (problems.length) failures.push(`${group} ${path}: ${problems.join('; ')}`)
       }

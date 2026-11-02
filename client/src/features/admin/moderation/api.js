@@ -1,6 +1,6 @@
 import { api } from '@/app/api.js'
 
-/* Moderation › Candidate verification (M-166): the queue, a submission and the decision. */
+/* Moderation › Candidate verification (M-166) and Account review (M-165, P4-Q2): queues, details and decisions. */
 export const moderationApi = api.injectEndpoints({
   endpoints: (build) => ({
     getVerificationQueue: build.query({
@@ -12,9 +12,26 @@ export const moderationApi = api.injectEndpoints({
       query: ({ id, ...body }) => ({ url: `/admin/moderation/verification/${id}/decision`, method: 'POST', body }),
       invalidatesTags: ['VerificationQueue'],
     }),
+    getAccountQueue: build.query({
+      query: (status = 'pending_review') => ({ url: '/admin/moderation/accounts', params: { status } }),
+      providesTags: ['AccountReview'],
+    }),
+    getAccount: build.query({ query: (userId) => `/admin/moderation/accounts/${userId}`, providesTags: ['AccountReview'] }),
+    decideAccount: build.mutation({
+      query: ({ userId, ...body }) => ({ url: `/admin/moderation/accounts/${userId}/decision`, method: 'POST', body }),
+      invalidatesTags: ['AccountReview'],
+    }),
     // A signed URL for a sensitive file (documents.view, §2.6)
     getAdminFileUrl: build.query({ query: (fileId) => `/admin/files/${fileId}`, keepUnusedDataFor: 0 }),
   }),
 })
 
-export const { useGetVerificationQueueQuery, useGetVerificationSubmissionQuery, useDecideVerificationMutation, useGetAdminFileUrlQuery } = moderationApi
+export const {
+  useGetVerificationQueueQuery,
+  useGetVerificationSubmissionQuery,
+  useDecideVerificationMutation,
+  useGetAccountQueueQuery,
+  useGetAccountQuery,
+  useDecideAccountMutation,
+  useGetAdminFileUrlQuery,
+} = moderationApi

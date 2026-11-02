@@ -1,130 +1,150 @@
+import { useTranslation } from 'react-i18next'
 import { useNavigate } from 'react-router-dom'
 import { Building2 } from 'lucide-react'
+import { useGetConfigQuery } from '@/app/api.js'
+import { refreshMe } from '@/app/session.js'
 import { SelectField, TextareaField, TextField } from '@/components/ui'
+import CityField from '@/components/common/CityField.jsx'
+import { check, useErrorText, useFormState } from '@/lib/forms.js'
+import { useSaveOnboardingCompanyMutation } from '../api.js'
 import hintStyles from '../components/compactHint.module.css'
 import StepFooter from '../components/StepFooter.jsx'
 import StepGroup from '../components/StepGroup.jsx'
 import StepHeading from '../components/StepHeading.jsx'
-import { COMPANY_SIZES, ONBOARDING_STEPS } from '../data/onboarding.js'
-import { useFormState } from '../utils/useFormState.js'
+import { stepPath } from '../data/onboarding.js'
 import { useOnboarding } from '../utils/useOnboarding.js'
-import { validateCompany } from '../utils/validation.js'
 import styles from './OnboardingStepPage.module.css'
 
-/** Onboarding step 2 of 5: registered company details. */
+/**
+ * Onboarding step 2 of 5 (M-146, M-149, P4-Q3): the registered company. The city is picked through the Places
+ * proxy (G-1); its country becomes the header country, currency and (unless chosen) the language.
+ */
 export default function CompanyInformationPage() {
+  const { t } = useTranslation()
   const navigate = useNavigate()
-  const { data, saveData, completeStep } = useOnboarding()
-  const { values, errors, setErrors, field } = useFormState({
-    companyName: data.companyName,
-    website: data.website,
-    businessEmail: data.businessEmail,
-    industry: data.industry,
-    companySize: data.companySize,
-    country: data.country,
-    registrationDetails: data.registrationDetails,
-    businessAddress: data.businessAddress,
+  const errorText = useErrorText()
+  const { state } = useOnboarding()
+  const { data: config } = useGetConfigQuery()
+  const [saveCompany, { isLoading }] = useSaveOnboardingCompanyMutation()
+  const company = state.company
+  const { values, set, errors, setErrors, failure, run } = useFormState({
+    legalName: company?.legalName ?? '',
+    website: company?.website ?? '',
+    businessEmail: company?.businessEmail ?? '',
+    industry: company?.industry ?? '',
+    size: company?.size ?? '',
+    place: company?.location ?? null,
+    registrationDetails: company?.registrationDetails ?? '',
+    businessAddress: company?.businessAddress ?? '',
   })
+  const limits = config?.limits.company
+  const field = (name) => (event) => set(name, event.target.value)
+  const errorOf = (name) => errorText.field(name, errors[name])
 
-  function handleBack() {
-    saveData(values)
-    navigate(ONBOARDING_STEPS[0].path)
-  }
-
-  function handleSubmit(event) {
+  async function handleSubmit(event) {
     event.preventDefault()
-    const nextErrors = validateCompany(values)
-    setErrors(nextErrors)
-    if (Object.keys(nextErrors).length > 0) return
-    saveData(values)
-    completeStep('company')
-    navigate(ONBOARDING_STEPS[2].path)
+    if (!state.editable) return navigate(stepPath('kyc'))
+    const saved = await run(
+      {
+        legalName: check.text(values.legalName, limits.name.max),
+        website: check.text(values.website, limits.website.max),
+        businessEmail: check.email(values.businessEmail),
+        industry: check.text(values.industry, limits.industry.max),
+        size: check.required(values.size),
+        placeId: values.place ? undefined : { key: 'required' },
+        businessAddress: check.text(values.businessAddress, limits.businessAddress.max),
+        registrationDetails: check.maxLength(values.registrationDetails, limits.registrationDetails.max),
+      },
+      async () => {
+        const { place, ...body } = values
+        await saveCompany({ ...body, placeId: place.placeId }).unwrap()
+        await refreshMe()
+      },
+    )
+    if (saved) navigate(stepPath('kyc'))
   }
 
   return (
     <>
-      <StepHeading
-        title="Company information"
-        description="Add the registered details we will use to verify your organisation."
-      />
+      <StepHeading title={t('auth:onboarding.company.title')} description={t('auth:onboarding.company.description')} />
       <form className={styles.form} onSubmit={handleSubmit} noValidate>
-        <StepGroup
-          icon={Building2}
-          title="Organisation details"
-          description="Enter details exactly as they appear on official records."
-        >
-          <div className={styles.fieldGrid}>
-            <TextField
-              label="Legal company name"
-              name="companyName"
-              autoComplete="organization"
-              value={values.companyName}
-              onChange={field('companyName')}
-              error={errors.companyName}
-            />
-            <TextField
-              label="Company website"
-              name="website"
-              type="url"
-              autoComplete="url"
-              placeholder="https://"
-              value={values.website}
-              onChange={field('website')}
-              error={errors.website}
-            />
-            <TextField
-              label="Business email"
-              name="businessEmail"
-              type="email"
-              autoComplete="email"
-              value={values.businessEmail}
-              onChange={field('businessEmail')}
-              error={errors.businessEmail}
-            />
-            <TextField
-              label="Industry"
-              name="industry"
-              value={values.industry}
-              onChange={field('industry')}
-              error={errors.industry}
-            />
-            <SelectField
-              label="Company size"
-              name="companySize"
-              placeholder="Select size"
-              options={COMPANY_SIZES}
-              value={values.companySize}
-              onChange={field('companySize')}
-              error={errors.companySize}
-            />
-            <TextField
-              label="Country"
-              name="country"
-              autoComplete="country-name"
-              value={values.country}
-              onChange={field('country')}
-              error={errors.country}
-            />
-            <TextField
-              className={hintStyles.compactHint}
-              label="Company registration details"
-              name="registrationDetails"
-              hint="Optional where your country does not issue a registration number."
-              value={values.registrationDetails}
-              onChange={field('registrationDetails')}
-            />
-            <TextareaField
-              className={styles.fullWidth}
-              label="Business address"
-              name="businessAddress"
-              autoComplete="street-address"
-              value={values.businessAddress}
-              onChange={field('businessAddress')}
-              error={errors.businessAddress}
-            />
-          </div>
-        </StepGroup>
-        <StepFooter onBack={handleBack} />
+        <fieldset disabled={!state.editable} className={styles.fieldset}>
+          <StepGroup icon={Building2} title={t('auth:onboarding.company.groupTitle')} description={t('auth:onboarding.company.groupDescription')}>
+            <div className={styles.fieldGrid}>
+              <TextField
+                label={t('auth:onboarding.company.legalName')}
+                name="legalName"
+                autoComplete="organization"
+                value={values.legalName}
+                onChange={field('legalName')}
+                error={errorOf('legalName')}
+              />
+              <TextField
+                className={hintStyles.compactHint}
+                label={t('auth:onboarding.company.website')}
+                name="website"
+                type="url"
+                autoComplete="url"
+                placeholder="https://"
+                hint={t('auth:onboarding.company.websiteHint')}
+                value={values.website}
+                onChange={field('website')}
+                error={errorOf('website')}
+              />
+              <TextField
+                label={t('auth:onboarding.company.businessEmail')}
+                name="businessEmail"
+                type="email"
+                autoComplete="email"
+                value={values.businessEmail}
+                onChange={field('businessEmail')}
+                error={errorOf('businessEmail')}
+              />
+              <TextField label={t('auth:onboarding.company.industry')} name="industry" value={values.industry} onChange={field('industry')} error={errorOf('industry')} />
+              <SelectField
+                label={t('auth:onboarding.company.size')}
+                name="size"
+                placeholder={t('auth:onboarding.company.sizePlaceholder')}
+                options={(config?.enums.companySize ?? []).map((size) => ({ value: size, label: t(`enums:companySize.${size}`) }))}
+                value={values.size}
+                onChange={field('size')}
+                error={errorOf('size')}
+              />
+              <CityField
+                label={t('auth:onboarding.company.city')}
+                hint={t('auth:onboarding.company.cityHint')}
+                name="companyCity"
+                value={values.place}
+                onChange={(place) => {
+                  set('place', place)
+                  setErrors((current) => ({ ...current, placeId: undefined }))
+                }}
+                error={errorOf('placeId')}
+              />
+              <TextField
+                className={hintStyles.compactHint}
+                label={t('auth:onboarding.company.registrationDetails')}
+                name="registrationDetails"
+                hint={t('auth:onboarding.company.registrationHint')}
+                value={values.registrationDetails}
+                onChange={field('registrationDetails')}
+                error={errorOf('registrationDetails')}
+              />
+              <TextareaField
+                className={styles.fullWidth}
+                label={t('auth:onboarding.company.businessAddress')}
+                name="businessAddress"
+                autoComplete="street-address"
+                value={values.businessAddress}
+                onChange={field('businessAddress')}
+                error={errorOf('businessAddress')}
+              />
+            </div>
+          </StepGroup>
+        </fieldset>
+        {!state.editable && <p className={styles.note}>{t('auth:onboarding.locked')}</p>}
+        {failure && <p role="alert">{errorText.code(failure)}</p>}
+        <StepFooter onBack={() => navigate(stepPath('account'))} loading={isLoading} />
       </form>
     </>
   )

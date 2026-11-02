@@ -63,6 +63,48 @@
         "Vous pouvez envoyer un nouveau justificatif depuis votre page de vérification."
       ],
       "action": "Ouvrir la vérification"
+    },
+    "recruiter_approved": {
+      "subject": "Votre compte recruteur est approuvé",
+      "heading": "Bienvenue sur Local WorkMan",
+      "body": [
+        "Bonjour {{name}},",
+        "Un administrateur a examiné {{company}} et approuvé votre compte recruteur. Votre espace recruteur est ouvert : vous pouvez publier des offres et découvrir des candidats."
+      ],
+      "action": "Se connecter"
+    },
+    "recruiter_rejected": {
+      "subject": "Votre compte recruteur doit être complété",
+      "heading": "Votre compte n’est pas encore approuvé",
+      "body": [
+        "Bonjour {{name}},",
+        "Un administrateur a examiné {{company}} et n’a pas pu approuver votre compte recruteur.",
+        "Motif : {{reason}}",
+        "Vous pouvez mettre à jour vos informations ou vos documents, puis les soumettre à nouveau."
+      ],
+      "action": "Vérifier et soumettre à nouveau"
+    },
+    "recruiter_suspended": {
+      "subject": "Votre compte recruteur est suspendu",
+      "heading": "Compte suspendu",
+      "body": [
+        "Bonjour {{name}},",
+        "Un administrateur a suspendu votre compte recruteur pour {{company}}. Pendant la suspension, vos offres ne sont pas visibles par les candidats.",
+        "Motif : {{reason}}"
+      ],
+      "action": "Voir l’état du compte"
+    },
+    "cv_request": {
+      "subject": "{{company}} souhaite voir un ancien CV",
+      "heading": "Demande d’une version antérieure du CV",
+      "body": [
+        "Bonjour {{name}},",
+        "{{company}} souhaite voir une version antérieure de votre CV.",
+        "Motif : {{reason}}",
+        "{{details}}",
+        "Rien n’est partagé sans votre accord. Sur votre page CV, vous pouvez choisir la version à partager ou refuser la demande."
+      ],
+      "action": "Ouvrir CV et versions"
     }
   },
   "verification": {
@@ -72,6 +114,33 @@
       "employment": "emploi",
       "right_to_work": "droit au travail",
       "certificate": "certificat"
+    }
+  },
+  "stages": {
+    "applied": "Candidature",
+    "screening": "Présélection",
+    "shortlisted": "Liste restreinte",
+    "interview": "Entretien",
+    "offer": "Offre",
+    "hired": "Embauche"
+  },
+  "cvRequestReason": {
+    "verify_employment": "Vérifier le parcours professionnel",
+    "earlier_role_cv": "Consulter un ancien CV adapté à un poste",
+    "compliance": "Contrôle de conformité ou audit",
+    "other": "Autre finalité de recrutement"
+  },
+  "labels": {
+    "workPreference": {
+      "remote": "À distance",
+      "hybrid": "Hybride",
+      "on_site": "Sur site"
+    },
+    "jobLevel": {
+      "junior": "Junior",
+      "mid": "Confirmé",
+      "senior": "Senior",
+      "lead": "Lead"
     }
   }
 }

@@ -1,5 +1,6 @@
 .footer {
   display: flex;
+  flex-wrap: wrap;
   align-items: center;
   justify-content: space-between;
   gap: 12px;
@@ -10,4 +11,12 @@
 
 .primary {
   min-width: 160px;
+  margin-left: auto;
+}
+
+/* Long translated labels wrap onto their own line instead of overflowing */
+@media (max-width: 479px) {
+  .primary {
+    flex: 1 1 100%;
+  }
 }

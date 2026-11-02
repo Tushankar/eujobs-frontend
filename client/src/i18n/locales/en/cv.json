@@ -30,5 +30,28 @@
     "title": "Delete this version?",
     "body": "Version {{number}} and its file will be deleted. This can't be undone.",
     "confirm": "Delete version"
+  },
+  "requests": {
+    "title": "Requests for earlier versions",
+    "lead": "Companies can ask to see an earlier CV for a specific purpose. Nothing is shared unless you approve and choose the version.",
+    "empty": "No requests from companies.",
+    "row": "{{company}} · {{reason}}",
+    "received": "Received {{date}}",
+    "version": "Version to share",
+    "versionPlaceholder": "Choose a version",
+    "versionOption": "Version {{number}} · {{name}}",
+    "approve": "Share this version",
+    "decline": "Decline",
+    "approved": "Shared version {{number}}",
+    "declined": "Declined",
+    "decidedOn": "{{status}} · {{date}}",
+    "needVersion": "Choose which version to share."
+  },
+  "downloads": {
+    "title": "Who opened your CV",
+    "lead": "Every time a company views or downloads one of your CV files, it is logged here.",
+    "empty": "No company has opened your CV yet.",
+    "row": "{{company}} opened version {{number}} ({{name}})",
+    "removed": "{{company}} opened a version you have since deleted"
   }
 }

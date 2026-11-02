@@ -18,11 +18,13 @@ export function renderEmail(type, language, params) {
   const layout = t(language, 'email.layout')
   const fill = (text) => interpolate(text, params)
   const fillHtml = (text) => interpolate(escapeHtml(text), Object.fromEntries(Object.entries(params).map(([k, v]) => [k, escapeHtml(v)])))
+  // A line that is only an optional parameter (e.g. {{details}}) is left out when that parameter is empty.
+  const body = template.body.filter((line) => fill(line).trim())
 
   const text = [
     fill(template.heading),
     '',
-    ...template.body.map(fill),
+    ...body.map(fill),
     params.code ? `\n${params.code}\n` : null,
     template.action ? `${template.action}: ${params.link}` : null,
     template.secondary ? `${template.secondary} ${params.secondaryLink}` : null,
@@ -48,7 +50,7 @@ export function renderEmail(type, language, params) {
 </td></tr>
 <tr><td style="padding:24px 32px 8px">
 <h1 style="margin:0 0 16px;font-family:Manrope,Arial,sans-serif;font-size:22px;font-weight:800;color:#202534">${fillHtml(template.heading)}</h1>
-${template.body.map((line) => paragraph(fillHtml(line))).join('\n')}
+${body.map((line) => paragraph(fillHtml(line))).join('\n')}
 ${params.code ? `<p style="margin:8px 0 24px;font-family:Manrope,Arial,sans-serif;font-size:32px;font-weight:800;letter-spacing:6px;color:#202534">${escapeHtml(params.code)}</p>` : ''}
 ${
   template.action

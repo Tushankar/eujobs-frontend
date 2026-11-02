@@ -30,6 +30,8 @@ const userSchema = new Schema(
       matchingConsent: { type: Boolean, default: true },
     },
     onboardingCompletedAt: Date,
+    // Recruiters (M-145)
+    companyId: { type: Schema.Types.ObjectId, ref: 'Company' },
     adminAccess: {
       roleId: { type: Schema.Types.ObjectId, ref: 'AdminRole' },
       department: String,

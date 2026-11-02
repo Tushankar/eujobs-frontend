@@ -20,10 +20,6 @@
   min-width: 192px;
 }
 
-.location {
-  flex: 0 0 208px;
-}
-
 .filtersButton.filtersButton {
   min-height: 46px;
   border-color: var(--border);
@@ -113,9 +109,5 @@
 @media (max-width: 767px) {
   .fields {
     flex-direction: column;
-  }
-
-  .location {
-    flex-basis: auto;
   }
 }

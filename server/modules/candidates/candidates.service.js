@@ -2,6 +2,7 @@ import { LIMITS } from '../../config/limits.js'
 import { AppError, fieldError } from '../../lib/errors.js'
 import { removeFiles, signedUrl, storeFile } from '../../lib/files.js'
 import { sanitizedUpload, squareWebp } from '../../lib/images.js'
+import { skillEntries } from '../../lib/skills.js'
 import { CvVersion } from '../cv/cv.model.js'
 import { File } from '../files/files.model.js'
 import { Country } from '../meta/meta.model.js'
@@ -144,14 +145,6 @@ async function checkSalary(salaryMin, location) {
   return salaryMin
 }
 
-/** M-064: unique case-insensitively. */
-function checkSkills(names) {
-  const keys = names.map((name) => name.toLocaleLowerCase())
-  const duplicate = names.find((name, index) => keys.indexOf(keys[index]) !== index)
-  if (duplicate) throw fieldError({ skills: 'duplicate' }, { skill: duplicate })
-  return names.map((name, index) => ({ name, key: keys[index] }))
-}
-
 /** PUT /candidate/profile: the Edit profile dialog (P3-D9). */
 export async function updateProfile(user, profile, body) {
   const location = await placeFor(profile, body.placeId, user.language)
@@ -160,7 +153,8 @@ export async function updateProfile(user, profile, body) {
     location,
     about: body.about,
     yearsExperience: body.yearsExperience,
-    skills: checkSkills(body.skills),
+    // M-064: unique case-insensitively; the key is shared with job skills (M-052).
+    skills: skillEntries(body.skills, 'skills'),
     workPreference: body.workPreference,
     availability: body.availability,
     salaryMin: await checkSalary(body.salaryMin, location),

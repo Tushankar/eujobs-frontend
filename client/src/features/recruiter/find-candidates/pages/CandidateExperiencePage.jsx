@@ -1,30 +1,34 @@
+import { useTranslation } from 'react-i18next'
 import { useOutletContext } from 'react-router-dom'
 import SectionTitle from '@/components/common/SectionTitle.jsx'
 import ProfileSection from '../components/ProfileSection.jsx'
-import { getCandidateDetails } from '../data/candidateDetails.js'
+import { useCandidateText } from '../utils/candidateText.js'
 import styles from './CandidateExperiencePage.module.css'
 
+/** Experience tab (M-018, M-026): the work history, newest first, with the candidate's own descriptions. */
 export default function CandidateExperiencePage() {
+  const { t } = useTranslation()
+  const text = useCandidateText()
   const { candidate } = useOutletContext()
-  const { roles } = getCandidateDetails(candidate)
 
   return (
     <ProfileSection labelledBy="experience-title">
-      <SectionTitle id="experience-title" title="Career history" />
-      <ol className={styles.list}>
-        {roles.map((entry) => (
-          <li key={`${entry.role}-${entry.period}`} className={styles.entry}>
-            <h3 className={styles.role}>{entry.role}</h3>
-            <p className={styles.meta}>
-              {entry.org} · {entry.period}
-            </p>
-            <p className={styles.summary}>
-              Worked with engineering and product partners on research, design, and delivery. Sample career history for
-              this demo profile.
-            </p>
-          </li>
-        ))}
-      </ol>
+      <SectionTitle id="experience-title" title={t('discovery:experienceTab.title')} />
+      {candidate.workHistory.length === 0 ? (
+        <p className={styles.summary}>{t('discovery:experienceTab.empty')}</p>
+      ) : (
+        <ol className={styles.list}>
+          {candidate.workHistory.map((entry) => (
+            <li key={`${entry.title}-${entry.start}`} className={styles.entry}>
+              <h3 className={styles.role}>{entry.title}</h3>
+              <p className={styles.meta}>
+                {entry.employer} · {text.period(entry.start, entry.end, entry.current)}
+              </p>
+              {entry.description && <p className={styles.summary}>{entry.description}</p>}
+            </li>
+          ))}
+        </ol>
+      )}
     </ProfileSection>
   )
 }

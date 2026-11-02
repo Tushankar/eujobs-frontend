@@ -28,24 +28,46 @@
 
 .identity {
   display: flex;
+  flex-wrap: wrap;
   align-items: center;
   gap: 16px;
 }
 
-.logo {
-  display: inline-flex;
-  flex-shrink: 0;
+.identityText {
+  flex: 1;
+  min-width: 0;
+}
+
+.legal {
+  font-size: 12px;
+  line-height: 18px;
+  color: var(--muted-foreground);
+  overflow-wrap: anywhere;
+}
+
+/* Upload, replace or remove the logo (M-150) */
+.logoActions {
+  display: flex;
+  flex-wrap: wrap;
   align-items: center;
-  justify-content: center;
-  width: 64px;
-  height: 64px;
-  border-radius: var(--radius-xl);
-  background: var(--accent);
-  font-family: var(--font-display);
-  font-size: 24px;
-  font-weight: 700;
-  line-height: 32px;
-  color: var(--primary);
+  justify-content: flex-end;
+  gap: 8px;
+  max-width: 280px;
+}
+
+.logoHint {
+  flex-basis: 100%;
+  font-size: 11px;
+  line-height: 16px;
+  text-align: right;
+  color: var(--muted-foreground);
+}
+
+.error {
+  padding-top: 12px;
+  font-size: 12px;
+  line-height: 18px;
+  color: var(--destructive);
 }
 
 .companyName {

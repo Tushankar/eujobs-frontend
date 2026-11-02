@@ -1,9 +1,10 @@
 /*
- * Every route per group (§2.13), with real ids for parameterised ones. The 69 workspace routes are
- * today's screens (23 candidate, 24 recruiter, 22 admin); `public` holds the pages without a session
- * and `recruiterOnboarding` the steps a recruiter sees before approval. Each phase adds its new screens.
+ * Every route per group (§2.13). Server ids are placeholders the sweep fills from the test database:
+ * :job (Acme Studio's "Product Designer, Growth") and :emma (Emma Wilson's user id). `public` holds the pages
+ * without a session and `recruiterOnboarding` the steps a recruiter sees before approval. Each phase adds its
+ * new screens.
  */
-const candidateProfile = '/recruiter/find-candidates/emma-wilson'
+const candidateProfile = '/recruiter/find-candidates/:emma'
 
 export const ROUTES = {
   public: [
@@ -20,7 +21,7 @@ export const ROUTES = {
     '/legal/privacy',
     '/legal/imprint',
   ],
-  // Mock steps until Phase 4: the layout opens the first step that is still open.
+  // James waits for review, so every step leads to the review page (the layout opens the first open step).
   recruiterOnboarding: [
     '/recruiter/onboarding/account',
     '/recruiter/onboarding/company',
@@ -31,7 +32,7 @@ export const ROUTES = {
   candidate: [
     '/candidate',
     '/candidate/jobs',
-    '/candidate/jobs/linear-senior-product-designer',
+    '/candidate/jobs/:job',
     '/candidate/applications',
     '/candidate/job-alerts',
     '/candidate/profile',
@@ -57,8 +58,8 @@ export const ROUTES = {
     '/recruiter',
     '/recruiter/jobs',
     '/recruiter/jobs/new',
-    '/recruiter/jobs/senior-product-designer',
-    '/recruiter/jobs/senior-product-designer/edit',
+    '/recruiter/jobs/:job',
+    '/recruiter/jobs/:job/edit',
     '/recruiter/find-candidates',
     candidateProfile,
     `${candidateProfile}/experience`,
@@ -99,6 +100,7 @@ export const ROUTES = {
     '/admin/analytics',
     '/admin/reports',
     '/admin/moderation',
+    '/admin/moderation/accounts',
     '/admin/moderation/verification',
     '/admin/audit-logs',
     '/admin/settings',

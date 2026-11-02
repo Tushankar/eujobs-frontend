@@ -97,6 +97,20 @@
     },
     "code": {
       "required": "Saisissez le code."
+    },
+    "website": {
+      "invalid": "Saisissez un site web comme https://exemple.com."
+    },
+    "legalName": {
+      "required": "Saisissez la raison sociale."
+    },
+    "businessAddress": {
+      "required": "Saisissez l’adresse de l’entreprise."
+    },
+    "size": {
+      "required": "Choisissez la taille de l’entreprise."
     }
-  }
+  },
+  "in_both": "{{skill}} est déjà une compétence requise.",
+  "below_min": "Indiquez un montant au moins égal au minimum."
 }

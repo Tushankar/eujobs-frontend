@@ -97,6 +97,20 @@
     },
     "code": {
       "required": "Enter the code."
+    },
+    "website": {
+      "invalid": "Enter a website like https://example.com."
+    },
+    "legalName": {
+      "required": "Enter the legal company name."
+    },
+    "businessAddress": {
+      "required": "Enter the business address."
+    },
+    "size": {
+      "required": "Select a company size."
     }
-  }
+  },
+  "in_both": "{{skill}} is already a required skill.",
+  "below_min": "Use an amount at least as high as the minimum."
 }

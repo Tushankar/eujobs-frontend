@@ -31,18 +31,6 @@
   color: #717789;
 }
 
-.aiBadge {
-  display: inline-flex;
-  align-items: center;
-  gap: 6px;
-  padding: 4px 8px;
-  border-radius: var(--radius-md);
-  background: var(--accent);
-  font-size: 10px;
-  font-weight: 500;
-  line-height: 15px;
-  color: var(--primary-hover);
-}
 
 .title {
   height: 26px;
@@ -100,10 +88,6 @@
   color: #596171;
 }
 
-.salaryUnit {
-  font-weight: 400;
-  color: #7b8292;
-}
 
 .tags {
   display: flex;
@@ -149,10 +133,6 @@
   color: var(--primary-hover);
 }
 
-.dot {
-  padding: 0 4px;
-  color: #d1ccd9;
-}
 
 .chevron {
   transition: transform var(--transition);
@@ -196,9 +176,10 @@
   color: var(--primary-hover);
 }
 
-.card .applied,
-.card .applied:disabled {
-  background: var(--primary);
-  color: var(--primary-foreground);
-  opacity: 0.4;
+/* OQ-6i: the countries a remote job accepts */
+.eligible {
+  padding-top: 8px;
+  font-size: 11px;
+  line-height: 16px;
+  color: var(--muted-foreground);
 }

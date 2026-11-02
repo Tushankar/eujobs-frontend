@@ -5,11 +5,15 @@ import { ENUMS } from '../config/enums.js'
 import { ScheduledTask } from '../jobs/models.js'
 import { connectDb, disconnectDb } from '../lib/db.js'
 import { AdminRole, AuditEvent } from '../modules/admin/admin.model.js'
+import { PipelineStage } from '../modules/applications/applications.model.js'
 import { EmailToken, VerificationCode } from '../modules/auth/auth.model.js'
 import { checkPassword, hashPassword } from '../modules/auth/auth.service.js'
 import { CandidateProfile } from '../modules/candidates/candidates.model.js'
-import { CvVersion } from '../modules/cv/cv.model.js'
+import { Company, KycDocument } from '../modules/companies/companies.model.js'
+import { CvAccessRequest, CvVersion } from '../modules/cv/cv.model.js'
+import { CandidateNote, ProfileView, RecruiterActivity, ShortlistEntry } from '../modules/discovery/discovery.model.js'
 import { File, FileAccessLog } from '../modules/files/files.model.js'
+import { Job, SavedJob } from '../modules/jobs/jobs.model.js'
 import { Country } from '../modules/meta/meta.model.js'
 import { currentLegalVersions } from '../modules/meta/meta.service.js'
 import { User } from '../modules/users/users.model.js'
@@ -18,6 +22,8 @@ import { seedCandidates } from './candidates.js'
 import { CANDIDATES, CITY_TIME_ZONES } from './data/candidates.js'
 import { DEMO_ACCOUNTS } from './data/demo.js'
 import { PLACES } from './data/places.js'
+import { COMPANIES } from './data/recruiters.js'
+import { seedRecruiters } from './recruiters.js'
 
 /*
  * seed:demo (U41): wipes the demo data and recreates it. Email logs and daily job runs are kept,
@@ -45,6 +51,16 @@ export async function seedDemo() {
     country: PLACES[person.city].countryCode,
     timezone: CITY_TIME_ZONES[person.city],
   }))
+  // One approved recruiter per mock company (M-145); Acme's is Sarah, a demo account.
+  const recruiters = COMPANIES.filter((company) => company.recruiter.email).map((company) => ({
+    role: 'recruiter',
+    status: 'active',
+    fullName: company.recruiter.fullName,
+    email: company.recruiter.email,
+    jobTitle: 'Talent lead',
+    country: PLACES[company.city].countryCode,
+    timezone: CITY_TIME_ZONES[company.city],
+  }))
   for (const account of demoAccounts) {
     try {
       checkPassword(config.seed.password, account.email)
@@ -65,6 +81,16 @@ export async function seedDemo() {
     VerificationSubmission.deleteMany({}),
     File.deleteMany({}),
     FileAccessLog.deleteMany({}),
+    Company.deleteMany({}),
+    KycDocument.deleteMany({}),
+    PipelineStage.deleteMany({}),
+    Job.deleteMany({}),
+    SavedJob.deleteMany({}),
+    ShortlistEntry.deleteMany({}),
+    CandidateNote.deleteMany({}),
+    RecruiterActivity.deleteMany({}),
+    ProfileView.deleteMany({}),
+    CvAccessRequest.deleteMany({}),
   ])
   // Every stored file is demo data: one folder per purpose under the upload root (never another root).
   await Promise.all(ENUMS.filePurpose.map((purpose) => rm(join(config.uploadRoot, purpose), { recursive: true, force: true })))
@@ -75,7 +101,7 @@ export async function seedDemo() {
   const languages = Object.fromEntries((await Country.find({}, 'code defaultLanguage')).map((c) => [c.code, c.defaultLanguage]))
 
   await User.insertMany(
-    [...demoAccounts, ...people].map(({ country, ...account }) => ({
+    [...demoAccounts, ...people, ...recruiters].map(({ country, ...account }) => ({
       ...account,
       passwordHash,
       legal,
@@ -87,12 +113,13 @@ export async function seedDemo() {
   )
   const owner = await User.findOne({ isOwner: true })
   await seedCandidates({ emailOf, owner, now: now.getTime() })
+  await seedRecruiters({ emailOf, owner, now: now.getTime() })
 }
 
 if (import.meta.main) {
   await connectDb()
   await seedDemo()
-  const [accounts, profiles, files] = await Promise.all([User.countDocuments(), CandidateProfile.countDocuments(), File.countDocuments()])
-  console.log(`seed:demo done: ${accounts} accounts (Owner + ${DEMO_ACCOUNTS.length - 1} demo accounts), ${profiles} candidate profiles, ${files} files`)
+  const [accounts, profiles, companies, jobs, files] = await Promise.all([User, CandidateProfile, Company, Job, File].map((Model) => Model.countDocuments()))
+  console.log(`seed:demo done: ${accounts} accounts (Owner + ${DEMO_ACCOUNTS.length - 1} demo accounts), ${profiles} candidate profiles, ${companies} companies, ${jobs} jobs, ${files} files`)
   await disconnectDb()
 }

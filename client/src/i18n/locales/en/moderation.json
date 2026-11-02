@@ -44,5 +44,98 @@
       "present": "present",
       "validUntil": "valid until {{date}}"
     }
+  },
+  "accounts": {
+    "tab": "Account review",
+    "title": "Account review queue",
+    "description": "Approve, reject or suspend recruiter accounts after checking the company record and the KYC documents.",
+    "statusFilter": "Filter by account status",
+    "status": {
+      "pending_review": "Pending review",
+      "active": "Active",
+      "suspended": "Suspended",
+      "rejected": "Rejected"
+    },
+    "empty": "No recruiter accounts with this status.",
+    "submitted": "Submitted {{date}}",
+    "joined": "Joined {{date}}",
+    "review": "Review account",
+    "stat": {
+      "label": "Pending accounts",
+      "caption": "Recruiter decisions needed"
+    },
+    "dialog": {
+      "title": "Review recruiter account",
+      "applicant": "Applicant",
+      "jobTitle": "Job title",
+      "email": "Email",
+      "emailVerified": "Verified with a code",
+      "emailUnverified": "Not verified",
+      "phone": "Phone",
+      "phoneConfirmed": "Phone confirmed on screen (no SMS)",
+      "phoneUnconfirmed": "Not confirmed",
+      "company": "Company record",
+      "legalName": "Legal name",
+      "displayName": "Display name",
+      "website": "Website",
+      "businessEmail": "Business email",
+      "industry": "Industry",
+      "size": "Size",
+      "location": "City",
+      "businessAddress": "Business address",
+      "registrationDetails": "Registration details",
+      "notProvided": "Not provided",
+      "documents": "KYC documents",
+      "documentType": {
+        "identity": "Identity document",
+        "registration": "Registration certificate",
+        "authorization": "Authorization proof"
+      },
+      "fileDeleted": "Deleted 30 days after the decision.",
+      "noDocuments": "No documents uploaded.",
+      "submittedAt": "Submitted",
+      "history": "Earlier decisions",
+      "decided": "{{decision}} by {{name}}, {{date}}",
+      "decision": {
+        "approved": "Approved",
+        "rejected": "Rejected",
+        "suspended": "Suspended"
+      },
+      "reason": "Reason: {{reason}}",
+      "noActions": "No decision is available for this account until the recruiter resubmits.",
+      "action": {
+        "approved": "Approve",
+        "reactivate": "Reactivate",
+        "rejected": "Reject",
+        "suspended": "Suspend"
+      },
+      "confirm": {
+        "approved": {
+          "title": "Approve this recruiter?",
+          "text": "The recruiter workspace opens and the default pipeline stages are created. The recruiter gets an email.",
+          "button": "Approve account"
+        },
+        "reactivate": {
+          "title": "Reactivate this recruiter?",
+          "text": "The recruiter can sign in again and their published jobs return to candidates. The recruiter gets an email.",
+          "button": "Reactivate account"
+        },
+        "rejected": {
+          "title": "Reject this application?",
+          "text": "The recruiter sees the reason by email and on the status page, and can fix the details and resubmit.",
+          "button": "Reject application"
+        },
+        "suspended": {
+          "title": "Suspend this recruiter?",
+          "text": "The recruiter is signed out, their jobs disappear from candidates and they get an email with the reason.",
+          "button": "Suspend account"
+        }
+      },
+      "reasonLabel": "Reason",
+      "reasonOptional": "Reason (optional)",
+      "reasonHint": "Up to {{max}} characters. Recorded with the decision and in the audit log.",
+      "back": "Back",
+      "decidedNow": "Decision saved and emailed to the recruiter."
+    }
   }
 }

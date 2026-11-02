@@ -4,11 +4,13 @@ import { AdminRole } from '../admin/admin.model.js'
 import { candidateSummary, fullNameChanged } from '../candidates/candidates.service.js'
 import { effectivePermissions } from '../admin/admin.service.js'
 import { checkPassword, hashPassword } from '../auth/auth.service.js'
+import { Company } from '../companies/companies.model.js'
+import { logoUrls } from '../companies/companies.service.js'
 import { currentLegalVersions, findEnabledCountry } from '../meta/meta.service.js'
 
 /**
- * The session profile (GET /me). Candidates carry the completeness checklist and the shell photo URL;
- * later phases add plan, entitlements and company.
+ * The session profile (GET /me). Candidates carry the completeness checklist and the shell photo URL,
+ * recruiters their company; later phases add plan and entitlements.
  * `legal.acceptRequired` is true when a newer Terms or Privacy version exists (U22).
  */
 export async function meDto(user) {
@@ -43,6 +45,9 @@ export async function meDto(user) {
   if (user.role === 'recruiter') {
     dto.jobTitle = user.jobTitle ?? null
     dto.phone = { e164: user.phone?.e164 ?? null, verified: Boolean(user.phone?.verifiedAt) }
+    // The shell subtitle and logo (M-195); null until onboarding step 2.
+    const company = user.companyId ? await Company.findById(user.companyId, 'displayName logoFileId') : null
+    dto.company = company ? { id: String(company._id), displayName: company.displayName, logoUrl: (await logoUrls([company], user._id)).get(String(company._id)) } : null
   }
   if (user.role === 'admin') {
     dto.isOwner = user.isOwner

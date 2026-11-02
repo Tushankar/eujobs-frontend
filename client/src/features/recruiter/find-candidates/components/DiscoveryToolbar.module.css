@@ -39,12 +39,21 @@
 
 .filters {
   display: grid;
-  grid-template-columns: repeat(4, minmax(0, 1fr)) auto;
+  grid-template-columns: repeat(4, minmax(0, 1fr));
   align-items: end;
   gap: 12px;
   margin-top: 16px;
   padding-top: 16px;
   border-top: 1px solid var(--border);
+}
+
+/* Right to work and Verified, under the selects */
+.checks {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 8px 20px;
+  grid-column: span 2;
+  padding-bottom: 12px;
 }
 
 @media (max-width: 1023px) {
@@ -69,5 +78,9 @@
 @media (max-width: 479px) {
   .filters {
     grid-template-columns: minmax(0, 1fr);
+  }
+
+  .checks {
+    grid-column: auto;
   }
 }

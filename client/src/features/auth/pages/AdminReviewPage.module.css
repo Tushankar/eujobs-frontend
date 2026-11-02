@@ -34,6 +34,52 @@
   color: #a47d2e;
 }
 
+/* Rejected and suspended use the destructive tone */
+.statusIconAlert {
+  background: #fdeceb;
+  color: var(--destructive);
+}
+
+.statusBadgeAlert {
+  background: #fdeceb;
+  color: var(--destructive);
+}
+
+.reason {
+  display: flex;
+  flex-direction: column;
+  gap: 4px;
+  max-width: 576px;
+  margin-top: 16px;
+  padding: 12px 16px;
+  border-radius: var(--radius-xl);
+  background: var(--muted);
+  font-size: 13px;
+  font-weight: 600;
+  line-height: 20px;
+  color: var(--foreground);
+  overflow-wrap: anywhere;
+}
+
+.reasonDate {
+  padding-top: 8px;
+  font-size: 12px;
+  font-weight: 400;
+  line-height: 18px;
+  color: var(--muted-foreground);
+}
+
+.reason .reasonDate {
+  padding-top: 0;
+}
+
+.error {
+  padding-top: 16px;
+  font-size: 12px;
+  line-height: 18px;
+  color: var(--destructive);
+}
+
 .resultTitle {
   padding-top: 20px;
   font-family: var(--font-display);

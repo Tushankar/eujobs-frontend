@@ -34,4 +34,18 @@ router.delete('/versions/:id', versionParams, async (req, res) => {
   res.json(await cv.listVersions(req.user))
 })
 
+router.get('/requests', async (req, res) => {
+  res.json(await cv.listRequests(req.user))
+})
+
+const decisionBody = z.object({ decision: z.enum(['approved', 'declined']), versionId: objectId.optional() })
+router.post('/requests/:id/decision', versionParams, validate({ body: decisionBody }), async (req, res) => {
+  await cv.decideRequest(req.user, req.params.id, req.body)
+  res.json(await cv.listRequests(req.user))
+})
+
+router.get('/downloads', async (req, res) => {
+  res.json(await cv.listDownloads(req.user))
+})
+
 export default router

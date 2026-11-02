@@ -3,8 +3,10 @@ import { AppError, fieldError } from '../../lib/errors.js'
 import { removeFiles, signedUrl, storeFile } from '../../lib/files.js'
 import { extractText } from '../../lib/pdfText.js'
 import { loadProfile, saveProfile } from '../candidates/candidates.service.js'
-import { File } from '../files/files.model.js'
-import { CvVersion } from './cv.model.js'
+import { Company } from '../companies/companies.model.js'
+import { recordActivity, recordCvUpdated } from '../discovery/discovery.service.js'
+import { File, FileAccessLog } from '../files/files.model.js'
+import { CvAccessRequest, CvVersion } from './cv.model.js'
 
 /* CV versions (M-027 … M-031, U18, P3-D7). A deleted version keeps its record with no file. */
 
@@ -62,8 +64,11 @@ async function ownVersion(user, id) {
 
 export async function setLive(user, id) {
   const profile = await loadProfile(user._id)
+  if (String(profile.liveCvVersionId) === String(id)) return
   profile.liveCvVersionId = id
   await saveProfile(user, profile)
+  // M-081: companies following this candidate see "CV updated" (P4-D13).
+  await recordCvUpdated(user._id, (await CvVersion.findById(id, 'number')).number)
 }
 
 export async function makeLive(user, id) {
@@ -86,4 +91,60 @@ export async function deleteVersion(user, id) {
   version.fileId = null
   await version.save()
   await removeFiles([fileId])
+}
+
+/* ---------- earlier-version requests and the download log (M-029, M-187, U19, P4-D12) ---------- */
+
+const companyNames = async (ids) => new Map((await Company.find({ _id: { $in: ids } }, 'displayName')).map((company) => [String(company._id), company.displayName]))
+
+/** GET /candidate/cv/requests: pending first, then decided, newest first. */
+export async function listRequests(user) {
+  const requests = await CvAccessRequest.find({ candidateId: user._id }).sort({ createdAt: -1 })
+  const names = await companyNames(requests.map((request) => request.companyId))
+  const versions = new Map((await CvVersion.find({ _id: { $in: requests.map((request) => request.cvVersionId).filter(Boolean) } }, 'number')).map((version) => [String(version._id), version.number]))
+  const items = requests
+    .map((request) => ({
+      id: String(request._id),
+      company: { displayName: names.get(String(request.companyId)) ?? null },
+      reason: request.reason,
+      details: request.details ?? '',
+      status: request.status,
+      createdAt: request.createdAt,
+      decidedAt: request.decidedAt ?? null,
+      versionNumber: request.cvVersionId ? versions.get(String(request.cvVersionId)) ?? null : null,
+    }))
+    .sort((a, b) => Number(b.status === 'pending') - Number(a.status === 'pending'))
+  return { items, total: items.length, page: 1, pageSize: items.length }
+}
+
+/** Approve by choosing which version to share (A: recruiter RQ-44), or decline; nothing else is shared. */
+export async function decideRequest(user, id, { decision, versionId }) {
+  const request = await CvAccessRequest.findOne({ _id: id, candidateId: user._id })
+  if (!request) throw new AppError('NOT_FOUND')
+  if (request.status !== 'pending') throw new AppError('CONFLICT', { params: { status: request.status } })
+  let version
+  if (decision === 'approved') {
+    if (!versionId) throw fieldError({ versionId: 'required' })
+    version = await ownVersion(user, versionId)
+  }
+  request.set({ status: decision, cvVersionId: version?._id, decidedAt: new Date() })
+  await request.save()
+  await recordActivity({ companyId: request.companyId, candidateId: user._id, type: 'cv_request_decided', params: { decision, version: version?.number } })
+}
+
+/** GET /candidate/cv/downloads: every view of the candidate's CV files by a company (M-187). */
+export async function listDownloads(user) {
+  const logs = await FileAccessLog.find({ ownerId: user._id, companyId: { $ne: null } }).sort({ at: -1 })
+  const names = await companyNames(logs.map((log) => log.companyId))
+  const versions = new Map((await CvVersion.find({ userId: user._id, fileId: { $in: logs.map((log) => log.fileId) } }, 'fileId number originalName')).map((version) => [String(version.fileId), version]))
+  const items = logs.map((log) => {
+    const version = versions.get(String(log.fileId))
+    return {
+      id: String(log._id),
+      company: { displayName: names.get(String(log.companyId)) ?? null },
+      version: version ? { number: version.number, originalName: version.originalName } : null,
+      at: log.at,
+    }
+  })
+  return { items, total: items.length, page: 1, pageSize: items.length }
 }

@@ -1,93 +1,94 @@
 import { useState } from 'react'
+import { useTranslation } from 'react-i18next'
 import { useNavigate } from 'react-router-dom'
 import { ShieldCheck } from 'lucide-react'
+import { useGetConfigQuery } from '@/app/api.js'
 import { Icon } from '@/components/ui'
+import { checkUpload, useErrorText, useUploadText } from '@/lib/forms.js'
+import { useDeleteKycDocumentMutation, useUploadKycDocumentMutation } from '../api.js'
 import DocumentUpload from '../components/DocumentUpload.jsx'
 import StepFooter from '../components/StepFooter.jsx'
 import StepHeading from '../components/StepHeading.jsx'
-import { ONBOARDING_STEPS } from '../data/onboarding.js'
+import { stepPath } from '../data/onboarding.js'
 import { useOnboarding } from '../utils/useOnboarding.js'
-import { checkDocumentFileName, validateKyc } from '../utils/validation.js'
+import stepStyles from './OnboardingStepPage.module.css'
 import styles from './KycVerificationPage.module.css'
 
-const DOCUMENTS = [
-  {
-    id: 'identity',
-    title: 'Government-issued identity document',
-    description: 'Required for the responsible person. PDF, JPG, or PNG.',
-  },
-  {
-    id: 'registration',
-    title: 'Company registration certificate',
-    description: 'Required business proof or local equivalent. PDF, JPG, or PNG.',
-  },
-  {
-    id: 'authorization',
-    title: 'Authorization proof',
-    optional: true,
-    description: 'Optional unless your authority to represent the company needs evidence. PDF, JPG, or PNG.',
-  },
-]
+// §3.12: identity and registration are required; authorization is optional.
+const DOCUMENTS = [{ type: 'identity' }, { type: 'registration' }, { type: 'authorization', optional: true }]
 
-/**
- * Onboarding step 3 of 5: identity and business documents. Files are not uploaded or
- * stored; only their names are kept (as the page itself states).
- */
+/** Onboarding step 3 of 5 (M-185): uploads go to the server at once and lock when the application is submitted. */
 export default function KycVerificationPage() {
+  const { t } = useTranslation()
   const navigate = useNavigate()
-  const { data, saveData, completeStep } = useOnboarding()
-  const [documents, setDocuments] = useState(data.documents)
+  const errorText = useErrorText()
+  const { state } = useOnboarding()
+  const { data: config } = useGetConfigQuery()
+  const rule = config?.limits.uploads.kyc
+  const uploadText = useUploadText(rule)
+  const [uploadDocument] = useUploadKycDocumentMutation()
+  const [deleteDocument] = useDeleteKycDocumentMutation()
+  const [uploading, setUploading] = useState(null)
   const [errors, setErrors] = useState({})
+  const documentOf = (type) => state.documents.find((document) => document.type === type)
 
-  function handleSelect(id, fileName) {
-    const typeError = checkDocumentFileName(fileName)
-    setErrors((current) => ({ ...current, [id]: typeError }))
-    if (!typeError) setDocuments((current) => ({ ...current, [id]: fileName }))
+  async function handleSelect(type, file) {
+    const problem = checkUpload(file, rule)
+    setErrors((current) => ({ ...current, [type]: problem ? uploadText.problem(problem, file) : undefined }))
+    if (problem) return
+    setUploading(type)
+    try {
+      await uploadDocument({ type, file }).unwrap()
+    } catch (failure) {
+      setErrors((current) => ({ ...current, [type]: errorText.code(failure) }))
+    } finally {
+      setUploading(null)
+    }
   }
 
-  function handleBack() {
-    saveData({ documents })
-    navigate(ONBOARDING_STEPS[1].path)
+  async function handleRemove(type) {
+    try {
+      await deleteDocument(documentOf(type).id).unwrap()
+    } catch (failure) {
+      setErrors((current) => ({ ...current, [type]: errorText.code(failure) }))
+    }
   }
 
   function handleSubmit(event) {
     event.preventDefault()
-    const nextErrors = validateKyc(documents)
-    setErrors(nextErrors)
-    if (Object.keys(nextErrors).length > 0) return
-    saveData({ documents })
-    completeStep('kyc')
-    navigate(ONBOARDING_STEPS[3].path)
+    const missing = DOCUMENTS.filter((document) => !document.optional && !documentOf(document.type))
+    setErrors(Object.fromEntries(missing.map(({ type }) => [type, t(`auth:onboarding.kyc.missing.${type}`)])))
+    if (missing.length === 0) navigate(stepPath('verify'))
   }
 
   return (
     <>
-      <StepHeading
-        title="KYC & business verification"
-        description="Provide evidence that confirms your identity and authority to hire."
-      />
+      <StepHeading title={t('auth:onboarding.kyc.title')} description={t('auth:onboarding.kyc.description')} />
       <form className={styles.form} onSubmit={handleSubmit} noValidate>
-        <p className={styles.intro}>
-          Requirements vary by country. Collect only appropriate identity and business evidence for this review.
-        </p>
+        <p className={styles.intro}>{t('auth:onboarding.kyc.intro')}</p>
         <div className={styles.documents}>
-          {DOCUMENTS.map((document) => (
+          {DOCUMENTS.map(({ type, optional }) => (
             <DocumentUpload
-              key={document.id}
-              title={document.title}
-              optional={document.optional}
-              description={document.description}
-              fileName={documents[document.id]}
-              error={errors[document.id]}
-              onSelect={(fileName) => handleSelect(document.id, fileName)}
+              key={type}
+              title={t(`auth:onboarding.kyc.documents.${type}.title`)}
+              description={`${t(`auth:onboarding.kyc.documents.${type}.description`)} ${uploadText.limits}`}
+              optional={optional}
+              document={documentOf(type)}
+              accept={rule?.types.map((ext) => `.${ext}`).join(',')}
+              editable={state.editable}
+              uploading={uploading === type}
+              error={errors[type]}
+              onSelect={(file) => handleSelect(type, file)}
+              onRemove={() => handleRemove(type)}
             />
           ))}
         </div>
         <p className={styles.banner}>
           <Icon as={ShieldCheck} size={16} />
-          This local prototype retains file names only. It does not upload or store document contents.
+          {t('auth:onboarding.privacyText')}
         </p>
-        <StepFooter onBack={handleBack} />
+        {!state.editable && <p className={stepStyles.note}>{t('auth:onboarding.locked')}</p>}
+        <StepFooter onBack={() => navigate(stepPath('company'))} />
       </form>
     </>
   )

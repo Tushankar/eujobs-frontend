@@ -1,58 +1,61 @@
+import { useTranslation } from 'react-i18next'
 import { Link } from 'react-router-dom'
-import { ArrowUpRight, Bookmark, Earth, MapPin } from 'lucide-react'
-import { Checkbox, Icon, IconButton } from '@/components/ui'
+import { ArrowUpRight, Bookmark, Earth, MapPin, ShieldCheck } from 'lucide-react'
+import { Avatar, Checkbox, Icon, IconButton } from '@/components/ui'
 import PillBadge from '@/components/common/PillBadge.jsx'
+import { usePreferences } from '@/lib/preferences.js'
 import { cx } from '@/utils/cx.js'
-import CandidateAvatar from './CandidateAvatar.jsx'
+import { useCandidateText } from '../utils/candidateText.js'
 import MatchInsights from './MatchInsights.jsx'
 import styles from './CandidateCard.module.css'
 
-/** One Find candidates result: identity, listed facts, availability, collapsible match evidence and actions. */
-export default function CandidateCard({
-  candidate,
-  job,
-  shortlisted,
-  onToggleShortlist,
-  compared,
-  compareDisabled,
-  onToggleCompare,
-}) {
-  const profilePath = `/recruiter/find-candidates/${candidate.id}`
+/**
+ * One Find candidates or Shortlists result (A: recruiter B2): photo, listed facts, availability, verification,
+ * right to work in the picker country, languages, match evidence and actions. `extra` adds a line (shortlist date).
+ */
+export default function CandidateCard({ candidate, hasJob, jobId, onToggleShortlist, compared, compareDisabled, onToggleCompare, extra }) {
+  const { t } = useTranslation()
+  const { country } = usePreferences()
+  const text = useCandidateText()
+  const profilePath = `/recruiter/find-candidates/${candidate.id}${jobId ? `?jobId=${jobId}` : ''}`
+  const rightToWork = country && country !== 'REMOTE' ? text.rightToWork(candidate, country) : null
 
   return (
-    <article className={styles.card}>
+    <article className={styles.card} data-candidate={candidate.id}>
       <div className={styles.top}>
         <Link to={profilePath} tabIndex={-1} aria-hidden="true">
-          <CandidateAvatar candidate={candidate} />
+          <Avatar name={candidate.fullName} src={candidate.photoUrl ?? undefined} size={48} />
         </Link>
         <IconButton
           icon={Bookmark}
           iconSize={17}
-          label={shortlisted ? `Remove ${candidate.name} from shortlist` : `Add ${candidate.name} to shortlist`}
-          aria-pressed={shortlisted}
-          className={cx(styles.bookmark, shortlisted && styles.bookmarkActive)}
+          label={t(candidate.shortlisted ? 'discovery:card.unshortlist' : 'discovery:card.shortlist', { name: candidate.fullName })}
+          aria-pressed={candidate.shortlisted}
+          className={cx(styles.bookmark, candidate.shortlisted && styles.bookmarkActive)}
           onClick={onToggleShortlist}
         />
       </div>
 
       <h2 className={styles.name}>
-        <Link to={profilePath}>{candidate.name}</Link>
+        <Link to={profilePath}>{candidate.fullName}</Link>
       </h2>
       <p className={styles.headline}>{candidate.headline}</p>
 
       <p className={styles.meta}>
-        <span>{candidate.experienceYears} years experience</span>
-        <span className={styles.metaItem}>
-          <Icon as={Earth} size={11} strokeWidth={2} />
-          {candidate.workMode}
-        </span>
+        <span>{t('discovery:card.years', { count: candidate.yearsExperience })}</span>
+        {candidate.workPreference && (
+          <span className={styles.metaItem}>
+            <Icon as={Earth} size={11} strokeWidth={2} />
+            {t(`enums:workPreference.${candidate.workPreference}`)}
+          </span>
+        )}
         <span className={styles.metaItem}>
           <Icon as={MapPin} size={11} strokeWidth={2} />
-          {candidate.location}
+          {text.location(candidate)}
         </span>
       </p>
 
-      <ul className={styles.skills} aria-label="Listed skills">
+      <ul className={styles.skills} aria-label={t('discovery:card.skills')}>
         {candidate.skills.slice(0, 3).map((skill) => (
           <li key={skill}>
             <PillBadge>{skill}</PillBadge>
@@ -62,12 +65,16 @@ export default function CandidateCard({
 
       <p className={styles.status}>
         <span className={styles.dot} aria-hidden="true" />
-        {candidate.availability}
-        <span className={styles.ready}>{candidate.profileStatus}</span>
+        {t(`enums:availability.${candidate.availability}`)}
+        <span className={styles.ready}>
+          <Icon as={ShieldCheck} size={11} strokeWidth={2} /> {text.verification(candidate)}
+        </span>
       </p>
+      {(rightToWork || candidate.languages.length > 0) && <p className={styles.facts}>{[rightToWork, text.languages(candidate, 2)].filter(Boolean).join(' · ')}</p>}
+      {extra && <p className={styles.facts}>{extra}</p>}
 
       <div className={styles.insights}>
-        <MatchInsights candidate={candidate} job={job} />
+        <MatchInsights candidate={candidate} hasJob={hasJob} />
       </div>
 
       <div className={styles.footer}>
@@ -76,12 +83,12 @@ export default function CandidateCard({
           checked={compared}
           disabled={compareDisabled && !compared}
           onChange={onToggleCompare}
-          aria-label={`Compare ${candidate.name}`}
+          aria-label={t('discovery:compare.toggle', { name: candidate.fullName })}
         >
-          Compare
+          {t('discovery:compare.label')}
         </Checkbox>
         <Link to={profilePath} className={styles.view}>
-          View profile
+          {t('discovery:card.view')}
           <Icon as={ArrowUpRight} size={12} strokeWidth={2} />
         </Link>
       </div>

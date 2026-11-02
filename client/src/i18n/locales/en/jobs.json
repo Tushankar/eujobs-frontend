@@ -1,0 +1,193 @@
+{
+  "page": {
+    "title": "The right brief. The right people.",
+    "description": "Create, manage, and refine the roles that will shape your team.",
+    "create": "Create a job",
+    "filterLabel": "Filter jobs by status",
+    "all": "All jobs",
+    "search": "Search your roles",
+    "caption": "Your roles",
+    "emptyFiltered": "No roles match your filters",
+    "emptyFilteredText": "Try another status or a different search.",
+    "empty": "No jobs yet",
+    "emptyText": "You have not created a job yet.",
+    "clearFilters": "Clear filters"
+  },
+  "table": {
+    "role": "Role",
+    "workPreference": "Work preference",
+    "candidates": "Candidates",
+    "status": "Status",
+    "actions": "Actions",
+    "relevant_one": "{{count}} relevant",
+    "relevant_other": "{{count}} relevant",
+    "manage": "Manage {{title}}",
+    "view": "View {{title}}",
+    "edit": "Edit job",
+    "viewCandidates": "View candidates",
+    "delete": "Delete draft",
+    "restricted": "Restricted",
+    "statusActions": {
+      "paused": "Pause job",
+      "closed": "Close job",
+      "published": "Publish job",
+      "resume": "Resume publishing",
+      "reopen": "Reopen job"
+    },
+    "closeTitle": "Close this job?",
+    "closeText": "{{title}} will stop accepting new candidates. You can reopen it at any time.",
+    "deleteTitle": "Delete this draft?",
+    "deleteText": "{{title}} will be removed. Only drafts can be deleted; published roles are closed instead.",
+    "locked": "This job is restricted by moderation and cannot be published until the restriction is lifted."
+  },
+  "steps": {
+    "basics": "Basic information",
+    "responsibilities": "Responsibilities",
+    "required-skills": "Required skills",
+    "preferred-skills": "Preferred skills",
+    "experience": "Experience & languages",
+    "location": "Location & work",
+    "quality": "Quality checks",
+    "review": "Review",
+    "publish": "Publish"
+  },
+  "wizard": {
+    "newEyebrow": "Build your next team",
+    "newTitle": "Great hiring starts with clarity.",
+    "editEyebrow": "Refine your role",
+    "editTitle": "Make the brief even clearer.",
+    "description": "Turn your role into structured requirements. You set the direction.",
+    "stepCount": "Step {{current}} of {{total}}",
+    "cancel": "Cancel",
+    "back": "Back",
+    "continue": "Continue",
+    "saveDraft": "Save as draft",
+    "publish": "Publish job",
+    "saveChanges": "Save changes",
+    "newNote": "Your draft is saved to your Jobs list after the first step, and again at every step.",
+    "draftNote": "This draft is saved at every step. Find it under Draft in your jobs.",
+    "liveNote": "Changes to a live role are saved when you finish and show to candidates straight away."
+  },
+  "fields": {
+    "title": "Job title",
+    "titlePlaceholder": "e.g. Senior Product Designer",
+    "company": "Company",
+    "companyHint": "Your company's display name, from the Company page.",
+    "employmentType": "Employment type",
+    "brief": "The brief",
+    "briefHint": "A few sentences on the team, the impact of the role and what success looks like.",
+    "responsibilities": "Responsibilities",
+    "responsibilitiesHint": "One responsibility per line, up to {{max}}. Optional, but three or more help matching.",
+    "requiredSkills": "Required skills",
+    "requiredSkillsHint": "Skills candidates must list on their profile to be considered relevant.",
+    "preferredSkills": "Preferred skills",
+    "preferredSkillsHint": "Nice to have. These never exclude a candidate. Optional.",
+    "level": "Seniority level",
+    "levelPlaceholder": "Choose a level",
+    "experienceYears": "Minimum years of experience",
+    "experiencePlaceholder": "e.g. 5",
+    "languages": "Required languages",
+    "languagesHint": "Optional. Candidates see the minimum level for each language.",
+    "language": "Language",
+    "minLevel": "Minimum level",
+    "addLanguage": "Add a language",
+    "removeLanguage": "Remove {{language}}",
+    "workPreference": "Work preference",
+    "workPreferencePlaceholder": "Choose a work preference",
+    "city": "Job city",
+    "cityHint": "The city sets the job's country and its salary currency.",
+    "remoteCountries": "Eligible countries",
+    "remoteCountriesHint": "Optional. Leave empty to accept candidates anywhere in the EU and the UK.",
+    "addCountry": "Add a country",
+    "removeCountry": "Remove {{country}}",
+    "salaryMin": "Minimum salary ({{currency}})",
+    "salaryMax": "Maximum salary ({{currency}})",
+    "salaryNoCurrency": "Salary",
+    "salaryNeedsPlace": "Choose the work preference and city first: they set the currency.",
+    "salaryPeriod": "Paid",
+    "salaryNote": "Salary is optional, but roles with a range usually attract more relevant applicants.",
+    "visaSponsorship": "Visa sponsorship available"
+  },
+  "skills": {
+    "placeholder": "Type a skill and press Enter",
+    "add": "Add",
+    "added": "{{label}} added",
+    "remove": "Remove {{skill}}",
+    "duplicate": "{{skill}} is already in the list.",
+    "inOther": "{{skill}} is already in the other skills list.",
+    "suggestions": "Suggestions"
+  },
+  "quality": {
+    "intro": "These checks run the same rules on the server for every job. They never rank or reject candidates.",
+    "title_words": {
+      "ok": "The title is specific enough for candidates to search by role and level.",
+      "warn": "The title is short. Candidates search by role and level, so add both."
+    },
+    "brief_length": {
+      "ok": "The brief gives enough context about the role.",
+      "warn": "The brief is under {{min}} characters. A few more sentences on the team and the impact help matching."
+    },
+    "responsibilities": {
+      "ok": "{{count}} responsibilities are listed.",
+      "warn": "Fewer than {{min}} responsibilities are listed. Add the main outcomes of the role."
+    },
+    "required_skills": {
+      "ok": "{{count}} required skills are listed, a good range for matching.",
+      "warn": "{{count}} required skills are listed. {{min}} to {{max}} gives matching enough to work with."
+    },
+    "salary_range": {
+      "ok": "A full salary range is visible to candidates.",
+      "warn": "No full salary range is shown. Roles with a range usually attract more relevant applicants."
+    }
+  },
+  "review": {
+    "untitled": "Untitled role",
+    "chooseStatus": "Save this role as a draft to finish it later, or publish it to list it with your open roles.",
+    "ready": "Everything is ready. Saving updates this role straight away.",
+    "role": "Role",
+    "where": "Where",
+    "requiredSkills": "Required skills",
+    "salary": "Salary",
+    "notSet": "Not set",
+    "none": "None",
+    "notShown": "Not shown"
+  },
+  "posting": {
+    "noBrief": "No brief has been added yet. Use Edit role to add one.",
+    "responsibilities": "Responsibilities",
+    "requiredSkills": "Required skills",
+    "preferredSkills": "Preferred skills",
+    "languages": "Languages",
+    "languageLevel": "{{language}} · {{level}} or above",
+    "eligible": "Eligible in {{countries}}",
+    "visa": "Visa sponsorship available"
+  },
+  "details": {
+    "back": "Back to jobs",
+    "dismiss": "Dismiss message",
+    "edit": "Edit role",
+    "brief": "The brief",
+    "activity": "Role activity",
+    "relevant_one": "{{count}} profile with relevant listed skills",
+    "relevant_other": "{{count}} profiles with relevant listed skills",
+    "discover": "Discover candidates",
+    "applications": "Review applications",
+    "tip": "A clear brief makes matching more useful. Review requirements regularly and keep mandatory criteria role-relevant.",
+    "talent": "Discover relevant talent",
+    "talentEmpty": "No profiles with relevant listed skills yet. Suggestions appear here as candidates update their profiles.",
+    "openTalent": "Open {{name}} in Find candidates",
+    "restricted": "Restricted by moderation: {{reason}}",
+    "years_one": "{{count}} year of experience",
+    "years_other": "{{count}} years of experience"
+  },
+  "notices": {
+    "published": "Job published. It now appears in your open roles.",
+    "draft": "Draft saved. Find it under Draft in your jobs.",
+    "saved": "Changes saved. Candidates see them straight away."
+  },
+  "notFound": {
+    "title": "We couldn’t find that job",
+    "text": "It may have been removed, or the link may be incorrect. Your other jobs are still in the Jobs list.",
+    "back": "Back to jobs"
+  }
+}

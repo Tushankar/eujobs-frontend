@@ -68,3 +68,11 @@
     flex-wrap: wrap;
   }
 }
+
+/* Which population the picker country shows (M-055) */
+.view {
+  margin-top: 8px;
+  font-size: 12px;
+  line-height: 18px;
+  color: var(--muted-foreground);
+}
