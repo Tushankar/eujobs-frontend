@@ -1,8 +1,8 @@
 import { clickText, pageApi, signInWithForm } from '../lib/flows.js'
 
 /**
- * P4-11 (M-050, M-052, M-053 with U8): job cards show the skill-overlap label and never a percentage; For you lists
- * jobs sharing at least one required skill, by overlap and then recency.
+ * P4-11 (M-050, M-052, M-053 with U8): a Free candidate's (Alex's) job cards show the skill-overlap label and never a
+ * percentage (Plus candidates see scores since Phase 9); For you lists jobs sharing at least one required skill, by overlap and then recency.
  */
 export default {
   name: 'P4-11 Free label',
@@ -10,7 +10,7 @@ export default {
   async run(ctx) {
     const handle = await ctx.newPage()
     const { page } = handle
-    await signInWithForm(page, ctx.webUrl, '/sign-in', ctx.seedCredentials.email('emma'), ctx.seedCredentials.password)
+    await signInWithForm(page, ctx.webUrl, '/sign-in', ctx.seedCredentials.email('alex'), ctx.seedCredentials.password)
     await page.goto(`${ctx.webUrl}/candidate/jobs`, { waitUntil: 'networkidle0' })
     await page.waitForSelector('article[data-job]')
     const cards = await page.$$eval('article[data-job]', (items) => items.map((item) => item.innerText))
@@ -21,7 +21,7 @@ export default {
     const recommended = (await pageApi(page, '/jobs/recommended')).body.items
     const profile = (await pageApi(page, '/candidate/profile')).body
     const skills = new Set(profile.skills.map((skill) => skill.toLocaleLowerCase()))
-    ctx.check(recommended.length > 0, 'Emma has recommendations')
+    ctx.check(recommended.length > 0, 'Alex has recommendations')
     ctx.check(
       recommended.every((job) => job.requiredSkills.some((skill) => skills.has(skill.toLocaleLowerCase()))),
       'every For you job shares a required skill',
