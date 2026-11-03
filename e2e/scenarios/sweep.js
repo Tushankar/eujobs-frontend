@@ -47,6 +47,7 @@ export default {
     const [acme] = await db('companies', 'find', { filter: { displayName: 'Acme Studio' } })
     const [job] = await db('jobs', 'find', { filter: { companyId: acme._id, title: 'Product Designer, Growth' } })
     const [emma] = await db('users', 'find', { filter: { email: ctx.seedCredentials.email('emma') } })
+    const [sarah] = await db('users', 'find', { filter: { email: ctx.seedCredentials.email('sarah') } })
     const [thread] = await db('conversations', 'find', { filter: { companyId: acme._id, candidateId: emma._id } })
     const course = async (title) => (await db('courses', 'find', { filter: { title } }))[0]
     const candidateCourse = await course('Interaction design foundations')
@@ -55,6 +56,7 @@ export default {
     const ids = {
       job: id(job),
       emma: id(emma),
+      sarah: id(sarah),
       thread: id(thread),
       candidateCourse: id(candidateCourse),
       candidateLesson: id(candidateCourse.lessons[0]),
