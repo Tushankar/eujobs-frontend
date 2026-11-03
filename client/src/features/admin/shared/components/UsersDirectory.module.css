@@ -57,3 +57,10 @@
     flex-basis: 100%;
   }
 }
+
+.error {
+  padding-top: 12px;
+  font-size: 12px;
+  line-height: 16px;
+  color: var(--destructive);
+}

@@ -13,9 +13,9 @@ const brandName = (brand) => brand.charAt(0).toUpperCase() + brand.slice(1)
 
 /**
  * Payment rows of every role's billing view (M-122): amounts in each row's own currency (M-130), the Stripe receipt
- * or hosted-invoice link (C12). `showPayer` adds the payer column (admin); `onView(payment)` adds a Details button.
+ * or hosted-invoice link (C12). `showPayer` adds the payer column and `showSource` the seeded badge (admin); `onView(payment)` adds a Details button.
  */
-export default function PaymentsTable({ payments, showPayer = false, onView }) {
+export default function PaymentsTable({ payments, showPayer = false, showSource = false, onView }) {
   const { t } = useTranslation('billing')
   const format = useFormat()
   const method = ({ method: used }) => {
@@ -24,7 +24,14 @@ export default function PaymentsTable({ payments, showPayer = false, onView }) {
     return t(`methods.${used.type === 'link' ? 'link' : 'other'}`)
   }
   const columns = [
-    { key: 'reference', header: t('table.reference'), render: (payment) => <span className={styles.reference}>{payment.reference}</span> },
+    { key: 'reference', header: t('table.reference'), render: (payment) => (
+        <>
+          <span className={styles.reference}>{payment.reference}</span>
+          {/* P10-Q5: seeded rows are marked on the admin page. */}
+          {showSource && payment.source === 'seed' && <PillBadge data-payment-source="seed">{t('enums:paymentSource.seed')}</PillBadge>}
+        </>
+      ),
+    },
     ...(showPayer
       ? [
           {

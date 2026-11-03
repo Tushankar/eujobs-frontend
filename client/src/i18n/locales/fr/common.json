@@ -25,5 +25,12 @@
     "tooLarge": "{{name}} dépasse {{size}}.",
     "empty": "{{name}} est vide. Choisissez un autre fichier."
   },
-  "companyLogo": "Logo de {{name}}"
+  "companyLogo": "Logo de {{name}}",
+  "pagination": {
+    "label": "Pages",
+    "range": "{{from}}–{{to}} sur {{total}}",
+    "previous": "Précédent",
+    "next": "Suivant",
+    "page": "Page {{page}} sur {{pages}}"
+  }
 }

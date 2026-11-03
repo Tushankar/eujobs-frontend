@@ -34,3 +34,10 @@
   line-height: 16px;
   color: var(--muted-foreground);
 }
+
+.problem {
+  padding-top: 16px;
+  font-size: 12px;
+  line-height: 16px;
+  color: var(--destructive);
+}

@@ -1,57 +1,93 @@
 import { useState } from 'react'
-import { useLocation, useNavigate } from 'react-router-dom'
+import { useTranslation } from 'react-i18next'
+import { useLocation, useNavigate, useParams } from 'react-router-dom'
 import { Settings2, ShieldCheck, Users } from 'lucide-react'
+import { errorCode } from '@/app/api.js'
+import { can } from '@/app/permissions.js'
+import { WORKSPACES, workspacePath } from '@/app/workspaces.js'
+import ConfirmDialog from '@/components/common/ConfirmDialog.jsx'
 import EmptyState from '@/components/common/EmptyState.jsx'
 import NoticeBanner from '@/components/common/NoticeBanner.jsx'
 import StatCard from '@/components/common/StatCard.jsx'
-import { WORKSPACES, workspacePath } from '@/app/workspaces.js'
+import { useErrorText } from '@/lib/forms.js'
+import { usePreferences } from '@/lib/preferences.js'
+import { useArchiveRoleMutation, useDuplicateRoleMutation, useGetRolesQuery } from '../api.js'
 import AccessToolbar from '../components/AccessToolbar.jsx'
 import CreateRoleModal from '../components/CreateRoleModal.jsx'
 import RoleCard from '../components/RoleCard.jsx'
-import { useAccess } from '../hooks/useAccess.js'
 import styles from './RolesPage.module.css'
 
 const admin = (to) => workspacePath(WORKSPACES.admin, to)
 
 /**
- * Roles tab (/admin/access-management). "Create custom role" is a dialog over this page
- * and has its own URL (/admin/access-management/roles/new).
+ * Roles tab (/admin/access-management), from the server (M-157, M-158). "Create custom role" (/roles/new) and the
+ * prefilled edit dialog (/roles/:roleId/edit) open over this page. Each action shows only with its permission.
  */
 export default function RolesPage() {
-  const { roles, users, addRole, duplicateRole } = useAccess()
+  const { t } = useTranslation('access')
+  const errorText = useErrorText()
+  const { me } = usePreferences()
   const navigate = useNavigate()
-  const creating = useLocation().pathname.endsWith('/roles/new')
+  const { pathname, state } = useLocation()
+  const { roleId } = useParams()
+  const { data: roles = [] } = useGetRolesQuery()
+  const [duplicateRole] = useDuplicateRoleMutation()
+  const [archiveRole] = useArchiveRoleMutation()
   const [query, setQuery] = useState('')
-  const [notice, setNotice] = useState('')
+  const [archiving, setArchiving] = useState(null)
+  const [problem, setProblem] = useState('')
+  const notice = state?.notice
 
+  const creating = pathname.endsWith('/roles/new') && can(me, 'roles.create')
+  const editing = roleId && can(me, 'roles.edit') ? roles.find((role) => role.id === roleId) : null
   const needle = query.trim().toLowerCase()
-  const visibleRoles = roles.filter((role) =>
-    [role.name, role.description, role.scope].some((text) => text.toLowerCase().includes(needle)),
-  )
-  const customCount = roles.filter((role) => !role.system).length
-  const assignedCount = users.filter((user) => user.role).length
+  const visibleRoles = roles.filter((role) => [role.name, role.description].some((text) => text.toLowerCase().includes(needle)))
+  const active = roles.filter((role) => role.status === 'active')
 
-  function handleCreate(values) {
-    const role = addRole(values)
-    setNotice(`Custom role "${role.name}" created. It is saved on this device.`)
-    navigate(admin('access-management'))
+  const showNotice = (message) => navigate(admin('access-management'), { replace: true, state: { notice: message } })
+
+  async function handleDuplicate(role) {
+    setProblem('')
+    try {
+      const copy = await duplicateRole(role.id).unwrap()
+      showNotice(t('role.duplicated', { source: role.name, name: copy.name }))
+    } catch (error) {
+      setProblem(errorText.code(error))
+    }
   }
 
-  function handleDuplicate(role) {
-    const copy = duplicateRole(role)
-    setNotice(`Duplicated "${role.name}" as "${copy.name}".`)
+  async function handleArchive() {
+    const role = archiving
+    setArchiving(null)
+    setProblem('')
+    try {
+      await archiveRole(role.id).unwrap()
+      showNotice(t('role.archived', { name: role.name }))
+    } catch (error) {
+      setProblem(errorCode(error) === 'IN_USE' ? t('role.inUse', { count: error.data.error.params.count }) : errorText.code(error))
+    }
   }
 
   return (
     <>
-      <AccessToolbar active="roles" searchLabel="Search roles" query={query} onQueryChange={setQuery} />
+      <AccessToolbar active="roles" searchLabel={t('searchRoles')} query={query} onQueryChange={setQuery} />
 
       {notice && <NoticeBanner>{notice}</NoticeBanner>}
+      {problem && (
+        <p className={styles.problem} role="alert">
+          {problem}
+        </p>
+      )}
 
       <div className={styles.stats}>
-        <StatCard label="Active roles" value={roles.length} caption="System templates and custom roles" icon={ShieldCheck} />
-        <StatCard label="Custom roles" value={customCount} caption="Reusable roles created by admins" icon={Settings2} />
-        <StatCard label="Assigned users" value={assignedCount} caption="Users with configured frontend access" icon={Users} />
+        <StatCard label={t('stats.activeRoles')} value={active.length} caption={t('stats.activeRolesCaption')} icon={ShieldCheck} />
+        <StatCard label={t('stats.customRoles')} value={active.filter((role) => !role.system).length} caption={t('stats.customRolesCaption')} icon={Settings2} />
+        <StatCard
+          label={t('stats.assignedUsers')}
+          value={roles.reduce((total, role) => total + role.assignedCount, 0)}
+          caption={t('stats.assignedUsersCaption')}
+          icon={Users}
+        />
       </div>
 
       <div className={styles.roles}>
@@ -62,22 +98,36 @@ export default function RolesPage() {
                 key={role.id}
                 role={role}
                 manageUsersTo={admin('access-management/users')}
-                onDuplicate={() => handleDuplicate(role)}
+                actions={{
+                  onDuplicate: can(me, 'roles.create') ? () => handleDuplicate(role) : null,
+                  onEdit: can(me, 'roles.edit') ? () => navigate(admin(`access-management/roles/${role.id}/edit`)) : null,
+                  onArchive: can(me, 'roles.archive') ? () => setArchiving(role) : null,
+                }}
               />
             ))}
           </div>
         ) : (
-          <EmptyState icon={ShieldCheck} title="No roles match your search" description="Try a different name or clear the search box." />
+          <EmptyState icon={ShieldCheck} title={t('role.noRoles')} description={t('role.noRolesText')} />
         )}
       </div>
 
-      {creating && (
+      {(creating || editing) && (
         <CreateRoleModal
-          existingNames={roles.map((role) => role.name)}
+          key={editing?.id ?? 'new'}
+          role={editing}
           onClose={() => navigate(admin('access-management'))}
-          onCreate={handleCreate}
+          onSaved={(saved) => showNotice(t(editing ? 'role.updated' : 'role.created', { name: saved.name }))}
         />
       )}
+      <ConfirmDialog
+        open={archiving !== null}
+        title={t('role.archiveTitle', { name: archiving?.name })}
+        description={t('role.archiveText')}
+        confirmLabel={t('role.archive')}
+        tone="danger"
+        onClose={() => setArchiving(null)}
+        onConfirm={handleArchive}
+      />
     </>
   )
 }

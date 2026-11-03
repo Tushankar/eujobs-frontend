@@ -52,7 +52,8 @@
     "forgotPassword": "Contraseña olvidada",
     "resetPassword": "Restablecer contraseña",
     "emailCode": "Verifica tu correo de trabajo",
-    "checkoutReturn": "Pago"
+    "checkoutReturn": "Pago",
+    "setPassword": "Crea tu contraseña"
   },
   "workspaces": {
     "candidate": {
@@ -122,5 +123,10 @@
   "profileMenu": {
     "open": "Abrir el menú de perfil",
     "profile": "Perfil"
+  },
+  "forbidden": {
+    "title": "No tienes acceso a esta página",
+    "text": "Esta página necesita el permiso «{{permission}}». Pide a un administrador que pueda asignar roles que te lo añada.",
+    "home": "Ir a mi espacio de trabajo"
   }
 }

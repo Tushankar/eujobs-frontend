@@ -1,3 +1,4 @@
+import { useTranslation } from 'react-i18next'
 import { useNavigate } from 'react-router-dom'
 import { ShieldCheck, Users } from 'lucide-react'
 import ViewToggle from '@/components/common/ViewToggle.jsx'
@@ -6,8 +7,8 @@ import { WORKSPACES, workspacePath } from '@/app/workspaces.js'
 import styles from './AccessToolbar.module.css'
 
 const TABS = [
-  { id: 'roles', label: 'Roles', icon: ShieldCheck },
-  { id: 'users', label: 'User access', icon: Users },
+  { id: 'roles', icon: ShieldCheck },
+  { id: 'users', icon: Users },
 ]
 
 const PATHS = { roles: 'access-management', users: 'access-management/users' }
@@ -17,13 +18,14 @@ const PATHS = { roles: 'access-management', users: 'access-management/users' }
  * magnifier (it is hidden behind the input), so the box has none; the text sits 20px (Roles) / 40px (User access) in.
  */
 export default function AccessToolbar({ active, searchLabel, query, onQueryChange }) {
+  const { t } = useTranslation('access')
   const navigate = useNavigate()
 
   return (
     <div className={styles.toolbar}>
       <ViewToggle
-        label="Access management view"
-        items={TABS}
+        label={t('tabs.label')}
+        items={TABS.map((tab) => ({ ...tab, label: t(`tabs.${tab.id}`) }))}
         value={active}
         onChange={(next) => navigate(workspacePath(WORKSPACES.admin, PATHS[next]))}
       />

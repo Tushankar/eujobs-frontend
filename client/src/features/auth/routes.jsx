@@ -39,6 +39,8 @@ export default [
   { path: '/verify-email', lazy: lazyPage(() => import('./pages/VerifyEmailPage.jsx')), handle: { titleKey: 'titles.verifyEmail' } },
   { path: '/forgot-password', lazy: lazyPage(() => import('./pages/ForgotPasswordPage.jsx')), handle: { titleKey: 'titles.forgotPassword' } },
   { path: '/reset-password', lazy: lazyPage(() => import('./pages/ResetPasswordPage.jsx')), handle: { titleKey: 'titles.resetPassword' } },
+  // U21: the admin invite link; before the admin workspace's catch-all.
+  { path: '/admin/set-password', lazy: lazyPage(() => import('./pages/SetPasswordPage.jsx')), handle: { titleKey: 'titles.setPassword' } },
   {
     path: '/recruiter/onboarding/email-code',
     loader: onboardingLoader,

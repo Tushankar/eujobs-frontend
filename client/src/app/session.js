@@ -1,6 +1,7 @@
 import i18n from '@/i18n/index.js'
 import { api, setAuthRequiredHandler } from './api.js'
 import { navigateTo } from './navigation.js'
+import { adminHome } from './permissions.js'
 import { signedIn, signedOut, store } from './store.js'
 import { clearToken, getToken, setToken, TOKEN_KEY } from './token.js'
 
@@ -38,7 +39,9 @@ export function landingPath(me, next) {
   const required = requiredPage(me)
   if (required) return required.path
   const target = safeNext(next)
-  return target?.startsWith(WORKSPACE_PATH[me.role]) ? target : WORKSPACE_PATH[me.role]
+  // M-155: an admin without the Overview lands on the first page their permissions open.
+  const home = me.role === 'admin' ? adminHome(me) : WORKSPACE_PATH[me.role]
+  return target?.startsWith(WORKSPACE_PATH[me.role]) ? target : home
 }
 
 /** GET /me for the stored token (cached by RTK Query), switching the UI to the account's language. */

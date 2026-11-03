@@ -4,6 +4,7 @@ import { Link, NavLink, useNavigate } from 'react-router-dom'
 import { ArrowRight, ArrowUpRight, CircleHelp, LogOut, Settings2 } from 'lucide-react'
 import { cx } from '@/utils/cx.js'
 import { Avatar, Icon, IconButton } from '@/components/ui'
+import { can } from '@/app/permissions.js'
 import { workspacePath } from '@/app/workspaces.js'
 import { signOut } from '@/app/session.js'
 import { openUpgrade } from '@/app/upgrade.js'
@@ -121,7 +122,7 @@ export default function Sidebar({ workspace, open, onClose }) {
         <div className={styles.navArea}>
           <p className={styles.sectionLabel}>{t('shell:sidebar.section')}</p>
           <nav className={cx(styles.nav, 'stagger')} aria-label={t('shell:sidebar.section')}>
-            {workspace.nav.map((item) => (
+            {workspace.nav.filter((item) => can(me, item.permission)).map((item) => (
               <NavItem key={item.to} workspace={workspace} item={item} me={me} />
             ))}
           </nav>

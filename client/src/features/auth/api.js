@@ -27,6 +27,9 @@ export const authApi = api.injectEndpoints({
     resendEmailCode: build.mutation({ query: () => ({ url: '/auth/email-code/resend', method: 'POST' }) }),
     forgotPassword: build.mutation({ query: (email) => post('/auth/forgot-password')({ email }) }),
     resetPassword: build.mutation({ query: post('/auth/reset-password') }),
+    // U21: an admin invite link (/admin/set-password)
+    getInvite: build.query({ query: (token) => `/auth/invite/${encodeURIComponent(token)}` }),
+    acceptInvite: build.mutation({ query: post('/auth/invite/accept') }),
     getOnboarding: build.query({ query: () => '/recruiter/onboarding', providesTags: ['Onboarding'] }),
     updateOnboardingAccount: build.mutation({ query: (body) => ({ url: '/recruiter/onboarding/account', method: 'PUT', body }), ...writesOnboarding(['Me']) }),
     // The company country becomes the header country (and the language unless chosen), so /me is refreshed by the page.
@@ -51,6 +54,8 @@ export const {
   useResendEmailCodeMutation,
   useForgotPasswordMutation,
   useResetPasswordMutation,
+  useGetInviteQuery,
+  useAcceptInviteMutation,
   useGetOnboardingQuery,
   useUpdateOnboardingAccountMutation,
   useSaveOnboardingCompanyMutation,

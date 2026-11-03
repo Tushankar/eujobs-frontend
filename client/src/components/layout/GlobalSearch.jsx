@@ -3,6 +3,7 @@ import { useTranslation } from 'react-i18next'
 import { useNavigate } from 'react-router-dom'
 import { CircleHelp, Search, Settings2 } from 'lucide-react'
 import { Icon, Modal } from '@/components/ui'
+import { can } from '@/app/permissions.js'
 import { workspacePath } from '@/app/workspaces.js'
 import PlanChip from '@/features/candidate/billing/components/PlanChip.jsx'
 import { lacksEntitlement } from '@/features/candidate/billing/usePlan.js'
@@ -19,7 +20,7 @@ export default function GlobalSearch({ workspace, open, onClose }) {
 
   const destinations = useMemo(
     () => [
-      ...workspace.nav.map((item) => ({
+      ...workspace.nav.filter((item) => can(me, item.permission)).map((item) => ({
         label: t(`shell:nav.${item.key}`),
         to: workspacePath(workspace, item.to),
         icon: item.icon,

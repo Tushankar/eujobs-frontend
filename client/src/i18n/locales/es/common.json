@@ -25,5 +25,12 @@
     "tooLarge": "{{name}} pesa más de {{size}}.",
     "empty": "{{name}} está vacío. Elige otro archivo."
   },
-  "companyLogo": "Logotipo de {{name}}"
+  "companyLogo": "Logotipo de {{name}}",
+  "pagination": {
+    "label": "Páginas",
+    "range": "{{from}}–{{to}} de {{total}}",
+    "previous": "Anterior",
+    "next": "Siguiente",
+    "page": "Página {{page}} de {{pages}}"
+  }
 }

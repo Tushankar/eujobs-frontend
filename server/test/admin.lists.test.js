@@ -2,7 +2,7 @@ import assert from 'node:assert/strict'
 import { before, describe, it } from 'node:test'
 import { signedUrl } from '../lib/files.js'
 import { AdminRole, AuditEvent } from '../modules/admin/admin.model.js'
-import { Application } from '../modules/applications/applications.model.js'
+import { Application, PipelineStage } from '../modules/applications/applications.model.js'
 import { CandidateProfile } from '../modules/candidates/candidates.model.js'
 import { Company } from '../modules/companies/companies.model.js'
 import { File } from '../modules/files/files.model.js'
@@ -89,7 +89,7 @@ describe('admin Candidates and Recruiters (M-161, M-169, M-206)', () => {
     assert.equal(res.status, 200)
     assert.match(res.headers['content-type'], /^text\/csv; charset=utf-8/)
     assert.match(res.headers['content-disposition'], /candidates-\d{4}-\d{2}-\d{2}\.csv/)
-    assert.ok(res.text.startsWith('﻿Nombre,Correo electrónico,Alta,Estado,País,Permiso de trabajo,Verificación'))
+    assert.ok(res.text.startsWith('\uFEFFNombre,Correo electrónico,Alta,Estado,País,Permiso de trabajo,Verificación'))
     const [, row] = res.text.trim().split('\r\n')
     assert.match(row, /^Paula Partial,.*,Activa,GB,Reino Unido,2 de 3 verificadas,100,Free,0,0$/)
     const [event] = await AuditEvent.find({ category: 'reports' })
@@ -101,7 +101,8 @@ describe('admin Candidates and Recruiters (M-161, M-169, M-206)', () => {
     const { verified } = await candidates()
     const { user: recruiter, company } = await approvedRecruiter({ fullName: 'Rae Recruiter' })
     const job = await Job.create({ ...jobBody(), companyId: company._id, createdBy: recruiter._id, status: 'published', country: 'GB', requiredSkills: [], preferredSkills: [] })
-    await Application.create({ candidateId: verified._id, jobId: job._id, companyId: company._id, status: 'applied', appliedAt: new Date() })
+    const stage = await PipelineStage.findOne({ companyId: company._id, isEntry: true })
+    await Application.create({ candidateId: verified._id, jobId: job._id, companyId: company._id, stageId: stage._id, status: 'applied', consentAt: new Date(), appliedAt: new Date() })
     const candidate = (await get(admin, `/admin/users/${verified._id}`)).body
     assert.equal(candidate.role, 'candidate')
     assert.equal(candidate.verification.state, 'verified')
@@ -171,7 +172,7 @@ describe('admin Payments (M-122, M-123, P10-Q5 … Q7)', () => {
     const detail = (await get(admin, `/admin/payments/${failed._id}`)).body
     assert.deepEqual([detail.subscription.status, detail.subscription.paid, detail.failureReason], ['active', true, 'card_declined'])
     const csv = await get(admin, '/admin/payments/export?payer=candidate&status=failed')
-    assert.ok(csv.text.startsWith('﻿Reference,Date,Payer,Payer type,Item,Type,Amount,Currency,Method,Status,Failure reason,Source'))
+    assert.ok(csv.text.startsWith('\uFEFFReference,Date,Payer,Payer type,Item,Type,Amount,Currency,Method,Status,Failure reason,Source'))
     assert.match(csv.text.trim().split('\r\n')[1], /^LWM-T\d+,.*,Lena London,Candidate,Plus,Subscription,9\.00,GBP,,Failed,card_declined,Stripe$/)
     assert.equal((await AuditEvent.findOne({ type: 'reports.payments_exported' })).params.count, 1)
   })
@@ -209,8 +210,9 @@ describe('admin Audit logs (M-162, M-163)', () => {
     assert.deepEqual([(await list('pageSize=2')).items.length, (await list('pageSize=2')).total], [2, 3])
     const csv = await get(admin, '/admin/audit-events/export?category=jobs')
     const lines = csv.text.trim().split('\r\n')
-    assert.equal(lines[0], '﻿Date,Catégorie,Type d’acteur,Acteur,Événement')
-    assert.match(lines[1], /,Offres,Utilisateur,Rae,Statut de l’offre modifié : Designer \(Acme\), Brouillon → Publiée$/)
+    assert.ok(csv.text.startsWith('\uFEFF'))
+    assert.equal(lines[0], 'Date,Catégorie,Type d’acteur,Acteur,Événement')
+    assert.match(lines[1], /,Offres,Utilisateur,Rae,"Statut de l’offre modifié : Designer \(Acme\), Brouillon → Publiée"$/)
     const refund = await get(admin, '/admin/audit-events/export?category=payments')
     assert.match(refund.text, /Paiement remboursé LWM-000009 : Lena, Plus \(9,00\s£GB\)/)
     assert.ok(await AuditEvent.exists({ type: 'reports.audit_exported' }))

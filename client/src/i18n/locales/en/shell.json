@@ -52,7 +52,8 @@
     "forgotPassword": "Forgot password",
     "resetPassword": "Reset password",
     "emailCode": "Verify your work email",
-    "checkoutReturn": "Payment"
+    "checkoutReturn": "Payment",
+    "setPassword": "Set your password"
   },
   "workspaces": {
     "candidate": {
@@ -122,5 +123,10 @@
   "profileMenu": {
     "open": "Open profile menu",
     "profile": "Profile"
+  },
+  "forbidden": {
+    "title": "You don’t have access to this page",
+    "text": "This page needs the “{{permission}}” permission. Ask an admin who can assign roles to add it.",
+    "home": "Go to my workspace"
   }
 }

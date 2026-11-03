@@ -52,7 +52,8 @@
     "forgotPassword": "Mot de passe oublié",
     "resetPassword": "Réinitialiser le mot de passe",
     "emailCode": "Vérifiez votre e-mail professionnel",
-    "checkoutReturn": "Paiement"
+    "checkoutReturn": "Paiement",
+    "setPassword": "Créez votre mot de passe"
   },
   "workspaces": {
     "candidate": {
@@ -122,5 +123,10 @@
   "profileMenu": {
     "open": "Ouvrir le menu du profil",
     "profile": "Profil"
+  },
+  "forbidden": {
+    "title": "Vous n’avez pas accès à cette page",
+    "text": "Cette page nécessite l’autorisation « {{permission}} ». Demandez à un administrateur qui peut attribuer des rôles de l’ajouter.",
+    "home": "Aller à mon espace de travail"
   }
 }

@@ -1,187 +1,215 @@
-import { useMemo, useState } from 'react'
-import { CircleAlert, CircleCheck, Download, Repeat, Search, Wallet } from 'lucide-react'
-import { Button, Icon, Modal, SelectField, TextField } from '@/components/ui'
+import { useState } from 'react'
+import { useTranslation } from 'react-i18next'
+import { useSearchParams } from 'react-router-dom'
+import { CircleAlert, Download, Repeat, Search, TrendingUp, Wallet } from 'lucide-react'
+import { can } from '@/app/permissions.js'
 import EmptyState from '@/components/common/EmptyState.jsx'
 import PageTitle from '@/components/common/PageTitle.jsx'
+import Pagination from '@/components/common/Pagination.jsx'
 import PillBadge from '@/components/common/PillBadge.jsx'
 import StatCard from '@/components/common/StatCard.jsx'
-import { useAuditLog } from '@/features/admin/audit-logs/hooks/useAuditLog.js'
-import { formatDateTime } from '@/features/admin/audit-logs/utils/formatDate.js'
+import { Button, Icon, Modal, SelectField, TextField } from '@/components/ui'
 import PaymentsTable from '@/features/payments/components/PaymentsTable.jsx'
-import { downloadCsv } from '@/utils/downloadCsv.js'
-import { PAYER_ROLE_LABEL, PAYMENT_KIND_LABEL, PAYMENT_STATUS, SAMPLE_PAYMENTS, formatMoney } from '../data/payments.js'
+import { useCountryOptions } from '@/lib/countries.js'
+import { downloadFromApi } from '@/lib/download.js'
+import { useErrorText } from '@/lib/forms.js'
+import { useFormat, usePreferences } from '@/lib/preferences.js'
+import { useGetAdminPaymentQuery, useGetAdminPaymentsQuery, useGetPaymentStatsQuery } from '../api.js'
 import styles from './PaymentsPage.module.css'
 
-const STATUS_OPTIONS = [
-  { value: 'all', label: 'All statuses' },
-  { value: 'paid', label: 'Paid' },
-  { value: 'failed', label: 'Failed' },
-]
-const PAYER_OPTIONS = [
-  { value: 'all', label: 'All payers' },
-  { value: 'candidate', label: 'Candidates' },
-  { value: 'recruiter', label: 'Recruiters' },
-]
-const KIND_OPTIONS = [
-  { value: 'all', label: 'All types' },
-  { value: 'course', label: 'Courses' },
-  { value: 'subscription', label: 'Subscriptions' },
-]
+const STATUS_TONE = { paid: 'success', failed: 'danger', refunded: 'neutral' }
+const MONEY_LINES = 3
+const FILTERS = {
+  status: ['paid', 'failed', 'refunded'],
+  payer: ['candidate', 'recruiter'],
+  kind: ['course', 'subscription'],
+  source: ['stripe', 'seed'],
+}
+const ALL = { status: 'allStatuses', payer: 'allPayers', kind: 'allKinds', source: 'allSources', country: 'allCountries' }
+
+/** U34: one line per currency, largest first, at most 3, then "+n more"; never summed across currencies (C15). */
+function MoneyLines({ totals }) {
+  const { t } = useTranslation('adminPayments')
+  const format = useFormat()
+  if (!totals?.length) return t('stats.none')
+  return (
+    <span className={styles.moneyLines}>
+      {totals.slice(0, MONEY_LINES).map((entry) => (
+        <span key={entry.currency}>{format.money(entry.amountMinor, entry.currency)}</span>
+      ))}
+      {totals.length > MONEY_LINES && <span className={styles.more}>{t('stats.more', { count: totals.length - MONEY_LINES })}</span>}
+    </span>
+  )
+}
+
+/** M-123: the row with the subscription's status and period for a plan payment. */
+function PaymentDetails({ id, onClose }) {
+  const { t } = useTranslation(['adminPayments', 'enums'])
+  const format = useFormat()
+  const { data: payment } = useGetAdminPaymentQuery(id)
+  const subscription = payment?.subscription
+  const rows = payment
+    ? [
+        ['status', <PillBadge key="status" tone={STATUS_TONE[payment.status]}>{t(`enums:paymentStatus.${payment.status}`)}</PillBadge>],
+        ['payer', payment.payerName && `${payment.payerName} · ${t(`enums:role.${payment.payerRole}`)}`],
+        ['payerCountry', payment.payerCountry && format.country(payment.payerCountry)],
+        ['item', `${payment.itemName} · ${t(`enums:paymentKind.${payment.kind}`)}`],
+        ['amount', format.money(payment.amountMinor, payment.currency)],
+        ['method', payment.method?.last4 ? t('details.methodValue', { brand: payment.method.brand, last4: payment.method.last4 }) : payment.method?.type],
+        ['date', format.dateTime(payment.paidAt)],
+        ['invoicePeriod', payment.periodStart && t('details.periodValue', { start: format.date(payment.periodStart), end: format.date(payment.periodEnd) })],
+        ['failureReason', payment.failureReason && t(`failureReason.${payment.failureReason}`, { defaultValue: payment.failureReason })],
+        ['source', t(`enums:paymentSource.${payment.source}`)],
+        ['receipt', payment.receiptUrl && <a key="receipt" href={payment.receiptUrl} target="_blank" rel="noopener noreferrer">{t('details.openReceipt')}</a>],
+        ['subscription', subscription && t(`subscriptionStatus.${subscription.status}`)],
+        ['period', subscription?.currentPeriodStart && t('details.periodValue', { start: format.date(subscription.currentPeriodStart), end: format.date(subscription.currentPeriodEnd) })],
+        ['renewal', subscription && [t(subscription.cancelAtPeriodEnd ? 'details.endsAtPeriodEnd' : 'details.renews'), subscription.retrying && t('details.retrying')].filter(Boolean).join(' · ')],
+      ].filter(([, value]) => value)
+    : []
+  return (
+    <Modal
+      open
+      onClose={onClose}
+      title={payment ? t('details.title', { reference: payment.reference }) : ''}
+      width={480}
+      footer={
+        <Button variant="secondary" onClick={onClose}>
+          {t('details.close')}
+        </Button>
+      }
+    >
+      <dl className={styles.details}>
+        {rows.map(([key, value]) => (
+          <div key={key} className={styles.detail} data-detail={key}>
+            <dt>{t(`details.${key}`)}</dt>
+            <dd>{value}</dd>
+          </div>
+        ))}
+      </dl>
+    </Modal>
+  )
+}
 
 /**
- * Payments: sample payments of candidates and recruiters (P5-Q1, until Phase 10). Search and filters narrow the
- * table; "Export payments" saves the matching rows as a CSV.
+ * Admin › Payments (M-122, M-123, P10-Q5 … Q7): every payment row (Stripe and seeded) of candidates and recruiters,
+ * server-paginated (M-206), with search, status, payer, type, source and payer-country filters; all-time cards that
+ * follow only the country filter; details with the subscription status and period; an audited CSV export.
  */
 export default function PaymentsPage() {
-  const payments = SAMPLE_PAYMENTS
-  const { record } = useAuditLog()
-  const [query, setQuery] = useState('')
-  const [status, setStatus] = useState('all')
-  const [payer, setPayer] = useState('all')
-  const [kind, setKind] = useState('all')
+  const { t } = useTranslation(['adminPayments', 'enums'])
+  const errorText = useErrorText()
+  const { me } = usePreferences()
+  const countries = useCountryOptions().filter((country) => !country.isRemote)
+  const [params, setParams] = useSearchParams()
   const [selected, setSelected] = useState(null)
-  const [exportStatus, setExportStatus] = useState('')
+  const [exporting, setExporting] = useState(false)
+  const [exportError, setExportError] = useState('')
+  const filters = Object.fromEntries(['q', ...Object.keys(FILTERS), 'country'].map((name) => [name, params.get(name) ?? '']))
+  const query = { page: Number(params.get('page')) || 1, ...Object.fromEntries(Object.entries(filters).filter(([, value]) => value)) }
+  const { data, isSuccess } = useGetAdminPaymentsQuery(query, { refetchOnMountOrArgChange: true })
+  const { data: stats } = useGetPaymentStatsQuery(filters.country ? { country: filters.country } : {}, { refetchOnMountOrArgChange: true })
 
-  const paid = payments.filter((payment) => payment.status === 'paid')
-  const collected = paid.reduce((total, payment) => total + payment.amountMinor, 0)
+  function setFilter(name, value) {
+    const next = new URLSearchParams(params)
+    if (value) next.set(name, value)
+    else next.delete(name)
+    if (name !== 'page') next.delete('page')
+    setParams(next, { replace: true })
+  }
 
-  const rows = useMemo(() => {
-    const needle = query.trim().toLowerCase()
-    return payments.filter(
-      (payment) =>
-        (status === 'all' || payment.status === status) &&
-        (payer === 'all' || payment.payerRole === payer) &&
-        (kind === 'all' || payment.kind === kind) &&
-        (!needle || [payment.reference, payment.payerName, payment.itemName].some((text) => text.toLowerCase().includes(needle))),
-    )
-  }, [payments, query, status, payer, kind])
+  async function exportCsv() {
+    setExporting(true)
+    setExportError('')
+    try {
+      await downloadFromApi('/admin/payments/export', { ...query, page: undefined })
+    } catch (error) {
+      setExportError(errorText.code(error))
+    } finally {
+      setExporting(false)
+    }
+  }
 
-  function handleExport() {
-    downloadCsv(
-      [
-        ['Reference', 'Date', 'Payer', 'Role', 'Item', 'Type', 'Amount (GBP)', 'Method', 'Status', 'Failure reason'],
-        ...rows.map((payment) => [
-          payment.reference,
-          payment.paidAt,
-          payment.payerName,
-          PAYER_ROLE_LABEL[payment.payerRole],
-          payment.itemName,
-          PAYMENT_KIND_LABEL[payment.kind],
-          (payment.amountMinor / 100).toFixed(2),
-          `${payment.method.brand} ending ${payment.method.last4}`,
-          PAYMENT_STATUS[payment.status].label,
-          payment.failureReason ?? '',
-        ]),
-      ],
-      'payments.csv',
-    )
-    record({
-      title: 'Payments exported',
-      category: 'Reports',
-      detail: `${rows.length} ${rows.length === 1 ? 'payment was' : 'payments were'} exported as payments.csv in the browser and saved to this device. Nothing was uploaded.`,
-    })
-    setExportStatus('payments.csv was generated in your browser and saved to this device. Nothing was uploaded.')
+  const optionLabel = (name, value) => {
+    if (name === 'status') return t(`enums:paymentStatus.${value}`)
+    if (name === 'source') return t(`enums:paymentSource.${value}`)
+    return t(`filters.${name === 'payer' ? 'payers' : 'kinds'}.${value}`)
   }
 
   return (
     <>
       <PageTitle
-        title="Every payment, in one place."
-        description="Track what candidates and recruiters pay for, and see which attempts did not go through."
+        title={t('title')}
+        description={t('description')}
         actions={
-          <Button variant="outline" leftIcon={<Icon as={Download} size={13} />} onClick={handleExport} disabled={rows.length === 0}>
-            Export payments
-          </Button>
+          can(me, 'reports.export') && (
+            <Button variant="outline" leftIcon={<Icon as={Download} size={13} />} onClick={exportCsv} loading={exporting} disabled={!data?.total}>
+              {t('export')}
+            </Button>
+          )
         }
       />
-      <div role="status">{exportStatus && <p className={styles.status}>{exportStatus}</p>}</div>
+      {exportError && (
+        <p className={styles.error} role="alert">
+          {exportError}
+        </p>
+      )}
 
       <div className={styles.stats}>
-        <StatCard label="Collected" value={formatMoney(collected)} caption="From paid payments, in GBP" icon={Wallet} />
-        <StatCard label="Successful payments" value={paid.length} caption="Courses and subscriptions" icon={CircleCheck} />
-        <StatCard label="Failed payments" value={payments.length - paid.length} caption="Declined at checkout" icon={CircleAlert} />
-        <StatCard
-          label="Subscriptions"
-          value={paid.filter((payment) => payment.kind === 'subscription').length}
-          caption="Paid Plus plans"
-          icon={Repeat}
-        />
+        <StatCard label={t('stats.collected')} value={stats && <MoneyLines totals={stats.collected} />} caption={t('stats.collectedCaption')} icon={Wallet} />
+        <StatCard label={t('stats.activeSubscribers')} value={stats?.activeSubscribers ?? 0} caption={t('stats.activeSubscribersCaption')} icon={Repeat} />
+        <StatCard label={t('stats.mrr')} value={stats && <MoneyLines totals={stats.mrr} />} caption={t('stats.mrrCaption')} icon={TrendingUp} />
+        <StatCard label={t('stats.failedRenewals')} value={stats?.failedRenewals ?? 0} caption={t('stats.failedRenewalsCaption')} icon={CircleAlert} />
       </div>
 
       <div className={styles.filters}>
         <TextField
           className={styles.search}
           type="search"
-          aria-label="Search payments"
-          placeholder="Search reference, payer or item"
-          value={query}
-          onChange={(event) => setQuery(event.target.value)}
+          name="q"
+          aria-label={t('filters.search')}
+          placeholder={t('filters.search')}
+          value={filters.q}
+          onChange={(event) => setFilter('q', event.target.value)}
         />
-        <SelectField className={styles.select} aria-label="Filter by status" options={STATUS_OPTIONS} value={status} onChange={(event) => setStatus(event.target.value)} />
-        <SelectField className={styles.select} aria-label="Filter by payer" options={PAYER_OPTIONS} value={payer} onChange={(event) => setPayer(event.target.value)} />
-        <SelectField className={styles.select} aria-label="Filter by type" options={KIND_OPTIONS} value={kind} onChange={(event) => setKind(event.target.value)} />
+        {[...Object.keys(FILTERS), 'country'].map((name) => (
+          <SelectField
+            key={name}
+            name={name}
+            className={styles.select}
+            aria-label={t(`filters.${name}`)}
+            value={filters[name]}
+            onChange={(event) => setFilter(name, event.target.value)}
+            options={[
+              { value: '', label: t(`filters.${ALL[name]}`) },
+              ...(name === 'country' ? countries.map((country) => ({ value: country.code, label: country.name })) : FILTERS[name].map((value) => ({ value, label: optionLabel(name, value) }))),
+            ]}
+          />
+        ))}
       </div>
 
       <div className={styles.results}>
-        {rows.length === 0 ? (
-          <EmptyState icon={Search} title="No payments match" description="Try a different search, or choose another status, payer or type." />
+        {data?.items.length > 0 ? (
+          <>
+            <PaymentsTable payments={data.items} showPayer showSource onView={(payment) => setSelected(payment.id)} />
+            <Pagination page={data.page} pageSize={data.pageSize} total={data.total} onChange={(next) => setFilter('page', String(next))} />
+          </>
         ) : (
-          <PaymentsTable payments={rows} showPayer onView={setSelected} />
+          isSuccess && (
+            <EmptyState
+              icon={Search}
+              title={t('empty')}
+              description={t('emptyText')}
+              action={
+                <Button variant="outline" onClick={() => setParams({}, { replace: true })}>
+                  {t('clear')}
+                </Button>
+              }
+            />
+          )
         )}
       </div>
 
-      <Modal
-        open={selected !== null}
-        onClose={() => setSelected(null)}
-        title={selected ? `Payment ${selected.reference}` : ''}
-        width={480}
-        footer={
-          <Button variant="secondary" onClick={() => setSelected(null)}>
-            Close
-          </Button>
-        }
-      >
-        {selected && (
-          <dl className={styles.details}>
-            <div className={styles.detail}>
-              <dt>Status</dt>
-              <dd>
-                <PillBadge tone={PAYMENT_STATUS[selected.status].tone}>{PAYMENT_STATUS[selected.status].label}</PillBadge>
-              </dd>
-            </div>
-            <div className={styles.detail}>
-              <dt>Payer</dt>
-              <dd>
-                {selected.payerName} · {PAYER_ROLE_LABEL[selected.payerRole]}
-              </dd>
-            </div>
-            <div className={styles.detail}>
-              <dt>Item</dt>
-              <dd>
-                {selected.itemName} · {PAYMENT_KIND_LABEL[selected.kind]}
-              </dd>
-            </div>
-            <div className={styles.detail}>
-              <dt>Amount</dt>
-              <dd>{formatMoney(selected.amountMinor)}</dd>
-            </div>
-            <div className={styles.detail}>
-              <dt>Method</dt>
-              <dd>{`${selected.method.brand} •••• ${selected.method.last4}`}</dd>
-            </div>
-            <div className={styles.detail}>
-              <dt>Date</dt>
-              <dd>{formatDateTime(selected.paidAt)}</dd>
-            </div>
-            {selected.failureReason && (
-              <div className={styles.detail}>
-                <dt>Failure reason</dt>
-                <dd>{selected.failureReason}</dd>
-              </div>
-            )}
-          </dl>
-        )}
-      </Modal>
+      {selected && <PaymentDetails id={selected} onClose={() => setSelected(null)} />}
     </>
   )
 }
