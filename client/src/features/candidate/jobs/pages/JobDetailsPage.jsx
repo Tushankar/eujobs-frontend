@@ -4,13 +4,13 @@ import { ArrowLeft, Bookmark, Building2, BriefcaseBusiness, Check, Globe, MapPin
 import { cx } from '@/utils/cx.js'
 import { Button, CompanyLogo, Icon } from '@/components/ui'
 import EmptyState from '@/components/common/EmptyState.jsx'
-import StatusBadge from '@/components/common/StatusBadge.jsx'
 import aiGlyph from '@/assets/icons/ai-glyph-blue.svg'
 import { ApplyButton } from '@/features/candidate/applications/components/ApplyFlow.jsx'
 import { MessageCompanyButton } from '@/features/messages/components/StartConversation.jsx'
 import { useJobText } from '@/lib/jobText.js'
 import { useFormat } from '@/lib/preferences.js'
 import { useGetJobQuery, useSaveToggle } from '../api.js'
+import MatchBadge from '../components/MatchBadge.jsx'
 import styles from './JobDetailsPage.module.css'
 
 function ListSection({ title, items }) {
@@ -45,7 +45,7 @@ function SkillSection({ title, skills }) {
   )
 }
 
-/** The skill-overlap evidence every candidate sees (M-050, M-052): no score and no AI until Phase 9. */
+/** The skill-overlap evidence every candidate sees (M-050, M-052); the score is in the header badge (C6). */
 function SkillEvidence({ job }) {
   const { t } = useTranslation()
   const format = useFormat()
@@ -153,7 +153,7 @@ export default function JobDetailsPage() {
             <div className={styles.heroText}>
               <div className={styles.heroRow}>
                 <span className={styles.company}>{company.displayName}</span>
-                <StatusBadge tone={job.overlap.count > 0 ? 'info' : 'neutral'}>{t('findJobs:card.overlap', { count: job.overlap.count, total: job.overlap.total })}</StatusBadge>
+                <MatchBadge job={job} />
               </div>
               <p className={styles.posted}>{[company.industry, job.publishedAt && t('findJobs:details.posted', { time: format.relative(job.publishedAt) })].filter(Boolean).join(' · ')}</p>
             </div>

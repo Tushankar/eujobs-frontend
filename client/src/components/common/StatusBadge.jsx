@@ -1,9 +1,9 @@
 import PillBadge from './PillBadge.jsx'
 
 /** Dot + label status pill used for match strength and application status. tone = success | info | violet | neutral. */
-export default function StatusBadge({ tone = 'neutral', children, className }) {
+export default function StatusBadge({ tone = 'neutral', children, className, ...rest }) {
   return (
-    <PillBadge tone={tone} dot className={className}>
+    <PillBadge tone={tone} dot className={className} {...rest}>
       {children}
     </PillBadge>
   )

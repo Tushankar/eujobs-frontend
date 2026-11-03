@@ -11,6 +11,7 @@ import { CvAccessRequest, CvVersion } from '../cv/cv.model.js'
 import { File } from '../files/files.model.js'
 import { Job } from '../jobs/jobs.model.js'
 import { badgesOf } from '../learning/learning.certificates.js'
+import { relevantCandidates, resultsBy } from '../matching/matching.service.js'
 import { User } from '../users/users.model.js'
 import { VerificationSubmission } from '../verification/verification.model.js'
 import { CandidateNote, ProfileView, RecruiterActivity, ShortlistEntry } from './discovery.model.js'
@@ -19,8 +20,8 @@ import { hasRightToWorkIn, inMarket, listableCandidates, marketCandidates, valid
 /*
  * Recruiter discovery (§3.8): Find candidates with the M-055 country rule and the M-056 filters, the candidate
  * profile (M-026, M-168, P4-D11) with profile views (M-184), the shortlist (M-079), notes (M-080), the activity
- * timeline (M-081), and CV access and earlier-version requests (M-029, M-187, P4-D12). Until Phase 9 the
- * ranking is the M-052 skill overlap; recruiters never see a score (C6).
+ * timeline (M-081), and CV access and earlier-version requests (M-029, M-187, P4-D12). Recommended ranks by the
+ * match score (M-047), then the M-052 skill overlap; recruiters never see a score (C6), so no answer carries one.
  */
 const LEVELS = ENUMS.languageLevel
 const TALENT_CARDS = 3
@@ -134,9 +135,11 @@ function keep(query, country) {
   }
 }
 
-function sortCards(cards, sort, language) {
+/** `scores` maps candidate ids to the match job's scores (P4-D10: without a job, the most recently updated first). */
+function sortCards(cards, sort, language, scores = new Map()) {
+  const score = (card) => scores.get(card.id)?.score ?? -1
   const sorters = {
-    recommended: (a, b) => (b.overlap?.count ?? 0) - (a.overlap?.count ?? 0) || new Date(b.updatedAt) - new Date(a.updatedAt),
+    recommended: (a, b) => score(b) - score(a) || (b.overlap?.count ?? 0) - (a.overlap?.count ?? 0) || new Date(b.updatedAt) - new Date(a.updatedAt),
     experience: (a, b) => (b.yearsExperience ?? 0) - (a.yearsExperience ?? 0),
     name: (a, b) => a.fullName.localeCompare(b.fullName, language),
   }
@@ -151,7 +154,7 @@ export async function listCandidates(user, company, query) {
   const card = await cardContext(user, company, entries, job)
   let items = entries.map(card)
   if (query.verified) items = items.filter((item) => item.verification.verified)
-  items = sortCards(items, query.sort, user.language)
+  items = sortCards(items, query.sort, user.language, job ? await resultsBy({ jobId: job._id }) : undefined)
   return { items, total: items.length, page: 1, pageSize: items.length, matchJob: job ? { id: String(job._id), title: job.title } : null }
 }
 
@@ -209,7 +212,8 @@ export async function shortlist(user, company, query) {
   const listable = await listableCandidates(entries.map((entry) => entry.candidateId))
   const country = viewOf(user)
   const shown = listable.filter(({ profile }) => inMarket(profile, country)).filter(keep(query, country))
-  const card = await cardContext(user, company, shown, await matchJob(company, query.jobId))
+  const job = await matchJob(company, query.jobId)
+  const card = await cardContext(user, company, shown, job)
   const adders = new Map((await User.find({ _id: { $in: entries.map((entry) => entry.addedBy) } }, 'fullName')).map((adder) => [String(adder._id), adder.fullName]))
   const byCandidate = new Map(entries.map((entry) => [String(entry.candidateId), entry]))
   let items = shown.map((item) => {
@@ -217,7 +221,7 @@ export async function shortlist(user, company, query) {
     return { ...card(item), addedAt: entry.createdAt, addedBy: adders.get(String(entry.addedBy)) ?? null }
   })
   if (query.verified) items = items.filter((item) => item.verification.verified)
-  items = sortCards(items, query.sort, user.language)
+  items = sortCards(items, query.sort, user.language, job ? await resultsBy({ jobId: job._id }) : undefined)
   return { items, total: items.length, page: 1, pageSize: items.length, hiddenCount: entries.length - listable.length }
 }
 
@@ -333,33 +337,26 @@ export async function requestCv(user, company, candidateId, { reason, details })
   })
 }
 
-/* ---------- relevance and the recruiter Overview (fallback until Phase 9) ---------- */
+/* ---------- relevance and the recruiter Overview (M-051, A: recruiter A9, RQ-34) ---------- */
 
-/** Candidates of the job's market sharing at least 1 required skill, by overlap (M-051 fallback, P4-D9). */
-async function relevantFor(job) {
-  if (!job.country) return []
-  return (await marketCandidates(job.country))
-    .map((entry) => ({ entry, overlap: skillOverlap(entry.profile.skills, job) }))
-    .filter(({ overlap }) => overlap.requiredMatched > 0)
-    .sort((a, b) => b.overlap.matched.length - a.overlap.matched.length)
-}
-
-/** GET /recruiter/jobs/:id/relevant-talent */
+/** GET /recruiter/jobs/:id/relevant-talent: the job's best relevant candidates. */
 export async function relevantTalent(user, company, jobId) {
   const job = await Job.findOne({ _id: jobId, companyId: company._id })
   if (!job) throw new AppError('NOT_FOUND')
-  const relevant = (await relevantFor(job)).slice(0, RELEVANT_TALENT).map(({ entry }) => entry)
+  const relevant = (await relevantCandidates(job)).slice(0, RELEVANT_TALENT).map(({ entry }) => entry)
   const card = await cardContext(user, company, relevant, job)
   return { items: relevant.map(card), total: job.relevantCount }
 }
 
-/** Every candidate relevant to at least one published job, with the job of the best overlap. */
+const rank = (a, b) => (b.result?.score ?? -1) - (a.result?.score ?? -1) || b.overlap.matched.length - a.overlap.matched.length
+
+/** Every candidate relevant to at least one published job, with the job where they rank best. */
 async function relevantAcrossJobs(company) {
   const best = new Map()
   for (const job of await Job.find({ companyId: company._id, status: 'published' })) {
-    for (const { entry, overlap } of await relevantFor(job)) {
-      const id = String(entry.user._id)
-      if (!best.has(id) || overlap.matched.length > best.get(id).overlap.matched.length) best.set(id, { entry, overlap, job })
+    for (const item of await relevantCandidates(job)) {
+      const id = String(item.entry.user._id)
+      if (!best.has(id) || rank(item, best.get(id)) < 0) best.set(id, { ...item, job })
     }
   }
   return [...best.values()]
@@ -376,12 +373,16 @@ export async function recruiterOverview(company) {
   return { openPositions, recommendedCandidates: relevant.length, shortlisted, applications }
 }
 
-/** "Talent worth meeting": the top 3 relevant candidates not yet shortlisted (A: recruiter A9; applicants in Phase 6). */
+/** "Talent worth meeting": the top 3 relevant candidates neither shortlisted nor applied to the company (§3.8, A9). */
 export async function talentCards(user, company) {
-  const shortlisted = new Set((await ShortlistEntry.distinct('candidateId', { companyId: company._id })).map(String))
+  const [shortlisted, applied] = await Promise.all([
+    ShortlistEntry.distinct('candidateId', { companyId: company._id }),
+    Application.distinct('candidateId', { companyId: company._id }),
+  ])
+  const known = new Set([...shortlisted, ...applied].map(String))
   const top = (await relevantAcrossJobs(company))
-    .filter(({ entry }) => !shortlisted.has(String(entry.user._id)))
-    .sort((a, b) => b.overlap.matched.length - a.overlap.matched.length)
+    .filter(({ entry }) => !known.has(String(entry.user._id)))
+    .sort(rank)
     .slice(0, TALENT_CARDS)
   const items = []
   for (const { entry, job } of top) {

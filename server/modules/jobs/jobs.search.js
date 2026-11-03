@@ -6,14 +6,17 @@ import { CandidateProfile } from '../candidates/candidates.model.js'
 import { Company } from '../companies/companies.model.js'
 import { logoUrls, publicCompanyDto } from '../companies/companies.service.js'
 import { ProfileView } from '../discovery/discovery.model.js'
+import { relevantPair, resultsBy } from '../matching/matching.service.js'
 import { Country } from '../meta/meta.model.js'
+import { planState } from '../payments/payments.service.js'
 import { User } from '../users/users.model.js'
 import { Job, SavedJob } from './jobs.model.js'
 import { jobFieldsDto } from './jobs.service.js'
 
 /*
  * Candidate job browsing (§3.8, M-043, M-044, M-052, M-053 with U8, M-137, OD2, U25, P4-Q4). The header
- * country picks the view; every candidate sees the skill-overlap label, never a percentage (M-050).
+ * country picks the view; every candidate sees the skill-overlap label (M-050). Plus candidates with matching consent
+ * also see the score and label (C6) and get For you and Recommended ranked by score.
  */
 const DAY_MS = 24 * 60 * 60 * 1000
 
@@ -48,9 +51,17 @@ async function cardContext(user, jobs) {
     (await Application.find({ candidateId: user._id, jobId: { $in: jobs.map((job) => job._id) }, status: { $ne: 'withdrawn' } }, 'jobId status')).map((application) => [String(application.jobId), { id: String(application._id), status: application.status }]),
   )
   const skills = profile?.skills ?? []
+  const scored = user.privacy?.matchingConsent && (await planState(user._id)).entitlements.includes('ai')
+  const results = scored ? await resultsBy({ candidateId: user._id }, jobs.map((job) => job._id)) : new Map()
+  const result = (job) => results.get(String(job._id)) ?? null
   return {
+    scored,
     company: (job) => byId.get(String(job.companyId)),
     overlap: (job) => skillOverlap(skills, job),
+    // M-051: a score ≥ Good, or at least 1 required skill when the pair has no score (U8 for Free).
+    relevant: (job) => relevantPair(job, { skills }, result(job)),
+    // Scored jobs first by score, then by overlap and recency (U8).
+    byScore: (a, b) => (result(b)?.score ?? -1) - (result(a)?.score ?? -1) || skillOverlap(skills, b).matched.length - skillOverlap(skills, a).matched.length || newest(a, b),
     card(job) {
       const company = byId.get(String(job.companyId))
       const { matched, total } = skillOverlap(skills, job)
@@ -60,8 +71,9 @@ async function cardContext(user, jobs) {
         saved: saved.has(String(job._id)),
         // The candidate's own active application to this job (Phase 6); the Apply button reads it.
         application: applied.get(String(job._id)) ?? null,
-        // M-052: one overlap definition and label for everyone (Plus adds the score in Phase 9).
+        // M-052: one overlap definition and label for everyone.
         overlap: { matched, count: matched.length, total },
+        match: result(job) ? { score: result(job).score, label: result(job).label ?? null } : null,
       }
     },
   }
@@ -99,7 +111,7 @@ export async function searchJobs(user, query) {
     return !query.q || matchesKeywords(query.q, haystack(job, context.company(job), user.language))
   })
   const sorters = {
-    recommended: (a, b) => context.overlap(b).matched.length - context.overlap(a).matched.length || newest(a, b),
+    recommended: context.byScore,
     newest,
     salary: (a, b) => (annualTop(b.salary) ?? -1) - (annualTop(a.salary) ?? -1) || newest(a, b),
   }
@@ -108,16 +120,14 @@ export async function searchJobs(user, query) {
   return { items, total: items.length, page: 1, pageSize: items.length, view: { country: view, currency } }
 }
 
-/** U8 (every candidate until Phase 9): jobs sharing at least 1 required skill, by overlap, then recency. */
+/** M-053: Plus = jobs with a score ≥ Good, ranked; U8 (Free, and pairs without a score): at least 1 required skill. */
 export async function recommendedJobs(user, now = Date.now()) {
   const jobs = await Job.find({ ...(await visibleFilter()), ...viewFilter(viewOf(user)) })
   const context = await cardContext(user, jobs)
-  const items = jobs
-    .filter((job) => context.overlap(job).requiredMatched > 0)
-    .sort((a, b) => context.overlap(b).matched.length - context.overlap(a).matched.length || newest(a, b))
+  const items = jobs.filter(context.relevant).sort(context.byScore)
   // M-053: "+N this week" = published in the last 7 days.
   const newThisWeek = items.filter((job) => job.publishedAt && job.publishedAt.getTime() >= now - 7 * DAY_MS).length
-  return { items: items.map((job) => context.card(job)), total: items.length, newThisWeek }
+  return { items: items.map((job) => context.card(job)), total: items.length, newThisWeek, byScore: Boolean(context.scored) }
 }
 
 export async function isVisible(job) {
@@ -163,5 +173,5 @@ export async function candidateOverview(user, now = Date.now()) {
     ProfileView.countDocuments({ candidateId: user._id, at: { $gte: new Date(now - 30 * DAY_MS) } }),
     ProfileView.countDocuments({ candidateId: user._id, at: { $gte: new Date(now - 60 * DAY_MS), $lt: new Date(now - 30 * DAY_MS) } }),
   ])
-  return { recommended: { count: recommended.total, newThisWeek: recommended.newThisWeek }, savedJobs: savedCount, profileViews: { last30, previous30 } }
+  return { recommended: { count: recommended.total, newThisWeek: recommended.newThisWeek, byScore: recommended.byScore }, savedJobs: savedCount, profileViews: { last30, previous30 } }
 }

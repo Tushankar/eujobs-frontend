@@ -12,6 +12,7 @@ import * as discoveryRoutes from '../modules/discovery/discovery.routes.js'
 import filesRoutes from '../modules/files/files.routes.js'
 import * as jobRoutes from '../modules/jobs/jobs.routes.js'
 import * as learningRoutes from '../modules/learning/learning.routes.js'
+import * as matchingRoutes from '../modules/matching/matching.routes.js'
 import messagesRoutes from '../modules/messages/messages.routes.js'
 import metaRoutes from '../modules/meta/meta.routes.js'
 import * as paymentRoutes from '../modules/payments/payments.routes.js'
@@ -57,6 +58,8 @@ router.use('/learning', learningRoutes.learningRouter)
 router.use('/public/certificates', learningRoutes.publicCertificatesRouter)
 router.use('/admin/courses', learningRoutes.adminCoursesRouter)
 router.use('/admin', learningRoutes.adminToolsRouter)
+router.use('/admin/matching', matchingRoutes.adminMatchingRouter)
+router.use('/admin/ai', matchingRoutes.adminAiRouter)
 router.use('/admin/moderation/verification', verificationRoutes.adminRouter)
 router.use('/admin/moderation/accounts', companyRoutes.adminRouter)
 router.use('/admin', adminRoutes)

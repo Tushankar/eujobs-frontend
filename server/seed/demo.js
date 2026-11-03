@@ -14,8 +14,12 @@ import { Company, KycDocument } from '../modules/companies/companies.model.js'
 import { CvAccessRequest, CvVersion } from '../modules/cv/cv.model.js'
 import { CandidateNote, ProfileView, RecruiterActivity, ShortlistEntry } from '../modules/discovery/discovery.model.js'
 import { File, FileAccessLog } from '../modules/files/files.model.js'
+import { AiUsage } from '../modules/ai/ai.model.js'
 import { Job, SavedJob } from '../modules/jobs/jobs.model.js'
 import { Course, Enrollment } from '../modules/learning/learning.model.js'
+import { ensureDefaultPolicy } from '../modules/matching/matching.admin.js'
+import { MatchingPolicy, MatchingPolicyVersion, MatchResult } from '../modules/matching/matching.model.js'
+import { recomputeAll } from '../modules/matching/matching.service.js'
 import { Conversation, Message } from '../modules/messages/messages.model.js'
 import { Country } from '../modules/meta/meta.model.js'
 import { currentLegalVersions } from '../modules/meta/meta.service.js'
@@ -37,6 +41,8 @@ import { deleteDatabaseCustomers } from './stripe.js'
 /*
  * seed:demo (U41): wipes the demo data and recreates it. Email logs and daily job runs are kept,
  * so re-seeding never resets the Gmail cap. Run seed:catalog first (countries are read from it).
+ * Embeddings are kept until the backfill has reused every unchanged text's vector (only new texts reach OpenAI);
+ * matching policies return to the default v1, as custom admin roles are removed.
  */
 
 /** `<local>+<tag>@<domain>` of SEED_ADMIN_EMAIL (P12); no address is hard-coded. */
@@ -113,7 +119,12 @@ export async function seedDemo() {
     Message.deleteMany({}),
     JobAlert.deleteMany({}),
     AlertMatch.deleteMany({}),
+    MatchingPolicy.deleteMany({}),
+    MatchingPolicyVersion.deleteMany({}),
+    MatchResult.deleteMany({}),
+    AiUsage.deleteMany({}),
   ])
+  await ensureDefaultPolicy()
   // Every stored file is demo data: one folder per purpose under the upload root (never another root).
   await Promise.all(ENUMS.filePurpose.map((purpose) => rm(join(config.uploadRoot, purpose), { recursive: true, force: true })))
 
@@ -140,6 +151,8 @@ export async function seedDemo() {
   await seedLearning({ emailOf, owner, now: now.getTime() })
   await seedApplications({ emailOf, now: now.getTime() })
   await seedMessages({ emailOf, now: now.getTime() })
+  // U6, U7: embeddings, scores and relevant counts of the seeded people and jobs.
+  await recomputeAll()
 }
 
 if (import.meta.main) {

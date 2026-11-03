@@ -4,7 +4,6 @@ import { createDefaultStages } from '../modules/companies/companies.review.js'
 import { Company, KycDocument } from '../modules/companies/companies.model.js'
 import { ProfileView, RecruiterActivity, ShortlistEntry } from '../modules/discovery/discovery.model.js'
 import { Job, SavedJob } from '../modules/jobs/jobs.model.js'
-import { refreshRelevantCounts } from '../modules/jobs/jobs.service.js'
 import { User } from '../modules/users/users.model.js'
 import { pdf } from './candidates.js'
 import { CANDIDATES } from './data/candidates.js'
@@ -121,6 +120,4 @@ export async function seedRecruiters({ emailOf, owner, now }) {
   spread(PROFILE_VIEWS.last30, 1)
   spread(PROFILE_VIEWS.previous30, 31)
   await ProfileView.insertMany(views)
-
-  await refreshRelevantCounts(jobs)
 }

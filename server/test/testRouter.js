@@ -1,6 +1,7 @@
 import { Router } from 'express'
 import mongoose from 'mongoose'
 import { tick } from '../jobs/scheduler.js'
+import { failNextCall } from '../lib/ai.js'
 import { capturedMail } from '../lib/mailer.js'
 import { resetRateLimits } from '../middleware/rateLimit.js'
 
@@ -22,6 +23,11 @@ router.get('/mail', (req, res) => {
 
 router.post('/scheduler/tick', async (req, res) => {
   await tick(req.body.now ? new Date(req.body.now) : new Date())
+  res.status(204).end()
+})
+
+router.post('/ai/fail-next', (req, res) => {
+  failNextCall()
   res.status(204).end()
 })
 

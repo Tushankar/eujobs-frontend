@@ -86,6 +86,9 @@ export const api = createApi({
     'Courses',
     'AdminCourses',
     'Certificates',
+    'MatchingPolicies',
+    'Oversight',
+    'AiStatus',
   ],
   endpoints: (build) => ({
     getMe: build.query({ query: () => '/me', providesTags: ['Me'] }),

@@ -1,97 +1,67 @@
 import { useState } from 'react'
-import { useNavigate, useParams } from 'react-router-dom'
+import { useTranslation } from 'react-i18next'
+import { useLocation, useNavigate, useParams } from 'react-router-dom'
 import { Plus } from 'lucide-react'
 import { Button, Icon } from '@/components/ui'
 import PageTitle from '@/components/common/PageTitle.jsx'
-import { useAuditLog } from '@/features/admin/audit-logs/hooks/useAuditLog.js'
+import { useGetPoliciesQuery } from '../api.js'
 import CreatePolicyModal from '../components/CreatePolicyModal.jsx'
-import { EvidenceExplanation, MatchSummaryOversight } from '../components/OversightSection.jsx'
+import OversightSection from '../components/OversightSection.jsx'
 import PolicyEditor from '../components/PolicyEditor.jsx'
 import PolicySidebar from '../components/PolicySidebar.jsx'
-import { useMatchingPolicies } from '../hooks/useMatchingPolicies.js'
 import styles from './AiMatchingPage.module.css'
 
 const LIST_PATH = '/admin/ai-matching'
 
 /**
- * AI & matching. Also serves /admin/ai-matching/policies/new, which is this page with the
- * "Create matching policy" dialog open (the Figma frame is that dialog over this page).
+ * AI & matching (M-048, M-049, M-068). Also serves /admin/ai-matching/policies/new, which is this page with the
+ * "Create matching policy" dialog open (the Figma frame is that dialog over this page). The server audits every
+ * policy change (category Policy, M-162).
  */
 export default function AiMatchingPage() {
+  const { t } = useTranslation('aiMatching')
   const navigate = useNavigate()
   const isCreating = useParams()['*'] === 'policies/new'
-  const { policies, activeId, addPolicy, saveSignals, activate } = useMatchingPolicies()
-  const { record } = useAuditLog()
-  const [selectedId, setSelectedId] = useState(activeId)
-  const [notice, setNotice] = useState('')
-  const selected = policies.find((policy) => policy.id === selectedId) ?? policies[0]
+  // Leaving the create route remounts the page, so the new policy and the notice travel in the navigation state.
+  const { state } = useLocation()
+  const { data, isError } = useGetPoliciesQuery()
+  const [selectedId, setSelectedId] = useState(state?.selectedId ?? null)
+  const notice = state?.notice ?? ''
+  const policies = data?.items ?? []
+  // A chosen policy is never swapped for another one (the editor would edit the wrong policy); without a choice, the active one.
+  const selected = selectedId ? policies.find((policy) => policy.id === selectedId) : (policies.find((policy) => policy.status === 'active') ?? policies[0])
 
-  function handleCreate({ name, description }) {
-    const id = addPolicy({ name, description })
-    record({
-      title: 'Matching policy draft created',
-      category: 'Policy',
-      detail: `Draft policy “${name}” was created with every approved signal on. Human review stays required.`,
-    })
-    setSelectedId(id)
-    setNotice(`Draft policy “${name}” was created on this device. Review its signals, then make it active.`)
-    navigate(LIST_PATH)
-  }
-
-  function handleSave(id, signals) {
-    saveSignals(id, signals)
-    record({
-      title: 'Matching policy saved',
-      category: 'Policy',
-      detail: `Signals for “${selected.name}” were reviewed and saved. Human review stays required.`,
-    })
-  }
-
-  function handleActivate(id) {
-    activate(id)
-    record({
-      title: 'Matching policy activated',
-      category: 'Policy',
-      detail: `“${selected.name}” is now the active matching policy on this device.`,
-    })
+  function handleCreated(policy) {
+    setSelectedId(policy.id)
+    navigate(LIST_PATH, { state: { selectedId: policy.id, notice: t('create.created', { name: policy.name }) } })
   }
 
   return (
     <>
       <PageTitle
-        eyebrow="Responsible AI"
-        title="Make the reasoning visible."
-        description="Role-relevant signals. Clear evidence. Human decisions, always."
+        eyebrow={t('page.eyebrow')}
+        title={t('page.title')}
+        description={t('page.description')}
         actions={
           <Button leftIcon={<Icon as={Plus} size={14} />} onClick={() => navigate(`${LIST_PATH}/policies/new`)}>
-            Create policy
+            {t('page.create')}
           </Button>
         }
       />
 
       <div role="status">{notice && <p className={styles.notice}>{notice}</p>}</div>
+      {isError && <p className={styles.notice}>{t('page.loadError')}</p>}
 
-      <div className={styles.grid}>
-        <PolicyEditor
-          key={selected.id}
-          policy={selected}
-          isActive={selected.id === activeId}
-          onSave={handleSave}
-          onActivate={handleActivate}
-        />
-        <PolicySidebar policies={policies} activeId={activeId} selectedId={selected.id} onSelect={setSelectedId} />
-      </div>
-
-      <MatchSummaryOversight />
-      <EvidenceExplanation />
-
-      {isCreating && (
-        <CreatePolicyModal
-          existingNames={policies.map((policy) => policy.name.toLowerCase())}
-          onClose={() => navigate(LIST_PATH)}
-          onCreate={handleCreate}
-        />
+      {selected && (
+        <div className={styles.grid}>
+          <PolicyEditor key={selected.id} policy={selected} />
+          <PolicySidebar policies={policies} selectedId={selected.id} onSelect={setSelectedId} />
+        </div>
       )}
+
+      <OversightSection />
+
+      {isCreating && <CreatePolicyModal onClose={() => navigate(LIST_PATH)} onCreated={handleCreated} />}
     </>
   )
 }

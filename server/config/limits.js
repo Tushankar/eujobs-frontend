@@ -132,4 +132,17 @@ export const LIMITS = {
     perUser: { autocomplete: { windowMs: MINUTE, limit: 60 }, details: { windowMs: MINUTE, limit: 30 } },
     cache: { autocompleteTtlMs: 10 * MINUTE, detailsTtlMs: 24 * HOUR, maxEntries: 1000 },
   },
+  // OD13, U3: counted generations per user and UTC day. U6: embedding input ≈ 8,000 tokens at 4 characters a token.
+  ai: { dailyGenerations: 50, embeddingMaxChars: 32_000 },
+  // U5, M-047: the default policy; M-049 and A: admin §1.19: policy fields
+  matching: {
+    weights: { sim: 0.6, skill: 0.4 },
+    thresholds: { strong: 75, good: 50 },
+    cosFloor: 0.2,
+    cosCeiling: 0.6,
+    locationCap: 49,
+    policyName: { min: 3, max: 60 },
+    policyDescription: { min: 20, max: 500 },
+    oversightCandidates: 4,
+  },
 }

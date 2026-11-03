@@ -57,3 +57,54 @@
 .message:not(:empty) {
   padding-top: 4px;
 }
+
+.editLink {
+  margin-top: 12px;
+}
+
+.details {
+  display: flex;
+  flex-direction: column;
+  gap: 16px;
+  padding-top: 20px;
+}
+
+.error {
+  padding-top: 4px;
+  font-size: 11px;
+  line-height: 16px;
+  color: var(--destructive);
+}
+
+.historyTitle {
+  padding-top: 24px;
+  font-size: 12px;
+  font-weight: 600;
+  line-height: 16px;
+  color: var(--foreground);
+}
+
+.history {
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+  padding-top: 12px;
+  list-style: none;
+}
+
+.history li {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 4px 12px;
+  font-size: 11px;
+  line-height: 18px;
+}
+
+.historyItem {
+  font-weight: 600;
+  color: var(--foreground);
+}
+
+.historySignals {
+  color: var(--muted-foreground);
+}

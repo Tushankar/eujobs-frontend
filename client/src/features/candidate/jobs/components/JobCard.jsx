@@ -9,11 +9,12 @@ import aiGlyph from '@/assets/icons/ai-glyph-blue.svg'
 import { ApplyButton } from '@/features/candidate/applications/components/ApplyFlow.jsx'
 import { useJobText } from '@/lib/jobText.js'
 import { useFormat } from '@/lib/preferences.js'
+import MatchBadge from './MatchBadge.jsx'
 import styles from './JobCard.module.css'
 
 /**
- * Job listing card (Overview and Find jobs). Every candidate sees the skill-overlap label (M-050, M-052), never a
- * percentage; Plus adds the score in Phase 9. Apply goes through the gate (§3.4).
+ * Job listing card (Overview and Find jobs). Every candidate sees the skill overlap (M-050, M-052); Plus candidates
+ * see the match score and label instead (C6). Apply goes through the gate (§3.4).
  */
 export default function JobCard({ job, onToggleSave }) {
   const { t } = useTranslation()
@@ -33,7 +34,7 @@ export default function JobCard({ job, onToggleSave }) {
         <div className={styles.headText}>
           <div className={styles.eyebrow}>
             <span className={styles.company}>{company}</span>
-            <StatusBadge tone={job.overlap.count > 0 ? 'info' : 'neutral'}>{t('findJobs:card.overlap', { count: job.overlap.count, total: job.overlap.total })}</StatusBadge>
+            <MatchBadge job={job} />
             {job.accepting === false && <StatusBadge tone="warning">{t('findJobs:card.notAccepting')}</StatusBadge>}
           </div>
           <h3 className={styles.title}>

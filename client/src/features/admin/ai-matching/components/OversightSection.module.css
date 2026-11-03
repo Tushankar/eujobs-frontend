@@ -15,44 +15,13 @@
   gap: 12px;
 }
 
-.avatar {
-  display: inline-flex;
-  flex-shrink: 0;
-  align-items: center;
-  justify-content: center;
-  width: 36px;
-  height: 36px;
-  border-radius: var(--radius-full);
-  font-size: 12px;
-  font-weight: 600;
-  line-height: 16px;
-}
-
-.blue {
-  background: var(--accent);
-  color: var(--primary-hover);
-}
-
-.lilac {
-  background: #e8e4f4;
-  color: #6c5b97;
-}
-
-.sky {
-  background: #dfe8f4;
-  color: #5a7b9e;
-}
-
-.mint {
-  background: #ddebe8;
-  color: #527b72;
-}
 
 .personText {
   min-width: 0;
 }
 
 .name {
+  display: block;
   font-size: 12px;
   font-weight: 600;
   line-height: 16px;
@@ -60,6 +29,7 @@
 }
 
 .role {
+  display: block;
   padding-top: 4px;
   font-size: 10px;
   line-height: 15px;
@@ -67,6 +37,7 @@
 }
 
 .percent {
+  display: block;
   padding-top: 20px;
   font-family: var(--font-display);
   font-size: 24px;
@@ -76,6 +47,7 @@
 }
 
 .caption {
+  display: block;
   padding-top: 8px;
   font-size: 10px;
   line-height: 20px;
@@ -87,16 +59,6 @@
   margin-top: 20px;
 }
 
-.insightToggle {
-  display: flex;
-  align-items: center;
-  justify-content: space-between;
-  width: 100%;
-  padding: 0;
-  border: 0;
-  background: transparent;
-  color: var(--primary);
-}
 
 .insightTitle {
   display: inline-flex;
@@ -107,13 +69,7 @@
   line-height: 16.5px;
 }
 
-.chevron {
-  transition: transform var(--transition);
-}
 
-.chevronClosed {
-  transform: rotate(180deg);
-}
 
 .summary {
   padding-top: 8px;
@@ -178,6 +134,52 @@
   font-size: 10px;
   line-height: 16px;
   color: var(--primary-hover);
+}
+
+.jobPicker {
+  max-width: 480px;
+  padding-top: 20px;
+}
+
+.card {
+  display: flex;
+  flex-direction: column;
+  align-items: flex-start;
+  gap: 4px;
+  padding: 20px;
+  border: 1px solid var(--border);
+  border-radius: var(--radius-xl);
+  background: var(--card);
+  text-align: left;
+  transition: border-color var(--transition);
+}
+
+.card:hover {
+  border-color: #cdd0d9;
+}
+
+.cardSelected,
+.cardSelected:hover {
+  border-color: #bbdeff;
+}
+
+.spaced {
+  padding-top: 16px;
+}
+
+.languages {
+  padding-top: 8px;
+  padding-left: 16px;
+  font-size: 12px;
+  line-height: 20px;
+  color: var(--primary-hover);
+}
+
+.empty {
+  padding-top: 20px;
+  font-size: 12px;
+  line-height: 20px;
+  color: var(--muted-foreground);
 }
 
 @media (max-width: 1279px) {

@@ -1,17 +1,49 @@
+import { useTranslation } from 'react-i18next'
 import { ShieldCheck } from 'lucide-react'
 import { Icon, Panel } from '@/components/ui'
 import PillBadge from '@/components/common/PillBadge.jsx'
 import SectionTitle from '@/components/common/SectionTitle.jsx'
-import { formatDate } from '@/features/admin/audit-logs/utils/formatDate.js'
+import { useFormat } from '@/lib/preferences.js'
 import { cx } from '@/utils/cx.js'
+import { useGetAiStatusQuery } from '../api.js'
 import styles from './PolicySidebar.module.css'
 
-/** Right column: policy library (select a policy), guidance card and service status. */
-export default function PolicySidebar({ policies, activeId, selectedId, onSelect }) {
+const STATUS_TONES = { active: 'success', draft: 'neutral', archived: 'warning' }
+
+/** The OpenAI models in use and the last successful and failed calls (A: admin §1.18). */
+function ServiceStatus() {
+  const { t } = useTranslation('aiMatching')
+  const format = useFormat()
+  const { data: status } = useGetAiStatusQuery()
+  if (!status) return null
+  return (
+    <Panel padding={24} data-ai-status>
+      <h3 className={styles.statusTitle}>{t('status.title')}</h3>
+      <PillBadge tone={status.lastSuccessAt ? 'success' : 'warning'} dot>
+        {status.lastSuccessAt ? t('status.connected', { time: format.relative(status.lastSuccessAt) }) : t('status.noCalls')}
+      </PillBadge>
+      {status.lastErrorAt && <p className={styles.statusText}>{t('status.lastError', { time: format.relative(status.lastErrorAt) })}</p>}
+      <p className={styles.statusText}>{t('status.models')}</p>
+      <dl className={styles.models}>
+        {Object.entries(status.models).map(([key, model]) => (
+          <div key={key} className={styles.modelRow}>
+            <dt>{t(`status.model.${key}`)}</dt>
+            <dd>{model}</dd>
+          </div>
+        ))}
+      </dl>
+    </Panel>
+  )
+}
+
+/** Right column: the policy library (select a policy), the guidance card and the AI service status. */
+export default function PolicySidebar({ policies, selectedId, onSelect }) {
+  const { t } = useTranslation('aiMatching')
+  const format = useFormat()
   return (
     <div className={styles.column}>
       <Panel padding={24}>
-        <SectionTitle title="Policy library" description="Select a policy to review or activate." />
+        <SectionTitle title={t('library.title')} description={t('library.description')} />
         <ul className={styles.list}>
           {policies.map((policy) => (
             <li key={policy.id}>
@@ -23,13 +55,9 @@ export default function PolicySidebar({ policies, activeId, selectedId, onSelect
               >
                 <span className={styles.policyText}>
                   <span className={styles.policyName}>{policy.name}</span>
-                  <span className={styles.policyMeta}>Updated {formatDate(policy.updatedAt)}</span>
+                  <span className={styles.policyMeta}>{t('library.updated', { date: format.date(policy.updatedAt) })}</span>
                 </span>
-                {policy.id === activeId ? (
-                  <PillBadge tone="success">Active</PillBadge>
-                ) : (
-                  <PillBadge tone="neutral">Draft</PillBadge>
-                )}
+                <PillBadge tone={STATUS_TONES[policy.status]}>{t(`enums:policyStatus.${policy.status}`)}</PillBadge>
               </button>
             </li>
           ))}
@@ -40,23 +68,11 @@ export default function PolicySidebar({ policies, activeId, selectedId, onSelect
         <span className={styles.shield}>
           <Icon as={ShieldCheck} size={25} strokeWidth={2} />
         </span>
-        <h3 className={styles.guidanceTitle}>Evidence. Not absolutes.</h3>
-        <p className={styles.guidanceText}>
-          Never use protected characteristics as matching inputs. Show potential gaps alongside strengths, and make every
-          recommendation reviewable.
-        </p>
+        <h3 className={styles.guidanceTitle}>{t('guidance.title')}</h3>
+        <p className={styles.guidanceText}>{t('guidance.text')}</p>
       </Panel>
 
-      <Panel padding={24}>
-        <h3 className={styles.statusTitle}>Service status</h3>
-        <PillBadge tone="warning" dot>
-          AI backend not connected
-        </PillBadge>
-        <p className={styles.statusText}>
-          Local skill comparisons and editable previews are available. Model performance, confidence, and semantic
-          quality require a connected service and evaluation data.
-        </p>
-      </Panel>
+      <ServiceStatus />
     </div>
   )
 }

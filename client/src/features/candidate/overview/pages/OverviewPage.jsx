@@ -84,7 +84,7 @@ export default function OverviewPage() {
             label={t('findJobs:overview.stats.recommended')}
             value={overview?.recommended.count ?? 0}
             delta={overview?.recommended.newThisWeek ? t('findJobs:overview.stats.recommendedDelta', { count: overview.recommended.newThisWeek }) : undefined}
-            caption={t('findJobs:overview.stats.recommendedCaption')}
+            caption={t(overview?.recommended.byScore ? 'findJobs:overview.stats.recommendedCaptionScore' : 'findJobs:overview.stats.recommendedCaption')}
             iconSrc={aiNavGlyph}
           />
         </Link>

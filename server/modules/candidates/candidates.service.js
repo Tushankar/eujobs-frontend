@@ -6,6 +6,7 @@ import { skillEntries } from '../../lib/skills.js'
 import { CvVersion } from '../cv/cv.model.js'
 import { File } from '../files/files.model.js'
 import { reissueCertificates } from '../learning/learning.certificates.js'
+import { scheduleRecompute } from '../matching/matching.service.js'
 import { Country } from '../meta/meta.model.js'
 import { resolvePlace } from '../places/places.service.js'
 import { User } from '../users/users.model.js'
@@ -27,11 +28,12 @@ async function completenessOf(user, profile) {
   return computeCompleteness({ user, profile, approved: new Set(approved) })
 }
 
-/** Saves the profile with its stored completeness (§3.2: recomputed on every change). */
+/** Saves the profile with its stored completeness (§3.2: recomputed on every change) and rescores it (M-047). */
 export async function saveProfile(user, profile) {
   const { complete, done, total, items } = await completenessOf(user, profile)
   profile.completeness = { complete, done, total, missing: items.filter((item) => !item.done).map((item) => item.key) }
   await profile.save()
+  await scheduleRecompute('candidate', user._id)
 }
 
 /** Recomputes after a change outside the profile: phone, live CV, a verification decision or reset. */
@@ -370,4 +372,6 @@ export function privacyDto(user) {
 export async function updatePrivacy(user, body) {
   for (const [key, value] of Object.entries(body)) if (value !== undefined) user.privacy[key] = value
   await user.save()
+  // M-187: matching consent adds the candidate to AI matching or removes them from it.
+  if (body.matchingConsent !== undefined) await scheduleRecompute('candidate', user._id)
 }

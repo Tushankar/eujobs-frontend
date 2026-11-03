@@ -1,10 +1,10 @@
 import { LIMITS } from '../../config/limits.js'
-import { dailyJobs, scheduleTask } from '../../jobs/scheduler.js'
+import { scheduleTask } from '../../jobs/scheduler.js'
 import { AppError, fieldError } from '../../lib/errors.js'
-import { searchText, skillEntries, skillOverlap } from '../../lib/skills.js'
+import { searchText, skillEntries } from '../../lib/skills.js'
 import { validationError } from '../../lib/validate.js'
-import { marketCandidates } from '../discovery/discovery.population.js'
 import { Country } from '../meta/meta.model.js'
+import { refreshRelevantCounts, scheduleRecompute } from '../matching/matching.service.js'
 import { resolvePlace } from '../places/places.service.js'
 import { Job } from './jobs.model.js'
 import { jobBody } from './jobs.schemas.js'
@@ -12,7 +12,8 @@ import { jobBody } from './jobs.schemas.js'
 /*
  * Recruiter jobs (§3.7): the wizard draft (M-041), publish validation with the wizard step (M-039), status
  * transitions (M-040, M-167), live edits (M-037), drafts-only delete (M-038), quality checks (M-060),
- * skill suggestions (M-034) and the "N relevant" count with the non-AI fallback (M-051, P4-D9).
+ * skill suggestions (M-034) and the "N relevant" count (M-051): stored at once from the current scores, then
+ * recomputed with the job's new embedding on the next scheduler tick.
  */
 const J = LIMITS.job
 const QUALITY = { titleWords: 2, briefLength: 120, responsibilities: 3, requiredSkills: { min: 3, max: 8 } }
@@ -170,25 +171,6 @@ export function jobDto(job, company) {
   }
 }
 
-/* ---------- relevant counts (M-051 fallback, P4-D9, U7) ---------- */
-
-/** Candidates of the job's market sharing at least 1 required skill; stored on the job. */
-export async function refreshRelevantCounts(jobs) {
-  const markets = new Map()
-  for (const job of jobs) {
-    let count = 0
-    if (job.country) {
-      if (!markets.has(job.country)) markets.set(job.country, await marketCandidates(job.country))
-      count = markets.get(job.country).filter(({ profile }) => skillOverlap(profile.skills, job).requiredMatched > 0).length
-    }
-    job.relevantCount = count
-    await Job.updateOne({ _id: job._id }, { relevantCount: count, relevantComputedAt: new Date() }, { timestamps: false })
-  }
-}
-
-// U7: nightly at 03:00 server time, caught up at startup after 24 h (the scheduler's daily slots).
-dailyJobs.push({ name: 'relevance-nightly', hour: 3, run: async () => refreshRelevantCounts(await Job.find({ status: { $ne: 'closed' } })) })
-
 /* ---------- recruiter endpoints ---------- */
 
 async function ownJob(company, id) {
@@ -223,6 +205,7 @@ export const updateJob = stepErrors(async (user, company, id, body) => {
   if (job.status !== 'draft') assertPublishable(job)
   await job.save()
   await refreshRelevantCounts([job])
+  if (job.status !== 'draft') await scheduleRecompute('job', job._id)
   return job
 })
 
@@ -246,6 +229,7 @@ export const setStatus = stepErrors(async (company, id, status) => {
   job.status = status
   await job.save()
   if (firstPublish) await scheduleTask({ type: 'alerts.instant', key: `alerts.instant:${job._id}`, dueAt: now, payload: { jobId: String(job._id) } })
+  await scheduleRecompute('job', job._id)
   return job
 })
 

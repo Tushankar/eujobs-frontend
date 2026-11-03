@@ -2,6 +2,7 @@ import { PERMISSIONS } from '../config/enums.js'
 import { connectDb, disconnectDb } from '../lib/db.js'
 import { renderMarkdown } from '../lib/markdown.js'
 import { AdminRole, Permission } from '../modules/admin/admin.model.js'
+import { ensureDefaultPolicy } from '../modules/matching/matching.admin.js'
 import { Country, Faq, LegalDocument } from '../modules/meta/meta.model.js'
 import { AppConfig, Plan } from '../modules/payments/payments.model.js'
 import { COUNTRIES, PLANS, SYSTEM_ROLES } from './data/catalog.js'
@@ -11,8 +12,8 @@ import { ensureStripeCatalog } from './stripe.js'
 
 /*
  * seed:catalog (U41): an idempotent upsert of the catalogue. Countries, plans, permissions, FAQs and
- * legal texts match the data exactly; the system roles are only created when missing, so admin edits
- * to them survive.
+ * legal texts match the data exactly; the system roles and the default matching policy v1 (§3.20) are only
+ * created when missing, so admin edits to them survive.
  */
 async function upsertExactly(Model, key, rows) {
   await Model.bulkWrite(rows.map((row) => ({ updateOne: { filter: { [key]: row[key] }, update: { $set: row }, upsert: true } })))
@@ -20,6 +21,7 @@ async function upsertExactly(Model, key, rows) {
 }
 
 export async function seedCatalog() {
+  await ensureDefaultPolicy()
   await upsertExactly(Country, 'code', COUNTRIES)
   // U40, P6: the Stripe Product, Prices and Portal configuration; their ids live on the plan and in AppConfig('stripe').
   const { productId, priceIds, portalConfigurationId } = await ensureStripeCatalog(PLANS.find((plan) => plan.key === 'plus').prices)

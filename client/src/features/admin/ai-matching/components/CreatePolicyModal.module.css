@@ -92,3 +92,10 @@
   color: var(--primary-foreground);
   opacity: 0.4;
 }
+
+.assistError {
+  padding-top: 8px;
+  font-size: 11px;
+  line-height: 16px;
+  color: var(--destructive);
+}

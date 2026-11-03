@@ -1,87 +1,80 @@
 import { useState } from 'react'
+import { useTranslation } from 'react-i18next'
 import { Sparkles } from 'lucide-react'
 import aiSparkle from '@/assets/icons/ai-sparkle-blue-16.svg'
+import { useGetConfigQuery } from '@/app/api.js'
 import { Button, Icon, Modal, TextareaField, TextField } from '@/components/ui'
-import { suggestDescription } from '../data/matching.js'
+import { useErrorText, useFormState } from '@/lib/forms.js'
+import { useCreatePolicyMutation, useSuggestPolicyDescriptionMutation } from '../api.js'
+import { checkLength, policyErrorText } from './policyErrors.js'
 import styles from './CreatePolicyModal.module.css'
 
-function validate({ name, description }, existingNames) {
-  const errors = {}
-  const trimmedName = name.trim()
-  if (!trimmedName) errors.name = 'Enter a policy name.'
-  else if (trimmedName.length < 3) errors.name = 'Policy name must be at least 3 characters.'
-  else if (trimmedName.length > 60) errors.name = 'Policy name must be 60 characters or fewer.'
-  else if (existingNames.includes(trimmedName.toLowerCase())) {
-    errors.name = 'A policy with this name already exists. Choose a different name.'
-  }
-
-  const trimmedDescription = description.trim()
-  if (!trimmedDescription) errors.description = 'Describe the roles, market, or review context this policy supports.'
-  else if (trimmedDescription.length < 20) errors.description = 'Add more detail: at least 20 characters.'
-  else if (trimmedDescription.length > 500) errors.description = 'Keep the description to 500 characters or fewer.'
-  return errors
-}
-
 /**
- * "Create matching policy" dialog. Creates a named draft with every approved signal on; human review
- * stays required. "Improve description" is a local template rewrite, not a model call.
+ * "Create matching policy" (A: admin §1.19): a named draft with every signal on; human review stays required.
+ * "Improve description" asks OpenAI (OPENAI_MODEL, M-048) for a description in the admin's language.
  */
-export default function CreatePolicyModal({ existingNames, onClose, onCreate }) {
-  const [values, setValues] = useState({ name: '', description: '' })
-  const [errors, setErrors] = useState({})
+export default function CreatePolicyModal({ onClose, onCreated }) {
+  const { t } = useTranslation('aiMatching')
+  const errorText = useErrorText()
+  const { data: config } = useGetConfigQuery()
+  const [create, { isLoading }] = useCreatePolicyMutation()
+  const [suggest, suggesting] = useSuggestPolicyDescriptionMutation()
+  const form = useFormState({ name: '', description: '' })
   const [suggested, setSuggested] = useState(false)
-
+  const { values, errors } = form
+  const limits = config?.limits.matching
   const hasText = values.name.trim() !== '' && values.description.trim() !== ''
 
   function update(field) {
     return (event) => {
-      setValues((current) => ({ ...current, [field]: event.target.value }))
-      setErrors((current) => ({ ...current, [field]: undefined }))
+      form.set(field, event.target.value)
       setSuggested(false)
     }
   }
 
-  function handleImprove() {
-    setValues((current) => ({ ...current, description: suggestDescription(current.name, current.description) }))
-    setErrors((current) => ({ ...current, description: undefined }))
-    setSuggested(true)
+  async function handleImprove() {
+    suggesting.reset()
+    try {
+      const { description } = await suggest({ name: values.name.trim(), description: values.description.trim() }).unwrap()
+      form.set('description', description)
+      setSuggested(true)
+    } catch {
+      // The failure is shown under the button.
+    }
   }
 
-  function handleSubmit(event) {
+  async function handleSubmit(event) {
     event.preventDefault()
-    const nextErrors = validate(values, existingNames)
-    setErrors(nextErrors)
-    if (Object.keys(nextErrors).length > 0) return
-    onCreate({ name: values.name.trim(), description: values.description.trim() })
+    let created
+    const done = await form.run({ name: checkLength(values.name, limits.policyName), description: checkLength(values.description, limits.policyDescription) }, async () => {
+      created = await create({ name: values.name.trim(), description: values.description.trim() }).unwrap()
+    })
+    if (done) onCreated(created)
   }
 
   return (
-    <Modal open onClose={onClose} title="Create matching policy" width={512} divided>
+    <Modal open onClose={onClose} title={t('create.title')} width={512} divided>
       <form onSubmit={handleSubmit} noValidate>
-        <p className={styles.intro}>
-          Start a named draft with all approved evidence signals enabled. Human review is always required and cannot be
-          disabled.
-        </p>
+        <p className={styles.intro}>{t('create.intro')}</p>
 
         <TextField
           className={styles.field}
-          label="Policy name"
-          placeholder="For example, UK product roles"
+          label={t('create.name')}
+          placeholder={t('create.namePlaceholder')}
           value={values.name}
           onChange={update('name')}
-          error={errors.name}
-          maxLength={80}
+          error={policyErrorText(t, 'name', errors.name)}
           autoComplete="off"
           data-autofocus
         />
         <TextareaField
           className={styles.descriptionField}
-          label="Policy description"
-          placeholder="Describe the roles, market, or review context this policy supports."
-          hint="Explain when this policy should be used."
+          label={t('create.description')}
+          placeholder={t('create.descriptionPlaceholder')}
+          hint={t('create.descriptionHint')}
           value={values.description}
           onChange={update('description')}
-          error={errors.description}
+          error={policyErrorText(t, 'description', errors.description)}
           rows={4}
         />
 
@@ -90,31 +83,39 @@ export default function CreatePolicyModal({ existingNames, onClose, onCreate }) 
             <img src={aiSparkle} alt="" width={16} height={16} />
           </span>
           <div className={styles.assistBody}>
-            <p className={styles.assistTitle}>AI-assisted policy suggestion</p>
-            <p className={styles.assistText}>
-              {suggested
-                ? 'Suggestion added to the description. Review and edit it before creating the draft.'
-                : 'Add a policy name and description to receive a tailored suggestion.'}
+            <p className={styles.assistTitle}>{t('create.assistTitle')}</p>
+            <p className={styles.assistText} role="status">
+              {suggesting.isLoading ? t('create.improving') : suggested ? t('create.assistDone') : t('create.assistIdle')}
             </p>
             <Button
               variant="outline"
               className={styles.improve}
-              disabled={!hasText}
+              disabled={!hasText || suggesting.isLoading}
               onClick={handleImprove}
               leftIcon={<Icon as={Sparkles} size={13} />}
             >
-              Improve description
+              {t('create.improve')}
             </Button>
-            <p className={styles.assistNote}>Local suggestion only. Review and edit the result before creating the draft.</p>
+            {suggesting.isError && (
+              <p className={styles.assistError} role="alert">
+                {errorText.code(suggesting.error)}
+              </p>
+            )}
+            <p className={styles.assistNote}>{t('create.assistNote')}</p>
           </div>
         </div>
 
+        {form.failure && (
+          <p className={styles.assistError} role="alert">
+            {errorText.code(form.failure)}
+          </p>
+        )}
         <div className={styles.footer}>
           <Button variant="outline" onClick={onClose}>
-            Cancel
+            {t('create.cancel')}
           </Button>
-          <Button type="submit" className={styles.create} disabled={!hasText}>
-            Create draft policy
+          <Button type="submit" className={styles.create} disabled={!hasText || isLoading || !limits}>
+            {t('create.submit')}
           </Button>
         </div>
       </form>

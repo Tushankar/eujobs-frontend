@@ -1,0 +1,99 @@
+{
+  "page": {
+    "eyebrow": "Responsible AI",
+    "title": "Make the reasoning visible.",
+    "description": "Role-relevant signals. Clear evidence. Human decisions, always.",
+    "create": "Create policy",
+    "loadError": "The matching policies could not be loaded."
+  },
+  "signals": {
+    "skills": { "label": "Relevant skills", "description": "Share of the role's required skills listed on the candidate's profile." },
+    "experience": { "label": "Relevant experience", "description": "Meaning of the profile, work history and live CV compared with the job text. Years alone never decide a match." },
+    "location": { "label": "Location & work preferences", "description": "A different country or work mode caps the score below Good." },
+    "humanReview": { "label": "Require human review", "description": "Always on. AI cannot autonomously select, reject, contact or hire a candidate." }
+  },
+  "editor": {
+    "edit": "Edit name and description",
+    "cancel": "Cancel",
+    "saveDetails": "Save details",
+    "save": "Save reviewed policy",
+    "activate": "Make active",
+    "archive": "Archive draft",
+    "archivedNote": "Archived policies are read-only.",
+    "note": "Saving the active policy, or making a policy active, recomputes every match score with that version.",
+    "saved": "Version {{version}} saved.",
+    "savedActive": "Version {{version}} saved. Match scores are being recomputed.",
+    "activated": "“{{name}}” is now the active policy. Match scores are being recomputed.",
+    "archived": "“{{name}}” was archived.",
+    "detailsSaved": "Name and description saved.",
+    "history": "Version history",
+    "historyItem": "Version {{version}} · {{date}}",
+    "signalsOn": "On: {{signals}}"
+  },
+  "library": {
+    "title": "Policy library",
+    "description": "Select a policy to review or activate.",
+    "updated": "Updated {{date}}"
+  },
+  "guidance": {
+    "title": "Evidence. Not absolutes.",
+    "text": "Never use protected characteristics as matching inputs. Show potential gaps alongside strengths, and make every recommendation reviewable."
+  },
+  "status": {
+    "title": "Service status",
+    "connected": "Last successful call {{time}}",
+    "noCalls": "No OpenAI call yet",
+    "lastError": "Last failed call {{time}}",
+    "models": "Models",
+    "model": { "fast": "Fast", "main": "Main", "embedding": "Embeddings", "transcribe": "Transcription" }
+  },
+  "create": {
+    "title": "Create matching policy",
+    "intro": "Start a named draft with all approved evidence signals enabled. Human review is always required and cannot be disabled.",
+    "name": "Policy name",
+    "namePlaceholder": "For example, UK product roles",
+    "description": "Policy description",
+    "descriptionPlaceholder": "Describe the roles, market, or review context this policy supports.",
+    "descriptionHint": "Explain when this policy should be used.",
+    "assistTitle": "AI-assisted policy suggestion",
+    "assistIdle": "Add a policy name and description to receive a tailored suggestion.",
+    "assistDone": "Suggestion added to the description. Review and edit it before creating the draft.",
+    "improve": "Improve description",
+    "improving": "Writing a suggestion…",
+    "assistNote": "Written by OpenAI. Review and edit the result before creating the draft.",
+    "cancel": "Cancel",
+    "submit": "Create draft policy",
+    "created": "Draft policy “{{name}}” was created. Review its signals, then make it active."
+  },
+  "errors": {
+    "name": { "required": "Enter a policy name.", "too_short": "Policy name must be at least {{min}} characters.", "too_long": "Policy name must be {{max}} characters or fewer.", "taken": "A policy with this name already exists. Choose a different name." },
+    "description": { "required": "Describe the roles, market, or review context this policy supports.", "too_short": "Add more detail: at least {{min}} characters.", "too_long": "Keep the description to {{max}} characters or fewer." },
+    "signals": { "skills_or_experience": "Turn on skills or experience." }
+  },
+  "oversight": {
+    "title": "Recruiter match-summary oversight",
+    "description": "The top candidates of one job by match score. Recruiters see this ranking and the evidence, never the percentage.",
+    "job": "Job",
+    "noJobs": "No published jobs yet.",
+    "noCandidates": "No candidate in this job's market has a match score yet.",
+    "percentLabel": "Match score {{score}}",
+    "caption": "Skills, experience and work preferences. Human review remains required.",
+    "select": "Show the evidence for {{name}}"
+  },
+  "evidence": {
+    "title": "Match evidence for {{name}}",
+    "subtitle": "Computed from the profile and the job; no AI wrote this.",
+    "matched": "Skills listed for this job",
+    "missing": "Required skills not listed",
+    "none": "None",
+    "years": "{{candidate}} years reported · the job asks for {{required}}+",
+    "yearsNoRequirement": "{{candidate}} years reported · no minimum set",
+    "workMode": "Prefers {{candidate}} · the job is {{job}}",
+    "location": { "met": "Location fits the job", "notMet": "Location or work mode does not fit the job" },
+    "languages": "Required languages",
+    "language": "{{language}}: needs {{minLevel}}, has {{level}}",
+    "languageMissing": "{{language}}: needs {{minLevel}}, not listed",
+    "rightToWork": { "true": "Right to work in the job's country", "false": "No right to work in the job's country listed" },
+    "disclaimer": "Based on profile evidence and stated preferences, not a hiring decision. You remain in control."
+  }
+}

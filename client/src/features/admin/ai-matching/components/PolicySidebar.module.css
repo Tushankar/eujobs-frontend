@@ -92,3 +92,29 @@
   line-height: 24px;
   color: var(--muted-foreground);
 }
+
+.models {
+  display: flex;
+  flex-direction: column;
+  gap: 4px;
+  padding-top: 8px;
+}
+
+.modelRow {
+  display: flex;
+  justify-content: space-between;
+  gap: 12px;
+  font-size: 11px;
+  line-height: 18px;
+}
+
+.modelRow dt {
+  color: var(--muted-foreground);
+}
+
+.modelRow dd {
+  min-width: 0;
+  overflow-wrap: anywhere;
+  color: var(--foreground);
+  text-align: right;
+}
