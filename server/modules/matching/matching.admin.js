@@ -2,6 +2,7 @@ import { LIMITS } from '../../config/limits.js'
 import { generate } from '../../lib/ai.js'
 import { actorFor, recordAudit } from '../../lib/audit.js'
 import { AppError, fieldError } from '../../lib/errors.js'
+import { ExplanationFeedback } from '../ai/ai.model.js'
 import { Company } from '../companies/companies.model.js'
 import { marketCandidates } from '../discovery/discovery.population.js'
 import { Job } from '../jobs/jobs.model.js'
@@ -163,4 +164,22 @@ export async function oversight({ jobId, candidateId }) {
     candidates: top.map(({ entry, result }) => ({ id: String(entry.user._id), fullName: entry.user.fullName, headline: entry.profile.headline ?? '', score: result.score, label: result.label ?? null })),
     selected: chosen ? { candidateId: String(chosen.entry.user._id), evidence: matchEvidence(chosen.entry.profile, job) } : null,
   }
+}
+
+/* ---------- explanation feedback (M-067) ---------- */
+
+/** "Helpful" and "Needs review" in total and per job, the most rated jobs first. */
+export async function feedbackSummary() {
+  const rows = await ExplanationFeedback.aggregate([{ $group: { _id: { jobId: '$jobId', value: '$value' }, count: { $sum: 1 } } }])
+  const byJob = new Map()
+  for (const { _id, count } of rows) {
+    const entry = byJob.get(String(_id.jobId)) ?? { helpful: 0, needsReview: 0 }
+    entry[_id.value === 'helpful' ? 'helpful' : 'needsReview'] += count
+    byJob.set(String(_id.jobId), entry)
+  }
+  const titles = new Map((await Job.find({ _id: { $in: [...byJob.keys()] } }, 'title')).map((job) => [String(job._id), job.title]))
+  const jobs = [...byJob.entries()]
+    .map(([id, counts]) => ({ id, title: titles.get(id) ?? null, ...counts }))
+    .sort((a, b) => b.helpful + b.needsReview - (a.helpful + a.needsReview))
+  return { helpful: jobs.reduce((sum, job) => sum + job.helpful, 0), needsReview: jobs.reduce((sum, job) => sum + job.needsReview, 0), jobs }
 }

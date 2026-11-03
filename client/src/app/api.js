@@ -89,6 +89,8 @@ export const api = createApi({
     'MatchingPolicies',
     'Oversight',
     'AiStatus',
+    'Insights',
+    'AdminJobs',
   ],
   endpoints: (build) => ({
     getMe: build.query({ query: () => '/me', providesTags: ['Me'] }),

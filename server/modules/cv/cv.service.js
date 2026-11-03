@@ -19,6 +19,10 @@ const versionDto = (version, liveId) => ({
   noReadableText: version.noReadableText,
   createdAt: version.createdAt,
   live: String(version._id) === String(liveId),
+  // M-027, M-061 (Phase 9): the confirmed snapshot, a proposal waiting for confirmation, and assisted drafts.
+  snapshot: version.snapshot?.role ? { role: version.snapshot.role, years: version.snapshot.years, skills: version.snapshot.skills } : null,
+  pendingSnapshot: version.pendingSnapshot ?? null,
+  drafts: version.drafts.map((draft) => ({ id: String(draft._id), suggestions: draft.suggestions, revisedSnapshot: draft.revisedSnapshot, createdAt: draft.createdAt })),
 })
 
 /** GET /candidate/cv: the versions that still have a file, newest first. */
@@ -56,7 +60,7 @@ export async function uploadVersion(user, upload) {
   return version
 }
 
-async function ownVersion(user, id) {
+export async function ownVersion(user, id) {
   const version = await CvVersion.findOne({ _id: id, userId: user._id, fileId: { $ne: null } })
   if (!version) throw new AppError('NOT_FOUND')
   return version

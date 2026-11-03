@@ -3,6 +3,7 @@ import { scheduleTask } from '../../jobs/scheduler.js'
 import { AppError, fieldError } from '../../lib/errors.js'
 import { searchText, skillEntries } from '../../lib/skills.js'
 import { validationError } from '../../lib/validate.js'
+import { Company } from '../companies/companies.model.js'
 import { Country } from '../meta/meta.model.js'
 import { refreshRelevantCounts, scheduleRecompute } from '../matching/matching.service.js'
 import { resolvePlace } from '../places/places.service.js'
@@ -177,6 +178,14 @@ async function ownJob(company, id) {
   const job = await Job.findOne({ _id: id, companyId: company._id })
   if (!job) throw new AppError('NOT_FOUND')
   return job
+}
+
+/** P9-Q5: every job that is not a draft, newest first, with its company's display name. */
+export async function adminJobs() {
+  const jobs = await Job.find({ status: { $ne: 'draft' } }).sort({ publishedAt: -1 })
+  const companies = new Map((await Company.find({ _id: { $in: jobs.map((job) => job.companyId) } }, 'displayName')).map((company) => [String(company._id), company]))
+  const items = jobs.map((job) => jobDto(job, companies.get(String(job.companyId))))
+  return { items, total: items.length, page: 1, pageSize: items.length }
 }
 
 export async function listJobs(company) {

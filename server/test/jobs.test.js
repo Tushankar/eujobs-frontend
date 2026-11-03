@@ -222,7 +222,7 @@ describe('candidate job browsing (M-043, M-044, M-052, M-053, OD2, U8, U25, P4-Q
     assert.deepEqual(saved.map((job) => [job.id, job.accepting]), [[weak.id, false]])
 
     const overview = (await api().get('/api/v1/candidate/overview').set(auth(candidate))).body
-    assert.deepEqual(overview, { recommended: { count: 1, newThisWeek: 1 }, savedJobs: 1, profileViews: { last30: 0, previous30: 0 } })
+    assert.deepEqual(overview, { recommended: { count: 1, newThisWeek: 1, byScore: false }, savedJobs: 1, profileViews: { last30: 0, previous30: 0 } })
   })
 
   it('hides drafts from candidates (P4-17)', async () => {

@@ -1,0 +1,45 @@
+{
+  "status": {
+    "loading": "Writing with AI…",
+    "unavailable": "The AI service didn't answer. The evidence shown is unchanged; try again in a moment.",
+    "notFound": "This is no longer available.",
+    "retry": "Try again",
+    "limit": "You've used today's 50 AI generations. They start again at {{time}}. Texts written earlier still show.",
+    "plan": "AI texts are part of Plus.",
+    "upgrade": "See Plus"
+  },
+  "badge": "Written by AI",
+  "translate": {
+    "action": "Translate",
+    "done": "Translated by AI into {{language}}",
+    "original": "Show original"
+  },
+  "jobSummary": {
+    "action": "AI job summary",
+    "actionLabel": "AI job summary for {{title}}",
+    "title": "AI job summary",
+    "lead": "Written by AI from the job posting. Check the posting before relying on it; this is not a hiring decision.",
+    "overview": "Overview",
+    "highlights": "Highlights",
+    "considerations": "Worth checking",
+    "skills": "Required skills",
+    "close": "Close",
+    "regenerate": "Regenerate",
+    "regenerated": "A new summary was written."
+  },
+  "profileSummary": {
+    "action": "Ai Job Summary",
+    "title": "Ai Job Summary",
+    "lead": "A recruiter-ready summary written by AI from your profile and live CV. Read it before you use it.",
+    "copy": "Copy summary",
+    "copied": "Summary copied to your clipboard.",
+    "copyFailed": "Copying is blocked in this browser. Select the text and copy it instead.",
+    "close": "Close"
+  },
+  "explanation": {
+    "title": "Why this job",
+    "strengths": "Strengths",
+    "gaps": "Gaps and open questions",
+    "openQuestions": "Questions to ask"
+  }
+}

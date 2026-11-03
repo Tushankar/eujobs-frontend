@@ -27,5 +27,17 @@ const aiUsageSchema = new Schema(
 )
 aiUsageSchema.index({ userId: 1, day: 1 }, { unique: true })
 
+/* M-067: one "Helpful" or "Needs review" per candidate and job, aggregated for admins. */
+const explanationFeedbackSchema = new Schema(
+  {
+    candidateId: { type: Schema.Types.ObjectId, ref: 'User', required: true },
+    jobId: { type: Schema.Types.ObjectId, ref: 'Job', required: true },
+    value: { type: String, enum: ['helpful', 'needs_review'], required: true },
+  },
+  { timestamps: true },
+)
+explanationFeedbackSchema.index({ candidateId: 1, jobId: 1 }, { unique: true })
+
 export const AiCache = mongoose.model('AiCache', aiCacheSchema)
 export const AiUsage = mongoose.model('AiUsage', aiUsageSchema)
+export const ExplanationFeedback = mongoose.model('ExplanationFeedback', explanationFeedbackSchema)

@@ -20,6 +20,8 @@ const profileSchema = new Schema(
     about: String,
     yearsExperience: Number,
     skills: [{ _id: false, name: String, key: String }],
+    // P9-Q2: skills the candidate plans to learn (never profile skills); they also rank "Suggested for you".
+    learningPlan: [{ _id: false, name: String, key: String }],
     workPreference: { type: String, enum: ENUMS.workPreference },
     availability: { type: String, enum: ENUMS.availability, default: 'open_to_opportunities' },
     salaryMin: new Schema({ amount: Number, currency: String, period: { type: String, enum: ENUMS.salaryPeriod } }, { _id: false }),

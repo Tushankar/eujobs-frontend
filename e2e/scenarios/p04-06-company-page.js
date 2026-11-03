@@ -72,7 +72,12 @@ export default {
       const src = document.querySelector('img[alt="Northlight logo"]')?.src
       return src && src !== previous
     }, {}, pngSrc)
-    await page.waitForNetworkIdle()
+    const pending = new Map()
+    const started = (request) => pending.set(request, Date.now())
+    const ended = (request) => pending.delete(request)
+    page.on('request', started); page.on('requestfinished', ended); page.on('requestfailed', ended)
+    try { await page.waitForNetworkIdle({ timeout: 20000 }) } catch (error) { ctx.note('DEBUG idle wait failed: ' + error.message + ' | pending: ' + [...pending].map(([r, t]) => r.method() + ' ' + r.url().replace(/sig=[^&]+/, 'sig=…') + ' ' + (Date.now() - t) + 'ms').join(' ; ')); throw error }
+    ctx.note('DEBUG idle ok; still tracked: ' + [...pending].map(([r]) => r.url().slice(-60)).join(' ; '))
     const [stored] = await db('files', 'find', { filter: { ownerId: { $oid: (await api('/me', { token })).body.id }, purpose: 'company_logo' } })
     const served = readFileSync(join(UPLOAD_ROOT, stored.path), 'utf8')
     ctx.check(!/script|onload|onclick/i.test(served) && served.includes('<rect'), 'the served SVG has no script and no on* attribute')

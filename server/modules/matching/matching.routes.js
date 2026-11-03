@@ -42,6 +42,10 @@ adminMatchingRouter.post('/policies/:id/archive', manage, idParams, async (req, 
   res.json(await admin.archivePolicy(req.user, req.params.id))
 })
 
+adminMatchingRouter.get('/feedback', view, async (req, res) => {
+  res.json(await admin.feedbackSummary())
+})
+
 adminMatchingRouter.get('/oversight', view, validate({ query: schemas.oversightQuery }), async (req, res) => {
   res.json(await admin.oversight(req.query))
 })

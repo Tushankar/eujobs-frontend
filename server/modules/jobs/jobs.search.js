@@ -79,6 +79,12 @@ async function cardContext(user, jobs) {
   }
 }
 
+/** Job cards for any jobs of this candidate's (AI insights role picker, M-063). */
+export async function jobCards(user, jobs) {
+  const context = await cardContext(user, jobs)
+  return jobs.map((job) => context.card(job))
+}
+
 /** §3.6 keywords: title, company, skills, city, work mode, level or industry; labels in the user's language. */
 export function haystack(job, company, language) {
   return searchText(

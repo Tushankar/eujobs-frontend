@@ -9,7 +9,8 @@ import { courseCards } from './learning.service.js'
 /*
  * "Suggested for you" (M-114, OQ-3): rule-based, for Free and Plus alike, never AI.
  * - Candidates: gap skills = required skills missing from the profile across saved jobs, applied jobs and the first
- *   10 For-you jobs; published candidate courses not enrolled, ranked by how many gap skills their tags match.
+ *   10 For-you jobs; published candidate courses not enrolled, ranked by how many gap skills their tags match. The
+ *   learning-plan skills count as gap skills too (P9-Q2).
  * - Recruiters: up to 3 published recruiter courses not enrolled whose pipeline category holds the most active
  *   applications at the company ("{n} active applications at {stage}"); a category with none is not suggested.
  */
@@ -40,14 +41,19 @@ async function gapSkills(user) {
 }
 
 async function candidateSuggestions(user) {
-  const gaps = await gapSkills(user)
-  const gapKeys = new Set(gaps.map((gap) => gap.key))
+  const [gaps, profile] = await Promise.all([gapSkills(user), CandidateProfile.findOne({ userId: user._id }, 'learningPlan')])
+  const plan = profile?.learningPlan ?? []
+  const gapKeys = new Set([...gaps, ...plan].map((skill) => skill.key))
   const ranked = (await availableCourses(user))
     .map((course) => ({ course, matched: course.skillTags.filter((tag) => gapKeys.has(tag.key)).map((tag) => tag.name) }))
     .filter((entry) => entry.matched.length > 0)
     .sort((a, b) => b.matched.length - a.matched.length || a.course.title.localeCompare(b.course.title))
   const cards = await courseCards(user, ranked.map((entry) => entry.course))
-  return { gapSkills: gaps.map((gap) => gap.name), items: cards.map((card, index) => ({ ...card, matchedSkills: ranked[index].matched })) }
+  return {
+    gapSkills: gaps.map((gap) => gap.name),
+    planSkills: plan.filter((skill) => !gaps.some((gap) => gap.key === skill.key)).map((skill) => skill.name),
+    items: cards.map((card, index) => ({ ...card, matchedSkills: ranked[index].matched })),
+  }
 }
 
 async function recruiterSuggestions(user) {

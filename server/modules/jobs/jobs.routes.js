@@ -2,12 +2,13 @@ import { Router } from 'express'
 import { z } from 'zod'
 import { objectId, validate } from '../../lib/validate.js'
 import { requireApprovedRecruiter, requireAuth, requireRole } from '../../middleware/auth.js'
+import { requirePermission } from '../../middleware/permissions.js'
 import { relevantTalent } from '../discovery/discovery.service.js'
 import * as schemas from './jobs.schemas.js'
 import * as search from './jobs.search.js'
 import * as jobs from './jobs.service.js'
 
-/* /recruiter/jobs and /skills (approved recruiters), /jobs and /candidate/saved-jobs (candidates) (§5). */
+/* /recruiter/jobs and /skills (approved recruiters), /jobs and /candidate/saved-jobs (candidates), /admin/jobs (§5). */
 const jobParams = validate({ params: schemas.jobParams })
 
 export const recruiterRouter = Router()
@@ -87,4 +88,10 @@ savedRouter.put('/:jobId', savedParams, async (req, res) => {
 savedRouter.delete('/:jobId', savedParams, async (req, res) => {
   await search.unsaveJob(req.user, req.params.jobId)
   res.json({ saved: false })
+})
+
+/* GET /admin/jobs (P9-Q5): the minimal admin list for the AI summaries; Phase 10 adds the filter and the rest (M-046). */
+export const adminRouter = Router()
+adminRouter.get('/', requireAuth, requireRole('admin'), requirePermission('jobs.view'), async (req, res) => {
+  res.json(await jobs.adminJobs())
 })

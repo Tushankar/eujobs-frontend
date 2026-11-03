@@ -2,6 +2,7 @@ import { Router } from 'express'
 import { config } from '../config/env.js'
 import { dbStatus } from '../lib/db.js'
 import adminRoutes from '../modules/admin/admin.routes.js'
+import * as aiRoutes from '../modules/ai/ai.routes.js'
 import alertRoutes from '../modules/alerts/alerts.routes.js'
 import * as applicationRoutes from '../modules/applications/applications.routes.js'
 import authRoutes from '../modules/auth/auth.routes.js'
@@ -40,11 +41,16 @@ router.use('/candidate/verification', verificationRoutes.candidateRouter)
 router.use('/candidate/saved-jobs', jobRoutes.savedRouter)
 router.use('/candidate/job-alerts', alertRoutes)
 router.use('/candidate/subscription', paymentRoutes.subscriptionRouter)
+router.use('/candidate/insights', aiRoutes.insightsRouter)
+router.use('/candidate', aiRoutes.candidateRouter)
 router.use('/candidate', candidateRoutes)
+router.use('/jobs', aiRoutes.jobSummaryRouter)
 router.use('/jobs', jobRoutes.candidateRouter)
+router.use('/translate', aiRoutes.translateRouter)
 router.use('/recruiter/onboarding', companyRoutes.onboardingRouter)
 router.use('/recruiter/company', companyRoutes.companyRouter)
 router.use('/recruiter/jobs', jobRoutes.recruiterRouter)
+router.use('/recruiter/candidates', aiRoutes.recruiterRouter)
 router.use('/recruiter/candidates', discoveryRoutes.candidatesRouter)
 router.use('/recruiter/shortlist', discoveryRoutes.shortlistRouter)
 router.use('/recruiter/overview', discoveryRoutes.overviewRouter)
@@ -59,6 +65,8 @@ router.use('/public/certificates', learningRoutes.publicCertificatesRouter)
 router.use('/admin/courses', learningRoutes.adminCoursesRouter)
 router.use('/admin', learningRoutes.adminToolsRouter)
 router.use('/admin/matching', matchingRoutes.adminMatchingRouter)
+router.use('/admin/jobs', jobRoutes.adminRouter)
+router.use('/admin/jobs', aiRoutes.adminRouter)
 router.use('/admin/ai', matchingRoutes.adminAiRouter)
 router.use('/admin/moderation/verification', verificationRoutes.adminRouter)
 router.use('/admin/moderation/accounts', companyRoutes.adminRouter)
