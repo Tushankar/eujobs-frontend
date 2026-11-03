@@ -183,6 +183,7 @@
         "Bonjour {{name}},",
         "{{countLabel}} pour votre alerte « {{alertName}} » depuis votre dernier récapitulatif :"
       ],
+      "more": "Voici les {{shown}} plus récentes. Voir les {{total}} offres :",
       "action": "Trouver un emploi",
       "secondary": "Gérez vos alertes emploi :"
     },
@@ -193,6 +194,7 @@
         "Bonjour {{name}},",
         "{{countLabel}} pour votre alerte « {{alertName}} » depuis votre dernier récapitulatif :"
       ],
+      "more": "Voici les {{shown}} plus récentes. Voir les {{total}} offres :",
       "action": "Trouver un emploi",
       "secondary": "Gérez vos alertes emploi :"
     }

@@ -1,5 +1,4 @@
 import { CV_STORAGE_KEY, EMPTY_CV } from '../../cv/data/cvVersions.js'
-import { LEARNING_STORAGE_KEY } from '../../learning/data/courses.js'
 import { PROFILE_STORAGE_KEY } from '../../profile/data/profile.js'
 import { experienceLabel, salaryLabel } from '../../profile/utils/profileText.js'
 import { CREDENTIAL_CHECKS } from '../../verification/data/verification.js'
@@ -49,7 +48,6 @@ export function deleteCandidateData() {
     removeKeys((key) => key.startsWith(CANDIDATE_PREFIX) && !key.startsWith(SETTINGS_PREFIX))
     window.localStorage.setItem(PROFILE_STORAGE_KEY, 'null')
     window.localStorage.setItem(CV_STORAGE_KEY, JSON.stringify(EMPTY_CV))
-    window.localStorage.setItem(LEARNING_STORAGE_KEY, JSON.stringify({ purchased: [], completedLessons: {} }))
     EMPTY_LIST_KEYS.forEach((key) => window.localStorage.setItem(key, '[]'))
   })
 }

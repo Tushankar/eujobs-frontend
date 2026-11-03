@@ -1,4 +1,5 @@
 import { useEffect, useState } from 'react'
+import { useSearchParams } from 'react-router-dom'
 import { useTranslation } from 'react-i18next'
 import { ChevronDown, SearchX, Search, SlidersHorizontal } from 'lucide-react'
 import { Button, Icon, TextField } from '@/components/ui'
@@ -18,13 +19,16 @@ const DEBOUNCE_MS = 300
 
 /**
  * Find jobs (M-137, OD2, §3.6): the header country's jobs, or the Remote view, from the server with keyword search,
- * filters and sort; the list shows nine at a time. The page-level AI summary is gone (M-059).
+ * filters and sort; the list shows nine at a time. The page-level AI summary is gone (M-059). `?q=` fills the search
+ * (the "See all" link of a job alert digest).
  */
 export default function FindJobsPage() {
   const { t } = useTranslation()
   const format = useFormat()
-  const [query, setQuery] = useState('')
-  const [debounced, setDebounced] = useState('')
+  const [urlParams] = useSearchParams()
+  const initialQuery = urlParams.get('q') ?? ''
+  const [query, setQuery] = useState(initialQuery)
+  const [debounced, setDebounced] = useState(initialQuery)
   const [filters, setFilters] = useState(EMPTY_FILTERS)
   const [sort, setSort] = useState('recommended')
   const [visible, setVisible] = useState(PAGE_SIZE)

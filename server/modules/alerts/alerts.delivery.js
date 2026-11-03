@@ -1,5 +1,6 @@
 import { DateTime } from 'luxon'
 import { config } from '../../config/env.js'
+import { LIMITS } from '../../config/limits.js'
 import { taskHandlers, tickJobs } from '../../jobs/scheduler.js'
 import { interpolate, t } from '../../lib/i18n.js'
 import { sendEmail } from '../../lib/mailer.js'
@@ -14,7 +15,8 @@ import { AlertMatch, JobAlert } from './alerts.model.js'
 /*
  * Alert delivery (§3.6, §3.17). Instant alerts run once per job, on its first publish (M-097, `alerts.instant` task
  * scheduled by the jobs service). Daily and weekly digests are checked on every tick: 08:00, and Monday 08:00, in
- * the user's time zone, listing jobs first published since the last digest; empty digests are not sent (U12).
+ * the user's time zone, listing the open jobs first published since the last digest, at most 20 (the newest) with
+ * "See all"; empty digests are not sent (U12).
  * Alerts of candidates without `job_alerts` are paused (M-119). A job goes out at most once per alert.
  */
 const DIGEST_HOUR = 8
@@ -39,10 +41,15 @@ async function entitledIds(ids) {
   return new Set(unique.filter((id, index) => states[index].entitlements.includes('job_alerts')))
 }
 
+/** The jobs not yet sent for this alert. */
+async function unsentJobs(alert, jobs) {
+  const sent = new Set((await AlertMatch.find({ alertId: alert._id, jobId: { $in: jobs.map((job) => job._id) } }, 'jobId')).map((match) => String(match.jobId)))
+  return jobs.filter((job) => !sent.has(String(job._id)))
+}
+
 /** Records the matches first; a job already sent for this alert is dropped (the unique pair). */
 async function claimMatches(alert, jobs, mode, now) {
-  const sent = new Set((await AlertMatch.find({ alertId: alert._id, jobId: { $in: jobs.map((job) => job._id) } }, 'jobId')).map((match) => String(match.jobId)))
-  const fresh = jobs.filter((job) => !sent.has(String(job._id)))
+  const fresh = await unsentJobs(alert, jobs)
   if (fresh.length) await AlertMatch.insertMany(fresh.map((job) => ({ alertId: alert._id, jobId: job._id, mode, sentAt: now })), { ordered: false })
   return fresh
 }
@@ -96,9 +103,17 @@ async function sendDigests(now) {
     const user = users.get(String(alert.candidateId))
     const jobs = await Job.find({ ...visible, country: alert.country, firstPublishedAt: { $gt: alert.lastDigestAt ?? alert.createdAt, $lte: now } }).sort({ firstPublishedAt: -1 })
     const companies = new Map((await Company.find({ _id: { $in: jobs.map((job) => job.companyId) } }, 'displayName industry')).map((company) => [String(company._id), company]))
-    const fresh = await claimMatches(alert, jobs.filter((job) => alertMatches(alert, job, companies.get(String(job.companyId)))), 'digest', now)
+    const matching = jobs.filter((job) => alertMatches(alert, job, companies.get(String(job.companyId))))
+    const unsent = await unsentJobs(alert, matching)
+    // The newest jobs only; the rest are reached through "See all" and are not recorded as sent.
+    const fresh = await claimMatches(alert, unsent.slice(0, LIMITS.jobAlert.digestItems), 'digest', now)
     if (fresh.length) {
-      const countLabel = interpolate(t(user.language, `labels.alertJobs.${fresh.length === 1 ? 'one' : 'other'}`), { count: fresh.length })
+      const countLabel = interpolate(t(user.language, `labels.alertJobs.${unsent.length === 1 ? 'one' : 'other'}`), { count: unsent.length })
+      const more = unsent.length > fresh.length && {
+        shown: fresh.length,
+        total: unsent.length,
+        moreLink: `${config.clientOrigin}/candidate/jobs?${new URLSearchParams({ q: alert.keywords })}`,
+      }
       await sendEmail({
         type: alert.frequency === 'daily' ? 'alert_daily' : 'alert_weekly',
         to: user.email,
@@ -111,6 +126,7 @@ async function sendDigests(now) {
           items: fresh.map((job) => jobLine(job, companies.get(String(job.companyId)), user.language)),
           link: `${config.clientOrigin}/candidate/jobs`,
           secondaryLink: `${config.clientOrigin}/candidate/job-alerts`,
+          ...more,
         },
       })
     }

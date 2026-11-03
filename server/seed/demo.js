@@ -24,6 +24,7 @@ import { User } from '../modules/users/users.model.js'
 import { VerificationSubmission } from '../modules/verification/verification.model.js'
 import { seedApplications } from './applications.js'
 import { seedCandidates } from './candidates.js'
+import { seedLearning } from './learning.js'
 import { seedMessages } from './messages.js'
 import { CANDIDATES, CITY_TIME_ZONES } from './data/candidates.js'
 import { DEMO_ACCOUNTS } from './data/demo.js'
@@ -136,6 +137,7 @@ export async function seedDemo() {
   await seedCandidates({ emailOf, owner, now: now.getTime() })
   await seedRecruiters({ emailOf, owner, now: now.getTime() })
   await seedPayments({ emailOf, now: now.getTime() })
+  await seedLearning({ emailOf, owner, now: now.getTime() })
   await seedApplications({ emailOf, now: now.getTime() })
   await seedMessages({ emailOf, now: now.getTime() })
 }

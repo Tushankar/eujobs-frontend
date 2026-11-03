@@ -66,6 +66,13 @@ export function weekdayLabels(locale) {
   return Array.from({ length: 7 }, (_, index) => format.format(new Date(Date.UTC(2024, 0, 1 + index))))
 }
 
+/** A duration in seconds as hours and minutes ("2h 20m", "45 min"), at least one minute (course and lesson lengths). */
+export function formatDuration(seconds, locale) {
+  const minutes = Math.max(1, Math.round(seconds / 60))
+  const hours = Math.floor(minutes / 60)
+  return new Intl.DurationFormat(locale, { style: hours ? 'narrow' : 'short' }).format({ hours, minutes: minutes % 60 })
+}
+
 /** "84 kB", "2.4 MB" in the user's locale. */
 export function formatFileSize(bytes, locale) {
   const megabytes = bytes / (1024 * 1024)

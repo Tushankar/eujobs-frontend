@@ -12,6 +12,7 @@ import { CandidateProfile } from '../modules/candidates/candidates.model.js'
 import { Company, KycDocument } from '../modules/companies/companies.model.js'
 import { ProfileView, RecruiterActivity, ShortlistEntry } from '../modules/discovery/discovery.model.js'
 import { Job, SavedJob } from '../modules/jobs/jobs.model.js'
+import { Course, Enrollment } from '../modules/learning/learning.model.js'
 import { File } from '../modules/files/files.model.js'
 import { Conversation, Message } from '../modules/messages/messages.model.js'
 import { Country, Faq, LegalDocument } from '../modules/meta/meta.model.js'
@@ -122,7 +123,7 @@ describe('seed:demo (§3.20, OD9, P12)', () => {
       assert.deepEqual([profile.completeness.complete, profile.completeness.total], [true, 12], profile.userId.email)
       assert.match(profile.userId.phone.e164, /^\+4420794601\d\d$/)
     }
-    const files = await File.find({ purpose: { $ne: 'kyc' } })
+    const files = await File.find({ purpose: { $in: ['cv', 'photo', 'evidence'] } })
     // 7 CVs; 6 × (2 photo sizes + 3 evidence files)
     assert.equal(files.length, 7 + 6 * 5)
     assert.ok(files.every((file) => existsSync(absolutePath(file))), 'every file is on disk')
@@ -266,5 +267,35 @@ describe('seed:demo (§3.20, OD9, P12)', () => {
         [String(emma._id), 'Senior design roles in fintech', 'weekly', 'GB', null],
       ],
     )
+  })
+
+  it('seeds the 12 published courses with covers, 3 text lessons and 5 questions each, and the enrollments of the course payments (Phase 8, M-207, M-209)', async () => {
+    const courses = await Course.find().sort({ audience: 1, title: 1 })
+    assert.equal(courses.length, 12)
+    assert.deepEqual([...new Set(courses.map((course) => course.audience))], ['candidate', 'recruiter'])
+    for (const course of courses) {
+      assert.equal(course.status, 'published')
+      assert.equal(course.lessons.length, 3)
+      assert.equal(course.quiz.questions.length, 5)
+      assert.ok(course.quiz.questions.every((question) => question.correctOptionIds.length === 1))
+      assert.equal(course.prices.length, 8)
+      assert.ok(course.lessons.every((lesson) => lesson.textHtml.includes('<h2>') && lesson.durationSec >= 60))
+      assert.ok(existsSync(absolutePath(await File.findById(course.coverFileId))))
+    }
+    const tech = courses.find((course) => course.title === 'Hiring Technology & Product Talent')
+    assert.deepEqual([tech.pipelineCategory, tech.prices.find((price) => price.currency === 'HUF').amountMinor], ['screening', 2199000])
+
+    const done = async (tag) => {
+      const user = await User.findOne({ email: demoAddress(tag) })
+      const enrollment = await Enrollment.findOne({ userId: user._id }).populate('courseId', 'title lockedAt')
+      const payment = await Payment.findOne({ userId: user._id, kind: 'course' })
+      assert.equal(payment.itemId, String(enrollment.courseId._id))
+      assert.ok(enrollment.courseId.lockedAt)
+      return [enrollment.courseId.title, enrollment.source, enrollment.lessons.filter((lesson) => lesson.completedAt).length]
+    }
+    assert.deepEqual(await done('alex'), ['Interaction design foundations', 'seed', 1])
+    assert.deepEqual(await done('sarah'), ['Hiring Technology & Product Talent', 'seed', 1])
+    assert.deepEqual(await done('emma'), ['Interaction systems in practice', 'seed', 0])
+    assert.equal(await Enrollment.countDocuments(), 3)
   })
 })

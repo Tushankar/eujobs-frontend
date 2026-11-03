@@ -74,6 +74,7 @@ export function MessageCandidateButton({ candidate, job }) {
   const [open, setOpen] = useState(false)
   const firstName = candidate.fullName.split(' ')[0]
   if (existing) return <OpenConversationLink conversation={existing} fullWidth />
+  if (!candidate.canStartConversation) return null
   return (
     <>
       <Button variant="outline" fullWidth leftIcon={messageIcon} data-start-conversation onClick={() => setOpen(true)}>
@@ -108,13 +109,15 @@ export function CompanyMessageDialog({ job, onClose }) {
 /**
  * "Message the company": opens the existing thread, or the start dialog (the upgrade without the plan). Inside
  * another dialog, pass `onStart` so the caller closes that one first and then opens CompanyMessageDialog itself.
+ * `canStart` is false for a withdrawn application, which does not allow a new thread.
  */
-export function MessageCompanyButton({ job, onStart, ...buttonProps }) {
+export function MessageCompanyButton({ job, canStart = true, onStart, ...buttonProps }) {
   const { t } = useTranslation()
   const startWith = useCompanyMessageStart()
   const existing = useExistingConversation(job.company.id)
   const [open, setOpen] = useState(false)
   if (existing) return <OpenConversationLink conversation={existing} {...buttonProps} />
+  if (!canStart) return null
 
   const handleClick = () => (onStart ? onStart() : startWith(() => setOpen(true)))
   return (

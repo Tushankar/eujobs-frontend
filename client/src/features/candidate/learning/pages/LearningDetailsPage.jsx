@@ -1,84 +1,84 @@
-import { useState } from 'react'
+import { useTranslation } from 'react-i18next'
 import { Link, useParams } from 'react-router-dom'
 import { ArrowLeft, BookOpen, Check, CirclePlay, GraduationCap, ShieldCheck } from 'lucide-react'
-import { Button, Icon, Modal, Panel } from '@/components/ui'
+import { Button, Icon, Panel } from '@/components/ui'
 import EmptyState from '@/components/common/EmptyState.jsx'
 import PageTitle from '@/components/common/PageTitle.jsx'
 import PillBadge from '@/components/common/PillBadge.jsx'
+import { useFormat } from '@/lib/preferences.js'
+import { useGetCourseQuery } from '@/features/learning/api.js'
+import CourseAction from '@/features/learning/components/CourseAction.jsx'
+import { useCourseText } from '@/features/learning/useCourseText.js'
 import LessonRow from '../components/LessonRow.jsx'
-import { formatPrice, useLearning } from '../hooks/useLearning.js'
 import styles from './LearningDetailsPage.module.css'
 
-const INCLUDED = ['pre-recorded lessons', 'Completion assessment', 'Course-completion badge', 'Learn at your own pace']
+const BASE = '/candidate/learning'
 
-/** Course details: free introduction, outcomes, curriculum with lesson completion, price and progress. */
+/** Course details: the free preview lesson (M-106), outcomes, curriculum states, price or enrolment, and progress. */
 export default function LearningDetailsPage() {
+  const { t } = useTranslation('learning')
+  const format = useFormat()
+  const text = useCourseText()
   const { courseId } = useParams()
-  const learning = useLearning()
-  const course = learning.courses.find((item) => item.id === courseId)
-  const [introOpen, setIntroOpen] = useState(false)
+  const { data: course, isError } = useGetCourseQuery(courseId)
 
-  if (!course) {
+  const back = (
+    <Link to={BASE} className={styles.back}>
+      <Icon as={ArrowLeft} size={14} />
+      {t('details.back')}
+    </Link>
+  )
+  if (isError) {
     return (
       <EmptyState
         icon={GraduationCap}
-        title="This course does not exist"
-        description="The course may have been renamed or removed. Choose one from the catalogue."
+        title={t('details.missingTitle')}
+        description={t('details.missingText')}
         action={
-          <Button as={Link} to="/candidate/learning">
-            Back to learning
+          <Button as={Link} to={BASE}>
+            {t('details.back')}
           </Button>
         }
       />
     )
   }
+  if (!course) return back
 
-  const progress = learning.progress(course)
-  const completedIds = learning.state.completedLessons[course.id] ?? []
-  const lessonCount = course.lessons.length
+  const preview = !course.enrollment && course.curriculum.find((lesson) => lesson.isPreview)
+  const percent = text.progress(course)
+  const lessonPath = (lesson) => `${BASE}/${course.id}/lessons/${lesson.id}`
 
   return (
     <>
-      <Link to="/candidate/learning" className={styles.back}>
-        <Icon as={ArrowLeft} size={14} />
-        Back to learning
-      </Link>
-
+      {back}
       <PageTitle
-        eyebrow={`${course.category} · ${course.level}`}
+        eyebrow={`${course.category} · ${text.level(course)}`}
         title={course.title}
         description={course.summary}
-        actions={
-          progress.complete ? (
-            <PillBadge tone="success">Completed</PillBadge>
-          ) : progress.purchased ? (
-            <PillBadge tone="warning">Purchased</PillBadge>
-          ) : null
-        }
+        actions={course.enrollment?.completedAt ? <PillBadge tone="success">{t('details.completed')}</PillBadge> : course.enrollment ? <PillBadge tone="warning">{t('card.enrolled')}</PillBadge> : null}
       />
 
       <div className={styles.layout}>
         <div className={styles.main}>
-          <section className={styles.hero} aria-labelledby="intro-heading">
-            <div className={styles.heroTop}>
-              <PillBadge tone="info">Free introduction · 3 min</PillBadge>
-              <Icon as={BookOpen} size={22} />
-            </div>
-            <h2 className={styles.heroTitle} id="intro-heading">
-              Preview the course before you decide.
-            </h2>
-            <p className={styles.heroText}>
-              Meet the course, understand the practical project, and see how the lessons support your {course.category}{' '}
-              development. No purchase is needed for this introduction.
-            </p>
-            <Button leftIcon={<Icon as={CirclePlay} size={15} />} onClick={() => setIntroOpen(true)}>
-              Watch free introduction
-            </Button>
-          </section>
+          {preview && (
+            <section className={styles.hero} aria-labelledby="intro-heading">
+              <div className={styles.heroTop}>
+                <PillBadge tone="info">{t('details.previewBadge', { duration: format.duration(preview.durationSec ?? 60) })}</PillBadge>
+                <Icon as={BookOpen} size={22} />
+              </div>
+              <h2 className={styles.heroTitle} id="intro-heading">
+                {t('details.previewTitle')}
+              </h2>
+              <p className={styles.heroText}>{t('details.previewText', { lesson: preview.title })}</p>
+              <Button as={Link} to={lessonPath(preview)} leftIcon={<Icon as={CirclePlay} size={15} />} data-open-preview>
+                {t('details.previewButton')}
+              </Button>
+            </section>
+          )}
 
           <Panel padding={24}>
-            <h2 className={styles.sectionTitle}>What you’ll learn</h2>
-            <p className={styles.sectionLead}>Practical outcomes designed around evidence, reflection, and application.</p>
+            <h2 className={styles.sectionTitle}>{t('details.outcomesTitle')}</h2>
+            <p className={styles.sectionLead}>{t('details.outcomesLead')}</p>
             <ol className={styles.outcomes}>
               {course.outcomes.map((outcome, index) => (
                 <li key={outcome} className={styles.outcome}>
@@ -90,38 +90,33 @@ export default function LearningDetailsPage() {
           </Panel>
 
           <Panel padding={24}>
-            <h2 className={styles.sectionTitle}>Course curriculum</h2>
-            <p className={styles.sectionLead}>
-              Free introduction + {lessonCount} lessons · {course.duration} · Learn at your pace
-            </p>
+            <h2 className={styles.sectionTitle}>{t('details.curriculumTitle')}</h2>
+            <p className={styles.sectionLead}>{t('details.curriculumLead', { count: course.lessons, duration: text.duration(course) })}</p>
             <div className={styles.lessons}>
-              <LessonRow kind="intro" title="Course introduction" subtitle="Preview · 3 minutes" onClick={() => setIntroOpen(true)} />
-              {course.lessons.map((lesson, index) => (
+              {course.curriculum.map((lesson, index) => (
                 <LessonRow
                   key={lesson.id}
-                  kind="lesson"
+                  lesson={lesson}
+                  to={lessonPath(lesson)}
                   title={`${index + 1}. ${lesson.title}`}
-                  subtitle="Pre-recorded lesson"
-                  unlocked={progress.purchased}
-                  done={completedIds.includes(lesson.id)}
-                  onClick={() => learning.toggleLesson(course.id, lesson.id)}
+                  subtitle={[t(`enums:lessonType.${lesson.type}`), lesson.durationSec && format.duration(lesson.durationSec)].filter(Boolean).join(' · ')}
                 />
               ))}
             </div>
           </Panel>
 
           <Panel padding={24}>
-            <h2 className={styles.sectionTitle}>About this course</h2>
+            <h2 className={styles.sectionTitle}>{t('details.aboutTitle')}</h2>
             <p className={styles.about}>{course.about}</p>
             <ul className={styles.tags}>
               <li>
-                <PillBadge>{course.level}</PillBadge>
+                <PillBadge>{text.level(course)}</PillBadge>
               </li>
               <li>
-                <PillBadge>{course.duration}</PillBadge>
+                <PillBadge>{text.duration(course)}</PillBadge>
               </li>
               <li>
-                <PillBadge>{lessonCount} lessons</PillBadge>
+                <PillBadge>{t('details.lessonCount', { count: course.lessons })}</PillBadge>
               </li>
               <li>
                 <PillBadge tone="accent">{course.category}</PillBadge>
@@ -132,70 +127,42 @@ export default function LearningDetailsPage() {
 
         <aside className={styles.side}>
           <Panel padding={24}>
-            <p className={styles.priceLabel}>Course price</p>
-            <p className={styles.price}>{formatPrice(course.price)}</p>
-            <p className={styles.access}>One-time course access</p>
+            <p className={styles.priceLabel}>{t('price.label')}</p>
+            <p className={styles.price} data-course-price>
+              {text.price(course)}
+            </p>
+            <p className={styles.access}>{text.access(course)}</p>
             <ul className={styles.included}>
-              {INCLUDED.map((item, index) => (
+              {text.included(course).map((item) => (
                 <li key={item}>
                   <Icon as={Check} size={13} />
-                  {index === 0 ? `${lessonCount} ${item}` : item}
+                  {item}
                 </li>
               ))}
             </ul>
-            {/* P5-Q2: buying a paid course opens with the real courses in Phase 8. */}
-            {progress.purchased && (
-              <Button fullWidth disabled className={styles.purchased}>
-                Purchased
-              </Button>
-            )}
+            <CourseAction course={course} />
           </Panel>
 
-          <Panel padding={24}>
-            <h2 className={styles.sectionTitle}>Your progress</h2>
-            <p className={styles.percent}>{progress.percent}%</p>
-            <div
-              className={styles.track}
-              role="progressbar"
-              aria-label="Course completion"
-              aria-valuemin={0}
-              aria-valuemax={100}
-              aria-valuenow={progress.percent}
-            >
-              <span className={styles.fill} style={{ width: `${progress.percent}%` }} />
-            </div>
-            <p className={styles.progressText} aria-live="polite">
-              {progress.done} of {progress.total} lessons complete
-            </p>
-          </Panel>
+          {course.enrollment && (
+            <Panel padding={24}>
+              <h2 className={styles.sectionTitle}>{t('details.progressTitle')}</h2>
+              <p className={styles.percent}>{format.number(percent / 100, { style: 'percent' })}</p>
+              <div className={styles.track} role="progressbar" aria-label={t('details.progressLabel')} aria-valuemin={0} aria-valuemax={100} aria-valuenow={percent}>
+                <span className={styles.fill} style={{ width: `${percent}%` }} />
+              </div>
+              <p className={styles.progressText} aria-live="polite">
+                {t('details.progressText', { done: course.enrollment.lessonsDone, total: course.lessons })}
+              </p>
+            </Panel>
+          )}
 
           <section className={styles.evidence}>
             <Icon as={ShieldCheck} size={21} className={styles.evidenceIcon} />
-            <h2 className={styles.evidenceTitle}>Evidence, not a shortcut.</h2>
-            <p className={styles.evidenceText}>
-              Completion confirms participation and a short knowledge check. It does not verify workplace proficiency or
-              change your profile skills automatically.
-            </p>
+            <h2 className={styles.evidenceTitle}>{t('details.evidenceTitle')}</h2>
+            <p className={styles.evidenceText}>{t('details.evidenceText')}</p>
           </section>
         </aside>
       </div>
-
-      <Modal
-        open={introOpen}
-        onClose={() => setIntroOpen(false)}
-        title="Course introduction"
-        description={`${course.title} · Preview · 3 minutes`}
-        footer={
-          <Button variant="secondary" onClick={() => setIntroOpen(false)}>
-            Close
-          </Button>
-        }
-      >
-        <p className={styles.introNote}>
-          This prototype does not include video playback. In the full product, the free 3-minute introduction would play
-          here, with no purchase needed.
-        </p>
-      </Modal>
     </>
   )
 }

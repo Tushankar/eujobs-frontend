@@ -116,7 +116,7 @@ describe('starting conversations (M-084, M-085, U28)', () => {
     const { user: otherRecruiter, company: otherCompany } = await approvedRecruiter()
     const otherJob = await publish(otherCompany, otherRecruiter)
     const plus = await applicantCandidate()
-    await applyRecord(plus, job, 'withdrawn')
+    await applyRecord(plus, job, 'not_selected')
 
     const res = await start(plus, { jobId: String(job._id), body: 'A question about the role.' })
     assert.equal(res.status, 201)
@@ -137,6 +137,35 @@ describe('starting conversations (M-084, M-085, U28)', () => {
     assert.equal(view.status, 200)
     assert.equal(view.body.items[0].body, 'We liked your application.')
     assert.equal((await send(free, opened.body.conversation.id, 'Thanks')).status, 402)
+  })
+
+  it('does not count a withdrawn application for a new thread on either side; an existing thread stays open', async () => {
+    const { user: recruiter, company } = await approvedRecruiter()
+    const job = await publish(company, recruiter)
+
+    // Recruiter: a hidden candidate whose only application is withdrawn opens (P6-C5) but cannot be messaged.
+    const hidden = await listedCandidate({ privacy: { discoverable: false, resumeVisible: false, matchingConsent: true } })
+    await applyRecord(hidden, job, 'withdrawn')
+    const profile = await api().get(`${v1}/recruiter/candidates/${hidden._id}`).set(auth(recruiter))
+    assert.deepEqual([profile.status, profile.body.canStartConversation], [200, false])
+    const refused = await start(recruiter, { candidateId: String(hidden._id), body: 'Hello' })
+    assert.deepEqual([refused.status, code(refused)], [403, 'FORBIDDEN'])
+    const listed = await listedCandidate()
+    assert.equal((await api().get(`${v1}/recruiter/candidates/${listed._id}`).set(auth(recruiter))).body.canStartConversation, true)
+
+    // Candidate: a withdrawn application does not allow a new thread.
+    const withdrawn = await applicantCandidate()
+    await applyRecord(withdrawn, job, 'withdrawn')
+    assert.equal((await start(withdrawn, { jobId: String(job._id), body: 'Hello' })).status, 403)
+
+    // A thread started while the application was active stays open after the withdrawal, both ways.
+    const plus = await applicantCandidate()
+    const application = await applyRecord(plus, job)
+    const opened = await start(plus, { jobId: String(job._id), body: 'A question about the role.' })
+    await Application.updateOne({ _id: application._id }, { status: 'withdrawn' })
+    assert.equal((await start(plus, { jobId: String(job._id), body: 'One more question.' })).body.conversation.id, opened.body.conversation.id)
+    assert.equal((await send(plus, opened.body.conversation.id, 'Thanks')).status, 201)
+    assert.equal((await send(recruiter, opened.body.conversation.id, 'You are welcome.')).status, 201)
   })
 })
 

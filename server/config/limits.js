@@ -79,11 +79,31 @@ export const LIMITS = {
   message: { body: { max: 2000 } },
   messageEmail: { unreadDelayMs: 15 * MINUTE, perConversationMs: HOUR },
   // M-031, §3.6
-  jobAlert: { max: 10, name: { max: 80 }, keywords: { max: 120 } },
+  // digestItems: a digest lists at most this many jobs, then "See all" (owner change to P7-C4)
+  jobAlert: { max: 10, name: { max: 80 }, keywords: { max: 120 }, digestItems: 20 },
   // M-080, M-029
   note: { max: 5000 },
   cvRequestDetails: { max: 1000 },
-  // M-185, §2.6: types are extensions; sizes in bytes
+  // §3.9, M-102, M-104, U16, A: admin §9.1, P8-C1: the course builder. Lesson duration in seconds (1 s to 600 min).
+  course: {
+    title: { min: 3, max: 80 },
+    category: { min: 2, max: 40 },
+    summary: { min: 20, max: 300 },
+    about: { min: 20, max: 1000 },
+    tagline: { max: 120 },
+    designedFor: { max: 200 },
+    outcomes: { min: 1, max: 6, itemMax: 200 },
+    skillTags: { min: 1, max: 10, itemMax: 50 },
+    amountMinor: { min: 1, max: 99_999_999 },
+    lessons: { min: 1, max: 60 },
+    lessonTitle: { min: 3, max: 120 },
+    lessonText: { max: 50_000 },
+    lessonUrl: { max: 2048 },
+    durationSec: { min: 1, max: 36_000 },
+    quiz: { questions: { min: 1, max: 50 }, text: { min: 5, max: 500 }, options: { min: 2, max: 6 }, option: { max: 200 } },
+    passMark: { min: 1, max: 100, default: 70 },
+  },
+  // M-185, §2.6: types are extensions; sizes in bytes. `toDisk` streams the upload to disk instead of memory.
   uploads: {
     photo: { types: ['jpg', 'png', 'webp'], maxBytes: 5 * MB },
     cv: { types: ['pdf', 'docx'], maxBytes: 10 * MB },
@@ -91,9 +111,14 @@ export const LIMITS = {
     certificate_file: { types: ['pdf', 'jpg', 'png'], maxBytes: 10 * MB },
     kyc: { types: ['pdf', 'jpg', 'png'], maxBytes: 10 * MB },
     company_logo: { types: ['png', 'jpg', 'svg'], maxBytes: 2 * MB },
+    // M-102, M-107
+    course_cover: { types: ['jpg', 'png', 'webp'], maxBytes: 5 * MB },
+    lesson_video: { types: ['mp4', 'webm'], maxBytes: 500 * MB, toDisk: true },
+    lesson_document: { types: ['pdf'], maxBytes: 50 * MB, toDisk: true },
   },
-  // U39
+  // U39: images, PDFs and CVs; video 6 hours
   signedUrlTtlMs: 15 * MINUTE,
+  videoUrlTtlMs: 6 * HOUR,
   // G-1, §2.16
   places: {
     input: { min: 2, max: 60 },

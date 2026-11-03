@@ -68,6 +68,16 @@ export function docx(text) {
 /** The start of a Windows executable, to be uploaded under an image name. */
 export const executable = () => Buffer.concat([Buffer.from('MZ'), Buffer.alloc(510)])
 
+/** An MP4 `ftyp` box and a WebM EBML header: enough for the container check (M-102), not playable. */
+export const mp4Header = () => Buffer.concat([Buffer.from([0, 0, 0, 0x18]), Buffer.from('ftypisom'), Buffer.from([0, 0, 2, 0]), Buffer.from('isomiso2'), Buffer.alloc(64)])
+export const webmHeader = () =>
+  Buffer.concat([
+    Buffer.from([0x1a, 0x45, 0xdf, 0xa3, 0x9f, 0x42, 0x86, 0x81, 0x01, 0x42, 0xf7, 0x81, 0x01, 0x42, 0xf2, 0x81, 0x04, 0x42, 0xf3, 0x81, 0x08, 0x42, 0x82, 0x84]),
+    Buffer.from('webm'),
+    Buffer.from([0x42, 0x87, 0x81, 0x04, 0x42, 0x85, 0x81, 0x02]),
+    Buffer.alloc(64),
+  ])
+
 /** `size` bytes that begin like `head` (size limits are checked before the type). */
 export const padded = (head, size) => Buffer.concat([head, Buffer.alloc(size - head.length)])
 

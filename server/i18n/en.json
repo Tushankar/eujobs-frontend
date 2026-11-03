@@ -183,6 +183,7 @@
         "Hi {{name}},",
         "{{countLabel}} for your alert “{{alertName}}” since your last digest:"
       ],
+      "more": "These are the {{shown}} newest. See all {{total}} jobs:",
       "action": "Find jobs",
       "secondary": "Manage your job alerts:"
     },
@@ -193,6 +194,7 @@
         "Hi {{name}},",
         "{{countLabel}} for your alert “{{alertName}}” since your last digest:"
       ],
+      "more": "These are the {{shown}} newest. See all {{total}} jobs:",
       "action": "Find jobs",
       "secondary": "Manage your job alerts:"
     }

@@ -12,7 +12,7 @@
   transition: background-color var(--transition);
 }
 
-.row:not(:disabled):hover {
+.row:not(.locked):hover {
   background: var(--muted);
 }
 

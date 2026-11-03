@@ -3,6 +3,7 @@ import { AppError, fieldError } from '../../lib/errors.js'
 import { sendEmail } from '../../lib/mailer.js'
 import { callStripe, fromUnix, stripe } from '../../lib/stripe.js'
 import { Course, Enrollment } from '../learning/learning.model.js'
+import { enroll } from '../learning/learning.service.js'
 import { userCurrency } from '../meta/meta.service.js'
 import { User } from '../users/users.model.js'
 import { AppConfig, Counter, Payment, Plan, StripeEvent, Subscription } from './payments.model.js'
@@ -320,11 +321,7 @@ async function onCheckoutCompleted(object) {
     stripe: { checkoutSessionId: session.id, paymentIntentId: intent?.id, chargeId: charge?.id },
     paidAt: fromUnix(charge?.created) ?? new Date(),
   })
-  await Enrollment.updateOne(
-    { userId: user._id, courseId: course._id },
-    { $setOnInsert: { source: 'purchase', paymentId: payment._id, enrolledAt: new Date() } },
-    { upsert: true },
-  )
+  await enroll({ userId: user._id, courseId: course._id, source: 'purchase', paymentId: payment._id })
 }
 
 /** charge.refunded: a fully refunded charge marks its row refunded (M-122). */

@@ -36,6 +36,13 @@ const patch = (user, id, body) => api().patch(`${v1}/candidate/job-alerts/${id}`
 const list = async (user) => (await api().get(`${v1}/candidate/job-alerts`).set(auth(user))).body
 const tick = (date) => api().post(`${v1}/_test/scheduler/tick`).send({ now: date.toISOString() })
 
+/** The first 08:00 in `zone` after now (today before 08:00, otherwise tomorrow), so the test passes at any hour. */
+function nextEight(zone) {
+  const now = DateTime.now().setZone(zone)
+  const today = now.set({ hour: 8, minute: 0, second: 0, millisecond: 0 })
+  return today > now ? today : today.plus({ days: 1 })
+}
+
 /** A job published through the recruiter API, so the first publish schedules the instant alerts (M-097). */
 async function publishJob(recruiter, overrides = {}) {
   const draft = await api().post(`${v1}/recruiter/jobs`).set(auth(recruiter)).send(jobBody(overrides))
@@ -175,7 +182,7 @@ describe('digests (U12)', () => {
     await create(user, { name: 'Design', keywords: 'designer', frequency: 'daily' })
     await publishJob(recruiter, { title: 'Product Designer' })
     await publishJob(recruiter, { title: 'Accountant' })
-    const next8 = DateTime.now().setZone('Europe/Madrid').plus({ days: 1 }).set({ hour: 8, minute: 0, second: 0, millisecond: 0 })
+    const next8 = nextEight('Europe/Madrid')
 
     await tick(next8.minus({ minutes: 1 }).toJSDate())
     assert.equal(mailTo(user.email, 'alert_daily').length, 0)
@@ -199,6 +206,28 @@ describe('digests (U12)', () => {
     await Subscription.updateOne({ userId: user._id }, { status: 'active' })
     await tick(monday.plus({ minutes: 1 }).toJSDate())
     assert.equal(mailTo(user.email, 'alert_weekly').length, 1)
+  })
+
+  it('lists at most the 20 newest jobs, with "See all" to Find jobs with the alert keywords (P7-C4 change)', async () => {
+    const { user: recruiter } = await approvedRecruiter()
+    const user = await candidate({ timezone: 'Europe/London' })
+    await create(user, { name: 'Design', keywords: 'designer', frequency: 'daily' })
+    const first = await Job.findById((await publishJob(recruiter, { title: 'Product Designer' })).id).lean()
+    const start = first.firstPublishedAt.getTime()
+    await Job.insertMany(
+      Array.from({ length: 20 }, (_, index) => {
+        const at = new Date(start + (index + 1) * 1000)
+        return { ...first, _id: undefined, title: `Designer ${index + 1}`, publishedAt: at, firstPublishedAt: at }
+      }),
+    )
+    const next8 = nextEight('Europe/London')
+    await tick(next8.toJSDate())
+    const [mail] = mailTo(user.email, 'alert_daily')
+    assert.deepEqual([mail.params.items.length, mail.params.countLabel, mail.params.shown, mail.params.total], [20, '21 new jobs', 20, 21])
+    assert.match(mail.params.items[0], /^Designer 20 · /)
+    assert.ok(mail.params.moreLink.endsWith('/candidate/jobs?q=designer'))
+    assert.match(mail.text, /These are the 20 newest\. See all 21 jobs: http\S+\/candidate\/jobs\?q=designer/)
+    assert.equal(await AlertMatch.countDocuments(), 20)
   })
 
   it('leaves a job out once it went out instantly for the same alert', async () => {

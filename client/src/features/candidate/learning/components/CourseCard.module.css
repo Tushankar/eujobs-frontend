@@ -117,10 +117,3 @@
   gap: 8px;
   padding-top: 20px;
 }
-
-/* Figma shows a purchased course as the primary button at 40% opacity. */
-.actions .purchased:disabled {
-  background: var(--primary);
-  color: var(--primary-foreground);
-  opacity: 0.4;
-}

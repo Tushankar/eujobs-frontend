@@ -1,5 +1,6 @@
 import { createHash, createHmac, randomBytes, timingSafeEqual } from 'node:crypto'
-import { mkdir, unlink, writeFile } from 'node:fs/promises'
+import { createReadStream } from 'node:fs'
+import { mkdir, open, rename, stat, unlink, writeFile } from 'node:fs/promises'
 import { join } from 'node:path'
 import { fileTypeFromBuffer } from 'file-type'
 import { config } from '../config/env.js'
@@ -19,6 +20,8 @@ export const MIME = {
   pdf: 'application/pdf',
   docx: 'application/vnd.openxmlformats-officedocument.wordprocessingml.document',
   svg: 'image/svg+xml',
+  mp4: 'video/mp4',
+  webm: 'video/webm',
 }
 const EXTENSION_ALIASES = { jpeg: 'jpg' }
 
@@ -44,10 +47,35 @@ export async function detectFileType({ originalname, mimetype, buffer }, allowed
 
 export const absolutePath = (file) => join(config.uploadRoot, file.path)
 
-/** Writes the bytes under a random name and records the File. */
-export async function storeFile({ ownerId, purpose, buffer, ext, originalName, deleteAfter }) {
+/** Large uploads (video, lesson PDFs) are streamed here by multer, then moved into their purpose folder. */
+export const incomingDir = () => join(config.uploadRoot, '_incoming')
+
+/** The first bytes of a file on disk, enough for the magic-byte check. */
+export async function readHead(path, length = 4100) {
+  const handle = await open(path)
+  try {
+    const { buffer, bytesRead } = await handle.read(Buffer.alloc(length), 0, length, 0)
+    return buffer.subarray(0, bytesRead)
+  } finally {
+    await handle.close()
+  }
+}
+
+const sha256Of = (path) =>
+  new Promise((resolve, reject) => {
+    const hash = createHash('sha256')
+    createReadStream(path).on('error', reject).on('data', (chunk) => hash.update(chunk)).on('end', () => resolve(hash.digest('hex')))
+  })
+
+/** Writes the bytes (or moves the uploaded file at `tempPath`) under a random name and records the File. */
+export async function storeFile({ ownerId, purpose, buffer, tempPath, ext, originalName, deleteAfter }) {
   const path = `${purpose}/${randomBytes(16).toString('hex')}.${ext}`
   await mkdir(join(config.uploadRoot, purpose), { recursive: true })
+  if (tempPath) {
+    const [sha256, { size }] = await Promise.all([sha256Of(tempPath), stat(tempPath)])
+    await rename(tempPath, join(config.uploadRoot, path))
+    return File.create({ ownerId, purpose, path, originalName, mime: MIME[ext], size, sha256, deleteAfter })
+  }
   await writeFile(join(config.uploadRoot, path), buffer)
   const sha256 = createHash('sha256').update(buffer).digest('hex')
   return File.create({ ownerId, purpose, path, originalName, mime: MIME[ext], size: buffer.length, sha256, deleteAfter })
@@ -73,9 +101,12 @@ const signature = (file, userId, exp) => createHmac('sha256', config.fileUrlSecr
 // load the same file again (an avatar would otherwise reload on every /me response).
 const URL_STEP_SECONDS = 5 * 60
 
-/** U39: a URL for `userId`, valid 10 to 15 minutes. Issue it only after the ownership or visibility check. */
-export function signedUrl(file, userId, { download = false } = {}) {
-  const exp = Math.floor((Date.now() + LIMITS.signedUrlTtlMs) / 1000 / URL_STEP_SECONDS) * URL_STEP_SECONDS
+/**
+ * U39: a URL for `userId`, valid 10 to 15 minutes (video: `ttlMs` of 6 hours, less up to 5 minutes). Issue it only
+ * after the ownership or visibility check.
+ */
+export function signedUrl(file, userId, { download = false, ttlMs = LIMITS.signedUrlTtlMs } = {}) {
+  const exp = Math.floor((Date.now() + ttlMs) / 1000 / URL_STEP_SECONDS) * URL_STEP_SECONDS
   const query = new URLSearchParams({ u: String(userId), exp: String(exp), sig: signature(file, userId, exp) })
   if (download) query.set('download', '1')
   return `/api/v1/files/${file._id}?${query}`

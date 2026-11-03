@@ -183,6 +183,7 @@
         "Hola, {{name}}:",
         "{{countLabel}} para tu alerta «{{alertName}}» desde tu último resumen:"
       ],
+      "more": "Estas son las {{shown}} más recientes. Ver las {{total}} ofertas:",
       "action": "Buscar empleo",
       "secondary": "Gestiona tus alertas de empleo:"
     },
@@ -193,6 +194,7 @@
         "Hola, {{name}}:",
         "{{countLabel}} para tu alerta «{{alertName}}» desde tu último resumen:"
       ],
+      "more": "Estas son las {{shown}} más recientes. Ver las {{total}} ofertas:",
       "action": "Buscar empleo",
       "secondary": "Gestiona tus alertas de empleo:"
     }

@@ -32,7 +32,7 @@ export default function ApplicationActivityModal({ application, canReapply, onCl
           <Button as={Link} to={`/candidate/jobs/${job.id}`} variant="secondary" onClick={onClose}>
             {t('applications:activity.viewJob')}
           </Button>
-          <MessageCompanyButton job={job} onStart={() => onMessage(application)} />
+          <MessageCompanyButton job={job} canStart={application.status !== 'withdrawn'} onStart={() => onMessage(application)} />
           {canWithdraw(application.status) && (
             <Button variant="danger" onClick={() => onWithdraw(application)}>
               {t('applications:activity.withdraw')}

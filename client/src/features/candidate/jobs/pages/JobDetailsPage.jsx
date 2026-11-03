@@ -208,7 +208,7 @@ export default function JobDetailsPage() {
               >
                 {t(job.saved ? 'findJobs:details.saved' : 'findJobs:details.save')}
               </Button>
-              {job.application && <MessageCompanyButton job={job} fullWidth />}
+              {job.application && <MessageCompanyButton job={job} canStart={job.application.status !== 'withdrawn'} fullWidth />}
             </div>
             {job.application && <p className={styles.railText}>{t('applications:apply.sent')}</p>}
           </section>

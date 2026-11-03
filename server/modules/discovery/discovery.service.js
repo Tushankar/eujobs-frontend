@@ -156,14 +156,15 @@ export async function listCandidates(user, company, query) {
 
 /**
  * P4-D11: a profile opens when the candidate is listable in some country or has an application to this company
- * (any status: the recruiter saw it, so the link in the Applications table keeps working).
+ * (any status: the recruiter saw it, so the link in the Applications table keeps working). `applicationFilter` narrows
+ * the applications that count (a new conversation ignores withdrawn ones). An applicant entry has `viaApplication`.
  */
-export async function accessibleCandidate(id, company) {
+export async function accessibleCandidate(id, company, applicationFilter = {}) {
   const [entry] = await listableCandidates([id])
   if (entry) return entry
-  if (await Application.exists({ candidateId: id, companyId: company._id })) {
+  if (await Application.exists({ candidateId: id, companyId: company._id, ...applicationFilter })) {
     const [user, profile] = await Promise.all([User.findOne({ _id: id, role: 'candidate', status: 'active' }), CandidateProfile.findOne({ userId: id, 'restricted.at': null })])
-    if (user && profile) return { user, profile }
+    if (user && profile) return { user, profile, viaApplication: true }
   }
   throw new AppError('NOT_FOUND')
 }
@@ -187,6 +188,8 @@ export async function candidateProfile(user, company, id, jobId) {
     ...card,
     // M-071: one stage select per application; the profile of a non-applicant has none.
     applications: applications.map((application) => ({ id: String(application._id), status: application.status, stageId: String(application.stageId), appliedAt: application.appliedAt, job: { id: String(application.jobId), title: jobTitles.get(String(application.jobId)) } })),
+    // A new conversation needs a listable candidate or an application that is not withdrawn (P7-C2, owner change).
+    canStartConversation: !entry.viaApplication || applications.some((application) => application.status !== 'withdrawn'),
     about: profile.about,
     links: { linkedin: profile.links?.linkedin ?? '', portfolio: profile.links?.portfolio ?? '' },
     workHistory: latest(profile.workHistory, 'current').map(({ title, employer, start, end, current, description }) => ({ title, employer, start, end: end ?? null, current: Boolean(current), description: description ?? '' })),

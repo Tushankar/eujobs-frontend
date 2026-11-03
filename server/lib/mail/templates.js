@@ -4,7 +4,8 @@ import { interpolate, t } from '../i18n.js'
  * Renders an email from the recipient's dictionary through one shared layout (§2.8).
  * A template has subject, heading, body[], and optionally action (button to params.link),
  * secondary (a second link to params.secondaryLink) and note. params.code shows a code box; params.items (strings)
- * shows a list after the body, such as the jobs of an alert.
+ * shows a list after the body, such as the jobs of an alert; with params.moreLink, the template's `more` line and that
+ * link follow the list (a shortened list).
  * Colours are DESIGN_SYSTEM tokens; the button uses #0066C4 for AA contrast.
  */
 // The brand and its English tagline stay the same in every language (M-193).
@@ -27,6 +28,7 @@ export function renderEmail(type, language, params) {
     '',
     ...body.map(fill),
     ...(params.items ?? []).map((item) => `- ${item}`),
+    params.moreLink ? `${fill(template.more)} ${params.moreLink}` : null,
     params.code ? `\n${params.code}\n` : null,
     template.action ? `${template.action}: ${params.link}` : null,
     template.secondary ? `${template.secondary} ${params.secondaryLink}` : null,
@@ -54,6 +56,7 @@ export function renderEmail(type, language, params) {
 <h1 style="margin:0 0 16px;font-family:Manrope,Arial,sans-serif;font-size:22px;font-weight:800;color:#202534">${fillHtml(template.heading)}</h1>
 ${body.map((line) => paragraph(fillHtml(line))).join('\n')}
 ${params.items?.length ? `<ul style="margin:0 0 16px;padding-left:20px;font-size:15px;line-height:1.55;color:#202534">${params.items.map((item) => `<li>${escapeHtml(item)}</li>`).join('')}</ul>` : ''}
+${params.moreLink ? paragraph(`${fillHtml(template.more)}<br>${link(params.moreLink)}`, 'font-size:14px') : ''}
 ${params.code ? `<p style="margin:8px 0 24px;font-family:Manrope,Arial,sans-serif;font-size:32px;font-weight:800;letter-spacing:6px;color:#202534">${escapeHtml(params.code)}</p>` : ''}
 ${
   template.action

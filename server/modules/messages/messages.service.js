@@ -14,7 +14,7 @@ import { Conversation, Message } from './messages.model.js'
 /*
  * Two-way messages (§3.5): one thread per company and candidate (M-086). A paid candidate starts only with a company
  * they applied to (M-084); an approved recruiter starts only with applicants and candidates they can discover
- * (M-085, U28), and an existing thread stays open for both sides. Free candidates read only (the route checks
+ * (M-085, U28); a withdrawn application does not count for either. An existing thread stays open for both sides. Free candidates read only (the route checks
  * `message_send`). Recruiters never see a candidate's plan (M-087). The side of a user is their role.
  */
 const PREVIEW_LENGTH = 140
@@ -122,16 +122,19 @@ export async function start(user, company, { candidateId, jobId, body }) {
     if (!jobId) throw fieldError({ jobId: 'required' })
     const job = await Job.findById(jobId, 'companyId')
     if (!job) throw new AppError('NOT_FOUND')
-    // M-084: any application to the company, in any status.
-    if (!(await Application.exists({ candidateId: user._id, companyId: job.companyId }))) throw new AppError('FORBIDDEN')
+    // M-084: a new thread needs an application to the company that is not withdrawn; an existing thread stays open.
+    const allowed =
+      (await Conversation.exists({ companyId: job.companyId, candidateId: user._id })) ||
+      (await Application.exists({ candidateId: user._id, companyId: job.companyId, status: { $ne: 'withdrawn' } }))
+    if (!allowed) throw new AppError('FORBIDDEN')
     thread = await threadFor({ companyId: job.companyId, candidateId: user._id, jobId: job._id, startedBy: 'candidate' })
   } else {
     if (!candidateId) throw fieldError({ candidateId: 'required' })
     const job = jobId && (await Job.findOne({ _id: jobId, companyId: company._id }, 'title'))
     if (jobId && !job) throw fieldError({ jobId: 'invalid' })
-    // M-085, U28: a new thread only with an applicant or a candidate listable now; an existing one stays open.
+    // M-085, U28: a new thread only with an applicant (not withdrawn) or a candidate listable now; an existing one stays open.
     if (!(await Conversation.exists({ companyId: company._id, candidateId }))) {
-      await accessibleCandidate(candidateId, company).catch(() => {
+      await accessibleCandidate(candidateId, company, { status: { $ne: 'withdrawn' } }).catch(() => {
         throw new AppError('FORBIDDEN')
       })
     }

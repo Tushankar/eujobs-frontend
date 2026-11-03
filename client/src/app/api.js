@@ -83,6 +83,8 @@ export const api = createApi({
     'Pipeline',
     'Conversations',
     'JobAlerts',
+    'Courses',
+    'AdminCourses',
   ],
   endpoints: (build) => ({
     getMe: build.query({ query: () => '/me', providesTags: ['Me'] }),
