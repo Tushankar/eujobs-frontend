@@ -37,7 +37,7 @@ recruiterRouter.put('/:id', jobParams, async (req, res) => {
 })
 
 recruiterRouter.patch('/:id/status', jobParams, validate({ body: schemas.statusBody }), async (req, res) => {
-  res.json(jobs.jobDto(await jobs.setStatus(req.company, req.params.id, req.body.status), req.company))
+  res.json(jobs.jobDto(await jobs.setStatus(req.company, req.params.id, req.body.status, req.user), req.company))
 })
 
 recruiterRouter.delete('/:id', jobParams, async (req, res) => {

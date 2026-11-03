@@ -2,6 +2,7 @@ import { Router } from 'express'
 import { requireAuth, requireRole } from '../../middleware/auth.js'
 import { failedLoginsPerEmail, forgotPasswordPerEmail, loginsPerIp, signUpsPerIp } from '../../middleware/rateLimit.js'
 import { validate } from '../../lib/validate.js'
+import { acceptInvite, inviteDetails } from '../admin/admin.access.js'
 import { meDto } from '../users/users.service.js'
 import * as schemas from './auth.schemas.js'
 import * as auth from './auth.service.js'
@@ -49,6 +50,15 @@ router.post('/forgot-password', forgotPasswordPerEmail, validate({ body: schemas
 
 router.post('/reset-password', validate({ body: schemas.resetBody }), async (req, res) => {
   res.json(await auth.resetPassword(req.body.token, req.body.password))
+})
+
+// U21: the invite link opens /admin/set-password, which checks the token, then sets the password once.
+router.get('/invite/:token', async (req, res) => {
+  res.json(await inviteDetails(req.params.token))
+})
+
+router.post('/invite/accept', validate({ body: schemas.resetBody }), async (req, res) => {
+  res.json(await acceptInvite(req.body.token, req.body.password))
 })
 
 export default router

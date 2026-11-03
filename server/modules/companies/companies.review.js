@@ -76,6 +76,11 @@ async function recruiter(userId) {
 /** §3.12: applicant, company record, contact checks, KYC files (opened through /admin/files), dates and history. */
 export async function accountDetail(admin, userId) {
   const user = await recruiter(userId)
+  return { ...(await accountRecord(admin, user)), actions: await allowedActions(admin, user.status) }
+}
+
+/** The review record of any recruiter (also the admin Recruiters detail page, M-161). */
+export async function accountRecord(admin, user) {
   const company = await Company.findOne({ ownerUserId: user._id })
   const documents = company ? await KycDocument.find({ companyId: company._id }).sort({ uploadedAt: 1 }) : []
   const files = new Map((await File.find({ _id: { $in: documents.map((document) => document.fileId) } })).map((file) => [String(file._id), file]))
@@ -95,7 +100,6 @@ export async function accountDetail(admin, userId) {
     history: (company?.reviewHistory ?? [])
       .map((entry) => ({ decision: entry.decision, reason: entry.reason ?? null, by: reviewers.get(String(entry.by)) ?? null, at: entry.at }))
       .reverse(),
-    actions: await allowedActions(admin, user.status),
   }
 }
 

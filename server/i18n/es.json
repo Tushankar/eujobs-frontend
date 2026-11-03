@@ -208,6 +208,16 @@
       ],
       "action": "Abrir tu certificado",
       "secondary": "Comprobación pública:"
+    },
+    "admin_invite": {
+      "subject": "Te han invitado al espacio de administración de Local WorkMan",
+      "heading": "Únete al espacio de administración",
+      "body": [
+        "Hola, {{name}}:",
+        "{{inviter}} te ha invitado al espacio de administración de Local WorkMan con el rol {{role}}. Crea una contraseña para terminar tu cuenta. El enlace funciona una vez y caduca en 72 horas."
+      ],
+      "action": "Crear tu contraseña",
+      "note": "Si no esperabas esta invitación, puedes ignorar este correo."
     }
   },
   "verification": {
@@ -270,7 +280,89 @@
     "alertJobs": {
       "one": "{{count}} oferta nueva",
       "other": "{{count}} ofertas nuevas"
-    }
+    },
+    "userStatus": {
+      "unverified": "Sin verificar",
+      "onboarding": "En alta",
+      "pending_review": "Pendiente de revisión",
+      "active": "Activa",
+      "rejected": "Rechazada",
+      "suspended": "Suspendida",
+      "invited": "Invitada"
+    },
+    "recruiterState": {
+      "pending": "Pendiente",
+      "approved": "Aprobada",
+      "rejected": "Rechazada",
+      "suspended": "Suspendida"
+    },
+    "verificationState": {
+      "not_started": "Sin empezar",
+      "in_review": "En revisión",
+      "partial": "{{count}} de 3 verificadas",
+      "verified": "Verificado"
+    },
+    "plan": {
+      "free": "Free",
+      "plus": "Plus"
+    },
+    "rtwRegion": {
+      "eu": "UE",
+      "uk": "Reino Unido"
+    },
+    "rtwStatus": {
+      "citizen_settled": "Ciudadanía o residencia",
+      "visa_permit": "Visado o permiso",
+      "needs_sponsorship": "Necesita patrocinio"
+    },
+    "jobStatus": {
+      "draft": "Borrador",
+      "published": "Publicada",
+      "paused": "En pausa",
+      "closed": "Cerrada"
+    },
+    "verificationCategory": {
+      "identity": "Identidad",
+      "academic": "Formación",
+      "employment": "Empleo",
+      "right_to_work": "Permiso de trabajo",
+      "certificate": "Certificado"
+    },
+    "paymentStatus": {
+      "paid": "Pagado",
+      "failed": "Fallido",
+      "refunded": "Reembolsado"
+    },
+    "paymentKind": {
+      "course": "Curso",
+      "subscription": "Suscripción"
+    },
+    "payerRole": {
+      "candidate": "Candidato",
+      "recruiter": "Reclutador"
+    },
+    "paymentSource": {
+      "stripe": "Stripe",
+      "seed": "De ejemplo"
+    },
+    "auditCategory": {
+      "workspace": "Espacio de trabajo",
+      "policy": "Política",
+      "moderation": "Moderación",
+      "reports": "Informes",
+      "access": "Acceso",
+      "learning": "Formación",
+      "payments": "Pagos",
+      "jobs": "Empleos"
+    },
+    "actorType": {
+      "admin": "Administración",
+      "user": "Usuario",
+      "system": "Sistema"
+    },
+    "none": "Ninguno",
+    "yes": "Sí",
+    "no": "No"
   },
   "certificate": {
     "tagline": "AI Job Portal",
@@ -281,5 +373,107 @@
     "code": "Código del certificado",
     "verify": "Comprueba este certificado en",
     "note": "Este certificado confirma que se completó el curso y se aprobó su cuestionario final. No verifica competencias profesionales."
+  },
+  "csv": {
+    "candidates": [
+      "Nombre",
+      "Correo electrónico",
+      "Alta",
+      "Estado",
+      "País",
+      "Permiso de trabajo",
+      "Verificación",
+      "Perfil completo %",
+      "Plan",
+      "Cursos",
+      "Certificados"
+    ],
+    "recruiters": [
+      "Nombre",
+      "Correo electrónico",
+      "Alta",
+      "Estado",
+      "Empresa",
+      "País",
+      "Cursos",
+      "Certificados"
+    ],
+    "payments": [
+      "Referencia",
+      "Fecha",
+      "Pagador",
+      "Tipo de pagador",
+      "Concepto",
+      "Tipo",
+      "Importe",
+      "Moneda",
+      "Método",
+      "Estado",
+      "Motivo del fallo",
+      "Origen"
+    ],
+    "audit": [
+      "Fecha",
+      "Categoría",
+      "Tipo de actor",
+      "Actor",
+      "Evento"
+    ]
+  },
+  "audit": {
+    "moderation": {
+      "account_submitted": "{{name}} envió {{company}} a revisión",
+      "account_resubmitted": "{{name}} volvió a enviar {{company}} a revisión",
+      "account_approved": "Cuenta de reclutador aprobada: {{name}} ({{company}})",
+      "account_rejected": "Cuenta de reclutador rechazada: {{name}} ({{company}})",
+      "account_suspended": "Cuenta de reclutador suspendida: {{name}} ({{company}})",
+      "account_reactivated": "Cuenta de reclutador reactivada: {{name}} ({{company}})",
+      "verification_approved": "Prueba de verificación aprobada: {{candidate}} ({{category}})",
+      "verification_rejected": "Prueba de verificación rechazada: {{candidate}} ({{category}})"
+    },
+    "learning": {
+      "course_created": "Curso creado: {{title}}",
+      "course_details_updated": "Detalles del curso actualizados: {{title}}",
+      "lesson_added": "Lección añadida a {{title}}: {{lesson}}",
+      "lesson_updated": "Lección actualizada en {{title}}: {{lesson}}",
+      "lesson_deleted": "Lección eliminada de {{title}}: {{lesson}}",
+      "lessons_reordered": "Lecciones reordenadas: {{title}}",
+      "quiz_saved": "Cuestionario guardado para {{title}} ({{questions}} preguntas)",
+      "course_published": "Curso publicado: {{title}}",
+      "course_unpublished": "Curso retirado: {{title}}",
+      "certificate_revoked": "Certificado {{code}} revocado: {{name}}, {{title}}"
+    },
+    "policy": {
+      "created": "Política de coincidencia creada: {{name}}",
+      "updated": "Detalles de la política de coincidencia actualizados: {{name}}",
+      "saved": "Señales de la política de coincidencia guardadas: {{name}} (v{{version}})",
+      "activated": "Política de coincidencia activada: {{name}} (v{{version}})",
+      "archived": "Política de coincidencia archivada: {{name}}"
+    },
+    "access": {
+      "role_created": "Rol creado: {{role}}",
+      "role_duplicated": "Rol duplicado: {{role}} (a partir de {{source}})",
+      "role_updated": "Rol actualizado: {{role}}",
+      "role_archived": "Rol archivado: {{role}}",
+      "user_access_saved": "Acceso guardado para {{name}}",
+      "user_access_revoked": "Acceso revocado para {{name}}",
+      "admin_invited": "Administrador invitado: {{name}} ({{email}}) como {{role}}",
+      "invite_accepted": "Invitación aceptada: {{name}}"
+    },
+    "reports": {
+      "candidates_exported": "Candidatos exportados ({{count}} filas)",
+      "recruiters_exported": "Reclutadores exportados ({{count}} filas)",
+      "payments_exported": "Pagos exportados ({{count}} filas)",
+      "audit_exported": "Registro de auditoría exportado ({{count}} filas)"
+    },
+    "jobs": {
+      "status_changed": "Estado de la oferta cambiado: {{title}} ({{company}}), {{from}} → {{to}}",
+      "cv_downloaded": "CV descargado: {{candidate}}, versión {{version}} ({{company}})"
+    },
+    "payments": {
+      "payment_recorded": "Pago {{reference}}: {{payer}}, {{item}} ({{amount}})",
+      "renewal_failed": "Renovación fallida {{reference}}: {{payer}}, {{item}} ({{amount}})",
+      "payment_refunded": "Pago reembolsado {{reference}}: {{payer}}, {{item}} ({{amount}})"
+    }
   }
 }

@@ -138,12 +138,28 @@
 }
 
 /* Form column (right half) */
+/* Pinned to the top, not centred: a longer translation only grows the form downwards instead of
+   shifting it (M-140). Scrollbars are hidden on the auth pages; scrolling still works. */
 .formSection {
   display: flex;
-  align-items: center;
+  align-items: flex-start;
   justify-content: center;
   padding: 48px 24px;
   background: var(--card);
+  scrollbar-width: none;
+}
+
+.formSection::-webkit-scrollbar {
+  display: none;
+}
+
+:global(html):has(.layout) {
+  scrollbar-gutter: auto;
+  scrollbar-width: none;
+}
+
+:global(html):has(.layout)::-webkit-scrollbar {
+  display: none;
 }
 
 .formColumn {
@@ -181,8 +197,7 @@
 }
 
 /* Desktop: the split is exactly one screen tall, so the hero image always fits and only the
-   form column scrolls (long forms such as sign-up). Auto margins centre the form while it
-   fits and keep its top reachable once it overflows. */
+   form column scrolls (long forms such as sign-up). */
 @media (min-width: 1024px) {
   .layout {
     grid-template-rows: minmax(0, 1fr);
@@ -191,10 +206,6 @@
 
   .formSection {
     overflow-y: auto;
-  }
-
-  .formColumn {
-    margin: auto;
   }
 }
 

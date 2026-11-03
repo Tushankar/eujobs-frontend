@@ -73,6 +73,13 @@
   line-height: 20px;
 }
 
+/* Chrome paints autofilled inputs light blue; keep the field's own card background instead. */
+.input:-webkit-autofill {
+  box-shadow: 0 0 0 100px var(--card) inset;
+  -webkit-text-fill-color: var(--foreground);
+  caret-color: var(--foreground);
+}
+
 .input::placeholder {
   color: var(--text-placeholder);
 }

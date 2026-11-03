@@ -1,8 +1,10 @@
 import { Router } from 'express'
 import { z } from 'zod'
+import { actorFor, recordAudit } from '../../lib/audit.js'
 import { AppError } from '../../lib/errors.js'
 import { absolutePath, validSignature } from '../../lib/files.js'
 import { objectId, validate } from '../../lib/validate.js'
+import { Company } from '../companies/companies.model.js'
 import { CvVersion } from '../cv/cv.model.js'
 import { recordActivity } from '../discovery/discovery.service.js'
 import { User } from '../users/users.model.js'
@@ -21,12 +23,20 @@ const signedQuery = z.object({
 /** M-187: a CV served to someone other than its owner is logged once per view (not per Range chunk), with company activity. */
 async function logCvAccess(file, accessorId, range) {
   if (file.purpose !== 'cv' || accessorId === String(file.ownerId) || (range && !range.startsWith('bytes=0-'))) return
-  const accessor = await User.findById(accessorId, 'companyId')
+  const accessor = await User.findById(accessorId, 'companyId fullName role')
   await FileAccessLog.create({ fileId: file._id, ownerId: file.ownerId, accessorId, companyId: accessor?.companyId })
-  // M-081: the company timeline shows the download.
+  // M-081: the company timeline shows the download; M-162: so does the audit log (Jobs category).
   if (accessor?.companyId) {
     const version = await CvVersion.findOne({ fileId: file._id }, 'number')
     await recordActivity({ companyId: accessor.companyId, candidateId: file.ownerId, actorId: accessorId, type: 'cv_download', params: { version: version?.number } })
+    const [owner, company] = await Promise.all([User.findById(file.ownerId, 'fullName'), Company.findById(accessor.companyId, 'displayName')])
+    await recordAudit({
+      type: 'jobs.cv_downloaded',
+      category: 'jobs',
+      actor: actorFor(accessor),
+      target: { type: 'user', id: file.ownerId },
+      params: { candidate: owner?.fullName, company: company?.displayName, version: version?.number },
+    })
   }
 }
 

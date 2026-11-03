@@ -1,4 +1,5 @@
 import { config } from '../../config/env.js'
+import { actorFor, recordAudit, SYSTEM_ACTOR } from '../../lib/audit.js'
 import { AppError, fieldError } from '../../lib/errors.js'
 import { sendEmail } from '../../lib/mailer.js'
 import { callStripe, fromUnix, stripe } from '../../lib/stripe.js'
@@ -144,7 +145,7 @@ export async function subscriptionDto(userId) {
   return { planKey, status, paid: isPaid(subscription), retrying, currency, amountMinor, currentPeriodStart, currentPeriodEnd, cancelAtPeriodEnd, startedAt }
 }
 
-const paymentDto = (payment) => ({
+export const paymentDto = (payment) => ({
   id: String(payment._id),
   reference: payment.reference,
   kind: payment.kind,
@@ -271,6 +272,11 @@ async function onInvoice(object) {
       if (error.code === 11000 && error.keyPattern?.['stripe.invoiceId']) return null
       throw error
     })
+    if (created) {
+      // The first invoice is the candidate's own purchase; renewals and their failures are system events.
+      const actor = paid && invoice.billing_reason === 'subscription_create' ? actorFor(user) : SYSTEM_ACTOR
+      await auditPayment(created, paid ? 'payment_recorded' : 'renewal_failed', actor)
+    }
     if (!created) {
       await Payment.updateOne({ 'stripe.invoiceId': invoice.id }, { $set: fields })
     } else if (!paid) {
@@ -305,6 +311,7 @@ async function onCheckoutCompleted(object) {
   const intent = session.payment_intent
   const charge = intent?.latest_charge
   let payment = await Payment.findOne({ 'stripe.checkoutSessionId': session.id })
+  const recorded = Boolean(payment)
   payment ??= await Payment.create({
     reference: await nextReference(),
     userId: user._id,
@@ -321,6 +328,7 @@ async function onCheckoutCompleted(object) {
     stripe: { checkoutSessionId: session.id, paymentIntentId: intent?.id, chargeId: charge?.id },
     paidAt: fromUnix(charge?.created) ?? new Date(),
   })
+  if (!recorded) await auditPayment(payment, 'payment_recorded', actorFor(user))
   await enroll({ userId: user._id, courseId: course._id, source: 'purchase', paymentId: payment._id })
 }
 
@@ -328,7 +336,23 @@ async function onCheckoutCompleted(object) {
 async function onChargeRefunded(object) {
   const charge = await stripe().charges.retrieve(object.id)
   if (!charge.refunded) return
-  await Payment.updateMany({ $or: [{ 'stripe.chargeId': charge.id }, { 'stripe.paymentIntentId': charge.payment_intent }] }, { $set: { status: 'refunded' } })
+  const rows = await Payment.find({ $or: [{ 'stripe.chargeId': charge.id }, { 'stripe.paymentIntentId': charge.payment_intent }], status: { $ne: 'refunded' } })
+  for (const row of rows) {
+    row.status = 'refunded'
+    await row.save()
+    await auditPayment(row, 'payment_refunded', SYSTEM_ACTOR)
+  }
+}
+
+/** M-162, M-163: payment rows are audited in the Payments category. */
+function auditPayment(payment, type, actor) {
+  return recordAudit({
+    type: `payments.${type}`,
+    category: 'payments',
+    actor,
+    target: { type: 'payment', id: payment._id },
+    params: { reference: payment.reference, item: payment.itemName, payer: payment.payerName, amountMinor: payment.amountMinor, currency: payment.currency },
+  })
 }
 
 export const WEBHOOK_HANDLERS = {

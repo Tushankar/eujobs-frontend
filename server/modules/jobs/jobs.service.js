@@ -1,5 +1,6 @@
 import { LIMITS } from '../../config/limits.js'
 import { scheduleTask } from '../../jobs/scheduler.js'
+import { actorFor, recordAudit } from '../../lib/audit.js'
 import { AppError, fieldError } from '../../lib/errors.js'
 import { searchText, skillEntries } from '../../lib/skills.js'
 import { validationError } from '../../lib/validate.js'
@@ -221,9 +222,10 @@ export const updateJob = stepErrors(async (user, company, id, body) => {
 // M-040: Reopen is closed → published; restricted jobs cannot be published (M-167).
 const TRANSITIONS = { draft: ['published'], published: ['paused', 'closed'], paused: ['published', 'closed'], closed: ['published'] }
 
-export const setStatus = stepErrors(async (company, id, status) => {
+export const setStatus = stepErrors(async (company, id, status, user) => {
   const job = await ownJob(company, id)
   if (!TRANSITIONS[job.status].includes(status)) throw new AppError('CONFLICT', { params: { status: job.status } })
+  const from = job.status
   const now = new Date()
   const firstPublish = status === 'published' && !job.firstPublishedAt
   if (status === 'published') {
@@ -237,6 +239,14 @@ export const setStatus = stepErrors(async (company, id, status) => {
   if (status === 'closed') job.closedAt = now
   job.status = status
   await job.save()
+  // M-162: recruiter job status changes are user events in the Jobs category (M-163).
+  await recordAudit({
+    type: 'jobs.status_changed',
+    category: 'jobs',
+    actor: actorFor(user),
+    target: { type: 'job', id: job._id },
+    params: { title: job.title, company: company.displayName, from, to: status },
+  })
   if (firstPublish) await scheduleTask({ type: 'alerts.instant', key: `alerts.instant:${job._id}`, dueAt: now, payload: { jobId: String(job._id) } })
   await scheduleRecompute('job', job._id)
   return job

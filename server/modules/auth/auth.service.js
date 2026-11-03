@@ -59,13 +59,13 @@ export function signToken(user) {
 
 const sha256 = (value) => createHash('sha256').update(value).digest('hex')
 
-async function issueEmailToken(userId, purpose, ttlMs) {
+export async function issueEmailToken(userId, purpose, ttlMs) {
   const raw = randomBytes(32).toString('base64url')
   await EmailToken.create({ userId, purpose, tokenHash: sha256(raw), expiresAt: new Date(Date.now() + ttlMs) })
   return raw
 }
 
-async function findEmailToken(raw, purpose) {
+export async function findEmailToken(raw, purpose) {
   const token = await EmailToken.findOne({ tokenHash: sha256(raw), purpose })
   if (!token) throw new AppError('TOKEN_INVALID')
   if (token.usedAt) throw new AppError('TOKEN_USED')
@@ -73,7 +73,7 @@ async function findEmailToken(raw, purpose) {
   return token
 }
 
-async function useEmailToken(token) {
+export async function useEmailToken(token) {
   const claimed = await EmailToken.findOneAndUpdate({ _id: token._id, usedAt: null }, { usedAt: new Date() })
   if (!claimed) throw new AppError('TOKEN_USED')
 }

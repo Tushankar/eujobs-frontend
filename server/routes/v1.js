@@ -23,6 +23,20 @@ import * as verificationRoutes from '../modules/verification/verification.routes
 
 const router = Router()
 
+/** Every admin router, in mount order. The permission matrix test (M-155) walks this table. */
+export const ADMIN_MOUNTS = [
+  ['/admin/courses', learningRoutes.adminCoursesRouter],
+  ['/admin', learningRoutes.adminToolsRouter],
+  ['/admin/matching', matchingRoutes.adminMatchingRouter],
+  ['/admin/jobs', jobRoutes.adminRouter],
+  ['/admin/jobs', aiRoutes.adminRouter],
+  ['/admin/ai', matchingRoutes.adminAiRouter],
+  ['/admin/moderation/verification', verificationRoutes.adminRouter],
+  ['/admin/moderation/accounts', companyRoutes.adminRouter],
+  ['/admin/payments', paymentRoutes.adminRouter],
+  ['/admin', adminRoutes],
+]
+
 router.get('/health', (req, res) => {
   res.json({ status: 'ok', db: dbStatus() })
 })
@@ -62,15 +76,7 @@ router.use('/conversations', messagesRoutes)
 router.use('/courses', learningRoutes.coursesRouter)
 router.use('/learning', learningRoutes.learningRouter)
 router.use('/public/certificates', learningRoutes.publicCertificatesRouter)
-router.use('/admin/courses', learningRoutes.adminCoursesRouter)
-router.use('/admin', learningRoutes.adminToolsRouter)
-router.use('/admin/matching', matchingRoutes.adminMatchingRouter)
-router.use('/admin/jobs', jobRoutes.adminRouter)
-router.use('/admin/jobs', aiRoutes.adminRouter)
-router.use('/admin/ai', matchingRoutes.adminAiRouter)
-router.use('/admin/moderation/verification', verificationRoutes.adminRouter)
-router.use('/admin/moderation/accounts', companyRoutes.adminRouter)
-router.use('/admin', adminRoutes)
+for (const [path, adminRouter] of ADMIN_MOUNTS) router.use(path, adminRouter)
 
 // Test-only helpers (§2.13), never mounted outside NODE_ENV=test.
 if (config.isTest) router.use('/_test', (await import('../test/testRouter.js')).default)
