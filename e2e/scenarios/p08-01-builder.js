@@ -19,6 +19,12 @@ async function saveLesson(page, count) {
   await page.waitForFunction((n) => !document.querySelector('[role="dialog"]') && document.querySelectorAll('[data-lesson-item]').length === n, { timeout: 15_000 }, count)
 }
 
+/** Opens a builder tab and waits until it is the selected one. */
+async function openTab(page, name) {
+  await clickText(page, name, 'main [role="tab"]')
+  await page.waitForFunction((wanted) => document.querySelector('main [role="tab"][aria-selected="true"]')?.textContent === wanted, { timeout: 10_000 }, name)
+}
+
 const lessonTitles = (page) => page.$$eval('[data-lesson-item]', (items) => items.map((item) => item.querySelector('p').textContent.replace(/^\d+\.\s*/, '')))
 
 /**
@@ -59,7 +65,10 @@ export default {
     await ctx.screenshot(page, '1-details')
 
     // U24: publishing is blocked, with the reason.
+    // The checklist is always shown on a draft, so wait for the refused publish itself.
+    const refused = page.waitForResponse((response) => response.url().endsWith(`/admin/courses/${courseId}/status`))
     await page.click('[data-publish]')
+    ctx.check((await refused).status() === 422, 'the publish request is refused with 422')
     await page.waitForFunction(() => document.querySelector('[data-publish-problems]')?.innerText.includes('Add the HUF price'), { timeout: 10_000 })
     const problems = await page.$eval('[data-publish-problems]', (element) => element.innerText)
     ctx.check(problems.includes('Add at least one lesson') && problems.includes('Add at least one quiz question'), `the reasons name lessons and quiz too:\n${problems}`)
@@ -67,7 +76,7 @@ export default {
     await ctx.screenshot(page, '2-publish-blocked')
 
     // Lessons: MP4 with progress and the browser-read duration (editable).
-    await clickText(page, 'Lessons', 'main button')
+    await openTab(page, 'Lessons')
     await startLesson(page, 'Course introduction', 'video')
     await page.evaluate(() => {
       window.__sawProgress = false
@@ -136,7 +145,7 @@ export default {
     await ctx.screenshot(page, '6-lessons')
 
     // Quiz: one option → error; no correct option → error; then 5 valid questions.
-    await clickText(page, 'Quiz', 'main button')
+    await openTab(page, 'Quiz')
     await page.click('[data-add-question]')
     // The question field is the one input of a question without an aria-label (it has a visible label).
     await fill(page, '[data-question="0"] input:not([aria-label])', 'Which state helps a first-time user?')
@@ -174,13 +183,13 @@ export default {
     await ctx.screenshot(page, '8-quiz')
 
     // The HUF price, then publish.
-    await clickText(page, 'Details', 'main button')
+    await openTab(page, 'Details')
     await fill(page, 'input[data-price="HUF"]', String(PRICES_19.HUF))
     await page.click('[data-save-details]')
     await waitForText(page, 'Saved')
     await page.click('[data-publish]')
     await page.waitForSelector('[data-course-status="published"]', { timeout: 10_000 })
-    await clickText(page, 'Preview', 'main button')
+    await openTab(page, 'Preview')
     await page.waitForSelector('[data-course-preview]', { visible: true })
     await ctx.screenshot(page, '9-published-preview')
     ctx.assertClean(handle.issues, 'builder')

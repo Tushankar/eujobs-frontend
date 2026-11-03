@@ -57,6 +57,14 @@
   padding-left: 22px;
 }
 
+.text ul {
+  list-style: disc;
+}
+
+.text ol {
+  list-style: decimal;
+}
+
 .text a {
   color: var(--primary);
   text-decoration: underline;

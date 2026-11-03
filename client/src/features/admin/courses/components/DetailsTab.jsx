@@ -107,9 +107,7 @@ export default function DetailsTab({ course }) {
               onChange={(event) => setOutcome(index, event.target.value)}
               error={errorText.field('outcomes', errors[`outcomes.${index}`])}
             />
-            <IconButton label={t('details.removeOutcome')} onClick={() => set('outcomes', values.outcomes.filter((_, at) => at !== index))} disabled={values.outcomes.length === 1}>
-              <Icon as={X} size={14} />
-            </IconButton>
+            <IconButton label={t('details.removeOutcome')} onClick={() => set('outcomes', values.outcomes.filter((_, at) => at !== index))} disabled={values.outcomes.length === 1} icon={X} iconSize={14} />
           </div>
         ))}
         {errors.outcomes && <p className={styles.error}>{errorText.field('outcomes', errors.outcomes)}</p>}

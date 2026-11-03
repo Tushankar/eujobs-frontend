@@ -1,14 +1,15 @@
-import { completeCandidate, recruiterWithJob } from '../lib/applicants.js'
+import { applyApi, completeCandidate, recruiterWithJob } from '../lib/applicants.js'
 import { signInWithForm, waitForText } from '../lib/flows.js'
 import { sendApi, startApi } from '../lib/messages.js'
 import { login } from '../lib/recruiters.js'
-import { api, db } from '../lib/testApi.js'
+import { api, db, TEST_PASSWORD } from '../lib/testApi.js'
 
 const setDiscoverable = (id, discoverable) => db('users', 'updateMany', { filter: { _id: { $oid: id } }, update: { $set: { 'privacy.discoverable': discoverable } } })
 
 /**
  * P7-05 (M-085, U28): a hidden candidate who never applied has no profile and so no Message button, and the API
  * refuses 403. After Emma hides, her existing Acme thread works both ways; a company without a thread cannot start one.
+ * P7-A1: a hidden candidate whose only application is withdrawn keeps an open profile (P6-C5) but no Message button.
  */
 export default {
   name: 'P7-05 Recruiter limits',
@@ -46,5 +47,21 @@ export default {
       await setDiscoverable(emma.id, true)
     }
     ctx.assertClean(sarah.issues, 'recruiter limits')
+
+    // P7-A1: withdrawn-only and hidden: the profile opens, but there is no Message button and the API refuses.
+    const { recruiter, job } = await recruiterWithJob('WithdrawnOnly')
+    const applicant = await completeCandidate('WithdrawnOnly')
+    const application = await applyApi(applicant.token, job.id)
+    ctx.check((await api(`/candidate/applications/${application.body.id}/withdraw`, { method: 'POST', token: applicant.token })).status === 200, 'the applicant withdraws')
+    await setDiscoverable(applicant.id, false)
+    const other = await ctx.newPage()
+    await signInWithForm(other.page, ctx.webUrl, '/recruiter/sign-in', recruiter.email, TEST_PASSWORD)
+    await other.page.goto(`${ctx.webUrl}/recruiter/find-candidates/${applicant.id}`, { waitUntil: 'networkidle0' })
+    await waitForText(other.page, applicant.fullName)
+    ctx.check(!(await other.page.$('[data-start-conversation]')), 'no Message button for a withdrawn-only hidden applicant')
+    await ctx.screenshot(other.page, '3-withdrawn-applicant')
+    const withdrawnStart = await startApi(recruiter.token, { candidateId: applicant.id, body: 'Hello' })
+    ctx.check(withdrawnStart.status === 403, `the API refuses a new thread (${withdrawnStart.status})`)
+    ctx.assertClean(other.issues, 'withdrawn applicant')
   },
 }

@@ -72,9 +72,7 @@ export default function QuizTab({ course }) {
           <div className={styles.row}>
             <h2 className={styles.heading}>{t('quiz.question', { number: index + 1 })}</h2>
             <span className={styles.grow} />
-            <IconButton label={t('quiz.removeQuestion', { number: index + 1 })} onClick={() => set('questions', values.questions.filter((_, at) => at !== index))} disabled={locked}>
-              <Icon as={Trash2} size={14} />
-            </IconButton>
+            <IconButton label={t('quiz.removeQuestion', { number: index + 1 })} onClick={() => set('questions', values.questions.filter((_, at) => at !== index))} disabled={locked} icon={Trash2} iconSize={14} />
           </div>
           <TextField label={t('quiz.text')} value={question.text} onChange={(event) => change(index, { text: event.target.value })} error={error(`questions.${index}.text`)} disabled={locked} />
           <SelectField
@@ -105,9 +103,7 @@ export default function QuizTab({ course }) {
                   error={error(`questions.${index}.options.${optionIndex}.text`)}
                   disabled={locked}
                 />
-                <IconButton label={t('quiz.removeOption', { number: optionIndex + 1 })} onClick={() => removeOption(index, optionIndex)} disabled={locked}>
-                  <Icon as={X} size={14} />
-                </IconButton>
+                <IconButton label={t('quiz.removeOption', { number: optionIndex + 1 })} onClick={() => removeOption(index, optionIndex)} disabled={locked} icon={X} iconSize={14} />
               </div>
             ))}
             {[`questions.${index}.options`, `questions.${index}.correct`].map(

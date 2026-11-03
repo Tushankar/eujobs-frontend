@@ -1,7 +1,7 @@
 import { useState } from 'react'
 import { useTranslation } from 'react-i18next'
 import { Link, useNavigate, useParams, useSearchParams } from 'react-router-dom'
-import { ArrowLeft, LockKeyhole } from 'lucide-react'
+import { ArrowLeft, CircleAlert, LockKeyhole } from 'lucide-react'
 import NoticeBanner from '@/components/common/NoticeBanner.jsx'
 import PageTitle from '@/components/common/PageTitle.jsx'
 import PillBadge from '@/components/common/PillBadge.jsx'
@@ -69,7 +69,10 @@ function Problems({ problems }) {
       <h2 className={styles.problemsTitle}>{t('builder.problemsTitle')}</h2>
       <ul>
         {entries.map(([field, key]) => (
-          <li key={field}>{problemText(field, key)}</li>
+          <li key={field}>
+            <Icon as={CircleAlert} size={14} />
+            <span>{problemText(field, key)}</span>
+          </li>
         ))}
       </ul>
     </Panel>

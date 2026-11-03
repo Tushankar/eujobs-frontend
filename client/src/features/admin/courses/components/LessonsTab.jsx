@@ -75,18 +75,10 @@ export default function LessonsTab({ course }) {
                 </div>
                 {lesson.isPreview && <PillBadge tone="info">{t('lessons.previewBadge')}</PillBadge>}
                 <div className={styles.lessonActions}>
-                  <IconButton label={t('lessons.moveUp', { title: lesson.title })} onClick={() => move(index, index - 1)} disabled={locked || index === 0} data-move="up">
-                    <Icon as={ArrowUp} size={14} />
-                  </IconButton>
-                  <IconButton label={t('lessons.moveDown', { title: lesson.title })} onClick={() => move(index, index + 1)} disabled={locked || index === course.lessons.length - 1} data-move="down">
-                    <Icon as={ArrowDown} size={14} />
-                  </IconButton>
-                  <IconButton label={t('lessons.edit', { title: lesson.title })} onClick={() => setEditing(lesson)} disabled={locked}>
-                    <Icon as={Pencil} size={14} />
-                  </IconButton>
-                  <IconButton label={t('lessons.delete', { title: lesson.title })} onClick={() => setDeleting(lesson)} disabled={locked}>
-                    <Icon as={Trash2} size={14} />
-                  </IconButton>
+                  <IconButton label={t('lessons.moveUp', { title: lesson.title })} onClick={() => move(index, index - 1)} disabled={locked || index === 0} data-move="up" icon={ArrowUp} iconSize={14} />
+                  <IconButton label={t('lessons.moveDown', { title: lesson.title })} onClick={() => move(index, index + 1)} disabled={locked || index === course.lessons.length - 1} data-move="down" icon={ArrowDown} iconSize={14} />
+                  <IconButton label={t('lessons.edit', { title: lesson.title })} onClick={() => setEditing(lesson)} disabled={locked} icon={Pencil} iconSize={14} />
+                  <IconButton label={t('lessons.delete', { title: lesson.title })} onClick={() => setDeleting(lesson)} disabled={locked} icon={Trash2} iconSize={14} />
                 </div>
               </Panel>
             </li>
