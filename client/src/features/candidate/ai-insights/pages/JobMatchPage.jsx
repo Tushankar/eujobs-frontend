@@ -1,16 +1,21 @@
 import { useState } from 'react'
+import { useTranslation } from 'react-i18next'
 import { Link } from 'react-router-dom'
-import { ArrowRight, ArrowUpRight, Bookmark, BookmarkCheck, Check, CircleCheck, CircleHelp, FileText } from 'lucide-react'
+import { ArrowRight, ArrowUpRight, Bookmark, BookmarkCheck, Check, FileText } from 'lucide-react'
 import { Button, Icon, Panel } from '@/components/ui'
 import PillBadge from '@/components/common/PillBadge.jsx'
-import StatusBadge from '@/components/common/StatusBadge.jsx'
+import { useGetInsightPageQuery } from '@/features/ai/api.js'
+import { useSaveToggle } from '@/features/candidate/jobs/api.js'
+import MatchBadge from '@/features/candidate/jobs/components/MatchBadge.jsx'
+import { useGetProfileQuery } from '@/features/candidate/profile/api.js'
+import { useJobText } from '@/lib/jobText.js'
+import { useFormat } from '@/lib/preferences.js'
 import AiPageShell from '../components/AiPageShell.jsx'
+import Narrative from '../components/Narrative.jsx'
 import RolePicker from '../components/RolePicker.jsx'
 import SectionHeading from '../components/SectionHeading.jsx'
 import SourceEvidenceModal from '../components/SourceEvidenceModal.jsx'
-import { PROFILE } from '../data/insights.js'
-import { useAddedSkills, useSavedRoles, useSelectedRole } from '../hooks/useInsightsState.js'
-import { buildEvidenceRows, compareRole } from '../utils/matching.js'
+import { useChosenJob } from '../hooks/useChosenJob.js'
 import styles from './JobMatchPage.module.css'
 
 const AI_INSIGHTS = '/candidate/ai-insights'
@@ -26,145 +31,181 @@ function AlignmentBadge({ aligned, label }) {
   )
 }
 
-/** Job match: skills, experience and preferences compared side by side, with no score. */
+/** Job match (M-057, M-065): the code evidence side by side, the AI narrative, and "Save this opportunity". */
 export default function JobMatchPage() {
-  const [role, selectRole] = useSelectedRole('linear')
-  const { skills } = useAddedSkills()
-  const { saved, toggle: toggleSaved } = useSavedRoles()
+  const { t } = useTranslation('aiInsights')
+  const format = useFormat()
+  const jobText = useJobText()
+  const { roles, jobId, choose } = useChosenJob()
+  const { data, refetch } = useGetInsightPageQuery({ page: 'job-match', jobId }, { skip: !jobId })
+  const { data: profile } = useGetProfileQuery()
+  const toggleSave = useSaveToggle()
   const [sourceOpen, setSourceOpen] = useState(false)
+  const job = data?.job
+  const evidence = data?.evidence
+  const mode = (key) => (key ? t(`enums:workPreference.${key}`) : '—')
+  const level = (key) => t(`enums:languageLevel.${key}`)
 
-  const match = compareRole(role, skills)
-  const rows = buildEvidenceRows(role, match)
-  const strong = match.allSkillsListed && match.yearsMet && match.workAligned
-  const isSaved = saved.includes(role.id)
-
-  const tiles = [
+  const rows = evidence && [
+    ...job.requiredSkills.map((skill) => {
+      const listed = !evidence.missingSkills.includes(skill)
+      return { key: `skill-${skill}`, label: skill, aligned: listed, status: t(listed ? 'jobMatch.listed' : 'jobMatch.notListed'), profile: listed ? skill : t('jobMatch.notListedValue'), requirement: skill }
+    }),
     {
-      label: 'Required skills',
-      value: `${match.listed.length} of ${role.requiredSkills.length} listed`,
-      aligned: match.allSkillsListed,
+      key: 'experience',
+      label: t('jobMatch.rows.experience'),
+      aligned: evidence.years.met,
+      status: t(evidence.years.met ? 'jobMatch.aligned' : 'jobMatch.toReview'),
+      profile: t('jobMatch.experienceValue', { count: evidence.years.candidate ?? 0 }),
+      requirement: evidence.years.required == null ? t('jobMatch.noMinimum') : t('source.requiredYearsValue', { count: evidence.years.required }),
     },
-    { label: 'Relevant experience', value: `${PROFILE.yearsReported} years reported`, aligned: match.yearsMet },
-    { label: 'Work preference', value: `${PROFILE.workPreference} → ${role.workMode}`, aligned: match.workAligned },
+    { key: 'work', label: t('jobMatch.rows.work'), aligned: evidence.workMode.met, status: t(evidence.workMode.met ? 'jobMatch.aligned' : 'jobMatch.toReview'), profile: mode(evidence.workMode.candidate), requirement: mode(evidence.workMode.job) },
+    {
+      key: 'location',
+      label: t('jobMatch.rows.location'),
+      aligned: evidence.location.met,
+      status: t(evidence.location.met ? 'jobMatch.aligned' : 'jobMatch.toReview'),
+      profile: evidence.location.countryCode ? format.country(evidence.location.countryCode) : '—',
+      requirement: jobText.place(job),
+    },
+    ...(evidence.rightToWork === null
+      ? []
+      : [
+          {
+            key: 'rtw',
+            label: t('jobMatch.rows.rightToWork'),
+            aligned: evidence.rightToWork,
+            status: t(evidence.rightToWork ? 'jobMatch.aligned' : 'jobMatch.toReview'),
+            profile: t(evidence.rightToWork ? 'jobMatch.rightToWorkYes' : 'jobMatch.rightToWorkNo'),
+            requirement: t('jobMatch.rightToWorkRequirement', { country: format.country(job.country) }),
+          },
+        ]),
+    ...evidence.languages.map((language) => ({
+      key: `language-${language.code}`,
+      label: format.languageName(language.code),
+      aligned: language.met,
+      status: t(language.met ? 'jobMatch.aligned' : 'jobMatch.toReview'),
+      profile: language.level ? level(language.level) : t('jobMatch.notListedValue'),
+      requirement: level(language.minLevel),
+    })),
   ]
 
+  async function handleSave() {
+    await toggleSave(job)
+    refetch()
+  }
+
   return (
-    <AiPageShell
-      eyebrow="Job Match Insights"
-      title="See the fit. Understand the evidence."
-      description="Skills, experience, preferences, and open questions. More useful than a percentage."
-    >
-      <RolePicker role={role} onChange={selectRole} />
+    <AiPageShell eyebrow={t('jobMatch.eyebrow')} title={t('jobMatch.title')} description={t('jobMatch.description')}>
+      <RolePicker roles={roles} jobId={jobId} onChange={choose} />
 
-      <div className={styles.layout}>
-        <div className={styles.main}>
-          <Panel padding={24} aria-labelledby="fit-title">
-            <div className={styles.fitHead}>
-              <SectionHeading
-                id="fit-title"
-                className={styles.fitTitle}
-                title="Why this role may fit"
-                description="A starting point for your review, not a hiring decision."
-              />
-              {strong ? <StatusBadge tone="success">Strong match</StatusBadge> : <PillBadge tone="warning" dot>Partial overlap</PillBadge>}
-            </div>
-            <ul className={styles.tiles}>
-              {tiles.map((tile) => (
-                <li key={tile.label} className={styles.tile}>
-                  <p className={styles.tileLabel}>{tile.label}</p>
-                  <p className={styles.tileValue}>{tile.value}</p>
-                  <AlignmentBadge aligned={tile.aligned} label={tile.aligned ? 'Aligned' : 'To review'} />
+      {evidence && (
+        <div className={styles.layout}>
+          <div className={styles.main}>
+            <Panel padding={24} aria-labelledby="fit-title">
+              <div className={styles.fitHead}>
+                <SectionHeading id="fit-title" className={styles.fitTitle} title={t('jobMatch.fit')} description={t('jobMatch.fitLead')} />
+                <MatchBadge job={job} />
+              </div>
+              <ul className={styles.tiles}>
+                <li className={styles.tile}>
+                  <p className={styles.tileLabel}>{t('jobMatch.skills')}</p>
+                  <p className={styles.tileValue}>{t('jobMatch.skillsValue', { count: evidence.requiredSkills - evidence.missingSkills.length, total: evidence.requiredSkills })}</p>
+                  <AlignmentBadge aligned={!evidence.missingSkills.length} label={t(evidence.missingSkills.length ? 'jobMatch.toReview' : 'jobMatch.aligned')} />
                 </li>
-              ))}
-            </ul>
-          </Panel>
+                <li className={styles.tile}>
+                  <p className={styles.tileLabel}>{t('jobMatch.experience')}</p>
+                  <p className={styles.tileValue}>{t('jobMatch.experienceValue', { count: evidence.years.candidate ?? 0 })}</p>
+                  <AlignmentBadge aligned={evidence.years.met} label={t(evidence.years.met ? 'jobMatch.aligned' : 'jobMatch.toReview')} />
+                </li>
+                <li className={styles.tile}>
+                  <p className={styles.tileLabel}>{t('jobMatch.work')}</p>
+                  <p className={styles.tileValue}>
+                    {mode(evidence.workMode.candidate)} → {mode(evidence.workMode.job)}
+                  </p>
+                  <AlignmentBadge aligned={evidence.workMode.met} label={t(evidence.workMode.met ? 'jobMatch.aligned' : 'jobMatch.toReview')} />
+                </li>
+              </ul>
+            </Panel>
 
-          <Panel padding={24} aria-labelledby="evidence-title">
-            <div className={styles.evidenceHead}>
-              <h2 className={styles.title} id="evidence-title">
-                The evidence, side by side
-              </h2>
-              <Button variant="ghost" className={styles.quiet} onClick={() => setSourceOpen(true)} leftIcon={<Icon as={FileText} size={13} strokeWidth={2} />}>
-                View source
-              </Button>
-            </div>
-            <ul className={styles.rows}>
-              {rows.map((row) => (
-                <li key={row.label} className={styles.row}>
-                  <div className={styles.rowLabel}>
-                    <p className={styles.rowName}>{row.label}</p>
-                    <AlignmentBadge aligned={row.aligned} label={row.statusLabel} />
+            <Panel padding={24} aria-labelledby="evidence-title">
+              <div className={styles.evidenceHead}>
+                <h2 className={styles.title} id="evidence-title">
+                  {t('jobMatch.evidence')}
+                </h2>
+                <Button variant="ghost" className={styles.quiet} onClick={() => setSourceOpen(true)} leftIcon={<Icon as={FileText} size={13} strokeWidth={2} />}>
+                  {t('jobMatch.viewSource')}
+                </Button>
+              </div>
+              <ul className={styles.rows}>
+                {rows.map((row) => (
+                  <li key={row.key} className={styles.row}>
+                    <div className={styles.rowLabel}>
+                      <p className={styles.rowName}>{row.label}</p>
+                      <AlignmentBadge aligned={row.aligned} label={row.status} />
+                    </div>
+                    <dl className={styles.rowValue}>
+                      <dt>{t('jobMatch.yours')}</dt>
+                      <dd>{row.profile}</dd>
+                    </dl>
+                    <dl className={styles.rowValue}>
+                      <dt>{t('jobMatch.requirement')}</dt>
+                      <dd>{row.requirement}</dd>
+                    </dl>
+                  </li>
+                ))}
+              </ul>
+            </Panel>
+
+            <Panel padding={24} aria-labelledby="gaps-title">
+              <SectionHeading id="gaps-title" title={t('jobMatch.gaps')} description={t('jobMatch.gapsLead')} />
+              <Narrative section="job_match" jobId={jobId}>
+                {(narrative) => (
+                  <div className={styles.gapText}>
+                    <p>{narrative.summary}</p>
+                    {narrative.gaps.length > 0 && (
+                      <ul>
+                        {narrative.gaps.map((gap) => (
+                          <li key={gap}>{gap}</li>
+                        ))}
+                      </ul>
+                    )}
                   </div>
-                  <dl className={styles.rowValue}>
-                    <dt>Your profile</dt>
-                    <dd>{row.profile}</dd>
-                  </dl>
-                  <dl className={styles.rowValue}>
-                    <dt>Role requirement</dt>
-                    <dd>{row.requirement}</dd>
-                  </dl>
-                </li>
-              ))}
-            </ul>
-          </Panel>
-
-          <Panel padding={24} aria-labelledby="gaps-title">
-            <SectionHeading
-              id="gaps-title"
-              title="Potential gaps & open questions"
-              description="Missing evidence is not the same as missing capability."
-            />
-            <div className={styles.gapText}>
-              <span className={match.missing.length === 0 ? styles.gapIconOk : styles.gapIcon}>
-                <Icon as={match.missing.length === 0 ? CircleCheck : CircleHelp} size={17} strokeWidth={2} />
-              </span>
-              <p>
-                {match.missing.length === 0
-                  ? 'No gaps were detected in these basic listed fields. Role-specific depth, proficiency, and team fit still need human review.'
-                  : `${match.missing.join(', ')} ${match.missing.length === 1 ? 'is' : 'are'} listed by this role but not in your reviewed profile. That is missing evidence, not missing capability, and role-specific depth still needs human review.`}
-              </p>
-            </div>
-            <Link to={`${AI_INSIGHTS}/skill-gap?role=${role.id}`} className={styles.link}>
-              Explore the skill gap analysis
-              <Icon as={ArrowRight} size={13} strokeWidth={2} />
-            </Link>
-          </Panel>
-        </div>
-
-        <aside className={styles.side} aria-label="Next step">
-          <Panel padding={24}>
-            <h2 className={styles.title}>Your next step is yours.</h2>
-            <p className={styles.sideText}>Read the full brief, check the evidence, and decide whether this opportunity feels right.</p>
-            <div className={styles.sideActions}>
-              <Button as={Link} to={`/candidate/jobs/${role.jobId}`} fullWidth rightIcon={<Icon as={ArrowUpRight} size={13} strokeWidth={2} />}>
-                View role &amp; apply
-              </Button>
-              <Button
-                variant="outline"
-                fullWidth
-                aria-pressed={isSaved}
-                onClick={() => toggleSaved(role.id)}
-                leftIcon={<Icon as={isSaved ? BookmarkCheck : Bookmark} size={13} strokeWidth={2} />}
-              >
-                {isSaved ? 'Saved on this device' : 'Save this opportunity'}
-              </Button>
-              <Link to={`${AI_INSIGHTS}/why-recommended?role=${role.id}`} className={styles.centerLink}>
-                Why was this recommended?
+                )}
+              </Narrative>
+              <Link to={`${AI_INSIGHTS}/skill-gap?jobId=${jobId}`} className={styles.link}>
+                {t('jobMatch.skillGap')}
                 <Icon as={ArrowRight} size={13} strokeWidth={2} />
               </Link>
-            </div>
-          </Panel>
-          <Panel className={styles.context} padding={24}>
-            <h2 className={styles.title}>A useful match has context.</h2>
-            <p className={styles.contextText}>
-              No single percentage can explain a career decision. These insights don’t verify your skills, infer protected
-              characteristics, or guarantee an interview.
-            </p>
-          </Panel>
-        </aside>
-      </div>
+            </Panel>
+          </div>
 
-      <SourceEvidenceModal open={sourceOpen} onClose={() => setSourceOpen(false)} role={role} skills={skills} />
+          <aside className={styles.side} aria-label={t('jobMatch.nextTitle')}>
+            <Panel padding={24}>
+              <h2 className={styles.title}>{t('jobMatch.nextTitle')}</h2>
+              <p className={styles.sideText}>{t('jobMatch.nextText')}</p>
+              <div className={styles.sideActions}>
+                <Button as={Link} to={`/candidate/jobs/${jobId}`} fullWidth rightIcon={<Icon as={ArrowUpRight} size={13} strokeWidth={2} />}>
+                  {t('jobMatch.view')}
+                </Button>
+                <Button variant="outline" fullWidth aria-pressed={job.saved} data-save-job onClick={handleSave} leftIcon={<Icon as={job.saved ? BookmarkCheck : Bookmark} size={13} strokeWidth={2} />}>
+                  {t(job.saved ? 'jobMatch.saved' : 'jobMatch.save')}
+                </Button>
+                <Link to={`${AI_INSIGHTS}/why-recommended?jobId=${jobId}`} className={styles.centerLink}>
+                  {t('jobMatch.why')}
+                  <Icon as={ArrowRight} size={13} strokeWidth={2} />
+                </Link>
+              </div>
+            </Panel>
+            <Panel className={styles.context} padding={24}>
+              <h2 className={styles.title}>{t('jobMatch.contextTitle')}</h2>
+              <p className={styles.contextText}>{t('jobMatch.contextText')}</p>
+            </Panel>
+          </aside>
+        </div>
+      )}
+
+      <SourceEvidenceModal open={sourceOpen} onClose={() => setSourceOpen(false)} job={job} evidence={evidence} skills={profile?.skills ?? []} />
     </AiPageShell>
   )
 }

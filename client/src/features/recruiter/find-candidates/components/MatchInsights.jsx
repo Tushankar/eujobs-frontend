@@ -3,14 +3,49 @@ import { useTranslation } from 'react-i18next'
 import { Check, ChevronDown, ChevronUp } from 'lucide-react'
 import { Icon } from '@/components/ui'
 import aiMatchIcon from '@/assets/icons/find-candidates-ai-match.svg'
+import { useGetRecruiterMatchQuery } from '@/features/ai/api.js'
+import AiStatus from '@/features/ai/components/AiStatus.jsx'
 import { useFormat } from '@/lib/preferences.js'
 import styles from './MatchInsights.module.css'
 
+/** M-057: the OpenAI narrative of Match insights, requested when the panel opens; never a score (C6). */
+function MatchNarrative({ candidateId, jobId }) {
+  const { t } = useTranslation('ai')
+  const query = useGetRecruiterMatchQuery({ candidateId, jobId })
+  const list = (key, items) =>
+    items?.length > 0 && (
+      <>
+        <p className={styles.label}>{t(`explanation.${key}`)}</p>
+        <ul className={styles.narrativeList}>
+          {items.map((item) => (
+            <li key={item}>{item}</li>
+          ))}
+        </ul>
+      </>
+    )
+  return (
+    <div className={styles.narrative} data-narrative="recruiter_match">
+      <AiStatus isLoading={query.isFetching} error={query.error} onRetry={query.refetch}>
+        {query.data && (
+          <>
+            <p className={styles.label}>{t('badge')}</p>
+            <p className={styles.narrativeText}>{query.data.summary}</p>
+            {list('strengths', query.data.strengths)}
+            {list('openQuestions', query.data.openQuestions)}
+          </>
+        )}
+      </AiStatus>
+    </div>
+  )
+}
+
 /**
  * Match evidence for the chosen job (M-052, M-057 code part): the job's skills the candidate lists, the required
- * ones not listed, years and work mode, computed on the server. Never a score (C6); the narrative comes in Phase 9.
+ * ones not listed, years and work mode, computed on the server, and, once opened, the AI narrative around them in the
+ * recruiter's language (free for approved recruiters, M-117). Never a score (C6).
  */
-export default function MatchInsights({ candidate, hasJob, defaultOpen = false }) {
+export default function MatchInsights({ candidate, jobId, defaultOpen = false }) {
+  const hasJob = Boolean(jobId)
   const { t } = useTranslation()
   const format = useFormat()
   const [open, setOpen] = useState(defaultOpen)
@@ -60,6 +95,7 @@ export default function MatchInsights({ candidate, hasJob, defaultOpen = false }
               <p>{t('discovery:match.missing', { skills: format.list(overlap.missing) })}</p>
             </div>
           )}
+          {hasJob && <MatchNarrative candidateId={candidate.id} jobId={jobId} />}
           <p className={styles.disclaimer}>{t('discovery:match.disclaimer')}</p>
         </div>
       )}

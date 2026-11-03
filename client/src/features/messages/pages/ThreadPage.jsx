@@ -6,6 +6,7 @@ import { ArrowLeft, Lock, MessageSquareOff, Sparkles } from 'lucide-react'
 import { openUpgrade } from '@/app/upgrade.js'
 import { Button, Icon, Panel } from '@/components/ui'
 import EmptyState from '@/components/common/EmptyState.jsx'
+import Translatable from '@/features/ai/components/Translatable.jsx'
 import { lacksEntitlement } from '@/features/candidate/billing/usePlan.js'
 import { useFormat, usePreferences } from '@/lib/preferences.js'
 import { cx } from '@/utils/cx.js'
@@ -67,7 +68,14 @@ export default function ThreadPage() {
         <ol className={styles.messages} aria-label={t('messages:thread.messages')}>
           {data.items.map((message) => (
             <li key={message.id} className={cx(styles.message, message.mine && styles.mine)} data-message={message.mine ? 'mine' : 'theirs'}>
-              <p className={styles.bubble}>{message.body}</p>
+              {message.mine ? (
+                <p className={styles.bubble}>{message.body}</p>
+              ) : (
+                // M-144, M-088: the other side's message in the reader's language on demand
+                <Translatable source={{ entity: 'message', id: message.id, field: 'body' }} texts={[message.body]}>
+                  {([body]) => <p className={styles.bubble}>{body}</p>}
+                </Translatable>
+              )}
               <time className={styles.time} dateTime={message.createdAt}>
                 {format.dateTime(message.createdAt)}
               </time>

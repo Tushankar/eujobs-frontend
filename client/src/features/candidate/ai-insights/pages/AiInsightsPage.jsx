@@ -1,103 +1,94 @@
+import { useTranslation } from 'react-i18next'
 import { Link } from 'react-router-dom'
 import { ArrowRight, BriefcaseBusiness, Layers, ShieldCheck, TrendingUp } from 'lucide-react'
 import StatCard from '@/components/common/StatCard.jsx'
-import { Button, Icon, Panel } from '@/components/ui'
+import { Avatar, Button, Icon, Panel } from '@/components/ui'
 import sparkle from '@/assets/icons/ai-insights-sparkle-24.svg'
+import { useGetInsightsOverviewQuery } from '@/features/ai/api.js'
+import { useFormat, usePreferences } from '@/lib/preferences.js'
 import AiPageShell from '../components/AiPageShell.jsx'
 import MatchCard from '../components/MatchCard.jsx'
+import Narrative from '../components/Narrative.jsx'
 import SectionHeading from '../components/SectionHeading.jsx'
-import { DEMO_OPPORTUNITY_COUNT, PROFILE, ROLES_WITH_ALIGNED_SKILLS, SKILL_DEMAND } from '../data/insights.js'
-import { useAddedSkills } from '../hooks/useInsightsState.js'
-import { rankRoles } from '../utils/matching.js'
 import styles from './AiInsightsPage.module.css'
 
 const AI_INSIGHTS = '/candidate/ai-insights'
 
-/** Profile insights: a snapshot of the reviewed profile and the evidence behind the top role matches. */
+/** Profile insights (M-057, M-066): the profile at a glance, skill demand in the market and the best matches. */
 export default function AiInsightsPage() {
-  const { skills } = useAddedSkills()
-  const topMatches = rankRoles(skills).slice(0, 4)
+  const { t } = useTranslation('aiInsights')
+  const format = useFormat()
+  const { me } = usePreferences()
+  const { data } = useGetInsightsOverviewQuery()
+  if (!data) return <AiPageShell eyebrow={t('overview.eyebrow')} title={t('overview.title')} description={t('overview.description')} />
+  const { profile, stats, skillDemand, topMatches } = data
+  const place = profile.location && [profile.location.city, format.country(profile.location.countryCode)].join(', ')
 
   return (
-    <AiPageShell
-      eyebrow="AI Profile Insights"
-      title="Your potential, in perspective."
-      description="Understand your strengths, see the evidence, and decide what comes next."
-    >
+    <AiPageShell eyebrow={t('overview.eyebrow')} title={t('overview.title')} description={t('overview.description')}>
       <Panel className={styles.profile} padding={24}>
-        <span className={styles.avatar} aria-hidden="true">
-          {PROFILE.initials}
-        </span>
+        <Avatar name={profile.fullName} src={me?.photoUrl ?? undefined} size={56} className={styles.avatar} />
         <div className={styles.profileText}>
-          <p className={styles.name}>{PROFILE.name}</p>
-          <p className={styles.role}>
-            {PROFILE.title} · {PROFILE.location}
-          </p>
-          <p className={styles.snapshot}>
-            A snapshot of your reviewed information. Strengths here reflect listed evidence—not independently verified proficiency.
-          </p>
+          <p className={styles.name}>{profile.fullName}</p>
+          <p className={styles.role}>{[profile.headline, place].filter(Boolean).join(' · ')}</p>
+          <p className={styles.snapshot}>{t('overview.snapshot')}</p>
         </div>
         <Button as={Link} to={`${AI_INSIGHTS}/improve-profile`} rightIcon={<Icon as={ArrowRight} size={13} strokeWidth={2} />}>
-          Improve my profile
+          {t('overview.improve')}
         </Button>
       </Panel>
 
       <div className={styles.stats}>
-        <StatCard icon={Layers} label="Skills in your profile" value={skills.length} caption="Based on your reviewed information" />
+        <StatCard icon={Layers} label={t('overview.stats.skills')} value={stats.skillsCount} caption={t('overview.stats.skillsCaption')} />
+        <StatCard icon={BriefcaseBusiness} label={t('overview.stats.aligned')} value={stats.rolesWithAlignedSkills} caption={t('overview.stats.alignedCaption', { count: stats.jobsConsidered })} />
         <StatCard
-          icon={BriefcaseBusiness}
-          label="Roles with aligned skills"
-          value={ROLES_WITH_ALIGNED_SKILLS}
-          caption="Among the current demo opportunities"
+          icon={TrendingUp}
+          label={t('overview.stats.years')}
+          value={stats.yearsExperience ?? 0}
+          format={(count) => t('overview.stats.yearsValue', { count: Math.round(count) })}
+          caption={t('overview.stats.yearsCaption')}
         />
-        <StatCard icon={TrendingUp} label="Experience reported" value={`${PROFILE.yearsReported} yrs`} caption="Review for role-specific relevance" />
       </div>
 
       <div className={styles.split}>
         <Panel padding={24} className={styles.strengths} aria-labelledby="strengths-title">
-          <SectionHeading
-            id="strengths-title"
-            title="Where your strengths stand out"
-            description="Listed skills appearing in current opportunities"
-          />
-          <ul className={styles.skillList}>
-            {skills.map((skill) => {
-              const roles = SKILL_DEMAND[skill] ?? 0
-              return (
-                <li key={skill}>
-                  <div className={styles.skillRow}>
-                    <span>{skill}</span>
-                    <span className={styles.roleCount}>
-                      {roles} {roles === 1 ? 'role' : 'roles'}
-                    </span>
-                  </div>
-                  <div
-                    className={styles.bar}
-                    role="progressbar"
-                    aria-label={`${skill} appears in ${roles} of ${DEMO_OPPORTUNITY_COUNT} current roles`}
-                    aria-valuemin={0}
-                    aria-valuemax={DEMO_OPPORTUNITY_COUNT}
-                    aria-valuenow={roles}
-                  >
-                    <span className={styles.fill} style={{ width: `${(roles / DEMO_OPPORTUNITY_COUNT) * 100}%` }} />
-                  </div>
-                </li>
-              )
-            })}
-          </ul>
-          <p className={styles.barNote}>Each bar shows how many of the {DEMO_OPPORTUNITY_COUNT} current demo opportunities list that skill.</p>
+          <SectionHeading id="strengths-title" title={t('overview.strengths')} description={t('overview.strengthsLead')} />
+          {skillDemand.length === 0 ? (
+            <p className={styles.barNote}>{t('overview.noSkills')}</p>
+          ) : (
+            <>
+              <ul className={styles.skillList}>
+                {skillDemand.map(({ skill, jobCount }) => (
+                  <li key={skill} data-skill-demand={skill}>
+                    <div className={styles.skillRow}>
+                      <span>{skill}</span>
+                      <span className={styles.roleCount}>{t('overview.roles', { count: jobCount })}</span>
+                    </div>
+                    <div
+                      className={styles.bar}
+                      role="progressbar"
+                      aria-label={t('overview.barLabel', { skill, count: jobCount, total: stats.jobsConsidered })}
+                      aria-valuemin={0}
+                      aria-valuemax={stats.jobsConsidered}
+                      aria-valuenow={jobCount}
+                    >
+                      <span className={styles.fill} style={{ width: `${stats.jobsConsidered ? (jobCount / stats.jobsConsidered) * 100 : 0}%` }} />
+                    </div>
+                  </li>
+                ))}
+              </ul>
+              <p className={styles.barNote}>{t('overview.barNote', { count: stats.jobsConsidered })}</p>
+            </>
+          )}
         </Panel>
 
         <div className={styles.side}>
           <Panel selected padding={28}>
             <img src={sparkle} alt="" width={24} height={24} />
-            <h3 className={styles.evidenceTitle}>Make the evidence visible.</h3>
-            <p className={styles.evidenceText}>
-              Your Product Design experience is a useful starting point. Add concrete outcomes, project examples, and your
-              contribution to help a recruiter understand the impact.
-            </p>
+            <h3 className={styles.evidenceTitle}>{t('overview.evidenceTitle')}</h3>
+            <Narrative section="overview">{(narrative) => <p className={styles.evidenceText}>{narrative.text}</p>}</Narrative>
             <Link to={`${AI_INSIGHTS}/improve-profile`} className={styles.link}>
-              Strengthen my profile
+              {t('overview.strengthen')}
               <Icon as={ArrowRight} size={13} strokeWidth={2} />
             </Link>
           </Panel>
@@ -105,31 +96,28 @@ export default function AiInsightsPage() {
             <span className={styles.shield}>
               <Icon as={ShieldCheck} size={22} strokeWidth={2} />
             </span>
-            <h3 className={styles.contextTitle}>Context, not conclusions.</h3>
-            <p className={styles.contextText}>
-              These insights compare your listed skills with the available demo roles. They don’t infer protected characteristics,
-              assess your worth, or make hiring decisions. A connected AI service would add semantic analysis with human review.
-            </p>
+            <h3 className={styles.contextTitle}>{t('overview.contextTitle')}</h3>
+            <p className={styles.contextText}>{t('overview.contextText')}</p>
           </Panel>
         </div>
       </div>
 
       <section className={styles.matches} aria-labelledby="matches-title">
-        <SectionHeading
-          id="matches-title"
-          title="The evidence behind your matches"
-          description="Ordered by listed skill overlap, work preference, then reported experience."
-        >
+        <SectionHeading id="matches-title" title={t('overview.matches')} description={t('overview.matchesLead')}>
           <Link to={`${AI_INSIGHTS}/skill-gap`} className={styles.link}>
-            Explore skill gaps
+            {t('overview.exploreGaps')}
             <Icon as={ArrowRight} size={13} strokeWidth={2} />
           </Link>
         </SectionHeading>
-        <div className={styles.matchGrid}>
-          {topMatches.map(({ role, match }) => (
-            <MatchCard key={role.id} role={role} match={match} />
-          ))}
-        </div>
+        {topMatches.length ? (
+          <div className={styles.matchGrid}>
+            {topMatches.map((job) => (
+              <MatchCard key={job.id} job={job} />
+            ))}
+          </div>
+        ) : (
+          <p className={styles.barNote}>{t('overview.noMatches')}</p>
+        )}
       </section>
     </AiPageShell>
   )

@@ -7,6 +7,7 @@ import EmptyState from '@/components/common/EmptyState.jsx'
 import PageTitle from '@/components/common/PageTitle.jsx'
 import PillBadge from '@/components/common/PillBadge.jsx'
 import { errorCode, useGetConfigQuery } from '@/app/api.js'
+import Translatable from '@/features/ai/components/Translatable.jsx'
 import { useFormat } from '@/lib/preferences.js'
 import { useGetLessonQuery, useRecordProgressMutation } from '../api.js'
 import { useLearningPath } from '../useCourseText.js'
@@ -47,7 +48,14 @@ function LessonContent({ lesson, report }) {
   if (lesson.type === 'video') {
     return <video ref={videoRef} className={styles.video} src={lesson.media.url} controls preload="metadata" data-lesson-video />
   }
-  if (lesson.type === 'text') return <div className={styles.text} data-lesson-text dangerouslySetInnerHTML={{ __html: lesson.html }} />
+  if (lesson.type === 'text') {
+    // M-113: the lesson text in the learner's language on demand; the server sanitises the translated Markdown too.
+    return (
+      <Translatable source={{ entity: 'course', id: lesson.courseId, field: 'lesson', entryId: lesson.id }} texts={[lesson.html]}>
+        {([html]) => <div className={styles.text} data-lesson-text dangerouslySetInnerHTML={{ __html: html }} />}
+      </Translatable>
+    )
+  }
   if (lesson.type === 'document') {
     return (
       <div className={styles.document}>

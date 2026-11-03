@@ -25,6 +25,7 @@ import EditProfileModal from '../components/EditProfileModal.jsx'
 import EntryDialog from '../components/EntryDialog.jsx'
 import LanguagesDialog from '../components/LanguagesDialog.jsx'
 import LinksDialog from '../components/LinksDialog.jsx'
+import ProfileSummaryButton from '../components/ProfileSummaryButton.jsx'
 import RightToWorkDialog from '../components/RightToWorkDialog.jsx'
 import styles from './ProfilePage.module.css'
 
@@ -177,9 +178,12 @@ function ProfileView({ profile }) {
         title={t('profile:title')}
         description={t('profile:description')}
         actions={
-          <Button leftIcon={<Icon as={SquarePen} size={20} />} onClick={() => openDialog('core')}>
-            {t('profile:edit')}
-          </Button>
+          <div className={styles.actions}>
+            <ProfileSummaryButton />
+            <Button leftIcon={<Icon as={SquarePen} size={20} />} onClick={() => openDialog('core')}>
+              {t('profile:edit')}
+            </Button>
+          </div>
         }
       />
 

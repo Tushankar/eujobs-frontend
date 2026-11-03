@@ -43,7 +43,7 @@ const responses = () => aiStub.calls.filter((call) => call.kind === 'response')
 
 async function market() {
   const { user: recruiter, company } = await approvedRecruiter()
-  const { body: job } = await api().post(`${v1}/recruiter/jobs`).set(auth(recruiter)).send(jobBody({ requiredSkills: ['Figma', 'Design Systems', 'Prototyping'] }))
+  const { body: job } = await api().post(`${v1}/recruiter/jobs`).set(auth(recruiter)).send(jobBody({ requiredSkills: ['Figma', 'Design Systems', 'User Research'] }))
   await api().patch(`${v1}/recruiter/jobs/${job.id}/status`).set(auth(recruiter)).send({ status: 'published' })
   const candidate = await plus(await listedCandidate({ profile: designer }))
   return { recruiter, company, job, candidate }
@@ -116,12 +116,12 @@ describe('AI insights (M-057, M-063 … M-067)', () => {
     assert.deepEqual(overview.stats, { skillsCount: 2, rolesWithAlignedSkills: 1, jobsConsidered: 1, yearsExperience: 5 })
     assert.deepEqual(overview.skillDemand, [{ skill: 'Figma', jobCount: 1 }, { skill: 'Design Systems', jobCount: 1 }])
     const gap = (await api().get(`${v1}/candidate/insights/skill-gap?jobId=${job.id}`).set(auth(candidate))).body
-    assert.deepEqual(gap.evidence.missingSkills, ['Prototyping'])
-    aiStub.reply = (request) => (request.text.format.name === 'insights' ? { guidance: [{ skill: 'Prototyping', text: 'Muestra un prototipo.' }] } : null)
+    assert.deepEqual(gap.evidence.missingSkills, ['User Research'])
+    aiStub.reply = (request) => (request.text.format.name === 'insights' ? { guidance: [{ skill: 'User Research', text: 'Muestra una investigación.' }] } : null)
     const narrative = await api().get(`${v1}/candidate/insights/narrative?section=skill_gap&jobId=${job.id}`).set(auth(candidate))
-    assert.deepEqual(narrative.body.guidance, [{ skill: 'Prototyping', text: 'Muestra un prototipo.' }])
+    assert.deepEqual(narrative.body.guidance, [{ skill: 'User Research', text: 'Muestra una investigación.' }])
     assert.match(responses()[0].instructions, /in Spanish\./)
-    assert.equal(JSON.parse(responses()[0].input).missingSkills[0], 'Prototyping')
+    assert.equal(JSON.parse(responses()[0].input).missingSkills[0], 'User Research')
   })
 
   it('offers the top recommendations plus saved and applied jobs in the role picker', async () => {

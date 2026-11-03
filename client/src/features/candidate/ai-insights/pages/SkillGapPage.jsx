@@ -1,8 +1,20 @@
 import { useState } from 'react'
+import { useTranslation } from 'react-i18next'
 import { Link } from 'react-router-dom'
 import { ArrowRight, BriefcaseBusiness, CheckCheck, FileText, Layers } from 'lucide-react'
 import StatCard from '@/components/common/StatCard.jsx'
 import { Button, Icon, Panel } from '@/components/ui'
+import {
+  useAddPlanSkillMutation,
+  useAddProfileSkillMutation,
+  useGetInsightNarrativeQuery,
+  useGetInsightPageQuery,
+  useRemovePlanSkillMutation,
+  useRemoveProfileSkillMutation,
+} from '@/features/ai/api.js'
+import AiStatus from '@/features/ai/components/AiStatus.jsx'
+import { useGetProfileQuery } from '@/features/candidate/profile/api.js'
+import { serverFieldErrors, useErrorText } from '@/lib/forms.js'
 import AiPageShell from '../components/AiPageShell.jsx'
 import GapCard from '../components/GapCard.jsx'
 import LearningPlanCard from '../components/LearningPlanCard.jsx'
@@ -10,111 +22,119 @@ import ReviewSkillModal from '../components/ReviewSkillModal.jsx'
 import RolePicker from '../components/RolePicker.jsx'
 import SectionHeading from '../components/SectionHeading.jsx'
 import SourceEvidenceModal from '../components/SourceEvidenceModal.jsx'
-import { PROFILE } from '../data/insights.js'
-import { useAddedSkills, useLearningPlan, useSelectedRole } from '../hooks/useInsightsState.js'
-import { compareRole } from '../utils/matching.js'
+import { useChosenJob } from '../hooks/useChosenJob.js'
 import styles from './SkillGapPage.module.css'
 
-/** Skill gap: which required skills are not listed yet, and what the candidate may do about each one. */
+/** Skill gap (M-064, P9-Q2): the chosen role's required skills the profile does not list, and what to do about each. */
 export default function SkillGapPage() {
-  const [role, selectRole] = useSelectedRole('stripe')
-  const { added, skills, add, undo } = useAddedSkills()
-  const { plan, toggle: togglePlan } = useLearningPlan()
+  const { t } = useTranslation('aiInsights')
+  const errorText = useErrorText()
+  const { roles, jobId, choose } = useChosenJob()
+  const { data } = useGetInsightPageQuery({ page: 'skill-gap', jobId }, { skip: !jobId })
+  const { data: profile } = useGetProfileQuery()
+  const [addSkill, adding] = useAddProfileSkillMutation()
+  const [removeSkill] = useRemoveProfileSkillMutation()
+  const [addPlan] = useAddPlanSkillMutation()
+  const [removePlan] = useRemovePlanSkillMutation()
+  const [added, setAdded] = useState([])
   const [reviewing, setReviewing] = useState(null)
+  const [reviewError, setReviewError] = useState('')
   const [sourceOpen, setSourceOpen] = useState(false)
   const [announcement, setAnnouncement] = useState('')
+  const evidence = data?.evidence
+  const plan = data?.learningPlan ?? []
+  // Skills added here stay on screen with an undo, although the profile now lists them.
+  const gaps = evidence ? [...new Set([...evidence.missingSkills, ...added.filter((skill) => data.job.requiredSkills.includes(skill))])] : []
+  // The AI tips are a separate request: the gap cards (code evidence) show whatever happens to it (§2.9).
+  const narrative = useGetInsightNarrativeQuery({ section: 'skill_gap', jobId }, { skip: !jobId || !evidence?.missingSkills.length })
 
-  const match = compareRole(role, skills)
-  // Cards come from the reviewed profile, so a skill added here stays visible (with an undo).
-  const gapSkills = role.requiredSkills.filter((skill) => !PROFILE.skills.includes(skill))
-
-  function confirmSkill(skill) {
-    add(skill)
-    setReviewing(null)
-    setAnnouncement(`${skill} added to your reviewed skills. Saved on this device.`)
+  async function confirmSkill(skill) {
+    setReviewError('')
+    try {
+      await addSkill(skill).unwrap()
+      setAdded((current) => [...current, skill])
+      setReviewing(null)
+      setAnnouncement(t('gap.addedAnnouncement', { skill }))
+    } catch (failure) {
+      const field = serverFieldErrors(failure).skill
+      setReviewError(field ? errorText.field('skills', field) : errorText.code(failure))
+    }
   }
 
-  function undoSkill(skill) {
-    undo(skill)
-    setAnnouncement(`${skill} removed from your reviewed skills.`)
+  async function undoSkill(skill) {
+    await removeSkill(skill).unwrap()
+    setAdded((current) => current.filter((item) => item !== skill))
+    setAnnouncement(t('gap.removedAnnouncement', { skill }))
   }
+
+  const togglePlan = (skill) => (plan.includes(skill) ? removePlan(skill) : addPlan(skill))
 
   return (
-    <AiPageShell
-      eyebrow="Skill Gap"
-      title="Know the gaps. Find your next step."
-      description="A skill not listed is an open question—not a judgment about your potential."
-    >
-      <RolePicker role={role} onChange={selectRole} />
+    <AiPageShell eyebrow={t('gap.eyebrow')} title={t('gap.title')} description={t('gap.description')}>
+      <RolePicker roles={roles} jobId={jobId} onChange={choose} />
 
-      <div className={styles.stats}>
-        <StatCard
-          icon={CheckCheck}
-          label="Listed skills that align"
-          value={`${match.listed.length} of ${role.requiredSkills.length}`}
-          caption="Compared with this role’s required skills"
-        />
-        <StatCard
-          icon={Layers}
-          label="Required skills not listed"
-          value={match.missing.length}
-          caption="Missing evidence, not a measure of ability"
-        />
-        <StatCard
-          icon={BriefcaseBusiness}
-          label="Experience to review"
-          value={match.yearsMet ? 'Aligned' : 'To review'}
-          caption={
-            match.yearsMet
-              ? 'Reported years meet the listed target'
-              : `Role lists ${role.minYears}+ years; you reported ${PROFILE.yearsReported}`
-          }
-        />
-      </div>
-
-      <SectionHeading
-        className={styles.heading}
-        title="The gaps worth exploring"
-        description="Prioritize role-relevant evidence. You don’t need to tick every nice-to-have."
-      >
-        <Button variant="outline" onClick={() => setSourceOpen(true)} leftIcon={<Icon as={FileText} size={14} strokeWidth={2} />}>
-          View source evidence
-        </Button>
-      </SectionHeading>
-
-      {gapSkills.length > 0 ? (
-        <div className={styles.gaps}>
-          {gapSkills.map((skill) => (
-            <GapCard
-              key={skill}
-              skill={skill}
-              added={added.includes(skill)}
-              planned={plan.includes(skill)}
-              onReview={setReviewing}
-              onUndo={undoSkill}
-              onTogglePlan={togglePlan}
+      {evidence && (
+        <>
+          <div className={styles.stats}>
+            <StatCard
+              icon={CheckCheck}
+              label={t('gap.aligned')}
+              value={t('gap.alignedValue', { count: evidence.requiredSkills - evidence.missingSkills.length, total: evidence.requiredSkills })}
+              caption={t('gap.alignedCaption')}
             />
-          ))}
-        </div>
-      ) : (
-        <Panel className={styles.empty} padding={24}>
-          <p className={styles.emptyText}>
-            No required skills are missing from your reviewed profile for this role. Role-specific depth, proficiency, and team fit still
-            need human review.
-          </p>
-          <Link to={`/candidate/ai-insights/job-match?role=${role.id}`} className={styles.link}>
-            See the evidence side by side
-            <Icon as={ArrowRight} size={13} strokeWidth={2} />
-          </Link>
-        </Panel>
+            <StatCard icon={Layers} label={t('gap.missing')} value={evidence.missingSkills.length} caption={t('gap.missingCaption')} />
+            <StatCard
+              icon={BriefcaseBusiness}
+              label={t('gap.experience')}
+              value={t(evidence.years.met ? 'gap.experienceAligned' : 'gap.experienceReview')}
+              caption={evidence.years.met ? t('gap.experienceMet') : t('gap.experienceShort', { required: evidence.years.required, candidate: evidence.years.candidate ?? 0 })}
+            />
+          </div>
+
+          <SectionHeading className={styles.heading} title={t('gap.heading')} description={t('gap.headingLead')}>
+            <Button variant="outline" onClick={() => setSourceOpen(true)} leftIcon={<Icon as={FileText} size={14} strokeWidth={2} />}>
+              {t('gap.source')}
+            </Button>
+          </SectionHeading>
+
+          {gaps.length > 0 ? (
+            <>
+              <div data-narrative="skill_gap">
+                <AiStatus isLoading={narrative.isFetching} error={narrative.error} onRetry={narrative.refetch} />
+              </div>
+              <div className={styles.gaps}>
+                {gaps.map((skill) => (
+                  <GapCard
+                    key={skill}
+                    skill={skill}
+                    guidance={narrative.data?.guidance.find((item) => item.skill === skill)?.text}
+                    added={added.includes(skill)}
+                    planned={plan.includes(skill)}
+                    onReview={setReviewing}
+                    onUndo={undoSkill}
+                    onTogglePlan={togglePlan}
+                  />
+                ))}
+              </div>
+            </>
+          ) : (
+            <Panel className={styles.empty} padding={24}>
+              <p className={styles.emptyText}>{t('gap.none')}</p>
+              <Link to={`/candidate/ai-insights/job-match?jobId=${jobId}`} className={styles.link}>
+                {t('gap.sideBySide')}
+                <Icon as={ArrowRight} size={13} strokeWidth={2} />
+              </Link>
+            </Panel>
+          )}
+        </>
       )}
 
       <div className={styles.plan}>
-        <LearningPlanCard plan={plan} onRemove={togglePlan} exploreLabel="Explore learning courses" exploreTo="/candidate/learning" />
+        <LearningPlanCard plan={plan} onRemove={(skill) => removePlan(skill)} exploreLabel={t('plan.explore')} exploreTo="/candidate/learning" />
       </div>
 
-      <ReviewSkillModal skill={reviewing} onClose={() => setReviewing(null)} onConfirm={confirmSkill} />
-      <SourceEvidenceModal open={sourceOpen} onClose={() => setSourceOpen(false)} role={role} skills={skills} />
+      <ReviewSkillModal skill={reviewing} error={reviewError} busy={adding.isLoading} onClose={() => setReviewing(null)} onConfirm={confirmSkill} />
+      <SourceEvidenceModal open={sourceOpen} onClose={() => setSourceOpen(false)} job={data?.job} evidence={evidence} skills={profile?.skills ?? []} />
       <p className="sr-only" role="status">
         {announcement}
       </p>

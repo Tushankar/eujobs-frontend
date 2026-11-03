@@ -1,5 +1,6 @@
 import { useTranslation } from 'react-i18next'
 import { useOutletContext } from 'react-router-dom'
+import Translatable from '@/features/ai/components/Translatable.jsx'
 import SectionTitle from '@/components/common/SectionTitle.jsx'
 import { useFormat, usePreferences } from '@/lib/preferences.js'
 import ProfileSection from '../components/ProfileSection.jsx'
@@ -18,7 +19,9 @@ export default function CandidateOverviewPage() {
   return (
     <ProfileSection labelledBy="overview-about">
       <SectionTitle id="overview-about" title={t('discovery:overviewTab.about')} />
-      <p className={styles.about}>{candidate.about}</p>
+      <Translatable source={{ entity: 'candidate', id: candidate.id, field: 'about' }} texts={[candidate.about]}>
+        {([about]) => <p className={styles.about}>{about}</p>}
+      </Translatable>
 
       <SectionTitle className={styles.next} title={t('discovery:overviewTab.experience')} />
       {current ? (
@@ -27,7 +30,11 @@ export default function CandidateOverviewPage() {
           <p className={styles.roleMeta}>
             {current.employer} · {text.period(current.start, current.end, current.current)}
           </p>
-          {current.description && <p className={styles.roleSummary}>{current.description}</p>}
+          {current.description && (
+            <Translatable source={{ entity: 'candidate', id: candidate.id, field: 'workHistory', entryId: current.id }} texts={[current.description]}>
+              {([description]) => <p className={styles.roleSummary}>{description}</p>}
+            </Translatable>
+          )}
         </div>
       ) : (
         <p className={styles.nextStep}>{t('discovery:overviewTab.noExperience')}</p>

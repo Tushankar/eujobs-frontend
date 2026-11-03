@@ -5,6 +5,7 @@ import { cx } from '@/utils/cx.js'
 import { Button, CompanyLogo, Icon } from '@/components/ui'
 import EmptyState from '@/components/common/EmptyState.jsx'
 import aiGlyph from '@/assets/icons/ai-glyph-blue.svg'
+import Translatable from '@/features/ai/components/Translatable.jsx'
 import { ApplyButton } from '@/features/candidate/applications/components/ApplyFlow.jsx'
 import { MessageCompanyButton } from '@/features/messages/components/StartConversation.jsx'
 import { useJobText } from '@/lib/jobText.js'
@@ -13,18 +14,28 @@ import { useGetJobQuery, useSaveToggle } from '../api.js'
 import MatchBadge from '../components/MatchBadge.jsx'
 import styles from './JobDetailsPage.module.css'
 
-function ListSection({ title, items }) {
+/** A bulleted section; with `source`, the items can be translated on demand (M-144). */
+function ListSection({ title, items, source }) {
   if (!items?.length) return null
+  const list = (shown) => (
+    <ul className={styles.bullets}>
+      {shown.map((item, index) => (
+        <li key={index} className={styles.bullet}>
+          {item}
+        </li>
+      ))}
+    </ul>
+  )
   return (
     <section className={styles.section}>
       <h2 className={styles.h2}>{title}</h2>
-      <ul className={styles.bullets}>
-        {items.map((item) => (
-          <li key={item} className={styles.bullet}>
-            {item}
-          </li>
-        ))}
-      </ul>
+      {source ? (
+        <Translatable source={source} texts={items}>
+          {list}
+        </Translatable>
+      ) : (
+        list(items)
+      )}
     </section>
   )
 }
@@ -182,10 +193,12 @@ export default function JobDetailsPage() {
           {job.brief && (
             <section className={styles.section}>
               <h2 className={styles.h2}>{t('findJobs:details.about')}</h2>
-              <p className={styles.about}>{job.brief}</p>
+              <Translatable source={{ entity: 'job', id: job.id, field: 'brief' }} texts={[job.brief]}>
+                {([brief]) => <p className={styles.about}>{brief}</p>}
+              </Translatable>
             </section>
           )}
-          <ListSection title={t('findJobs:details.responsibilities')} items={job.responsibilities} />
+          <ListSection title={t('findJobs:details.responsibilities')} items={job.responsibilities} source={{ entity: 'job', id: job.id, field: 'responsibilities' }} />
           <SkillSection title={t('findJobs:details.requiredSkills')} skills={job.requiredSkills} />
           <SkillSection title={t('findJobs:details.preferredSkills')} skills={job.preferredSkills} />
           <ListSection title={t('findJobs:details.languages')} items={conditions} />
@@ -215,7 +228,11 @@ export default function JobDetailsPage() {
 
           <section className={styles.card}>
             <h2 className={styles.aboutTitle}>{t('findJobs:details.aboutCompany', { company: company.displayName })}</h2>
-            {company.description && <p className={styles.aboutText}>{company.description}</p>}
+            {company.description && (
+              <Translatable source={{ entity: 'company', id: company.id, field: 'description' }} texts={[company.description]}>
+                {([description]) => <p className={styles.aboutText}>{description}</p>}
+              </Translatable>
+            )}
             <ul className={styles.facts}>
               {company.industry && (
                 <li>

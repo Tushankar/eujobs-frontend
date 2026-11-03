@@ -198,7 +198,7 @@ export async function candidateProfile(user, company, id, jobId) {
     courseCertificates: (await badgesOf([entry.user._id]))(entry.user._id),
     about: profile.about,
     links: { linkedin: profile.links?.linkedin ?? '', portfolio: profile.links?.portfolio ?? '' },
-    workHistory: latest(profile.workHistory, 'current').map(({ title, employer, start, end, current, description }) => ({ title, employer, start, end: end ?? null, current: Boolean(current), description: description ?? '' })),
+    workHistory: latest(profile.workHistory, 'current').map(({ _id, title, employer, start, end, current, description }) => ({ id: String(_id), title, employer, start, end: end ?? null, current: Boolean(current), description: description ?? '' })),
     education: latest(profile.education, 'stillStudying').map(({ institution, degree, start, end, stillStudying }) => ({ institution, degree, start, end: end ?? null, stillStudying: Boolean(stillStudying) })),
     rightToWorkInView: viewOf(user) === 'REMOTE' ? null : hasRightToWorkIn(profile, viewOf(user)),
   }

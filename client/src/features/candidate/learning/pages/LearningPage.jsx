@@ -47,6 +47,11 @@ export default function LearningPage() {
             <p className={styles.sectionLead}>
               {suggestions?.gapSkills.length ? t('suggestions.lead', { skills: format.list(suggestions.gapSkills) }) : t('suggestions.noGaps')}
             </p>
+            {suggestions?.planSkills.length > 0 && (
+              <p className={styles.sectionLead} data-plan-lead>
+                {t('suggestions.plan', { skills: format.list(suggestions.planSkills) })}
+              </p>
+            )}
           </div>
         </div>
         {suggestions?.items.length > 0 ? (
@@ -56,7 +61,7 @@ export default function LearningPage() {
             ))}
           </div>
         ) : (
-          suggestions?.gapSkills.length > 0 && <p className={styles.sectionLead}>{t('suggestions.empty')}</p>
+          (suggestions?.gapSkills.length > 0 || suggestions?.planSkills.length > 0) && <p className={styles.sectionLead}>{t('suggestions.empty')}</p>
         )}
       </section>
 

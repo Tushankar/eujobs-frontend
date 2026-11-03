@@ -6,6 +6,7 @@ import { errorCode } from '@/app/api.js'
 import { cx } from '@/utils/cx.js'
 import ConfirmDialog from '@/components/common/ConfirmDialog.jsx'
 import { Dropdown, Icon, IconButton } from '@/components/ui'
+import JobSummaryButton from '@/features/ai/components/JobSummaryButton.jsx'
 import { useErrorText } from '@/lib/forms.js'
 import { useJobText } from '@/lib/jobText.js'
 import { useDeleteJobMutation, useSetJobStatusMutation } from '../api.js'
@@ -157,7 +158,7 @@ export default function JobsTable({ jobs, sort, onSort, caption }) {
           </thead>
           <tbody>
             {jobs.map((job) => (
-              <tr key={job.id} className={styles.row}>
+              <tr key={job.id} className={styles.row} data-recruiter-job={job.id}>
                 <td className={styles.td}>
                   <Link to={`/recruiter/jobs/${job.id}`} className={styles.roleTitle}>
                     {job.title}
@@ -175,6 +176,8 @@ export default function JobsTable({ jobs, sort, onSort, caption }) {
                 </td>
                 <td className={styles.td}>
                   <div className={styles.actions}>
+                    {/* M-059: the AI summary on each row; free for approved recruiters (M-117) */}
+                    {job.status !== 'draft' && <JobSummaryButton job={job} />}
                     <ManageMenu job={job} onStatus={changeStatus} onRequestClose={setClosing} onRequestDelete={setDeleting} />
                     <IconButton as={Link} to={`/recruiter/jobs/${job.id}`} icon={Eye} label={t('jobs:table.view', { title: job.title })} />
                   </div>

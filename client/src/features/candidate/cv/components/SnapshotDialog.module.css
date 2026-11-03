@@ -1,0 +1,42 @@
+.body {
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+}
+
+.changes {
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+}
+
+.change {
+  display: grid;
+  grid-template-columns: minmax(96px, 140px) minmax(0, 1fr);
+  gap: 12px;
+  font-size: 12px;
+  line-height: 20px;
+}
+
+.change dt {
+  font-weight: 600;
+  color: var(--foreground);
+}
+
+.change dd {
+  min-width: 0;
+  overflow-wrap: anywhere;
+  color: var(--foreground);
+}
+
+.note {
+  font-size: 11px;
+  line-height: 18px;
+  color: var(--muted-foreground);
+}
+
+.error {
+  font-size: 11px;
+  line-height: 16px;
+  color: var(--destructive);
+}

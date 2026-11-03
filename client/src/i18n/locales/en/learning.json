@@ -170,6 +170,7 @@
     "eyebrow": "Rule-based suggestions",
     "lead": "Courses for skills that roles you saved, applied to or match ask for, but your profile does not list yet: {{skills}}.",
     "noGaps": "No skill gaps found in the roles you saved, applied to or match. Explore every course below.",
+    "plan": "Your learning plan adds: {{skills}}.",
     "empty": "No published course covers these skills yet.",
     "matches": "Covers {{skills}}",
     "best": "Best match",

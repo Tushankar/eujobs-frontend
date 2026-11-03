@@ -14,6 +14,7 @@ import { useGetCandidateOverviewQuery, useGetRecommendedJobsQuery, useGetSavedJo
 import JobCard from '@/features/candidate/jobs/components/JobCard.jsx'
 import { useCounters } from '@/app/counters.js'
 import ApplicationActivityCard from '../components/ApplicationActivityCard.jsx'
+import InsightCard from '../components/InsightCard.jsx'
 import ProfileStrengthCard from '../components/ProfileStrengthCard.jsx'
 import VerificationCard from '../components/VerificationCard.jsx'
 import styles from './OverviewPage.module.css'
@@ -32,9 +33,9 @@ function viewsDelta(views, format) {
 }
 
 /**
- * Candidate Overview: KPIs (Recommended jobs per U8 until Phase 9, saved jobs and profile views from the server),
- * active applications from the counters (M-094), the For you / Recently added / Saved lists and the profile rail. The
- * AI teaser returns with the AI in Phase 9 (P4-Q1).
+ * Candidate Overview: KPIs (Recommended jobs by score for Plus, else U8; saved jobs and profile views from the server),
+ * active applications from the counters (M-094), the For you / Recently added / Saved lists and the profile rail with
+ * the AI insights teaser for Plus.
  */
 export default function OverviewPage() {
   const { t } = useTranslation()
@@ -154,6 +155,7 @@ export default function OverviewPage() {
         </section>
 
         <aside className={styles.rail} aria-label={t('findJobs:overview.rail')}>
+          <InsightCard />
           <ProfileStrengthCard />
           <VerificationCard />
           <ApplicationActivityCard />

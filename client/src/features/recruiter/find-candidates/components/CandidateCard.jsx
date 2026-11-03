@@ -74,7 +74,7 @@ export default function CandidateCard({ candidate, hasJob, jobId, onToggleShortl
       {extra && <p className={styles.facts}>{extra}</p>}
 
       <div className={styles.insights}>
-        <MatchInsights candidate={candidate} hasJob={hasJob} />
+        <MatchInsights candidate={candidate} jobId={hasJob ? jobId : null} />
       </div>
 
       <div className={styles.footer}>

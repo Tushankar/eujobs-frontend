@@ -64,7 +64,7 @@ export default function ProfileSidebar({ candidate, jobs, job, onJobChange, onTo
           onChange={(event) => onJobChange(event.target.value)}
           options={jobs.length > 0 ? jobs.map((item) => ({ value: item.id, label: item.title })) : [{ value: '', label: t('discovery:toolbar.noJobs') }]}
         />
-        <MatchInsights candidate={candidate} hasJob={Boolean(job)} defaultOpen />
+        <MatchInsights candidate={candidate} jobId={job?.id ?? null} defaultOpen />
       </Panel>
 
       <p className={styles.reminder}>

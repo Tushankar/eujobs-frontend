@@ -24,7 +24,10 @@
     "download": "Download",
     "downloadLabel": "Download version {{number}}",
     "delete": "Delete",
-    "deleteLabel": "Delete version {{number}}"
+    "deleteLabel": "Delete version {{number}}",
+    "compare": "Compare",
+    "compareLabel": "Compare version {{number}}",
+    "snapshotLine": "Snapshot: {{role}} · {{years}} years · {{skills}}"
   },
   "deleteDialog": {
     "title": "Delete this version?",
@@ -53,5 +56,51 @@
     "empty": "No company has opened your CV yet.",
     "row": "{{company}} opened version {{number}} ({{name}})",
     "removed": "{{company}} opened a version you have since deleted"
+  },
+  "compare": {
+    "title": "Compare snapshots",
+    "lead": "Choose up to two versions to see the role, experience and skills their snapshots record.",
+    "empty": "Choose Compare on a version with a snapshot.",
+    "version": "Version {{number}}",
+    "proposed": "Proposal",
+    "role": "Role",
+    "experience": "Experience",
+    "years_one": "{{count}} year",
+    "years_other": "{{count}} years",
+    "skills": "Skills",
+    "onlyIn": "Only in version {{number}}: {{skills}}.",
+    "same": "Versions {{first}} and {{second}} record the same skills.",
+    "notice": "Companies never receive earlier versions automatically. A company can ask, and you choose whether to share one."
+  },
+  "snapshot": {
+    "propose": "Propose snapshot",
+    "proposeLabel": "Propose a profile snapshot from version {{number}}",
+    "pending": "AI proposal: {{role}} · {{years}} years · {{skills}}",
+    "pendingLead": "Written by AI from this CV. Your profile is unchanged until you confirm.",
+    "review": "Review and confirm",
+    "confirmTitle": "Update your profile from version {{number}}",
+    "confirmLead": "These changes are made to your profile when you confirm. Nothing else changes.",
+    "headline": "Headline",
+    "years": "Years of experience",
+    "skills": "Skills to add",
+    "fromTo": "{{from}} → {{to}}",
+    "addSkills": "{{skills}}",
+    "noSkills": "None: your profile lists them already",
+    "limit": "Not added, because the profile holds at most {{max}} skills: {{skills}}.",
+    "kept": "Your existing skills stay on your profile.",
+    "cancel": "Cancel",
+    "confirm": "Confirm and update profile",
+    "confirmed": "Your profile was updated from version {{number}}.",
+    "proposed": "A snapshot of version {{number}} is ready to review."
+  },
+  "draft": {
+    "create": "Create assisted draft",
+    "createLabel": "Create an AI-assisted draft of version {{number}}",
+    "title": "Assisted draft · {{date}}",
+    "lead": "Suggestions written by AI from this CV; no new file is made.",
+    "revised": "Revised snapshot: {{role}} · {{years}} years · {{skills}}",
+    "delete": "Delete draft",
+    "created": "An assisted draft of version {{number}} is ready.",
+    "deleted": "The draft was deleted."
   }
 }

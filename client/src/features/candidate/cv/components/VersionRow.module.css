@@ -75,3 +75,35 @@
     flex-wrap: wrap;
   }
 }
+
+.ai {
+  display: flex;
+  flex-direction: column;
+  align-items: flex-start;
+  gap: 6px;
+  margin-top: 10px;
+  padding: 12px;
+  border-radius: var(--radius-md);
+  background: var(--accent);
+}
+
+.aiTitle {
+  font-size: 12px;
+  font-weight: 600;
+  line-height: 18px;
+  color: var(--foreground);
+}
+
+.aiText {
+  font-size: 12px;
+  line-height: 20px;
+  overflow-wrap: anywhere;
+  color: var(--primary-hover);
+}
+
+.suggestions {
+  padding-left: 18px;
+  font-size: 12px;
+  line-height: 20px;
+  color: var(--foreground);
+}

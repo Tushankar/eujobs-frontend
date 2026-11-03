@@ -1,36 +1,32 @@
+import { useTranslation } from 'react-i18next'
 import { Link } from 'react-router-dom'
 import { ArrowRight } from 'lucide-react'
 import { Icon, Panel } from '@/components/ui'
 import SectionHeading from './SectionHeading.jsx'
 import styles from './LearningPlanCard.module.css'
 
-/** Skills the candidate chose to learn. A plan item never becomes a profile skill on its own. */
+/** P9-Q2: the skills the candidate plans to learn, kept on the server; a plan item never becomes a profile skill. */
 export default function LearningPlanCard({ plan, onRemove, exploreLabel, exploreTo }) {
+  const { t } = useTranslation('aiInsights')
   return (
-    <Panel padding={24} aria-labelledby="learning-plan-title">
-      <SectionHeading
-        id="learning-plan-title"
-        title="Your learning plan"
-        description="A considered next step—not a new claim on your profile."
-      />
+    <Panel padding={24} aria-labelledby="learning-plan-title" data-learning-plan>
+      <SectionHeading id="learning-plan-title" title={t('plan.title')} description={t('plan.lead')} />
       <div className={styles.box}>
         {plan.length === 0 ? (
-          <p className={styles.text}>
-            Add a skill from the gap analysis to start a plan. Learning progress never adds a skill to your profile automatically.
-          </p>
+          <p className={styles.text}>{t('plan.empty')}</p>
         ) : (
           <>
             <ul className={styles.list}>
               {plan.map((skill) => (
-                <li key={skill} className={styles.item}>
+                <li key={skill} className={styles.item} data-plan-skill={skill}>
                   <span className={styles.skill}>{skill}</span>
-                  <button type="button" className={styles.remove} onClick={() => onRemove(skill)}>
-                    Remove<span className="sr-only"> {skill} from learning plan</span>
+                  <button type="button" className={styles.remove} aria-label={t('plan.removeLabel', { skill })} onClick={() => onRemove(skill)}>
+                    {t('plan.remove')}
                   </button>
                 </li>
               ))}
             </ul>
-            <p className={styles.text}>Learning progress never adds a skill to your profile automatically.</p>
+            <p className={styles.text}>{t('plan.note')}</p>
           </>
         )}
         <Link to={exploreTo} className={styles.link}>

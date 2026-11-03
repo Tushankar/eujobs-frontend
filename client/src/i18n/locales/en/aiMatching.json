@@ -7,10 +7,22 @@
     "loadError": "The matching policies could not be loaded."
   },
   "signals": {
-    "skills": { "label": "Relevant skills", "description": "Share of the role's required skills listed on the candidate's profile." },
-    "experience": { "label": "Relevant experience", "description": "Meaning of the profile, work history and live CV compared with the job text. Years alone never decide a match." },
-    "location": { "label": "Location & work preferences", "description": "A different country or work mode caps the score below Good." },
-    "humanReview": { "label": "Require human review", "description": "Always on. AI cannot autonomously select, reject, contact or hire a candidate." }
+    "skills": {
+      "label": "Relevant skills",
+      "description": "Share of the role's required skills listed on the candidate's profile."
+    },
+    "experience": {
+      "label": "Relevant experience",
+      "description": "Meaning of the profile, work history and live CV compared with the job text. Years alone never decide a match."
+    },
+    "location": {
+      "label": "Location & work preferences",
+      "description": "A different country or work mode caps the score below Good."
+    },
+    "humanReview": {
+      "label": "Require human review",
+      "description": "Always on. AI cannot autonomously select, reject, contact or hire a candidate."
+    }
   },
   "editor": {
     "edit": "Edit name and description",
@@ -45,7 +57,12 @@
     "noCalls": "No OpenAI call yet",
     "lastError": "Last failed call {{time}}",
     "models": "Models",
-    "model": { "fast": "Fast", "main": "Main", "embedding": "Embeddings", "transcribe": "Transcription" }
+    "model": {
+      "fast": "Fast",
+      "main": "Main",
+      "embedding": "Embeddings",
+      "transcribe": "Transcription"
+    }
   },
   "create": {
     "title": "Create matching policy",
@@ -66,9 +83,20 @@
     "created": "Draft policy “{{name}}” was created. Review its signals, then make it active."
   },
   "errors": {
-    "name": { "required": "Enter a policy name.", "too_short": "Policy name must be at least {{min}} characters.", "too_long": "Policy name must be {{max}} characters or fewer.", "taken": "A policy with this name already exists. Choose a different name." },
-    "description": { "required": "Describe the roles, market, or review context this policy supports.", "too_short": "Add more detail: at least {{min}} characters.", "too_long": "Keep the description to {{max}} characters or fewer." },
-    "signals": { "skills_or_experience": "Turn on skills or experience." }
+    "name": {
+      "required": "Enter a policy name.",
+      "too_short": "Policy name must be at least {{min}} characters.",
+      "too_long": "Policy name must be {{max}} characters or fewer.",
+      "taken": "A policy with this name already exists. Choose a different name."
+    },
+    "description": {
+      "required": "Describe the roles, market, or review context this policy supports.",
+      "too_short": "Add more detail: at least {{min}} characters.",
+      "too_long": "Keep the description to {{max}} characters or fewer."
+    },
+    "signals": {
+      "skills_or_experience": "Turn on skills or experience."
+    }
   },
   "oversight": {
     "title": "Recruiter match-summary oversight",
@@ -89,11 +117,25 @@
     "years": "{{candidate}} years reported · the job asks for {{required}}+",
     "yearsNoRequirement": "{{candidate}} years reported · no minimum set",
     "workMode": "Prefers {{candidate}} · the job is {{job}}",
-    "location": { "met": "Location fits the job", "notMet": "Location or work mode does not fit the job" },
+    "location": {
+      "met": "Location fits the job",
+      "notMet": "Location or work mode does not fit the job"
+    },
     "languages": "Required languages",
     "language": "{{language}}: needs {{minLevel}}, has {{level}}",
     "languageMissing": "{{language}}: needs {{minLevel}}, not listed",
-    "rightToWork": { "true": "Right to work in the job's country", "false": "No right to work in the job's country listed" },
+    "rightToWork": {
+      "true": "Right to work in the job's country",
+      "false": "No right to work in the job's country listed"
+    },
     "disclaimer": "Based on profile evidence and stated preferences, not a hiring decision. You remain in control."
+  },
+  "feedback": {
+    "title": "Explanation feedback",
+    "description": "What candidates answered to \"Was this explanation useful?\" on Why recommended. Stored per candidate and job; it does not train a model.",
+    "totals": "{{helpful}} helpful · {{needsReview}} needs review",
+    "job": "{{helpful}} helpful · {{needsReview}} needs review",
+    "empty": "No feedback yet.",
+    "removedJob": "A deleted job"
   }
 }

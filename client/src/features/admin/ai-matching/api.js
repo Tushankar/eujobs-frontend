@@ -35,6 +35,8 @@ export const aiMatchingApi = api.injectEndpoints({
     suggestPolicyDescription: build.mutation({ query: (body) => ({ url: '/admin/matching/policies/suggest', method: 'POST', body }) }),
     getOversight: build.query({ query: (params) => ({ url: '/admin/matching/oversight', params }), providesTags: ['Oversight'] }),
     getAiStatus: build.query({ query: () => '/admin/ai/status', providesTags: ['AiStatus'] }),
+    // M-067: "Helpful" and "Needs review" on candidates' explanations
+    getExplanationFeedback: build.query({ query: () => '/admin/matching/feedback' }),
   }),
 })
 
@@ -48,4 +50,5 @@ export const {
   useSuggestPolicyDescriptionMutation,
   useGetOversightQuery,
   useGetAiStatusQuery,
+  useGetExplanationFeedbackQuery,
 } = aiMatchingApi

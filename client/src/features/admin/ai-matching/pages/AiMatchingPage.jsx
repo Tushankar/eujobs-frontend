@@ -6,6 +6,7 @@ import { Button, Icon } from '@/components/ui'
 import PageTitle from '@/components/common/PageTitle.jsx'
 import { useGetPoliciesQuery } from '../api.js'
 import CreatePolicyModal from '../components/CreatePolicyModal.jsx'
+import FeedbackSection from '../components/FeedbackSection.jsx'
 import OversightSection from '../components/OversightSection.jsx'
 import PolicyEditor from '../components/PolicyEditor.jsx'
 import PolicySidebar from '../components/PolicySidebar.jsx'
@@ -60,6 +61,7 @@ export default function AiMatchingPage() {
       )}
 
       <OversightSection />
+      <FeedbackSection />
 
       {isCreating && <CreatePolicyModal onClose={() => navigate(LIST_PATH)} onCreated={handleCreated} />}
     </>

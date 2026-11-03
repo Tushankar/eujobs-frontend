@@ -193,3 +193,22 @@
     grid-template-columns: minmax(0, 1fr);
   }
 }
+
+.feedback {
+  margin-top: 20px;
+}
+
+.feedbackList {
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+  padding-top: 12px;
+  list-style: none;
+}
+
+.feedbackList li {
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: space-between;
+  gap: 4px 12px;
+}

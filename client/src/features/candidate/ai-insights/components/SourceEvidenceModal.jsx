@@ -1,38 +1,39 @@
+import { useTranslation } from 'react-i18next'
 import { Link } from 'react-router-dom'
 import { Button, Modal } from '@/components/ui'
-import { PROFILE } from '../data/insights.js'
+import { useJobText } from '@/lib/jobText.js'
+import { useFormat } from '@/lib/preferences.js'
 import styles from './SourceEvidenceModal.module.css'
 
-/** The reviewed profile fields and the role listing behind a comparison. Provided locally, not verified. */
-export default function SourceEvidenceModal({ open, onClose, role, skills }) {
+/** The profile fields and the job posting behind a comparison (M-057): the same facts the scores and texts use. */
+export default function SourceEvidenceModal({ open, onClose, job, evidence, skills }) {
+  const { t } = useTranslation('aiInsights')
+  const format = useFormat()
+  const jobText = useJobText()
+  if (!job || !evidence) return null
+  const mode = (key) => (key ? t(`enums:workPreference.${key}`) : '—')
   const sections = [
     [
-      'Your reviewed profile',
+      t('source.profile'),
       [
-        ['Skills listed', skills.join(', ')],
-        ['Experience reported', `${PROFILE.yearsReported} years`],
-        ['Work preference', PROFILE.workPreference],
-        ['Location', PROFILE.location],
+        [t('source.skills'), format.list(skills) || '—'],
+        [t('source.years'), evidence.years.candidate == null ? '—' : t('source.yearsValue', { count: evidence.years.candidate })],
+        [t('source.workPreference'), mode(evidence.workMode.candidate)],
+        [t('source.location'), evidence.location.countryCode ? format.country(evidence.location.countryCode) : '—'],
       ],
     ],
     [
-      `Listing: ${role.title} · ${role.company}`,
+      t('source.listing', { title: job.title, company: job.company.displayName }),
       [
-        ['Required skills', role.requiredSkills.join(', ')],
-        ['Relevant experience', `${role.minYears}+ years`],
-        ['Work mode', role.workMode],
-        ['Location', role.location],
+        [t('source.required'), format.list(job.requiredSkills)],
+        [t('source.requiredYears'), evidence.years.required == null ? '—' : t('source.requiredYearsValue', { count: evidence.years.required })],
+        [t('source.workMode'), mode(evidence.workMode.job)],
+        [t('source.location'), jobText.place(job)],
       ],
     ],
   ]
   return (
-    <Modal
-      open={open}
-      onClose={onClose}
-      title="Source evidence"
-      description="The fields behind this comparison. Provided locally, not independently verified."
-      width={560}
-    >
+    <Modal open={open} onClose={onClose} title={t('source.title')} description={t('source.description')} width={560}>
       <div className={styles.body}>
         {sections.map(([heading, rows]) => (
           <section key={heading}>
@@ -49,9 +50,9 @@ export default function SourceEvidenceModal({ open, onClose, role, skills }) {
         ))}
         <div className={styles.actions}>
           <Button as={Link} to="/candidate/profile" variant="outline">
-            Review profile fields
+            {t('source.review')}
           </Button>
-          <Button onClick={onClose}>Close</Button>
+          <Button onClick={onClose}>{t('source.close')}</Button>
         </div>
       </div>
     </Modal>

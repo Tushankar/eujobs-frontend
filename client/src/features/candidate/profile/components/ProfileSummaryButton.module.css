@@ -1,0 +1,18 @@
+.body {
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+}
+
+.summary {
+  font-size: 13px;
+  line-height: 22px;
+  white-space: pre-line;
+  color: var(--foreground);
+}
+
+.status {
+  font-size: 11px;
+  line-height: 16px;
+  color: var(--success-fg);
+}

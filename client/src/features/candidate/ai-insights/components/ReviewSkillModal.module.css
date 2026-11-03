@@ -53,3 +53,9 @@
   color: var(--primary-foreground);
   opacity: 0.4;
 }
+
+.error {
+  font-size: 11px;
+  line-height: 16px;
+  color: var(--destructive);
+}

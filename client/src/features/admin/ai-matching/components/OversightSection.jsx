@@ -101,6 +101,7 @@ export default function OversightSection() {
         <>
           <SelectField
             className={styles.jobPicker}
+            name="oversightJob"
             label={t('oversight.job')}
             value={data.job.id}
             onChange={(event) => setSelection({ jobId: event.target.value })}

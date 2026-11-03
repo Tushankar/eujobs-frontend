@@ -110,3 +110,23 @@
 .details > .experience:first-child {
   padding-top: 0;
 }
+
+.narrative {
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
+  margin-top: 12px;
+}
+
+.narrativeText {
+  font-size: 12px;
+  line-height: 20px;
+  color: var(--foreground);
+}
+
+.narrativeList {
+  padding-left: 18px;
+  font-size: 12px;
+  line-height: 20px;
+  color: var(--foreground);
+}

@@ -1,6 +1,7 @@
 import { useTranslation } from 'react-i18next'
 import { useOutletContext } from 'react-router-dom'
 import SectionTitle from '@/components/common/SectionTitle.jsx'
+import Translatable from '@/features/ai/components/Translatable.jsx'
 import ProfileSection from '../components/ProfileSection.jsx'
 import { useCandidateText } from '../utils/candidateText.js'
 import styles from './CandidateExperiencePage.module.css'
@@ -24,7 +25,11 @@ export default function CandidateExperiencePage() {
               <p className={styles.meta}>
                 {entry.employer} · {text.period(entry.start, entry.end, entry.current)}
               </p>
-              {entry.description && <p className={styles.summary}>{entry.description}</p>}
+              {entry.description && (
+                <Translatable source={{ entity: 'candidate', id: candidate.id, field: 'workHistory', entryId: entry.id }} texts={[entry.description]}>
+                  {([description]) => <p className={styles.summary}>{description}</p>}
+                </Translatable>
+              )}
             </li>
           ))}
         </ol>

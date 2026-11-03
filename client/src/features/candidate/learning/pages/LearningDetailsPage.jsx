@@ -10,6 +10,7 @@ import { useGetCourseQuery } from '@/features/learning/api.js'
 import CourseAction from '@/features/learning/components/CourseAction.jsx'
 import QuizCard from '@/features/learning/components/QuizCard.jsx'
 import { useCourseText } from '@/features/learning/useCourseText.js'
+import Translatable from '@/features/ai/components/Translatable.jsx'
 import LessonRow from '../components/LessonRow.jsx'
 import styles from './LearningDetailsPage.module.css'
 
@@ -108,7 +109,9 @@ export default function LearningDetailsPage() {
 
           <Panel padding={24}>
             <h2 className={styles.sectionTitle}>{t('details.aboutTitle')}</h2>
-            <p className={styles.about}>{course.about}</p>
+            <Translatable source={{ entity: 'course', id: course.id, field: 'about' }} texts={[course.about]}>
+              {([about]) => <p className={styles.about}>{about}</p>}
+            </Translatable>
             <ul className={styles.tags}>
               <li>
                 <PillBadge>{text.level(course)}</PillBadge>

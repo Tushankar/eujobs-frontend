@@ -6,15 +6,18 @@ import { cx } from '@/utils/cx.js'
 import { CompanyLogo, Icon, IconButton } from '@/components/ui'
 import StatusBadge from '@/components/common/StatusBadge.jsx'
 import aiGlyph from '@/assets/icons/ai-glyph-blue.svg'
+import JobSummaryButton from '@/features/ai/components/JobSummaryButton.jsx'
 import { ApplyButton } from '@/features/candidate/applications/components/ApplyFlow.jsx'
 import { useJobText } from '@/lib/jobText.js'
 import { useFormat } from '@/lib/preferences.js'
+import JobExplanation from './JobExplanation.jsx'
 import MatchBadge from './MatchBadge.jsx'
 import styles from './JobCard.module.css'
 
 /**
  * Job listing card (Overview and Find jobs). Every candidate sees the skill overlap (M-050, M-052); Plus candidates
- * see the match score and label instead (C6). Apply goes through the gate (§3.4).
+ * see the match score and label instead (C6), and the AI explanation in the disclosure (M-057). The AI job summary sits
+ * on every card (M-059; locked for Free, M-118). Apply goes through the gate (§3.4).
  */
 export default function JobCard({ job, onToggleSave }) {
   const { t } = useTranslation()
@@ -85,6 +88,7 @@ export default function JobCard({ job, onToggleSave }) {
         </button>
         <div className={styles.actions}>
           {job.publishedAt && <span className={styles.posted}>{format.relative(job.publishedAt)}</span>}
+          <JobSummaryButton job={job} />
           <Link to={detailsPath} className={styles.viewJob} aria-label={t('findJobs:card.viewLabel', { title: job.title, company })}>
             {t('findJobs:card.view')}
             <Icon as={ArrowUpRight} size={12} />
@@ -93,9 +97,10 @@ export default function JobCard({ job, onToggleSave }) {
         </div>
       </div>
       {whyOpen && (
-        <p id={whyId} className={styles.whyText}>
-          {job.overlap.count > 0 ? t('findJobs:card.why', { skills: format.list(job.overlap.matched) }) : t('findJobs:card.whyNone')}
-        </p>
+        <div id={whyId} className={styles.whyText} data-explanation>
+          <p>{job.overlap.count > 0 ? t('findJobs:card.why', { skills: format.list(job.overlap.matched) }) : t('findJobs:card.whyNone')}</p>
+          {job.match && <JobExplanation jobId={job.id} />}
+        </div>
       )}
     </article>
   )
