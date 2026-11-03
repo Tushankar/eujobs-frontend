@@ -1,4 +1,4 @@
-import { signInWithForm, waitForText } from '../lib/flows.js'
+import { responseTo, signInWithForm, waitForText } from '../lib/flows.js'
 import { inCountry, resultsBy } from '../lib/matching.js'
 import { openAs } from '../lib/payments.js'
 import { login } from '../lib/recruiters.js'
@@ -42,9 +42,10 @@ export default {
     await page.waitForSelector(select)
     const options = await page.$$eval(`${select} option`, (items) => items.map((item) => item.value))
     const picked = options[1] ?? options[0]
+    const oversight = responseTo(page, ['/api/v1/admin/matching/oversight', `jobId=${picked}`])
     await page.select(select, picked)
+    await oversight
     await page.waitForFunction((id) => document.querySelector('select[name="oversightJob"]').value === id && document.querySelector('[data-candidate]'), {}, picked)
-    await page.waitForNetworkIdle()
     const cards = await page.$$eval('[data-candidate]', (items) => items.map((item) => ({ id: item.dataset.candidate, text: item.innerText })))
     const results = await resultsBy({ jobId: picked })
     ctx.check(cards.length > 0 && cards.length <= 4, `top ${cards.length} shown`)

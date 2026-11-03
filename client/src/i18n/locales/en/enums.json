@@ -106,7 +106,7 @@
   "entitlement": { "apply": "Applying to jobs", "message_send": "Messaging", "job_alerts": "Job alerts", "ai": "AI features" },
   "paymentKind": { "course": "Course", "subscription": "Subscription" },
   "paymentStatus": { "paid": "Paid", "failed": "Failed", "refunded": "Refunded" },
-  "paymentSource": { "stripe": "Stripe", "seed": "Sample data" },
+  "paymentSource": { "stripe": "Stripe", "seed": "Seeded" },
   "courseAudience": { "candidate": "Candidates", "recruiter": "Recruiters" },
   "courseLevel": { "foundation": "Foundation", "intermediate": "Intermediate", "advanced": "Advanced" },
   "courseStatus": { "draft": "Draft", "published": "Published", "unpublished": "Unpublished" },

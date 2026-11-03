@@ -1,4 +1,4 @@
-import { bodyText, fill, waitForPath } from '../lib/flows.js'
+import { bodyText, fill, waitForPath, waitForSettled } from '../lib/flows.js'
 
 /** P2-06 (M-198): the Owner signs in on the admin page; the restricted notice and Forgot link show, no demo note. */
 export default {
@@ -19,7 +19,7 @@ export default {
     await fill(page, 'input[name="password"]', ctx.seedCredentials.password)
     await page.click('button[type="submit"]')
     await waitForPath(page, () => location.pathname === '/admin')
-    await page.waitForNetworkIdle()
+    await waitForSettled(page)
     await handle.checkOverflow()
     await ctx.screenshot(page, '2-admin-overview')
     ctx.assertClean(handle.issues, 'admin sign-in')

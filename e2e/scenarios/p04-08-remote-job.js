@@ -32,8 +32,9 @@ export default {
     const filterBy = async (code) => {
       await clickText(page, 'Filters', 'button')
       await page.waitForSelector('select[name="eligible"]')
+      const counted = responseTo(page, ['/api/v1/jobs?', `eligible=${code}`])
       await page.select('select[name="eligible"]', code)
-      await page.waitForNetworkIdle()
+      await counted
       await clickText(page, 'Show', '[role="dialog"] button')
     }
     await filterBy('PL')

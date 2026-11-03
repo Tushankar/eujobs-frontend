@@ -14,15 +14,15 @@
   max-width: 100%;
 }
 
-.status {
-  margin-top: 16px;
-  padding: 12px 16px;
-  border: 1px solid rgba(0, 132, 255, 0.2);
-  border-radius: var(--radius-xl);
-  background: var(--accent);
+.actor {
+  flex: 0 0 176px;
+}
+
+.error {
+  padding-bottom: 16px;
   font-size: 12px;
-  line-height: 20px;
-  color: var(--primary-hover);
+  line-height: 16px;
+  color: var(--destructive);
 }
 
 .card {
@@ -40,37 +40,8 @@
   list-style: none;
 }
 
-.notice {
-  margin-top: 28px;
-  padding: 16px;
-  border-radius: var(--radius-xl);
-  background: var(--muted);
-  font-size: 11px;
-  line-height: 24px;
-  color: var(--muted-foreground);
-}
-
-.pager {
-  display: flex;
-  flex-wrap: wrap;
-  align-items: center;
-  justify-content: space-between;
-  gap: 12px;
+.card > nav {
   margin-top: auto;
-  padding-top: 24px;
-}
-
-.range,
-.pageNumber {
-  font-size: 11px;
-  line-height: 16px;
-  color: var(--muted-foreground);
-}
-
-.pagerButtons {
-  display: flex;
-  align-items: center;
-  gap: 12px;
 }
 
 @media (max-width: 767px) {

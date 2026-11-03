@@ -5,7 +5,7 @@ import { Button, Modal, SelectField, TextField } from '@/components/ui'
 import FormAlert from '@/features/auth/components/FormAlert.jsx'
 import { check, compact, serverFieldErrors, useErrorText } from '@/lib/forms.js'
 import { useInviteAdminMutation } from '../api.js'
-import { accessErrorText } from './CreateRoleModal.jsx'
+import { accessErrorText } from '../accessErrors.js'
 import styles from './InviteDialog.module.css'
 
 const FORM_ID = 'invite-admin-form'

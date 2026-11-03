@@ -1,5 +1,5 @@
 import { fixture } from '../fixtures/make.js'
-import { chooseFile, clickText, fill, pageApi, signInWithForm, waitForPath, waitForText } from '../lib/flows.js'
+import { chooseFile, clickText, fill, pageApi, signInWithForm, waitForPath, waitForSettled, waitForText } from '../lib/flows.js'
 import { db, TEST_PASSWORD, uniqueEmail, verifiedCandidate } from '../lib/testApi.js'
 
 /**
@@ -41,7 +41,7 @@ export default {
     await ctx.screenshot(page, '4-plan')
     await clickText(page, 'Continue with Free', 'button')
     await waitForPath(page, () => location.pathname === '/candidate')
-    await page.waitForNetworkIdle()
+    await waitForSettled(page)
     await ctx.screenshot(page, '5-overview')
 
     const me = await pageApi(page, '/me')

@@ -7,15 +7,13 @@ import FormAlert from '@/features/auth/components/FormAlert.jsx'
 import { compact, serverFieldErrors, useErrorText } from '@/lib/forms.js'
 import { checkLength } from '@/features/admin/ai-matching/components/policyErrors.js'
 import { useCreateRoleMutation, useGetPermissionsQuery, useUpdateRoleMutation } from '../api.js'
+import { accessErrorText } from '../accessErrors.js'
 import PermissionOption from './PermissionOption.jsx'
 import styles from './CreateRoleModal.module.css'
 
 const FORM_ID = 'create-role-form'
 const SCOPES = ['organization', 'department', 'finance_department', 'team']
 const GROUPS = ['people', 'roles', 'recruitment', 'finance', 'governance']
-
-/** The page's own texts first, then the shared validation texts. */
-export const accessErrorText = (t, field, error) => error && t([`access:errors.${field}.${error.key}`, `validation:${error.key}`], error.params)
 
 /**
  * "Create custom role" and, prefilled, "Edit role" (M-158): name, scope, description and the permission matrix
@@ -86,7 +84,6 @@ export default function CreateRoleModal({ role, onClose, onSaved }) {
             value={values.name}
             onChange={setField('name')}
             error={accessErrorText(t, 'name', errors.name)}
-            maxLength={config?.limits.adminRole.name.max}
             data-autofocus
           />
           <SelectField

@@ -1,4 +1,4 @@
-import { bodyText, clickText, fill, waitForPath } from '../lib/flows.js'
+import { bodyText, clickText, fill, waitForPath, waitForSettled, waitForText } from '../lib/flows.js'
 import { mailTo, TEST_PASSWORD, uniqueEmail } from '../lib/testApi.js'
 
 /** P2-01: a French browser signs up in French, gets the French link, verifies and lands on onboarding. */
@@ -32,7 +32,7 @@ export default {
     await page.click('button[type="submit"]')
 
     await waitForPath(page, '/sign-up/check-email')
-    await page.waitForNetworkIdle()
+    await waitForText(page, email)
     ctx.check((await bodyText(page)).includes(email), 'check-email shows the address')
     await handle.checkOverflow()
     await ctx.screenshot(page, '2-check-email')
@@ -49,7 +49,7 @@ export default {
     await fill(page, 'input[name="password"]', TEST_PASSWORD)
     await page.click('button[type="submit"]')
     await waitForPath(page, '/candidate/onboarding/story')
-    await page.waitForNetworkIdle()
+    await waitForSettled(page)
     await handle.checkOverflow()
     await ctx.screenshot(page, '4-onboarding')
     ctx.assertClean(handle.issues, 'sign-up flow')

@@ -1,0 +1,86 @@
+{
+  "title": "Clear decisions. A clear record.",
+  "description": "Review admin, user and system events across the platform, newest first.",
+  "export": "Export CSV",
+  "search": "Search events, people or references",
+  "categories": "Filter by category",
+  "allCategories": "All events",
+  "actorType": "Filter by actor",
+  "allActors": "All actors",
+  "listLabel": "Audit events",
+  "empty": "No events match",
+  "emptyText": "Try a different search, or choose another category or actor.",
+  "detail": {
+    "category": "Category",
+    "actor": "Recorded by",
+    "time": "Time",
+    "target": "Subject"
+  },
+  "actor": "{{name}} · {{type}}",
+  "target": {
+    "user": "Account",
+    "role": "Role",
+    "job": "Job",
+    "payment": "Payment",
+    "course": "Course",
+    "certificate": "Certificate",
+    "matching_policy": "Matching policy",
+    "verification_submission": "Verification evidence"
+  },
+  "types": {
+    "moderation": {
+      "account_submitted": "{{name}} submitted {{company}} for review",
+      "account_resubmitted": "{{name}} resubmitted {{company}} for review",
+      "account_approved": "Recruiter account approved: {{name}} ({{company}})",
+      "account_rejected": "Recruiter account rejected: {{name}} ({{company}})",
+      "account_suspended": "Recruiter account suspended: {{name}} ({{company}})",
+      "account_reactivated": "Recruiter account reactivated: {{name}} ({{company}})",
+      "verification_approved": "Verification evidence approved: {{candidate}} ({{category}})",
+      "verification_rejected": "Verification evidence rejected: {{candidate}} ({{category}})"
+    },
+    "learning": {
+      "course_created": "Course created: {{title}}",
+      "course_details_updated": "Course details updated: {{title}}",
+      "lesson_added": "Lesson added to {{title}}: {{lesson}}",
+      "lesson_updated": "Lesson updated in {{title}}: {{lesson}}",
+      "lesson_deleted": "Lesson deleted from {{title}}: {{lesson}}",
+      "lessons_reordered": "Lessons reordered: {{title}}",
+      "quiz_saved": "Quiz saved for {{title}} ({{questions}} questions)",
+      "course_published": "Course published: {{title}}",
+      "course_unpublished": "Course unpublished: {{title}}",
+      "certificate_revoked": "Certificate {{code}} revoked: {{name}}, {{title}}"
+    },
+    "policy": {
+      "created": "Matching policy created: {{name}}",
+      "updated": "Matching policy details updated: {{name}}",
+      "saved": "Matching policy signals saved: {{name}} (v{{version}})",
+      "activated": "Matching policy activated: {{name}} (v{{version}})",
+      "archived": "Matching policy archived: {{name}}"
+    },
+    "access": {
+      "role_created": "Role created: {{role}}",
+      "role_duplicated": "Role duplicated: {{role}} (from {{source}})",
+      "role_updated": "Role updated: {{role}}",
+      "role_archived": "Role archived: {{role}}",
+      "user_access_saved": "Access saved for {{name}}",
+      "user_access_revoked": "Access revoked for {{name}}",
+      "admin_invited": "Admin invited: {{name}} ({{email}}) as {{role}}",
+      "invite_accepted": "Invitation accepted: {{name}}"
+    },
+    "reports": {
+      "candidates_exported": "Candidates exported ({{count}} rows)",
+      "recruiters_exported": "Recruiters exported ({{count}} rows)",
+      "payments_exported": "Payments exported ({{count}} rows)",
+      "audit_exported": "Audit log exported ({{count}} rows)"
+    },
+    "jobs": {
+      "status_changed": "Job status changed: {{title}} ({{company}}), {{from}} → {{to}}",
+      "cv_downloaded": "CV downloaded: {{candidate}}, version {{version}} ({{company}})"
+    },
+    "payments": {
+      "payment_recorded": "Payment {{reference}}: {{payer}}, {{item}} ({{amount}})",
+      "renewal_failed": "Renewal failed {{reference}}: {{payer}}, {{item}} ({{amount}})",
+      "payment_refunded": "Payment refunded {{reference}}: {{payer}}, {{item}} ({{amount}})"
+    }
+  }
+}

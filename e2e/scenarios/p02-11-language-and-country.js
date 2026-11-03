@@ -1,5 +1,5 @@
 import { existsSync } from 'node:fs'
-import { bodyText, clickText, signInWithForm } from '../lib/flows.js'
+import { bodyText, clickText, responseTo, signInWithForm } from '../lib/flows.js'
 import { db } from '../lib/testApi.js'
 
 const SPANISH = new URL('../../client/src/i18n/locales/es/', import.meta.url)
@@ -49,8 +49,9 @@ export default {
       await ctx.screenshot(page, '1-spanish')
 
       await openChoices(page, ctx.viewport, { header: 'País', menu: 'Abrir el menú de perfil', row: 'País' })
+      const saved = responseTo(page, '/api/v1/me', 'PATCH')
       await clickText(page, 'Polonia', 'button')
-      await page.waitForNetworkIdle()
+      await saved
       await page.reload({ waitUntil: 'networkidle0' })
       if (ctx.viewport === 'M') await page.click('header button[aria-label="Abrir el menú de perfil"]')
       ctx.check((await bodyText(page)).includes('Polonia'), 'Poland is kept after a reload')

@@ -1,3 +1,4 @@
+import { responseTo } from '../lib/flows.js'
 import { applyApi, completeCandidate, MINUTE, recruiterWithJob, tickIn } from '../lib/applicants.js'
 import { openAs } from '../lib/payments.js'
 import { api, db, mailTo } from '../lib/testApi.js'
@@ -14,9 +15,10 @@ export default {
     const handle = await ctx.newPage()
     const { page } = handle
     await openAs(ctx, handle, candidate.email, '/candidate/settings/notifications')
+    const saved = responseTo(page, '/api/v1/me/notifications', 'PATCH')
     await page.click('main [role="switch"]')
     await page.waitForFunction(() => document.querySelector('main [role="switch"]').getAttribute('aria-checked') === 'false')
-    await page.waitForNetworkIdle()
+    await saved
     await ctx.screenshot(page, 'emails-off')
 
     const pipeline = (await api('/recruiter/pipeline', { token: recruiter.token })).body.items

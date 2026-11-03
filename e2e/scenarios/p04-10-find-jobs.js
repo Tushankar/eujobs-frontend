@@ -47,8 +47,9 @@ export default {
 
     // U25, P4-Q4: 6,000 a month is 72,000 a year; the yearly 70,000 job and the job without salary are left out.
     await clickText(page, 'Filters', 'button')
+    const counted = responseTo(page, ['/api/v1/jobs?', 'salaryMin=71000'])
     await fill(page, 'input[name="salaryMin"]', '71000')
-    await page.waitForNetworkIdle()
+    await counted
     await clickText(page, 'Show', '[role="dialog"] button')
     await page.waitForFunction(
       (keep, drop) => document.querySelector(`article[data-job="${keep}"]`) && !drop.some((id) => document.querySelector(`article[data-job="${id}"]`)),

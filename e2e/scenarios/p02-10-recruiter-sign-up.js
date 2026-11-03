@@ -1,4 +1,4 @@
-import { bodyText, clickText, fill, waitForPath } from '../lib/flows.js'
+import { bodyText, clickText, fill, waitForPath, waitForSettled, waitForText } from '../lib/flows.js'
 import { mailTo, TEST_PASSWORD, uniqueEmail } from '../lib/testApi.js'
 
 async function fillSignUp(page, webUrl, email) {
@@ -44,7 +44,7 @@ export default {
     const email = uniqueEmail('p210')
     await fillSignUp(page, ctx.webUrl, email)
     await waitForPath(page, '/recruiter/onboarding/email-code')
-    await page.waitForNetworkIdle()
+    await waitForText(page, email)
     ctx.check((await bodyText(page)).includes(email), 'the code screen names the address')
     await handle.checkOverflow()
     await ctx.screenshot(page, '1-code-screen')
@@ -77,7 +77,7 @@ export default {
 
     await enterCode(page, finalCode)
     await waitForPath(page, () => location.pathname.startsWith('/recruiter/onboarding/') && !location.pathname.endsWith('email-code'))
-    await page.waitForNetworkIdle()
+    await waitForSettled(page)
     await ctx.screenshot(page, '4-onboarding')
     await page.goto(`${ctx.webUrl}/recruiter`, { waitUntil: 'networkidle0' })
     ctx.check(new URL(page.url()).pathname.startsWith('/recruiter/onboarding'), `/recruiter led to ${new URL(page.url()).pathname}`)

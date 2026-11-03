@@ -15,14 +15,30 @@ export function waitForPath(page, test) {
   return page.waitForFunction(predicate, { timeout: 15_000 })
 }
 
-/** Signs in through a sign-in form and waits until the URL leaves the sign-in page. */
+/**
+ * The next response whose URL contains every part, for `method`. Create it before the action that sends the request.
+ * (P10-Q2: steps wait for their own request, never for network idle, which the 15 s counters poll can delay.)
+ */
+export function responseTo(page, parts, method = 'GET') {
+  const wanted = [parts].flat()
+  return page.waitForResponse((response) => response.request().method() === method && wanted.every((part) => response.url().includes(part)), { timeout: 15_000 })
+}
+
+/** After a navigation: the route's loading fallback is gone and the page heading is on screen. */
+export function waitForSettled(page) {
+  return page.waitForFunction(() => !document.querySelector('[role="status"][class*="loading"]') && document.querySelector('h1'), { timeout: 15_000 })
+}
+
+/** Signs in through a sign-in form and waits until the URL leaves the sign-in page and the landing page has rendered. */
 export async function signInWithForm(page, webUrl, signInPath, email, password) {
   await page.goto(`${webUrl}${signInPath}`, { waitUntil: 'networkidle0' })
   await fill(page, 'input[name="email"]', email)
   await fill(page, 'input[name="password"]', password)
+  const login = responseTo(page, '/api/v1/auth/login', 'POST')
   await page.click('button[type="submit"]')
+  await login
   await page.waitForFunction((path) => location.pathname !== path, { timeout: 15_000 }, signInPath)
-  await page.waitForNetworkIdle()
+  await waitForSettled(page)
 }
 
 /** Visible text of the page body. */

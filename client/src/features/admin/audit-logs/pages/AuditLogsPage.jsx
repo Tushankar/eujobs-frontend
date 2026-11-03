@@ -1,148 +1,118 @@
-import { useMemo, useState } from 'react'
-import { ChevronLeft, ChevronRight, Download, Search } from 'lucide-react'
-import { Button, Icon, TextField } from '@/components/ui'
+import { useState } from 'react'
+import { useTranslation } from 'react-i18next'
+import { useSearchParams } from 'react-router-dom'
+import { Download, Search } from 'lucide-react'
+import { can } from '@/app/permissions.js'
 import EmptyState from '@/components/common/EmptyState.jsx'
 import FilterChips from '@/components/common/FilterChips.jsx'
 import PageTitle from '@/components/common/PageTitle.jsx'
-import { downloadCsv } from '@/utils/downloadCsv.js'
+import Pagination from '@/components/common/Pagination.jsx'
+import { Button, Icon, SelectField, TextField } from '@/components/ui'
+import { downloadFromApi } from '@/lib/download.js'
+import { useErrorText } from '@/lib/forms.js'
+import { usePreferences } from '@/lib/preferences.js'
+import { useGetAuditEventsQuery } from '../api.js'
 import AuditEventRow from '../components/AuditEventRow.jsx'
-import { AUDIT_CATEGORIES } from '../data/auditEvents.js'
-import { useAuditLog } from '../hooks/useAuditLog.js'
-import { formatDateTime } from '../utils/formatDate.js'
 import styles from './AuditLogsPage.module.css'
 
-const PAGE_SIZE = 5
+const CATEGORIES = ['workspace', 'policy', 'moderation', 'reports', 'access', 'learning', 'payments', 'jobs']
+const ACTOR_TYPES = ['admin', 'user', 'system']
 
 /**
- * Audit logs: a searchable, filterable, paginated list of events recorded on this device (plus sample events).
- * Rows expand to show details. "Export log" builds a CSV in the browser from the events currently matching.
+ * Admin › Audit logs (M-162, M-163, M-206): admin, user and system events from the server, newest first, with the
+ * category chips (Learning, Payments and Jobs included), the actor type, a search and server pagination. Rows expand
+ * to their details. The CSV export is built and audited by the server (needs `reports.export`).
  */
 export default function AuditLogsPage() {
-  const { events } = useAuditLog()
-  const [query, setQuery] = useState('')
-  const [category, setCategory] = useState('all')
-  const [page, setPage] = useState(1)
+  const { t } = useTranslation(['audit', 'enums'])
+  const errorText = useErrorText()
+  const { me } = usePreferences()
+  const [params, setParams] = useSearchParams()
   const [openId, setOpenId] = useState(null)
-  const [status, setStatus] = useState('')
+  const [exporting, setExporting] = useState(false)
+  const [exportError, setExportError] = useState('')
+  const filters = { q: params.get('q') ?? '', category: params.get('category') ?? '', actorType: params.get('actorType') ?? '' }
+  const query = { page: Number(params.get('page')) || 1, ...Object.fromEntries(Object.entries(filters).filter(([, value]) => value)) }
+  const { data, isSuccess } = useGetAuditEventsQuery(query, { refetchOnMountOrArgChange: true })
 
-  const matching = useMemo(() => {
-    const needle = query.trim().toLowerCase()
-    return events.filter(
-      (event) =>
-        (category === 'all' || event.category === category) &&
-        (!needle || [event.title, event.category, event.actor, event.detail].some((text) => text.toLowerCase().includes(needle))),
-    )
-  }, [events, query, category])
-
-  const pageCount = Math.max(1, Math.ceil(matching.length / PAGE_SIZE))
-  const currentPage = Math.min(page, pageCount)
-  const first = (currentPage - 1) * PAGE_SIZE
-  const visible = matching.slice(first, first + PAGE_SIZE)
-
-  function changeFilter(update) {
-    update()
-    setPage(1)
+  function setFilter(name, value) {
+    const next = new URLSearchParams(params)
+    if (value) next.set(name, value)
+    else next.delete(name)
+    if (name !== 'page') next.delete('page')
+    setParams(next, { replace: true })
     setOpenId(null)
   }
 
-  function handleExport() {
-    downloadCsv(
-      [
-        ['Event', 'Category', 'Recorded by', 'Time', 'Details'],
-        ...matching.map((event) => [event.title, event.category, event.actor, formatDateTime(event.at), event.detail]),
-      ],
-      `audit-log-${new Date().toISOString().slice(0, 10)}.csv`,
-    )
-    setStatus(`Exported ${matching.length} ${matching.length === 1 ? 'event' : 'events'} as a CSV file saved to this device. Nothing was uploaded.`)
+  async function exportCsv() {
+    setExporting(true)
+    setExportError('')
+    try {
+      await downloadFromApi('/admin/audit-events/export', { ...query, page: undefined })
+    } catch (error) {
+      setExportError(errorText.code(error))
+    } finally {
+      setExporting(false)
+    }
   }
 
   return (
     <>
       <PageTitle
         className={styles.title}
-        title="Clear decisions. A clear record."
-        description="Review administrative changes and oversight activity in your local workspace."
+        title={t('title')}
+        description={t('description')}
         actions={
-          <Button variant="outline" leftIcon={<Icon as={Download} size={13} />} onClick={handleExport} disabled={matching.length === 0}>
-            Export log
-          </Button>
+          can(me, 'reports.export') && (
+            <Button variant="outline" leftIcon={<Icon as={Download} size={13} />} onClick={exportCsv} loading={exporting} disabled={!data?.total}>
+              {t('export')}
+            </Button>
+          )
         }
       />
+      {exportError && (
+        <p className={styles.error} role="alert">
+          {exportError}
+        </p>
+      )}
 
       <div className={styles.toolbar}>
         <TextField
           className={styles.search}
-          aria-label="Search events"
-          placeholder="Search events"
+          name="q"
+          aria-label={t('search')}
+          placeholder={t('search')}
           type="search"
-          value={query}
-          onChange={(event) => changeFilter(() => setQuery(event.target.value))}
+          value={filters.q}
+          onChange={(event) => setFilter('q', event.target.value)}
+        />
+        <SelectField
+          className={styles.actor}
+          name="actorType"
+          aria-label={t('actorType')}
+          value={filters.actorType}
+          onChange={(event) => setFilter('actorType', event.target.value)}
+          options={[{ value: '', label: t('allActors') }, ...ACTOR_TYPES.map((type) => ({ value: type, label: t(`enums:actorType.${type}`) }))]}
         />
         <FilterChips
-          label="Filter by category"
-          options={AUDIT_CATEGORIES}
-          value={category}
-          onChange={(next) => changeFilter(() => setCategory(next))}
+          label={t('categories')}
+          options={[{ id: 'all', label: t('allCategories') }, ...CATEGORIES.map((id) => ({ id, label: t(`enums:auditCategory.${id}`) }))]}
+          value={filters.category || 'all'}
+          onChange={(next) => setFilter('category', next === 'all' ? '' : next)}
         />
       </div>
 
-      <div role="status">{status && <p className={styles.status}>{status}</p>}</div>
-
-      <section className={styles.card} aria-label="Audit events">
-        {visible.length > 0 ? (
+      <section className={styles.card} aria-label={t('listLabel')}>
+        {data?.items.length > 0 ? (
           <ul className={styles.list}>
-            {visible.map((event) => (
-              <AuditEventRow
-                key={event.id}
-                event={event}
-                open={openId === event.id}
-                onToggle={() => setOpenId((current) => (current === event.id ? null : event.id))}
-              />
+            {data.items.map((event) => (
+              <AuditEventRow key={event.id} event={event} open={openId === event.id} onToggle={() => setOpenId((current) => (current === event.id ? null : event.id))} />
             ))}
           </ul>
         ) : (
-          <EmptyState
-            icon={Search}
-            title="No events match"
-            description="Try a different search or choose another category to see more of the log."
-          />
+          isSuccess && <EmptyState icon={Search} title={t('empty')} description={t('emptyText')} />
         )}
-
-        <p className={styles.notice}>
-          This is a local demo log, not an immutable security audit trail. Production requires server-side access control,
-          timestamps, and tamper-resistant event storage.
-        </p>
-
-        {matching.length > PAGE_SIZE && (
-          <nav className={styles.pager} aria-label="Audit log pages">
-            <p className={styles.range}>
-              Showing {first + 1}–{first + visible.length} of {matching.length} events
-            </p>
-            <div className={styles.pagerButtons}>
-              <Button
-                variant="outline"
-                size="sm"
-                leftIcon={<Icon as={ChevronLeft} size={14} />}
-                disabled={currentPage === 1}
-                onClick={() => setPage(currentPage - 1)}
-              >
-                Previous
-              </Button>
-              <span className={styles.pageNumber}>
-                Page {currentPage} of {pageCount}
-              </span>
-              <Button
-                variant="outline"
-                size="sm"
-                rightIcon={<Icon as={ChevronRight} size={14} />}
-                disabled={currentPage === pageCount}
-                onClick={() => setPage(currentPage + 1)}
-              >
-                Next
-              </Button>
-            </div>
-          </nav>
-        )}
+        {data && <Pagination page={data.page} pageSize={data.pageSize} total={data.total} onChange={(next) => setFilter('page', String(next))} />}
       </section>
     </>
   )

@@ -1,5 +1,5 @@
 import { fixture } from '../fixtures/make.js'
-import { chooseFile, clickText, signInWithForm, toggleCheckbox, waitForText } from '../lib/flows.js'
+import { chooseFile, clickText, responseTo, signInWithForm, toggleCheckbox, waitForText } from '../lib/flows.js'
 import { onboardedCandidate } from '../lib/candidates.js'
 import { db, mailTo, TEST_PASSWORD } from '../lib/testApi.js'
 
@@ -22,9 +22,10 @@ async function openReview(page, webUrl, name) {
     { timeout: 15_000 },
     name,
   )
+  const detail = responseTo(page, '/api/v1/admin/moderation/verification/')
   await link.asElement().click()
+  await detail
   await page.waitForSelector('[role="dialog"] [data-claim]')
-  await page.waitForNetworkIdle()
   return page.$eval('[role="dialog"]', (dialog) => dialog.innerText)
 }
 

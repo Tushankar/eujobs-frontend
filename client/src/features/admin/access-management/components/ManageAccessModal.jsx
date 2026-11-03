@@ -8,7 +8,7 @@ import { Button, Icon, Modal, SelectField, TextField } from '@/components/ui'
 import FormAlert from '@/features/auth/components/FormAlert.jsx'
 import { serverFieldErrors, useErrorText } from '@/lib/forms.js'
 import { useGetPermissionsQuery, useRevokeAccessMutation, useSaveAccessMutation } from '../api.js'
-import { accessErrorText } from './CreateRoleModal.jsx'
+import { accessErrorText } from '../accessErrors.js'
 import PermissionOption from './PermissionOption.jsx'
 import styles from './ManageAccessModal.module.css'
 

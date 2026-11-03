@@ -1,4 +1,4 @@
-import { signInWithForm } from '../lib/flows.js'
+import { responseTo, signInWithForm } from '../lib/flows.js'
 import { db } from '../lib/testApi.js'
 
 const switchState = (page) => page.$$eval('main [role="switch"]', (switches) => switches.map((element) => element.getAttribute('aria-checked')))
@@ -16,9 +16,10 @@ export default {
       await page.goto(`${ctx.webUrl}/candidate/settings/notifications`, { waitUntil: 'networkidle0' })
       const initial = await switchState(page)
       ctx.check(JSON.stringify(initial) === '["true"]', `switches: ${JSON.stringify(initial)}`)
+      const saved = responseTo(page, '/api/v1/me/notifications', 'PATCH')
       await page.click('main [role="switch"]')
       await page.waitForFunction(() => document.querySelector('main [role="switch"]').getAttribute('aria-checked') === 'false')
-      await page.waitForNetworkIdle()
+      await saved
       await page.reload({ waitUntil: 'networkidle0' })
       ctx.check(JSON.stringify(await switchState(page)) === '["false"]', 'the toggle stays off after a reload')
       await ctx.screenshot(page, 'email-off')

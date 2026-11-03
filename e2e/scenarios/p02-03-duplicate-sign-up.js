@@ -1,4 +1,4 @@
-import { fill, waitForPath } from '../lib/flows.js'
+import { fill, waitForPath, waitForSettled } from '../lib/flows.js'
 import { mailTo, TEST_PASSWORD } from '../lib/testApi.js'
 
 /** P2-03: an existing email gets the same check-email screen, and the owner gets "already registered". */
@@ -17,7 +17,7 @@ export default {
     await page.$eval('input[name="acceptTerms"]', (box) => box.click())
     await page.click('button[type="submit"]')
     await waitForPath(page, '/sign-up/check-email')
-    await page.waitForNetworkIdle()
+    await waitForSettled(page)
     await ctx.screenshot(page, 'check-email')
 
     const already = await mailTo(existing, 'already_registered')

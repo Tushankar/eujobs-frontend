@@ -1,5 +1,5 @@
 import { completeCandidate } from '../lib/applicants.js'
-import { waitForText } from '../lib/flows.js'
+import { responseTo, waitForText } from '../lib/flows.js'
 import { embeddingOf, expectedRelevant, resultsBy, sarah, tick } from '../lib/matching.js'
 import { openAs } from '../lib/payments.js'
 import { api, db, TEST_PASSWORD } from '../lib/testApi.js'
@@ -28,9 +28,10 @@ export default {
     await openAs(ctx, handle, candidate.email, '/candidate/settings/privacy', TEST_PASSWORD)
     const consent = 'button[role="switch"][aria-label="Matching consent"]'
     await page.waitForSelector(consent, { visible: true })
+    const saved = responseTo(page, '/api/v1/candidate/settings/privacy', 'PATCH')
     await page.click(consent)
     await page.waitForFunction((selector) => document.querySelector(selector).getAttribute('aria-checked') === 'false', {}, consent)
-    await page.waitForNetworkIdle()
+    await saved
     ctx.check((await db('users', 'find', { filter: { email: candidate.email } }))[0].privacy.matchingConsent === false, 'consent is off')
     await ctx.screenshot(page, '1-consent-off')
 

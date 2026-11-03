@@ -24,7 +24,10 @@ export default function PaymentsTable({ payments, showPayer = false, showSource 
     return t(`methods.${used.type === 'link' ? 'link' : 'other'}`)
   }
   const columns = [
-    { key: 'reference', header: t('table.reference'), render: (payment) => (
+    {
+      key: 'reference',
+      header: t('table.reference'),
+      render: (payment) => (
         <>
           <span className={styles.reference}>{payment.reference}</span>
           {/* P10-Q5: seeded rows are marked on the admin page. */}
