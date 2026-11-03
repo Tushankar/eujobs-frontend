@@ -1,0 +1,70 @@
+.back {
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+  margin-bottom: 16px;
+  font-size: 12px;
+  font-weight: 600;
+  line-height: 16px;
+  color: var(--muted-foreground);
+}
+
+.back:hover {
+  color: var(--foreground);
+}
+
+.headerActions {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: 12px;
+}
+
+.lock {
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+}
+
+.problems {
+  margin-top: 16px;
+}
+
+.problems ul {
+  margin: 8px 0 0;
+  padding-left: 20px;
+  font-size: 13px;
+  line-height: 20px;
+  color: var(--foreground);
+}
+
+.problemsTitle {
+  margin: 0;
+  font-family: var(--font-display);
+  font-size: 15px;
+  font-weight: 700;
+}
+
+.tabs {
+  margin-top: 24px;
+}
+
+.panel {
+  margin-top: 16px;
+}
+
+.newPanel {
+  max-width: 560px;
+  margin-top: 24px;
+}
+
+.newForm {
+  display: flex;
+  flex-direction: column;
+  align-items: flex-start;
+  gap: 16px;
+}
+
+.newForm > :first-child {
+  align-self: stretch;
+}
