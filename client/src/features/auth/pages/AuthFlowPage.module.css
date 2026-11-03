@@ -12,6 +12,36 @@
   overflow-wrap: anywhere;
 }
 
+.notice {
+  display: flex;
+  align-items: flex-start;
+  gap: 12px;
+  padding: 16px;
+  border: 1px solid var(--border);
+  border-radius: var(--radius-xl);
+  background: var(--accent);
+  font-size: 14px;
+  line-height: 22px;
+}
+
+.noticeIcon {
+  display: inline-flex;
+  flex-shrink: 0;
+  align-items: center;
+  justify-content: center;
+  width: 36px;
+  height: 36px;
+  border-radius: var(--radius-full);
+  background: var(--card);
+  color: var(--primary);
+}
+
+.hint {
+  font-size: 12px;
+  line-height: 20px;
+  color: var(--muted-foreground);
+}
+
 .actions {
   display: flex;
   flex-wrap: wrap;

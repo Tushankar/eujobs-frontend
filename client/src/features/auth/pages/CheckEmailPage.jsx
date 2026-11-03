@@ -1,5 +1,7 @@
+import { MailCheck } from 'lucide-react'
 import { Trans, useTranslation } from 'react-i18next'
 import { Link, useLocation } from 'react-router-dom'
+import { Icon } from '@/components/ui'
 import AuthLayout from '@/components/layout/AuthLayout.jsx'
 import AuthIntro from '../components/AuthIntro.jsx'
 import ResendVerification from '../components/ResendVerification.jsx'
@@ -14,8 +16,13 @@ export default function CheckEmailPage() {
     <AuthLayout>
       <AuthIntro title={t('auth:checkEmail.title')} />
       <div className={styles.body}>
-        <p>{email ? <Trans i18nKey="auth:checkEmail.sent" values={{ email }} components={{ email: <span className={styles.address} /> }} /> : t('auth:checkEmail.sentNoAddress')}</p>
-        <p>{t('auth:checkEmail.expiry')}</p>
+        <div className={styles.notice}>
+          <span className={styles.noticeIcon}>
+            <Icon as={MailCheck} size={20} />
+          </span>
+          <p>{email ? <Trans i18nKey="auth:checkEmail.sent" values={{ email }} components={{ email: <span className={styles.address} /> }} /> : t('auth:checkEmail.sentNoAddress')}</p>
+        </div>
+        <p className={styles.hint}>{t('auth:checkEmail.expiry')}</p>
         {email && <ResendVerification email={email} />}
         <div className={styles.links}>
           <Link to="/sign-up">{t('auth:checkEmail.wrongAddress')}</Link>

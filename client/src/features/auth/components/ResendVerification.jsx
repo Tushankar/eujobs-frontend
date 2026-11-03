@@ -1,8 +1,10 @@
 import { useState } from 'react'
 import { useTranslation } from 'react-i18next'
 import { useGetConfigQuery } from '@/app/api.js'
+import { Button } from '@/components/ui'
 import { useCooldown, useErrorText } from '@/lib/forms.js'
 import { useResendVerifyEmailMutation } from '../api.js'
+import FormAlert from './FormAlert.jsx'
 import styles from './ResendVerification.module.css'
 
 const MINUTE_SECONDS = 60
@@ -32,12 +34,12 @@ export default function ResendVerification({ email }) {
 
   return (
     <div className={styles.resend}>
-      <button type="button" className={styles.button} onClick={handleClick} disabled={isLoading}>
+      <Button variant="outline" className={styles.button} onClick={handleClick} loading={isLoading}>
         {t('auth:resend.action')}
-      </button>
-      {state?.status === 'sent' && <span role="status">{t('auth:resend.sent', { email })}</span>}
-      {state?.status === 'wait' && cooldown.remaining > 0 && <span role="alert">{t('auth:resend.wait', { count: cooldown.remaining })}</span>}
-      {state?.status === 'error' && <span role="alert">{errorText.code(state.error)}</span>}
+      </Button>
+      {state?.status === 'sent' && <FormAlert tone="success">{t('auth:resend.sent', { email })}</FormAlert>}
+      {state?.status === 'wait' && cooldown.remaining > 0 && <FormAlert tone="info">{t('auth:resend.wait', { count: cooldown.remaining })}</FormAlert>}
+      {state?.status === 'error' && <FormAlert>{errorText.code(state.error)}</FormAlert>}
     </div>
   )
 }

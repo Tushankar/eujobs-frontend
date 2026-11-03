@@ -2397,6 +2397,25 @@ The course-purchase path is built here but verified in Phase 8. AI pages are gat
 
 **Calls the plan did not specify:** P9-Q5, P9-Q6 (owner) and P9-C9 … C15 (builder) in the Owner answers table.
 
+**Results** (repo root unless noted; never run the server tests and the e2e at the same time):
+
+| Command | Result |
+|---|---|
+| `cd server && npm test` | 294 of 294 |
+| `cd server && npm run lint` | clean |
+| `cd client && npm run lint && npm run build` | clean, built |
+| `npx oxlint .` in `e2e/` | clean |
+| `node e2e/run.js phase-9` | 17 of 17 (P9-01, 03, 05, 07 at 1440 and 375 px), real OpenAI |
+| P2-12, P2-14, P3-05, P4-10, P4-11, P8-10 (screens 9b changed) | 8 of 8 |
+| `node e2e/run.js phase-7` (messages gained Translate) | 14 of 14 |
+| `node e2e/run.js sweep` | D and M pass |
+
+**Fixed during the checks.** Scenario fixes: three regexes in P9-01 were broken when the file was written through a shell heredoc (a `\b` became a backspace character); the AI cache outlives a reseed by design, so P9-01 and P9-12 clear the entries they must see written; P9-07 waits for its own feedback answer (P9-06 answers for the same job first); waits now skip the "Writing with AI…" line; the review checkbox is a hidden native input, so the label is waited for. Layout: the CV version row and the job card footer let their actions wrap (the new AI buttons squeezed the version text at 1440 px and crowded the card footer at 375 px).
+
+**Open.**
+- The new `ai` and `aiInsights` namespaces (and the new `cv`, `learning` and `aiMatching` keys) are English until Phase 11, as the other new namespaces.
+- No new email type in 9b.
+
 ### Phase 10: Admin
 
 **Scope.** Every remaining admin area: access enforcement and its UI; user tables and details; jobs, applications and recruitment; overview, analytics and reports; audit; payments admin; content moderation with Report buttons.

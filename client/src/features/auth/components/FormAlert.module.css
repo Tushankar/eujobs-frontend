@@ -27,9 +27,18 @@
   color: #28734b;
 }
 
+/* A message from a control inside the alert (e.g. resend) reads as plain text, not a second box. */
+.alert .alert {
+  padding: 0;
+  border: 0;
+  background: none;
+  color: inherit;
+}
+
 .alert a,
 .alert button {
   align-self: flex-start;
+  min-height: 0;
   padding: 0;
   border: 0;
   background: none;
