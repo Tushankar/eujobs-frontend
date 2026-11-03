@@ -236,6 +236,7 @@ M-164 lets users report jobs, profiles, companies and messages. M-167 defines "R
 | P9-C5 builder call: display | Plus candidates with matching consent get `match { score, label }` on job cards and details ("93% · Strong match"; a score below Good reads "41% match"); Free and consent-off candidates get `match: null`. Recommended sort and For you: scored jobs by score, then overlap, then recency; pairs without a score follow U8. `GET /candidate/overview` answers `recommended.byScore`, and the KPI caption then reads "Good match or better for your profile". Recruiters: Recommended = score, then overlap, then last update; relevant talent, the KPI and talent cards use score ≥ Good. Talent cards now also leave out applicants (§3.8, A9; the Phase 4 code left out only shortlisted ones). Oversight: the top 4 of the job's market population that have a score (any label), with code evidence (M-057); the narrative comes with 9b. The recruiter job page says "N relevant profiles". Awaiting owner review. | 2026-11-03 |
 | P9-C6 builder call: admin AI & matching client | The page runs on the API: edit name and description, signals, Make active, Archive draft, the version history, Improve description (OpenAI), the oversight job picker with selectable cards and code evidence, and the AI status (models, last successful and failed call). The local audit records are gone (the server audits). New `aiMatching` namespace, English until Phase 11. Every policy write updates the cached list at once, and the new policy and notice travel in the navigation state (leaving `/policies/new` remounts the page), so the editor never shows another policy. `StatusBadge` forwards `data-*`. Awaiting owner review. | 2026-11-03 |
 | P9-C7 builder call: e2e | Emma's seeded profile prefers remote work, so OQ-6g caps every UK on-site or hybrid job at 49 for her; P9-01 and P9-02 use her Remote view (restored afterwards). The relevance check reads the population of the job's own market (Remote for a remote job). P9-05 activates the default policy again at its end. Real OpenAI in 9a: the seed's new texts, the edited brief in P9-04, the P9-13 candidate and one Improve description call. Awaiting owner review. | 2026-11-03 |
+| P9-C8 builder call: earlier-phase checks adjusted | P4-11 (the Free overlap label) now uses Alex: it used Emma, who is the seeded Plus subscriber and sees scores since Phase 9. Awaiting owner review. | 2026-11-03 |
 | P8-C6 builder call: e2e | P11 part 3 is made by `e2e/fixtures/make.js`: a ~30 s MP4 (H.264/AAC) and WebM recorded by this Chrome's MediaRecorder at 250 kbit/s (about 0.7 MB each, nothing downloaded), a sparse 501 MB file with an MP4 header, a 51 MB PDF, and a cover JPG; the 6 MB cover test reuses `photo-6mb.png`. P8-01 drags through dispatched DragEvents (Chrome's real drag is not available headless) and waits for the publish response before moving on. P7-04 and P7-05 gained the P7-A1 checks. Awaiting owner review. | 2026-11-03 |
 
 _(Answers to any new question asked during the build are appended to this table.)_
@@ -2341,6 +2342,26 @@ The course-purchase path is built here but verified in Phase 8. AI pages are gat
 | P9-13 | Consent off | D | A candidate turns matching consent off → gone from Find candidates and the relevant counts; their job cards show no score. |
 
 **API tests.** The U5 formula (renormalisation, OQ-6g location cap, thresholds); policy versions and recompute; relevance population and nightly catch-up; cosine on Float32 buffers; embedding text and truncation; cache keys and invalidation (entity version, language, profile hash); cap counting (U3, admin exempt); recruiter and Free DTOs never carrying a score; consent exclusion; `AI_UNAVAILABLE`. OpenAI is stubbed in these tests.
+
+#### Phase 9a handoff (2026-11-03, built, awaiting owner review; 9b not started)
+
+**Prep.** P13: `eujobs` held 0.02 MB of data and `eujobs_test` 0.37 MB before the phase; after a seed with real vectors `eujobs_test` holds 0.70 MB (19 vectors of 3072 dims).
+
+**Built (9a, P9-Q1).**
+- Server: `openai` 7.47; `lib/ai.js` (embeddings, cosine, cached generations, the 50-a-day cap, `AI_UNAVAILABLE`, AI status); `modules/ai` (`aicaches`, `aiusages`); `modules/matching`: embeddings with their triggers, `matchingpolicies` and versions (default v1 in `seed:catalog`), the U5 score with the OQ-6g cap, `matchresults`, relevance with the nightly slot, the admin routes (policies, Suggest, oversight, AI status); `/_test/ai/fail-next`. The Phase 4 relevance fallback now applies only to pairs without a score.
+- Display: Plus job cards, details, Recommended and For you by score; Free keeps the overlap label; recruiter Recommended, relevant talent, KPI and talent cards by score with no score in any recruiter answer; admin oversight with %.
+- Client: the admin AI & matching page on the API; `MatchBadge` on the candidate job card and details; Overview caption by ranking basis.
+- Seed: `seed:demo` resets the policies, then backfills embeddings, scores and counts, reusing unchanged vectors.
+- Deleted: `admin/ai-matching/data/matching.js`, `hooks/useMatchingPolicies.js`.
+- e2e: `e2e/lib/matching.js`; scenarios P9-01 (score half), P9-02, 03, 04, 05, 13.
+
+**Not in 9a (9b):** explanations and narratives, job summaries, the insights pages and the learning plan (P9-Q2), CV AI with Compare, the profile Ai Job Summary button, Translate, explanation feedback and its admin aggregate, the cap and failure messages in the UI, the remaining mock deletions (`insights.js`, `useInsightsState`, `ai-insights/utils/matching.js`, the AI summary templates). Scenarios P9-01 (narrative half) and P9-06 … 12.
+
+**Calls the plan did not specify:** P9-Q1 … Q4 (owner) and P9-C1 … C8 (builder) in the Owner answers table.
+
+**Real scores.** With real vectors the seeded pairs have cosines from 0.33 to 0.60 (median 0.51), so the U5 similarity spreads from 0.33 to 1.0; Emma's Remote view reads 93 % to 52 %.
+
+**Fixed during the checks.** The first e2e runs scored with 16-dimension stub vectors: the seed API test had written them to `eujobs_test` and the e2e seed reused them by hash (fixed by P9-C1; the stub vectors were deleted). A job recompute skipped candidates without a vector (P9-C2). After creating a policy the editor briefly showed the active policy, so clicks could edit it (P9-C6). Scenario fixes: Emma's Remote view, the job's own market for remote jobs, CSS upper-case in `innerText`, a sticky header covering a switch, the Overview path `/candidate`.
 
 ### Phase 10: Admin
 
