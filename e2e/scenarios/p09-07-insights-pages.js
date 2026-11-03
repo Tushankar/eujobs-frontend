@@ -118,6 +118,8 @@ export default {
       await page.goto(`${ctx.webUrl}/candidate/ai-insights/why-recommended?jobId=${role.id}`, { waitUntil: 'networkidle0' })
       await page.waitForSelector('[data-narrative="why"] li', { visible: true, timeout: 60_000 })
       await page.click('[data-feedback="needs_review"]')
+      // An earlier scenario may already have answered for this job, so wait for this answer to be the pressed one.
+      await page.waitForSelector('[data-feedback="needs_review"][aria-pressed="true"]', { visible: true })
       await waitForText(page, 'Thanks, your answer is saved.')
       const [stored] = await db('explanationfeedbacks', 'find', { filter: { jobId: { $oid: role.id } } })
       ctx.check(stored?.value === 'needs_review', 'the feedback is stored')

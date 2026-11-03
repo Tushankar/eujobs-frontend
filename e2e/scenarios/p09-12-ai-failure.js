@@ -1,7 +1,7 @@
 import { inCountry } from '../lib/matching.js'
 import { openAs } from '../lib/payments.js'
 import { login } from '../lib/recruiters.js'
-import { api } from '../lib/testApi.js'
+import { api, db } from '../lib/testApi.js'
 
 /**
  * P9-12 (§2.9): the next OpenAI call fails (/_test/ai/fail-next). Job match shows its code evidence anyway, the AI
@@ -21,6 +21,8 @@ export default {
       // A role whose narrative is not cached yet: the last of the role picker.
       const roles = (await api('/candidate/insights/roles', { token })).body.items
       const job = roles.at(-1)
+      // The cache outlives a reseed, so the explanations are cleared: the page must really call OpenAI, which then fails.
+      await db('aicaches', 'deleteMany', { filter: { kind: 'match_explanation', language: 'en' } })
       await api('/_test/ai/fail-next', { method: 'POST' })
       await openAs(ctx, handle, email, `/candidate/ai-insights/job-match?jobId=${job.id}`, ctx.seedCredentials.password)
       await page.waitForSelector('[data-narrative="job_match"] [data-ai-state="error"]', { visible: true, timeout: 30_000 })
