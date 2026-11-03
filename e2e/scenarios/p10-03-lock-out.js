@@ -32,7 +32,10 @@ export default {
     await page.click('[role="dialog"] input[data-permission="roles.assign"]')
     await clickText(page, 'Save assignment', '[role="dialog"] button')
     // The access dialog closes (its exit animation keeps it mounted a moment) and the confirm opens.
-    await page.waitForFunction(() => [...document.querySelectorAll('[role="dialog"]')].map((dialog) => dialog.innerText).join('|').startsWith('Save access for') && document.querySelectorAll('[role="dialog"]').length === 1)
+    await page.waitForFunction(() => {
+      const dialogs = document.querySelectorAll('[role="dialog"]')
+      return dialogs.length === 1 && dialogs[0].innerText.includes('Save access for')
+    })
     handle.allow(409, '/api/v1/admin/access/users/')
     await clickText(page, 'Save assignment', '[role="dialog"] button')
     await waitForText(page, 'You can’t remove your own “Assign roles” permission.')
