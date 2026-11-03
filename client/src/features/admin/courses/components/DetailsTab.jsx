@@ -42,6 +42,7 @@ export default function DetailsTab({ course }) {
   const recruiter = course.audience === 'recruiter'
   const options = (enumName) => (config?.enums[enumName] ?? []).map((value) => ({ value, label: t(`enums:${enumName}.${value}`) }))
   const field = (name) => ({
+    name,
     value: values[name],
     onChange: (event) => {
       reset()

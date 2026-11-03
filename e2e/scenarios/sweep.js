@@ -48,7 +48,19 @@ export default {
     const [job] = await db('jobs', 'find', { filter: { companyId: acme._id, title: 'Product Designer, Growth' } })
     const [emma] = await db('users', 'find', { filter: { email: ctx.seedCredentials.email('emma') } })
     const [thread] = await db('conversations', 'find', { filter: { companyId: acme._id, candidateId: emma._id } })
-    const ids = { job: job._id.$oid ?? job._id, emma: emma._id.$oid ?? emma._id, thread: thread._id.$oid ?? thread._id }
+    const course = async (title) => (await db('courses', 'find', { filter: { title } }))[0]
+    const candidateCourse = await course('Interaction design foundations')
+    const recruiterCourse = await course('Hiring Technology & Product Talent')
+    const id = (doc) => doc._id.$oid ?? doc._id
+    const ids = {
+      job: id(job),
+      emma: id(emma),
+      thread: id(thread),
+      candidateCourse: id(candidateCourse),
+      candidateLesson: id(candidateCourse.lessons[0]),
+      recruiterCourse: id(recruiterCourse),
+      recruiterLesson: id(recruiterCourse.lessons[0]),
+    }
     const resolve = (path) => path.replace(/:(\w+)/g, (match, name) => ids[name] ?? match)
 
     const failures = []

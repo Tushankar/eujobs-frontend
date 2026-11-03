@@ -1,6 +1,8 @@
 /*
  * Every route per group (§2.13). Server ids are placeholders the sweep fills from the test database:
- * :job (Acme Studio's "Product Designer, Growth"), :emma (Emma Wilson's user id) and :thread (Acme's thread with Emma). `public` holds the pages
+ * :job (Acme Studio's "Product Designer, Growth"), :emma (Emma Wilson's user id), :thread (Acme's thread with Emma), and the
+ * seeded courses Alex and Sarah are enrolled in with their first lessons (:candidateCourse, :candidateLesson, :recruiterCourse,
+ * :recruiterLesson). `public` holds the pages
  * without a session and `recruiterOnboarding` the steps a recruiter sees before approval. Each phase adds its
  * new screens.
  */
@@ -45,7 +47,8 @@ export const ROUTES = {
     '/candidate/ai-insights/job-match',
     '/candidate/ai-insights/why-recommended',
     '/candidate/learning',
-    '/candidate/learning/interaction-design-foundations',
+    '/candidate/learning/:candidateCourse',
+    '/candidate/learning/:candidateCourse/lessons/:candidateLesson',
     '/candidate/onboarding/story',
     '/candidate/onboarding/preferences',
     '/candidate/onboarding/plan',
@@ -78,7 +81,8 @@ export const ROUTES = {
     '/recruiter/hiring-pipeline',
     '/recruiter/hiring-pipeline/manage-stage',
     '/recruiter/learning',
-    '/recruiter/learning/hiring-technology-product-talent',
+    '/recruiter/learning/:recruiterCourse',
+    '/recruiter/learning/:recruiterCourse/lessons/:recruiterLesson',
     '/recruiter/company',
     '/recruiter/settings/notifications',
     '/recruiter/settings/data-account',
@@ -101,6 +105,8 @@ export const ROUTES = {
     '/admin/access-management/users/sarah-miller',
     '/admin/courses',
     '/admin/courses/recruiter',
+    '/admin/courses/new',
+    '/admin/courses/:candidateCourse/edit',
     '/admin/payments',
     '/admin/ai-matching',
     '/admin/analytics',

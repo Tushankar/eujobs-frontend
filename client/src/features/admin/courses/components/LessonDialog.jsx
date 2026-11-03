@@ -10,7 +10,10 @@ import styles from './builder.module.css'
 
 const FORM_ID = 'lesson-form'
 
-/** The video's length in whole seconds, read by the browser (U16); null when it cannot be played here. */
+/**
+ * The video's length in whole seconds, read by the browser (U16); null when it cannot be played here. A WebM
+ * recorded in a browser often has no duration in its header: seeking to the end makes the browser find it.
+ */
 function readDuration(file) {
   return new Promise((resolve) => {
     const video = document.createElement('video')
@@ -19,8 +22,14 @@ function readDuration(file) {
       URL.revokeObjectURL(url)
       resolve(value)
     }
+    const report = () => Number.isFinite(video.duration) && done(Math.max(1, Math.round(video.duration)))
     video.preload = 'metadata'
-    video.onloadedmetadata = () => done(Number.isFinite(video.duration) ? Math.max(1, Math.round(video.duration)) : null)
+    video.onloadedmetadata = () => {
+      if (!report()) {
+        video.ondurationchange = report
+        video.currentTime = Number.MAX_SAFE_INTEGER
+      }
+    }
     video.onerror = () => done(null)
     video.src = url
   })
@@ -51,7 +60,7 @@ export default function LessonDialog({ course, lesson, onClose }) {
   })
   const { values, set, errors } = form
   const media = values.type === 'video' || values.type === 'document'
-  const field = (name) => ({ value: values[name], onChange: (event) => set(name, event.target.value), error: errorText.field(name, errors[name]) })
+  const field = (name) => ({ name, value: values[name], onChange: (event) => set(name, event.target.value), error: errorText.field(name, errors[name]) })
 
   async function handleVideo(file, local) {
     setFiles((current) => ({ ...current, video: file }))
@@ -132,7 +141,7 @@ export default function LessonDialog({ course, lesson, onClose }) {
         {media && (
           <SelectField label={t('lessons.contentLanguage')} options={(config?.enums.language ?? []).map((value) => ({ value, label: format.languageName(value) }))} {...field('contentLanguage')} />
         )}
-        <Checkbox checked={values.isPreview} onChange={(event) => set('isPreview', event.target.checked)} data-preview-flag>
+        <Checkbox name="isPreview" checked={values.isPreview} onChange={(event) => set('isPreview', event.target.checked)}>
           {t('lessons.isPreview')}
         </Checkbox>
         {Object.entries(errors)

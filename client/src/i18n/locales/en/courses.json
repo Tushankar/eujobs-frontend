@@ -1,0 +1,187 @@
+{
+  "page": {
+    "eyebrow": "Learning administration",
+    "title": "Build learning with a clear purpose.",
+    "description": "Create, review, publish, and maintain the courses candidates and recruiters see in their learning workspace.",
+    "create": "New course"
+  },
+  "tabs": {
+    "label": "Course audience",
+    "candidate": "Candidate courses",
+    "recruiter": "Recruiter courses"
+  },
+  "stats": {
+    "total": "Total courses",
+    "totalCaption": "Draft, published and unpublished",
+    "published": "Published",
+    "publishedCaption": {
+      "candidate": "Visible in candidate learning",
+      "recruiter": "Visible in recruiter learning"
+    },
+    "paid": "Paid courses",
+    "paidCaption": "One-time purchase content",
+    "active": "Active learners",
+    "activeCaption": "At least one lesson done, not yet completed"
+  },
+  "filters": {
+    "search": "Search course or skill",
+    "status": "Filter course status",
+    "allStatuses": "All statuses"
+  },
+  "notice": {
+    "published": "Published “{{title}}”.",
+    "unpublished": "Unpublished “{{title}}”. Learners who enrolled keep access."
+  },
+  "empty": {
+    "title": "No courses match your filters",
+    "text": "Try a different search or choose All statuses."
+  },
+  "table": {
+    "caption": "Courses",
+    "course": "Course",
+    "lessons_one": "{{count}} lesson",
+    "lessons_other": "{{count}} lessons",
+    "level": "Level",
+    "access": "Access",
+    "free": "Free",
+    "paid": "Paid",
+    "learning": "Learning",
+    "learners": "{{enrolled}} enrolled · {{purchased}} purchased",
+    "status": "Status",
+    "updated": "Updated",
+    "actions": "Actions",
+    "manage": "Manage",
+    "manageLabel": "Manage {{title}}",
+    "publish": "Publish",
+    "unpublish": "Unpublish",
+    "publishLabel": "Publish {{title}}",
+    "unpublishLabel": "Unpublish {{title}}"
+  },
+  "builder": {
+    "back": "Back to courses",
+    "newTitle": "New course",
+    "newDescription": "Start with a title. The course stays a draft until you publish it.",
+    "create": "Create draft",
+    "description": "Edit the learner-facing details, lessons and final quiz, then preview and publish.",
+    "publish": "Publish",
+    "unpublish": "Unpublish",
+    "locked": "Learners are enrolled, so lessons and the quiz are locked. Copy and prices can still change.",
+    "problemsTitle": "Before you can publish",
+    "tabsLabel": "Course builder sections",
+    "tab": {
+      "details": "Details",
+      "lessons": "Lessons",
+      "quiz": "Quiz",
+      "preview": "Preview"
+    },
+    "saved": "Saved"
+  },
+  "details": {
+    "title": "Course title",
+    "category": "Category or stream",
+    "categoryHint": "Shown on cards, for example Interaction Design.",
+    "level": "Level",
+    "choose": "Choose…",
+    "language": "Course language",
+    "summary": "Summary",
+    "about": "About this course",
+    "lead": "Lead text",
+    "tagline": "Tagline",
+    "designedFor": "Designed for",
+    "pipelineCategory": "Pipeline category",
+    "pipelineHint": "Suggested to recruiters with active applications at this stage.",
+    "skillTags": "Skill tags",
+    "skillTagsHint": "Separate with commas. Suggested to candidates missing these skills.",
+    "outcomes": "Outcomes",
+    "outcomeLabel": "Outcome {{number}}",
+    "removeOutcome": "Remove outcome",
+    "addOutcome": "Add outcome",
+    "cover": "Cover image",
+    "price": "Price",
+    "free": "Free course",
+    "priceHint": "One-time price in every currency, VAT included. All 8 are needed to publish a paid course.",
+    "save": "Save details"
+  },
+  "upload": {
+    "choose": "Choose file",
+    "replace": "Replace file",
+    "progress": "Upload progress"
+  },
+  "lessons": {
+    "listLabel": "Lessons",
+    "emptyTitle": "No lessons yet",
+    "emptyText": "Add a video, text, PDF or link lesson. A course needs at least one lesson to publish.",
+    "add": "Add lesson",
+    "addTitle": "Add lesson",
+    "editTitle": "Edit lesson",
+    "save": "Save lesson",
+    "title": "Lesson title",
+    "type": "Lesson type",
+    "video": "Video (MP4 H.264/AAC or WebM)",
+    "unplayable": "This browser cannot play the video. Check the file before publishing.",
+    "document": "PDF document",
+    "markdown": "Lesson text (Markdown)",
+    "markdownHint": "Headings, lists and https links. Anything unsafe is removed.",
+    "preview": "Preview text",
+    "url": "Link",
+    "urlHint": "https links only.",
+    "duration": "Duration in seconds",
+    "durationVideoHint": "Read from the video when it uploads. You can change it.",
+    "durationHint": "Optional. Counts toward the course length.",
+    "contentLanguage": "Content language",
+    "isPreview": "Free preview: opens without buying",
+    "previewBadge": "Free preview",
+    "moveUp": "Move “{{title}}” up",
+    "moveDown": "Move “{{title}}” down",
+    "edit": "Edit “{{title}}”",
+    "delete": "Delete “{{title}}”",
+    "deleteTitle": "Delete this lesson?",
+    "deleteText": "“{{title}}” and its file are deleted.",
+    "deleteConfirm": "Delete lesson"
+  },
+  "quiz": {
+    "passMark": "Pass mark (%)",
+    "passMarkHint": "Learners pass at this score or higher.",
+    "question": "Question {{number}}",
+    "removeQuestion": "Remove question {{number}}",
+    "text": "Question",
+    "type": "Answer type",
+    "optionsSingle": "Options: mark the correct one",
+    "optionsMultiple": "Options: mark every correct one",
+    "markCorrect": "Option {{number}} is correct",
+    "option": "Option {{number}}",
+    "removeOption": "Remove option {{number}}",
+    "addOption": "Add option",
+    "addQuestion": "Add question",
+    "save": "Save quiz"
+  },
+  "preview": {
+    "designedFor": "Designed for: {{text}}",
+    "noPrices": "No prices yet",
+    "quiz_one": "Final quiz: {{count}} question, pass mark {{passMark}}%.",
+    "quiz_other": "Final quiz: {{count}} questions, pass mark {{passMark}}%."
+  },
+  "problems": {
+    "category": { "required": "Add a category or stream." },
+    "level": { "required": "Choose a level." },
+    "summary": { "required": "Add a summary.", "too_short": "Make the summary at least 20 characters." },
+    "about": { "required": "Add the About text.", "too_short": "Make the About text at least 20 characters." },
+    "lead": { "required": "Add the lead text.", "too_short": "Make the lead text at least 20 characters." },
+    "tagline": { "required": "Add a tagline." },
+    "designedFor": { "required": "Say who the course is designed for." },
+    "pipelineCategory": { "required": "Choose a pipeline category." },
+    "coverFileId": { "required": "Upload a cover image." },
+    "outcomes": { "required": "Add at least one outcome." },
+    "skillTags": { "required": "Add at least one skill tag." },
+    "price": "Add the {{currency}} price, or make the course free.",
+    "lessons": { "too_few": "Add at least one lesson.", "required": "Add at least one lesson." },
+    "lesson": {
+      "videoFileId": "Lesson {{number}}: upload the video.",
+      "durationSec": "Lesson {{number}}: add the video duration.",
+      "documentFileId": "Lesson {{number}}: upload the PDF.",
+      "textMarkdown": "Lesson {{number}}: add the lesson text.",
+      "url": "Lesson {{number}}: add the link."
+    },
+    "quiz": { "too_few": "Add at least one quiz question.", "required": "Add at least one quiz question." }
+  }
+}

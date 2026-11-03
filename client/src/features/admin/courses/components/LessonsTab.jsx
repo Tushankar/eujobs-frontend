@@ -1,4 +1,4 @@
-import { useState } from 'react'
+import { useRef, useState } from 'react'
 import { useTranslation } from 'react-i18next'
 import { ArrowDown, ArrowUp, GripVertical, Pencil, Plus, Trash2 } from 'lucide-react'
 import ConfirmDialog from '@/components/common/ConfirmDialog.jsx'
@@ -25,7 +25,13 @@ export default function LessonsTab({ course }) {
   const [remove] = useDeleteLessonMutation()
   const [editing, setEditing] = useState(null)
   const [deleting, setDeleting] = useState(null)
+  // The dragged row: a ref for the drop handler (no render in between), state for its style.
+  const draggedRef = useRef(null)
   const [dragged, setDragged] = useState(null)
+  const drag = (index) => {
+    draggedRef.current = index
+    setDragged(index)
+  }
   const locked = course.locked
 
   function move(from, to) {
@@ -48,13 +54,13 @@ export default function LessonsTab({ course }) {
               key={lesson.id}
               className={cx(styles.lessonItem, dragged === index && styles.dragging)}
               draggable={!locked}
-              onDragStart={() => setDragged(index)}
+              onDragStart={() => drag(index)}
               onDragOver={(event) => event.preventDefault()}
               onDrop={() => {
-                move(dragged, index)
-                setDragged(null)
+                if (draggedRef.current !== null) move(draggedRef.current, index)
+                drag(null)
               }}
-              onDragEnd={() => setDragged(null)}
+              onDragEnd={() => drag(null)}
               data-lesson-item={lesson.id}
             >
               <Panel padding={16} className={styles.lessonPanel}>
