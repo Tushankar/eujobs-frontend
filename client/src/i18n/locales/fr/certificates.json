@@ -1,0 +1,18 @@
+{
+  "title": "Vérification de certificat",
+  "status": {
+    "valid": "Valide",
+    "revoked": "Révoqué",
+    "no_longer_valid": "N’est plus valide"
+  },
+  "holder": "Titulaire",
+  "course": "Formation",
+  "issued": "Délivré le",
+  "revoked": "Révoqué le",
+  "noLongerValid": "Ce certificat a été délivré sur Local WorkMan, mais il n’est plus valide.",
+  "note": "Un certificat confirme qu’une formation a été suivie et son quiz final réussi sur Local WorkMan. Il ne vérifie pas les compétences professionnelles.",
+  "notFound": {
+    "title": "Aucun certificat avec ce code",
+    "text": "Vérifiez le code indiqué sur le certificat. Les codes ont la forme LWM-7K3P-Q9XD."
+  }
+}

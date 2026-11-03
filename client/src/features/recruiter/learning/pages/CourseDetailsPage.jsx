@@ -9,6 +9,7 @@ import { useFormat } from '@/lib/preferences.js'
 import SectionHeading from '@/features/recruiter/overview/components/SectionHeading.jsx'
 import { useGetCourseQuery } from '@/features/learning/api.js'
 import CourseAction from '@/features/learning/components/CourseAction.jsx'
+import QuizCard from '@/features/learning/components/QuizCard.jsx'
 import { useCourseText } from '@/features/learning/useCourseText.js'
 import LessonRow from '../components/LessonRow.jsx'
 import styles from './CourseDetailsPage.module.css'
@@ -132,6 +133,7 @@ export default function CourseDetailsPage() {
             </ul>
             <CourseAction course={course} />
           </section>
+          <QuizCard course={course} />
           <section className={styles.accountability}>
             <Icon as={ShieldCheck} size={21} />
             <h2>{t('details.accountabilityTitle')}</h2>

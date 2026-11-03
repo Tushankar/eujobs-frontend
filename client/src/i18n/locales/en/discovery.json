@@ -156,7 +156,11 @@
     "certificates": "Certificates",
     "certificateVerified": "Verified",
     "certificateIssued": "{{issuer}} · {{date}}",
-    "noCertificates": "No certificates listed."
+    "noCertificates": "No certificates listed.",
+    "courseCertificates": "Course certificates",
+    "noCourseCertificates": "No course certificates earned on Local WorkMan.",
+    "checkCertificate": "Check {{code}}",
+    "courseCertificatesNote": "Course certificates confirm completion and a passed knowledge check. They do not verify workplace skills."
   },
   "educationTab": {
     "title": "Education",

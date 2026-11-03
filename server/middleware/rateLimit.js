@@ -37,6 +37,8 @@ export const loginsPerIp = limiter(rateLimits.loginsPerIp, byIp)
 export const failedLoginsPerEmail = limiter(rateLimits.failedLoginsPerEmail, byEmail, { skipSuccessfulRequests: true })
 export const forgotPasswordPerEmail = limiter(rateLimits.forgotPasswordPerEmail, byEmail)
 export const signUpsPerIp = limiter(rateLimits.signUpsPerIp, byIp)
+// U17: the public certificate check
+export const certificateVerifyPerIp = limiter(LIMITS.certificate.verifyPerIp, byIp)
 // After requireAuth (§2.16)
 export const placesAutocompletePerUser = limiter(LIMITS.places.perUser.autocomplete, byUser)
 export const placesDetailsPerUser = limiter(LIMITS.places.perUser.details, byUser)

@@ -3,7 +3,8 @@ import { AppError } from '../../lib/errors.js'
 import { signedUrl } from '../../lib/files.js'
 import { File } from '../files/files.model.js'
 import { userCurrency } from '../meta/meta.service.js'
-import { Course, Enrollment } from './learning.model.js'
+import { certificateDto } from './learning.certificates.js'
+import { Certificate, Course, Enrollment } from './learning.model.js'
 
 /*
  * Learner side (§3.9): candidates see candidate courses, approved recruiters recruiter courses (M-112: purchases
@@ -43,6 +44,7 @@ function enrollmentDto(course, enrollment) {
     enrolledAt: enrollment.enrolledAt,
     source: enrollment.source,
     lessonsDone: course.lessons.filter((lesson) => done.has(String(lesson._id))).length,
+    quizBestScore: enrollment.quizBestScore ?? null,
     completedAt: enrollment.completedAt ?? null,
   }
 }
@@ -81,6 +83,12 @@ async function cardContext(user, courses) {
   }
 }
 
+/** Catalogue cards of `courses` for this user (also the suggestions, OQ-3). */
+export async function courseCards(user, courses) {
+  const context = await cardContext(user, courses)
+  return courses.map((course) => cardDto(course, { ...context, enrollment: context.enrollments.get(String(course._id)) }))
+}
+
 /** GET /courses: the user's catalogue. */
 export async function listCourses(user) {
   const enrolled = await Enrollment.find({ userId: user._id }, 'courseId')
@@ -88,8 +96,7 @@ export async function listCourses(user) {
     audience: user.role,
     $or: [{ status: 'published' }, { _id: { $in: enrolled.map((enrollment) => enrollment.courseId) } }],
   }).sort({ publishedAt: -1 })
-  const context = await cardContext(user, courses)
-  const items = courses.map((course) => cardDto(course, { ...context, enrollment: context.enrollments.get(String(course._id)) }))
+  const items = await courseCards(user, courses)
   return { items, total: items.length, page: 1, pageSize: items.length }
 }
 
@@ -116,6 +123,7 @@ export async function getCourse(user, id) {
       state: done.has(String(lesson._id)) ? 'done' : enrollment || (lesson.isPreview && course.status === 'published') ? 'open' : 'locked',
     })),
     quiz: { questions: course.quiz.questions.length, passMark: course.quiz.passMark },
+    certificate: enrollment?.certificateId ? certificateDto(await Certificate.findById(enrollment.certificateId)) : null,
   }
 }
 

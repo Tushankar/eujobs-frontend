@@ -85,6 +85,7 @@ export const api = createApi({
     'JobAlerts',
     'Courses',
     'AdminCourses',
+    'Certificates',
   ],
   endpoints: (build) => ({
     getMe: build.query({ query: () => '/me', providesTags: ['Me'] }),

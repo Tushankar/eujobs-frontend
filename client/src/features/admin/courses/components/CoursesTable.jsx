@@ -5,17 +5,21 @@ import PillBadge from '@/components/common/PillBadge.jsx'
 import { Button } from '@/components/ui'
 import { cx } from '@/utils/cx.js'
 import { useFormat } from '@/lib/preferences.js'
+import { useMoneyLines } from '../useMoneyLines.js'
 import styles from './CoursesTable.module.css'
 
 const STATUS_TONE = { published: 'success', draft: 'warning', unpublished: 'neutral' }
 
 /**
- * Course list: Manage opens the builder (M-101); Publish runs the server's publish checks (U24) and Unpublish hides
- * the course (M-109). `accentActions` paints both row actions in the primary blue (the Recruiter courses frame).
+ * Course list (M-111): "{enrolled} enrolled, {purchased} purchased, {completions} completed", Revenue per currency when
+ * the server sends it (`finance.view`), Manage (the builder, M-101), Learners, and Publish (U24) or Unpublish (M-109).
+ * `accentActions` paints both row actions in the primary blue (the Recruiter courses frame).
  */
 export default function CoursesTable({ courses, accentActions = false, onToggleStatus }) {
   const { t } = useTranslation('courses')
   const format = useFormat()
+  const moneyLines = useMoneyLines()
+  const showRevenue = courses.some((course) => course.revenue)
   const columns = [
     {
       key: 'course',
@@ -43,8 +47,24 @@ export default function CoursesTable({ courses, accentActions = false, onToggleS
       key: 'learning',
       header: t('table.learning'),
       width: 186,
-      render: (course) => <span className={styles.muted}>{t('table.learners', { enrolled: course.enrolled, purchased: course.purchased })}</span>,
+      render: (course) => <span className={styles.muted}>{t('table.learners', { enrolled: course.enrolled, purchased: course.purchased, completions: course.completions })}</span>,
     },
+    ...(showRevenue
+      ? [
+          {
+            key: 'revenue',
+            header: t('table.revenue'),
+            width: 120,
+            render: (course) => (
+              <span className={styles.money} data-revenue>
+                {moneyLines(course.revenue).map((line) => (
+                  <span key={line}>{line}</span>
+                ))}
+              </span>
+            ),
+          },
+        ]
+      : []),
     {
       key: 'status',
       header: t('table.status'),
@@ -63,6 +83,9 @@ export default function CoursesTable({ courses, accentActions = false, onToggleS
         <div className={styles.actions}>
           <Button as={Link} to={`/admin/courses/${course.id}/edit`} variant="ghost" className={styles.manage} aria-label={t('table.manageLabel', { title: course.title })}>
             {t('table.manage')}
+          </Button>
+          <Button as={Link} to={`/admin/courses/${course.id}/learners`} variant="ghost" className={styles.manage} aria-label={t('table.learnersLabel', { title: course.title })}>
+            {t('table.learnersAction')}
           </Button>
           <Button
             variant="outline"

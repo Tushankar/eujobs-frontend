@@ -4,13 +4,18 @@ import { ArrowRight, BookOpen } from 'lucide-react'
 import { Button, Icon } from '@/components/ui'
 import PillBadge from '@/components/common/PillBadge.jsx'
 import { cx } from '@/utils/cx.js'
+import { useFormat } from '@/lib/preferences.js'
 import { useCourseText } from '@/features/learning/useCourseText.js'
 import styles from './CourseCard.module.css'
 
-/** Catalogue card: cover, category, level and length, summary, "Free" or the price (M-100), and View or Continue. */
+/**
+ * Catalogue card: cover, category, level and length, summary, "Free" or the price (M-100), and View or Continue. A
+ * suggested course (OQ-3) names the gap skills it covers.
+ */
 export default function CourseCard({ course }) {
   const { t } = useTranslation('learning')
   const text = useCourseText()
+  const format = useFormat()
   const started = course.enrollment?.lessonsDone > 0
   return (
     <article className={styles.card} data-course-card={course.id}>
@@ -18,7 +23,10 @@ export default function CourseCard({ course }) {
         <span className={styles.tile}>
           <Icon as={BookOpen} size={20} />
         </span>
-        <div className={styles.badges}>{course.enrollment && <PillBadge tone="success">{t('card.enrolled')}</PillBadge>}</div>
+        <div className={styles.badges}>
+          {course.matchedSkills && <PillBadge tone="accent">{t('suggestions.matches', { skills: format.list(course.matchedSkills) })}</PillBadge>}
+          {course.enrollment && <PillBadge tone="success">{t('card.enrolled')}</PillBadge>}
+        </div>
       </div>
 
       {course.coverUrl && <img src={course.coverUrl} alt="" className={styles.photo} width={323} height={129} />}

@@ -1,0 +1,46 @@
+.back {
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+  margin-bottom: 16px;
+  font-size: 12px;
+  font-weight: 600;
+  line-height: 16px;
+  color: var(--muted-foreground);
+}
+
+.back:hover {
+  color: var(--foreground);
+}
+
+.results {
+  margin-top: 24px;
+}
+
+.name {
+  margin: 0;
+  font-size: 13px;
+  font-weight: 600;
+  color: var(--foreground);
+}
+
+.muted {
+  margin: 0;
+  font-size: 12px;
+  line-height: 16px;
+  color: var(--muted-foreground);
+  white-space: nowrap;
+}
+
+.certificate {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: 8px;
+}
+
+.code {
+  font-size: 12px;
+  font-weight: 700;
+  white-space: nowrap;
+}

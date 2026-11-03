@@ -197,6 +197,17 @@
       "more": "Voici les {{shown}} plus récentes. Voir les {{total}} offres :",
       "action": "Trouver un emploi",
       "secondary": "Gérez vos alertes emploi :"
+    },
+    "certificate_issued": {
+      "subject": "Votre certificat pour « {{course}} »",
+      "heading": "Vous avez réussi la formation",
+      "body": [
+        "Bonjour {{name}},",
+        "Vous avez réussi le quiz final de « {{course}} ». Votre certificat {{code}} est prêt à être téléchargé.",
+        "Tout le monde peut le vérifier grâce à son code."
+      ],
+      "action": "Ouvrir votre certificat",
+      "secondary": "Vérification publique :"
     }
   },
   "verification": {
@@ -260,5 +271,15 @@
       "one": "{{count}} nouvelle offre",
       "other": "{{count}} nouvelles offres"
     }
+  },
+  "certificate": {
+    "tagline": "AI Job Portal",
+    "title": "Certificat de réussite",
+    "intro": "Nous certifions que",
+    "completed": "a terminé la formation",
+    "issued": "Délivré le {{date}}",
+    "code": "Code du certificat",
+    "verify": "Vérifiez ce certificat sur",
+    "note": "Ce certificat confirme que la formation a été suivie et son quiz final réussi. Il ne vérifie pas les compétences professionnelles."
   }
 }

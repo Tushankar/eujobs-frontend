@@ -37,11 +37,6 @@
   color: var(--foreground);
 }
 
-.tags {
-  display: flex;
-  gap: 8px;
-}
-
 .suggestionGrid {
   display: grid;
   grid-template-columns: repeat(3, minmax(0, 1fr));

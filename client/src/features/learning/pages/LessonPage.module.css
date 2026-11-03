@@ -17,6 +17,13 @@
   margin-top: 24px;
 }
 
+.hint {
+  margin: 16px 0 0;
+  font-size: 13px;
+  line-height: 20px;
+  color: var(--muted-foreground);
+}
+
 .video {
   display: block;
   width: 100%;

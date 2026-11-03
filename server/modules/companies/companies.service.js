@@ -5,6 +5,7 @@ import { reencodeImage, sanitizedUpload } from '../../lib/images.js'
 import { sanitizeSvg } from '../../lib/svg.js'
 import { normalizePhone } from '../auth/auth.service.js'
 import { File } from '../files/files.model.js'
+import { reissueCertificates } from '../learning/learning.certificates.js'
 import { resolvePlace } from '../places/places.service.js'
 import { updateMe } from '../users/users.service.js'
 import { Company, KycDocument } from './companies.model.js'
@@ -123,10 +124,13 @@ export function assertEditable(user) {
 export async function updateAccount(user, { fullName, jobTitle, phone, country }) {
   assertEditable(user)
   const e164 = normalizePhone(phone, country ?? user.pickerCountry)
+  const nameChanged = fullName !== user.fullName
   user.fullName = fullName
   user.jobTitle = jobTitle
   if (user.phone?.e164 !== e164) user.phone = { e164 }
   await user.save()
+  // U17: certificates are re-issued with the new name under the same code.
+  if (nameChanged) await reissueCertificates(user)
 }
 
 /**

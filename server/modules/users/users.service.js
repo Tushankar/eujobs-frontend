@@ -7,6 +7,7 @@ import { effectivePermissions } from '../admin/admin.service.js'
 import { checkPassword, hashPassword } from '../auth/auth.service.js'
 import { Company } from '../companies/companies.model.js'
 import { logoUrls } from '../companies/companies.service.js'
+import { reissueCertificates } from '../learning/learning.certificates.js'
 import { unreadCount } from '../messages/messages.service.js'
 import { currentLegalVersions, findEnabledCountry } from '../meta/meta.service.js'
 import { planState } from '../payments/payments.service.js'
@@ -86,6 +87,8 @@ export async function updateMe(user, patch) {
   }
   await user.save()
   if (nameChanged && user.role === 'candidate') await fullNameChanged(user._id)
+  // U17: certificates are re-issued with the new name under the same code.
+  if (nameChanged) await reissueCertificates(user)
 }
 
 /** M-010: current + new password; other sessions stay signed in. */

@@ -197,6 +197,17 @@
       "more": "These are the {{shown}} newest. See all {{total}} jobs:",
       "action": "Find jobs",
       "secondary": "Manage your job alerts:"
+    },
+    "certificate_issued": {
+      "subject": "Your certificate for “{{course}}”",
+      "heading": "You passed the course",
+      "body": [
+        "Hi {{name}},",
+        "You passed the final quiz of “{{course}}”. Your certificate {{code}} is ready to download.",
+        "Anyone can check it with its code."
+      ],
+      "action": "Open your certificate",
+      "secondary": "Public check:"
     }
   },
   "verification": {
@@ -260,5 +271,15 @@
       "one": "{{count}} new job",
       "other": "{{count}} new jobs"
     }
+  },
+  "certificate": {
+    "tagline": "AI Job Portal",
+    "title": "Certificate of completion",
+    "intro": "This certifies that",
+    "completed": "has completed the course",
+    "issued": "Issued on {{date}}",
+    "code": "Certificate code",
+    "verify": "Check this certificate at",
+    "note": "This certificate confirms that the course was completed and its final quiz passed. It does not verify workplace skills."
   }
 }

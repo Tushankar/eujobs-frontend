@@ -5,6 +5,7 @@ import { sanitizedUpload, squareWebp } from '../../lib/images.js'
 import { skillEntries } from '../../lib/skills.js'
 import { CvVersion } from '../cv/cv.model.js'
 import { File } from '../files/files.model.js'
+import { reissueCertificates } from '../learning/learning.certificates.js'
 import { Country } from '../meta/meta.model.js'
 import { resolvePlace } from '../places/places.service.js'
 import { User } from '../users/users.model.js'
@@ -163,6 +164,7 @@ export async function updateProfile(user, profile, body) {
     user.fullName = body.fullName
     await user.save()
     await resetSubmissions(user._id, { category: 'identity' })
+    await reissueCertificates(user)
   }
   profile.set(fields)
   await saveProfile(user, profile)

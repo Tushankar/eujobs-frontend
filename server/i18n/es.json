@@ -197,6 +197,17 @@
       "more": "Estas son las {{shown}} más recientes. Ver las {{total}} ofertas:",
       "action": "Buscar empleo",
       "secondary": "Gestiona tus alertas de empleo:"
+    },
+    "certificate_issued": {
+      "subject": "Tu certificado de «{{course}}»",
+      "heading": "Has superado el curso",
+      "body": [
+        "Hola, {{name}}:",
+        "Has aprobado el cuestionario final de «{{course}}». Tu certificado {{code}} ya se puede descargar.",
+        "Cualquiera puede comprobarlo con su código."
+      ],
+      "action": "Abrir tu certificado",
+      "secondary": "Comprobación pública:"
     }
   },
   "verification": {
@@ -260,5 +271,15 @@
       "one": "{{count}} oferta nueva",
       "other": "{{count}} ofertas nuevas"
     }
+  },
+  "certificate": {
+    "tagline": "AI Job Portal",
+    "title": "Certificado de finalización",
+    "intro": "Se certifica que",
+    "completed": "ha completado el curso",
+    "issued": "Emitido el {{date}}",
+    "code": "Código del certificado",
+    "verify": "Comprueba este certificado en",
+    "note": "Este certificado confirma que se completó el curso y se aprobó su cuestionario final. No verifica competencias profesionales."
   }
 }

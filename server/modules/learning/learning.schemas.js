@@ -80,3 +80,18 @@ export const quizBody = z.object({
 export const statusBody = z.object({ status: z.enum(['published', 'unpublished']) })
 
 export const enrollBody = z.object({ courseId: objectId })
+
+// U15: a heartbeat sends the playback position and rate; `open` marks a text, PDF or link lesson viewed.
+export const lessonIdParams = z.object({ lessonId: objectId })
+export const progressBody = z.discriminatedUnion('event', [
+  z.object({ event: z.literal('open') }),
+  z.object({ event: z.literal('heartbeat'), positionSec: z.number().min(0).max(C.durationSec.max), rate: z.number().min(0).max(16) }),
+])
+
+// M-104: each answer names the question and the chosen options (one for single choice, any for multiple).
+export const attemptBody = z.object({
+  answers: z.array(z.object({ questionId: objectId, optionIds: z.array(objectId).max(C.quiz.options.max) })).max(C.quiz.questions.max),
+})
+
+export const codeParams = z.object({ code: z.string().trim().regex(/^LWM-[A-Z\d]{4}-[A-Z\d]{4}$/i) })
+export const revokeBody = z.object({ reason: z.string().trim().min(LIMITS.certificate.revokeReason.min).max(LIMITS.certificate.revokeReason.max) })

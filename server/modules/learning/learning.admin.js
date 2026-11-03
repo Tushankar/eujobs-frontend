@@ -5,10 +5,13 @@ import { removeFiles, signedUrl, storeFile } from '../../lib/files.js'
 import { reencodeImage } from '../../lib/images.js'
 import { renderMarkdown } from '../../lib/markdown.js'
 import { skillEntries } from '../../lib/skills.js'
+import { effectivePermissions } from '../admin/admin.service.js'
 import { File } from '../files/files.model.js'
 import { Country } from '../meta/meta.model.js'
 import { userCurrency } from '../meta/meta.service.js'
 import { Payment } from '../payments/payments.model.js'
+import { User } from '../users/users.model.js'
+import { certificateDto, certificatesById } from './learning.certificates.js'
 import { Course, Enrollment } from './learning.model.js'
 
 /*
@@ -149,7 +152,16 @@ async function builderDto(course, admin) {
   }
 }
 
-/** M-110: enrolled = added or bought; active = at least one lesson done and not completed. */
+/** Money per currency, largest first; never summed across currencies (C15). */
+const byCurrency = (rows) =>
+  Object.entries(rows.reduce((totals, { currency, amountMinor }) => ({ ...totals, [currency]: (totals[currency] ?? 0) + amountMinor }), {}))
+    .map(([currency, amountMinor]) => ({ currency, amountMinor }))
+    .sort((a, b) => b.amountMinor - a.amountMinor)
+
+/**
+ * M-110, M-111: enrolled = added or bought; purchased = paid course payments; completions = quiz passed; active =
+ * at least one lesson done and not completed; revenue = paid amounts per currency.
+ */
 async function learnerCounts(courseIds) {
   const [enrollments, purchases] = await Promise.all([
     Enrollment.aggregate([
@@ -158,21 +170,38 @@ async function learnerCounts(courseIds) {
         $group: {
           _id: '$courseId',
           enrolled: { $sum: 1 },
+          completions: { $sum: { $cond: [{ $ifNull: ['$completedAt', false] }, 1, 0] } },
           active: { $sum: { $cond: [{ $and: [{ $not: ['$completedAt'] }, { $gt: [{ $size: { $filter: { input: '$lessons', cond: { $ne: ['$$this.completedAt', null] } } } }, 0] }] }, 1, 0] } },
         },
       },
     ]),
-    Payment.aggregate([{ $match: { kind: 'course', status: 'paid', itemId: { $in: courseIds.map(String) } } }, { $group: { _id: '$itemId', purchased: { $sum: 1 } } }]),
+    Payment.aggregate([
+      { $match: { kind: 'course', status: 'paid', itemId: { $in: courseIds.map(String) } } },
+      { $group: { _id: { itemId: '$itemId', currency: '$currency' }, purchased: { $sum: 1 }, amountMinor: { $sum: '$amountMinor' } } },
+    ]),
   ])
   const byCourse = new Map(enrollments.map((row) => [String(row._id), row]))
-  const bought = new Map(purchases.map((row) => [row._id, row.purchased]))
-  return (id) => ({ enrolled: byCourse.get(String(id))?.enrolled ?? 0, active: byCourse.get(String(id))?.active ?? 0, purchased: bought.get(String(id)) ?? 0 })
+  const payments = (id) => purchases.filter((row) => row._id.itemId === String(id))
+  return (id) => {
+    const row = byCourse.get(String(id))
+    return {
+      enrolled: row?.enrolled ?? 0,
+      completions: row?.completions ?? 0,
+      active: row?.active ?? 0,
+      purchased: payments(id).reduce((sum, entry) => sum + entry.purchased, 0),
+      revenue: byCurrency(payments(id).map((entry) => ({ currency: entry._id.currency, amountMinor: entry.amountMinor }))),
+    }
+  }
 }
 
-/** GET /admin/courses?audience=: rows with real counts and the page cards (M-110). */
+/**
+ * GET /admin/courses?audience=: rows "{enrolled} enrolled, {purchased} purchased, {completions} completed" and the page
+ * totals (M-111). Revenue, per row and in total, only for admins with `finance.view`.
+ */
 export async function listCourses(admin, { audience }) {
   const courses = await Course.find({ audience }).sort({ updatedAt: -1 })
   const counts = await learnerCounts(courses.map((course) => course._id))
+  const finance = (await effectivePermissions(admin)).has('finance.view')
   const currency = (await userCurrency(admin)) ?? 'EUR'
   const items = courses.map((course) => ({
     id: String(course._id),
@@ -187,8 +216,10 @@ export async function listCourses(admin, { audience }) {
     updatedAt: course.updatedAt,
     ...counts(course._id),
   }))
+  const sum = (field) => items.reduce((total, item) => total + item[field], 0)
+  const totals = { enrolled: sum('enrolled'), purchased: sum('purchased'), completions: sum('completions'), ...(finance && { revenue: byCurrency(items.flatMap((item) => item.revenue)) }) }
   return {
-    items,
+    items: items.map(({ revenue, ...item }) => (finance ? { ...item, revenue } : item)),
     total: items.length,
     page: 1,
     pageSize: items.length,
@@ -196,9 +227,37 @@ export async function listCourses(admin, { audience }) {
       total: items.length,
       published: items.filter((item) => item.status === 'published').length,
       paid: items.filter((item) => !item.isFree).length,
-      activeLearners: items.reduce((sum, item) => sum + item.active, 0),
+      activeLearners: sum('active'),
+      ...totals,
     },
   }
+}
+
+/** GET /admin/courses/:id/learners (M-111): every enrollment with progress, best score and certificate. */
+export async function listLearners(admin, id) {
+  const course = await findCourse(id)
+  const enrollments = await Enrollment.find({ courseId: course._id }).sort({ enrolledAt: -1 })
+  const [users, certificates] = await Promise.all([
+    User.find({ _id: { $in: enrollments.map((enrollment) => enrollment.userId) } }, 'fullName email role'),
+    certificatesById(enrollments.map((enrollment) => enrollment.certificateId)),
+  ])
+  const byId = new Map(users.map((user) => [String(user._id), user]))
+  const lessonIds = new Set(course.lessons.map((lesson) => String(lesson._id)))
+  const items = enrollments.map((enrollment) => {
+    const user = byId.get(String(enrollment.userId))
+    const certificate = enrollment.certificateId && certificates.get(String(enrollment.certificateId))
+    return {
+      id: String(enrollment._id),
+      user: user ? { id: String(user._id), name: user.fullName, email: user.email, role: user.role } : null,
+      source: enrollment.source,
+      enrolledAt: enrollment.enrolledAt,
+      lessonsDone: enrollment.lessons.filter((entry) => entry.completedAt && lessonIds.has(String(entry.lessonId))).length,
+      quizBestScore: enrollment.quizBestScore ?? null,
+      completedAt: enrollment.completedAt ?? null,
+      certificate: certificate ? certificateDto(certificate) : null,
+    }
+  })
+  return { course: { id: String(course._id), title: course.title, audience: course.audience, lessons: course.lessons.length }, items, total: items.length, page: 1, pageSize: items.length }
 }
 
 export async function getCourse(admin, id) {

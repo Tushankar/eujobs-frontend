@@ -2,10 +2,14 @@ import { Router } from 'express'
 import { validate } from '../../lib/validate.js'
 import { requireApprovedRecruiter, requireAuth, requireRole } from '../../middleware/auth.js'
 import { requirePermission } from '../../middleware/permissions.js'
+import { certificateVerifyPerIp } from '../../middleware/rateLimit.js'
 import { upload } from '../../middleware/upload.js'
 import * as admin from './learning.admin.js'
+import * as certificates from './learning.certificates.js'
+import * as progress from './learning.progress.js'
 import * as schemas from './learning.schemas.js'
 import * as learning from './learning.service.js'
+import { suggestions } from './learning.suggestions.js'
 
 /** Candidates, and approved recruiters (R✓), learn (§5). */
 const learner = [
@@ -44,6 +48,37 @@ learningRouter.get('/courses/:id/lessons/:lessonId', lessonParams, async (req, r
   res.json(await learning.getLesson(req.user, req.params.id, req.params.lessonId))
 })
 
+learningRouter.post('/lessons/:lessonId/progress', validate({ params: schemas.lessonIdParams, body: schemas.progressBody }), async (req, res) => {
+  res.json(await progress.recordProgress(req.user, req.params.lessonId, req.body))
+})
+
+learningRouter.get('/courses/:id/quiz', idParams, async (req, res) => {
+  res.json(await progress.getQuiz(req.user, req.params.id))
+})
+
+learningRouter.post('/courses/:id/quiz/attempts', idParams, validate({ body: schemas.attemptBody }), async (req, res) => {
+  res.status(201).json(await progress.submitAttempt(req.user, req.params.id, req.body))
+})
+
+learningRouter.get('/certificates', async (req, res) => {
+  res.json(await certificates.listOwnCertificates(req.user))
+})
+
+learningRouter.get('/certificates/:id/pdf', idParams, async (req, res) => {
+  res.json(await certificates.ownCertificatePdf(req.user, req.params.id))
+})
+
+learningRouter.get('/suggestions', async (req, res) => {
+  res.json(await suggestions(req.user))
+})
+
+/* GET /public/certificates/:code: the public check, 30 per minute per IP (U17). */
+export const publicCertificatesRouter = Router()
+
+publicCertificatesRouter.get('/:code', certificateVerifyPerIp, validate({ params: schemas.codeParams }), async (req, res) => {
+  res.json(await certificates.publicCertificate(req.params.code))
+})
+
 /* /admin/courses: the builder (M-101); viewing needs `learning.view`, changes `learning.manage`. */
 export const adminCoursesRouter = Router()
 const view = requirePermission('learning.view')
@@ -60,6 +95,10 @@ adminCoursesRouter.post('/', manage, validate({ body: schemas.createBody }), asy
 
 adminCoursesRouter.get('/:id', view, idParams, async (req, res) => {
   res.json(await admin.getCourse(req.user, req.params.id))
+})
+
+adminCoursesRouter.get('/:id/learners', view, idParams, async (req, res) => {
+  res.json(await admin.listLearners(req.user, req.params.id))
 })
 
 adminCoursesRouter.patch('/:id', manage, idParams, validate({ body: schemas.detailsBody }), async (req, res) => {
@@ -91,7 +130,7 @@ adminCoursesRouter.patch('/:id/status', manage, idParams, validate({ body: schem
   res.json(await admin.setStatus(req.user, req.params.id, req.body))
 })
 
-/* POST /admin/uploads?purpose= and POST /admin/markdown/preview (`learning.manage`), mounted under /admin. */
+/* POST /admin/uploads?purpose=, /admin/markdown/preview and /admin/certificates/:id/revoke (`learning.manage`), under /admin. */
 export const adminToolsRouter = Router()
 const manager = [requireAuth, requireRole('admin'), manage]
 const uploaders = Object.fromEntries(schemas.uploadQuery.shape.purpose.options.map((purpose) => [purpose, upload(purpose)]))
@@ -102,4 +141,9 @@ adminToolsRouter.post('/uploads', ...manager, validate({ query: schemas.uploadQu
 
 adminToolsRouter.post('/markdown/preview', ...manager, validate({ body: schemas.markdownBody }), (req, res) => {
   res.json(admin.previewMarkdown(req.body))
+})
+
+// M-105: an audited revoke from the learners list.
+adminToolsRouter.post('/certificates/:id/revoke', ...manager, idParams, validate({ body: schemas.revokeBody }), async (req, res) => {
+  res.json(await certificates.revokeCertificate(req.user, req.params.id, req.body))
 })

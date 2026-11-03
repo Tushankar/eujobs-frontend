@@ -103,6 +103,13 @@ export const LIMITS = {
     quiz: { questions: { min: 1, max: 50 }, text: { min: 5, max: 500 }, options: { min: 2, max: 6 }, option: { max: 200 } },
     passMark: { min: 1, max: 100, default: 70 },
   },
+  // U15: video heartbeats every 15 s; credit min(Δwall, 15 s) × min(rate, 2) when the position advanced without a
+  // seek (the position may run ahead of the credit by `seekToleranceSec` for timer jitter); complete at 90 %.
+  lessonProgress: { heartbeatSec: 15, maxRate: 2, seekToleranceSec: 2, completeShare: 0.9 },
+  // M-105, U17, C18: the certificate code is LWM- and 8 characters; a revoke needs a reason (the moderation limit)
+  certificate: { revokeReason: { min: 1, max: 300 }, verifyPerIp: { windowMs: MINUTE, limit: 30 } },
+  // OQ-3: For-you jobs read for candidate gap skills; recruiter suggestions shown
+  suggestions: { forYouJobs: 10, recruiterCourses: 3 },
   // M-185, §2.6: types are extensions; sizes in bytes. `toDisk` streams the upload to disk instead of memory.
   uploads: {
     photo: { types: ['jpg', 'png', 'webp'], maxBytes: 5 * MB },

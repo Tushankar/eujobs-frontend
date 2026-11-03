@@ -91,5 +91,45 @@ const enrollmentSchema = new Schema(
 )
 enrollmentSchema.index({ userId: 1, courseId: 1 }, { unique: true })
 
+/* M-104: every submitted attempt; the enrollment keeps the best score. */
+const quizAttemptSchema = new Schema(
+  {
+    userId: { type: Schema.Types.ObjectId, ref: 'User', required: true },
+    courseId: { type: Schema.Types.ObjectId, ref: 'Course', required: true },
+    answers: [{ _id: false, questionId: Schema.Types.ObjectId, optionIds: [Schema.Types.ObjectId] }],
+    scorePercent: { type: Number, required: true },
+    passed: { type: Boolean, required: true },
+    submittedAt: { type: Date, default: Date.now },
+  },
+  { timestamps: true },
+)
+quizAttemptSchema.index({ userId: 1, courseId: 1 })
+
+/*
+ * M-105, U17, C18: a snapshot of the holder's name and the course title at issue, the PDF in the holder's language,
+ * and the public status. A name change re-issues the PDF under the same code. `userId` is null for a tombstone.
+ */
+const certificateSchema = new Schema(
+  {
+    code: { type: String, required: true },
+    userId: { type: Schema.Types.ObjectId, ref: 'User' },
+    courseId: { type: Schema.Types.ObjectId, ref: 'Course', required: true },
+    holderName: String,
+    courseTitle: String,
+    language: { type: String, enum: ENUMS.language },
+    issuedAt: { type: Date, required: true },
+    pdfFileId: { type: Schema.Types.ObjectId, ref: 'File' },
+    status: { type: String, enum: ENUMS.certificateStatus, default: 'valid' },
+    revokedAt: Date,
+    revokedBy: { type: Schema.Types.ObjectId, ref: 'User' },
+    revokeReason: String,
+  },
+  { timestamps: true },
+)
+certificateSchema.index({ code: 1 }, { unique: true })
+certificateSchema.index({ userId: 1 })
+
 export const Course = mongoose.model('Course', courseSchema)
 export const Enrollment = mongoose.model('Enrollment', enrollmentSchema)
+export const QuizAttempt = mongoose.model('QuizAttempt', quizAttemptSchema)
+export const Certificate = mongoose.model('Certificate', certificateSchema)

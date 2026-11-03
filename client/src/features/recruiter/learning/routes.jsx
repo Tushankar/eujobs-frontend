@@ -4,4 +4,5 @@ export default [
   { path: 'learning', lazy: lazyPage(() => import('./pages/LearningPage.jsx')) },
   { path: 'learning/:courseId', lazy: lazyPage(() => import('./pages/CourseDetailsPage.jsx')) },
   { path: 'learning/:courseId/lessons/:lessonId', lazy: lazyPage(() => import('@/features/learning/pages/LessonPage.jsx')) },
+  { path: 'learning/:courseId/quiz', lazy: lazyPage(() => import('@/features/learning/pages/QuizPage.jsx')) },
 ]

@@ -20,6 +20,12 @@ const SAMPLE_PARAMS = {
   recruiter_suspended: { company: 'Mail Test Ltd', reason: 'Jobs on this account broke the posting rules.', link: `${config.clientOrigin}/recruiter/onboarding/review` },
   cv_request: { company: 'Mail Test Ltd', details: 'We would like to see the CV you used for your 2023 role.', link: `${config.clientOrigin}/candidate/cv-versions` },
   renewal_failed: { plan: 'Plus', amount: '£9', link: `${config.clientOrigin}/candidate/settings/billing` },
+  certificate_issued: {
+    course: 'Interaction design foundations',
+    code: 'LWM-7K3P-Q9XD',
+    link: `${config.clientOrigin}/candidate/learning`,
+    secondaryLink: `${config.clientOrigin}/certificates/LWM-7K3P-Q9XD`,
+  },
   plan_ended: { plan: 'Plus', link: `${config.clientOrigin}/candidate/settings/billing` },
   application_status: { job: 'Senior Product Designer', company: 'Mail Test Ltd', link: `${config.clientOrigin}/candidate/applications` },
   application_rejected: { job: 'Senior Product Designer', company: 'Mail Test Ltd', link: `${config.clientOrigin}/candidate/jobs` },

@@ -1,22 +1,25 @@
 import { useMemo, useState } from 'react'
 import { useTranslation } from 'react-i18next'
-import { Award, CirclePlay, Layers, Search } from 'lucide-react'
+import { Award, CircleHelp, CirclePlay, Layers, Search, Sparkles } from 'lucide-react'
 import { Icon, SelectField, TextField } from '@/components/ui'
 import EmptyState from '@/components/common/EmptyState.jsx'
 import PageTitle from '@/components/common/PageTitle.jsx'
 import StatCard from '@/components/common/StatCard.jsx'
 import SectionHeading from '@/features/recruiter/overview/components/SectionHeading.jsx'
-import { useGetCoursesQuery } from '@/features/learning/api.js'
+import { useGetCoursesQuery, useGetSuggestionsQuery } from '@/features/learning/api.js'
 import CourseCard from '../components/CourseCard.jsx'
+import SuggestionCard from '../components/SuggestionCard.jsx'
 import styles from './LearningPage.module.css'
 
 /**
- * Recruiter learning (§3.9, M-112): progress stats and the searchable course library. Streams are the courses'
+ * Recruiter learning (§3.9, M-112): progress stats, "Suggested for you" (M-114, OQ-3: rule-based, from the company's
+ * active applications per pipeline category) and the searchable course library. Streams are the courses'
  * categories. In progress = at least one lesson done and not completed (M-110).
  */
 export default function LearningPage() {
   const { t } = useTranslation('learning')
   const { data: catalogue = [] } = useGetCoursesQuery()
+  const { data: suggestions } = useGetSuggestionsQuery()
   const [query, setQuery] = useState('')
   const [stream, setStream] = useState('all')
 
@@ -43,6 +46,33 @@ export default function LearningPage() {
         <StatCard label={t('stats.certificates')} value={certificates} caption={t('stats.certificatesCaption')} icon={Award} />
         <StatCard label={t('stats.streams')} value={streams.length} caption={t('stats.streamsCaption')} icon={Layers} />
       </div>
+
+      <section className={styles.suggestions} aria-labelledby="suggested" data-suggestions>
+        <div className={styles.suggestionsHead}>
+          <div>
+            <p className={styles.eyebrow}>
+              <Icon as={Sparkles} size={13} />
+              {t('suggestions.eyebrow')}
+            </p>
+            <h2 className={styles.suggestionsTitle} id="suggested">
+              {t('suggestions.title')}
+            </h2>
+          </div>
+        </div>
+        {suggestions?.items.length > 0 ? (
+          <div className={styles.suggestionGrid}>
+            {suggestions.items.map((course, index) => (
+              <SuggestionCard key={course.id} course={course} rank={index + 1} />
+            ))}
+          </div>
+        ) : (
+          <p className={styles.aiNote}>{t('suggestions.noneRecruiter')}</p>
+        )}
+        <p className={styles.aiNote}>
+          <Icon as={CircleHelp} size={12} />
+          {t('suggestions.howRecruiter')}
+        </p>
+      </section>
 
       <div className={styles.filters}>
         <TextField

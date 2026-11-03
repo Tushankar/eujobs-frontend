@@ -10,6 +10,7 @@ import { CandidateProfile } from '../candidates/candidates.model.js'
 import { CvAccessRequest, CvVersion } from '../cv/cv.model.js'
 import { File } from '../files/files.model.js'
 import { Job } from '../jobs/jobs.model.js'
+import { badgesOf } from '../learning/learning.certificates.js'
 import { User } from '../users/users.model.js'
 import { VerificationSubmission } from '../verification/verification.model.js'
 import { CandidateNote, ProfileView, RecruiterActivity, ShortlistEntry } from './discovery.model.js'
@@ -190,6 +191,8 @@ export async function candidateProfile(user, company, id, jobId) {
     applications: applications.map((application) => ({ id: String(application._id), status: application.status, stageId: String(application.stageId), appliedAt: application.appliedAt, job: { id: String(application.jobId), title: jobTitles.get(String(application.jobId)) } })),
     // A new conversation needs a listable candidate or an application that is not withdrawn (P7-C2, owner change).
     canStartConversation: !entry.viaApplication || applications.some((application) => application.status !== 'withdrawn'),
+    // C24: course certificates show wherever the profile is visible (they do not verify skills, M-026).
+    courseCertificates: (await badgesOf([entry.user._id]))(entry.user._id),
     about: profile.about,
     links: { linkedin: profile.links?.linkedin ?? '', portfolio: profile.links?.portfolio ?? '' },
     workHistory: latest(profile.workHistory, 'current').map(({ title, employer, start, end, current, description }) => ({ title, employer, start, end: end ?? null, current: Boolean(current), description: description ?? '' })),

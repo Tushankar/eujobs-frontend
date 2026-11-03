@@ -8,6 +8,7 @@ import PillBadge from '@/components/common/PillBadge.jsx'
 import { useFormat } from '@/lib/preferences.js'
 import { useGetCourseQuery } from '@/features/learning/api.js'
 import CourseAction from '@/features/learning/components/CourseAction.jsx'
+import QuizCard from '@/features/learning/components/QuizCard.jsx'
 import { useCourseText } from '@/features/learning/useCourseText.js'
 import LessonRow from '../components/LessonRow.jsx'
 import styles from './LearningDetailsPage.module.css'
@@ -142,6 +143,8 @@ export default function LearningDetailsPage() {
             </ul>
             <CourseAction course={course} />
           </Panel>
+
+          <QuizCard course={course} />
 
           {course.enrollment && (
             <Panel padding={24}>

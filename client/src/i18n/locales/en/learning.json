@@ -55,7 +55,9 @@
     "certificates": "Certificates earned",
     "certificatesCaption": "Completed knowledge checks",
     "streams": "Specialist streams",
-    "streamsCaption": "Role and industry-focused learning"
+    "streamsCaption": "Role and industry-focused learning",
+    "skills": "Skills to explore",
+    "skillsCaption": "Based on gaps in roles you saved, applied to or match"
   },
   "curriculum": {
     "done": "Completed",
@@ -126,6 +128,55 @@
     "lockedTitle": "This lesson is locked",
     "lockedText": "Enrol in the course to open its lessons. Free preview lessons open without buying.",
     "missingTitle": "This lesson does not exist",
-    "missingText": "The lesson may have been moved. Open the course to see its lessons."
+    "missingText": "The lesson may have been moved. Open the course to see its lessons.",
+    "done": "Completed",
+    "videoHint": "This lesson completes once you have watched about 90% of the video at normal speed (up to 2×). Skipping ahead does not count."
+  },
+  "quiz": {
+    "title": "Final quiz",
+    "description_one": "{{count}} question. Pass with {{passMark}} or more. Unlimited attempts; your best score is kept.",
+    "description_other": "{{count}} questions. Pass with {{passMark}} or more. Unlimited attempts; your best score is kept.",
+    "summary_one": "{{count}} question · pass mark {{passMark}}",
+    "summary_other": "{{count}} questions · pass mark {{passMark}}",
+    "lockedTitle": "Finish every lesson first",
+    "lockedText": "The final quiz opens once every lesson of the course is complete.",
+    "unlockedText": "Every lesson is complete. Pass the quiz to finish the course and earn your certificate.",
+    "take": "Take the final quiz",
+    "best": "Best score {{score}}",
+    "chooseOne": "Choose one answer.",
+    "chooseAll": "Choose every answer that applies.",
+    "answerAll": "Answer every question to submit.",
+    "submit": "Submit answers",
+    "passed": "Passed. The pass mark is {{passMark}}.",
+    "failed": "Not passed yet. The pass mark is {{passMark}}.",
+    "noAnswers": "The correct answers are not shown. Review the lessons and try again whenever you like.",
+    "retry": "Try again"
+  },
+  "certificate": {
+    "title": "Your certificate",
+    "issued": "Issued {{date}}",
+    "code": "Certificate code",
+    "download": "Download PDF",
+    "verify": "Public check",
+    "note": "Anyone can check this certificate with its code. It confirms the course and its quiz, not workplace skills.",
+    "status": {
+      "valid": "Valid",
+      "revoked": "Revoked",
+      "no_longer_valid": "No longer valid"
+    }
+  },
+  "suggestions": {
+    "title": "Suggested for you",
+    "eyebrow": "Rule-based suggestions",
+    "lead": "Courses for skills that roles you saved, applied to or match ask for, but your profile does not list yet: {{skills}}.",
+    "noGaps": "No skill gaps found in the roles you saved, applied to or match. Explore every course below.",
+    "empty": "No published course covers these skills yet.",
+    "matches": "Covers {{skills}}",
+    "best": "Best match",
+    "rank": "Suggestion {{rank}}",
+    "reason_one": "{{count}} active application at {{stage}}",
+    "reason_other": "{{count}} active applications at {{stage}}",
+    "noneRecruiter": "No suggestions right now: none of the remaining courses matches a pipeline stage with active applications.",
+    "howRecruiter": "Suggestions follow the stages of your company’s active applications. No AI model is used."
   }
 }

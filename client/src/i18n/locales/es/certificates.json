@@ -1,0 +1,18 @@
+{
+  "title": "Comprobación de certificado",
+  "status": {
+    "valid": "Válido",
+    "revoked": "Revocado",
+    "no_longer_valid": "Ya no es válido"
+  },
+  "holder": "Titular",
+  "course": "Curso",
+  "issued": "Emitido",
+  "revoked": "Revocado el",
+  "noLongerValid": "Este certificado se emitió en Local WorkMan, pero ya no es válido.",
+  "note": "Un certificado confirma que se completó un curso y se aprobó su cuestionario final en Local WorkMan. No verifica competencias profesionales.",
+  "notFound": {
+    "title": "No hay ningún certificado con este código",
+    "text": "Revisa el código del certificado. Los códigos tienen el formato LWM-7K3P-Q9XD."
+  }
+}

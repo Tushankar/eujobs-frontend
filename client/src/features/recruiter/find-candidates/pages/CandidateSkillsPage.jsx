@@ -6,7 +6,10 @@ import { useFormat } from '@/lib/preferences.js'
 import ProfileSection from '../components/ProfileSection.jsx'
 import styles from './CandidateSkillsPage.module.css'
 
-/** Skills tab (M-026): listed skills, languages with level, and certificates ("Verified" only when reviewed, M-025). */
+/**
+ * Skills tab (M-026): listed skills, languages with level, certificates ("Verified" only when reviewed, M-025) and the
+ * course certificates earned on Local WorkMan (C24: shown wherever the profile is visible; they do not verify skills).
+ */
 export default function CandidateSkillsPage() {
   const { t } = useTranslation()
   const format = useFormat()
@@ -50,6 +53,25 @@ export default function CandidateSkillsPage() {
           ))}
         </ul>
       )}
+
+      <SectionTitle className={styles.section} title={t('discovery:skillsTab.courseCertificates')} />
+      {candidate.courseCertificates.length === 0 ? (
+        <p className={styles.note}>{t('discovery:skillsTab.noCourseCertificates')}</p>
+      ) : (
+        <ul className={styles.list} data-course-certificates>
+          {candidate.courseCertificates.map((certificate) => (
+            <li key={certificate.code} className={styles.skill} data-course-certificate={certificate.code}>
+              <span className={styles.name}>
+                {certificate.courseTitle} · {format.date(certificate.issuedAt)}
+              </span>
+              <a href={`/certificates/${certificate.code}`} target="_blank" rel="noopener">
+                <PillBadge tone="success">{t('discovery:skillsTab.checkCertificate', { code: certificate.code })}</PillBadge>
+              </a>
+            </li>
+          ))}
+        </ul>
+      )}
+      <p className={styles.note}>{t('discovery:skillsTab.courseCertificatesNote')}</p>
     </ProfileSection>
   )
 }

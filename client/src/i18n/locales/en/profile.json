@@ -62,6 +62,13 @@
     "link": "View credential",
     "file": "Open file"
   },
+  "courseCertificates": {
+    "title": "Certificates & badges",
+    "meta": "Issued {{date}} · {{code}}",
+    "check": "Public check",
+    "empty": "Course certificates you earn on Local WorkMan appear here.",
+    "browse": "Browse courses"
+  },
   "nextStep": {
     "title": "The right next step",
     "salary": "From {{amount}} {{period}}"

@@ -46,7 +46,7 @@
     "free": "Free",
     "paid": "Paid",
     "learning": "Learning",
-    "learners": "{{enrolled}} enrolled · {{purchased}} purchased",
+    "learners": "{{enrolled}} enrolled, {{purchased}} purchased, {{completions}} completed",
     "status": "Status",
     "updated": "Updated",
     "actions": "Actions",
@@ -55,7 +55,12 @@
     "publish": "Publish",
     "unpublish": "Unpublish",
     "publishLabel": "Publish {{title}}",
-    "unpublishLabel": "Unpublish {{title}}"
+    "unpublishLabel": "Unpublish {{title}}",
+    "revenue": "Revenue",
+    "more": "+{{count}} more",
+    "noRevenue": "—",
+    "learnersAction": "Learners",
+    "learnersLabel": "Learners of {{title}}"
   },
   "builder": {
     "back": "Back to courses",
@@ -162,19 +167,47 @@
     "quiz_other": "Final quiz: {{count}} questions, pass mark {{passMark}}%."
   },
   "problems": {
-    "category": { "required": "Add a category or stream." },
-    "level": { "required": "Choose a level." },
-    "summary": { "required": "Add a summary.", "too_short": "Make the summary at least 20 characters." },
-    "about": { "required": "Add the About text.", "too_short": "Make the About text at least 20 characters." },
-    "lead": { "required": "Add the lead text.", "too_short": "Make the lead text at least 20 characters." },
-    "tagline": { "required": "Add a tagline." },
-    "designedFor": { "required": "Say who the course is designed for." },
-    "pipelineCategory": { "required": "Choose a pipeline category." },
-    "coverFileId": { "required": "Upload a cover image." },
-    "outcomes": { "required": "Add at least one outcome." },
-    "skillTags": { "required": "Add at least one skill tag." },
+    "category": {
+      "required": "Add a category or stream."
+    },
+    "level": {
+      "required": "Choose a level."
+    },
+    "summary": {
+      "required": "Add a summary.",
+      "too_short": "Make the summary at least 20 characters."
+    },
+    "about": {
+      "required": "Add the About text.",
+      "too_short": "Make the About text at least 20 characters."
+    },
+    "lead": {
+      "required": "Add the lead text.",
+      "too_short": "Make the lead text at least 20 characters."
+    },
+    "tagline": {
+      "required": "Add a tagline."
+    },
+    "designedFor": {
+      "required": "Say who the course is designed for."
+    },
+    "pipelineCategory": {
+      "required": "Choose a pipeline category."
+    },
+    "coverFileId": {
+      "required": "Upload a cover image."
+    },
+    "outcomes": {
+      "required": "Add at least one outcome."
+    },
+    "skillTags": {
+      "required": "Add at least one skill tag."
+    },
     "price": "Add the {{currency}} price, or make the course free.",
-    "lessons": { "too_few": "Add at least one lesson.", "required": "Add at least one lesson." },
+    "lessons": {
+      "too_few": "Add at least one lesson.",
+      "required": "Add at least one lesson."
+    },
     "lesson": {
       "videoFileId": "Lesson {{number}}: upload the video.",
       "durationSec": "Lesson {{number}}: add the video duration.",
@@ -182,6 +215,43 @@
       "textMarkdown": "Lesson {{number}}: add the lesson text.",
       "url": "Lesson {{number}}: add the link."
     },
-    "quiz": { "too_few": "Add at least one quiz question.", "required": "Add at least one quiz question." }
+    "quiz": {
+      "too_few": "Add at least one quiz question.",
+      "required": "Add at least one quiz question."
+    }
+  },
+  "totals": {
+    "learning": "Page totals: {{enrolled}} enrolled, {{purchased}} purchased, {{completions}} completed",
+    "revenue": "revenue {{amounts}}"
+  },
+  "learners": {
+    "eyebrow": "Course learners",
+    "description_one": "{{count}} learner, newest first.",
+    "description_other": "{{count}} learners, newest first.",
+    "caption": "Learners",
+    "learner": "Learner",
+    "deleted": "Deleted account",
+    "source": "Source",
+    "sources": {
+      "free": "Free",
+      "purchase": "Purchase",
+      "seed": "Seed"
+    },
+    "enrolled": "Enrolled",
+    "progress": "Progress",
+    "lessons": "{{done}} of {{total}} lessons",
+    "bestScore": "Best score",
+    "certificate": "Certificate",
+    "status": {
+      "valid": "Valid",
+      "revoked": "Revoked",
+      "no_longer_valid": "No longer valid"
+    },
+    "revoke": "Revoke",
+    "revokeTitle": "Revoke this certificate?",
+    "revokeDescription": "{{code}} of {{name}}. The public check will show Revoked. This is recorded in the audit log.",
+    "reason": "Reason",
+    "emptyTitle": "No learners yet",
+    "emptyText": "Learners appear here once they enrol in or buy the course."
   }
 }

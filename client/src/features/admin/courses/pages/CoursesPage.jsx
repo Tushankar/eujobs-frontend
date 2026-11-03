@@ -14,11 +14,13 @@ import { useErrorText } from '@/lib/forms.js'
 import { cx } from '@/utils/cx.js'
 import { useGetAdminCoursesQuery, useSetCourseStatusMutation } from '../api.js'
 import CoursesTable from '../components/CoursesTable.jsx'
+import { useMoneyLines } from '../useMoneyLines.js'
 import styles from './CoursesPage.module.css'
 
 /**
  * Admin course catalogue (§3.9). "Candidate courses" (/admin/courses) and "Recruiter courses" (/admin/courses/recruiter)
- * are two audience tabs. The numbers are real (M-110): active learners have at least one lesson done and no completion.
+ * are two audience tabs. The numbers are real (M-110, M-111): active learners have at least one lesson done and no
+ * completion; the page totals add revenue per currency for admins with `finance.view`.
  */
 export default function CoursesPage() {
   const { t } = useTranslation('courses')
@@ -28,6 +30,7 @@ export default function CoursesPage() {
   const { data: config } = useGetConfigQuery()
   const { data } = useGetAdminCoursesQuery(audience)
   const [setStatus] = useSetCourseStatusMutation()
+  const moneyLines = useMoneyLines()
   const [query, setQuery] = useState('')
   const [status, setStatusFilter] = useState('all')
   const [notice, setNotice] = useState('')
@@ -99,6 +102,13 @@ export default function CoursesPage() {
           <EmptyState icon={Search} title={t('empty.title')} description={t('empty.text')} />
         )}
       </div>
+
+      {data && (
+        <p className={styles.totals} data-course-totals>
+          {t('totals.learning', { enrolled: data.stats.enrolled, purchased: data.stats.purchased, completions: data.stats.completions })}
+          {data.stats.revenue && ` · ${t('totals.revenue', { amounts: moneyLines(data.stats.revenue).join(', ') })}`}
+        </p>
+      )}
     </>
   )
 }

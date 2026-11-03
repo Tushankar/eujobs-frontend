@@ -18,6 +18,7 @@ import {
   useSetNoneMutation,
   useUploadPhotoMutation,
 } from '../api.js'
+import { useGetCertificatesQuery } from '@/features/learning/api.js'
 import CertificateDialog from '../components/CertificateDialog.jsx'
 import CompletenessChecklist from '../components/CompletenessChecklist.jsx'
 import EditProfileModal from '../components/EditProfileModal.jsx'
@@ -58,6 +59,42 @@ function EntryRow({ title, meta, children, onEdit, onDelete, editLabel, deleteLa
         {onDelete && <IconButton icon={Trash2} label={deleteLabel} onClick={onDelete} />}
       </div>
     </li>
+  )
+}
+
+/**
+ * "Certificates & badges" (M-105, M-026): course certificates earned here, each with its public check. Recruiters see
+ * the valid ones wherever the profile is visible to them (C24); they do not verify skills.
+ */
+function CourseCertificates() {
+  const { t } = useTranslation()
+  const format = useFormat()
+  const { data: certificates = [] } = useGetCertificatesQuery()
+  return (
+    <Section name="course-certificates" title={t('profile:courseCertificates.title')}>
+      {certificates.length > 0 ? (
+        <ul className={styles.entries}>
+          {certificates.map((certificate) => (
+            <li key={certificate.id} className={styles.entry} data-course-certificate={certificate.code}>
+              <div className={styles.entryText}>
+                <p className={styles.entryTitle}>{certificate.courseTitle}</p>
+                <p className={styles.entryMeta}>{t('profile:courseCertificates.meta', { date: format.date(certificate.issuedAt), code: certificate.code })}</p>
+                <p className={styles.certificateLinks}>
+                  <a href={`/certificates/${certificate.code}`} target="_blank" rel="noopener">
+                    {t('profile:courseCertificates.check')}
+                  </a>
+                </p>
+              </div>
+              {certificate.status !== 'valid' && <PillBadge tone="warning">{t(`learning:certificate.status.${certificate.status}`)}</PillBadge>}
+            </li>
+          ))}
+        </ul>
+      ) : (
+        <p className={styles.detail}>
+          {t('profile:courseCertificates.empty')} <Link to="/candidate/learning">{t('profile:courseCertificates.browse')}</Link>
+        </p>
+      )}
+    </Section>
   )
 }
 
@@ -372,6 +409,8 @@ function ProfileView({ profile }) {
               <p className={styles.detail}>{t('profile:certificates.empty')}</p>
             )}
           </Section>
+
+          <CourseCertificates />
 
           <Section name="next-step" title={t('profile:nextStep.title')}>
             <ul className={cx(styles.tags, styles.nextStep)}>

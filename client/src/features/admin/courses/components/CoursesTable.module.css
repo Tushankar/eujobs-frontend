@@ -27,6 +27,15 @@
   color: var(--muted-foreground);
 }
 
+.money {
+  display: flex;
+  flex-direction: column;
+  font-size: 12px;
+  line-height: 16px;
+  white-space: nowrap;
+  color: var(--foreground);
+}
+
 .actions {
   display: flex;
   align-items: center;

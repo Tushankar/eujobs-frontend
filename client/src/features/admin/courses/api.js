@@ -2,8 +2,8 @@ import { api } from '@/app/api.js'
 import { getToken } from '@/app/token.js'
 
 /*
- * Admin > Courses (§3.9, M-101 … M-111): the list with counts and the full-page builder. Every builder change
- * answers with the whole course, which replaces the cached one.
+ * Admin > Courses (§3.9, M-101 … M-111): the list with counts, the full-page builder and the learners list. Every
+ * builder change answers with the whole course, which replaces the cached one.
  */
 const writesCourse = {
   async onQueryStarted(arg, { dispatch, queryFulfilled }) {
@@ -30,6 +30,12 @@ export const adminCoursesApi = api.injectEndpoints({
     saveQuiz: build.mutation({ query: ({ id, ...body }) => ({ url: `/admin/courses/${id}/quiz`, method: 'PUT', body }), ...writesCourse }),
     setCourseStatus: build.mutation({ query: ({ id, status }) => ({ url: `/admin/courses/${id}/status`, method: 'PATCH', body: { status } }), ...writesCourse }),
     previewMarkdown: build.mutation({ query: (markdown) => ({ url: '/admin/markdown/preview', method: 'POST', body: { markdown } }) }),
+    // M-111: the learners of one course; M-105: an audited revoke from that list.
+    getCourseLearners: build.query({ query: (id) => `/admin/courses/${id}/learners`, providesTags: (result, error, id) => [{ type: 'AdminCourses', id: `learners-${id}` }] }),
+    revokeCertificate: build.mutation({
+      query: ({ certificateId, reason }) => ({ url: `/admin/certificates/${certificateId}/revoke`, method: 'POST', body: { reason } }),
+      invalidatesTags: (result, error, { courseId }) => [{ type: 'AdminCourses', id: `learners-${courseId}` }],
+    }),
   }),
 })
 
@@ -45,6 +51,8 @@ export const {
   useSaveQuizMutation,
   useSetCourseStatusMutation,
   usePreviewMarkdownMutation,
+  useGetCourseLearnersQuery,
+  useRevokeCertificateMutation,
 } = adminCoursesApi
 
 /**

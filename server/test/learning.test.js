@@ -233,7 +233,17 @@ describe('lock, unpublish and the learner side (M-106, M-108, M-109, M-110, M-13
     const list = await api().get(`${v1}/admin/courses?audience=candidate`).set(auth(user))
     const [row] = list.body.items
     assert.deepEqual([row.enrolled, row.purchased, row.active, row.lessons], [2, 1, 1, 2])
-    assert.deepEqual(list.body.stats, { total: 1, published: 1, paid: 1, activeLearners: 1 })
+    assert.deepEqual(list.body.stats, {
+      total: 1,
+      published: 1,
+      paid: 1,
+      activeLearners: 1,
+      // M-111 page totals; revenue because the Owner has finance.view.
+      enrolled: 2,
+      purchased: 1,
+      completions: 0,
+      revenue: [{ currency: 'GBP', amountMinor: 1900 }],
+    })
     assert.ok((await Course.findById(id)).lockedAt)
   })
 })
