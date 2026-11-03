@@ -47,7 +47,8 @@ export default {
     const [acme] = await db('companies', 'find', { filter: { displayName: 'Acme Studio' } })
     const [job] = await db('jobs', 'find', { filter: { companyId: acme._id, title: 'Product Designer, Growth' } })
     const [emma] = await db('users', 'find', { filter: { email: ctx.seedCredentials.email('emma') } })
-    const ids = { job: job._id.$oid ?? job._id, emma: emma._id.$oid ?? emma._id }
+    const [thread] = await db('conversations', 'find', { filter: { companyId: acme._id, candidateId: emma._id } })
+    const ids = { job: job._id.$oid ?? job._id, emma: emma._id.$oid ?? emma._id, thread: thread._id.$oid ?? thread._id }
     const resolve = (path) => path.replace(/:(\w+)/g, (match, name) => ids[name] ?? match)
 
     const failures = []

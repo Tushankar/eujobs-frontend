@@ -10,6 +10,12 @@
   gap: 16px;
 }
 
+.failure {
+  font-size: 13px;
+  line-height: 18px;
+  color: var(--destructive);
+}
+
 @media (max-width: 479px) {
   .row {
     grid-template-columns: 1fr;

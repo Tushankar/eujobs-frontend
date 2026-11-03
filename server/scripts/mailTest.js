@@ -24,7 +24,22 @@ const SAMPLE_PARAMS = {
   application_status: { job: 'Senior Product Designer', company: 'Mail Test Ltd', link: `${config.clientOrigin}/candidate/applications` },
   application_rejected: { job: 'Senior Product Designer', company: 'Mail Test Ltd', link: `${config.clientOrigin}/candidate/jobs` },
   new_applications: { job: 'Senior Product Designer', link: `${config.clientOrigin}/recruiter/applications` },
+  new_message: { sender: 'Mail Test Ltd', link: `${config.clientOrigin}/candidate/messages` },
+  alert_instant: {
+    alertName: 'Product design roles',
+    job: 'Senior Product Designer',
+    items: ['Senior Product Designer · Mail Test Ltd · London'],
+    link: `${config.clientOrigin}/candidate/jobs`,
+    secondaryLink: `${config.clientOrigin}/candidate/job-alerts`,
+  },
+  alert_daily: {
+    alertName: 'Product design roles',
+    items: ['Senior Product Designer · Mail Test Ltd · London', 'UX Designer · Mail Test Ltd · Dublin'],
+    link: `${config.clientOrigin}/candidate/jobs`,
+    secondaryLink: `${config.clientOrigin}/candidate/job-alerts`,
+  },
 }
+SAMPLE_PARAMS.alert_weekly = SAMPLE_PARAMS.alert_daily
 
 const [type, target, language = 'en'] = process.argv.slice(2)
 if (config.isTest) throw new Error('mail:test runs in development only')
@@ -44,7 +59,9 @@ const application =
     ? { status: t(language, 'labels.applicationStatus.interview'), nextStep: t(language, 'labels.nextStep.interview') }
     : type === 'new_applications'
       ? { countLabel: interpolate(t(language, 'labels.newApplications.other'), { count: 2 }) }
-      : {}
+      : type.startsWith('alert_')
+        ? { countLabel: interpolate(t(language, 'labels.alertJobs.other'), { count: 2 }) }
+        : {}
 const status = await sendEmail({ type, to, language, params: { name: 'Mail test', ...check, ...reason, ...application, ...SAMPLE_PARAMS[type] } })
 console.log(`mail:test ${type} (${language}) to ${target.startsWith('+') ? `the ${target} alias` : 'the given address'}: ${status}`)
 await disconnectDb()

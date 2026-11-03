@@ -3,14 +3,17 @@ import { existsSync } from 'node:fs'
 import { describe, it } from 'node:test'
 import { config } from '../config/env.js'
 import { absolutePath } from '../lib/files.js'
+import { ScheduledTask } from '../jobs/models.js'
 import { stripe } from '../lib/stripe.js'
 import { AdminRole, Permission } from '../modules/admin/admin.model.js'
+import { JobAlert } from '../modules/alerts/alerts.model.js'
 import { Application, PipelineStage } from '../modules/applications/applications.model.js'
 import { CandidateProfile } from '../modules/candidates/candidates.model.js'
 import { Company, KycDocument } from '../modules/companies/companies.model.js'
 import { ProfileView, RecruiterActivity, ShortlistEntry } from '../modules/discovery/discovery.model.js'
 import { Job, SavedJob } from '../modules/jobs/jobs.model.js'
 import { File } from '../modules/files/files.model.js'
+import { Conversation, Message } from '../modules/messages/messages.model.js'
 import { Country, Faq, LegalDocument } from '../modules/meta/meta.model.js'
 import { Payment, Plan, Subscription } from '../modules/payments/payments.model.js'
 import { User } from '../modules/users/users.model.js'
@@ -241,5 +244,27 @@ describe('seed:demo (§3.20, OD9, P12)', () => {
     assert.deepEqual(oliver.history.map((step) => step.stageName), ['Applied', 'Screening', 'Shortlisted', 'Interview'])
     assert.equal(await RecruiterActivity.countDocuments({ type: 'applied' }), 6)
     assert.equal(await RecruiterActivity.countDocuments({ type: 'stage_changed' }), 6)
+  })
+
+  it('seeds two Acme threads and Emma’s two alerts, with no email scheduled (P7-Q3, P7-Q4)', async () => {
+    const sarah = await User.findOne({ email: demoAddress('sarah') })
+    const emma = await User.findOne({ email: demoAddress('emma') })
+    const conversations = await Conversation.find().populate('candidateId', 'fullName').populate('jobId', 'title')
+    const summary = (conversation) => `${conversation.candidateId.fullName}: ${conversation.jobId.title}: ${conversation.unread.candidate}/${conversation.unread.recruiter}`
+    assert.deepEqual(conversations.map(summary).sort(), ['Emma Wilson: Senior Product Designer: 0/1', 'Oliver Park: Senior UX Designer: 1/0'])
+    assert.ok(conversations.every((conversation) => String(conversation.companyId) === String(sarah.companyId) && conversation.lastMessageAt < new Date()))
+    assert.equal(await Message.countDocuments(), 3)
+    assert.equal(await RecruiterActivity.countDocuments({ type: 'outreach' }), 2)
+    assert.equal(await RecruiterActivity.countDocuments({ type: 'message_reply' }), 1)
+    assert.equal(await ScheduledTask.countDocuments({ type: 'email.message' }), 0)
+
+    const alerts = await JobAlert.find().sort({ name: 1 })
+    assert.deepEqual(
+      alerts.map(({ candidateId, name, frequency, country, location }) => [String(candidateId), name, frequency, country, location]),
+      [
+        [String(emma._id), 'Remote product design roles', 'daily', 'REMOTE', null],
+        [String(emma._id), 'Senior design roles in fintech', 'weekly', 'GB', null],
+      ],
+    )
   })
 })

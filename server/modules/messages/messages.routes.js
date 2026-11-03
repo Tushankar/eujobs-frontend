@@ -1,0 +1,35 @@
+import { Router } from 'express'
+import { validate } from '../../lib/validate.js'
+import { requireApprovedRecruiter, requireAuth, requireRole } from '../../middleware/auth.js'
+import { requireEntitlement } from '../../middleware/entitlements.js'
+import * as schemas from './messages.schemas.js'
+import * as messages from './messages.service.js'
+
+/* /conversations for candidates and approved recruiters (§5). Sending needs `message_send` for candidates (M-084, M-118). */
+const router = Router()
+const idParams = validate({ params: schemas.idParams })
+
+router.use(requireAuth, requireRole('candidate', 'recruiter'), (req, res, next) => (req.user.role === 'recruiter' ? requireApprovedRecruiter(req, res, next) : next()))
+
+router.get('/', async (req, res) => {
+  res.json(await messages.listConversations(req.user, req.company))
+})
+
+router.post('/', requireEntitlement('message_send'), validate({ body: schemas.startBody }), async (req, res) => {
+  res.status(201).json(await messages.start(req.user, req.company, req.body))
+})
+
+router.get('/:id/messages', idParams, async (req, res) => {
+  res.json(await messages.getMessages(req.user, req.company, req.params.id))
+})
+
+router.post('/:id/messages', idParams, requireEntitlement('message_send'), validate({ body: schemas.messageBody }), async (req, res) => {
+  res.status(201).json(await messages.send(req.user, req.company, req.params.id, req.body.body))
+})
+
+router.post('/:id/read', idParams, async (req, res) => {
+  await messages.markRead(req.user, req.company, req.params.id)
+  res.status(204).end()
+})
+
+export default router

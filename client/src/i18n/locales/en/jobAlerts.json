@@ -1,0 +1,43 @@
+{
+  "title": "Let the right work find you.",
+  "description": "Thoughtful updates. On your terms. Never just more noise.",
+  "create": "Create job alert",
+  "empty": "No job alerts yet",
+  "emptyText": "Create an alert and we’ll email you matching roles as they are published.",
+  "frequency": {
+    "instant": "Instant",
+    "daily": "Daily digest",
+    "weekly": "Weekly digest"
+  },
+  "active": "Active",
+  "paused": "Paused",
+  "pause": "Pause alert",
+  "resume": "Resume alert",
+  "edit": "Edit alert: {{name}}",
+  "delete": "Delete alert: {{name}}",
+  "planPaused": {
+    "title": "Your alerts are paused",
+    "text": "Job alerts are part of Plus. Your alerts are kept, and emails start again when you upgrade.",
+    "upgrade": "Upgrade to resume"
+  },
+  "deleteDialog": {
+    "title": "Delete this alert?",
+    "description": "“{{name}}” will stop sending you jobs.",
+    "confirm": "Delete alert"
+  },
+  "form": {
+    "createTitle": "Create job alert",
+    "editTitle": "Edit job alert",
+    "description": "We email you new jobs in {{country}} that match every keyword.",
+    "name": "Alert name",
+    "namePlaceholder": "Remote product design roles",
+    "keywords": "Keywords",
+    "keywordsPlaceholder": "Job title, skills or company",
+    "keywordsHint": "Each word must appear in the job’s title, company, skills, city, work model, level or industry.",
+    "city": "City (optional)",
+    "cityHint": "Leave empty to match the whole country.",
+    "frequency": "How often",
+    "save": "Save changes",
+    "submit": "Create alert"
+  }
+}

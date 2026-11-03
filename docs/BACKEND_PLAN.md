@@ -203,6 +203,13 @@ M-164 lets users report jobs, profiles, companies and messages. M-167 defines "R
 | P7-Q2 Job alerts for a Free candidate with alerts (M-119) | any candidate can read their own alerts (`GET /candidate/job-alerts` is not plan-gated). A Free candidate with alerts sees the list, every card marked "Paused", and a notice that alerts are paused while on Free, with Upgrade. Create, edit, pause and resume answer 402; Delete stays allowed. A Free candidate without alerts sees the usual gate. The sidebar chip stays. | 2026-11-02 |
 | P7-Q3 seeded threads | Two Acme threads in English, dated days ago (no email scheduled), each with `outreach` activity. Sarah → Emma about Senior Product Designer: Emma replied, and her reply is unread by Sarah (recruiter badge 1). Sarah → Oliver about Senior UX Designer: unread by Oliver (Free, read-only). | 2026-11-02 |
 | P7-Q4 seeded alerts | Emma owns both `alerts.js` alerts, with no city: "Remote product design roles" (daily, country Remote) and "Senior design roles in fintech" (weekly, country GB). | 2026-11-02 |
+| P7-C1 builder call: conversation endpoints | `POST /conversations` takes `candidateId` (recruiter, optional `jobId` of the own company) or `jobId` (candidate, the job decides the company); a second start for the same pair adds to the existing thread (M-086). `POST …/read` answers 204. `GET /conversations` lists threads with `counterpart { id, name, imageUrl, headline }`, `job`, `lastMessagePreview` (140 characters) and the own side's `unread`; `GET …/messages` answers the thread and every message, oldest first. Nothing about the plan is in any recruiter answer (M-087). Awaiting owner review. | 2026-11-02 |
+| P7-C2 builder call: messaging rules | "Applied to" (M-084) = any application to the company, in any status (as P6-C5). A recruiter may start with an applicant (any status) or a candidate listable in some country (the P4-D11 rule, which is also when the profile opens); a restricted profile counts as neither. `outreach` activity is recorded only when a recruiter's start creates the thread (M-180); `message_reply` once per candidate answer after a recruiter message. Opening a thread marks the other side's messages read. The recruiter side of a thread is the company: its active recruiter gets the email and every recruiter of the company would see the count. Awaiting owner review. | 2026-11-02 |
+| P7-C3 builder call: new-message email | one pending `email.message` task per thread and recipient side, due at the later of "oldest unread message + 15 min" and "last email to that side + 60 min"; at the due time it re-checks the oldest unread message and waits again if needed, and sends nothing once everything is read. A send skipped by the toggle or the cap still counts as the side's last email. Awaiting owner review. | 2026-11-02 |
+| P7-C4 builder call: alert rules | The alert keeps the UI language of its creation for the translated labels (only that language's labels match, as Find jobs). Country is fixed at creation; editing keeps it; a Remote alert takes no city (`placeId: invalid`), and a city in another country answers `placeId: other_country`. Instant alerts skip a job that is no longer visible when the tick runs; a candidate with two matching alerts gets one email per alert. A job is sent at most once per alert, instant or digest (`alertmatches`); deleting an alert deletes its matches. Digest slots use `User.timezone`, UTC when unknown. `lastDigestAt` moves at every evaluated slot, also when nothing matched; a paused alert (by the candidate or the plan) is not evaluated, so its first digest after resuming lists the jobs since its last digest. Awaiting owner review. | 2026-11-02 |
+| P7-C5 builder call: server details | The scheduler gained `tickJobs` (checks run on every tick with the tick time) for the digests. The email layout shows `params.items` as a list (the alert jobs: "Title · Company · City", "Remote" in the recipient's language for remote jobs). The four new emails ship in en/es/fr; `npm run mail:test` knows them. Awaiting owner review. | 2026-11-02 |
+| P7-C6 builder call: client | The new `messages` and `jobAlerts` namespaces ship in en/es/fr (the M-088 template must be in the recruiter's language, and the shell opens in French and Spanish in P2-01 and P2-14), with `shell:nav.messages` and the new `validation` field keys. "Messages" sits after Applications in both sidebars. The counters query moved to `app/counters.js` (both roles poll it). `PlanGate` was split out of `RequirePlan`; the Job alerts route is no longer wrapped, as the page shows the gate itself (P7-Q2). The recruiter's Message button is on the profile sidebar; the candidate's "Message the company" is in the application activity dialog (which closes first, so dialogs never stack) and on job details after applying; both open the existing thread instead when there is one. Open threads and the inbox poll every 15 s like the counters, paused in hidden tabs. `alerts.js` and `useJobAlerts` are deleted. Awaiting owner review. | 2026-11-02 |
+| P7-C7 builder call: earlier-phase checks adjusted | P2-10 clears the code field by keyboard (the P3-06 race: a re-render restored the wrong code and the 6-character limit dropped the right one; it failed once at 375 px in the Phase 7 baseline). P4-17 hides a complete Free candidate built through the API, because since Phase 6 every seeded complete candidate has applied to Acme and an applicant's profile stays open (P6-C5); it failed in the baseline. Awaiting owner review. | 2026-11-02 |
 
 _(Answers to any new question asked during the build are appended to this table.)_
 
@@ -2080,6 +2087,52 @@ The course-purchase path is built here but verified in Phase 8. AI pages are gat
 | P7-12 | Limits | D | An 11th alert → error. A name of 81 characters → error. A message of 2,001 characters → error. |
 
 **API tests.** The start and reply matrix (role × plan × applied × discoverable × hidden after a thread exists); the 2,000-character limit; unread counts and read; U13 scheduling; alert CRUD and limits; matching (fields, translated labels, country including Remote); first publish only; digest scheduling with luxon time zones; lapse pause.
+
+#### Phase 7 handoff (2026-11-02, built, awaiting owner review)
+
+**Baseline before building** (Phase 6 approved): phase-2 26 of 27, phase-3 19 of 19, phase-4 23 of 24, phase-5 13 of 13, phase-6 15 of 15. Both failures were stale checks, fixed and rerun green (P7-C7): P2-10 at 375 px (code field race) and P4-17 (Aisha has applied to Acme since Phase 6).
+
+**Built.**
+- Server:
+  - the `messages` module: `Conversation` and `Message`, `/conversations` (list, start or add, thread, send, read), the M-084 / M-085 / U28 rules, unread counts per side, `outreach` and `message_reply` activity, and the `email.message` task (U13);
+  - the `alerts` module: `JobAlert` and `AlertMatch`, `/candidate/job-alerts` (read and delete for every candidate; create and change with `job_alerts`), matching through the Find jobs haystack, `alerts.instant` scheduled on a job's first publish, and daily and weekly digests checked on every tick (new scheduler `tickJobs`);
+  - `GET /me/counters` returns unread messages for both roles;
+  - emails `new_message`, `alert_instant`, `alert_daily`, `alert_weekly` in en/es/fr; the email layout lists `params.items`; `npm run mail:test` knows the four types.
+- Seed: two Acme threads (P7-Q3) and Emma's two alerts (P7-Q4).
+- Client:
+  - a shared `features/messages` (inbox and thread for both roles, the composer, or the upgrade prompt on Free, start dialogs), mounted in both workspaces with a "Messages" sidebar item and badge;
+  - the recruiter's Message button with the M-088 template on the candidate profile; the candidate's "Message the company" in the application activity dialog and on job details after applying;
+  - Job alerts on the API with the Places city field, the "Paused" state and notice for Free candidates with alerts, and the gate otherwise (P7-Q2);
+  - counters moved to `app/counters.js`; `PlanGate` split from `RequirePlan`.
+- Deleted: `job-alerts/data/alerts.js` and `useJobAlerts`. The device-only outreach text had already gone with the Phase 4 `MessageModal` removal.
+- e2e: `e2e/lib/messages.js`, scenarios P7-01 … P7-12, and the inboxes plus Acme's thread with Emma in the sweep.
+
+**Calls the plan did not specify:** owner answers P7-Q1 … P7-Q4 and builder calls P7-C1 … P7-C7 in the Owner answers table.
+
+**Results and exact commands** (from the repo root unless noted; never run the server tests and the e2e at the same time):
+
+| Command | Result |
+|---|---|
+| `cd server && npm test` | 239 of 239 |
+| `cd server && npm run lint` | clean |
+| `cd client && npm run lint && npm run build` | clean, built |
+| `npx oxlint .` in `e2e/` | clean |
+| `node e2e/run.js phase-7` | 14 of 14 (P7-01 and P7-08 at 1440 and 375 px) |
+| `node e2e/run.js sweep` | D and M pass (candidate 25, recruiter 27 routes, including the inboxes and a thread) |
+| `cd server && npm run mail:test -- new_message +alex`, `… alert_instant +alex`, `… alert_daily +alex`, `… alert_weekly +alex` | sent; the owner has not yet confirmed arrival |
+
+**Fixed during the browser checks.**
+- P7-09: signing in through the browser saves the browser's time zone (U12), and this machine's Chrome reports Asia/Calcutta, which overwrote the Madrid zone set through the API. The scenario now puts the browser in Europe/Madrid with the CDP override before signing in. The product rule was right.
+- P7-03: the Spanish candidate lands on the Overview, still English-only in Spanish (P4-Q5), so the scenario checks the Spanish inbox only.
+
+**Flaky or watch.**
+- Ticks with future times (`/_test/scheduler/tick`) also send other users' due digests and message emails in the same run. Scenarios filter mail by recipient and alert name.
+- The machine's Chrome time zone is Asia/Calcutta, so any e2e sign-in stores that zone unless the scenario overrides it.
+
+**Open.**
+- The owner confirms the four live emails.
+- The development database `eujobs` holds an older seed. Run `cd server && npm run seed:catalog && npm run seed:demo` to see the Phase 7 threads and alerts.
+- "Translate" per message comes with Phase 9 and "Report message" with Phase 10.
 
 ### Phase 8: Learning
 

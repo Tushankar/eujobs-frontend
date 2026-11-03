@@ -2,6 +2,7 @@ import { Router } from 'express'
 import { config } from '../config/env.js'
 import { dbStatus } from '../lib/db.js'
 import adminRoutes from '../modules/admin/admin.routes.js'
+import alertRoutes from '../modules/alerts/alerts.routes.js'
 import * as applicationRoutes from '../modules/applications/applications.routes.js'
 import authRoutes from '../modules/auth/auth.routes.js'
 import candidateRoutes from '../modules/candidates/candidates.routes.js'
@@ -10,6 +11,7 @@ import cvRoutes from '../modules/cv/cv.routes.js'
 import * as discoveryRoutes from '../modules/discovery/discovery.routes.js'
 import filesRoutes from '../modules/files/files.routes.js'
 import * as jobRoutes from '../modules/jobs/jobs.routes.js'
+import messagesRoutes from '../modules/messages/messages.routes.js'
 import metaRoutes from '../modules/meta/meta.routes.js'
 import * as paymentRoutes from '../modules/payments/payments.routes.js'
 import placesRoutes from '../modules/places/places.routes.js'
@@ -34,6 +36,7 @@ router.use('/candidate/cv', cvRoutes)
 router.use('/candidate/applications', applicationRoutes.candidateRouter)
 router.use('/candidate/verification', verificationRoutes.candidateRouter)
 router.use('/candidate/saved-jobs', jobRoutes.savedRouter)
+router.use('/candidate/job-alerts', alertRoutes)
 router.use('/candidate/subscription', paymentRoutes.subscriptionRouter)
 router.use('/candidate', candidateRoutes)
 router.use('/jobs', jobRoutes.candidateRouter)
@@ -47,6 +50,7 @@ router.use('/recruiter/overview', applicationRoutes.overviewRouter)
 router.use('/recruiter/applications', applicationRoutes.recruiterRouter)
 router.use('/recruiter/pipeline', applicationRoutes.pipelineRouter)
 router.use('/skills', jobRoutes.skillsRouter)
+router.use('/conversations', messagesRoutes)
 router.use('/admin/moderation/verification', verificationRoutes.adminRouter)
 router.use('/admin/moderation/accounts', companyRoutes.adminRouter)
 router.use('/admin', adminRoutes)

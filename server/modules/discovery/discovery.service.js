@@ -158,7 +158,7 @@ export async function listCandidates(user, company, query) {
  * P4-D11: a profile opens when the candidate is listable in some country or has an application to this company
  * (any status: the recruiter saw it, so the link in the Applications table keeps working).
  */
-async function accessibleCandidate(id, company) {
+export async function accessibleCandidate(id, company) {
   const [entry] = await listableCandidates([id])
   if (entry) return entry
   if (await Application.exists({ candidateId: id, companyId: company._id })) {

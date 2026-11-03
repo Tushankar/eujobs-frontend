@@ -1,0 +1,43 @@
+{
+  "title": "Deja que el trabajo adecuado te encuentre.",
+  "description": "Novedades útiles, a tu manera. Nunca más ruido.",
+  "create": "Crear alerta de empleo",
+  "empty": "Aún no tienes alertas de empleo",
+  "emptyText": "Crea una alerta y te enviaremos por correo las ofertas que coincidan en cuanto se publiquen.",
+  "frequency": {
+    "instant": "Al momento",
+    "daily": "Resumen diario",
+    "weekly": "Resumen semanal"
+  },
+  "active": "Activa",
+  "paused": "En pausa",
+  "pause": "Pausar alerta",
+  "resume": "Reanudar alerta",
+  "edit": "Editar alerta: {{name}}",
+  "delete": "Eliminar alerta: {{name}}",
+  "planPaused": {
+    "title": "Tus alertas están en pausa",
+    "text": "Las alertas de empleo forman parte de Plus. Conservamos tus alertas y los correos vuelven a enviarse cuando mejoras tu plan.",
+    "upgrade": "Mejora tu plan para reanudarlas"
+  },
+  "deleteDialog": {
+    "title": "¿Eliminar esta alerta?",
+    "description": "«{{name}}» dejará de enviarte ofertas.",
+    "confirm": "Eliminar alerta"
+  },
+  "form": {
+    "createTitle": "Crear alerta de empleo",
+    "editTitle": "Editar alerta de empleo",
+    "description": "Te enviamos por correo las nuevas ofertas en {{country}} que contengan todas las palabras clave.",
+    "name": "Nombre de la alerta",
+    "namePlaceholder": "Puestos de diseño de producto en remoto",
+    "keywords": "Palabras clave",
+    "keywordsPlaceholder": "Puesto, habilidades o empresa",
+    "keywordsHint": "Cada palabra debe aparecer en el puesto, la empresa, las habilidades, la ciudad, la modalidad, el nivel o el sector.",
+    "city": "Ciudad (opcional)",
+    "cityHint": "Déjala vacía para todo el país.",
+    "frequency": "Frecuencia",
+    "save": "Guardar cambios",
+    "submit": "Crear alerta"
+  }
+}

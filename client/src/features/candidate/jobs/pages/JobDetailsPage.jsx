@@ -7,6 +7,7 @@ import EmptyState from '@/components/common/EmptyState.jsx'
 import StatusBadge from '@/components/common/StatusBadge.jsx'
 import aiGlyph from '@/assets/icons/ai-glyph-blue.svg'
 import { ApplyButton } from '@/features/candidate/applications/components/ApplyFlow.jsx'
+import { MessageCompanyButton } from '@/features/messages/components/StartConversation.jsx'
 import { useJobText } from '@/lib/jobText.js'
 import { useFormat } from '@/lib/preferences.js'
 import { useGetJobQuery, useSaveToggle } from '../api.js'
@@ -207,6 +208,7 @@ export default function JobDetailsPage() {
               >
                 {t(job.saved ? 'findJobs:details.saved' : 'findJobs:details.save')}
               </Button>
+              {job.application && <MessageCompanyButton job={job} fullWidth />}
             </div>
             {job.application && <p className={styles.railText}>{t('applications:apply.sent')}</p>}
           </section>

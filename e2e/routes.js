@@ -1,6 +1,6 @@
 /*
  * Every route per group (§2.13). Server ids are placeholders the sweep fills from the test database:
- * :job (Acme Studio's "Product Designer, Growth") and :emma (Emma Wilson's user id). `public` holds the pages
+ * :job (Acme Studio's "Product Designer, Growth"), :emma (Emma Wilson's user id) and :thread (Acme's thread with Emma). `public` holds the pages
  * without a session and `recruiterOnboarding` the steps a recruiter sees before approval. Each phase adds its
  * new screens.
  */
@@ -34,6 +34,7 @@ export const ROUTES = {
     '/candidate/jobs',
     '/candidate/jobs/:job',
     '/candidate/applications',
+    '/candidate/messages',
     '/candidate/job-alerts',
     '/candidate/profile',
     '/candidate/cv-versions',
@@ -72,6 +73,8 @@ export const ROUTES = {
     `${candidateProfile}/notes`,
     '/recruiter/shortlists',
     '/recruiter/applications',
+    '/recruiter/messages',
+    '/recruiter/messages/:thread',
     '/recruiter/hiring-pipeline',
     '/recruiter/hiring-pipeline/manage-stage',
     '/recruiter/learning',

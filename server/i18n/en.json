@@ -155,6 +155,46 @@
         "Review them and move people forward from your Applications page."
       ],
       "action": "Open applications"
+    },
+    "new_message": {
+      "subject": "New message from {{sender}}",
+      "heading": "You have an unread message",
+      "body": [
+        "Hi {{name}},",
+        "{{sender}} sent you a message on Local WorkMan.",
+        "Open the conversation to read it and reply."
+      ],
+      "action": "Open conversation"
+    },
+    "alert_instant": {
+      "subject": "New job for your alert “{{alertName}}”: {{job}}",
+      "heading": "A new job matches your alert",
+      "body": [
+        "Hi {{name}},",
+        "A job matching your alert “{{alertName}}” was just published:"
+      ],
+      "action": "View job",
+      "secondary": "Manage your job alerts:"
+    },
+    "alert_daily": {
+      "subject": "{{countLabel}} for “{{alertName}}”",
+      "heading": "Your daily job alert",
+      "body": [
+        "Hi {{name}},",
+        "{{countLabel}} for your alert “{{alertName}}” since your last digest:"
+      ],
+      "action": "Find jobs",
+      "secondary": "Manage your job alerts:"
+    },
+    "alert_weekly": {
+      "subject": "{{countLabel}} for “{{alertName}}” this week",
+      "heading": "Your weekly job alert",
+      "body": [
+        "Hi {{name}},",
+        "{{countLabel}} for your alert “{{alertName}}” since your last digest:"
+      ],
+      "action": "Find jobs",
+      "secondary": "Manage your job alerts:"
     }
   },
   "verification": {
@@ -213,6 +253,10 @@
     "newApplications": {
       "one": "{{count}} new application",
       "other": "{{count}} new applications"
+    },
+    "alertJobs": {
+      "one": "{{count}} new job",
+      "other": "{{count}} new jobs"
     }
   }
 }

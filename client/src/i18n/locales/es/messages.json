@@ -1,0 +1,45 @@
+{
+  "inbox": {
+    "title": "Mensajes",
+    "description": {
+      "candidate": "Conversaciones con empresas sobre ofertas y tus candidaturas.",
+      "recruiter": "Conversaciones con candidatos y personas que se han postulado."
+    },
+    "empty": "Aún no hay mensajes",
+    "emptyText": {
+      "candidate": "Cuando una empresa te escriba, la conversación aparecerá aquí.",
+      "recruiter": "Inicia una conversación desde el perfil de un candidato."
+    },
+    "unread_one": "{{count}} sin leer",
+    "unread_other": "{{count}} sin leer"
+  },
+  "about": "Sobre {{job}}",
+  "deletedUser": "Usuario eliminado",
+  "thread": {
+    "back": "Volver a mensajes",
+    "messages": "Mensajes de esta conversación",
+    "notFound": "Conversación no encontrada",
+    "notFoundText": "Puede que se haya eliminado o que pertenezca a otra cuenta.",
+    "locked": "Responder forma parte de Plus. Con el plan Free puedes leer todos los mensajes.",
+    "upgrade": "Mejora tu plan para responder",
+    "send": "Enviar"
+  },
+  "form": {
+    "label": "Mensaje",
+    "count": "{{count}} / {{max}} caracteres"
+  },
+  "start": {
+    "button": "Escribir a la empresa",
+    "open": "Abrir conversación",
+    "title": "Escribir a {{company}}",
+    "description": "Sobre {{job}}. Las personas de selección de la empresa verán tu mensaje.",
+    "send": "Enviar mensaje"
+  },
+  "outreach": {
+    "button": "Mensaje",
+    "title": "Inicia una conversación con {{firstName}}",
+    "description": "La persona candidata recibe tu mensaje en Local WorkMan, y por correo si sigue sin leer.",
+    "template": "Hola, {{firstName}}: tu perfil nos ha llamado la atención para nuestro puesto de {{job}}. Me gustaría conocer mejor tu trabajo. ¿Te parece bien que hablemos brevemente?",
+    "templateNoJob": "Hola, {{firstName}}: tu perfil nos ha llamado la atención para un puesto que estamos cubriendo. Me gustaría conocer mejor tu trabajo. ¿Te parece bien que hablemos brevemente?"
+  }
+}

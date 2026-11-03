@@ -28,7 +28,8 @@
     "moderation": "Moderation",
     "auditLogs": "Audit logs",
     "aiBadge": "AI",
-    "planLocked": "Part of {{plan}}"
+    "planLocked": "Part of {{plan}}",
+    "messages": "Messages"
   },
   "titles": {
     "settings": "Settings",

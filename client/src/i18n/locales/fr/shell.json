@@ -28,7 +28,8 @@
     "moderation": "Modération",
     "auditLogs": "Journal d’audit",
     "aiBadge": "IA",
-    "planLocked": "Inclus dans {{plan}}"
+    "planLocked": "Inclus dans {{plan}}",
+    "messages": "Messages"
   },
   "titles": {
     "settings": "Paramètres",

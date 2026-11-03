@@ -9,6 +9,7 @@ import {
   GraduationCap,
   Layers,
   LayoutDashboard,
+  MessageSquare,
   Search,
   ShieldCheck,
   TrendingUp,
@@ -18,6 +19,7 @@ import {
 import aiNavIcon from '@/assets/icons/ai-nav.svg'
 import accessManagementIcon from '@/assets/icons/access-management.svg'
 import { useActiveApplicationsBadge } from '@/features/candidate/applications/api.js'
+import { useUnreadMessagesBadge } from '@/features/messages/api.js'
 
 /*
  * Per-role workspace configuration: sidebar navigation and header variant, as seen in the Figma
@@ -40,6 +42,7 @@ export const WORKSPACES = {
       { key: 'overview', to: '', icon: LayoutDashboard, end: true },
       { key: 'findJobs', to: 'jobs', icon: Search },
       { key: 'applications', to: 'applications', icon: BriefcaseBusiness, badge: { useText: useActiveApplicationsBadge } },
+      { key: 'messages', to: 'messages', icon: MessageSquare, badge: { useText: useUnreadMessagesBadge } },
       { key: 'jobAlerts', to: 'job-alerts', icon: Bell, entitlement: 'job_alerts' },
       { key: 'myProfile', to: 'profile', icon: Users },
       { key: 'cvVersions', to: 'cv-versions', icon: FileText },
@@ -60,6 +63,7 @@ export const WORKSPACES = {
       { key: 'findCandidates', to: 'find-candidates', icon: Search },
       { key: 'shortlists', to: 'shortlists', icon: Bookmark },
       { key: 'applications', to: 'applications', icon: FileText },
+      { key: 'messages', to: 'messages', icon: MessageSquare, badge: { useText: useUnreadMessagesBadge } },
       { key: 'hiringPipeline', to: 'hiring-pipeline', icon: Layers },
       { key: 'recruiterLearning', to: 'learning', icon: GraduationCap },
       { key: 'company', to: 'company', icon: Building2 },

@@ -17,6 +17,9 @@ export const taskHandlers = {}
 /** Daily slots: { name, hour, run(now) } at `hour`:00 server time (U7, U32). */
 export const dailyJobs = []
 
+/** Checks run on every tick with the tick time, e.g. the alert digests per user time zone (U12). */
+export const tickJobs = []
+
 /** Creates or collapses the pending task with this key (a pending key is unique). */
 export function scheduleTask({ type, key, dueAt, payload }) {
   return ScheduledTask.findOneAndUpdate(
@@ -69,12 +72,15 @@ async function runDailyJobs(now) {
       console.error(`Daily job ${job.name} failed: ${error.message}`)
       // Restoring the previous run time makes the next tick try again.
       await JobRun.updateOne({ name: job.name }, { lastRunAt: claimed.lastRunAt })
-    }
+    } 
   }
 }
 
 export async function tick(now = new Date()) {
   await runDailyJobs(now)
+  for (const job of tickJobs) {
+    await job.run(now).catch((error) => console.error(`Tick job ${job.name} failed: ${error.message}`))
+  }
   for (let task = await claimNextTask(now); task; task = await claimNextTask(now)) await runTask(task, now)
 }
 

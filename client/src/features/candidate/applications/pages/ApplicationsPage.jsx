@@ -10,6 +10,8 @@ import EmptyState from '@/components/common/EmptyState.jsx'
 import FilterChips from '@/components/common/FilterChips.jsx'
 import PageTitle from '@/components/common/PageTitle.jsx'
 import StatusBadge from '@/components/common/StatusBadge.jsx'
+import { useCompanyMessageStart } from '@/features/messages/api.js'
+import { CompanyMessageDialog } from '@/features/messages/components/StartConversation.jsx'
 import { useJobText } from '@/lib/jobText.js'
 import { useFormat } from '@/lib/preferences.js'
 import { useGetApplicationsQuery, useWithdrawMutation } from '../api.js'
@@ -19,8 +21,8 @@ import { STATUS_TONES } from '../status.js'
 import styles from './ApplicationsPage.module.css'
 
 /**
- * Applications (§3.4): every application with its status, dated history (M-075) and next step, withdraw (M-074)
- * and Apply again after a withdrawal (a new record; the old one stays withdrawn).
+ * Applications (§3.4): every application with its status, dated history (M-075) and next step, withdraw (M-074),
+ * Apply again after a withdrawal (a new record; the old one stays withdrawn) and a message to the company (M-084).
  */
 export default function ApplicationsPage() {
   const { t } = useTranslation()
@@ -33,6 +35,8 @@ export default function ApplicationsPage() {
   const [activityId, setActivityId] = useState(null)
   const [withdrawing, setWithdrawing] = useState(null)
   const [reapplying, setReapplying] = useState(null)
+  const [messaging, setMessaging] = useState(null)
+  const startMessage = useCompanyMessageStart()
 
   const applications = data?.items ?? []
   const rows = applications.filter((application) => filter === 'all' || application.status === filter)
@@ -116,6 +120,10 @@ export default function ApplicationsPage() {
           setActivityId(null)
           setReapplying(application)
         }}
+        onMessage={(application) => {
+          setActivityId(null)
+          startMessage(() => setMessaging(application.job))
+        }}
       />
       <ConfirmDialog
         open={withdrawing !== null}
@@ -130,6 +138,7 @@ export default function ApplicationsPage() {
         }}
       />
       {reapplying && <ApplyFlow job={reapplying.job} onClose={() => setReapplying(null)} />}
+      {messaging && <CompanyMessageDialog job={messaging} onClose={() => setMessaging(null)} />}
     </div>
   )
 }

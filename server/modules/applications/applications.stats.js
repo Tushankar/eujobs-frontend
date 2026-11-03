@@ -7,9 +7,9 @@ import { ACTIVE_FILTER, Application, PipelineStage } from './applications.model.
  * stages ever reached (M-178) and the hiring momentum with Monday weeks in the browser time zone (M-083, M-170).
  */
 
-/** GET /me/counters for a candidate: the active applications; unread messages arrive with Phase 7. */
+/** GET /me/counters for a candidate: the active applications. */
 export async function candidateCounters(user) {
-  return { unreadMessages: 0, activeApplications: await Application.countDocuments({ candidateId: user._id, ...ACTIVE_FILTER }) }
+  return { activeApplications: await Application.countDocuments({ candidateId: user._id, ...ACTIVE_FILTER }) }
 }
 
 /** M-082: applications to the company's jobs, excluding not selected and withdrawn. */

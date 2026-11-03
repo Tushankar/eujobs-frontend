@@ -155,6 +155,46 @@
         "Examinez-les et faites avancer les personnes depuis votre page Candidatures."
       ],
       "action": "Ouvrir les candidatures"
+    },
+    "new_message": {
+      "subject": "Nouveau message de {{sender}}",
+      "heading": "Vous avez un message non lu",
+      "body": [
+        "Bonjour {{name}},",
+        "{{sender}} vous a envoyé un message sur Local WorkMan.",
+        "Ouvrez la conversation pour le lire et répondre."
+      ],
+      "action": "Ouvrir la conversation"
+    },
+    "alert_instant": {
+      "subject": "Nouvelle offre pour votre alerte « {{alertName}} » : {{job}}",
+      "heading": "Une nouvelle offre correspond à votre alerte",
+      "body": [
+        "Bonjour {{name}},",
+        "Une offre correspondant à votre alerte « {{alertName}} » vient d’être publiée :"
+      ],
+      "action": "Voir l’offre",
+      "secondary": "Gérez vos alertes emploi :"
+    },
+    "alert_daily": {
+      "subject": "{{countLabel}} pour « {{alertName}} »",
+      "heading": "Votre alerte emploi quotidienne",
+      "body": [
+        "Bonjour {{name}},",
+        "{{countLabel}} pour votre alerte « {{alertName}} » depuis votre dernier récapitulatif :"
+      ],
+      "action": "Trouver un emploi",
+      "secondary": "Gérez vos alertes emploi :"
+    },
+    "alert_weekly": {
+      "subject": "{{countLabel}} pour « {{alertName}} » cette semaine",
+      "heading": "Votre alerte emploi hebdomadaire",
+      "body": [
+        "Bonjour {{name}},",
+        "{{countLabel}} pour votre alerte « {{alertName}} » depuis votre dernier récapitulatif :"
+      ],
+      "action": "Trouver un emploi",
+      "secondary": "Gérez vos alertes emploi :"
     }
   },
   "verification": {
@@ -213,6 +253,10 @@
     "newApplications": {
       "one": "{{count}} nouvelle candidature",
       "other": "{{count}} nouvelles candidatures"
+    },
+    "alertJobs": {
+      "one": "{{count}} nouvelle offre",
+      "other": "{{count}} nouvelles offres"
     }
   }
 }

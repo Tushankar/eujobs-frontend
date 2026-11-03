@@ -7,6 +7,7 @@ import { effectivePermissions } from '../admin/admin.service.js'
 import { checkPassword, hashPassword } from '../auth/auth.service.js'
 import { Company } from '../companies/companies.model.js'
 import { logoUrls } from '../companies/companies.service.js'
+import { unreadCount } from '../messages/messages.service.js'
 import { currentLegalVersions, findEnabledCountry } from '../meta/meta.service.js'
 import { planState } from '../payments/payments.service.js'
 
@@ -63,9 +64,10 @@ export async function meDto(user) {
   return dto
 }
 
-/** GET /me/counters (M-094): unread messages stay 0 until Phase 7; recruiters have no application badge. */
+/** GET /me/counters (M-094): unread messages for both roles; recruiters have no application badge. */
 export async function counters(user) {
-  return user.role === 'candidate' ? candidateCounters(user) : { unreadMessages: 0 }
+  const unreadMessages = await unreadCount(user, user.companyId)
+  return user.role === 'candidate' ? { unreadMessages, ...(await candidateCounters(user)) } : { unreadMessages }
 }
 
 /** PATCH /me. Until the language is explicit, the country's default language follows the country (M-134). */

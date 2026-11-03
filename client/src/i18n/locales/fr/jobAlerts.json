@@ -1,0 +1,43 @@
+{
+  "title": "Laissez le bon poste venir à vous.",
+  "description": "Des nouvelles utiles, à votre rythme. Jamais du bruit en plus.",
+  "create": "Créer une alerte emploi",
+  "empty": "Aucune alerte emploi pour le moment",
+  "emptyText": "Créez une alerte et nous vous enverrons par e-mail les offres correspondantes dès leur publication.",
+  "frequency": {
+    "instant": "Immédiate",
+    "daily": "Récapitulatif quotidien",
+    "weekly": "Récapitulatif hebdomadaire"
+  },
+  "active": "Active",
+  "paused": "En pause",
+  "pause": "Mettre en pause",
+  "resume": "Reprendre l’alerte",
+  "edit": "Modifier l’alerte : {{name}}",
+  "delete": "Supprimer l’alerte : {{name}}",
+  "planPaused": {
+    "title": "Vos alertes sont en pause",
+    "text": "Les alertes emploi font partie de Plus. Vos alertes sont conservées et les e-mails reprennent dès que vous passez à Plus.",
+    "upgrade": "Passer à Plus pour reprendre"
+  },
+  "deleteDialog": {
+    "title": "Supprimer cette alerte ?",
+    "description": "« {{name}} » ne vous enverra plus d’offres.",
+    "confirm": "Supprimer l’alerte"
+  },
+  "form": {
+    "createTitle": "Créer une alerte emploi",
+    "editTitle": "Modifier l’alerte emploi",
+    "description": "Nous vous envoyons par e-mail les nouvelles offres en {{country}} qui contiennent tous les mots-clés.",
+    "name": "Nom de l’alerte",
+    "namePlaceholder": "Postes de design produit à distance",
+    "keywords": "Mots-clés",
+    "keywordsPlaceholder": "Intitulé, compétences ou entreprise",
+    "keywordsHint": "Chaque mot doit figurer dans l’intitulé, l’entreprise, les compétences, la ville, le mode de travail, le niveau ou le secteur.",
+    "city": "Ville (facultatif)",
+    "cityHint": "Laissez vide pour tout le pays.",
+    "frequency": "Fréquence",
+    "save": "Enregistrer",
+    "submit": "Créer l’alerte"
+  }
+}

@@ -11,18 +11,20 @@ import styles from './RequirePlan.module.css'
 
 /**
  * Route layout for paid pages (M-118, A: shared §8.3): the entitlement comes from the route's `handle.entitlement`.
- * With it the pages render; without it, the upgrade card with the Plus price in the header country's currency.
- * The server enforces the same rule (402 PLAN_REQUIRED).
+ * With it the pages render; without it, the upgrade card. The server enforces the same rule (402 PLAN_REQUIRED).
  */
 export default function RequirePlan() {
+  const { me } = usePreferences()
+  const entitlement = useMatches().findLast((match) => match.handle?.entitlement)?.handle.entitlement
+  return lacksEntitlement(me, entitlement) ? <PlanGate entitlement={entitlement} /> : <Outlet />
+}
+
+/** The upgrade card of a locked page, with the Plus price in the header country's currency. */
+export function PlanGate({ entitlement }) {
   const { t } = useTranslation('billing')
   const format = useFormat()
-  const { me } = usePreferences()
   const { plus } = usePlan()
-  const entitlement = useMatches().findLast((match) => match.handle?.entitlement)?.handle.entitlement
   const [checkingOut, setCheckingOut] = useState(false)
-
-  if (!lacksEntitlement(me, entitlement)) return <Outlet />
 
   return (
     <>

@@ -19,7 +19,11 @@ const latestCode = async (email) => (await mailTo(email, 'recruiter_email_code')
 const wrong = (code) => String((Number(code) + 1) % 1e6).padStart(6, '0')
 
 async function enterCode(page, code) {
-  await fill(page, 'input[name="code"]', code)
+  // Clear by keyboard (as P3-06): a re-render after the last answer can restore a value cleared through the DOM,
+  // and the 6-character limit then drops the typed code.
+  await page.click('input[name="code"]', { count: 3 })
+  await page.keyboard.press('Backspace')
+  await page.type('input[name="code"]', code)
   await page.click('button[type="submit"]')
 }
 

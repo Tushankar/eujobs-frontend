@@ -28,7 +28,7 @@ export async function visibleFilter() {
 }
 
 /** OD2: the Remote view lists remote jobs; a country view lists the on-site and hybrid jobs located there. */
-const viewFilter = (country) => (country === 'REMOTE' ? { country: 'REMOTE' } : { country, workPreference: { $in: ['on_site', 'hybrid'] } })
+export const viewFilter = (country) => (country === 'REMOTE' ? { country: 'REMOTE' } : { country, workPreference: { $in: ['on_site', 'hybrid'] } })
 const viewOf = (user) => user.pickerCountry ?? 'REMOTE'
 
 /** U25: a monthly salary counts ×12; P4-Q4: the top end of the range (the minimum when there is no maximum). */
@@ -68,7 +68,7 @@ async function cardContext(user, jobs) {
 }
 
 /** §3.6 keywords: title, company, skills, city, work mode, level or industry; labels in the user's language. */
-function haystack(job, company, language) {
+export function haystack(job, company, language) {
   return searchText(
     [
       job.title,

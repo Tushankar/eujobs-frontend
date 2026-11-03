@@ -112,6 +112,23 @@
     },
     "consent": {
       "required": "Cochez la case pour partager votre profil avec cette entreprise."
+    },
+    "body": {
+      "required": "Écrivez un message avant de l’envoyer.",
+      "too_long": "Votre message doit faire au plus {{max}} caractères."
+    },
+    "alertName": {
+      "required": "Donnez un nom à l’alerte, par exemple « Postes de design produit à distance »."
+    },
+    "alertKeywords": {
+      "required": "Ajoutez un intitulé, une compétence ou une entreprise à suivre."
+    },
+    "alerts": {
+      "too_many": "Vous pouvez avoir jusqu’à {{max}} alertes emploi. Supprimez-en une pour en ajouter une autre."
+    },
+    "placeIdAlert": {
+      "other_country": "Choisissez une ville dans le pays de cette alerte.",
+      "invalid": "Les alertes à distance concernent les offres à distance, qui n’ont pas de ville."
     }
   },
   "in_both": "{{skill}} est déjà une compétence requise.",

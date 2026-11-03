@@ -3,6 +3,7 @@ import { Bookmark, ShieldCheck } from 'lucide-react'
 import { Button, Icon, Panel, SelectField } from '@/components/ui'
 import { useGetPipelineQuery } from '@/features/recruiter/applications/api.js'
 import ApplicationStageSelect from '@/features/recruiter/applications/components/ApplicationStageSelect.jsx'
+import { MessageCandidateButton } from '@/features/messages/components/StartConversation.jsx'
 import { useFormat } from '@/lib/preferences.js'
 import MatchInsights from './MatchInsights.jsx'
 import styles from './ProfileSidebar.module.css'
@@ -36,8 +37,8 @@ function CompanyApplications({ candidate }) {
 }
 
 /**
- * Right column of the candidate profile: the shortlist action, the stage of each application to this company, the
- * job to match against and the evidence panel. Messaging comes with Phase 7 (P4-Q1).
+ * Right column of the candidate profile: the shortlist and message actions, the stage of each application to this
+ * company, the job to match against (also the job the outreach template names) and the evidence panel.
  */
 export default function ProfileSidebar({ candidate, jobs, job, onJobChange, onToggleShortlist }) {
   const { t } = useTranslation()
@@ -48,6 +49,7 @@ export default function ProfileSidebar({ candidate, jobs, job, onJobChange, onTo
           <Button variant="outline" fullWidth leftIcon={<Icon as={Bookmark} size={14} strokeWidth={2} />} aria-pressed={candidate.shortlisted} onClick={onToggleShortlist}>
             {t(candidate.shortlisted ? 'discovery:profile.removeShortlist' : 'discovery:profile.addShortlist')}
           </Button>
+          <MessageCandidateButton candidate={candidate} job={job} />
         </div>
       </Panel>
 

@@ -112,6 +112,23 @@
     },
     "consent": {
       "required": "Marca la casilla para compartir tu perfil con esta empresa."
+    },
+    "body": {
+      "required": "Escribe un mensaje antes de enviarlo.",
+      "too_long": "Usa como máximo {{max}} caracteres en tu mensaje."
+    },
+    "alertName": {
+      "required": "Pon un nombre a la alerta, por ejemplo «Puestos de diseño de producto en remoto»."
+    },
+    "alertKeywords": {
+      "required": "Añade un puesto, una habilidad o una empresa que quieras seguir."
+    },
+    "alerts": {
+      "too_many": "Puedes tener hasta {{max}} alertas de empleo. Elimina una para añadir otra."
+    },
+    "placeIdAlert": {
+      "other_country": "Elige una ciudad del país de esta alerta.",
+      "invalid": "Las alertas en remoto buscan ofertas en remoto, que no tienen ciudad."
     }
   },
   "in_both": "{{skill}} ya es una competencia obligatoria.",

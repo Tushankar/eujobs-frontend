@@ -1,0 +1,45 @@
+{
+  "inbox": {
+    "title": "Messages",
+    "description": {
+      "candidate": "Vos conversations avec les entreprises sur leurs offres et vos candidatures.",
+      "recruiter": "Vos conversations avec les candidats et les personnes qui ont postulé."
+    },
+    "empty": "Aucun message pour le moment",
+    "emptyText": {
+      "candidate": "Quand une entreprise vous écrit, la conversation apparaît ici.",
+      "recruiter": "Lancez une conversation depuis le profil d’un candidat."
+    },
+    "unread_one": "{{count}} non lu",
+    "unread_other": "{{count}} non lus"
+  },
+  "about": "À propos de {{job}}",
+  "deletedUser": "Utilisateur supprimé",
+  "thread": {
+    "back": "Retour aux messages",
+    "messages": "Messages de cette conversation",
+    "notFound": "Conversation introuvable",
+    "notFoundText": "Elle a peut-être été supprimée, ou elle appartient à un autre compte.",
+    "locked": "Répondre fait partie de Plus. Avec l’offre Free, vous pouvez lire tous les messages.",
+    "upgrade": "Passer à Plus pour répondre",
+    "send": "Envoyer"
+  },
+  "form": {
+    "label": "Message",
+    "count": "{{count}} / {{max}} caractères"
+  },
+  "start": {
+    "button": "Écrire à l’entreprise",
+    "open": "Ouvrir la conversation",
+    "title": "Écrire à {{company}}",
+    "description": "À propos de {{job}}. Les recruteurs de l’entreprise verront votre message.",
+    "send": "Envoyer le message"
+  },
+  "outreach": {
+    "button": "Message",
+    "title": "Lancer une conversation avec {{firstName}}",
+    "description": "Le candidat reçoit votre message dans Local WorkMan, et par e-mail s’il reste non lu.",
+    "template": "Bonjour {{firstName}}, votre profil a retenu notre attention pour notre poste de {{job}}. J’aimerais en savoir plus sur votre travail. Seriez-vous disponible pour un court échange ?",
+    "templateNoJob": "Bonjour {{firstName}}, votre profil a retenu notre attention pour un poste que nous recrutons. J’aimerais en savoir plus sur votre travail. Seriez-vous disponible pour un court échange ?"
+  }
+}

@@ -1,0 +1,16 @@
+.form {
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+}
+
+.failure {
+  font-size: 13px;
+  line-height: 18px;
+  color: var(--destructive);
+}
+
+.actions {
+  display: flex;
+  justify-content: flex-end;
+}

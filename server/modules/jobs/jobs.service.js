@@ -1,5 +1,5 @@
 import { LIMITS } from '../../config/limits.js'
-import { dailyJobs } from '../../jobs/scheduler.js'
+import { dailyJobs, scheduleTask } from '../../jobs/scheduler.js'
 import { AppError, fieldError } from '../../lib/errors.js'
 import { searchText, skillEntries, skillOverlap } from '../../lib/skills.js'
 import { validationError } from '../../lib/validate.js'
@@ -233,17 +233,19 @@ export const setStatus = stepErrors(async (company, id, status) => {
   const job = await ownJob(company, id)
   if (!TRANSITIONS[job.status].includes(status)) throw new AppError('CONFLICT', { params: { status: job.status } })
   const now = new Date()
+  const firstPublish = status === 'published' && !job.firstPublishedAt
   if (status === 'published') {
     if (job.restricted?.at) throw new AppError('LOCKED', { params: { reason: 'restricted' } })
     assertPublishable(job)
     job.publishedAt = now
-    // M-097: only the first publish will trigger job alerts (Phase 7).
+    // M-097: only the first publish triggers job alerts.
     job.firstPublishedAt ??= now
     job.closedAt = undefined
   }
   if (status === 'closed') job.closedAt = now
   job.status = status
   await job.save()
+  if (firstPublish) await scheduleTask({ type: 'alerts.instant', key: `alerts.instant:${job._id}`, dueAt: now, payload: { jobId: String(job._id) } })
   return job
 })
 

@@ -5,6 +5,7 @@ import { ENUMS } from '../config/enums.js'
 import { ScheduledTask } from '../jobs/models.js'
 import { connectDb, disconnectDb } from '../lib/db.js'
 import { AdminRole, AuditEvent } from '../modules/admin/admin.model.js'
+import { AlertMatch, JobAlert } from '../modules/alerts/alerts.model.js'
 import { Application, PipelineStage } from '../modules/applications/applications.model.js'
 import { EmailToken, VerificationCode } from '../modules/auth/auth.model.js'
 import { checkPassword, hashPassword } from '../modules/auth/auth.service.js'
@@ -15,6 +16,7 @@ import { CandidateNote, ProfileView, RecruiterActivity, ShortlistEntry } from '.
 import { File, FileAccessLog } from '../modules/files/files.model.js'
 import { Job, SavedJob } from '../modules/jobs/jobs.model.js'
 import { Course, Enrollment } from '../modules/learning/learning.model.js'
+import { Conversation, Message } from '../modules/messages/messages.model.js'
 import { Country } from '../modules/meta/meta.model.js'
 import { currentLegalVersions } from '../modules/meta/meta.service.js'
 import { Counter, Payment, StripeEvent, Subscription } from '../modules/payments/payments.model.js'
@@ -22,6 +24,7 @@ import { User } from '../modules/users/users.model.js'
 import { VerificationSubmission } from '../modules/verification/verification.model.js'
 import { seedApplications } from './applications.js'
 import { seedCandidates } from './candidates.js'
+import { seedMessages } from './messages.js'
 import { CANDIDATES, CITY_TIME_ZONES } from './data/candidates.js'
 import { DEMO_ACCOUNTS } from './data/demo.js'
 import { PLACES } from './data/places.js'
@@ -105,6 +108,10 @@ export async function seedDemo() {
     StripeEvent.deleteMany({}),
     Course.deleteMany({}),
     Enrollment.deleteMany({}),
+    Conversation.deleteMany({}),
+    Message.deleteMany({}),
+    JobAlert.deleteMany({}),
+    AlertMatch.deleteMany({}),
   ])
   // Every stored file is demo data: one folder per purpose under the upload root (never another root).
   await Promise.all(ENUMS.filePurpose.map((purpose) => rm(join(config.uploadRoot, purpose), { recursive: true, force: true })))
@@ -130,6 +137,7 @@ export async function seedDemo() {
   await seedRecruiters({ emailOf, owner, now: now.getTime() })
   await seedPayments({ emailOf, now: now.getTime() })
   await seedApplications({ emailOf, now: now.getTime() })
+  await seedMessages({ emailOf, now: now.getTime() })
 }
 
 if (import.meta.main) {

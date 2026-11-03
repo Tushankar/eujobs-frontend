@@ -112,6 +112,23 @@
     },
     "consent": {
       "required": "Tick the box to share your profile with this company."
+    },
+    "body": {
+      "required": "Write a message before sending.",
+      "too_long": "Keep your message to {{max}} characters or fewer."
+    },
+    "alertName": {
+      "required": "Give the alert a name, like “Remote product design roles”."
+    },
+    "alertKeywords": {
+      "required": "Add a job title, skill or company to watch for."
+    },
+    "alerts": {
+      "too_many": "You can have up to {{max}} job alerts. Delete one to add another."
+    },
+    "placeIdAlert": {
+      "other_country": "Choose a city in the country of this alert.",
+      "invalid": "Remote alerts match remote jobs, which have no city."
     }
   },
   "in_both": "{{skill}} is already a required skill.",

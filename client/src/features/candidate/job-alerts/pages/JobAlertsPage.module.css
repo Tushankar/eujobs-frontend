@@ -73,10 +73,28 @@
   background: var(--muted);
 }
 
-.note {
-  padding-top: 20px;
-  font-size: 11px;
-  line-height: 16.5px;
+.paused {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  justify-content: space-between;
+  gap: 16px;
+  margin-top: 32px;
+  background: var(--warning-bg);
+}
+
+.pausedTitle {
+  font-size: 14px;
+  font-weight: 600;
+  line-height: 20px;
+  color: var(--foreground);
+}
+
+.pausedText {
+  max-width: 560px;
+  padding-top: 4px;
+  font-size: 13px;
+  line-height: 19px;
   color: var(--muted-foreground);
 }
 

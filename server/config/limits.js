@@ -75,6 +75,11 @@ export const LIMITS = {
   application: { coverNote: { max: 2000 } },
   pipeline: { stages: { min: 2, max: 12 }, stageName: { min: 1, max: 24 } },
   applicationEmail: { statusDelayMs: 10 * MINUTE, newApplicationsWindowMs: HOUR },
+  // M-086, M-089, U13
+  message: { body: { max: 2000 } },
+  messageEmail: { unreadDelayMs: 15 * MINUTE, perConversationMs: HOUR },
+  // M-031, §3.6
+  jobAlert: { max: 10, name: { max: 80 }, keywords: { max: 120 } },
   // M-080, M-029
   note: { max: 5000 },
   cvRequestDetails: { max: 1000 },

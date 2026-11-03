@@ -1,0 +1,45 @@
+{
+  "inbox": {
+    "title": "Messages",
+    "description": {
+      "candidate": "Conversations with companies about jobs and your applications.",
+      "recruiter": "Conversations with candidates and applicants."
+    },
+    "empty": "No messages yet",
+    "emptyText": {
+      "candidate": "When a company writes to you, the conversation appears here.",
+      "recruiter": "Start a conversation from a candidate’s profile."
+    },
+    "unread_one": "{{count}} unread",
+    "unread_other": "{{count}} unread"
+  },
+  "about": "About {{job}}",
+  "deletedUser": "Deleted user",
+  "thread": {
+    "back": "Back to messages",
+    "messages": "Messages in this conversation",
+    "notFound": "Conversation not found",
+    "notFoundText": "It may have been removed, or it belongs to another account.",
+    "locked": "Replying is part of Plus. On the Free plan you can read every message.",
+    "upgrade": "Upgrade to reply",
+    "send": "Send"
+  },
+  "form": {
+    "label": "Message",
+    "count": "{{count}} / {{max}} characters"
+  },
+  "start": {
+    "button": "Message the company",
+    "open": "Open conversation",
+    "title": "Message {{company}}",
+    "description": "About {{job}}. The company’s recruiters will see your message.",
+    "send": "Send message"
+  },
+  "outreach": {
+    "button": "Message",
+    "title": "Start a conversation with {{firstName}}",
+    "description": "The candidate gets your message in Local WorkMan, and by email if it stays unread.",
+    "template": "Hi {{firstName}}, your profile stood out for our {{job}} role. I’d like to learn more about your work. Would you be open to a short conversation?",
+    "templateNoJob": "Hi {{firstName}}, your profile stood out for a role we are hiring for. I’d like to learn more about your work. Would you be open to a short conversation?"
+  }
+}

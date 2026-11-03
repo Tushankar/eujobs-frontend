@@ -81,6 +81,8 @@ export const api = createApi({
     'Counters',
     'CompanyApplications',
     'Pipeline',
+    'Conversations',
+    'JobAlerts',
   ],
   endpoints: (build) => ({
     getMe: build.query({ query: () => '/me', providesTags: ['Me'] }),
