@@ -58,7 +58,56 @@
 }
 
 .section {
-  padding-top: 32px;
+  margin-top: 28px;
+  padding-top: 28px;
+  border-top: 1px solid var(--border);
+}
+
+.sectionIcon {
+  display: inline-flex;
+  flex-shrink: 0;
+  padding: 8px;
+  border-radius: var(--radius-lg);
+  background: var(--accent);
+  color: var(--primary-hover);
+}
+
+.sectionName {
+  flex: 1;
+  min-width: 0;
+}
+
+/* Empty section: a dashed card with the hint and the section's "none" choice. */
+.empty {
+  display: flex;
+  flex-direction: column;
+  align-items: flex-start;
+  gap: 12px;
+  margin-top: 16px;
+  padding: 16px 18px;
+  border: 1px dashed #d5dae4;
+  border-radius: var(--radius-xl);
+  background: var(--muted);
+}
+
+.emptyText {
+  font-size: 13px;
+  line-height: 20px;
+  color: var(--muted-foreground);
+}
+
+.emptyLink {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  font-size: 13px;
+  font-weight: 600;
+  line-height: 20px;
+  color: var(--primary);
+}
+
+.emptyLink:hover {
+  text-decoration: underline;
 }
 
 .sectionTitle {
@@ -100,7 +149,6 @@
   display: flex;
   flex-wrap: wrap;
   align-items: center;
-  justify-content: space-between;
   gap: 12px;
 }
 
@@ -176,7 +224,9 @@
 }
 
 .none {
-  margin-top: 12px;
+  padding-top: 12px;
+  border-top: 1px solid var(--border);
+  align-self: stretch;
 }
 
 .linkList {

@@ -1,9 +1,11 @@
 import { useTranslation } from 'react-i18next'
 import { Link } from 'react-router-dom'
-import { CircleCheck } from 'lucide-react'
+import { Check, ChevronRight } from 'lucide-react'
 import { Icon } from '@/components/ui'
 import PillBadge from '@/components/common/PillBadge.jsx'
 import { useFormat } from '@/lib/preferences.js'
+import { cx } from '@/utils/cx.js'
+import { completenessIcon } from '../utils/completenessIcons.js'
 import styles from './CompletenessChecklist.module.css'
 
 /**
@@ -23,9 +25,10 @@ export default function CompletenessChecklist({ completeness, items = completene
             {t('completeness:complete')}
           </PillBadge>
         ) : (
-          <span className={styles.count}>{t('completeness:progress', { done, total })}</span>
+          <span className={styles.percent}>{format.number(percent / 100, { style: 'percent' })}</span>
         )}
       </div>
+      {!complete && <p className={styles.count}>{t('completeness:progress', { done, total })}</p>}
       <div
         className={styles.meter}
         role="progressbar"
@@ -39,9 +42,23 @@ export default function CompletenessChecklist({ completeness, items = completene
       </div>
       <ul className={styles.items}>
         {items.map((item) => (
-          <li key={item.key} className={styles.item} data-item={item.key} data-done={item.done}>
-            {item.done ? <Icon as={CircleCheck} size={14} className={styles.done} /> : <span className={styles.open} aria-hidden="true" />}
-            {item.done ? <span>{t(`completeness:items.${item.key}`)}</span> : <Link to={item.route}>{t(`completeness:items.${item.key}`)}</Link>}
+          <li key={item.key} data-item={item.key} data-done={item.done}>
+            {item.done ? (
+              <span className={cx(styles.item, styles.itemDone)}>
+                <span className={styles.doneIcon}>
+                  <Icon as={Check} size={12} strokeWidth={2.5} />
+                </span>
+                <span className={styles.label}>{t(`completeness:items.${item.key}`)}</span>
+              </span>
+            ) : (
+              <Link to={item.route} className={styles.item}>
+                <span className={styles.openIcon}>
+                  <Icon as={completenessIcon(item.key)} size={14} />
+                </span>
+                <span className={styles.label}>{t(`completeness:items.${item.key}`)}</span>
+                <Icon as={ChevronRight} size={14} className={styles.chevron} />
+              </Link>
+            )}
           </li>
         ))}
       </ul>

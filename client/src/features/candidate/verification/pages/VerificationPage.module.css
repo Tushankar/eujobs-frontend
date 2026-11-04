@@ -25,29 +25,33 @@
 
 .sectionLead {
   padding-top: 4px;
-  font-size: 11px;
-  line-height: 16.5px;
+  font-size: 13px;
+  line-height: 20px;
   color: var(--muted-foreground);
 }
 
 .contact {
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
   padding-top: 20px;
 }
 
 .contactRow {
   display: flex;
   gap: 16px;
+  padding: 16px;
+  border: 1px solid var(--border);
+  border-radius: var(--radius-xl);
+  background: var(--card);
 }
 
 .emailRow {
   align-items: center;
-  padding-bottom: 20px;
-  border-bottom: 1px solid var(--border);
 }
 
 .phoneRow {
   align-items: flex-start;
-  padding-top: 20px;
 }
 
 .tile {

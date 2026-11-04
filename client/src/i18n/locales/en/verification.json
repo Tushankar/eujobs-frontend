@@ -17,7 +17,7 @@
     "send": "Send code",
     "resend": "Send a new code",
     "resendIn": "Send a new code in {{count}} s",
-    "codeShown": "Your code is {{code}}. Enter it below within {{minutes}} minutes.",
+    "codeShown": "Your code is <code>{{code}}</code>. Enter it below within {{minutes}} minutes.",
     "codeNote": "We show the code here instead of sending a text message.",
     "code": "Code",
     "confirm": "Confirm",

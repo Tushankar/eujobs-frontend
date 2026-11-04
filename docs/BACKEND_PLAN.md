@@ -1179,6 +1179,7 @@ All emails are in the recipient's language (S). Classes are defined in §2.8.
 | `recruiter_approved` / `_rejected` / `_suspended` | recruiter | account decision (rejected and suspended include the reason) | decision | M-092, M-165 |
 | `verification_approved` / `_rejected` | candidate | evidence decision | decision | M-092, M-166 |
 | `content_restricted` | job or profile owner | Restrict | decision | M-092, M-167 |
+| `content_restriction_lifted` | job or profile owner | Dismiss of a restricted case | decision | M-167, P10-Q12 |
 | `certificate_issued` | learner | quiz passed | decision | M-092, M-105 |
 | `renewal_failed` | candidate | `invoice.payment_failed` on a renewal | decision | M-092, M-120 |
 | `plan_ended` | candidate | subscription canceled or unpaid | decision | M-092, M-120 |
@@ -2536,6 +2537,39 @@ The course-purchase path is built here but verified in Phase 8. AI pages are gat
 **Open.**
 - The new namespaces `access`, `adminUsers`, `adminPayments` and `audit` are English until Phase 11.
 - `npm run mail:test` now knows `admin_invite`; no live invite email has been sent for the owner to confirm (it reaches a real inbox, so it waits for the owner's go-ahead).
+
+#### Phase 10b handoff (2026-11-04, built, awaiting owner review; Phase 10 complete)
+
+**Before 10b (owner request, P10-Q9).** After the owner rolled the Stripe test key: no backend or `stripe listen` process was running (checked by process kind, command lines never printed); `npm run stripe:listen` and `npm run dev` started from `server/`, Vite on 5173; Alex paid with 4242 on hosted Checkout: 13 webhook events, all answered 200; `/me` says Plus; LWM-000010 (£9, Paid, receipt link) shows in his Billing and in admin Payments. `npm run mail:test admin_invite +alex` sent (the owner confirms receipt).
+
+**Built (10b, P10-Q1).**
+- Server: content moderation in `modules/moderation` (`POST /reports`, the content queue, case details and decisions, the two decision emails, P10-C10); "Open case" and the extended `GET /admin/jobs` (P10-C11); `admin.metrics.js` (Overview, activity chart, Analytics, Recruitment, the Overview export; P10-C12, C13); `admin.applications.js` (P10-C15); `modules/reports` with `transcribe()` in `lib/ai.js` (P10-C14); `seed/moderation.js` (P10-C16); server dictionaries en/es/fr (`email.content_restricted`, `email.content_restriction_lifted`, `email.moderationSummary`, `reports.*`, `csv.applications`, `csv.overview`, `labels.reportTargetType`, `labels.reportReason`, the new `audit.*` sentences).
+- Client: Report buttons on job details (job and company section), the recruiter's candidate profile and messages from the other side; the Moderation content tab on the server (priority P10-Q10, reports, target, message excerpt, history, Restrict with photo removal, Dismiss and lift); admin Jobs, Applications, Recruitment, Overview, Analytics and Reports on the server; the remaining admin mocks deleted (P10-C17).
+- Verified company badge (P10-Q8): built after 10a (owner commits dbf1bd3, 6f3de96); recorded in the Owner answers table; its API test is in `jobs.test.js` and P10-12 ran again with the 10b regression.
+- Tests: `admin.moderation.test.js`, `admin.metrics.test.js`; the permission matrix covers `dashboard.view`, `reports.view` and `candidates.view` (0 todo). e2e: P10-05, 06, 07, 10, 11 and the voice-note fixture (P10-C18).
+
+**No admin page reads mock data.** Every admin page reads the server; no file under `features/admin` imports a `data/` file or local storage. `utils/downloadCsv.js` stays for the candidate's own profile export (Phase 12).
+
+**Calls the plan did not specify:** P10-Q9 … Q15 (owner) and P10-C10 … C18 (builder) in the Owner answers table.
+
+**Results** (repo root unless noted; never run the server tests and the e2e at the same time):
+
+| Command | Result |
+|---|---|
+| `cd server && npm test` | 349 tests: 348 pass, 1 fail, 0 todo. The failure was `foundation.test.js` still pinning 22 email types (P10-Q12 adds the 23rd); after the fix the file passes 13 of 13. New files `admin.moderation.test.js` (7) and `admin.metrics.test.js` (7); `admin.matrix.test.js` 22 of 22, 0 todo (`dashboard.view`, `reports.view`, `candidates.view` now have routes) |
+| `cd server && npm run lint` | clean |
+| `cd client && npm run lint && npm run build` | clean, built |
+| `npx oxlint .` in `e2e/` | clean |
+| `node e2e/run.js` P10-05 (D, M), P10-06 (D), P10-07 (D), P10-10 (D, M), P10-11 (D) | 7 of 7 after the scenario fixes below; P10-07 with the real OpenAI transcription and summary (English and, for a Spanish admin, Spanish) |
+| Earlier scenarios on changed screens, in 7 groups: P2-06, P3-07, P3-08, P4-03, 04, 05, 10, 13, 14, 15, 17, P6-02, 03, 09, 11, P7-01, 03, 04, 05, 06, 08, P8-11, P9-03, 08, 10, 11, P10-01, 08, 12 | 39 of 41 runs. P3-08 expected the Phase 3 in-page "no permission" text, which the 403 page replaced in 10a (it was not in 10a's rerun); updated to the 403 page plus the API refusal → pass. P9-08 failed once because Regenerate returned the same text (real OpenAI); rerun → pass |
+| `node e2e/run.js sweep` | D and M pass (admin 29 routes) |
+| `npm run seed:demo` (dev database `eujobs`) | done: Alex is Free again, the two seeded cases and the audit history are there |
+
+**Fixed during the checks.** Real bugs: `GET /admin/jobs` answered 500 when a job's company no longer existed (now left out); the Open case button was cut off at 1440 px (narrower columns); "Download again" was answered 304 from the browser cache (now `no-store`); the AI summary read empty "In period" cells as zero (the prompt now says what they mean); two component files also exported constants (moved to `overview/chartScale.js` and `moderation/tones.js`). Scenario fixes: `waitForPath` with a function runs in the browser; selects need `page.select`; the recruiter profile path is `/recruiter/find-candidates/:id`; the Manager role has no `reports.export` (Accounts Head is used). A failing API test that leaves a request pending keeps `node --test` alive; use `--test-force-exit` while debugging.
+
+**Open.**
+- The new namespaces `adminJobs`, `adminApplications`, `adminRecruitment`, `adminOverview` and `adminReports` (and the 10b keys of `moderation` and `audit`) are English until Phase 11.
+- Live emails waiting for the owner: `admin_invite` (sent 2026-11-04, to confirm); `content_restricted` and `content_restriction_lifted` exist in `npm run mail:test` but were not sent live (owner's go-ahead).
 
 ### Phase 11: Translations (es, fr), formats and long-text layout
 

@@ -1,7 +1,6 @@
 .checklist {
   display: flex;
   flex-direction: column;
-  gap: 12px;
 }
 
 .head {
@@ -12,15 +11,28 @@
   gap: 8px;
 }
 
+.percent {
+  padding: 2px 10px;
+  border-radius: var(--radius-full);
+  background: var(--accent);
+  font-family: var(--font-display);
+  font-size: 13px;
+  font-weight: 800;
+  line-height: 20px;
+  color: var(--primary-hover);
+  font-variant-numeric: tabular-nums;
+}
+
 .count {
+  padding-top: 4px;
   font-size: 12px;
-  font-weight: 600;
-  line-height: 16px;
-  color: var(--foreground);
+  line-height: 18px;
+  color: var(--muted-foreground);
 }
 
 .meter {
-  height: 6px;
+  height: 8px;
+  margin-top: 12px;
   overflow: hidden;
   border-radius: var(--radius-full);
   background: var(--muted);
@@ -30,42 +42,81 @@
   display: block;
   height: 100%;
   border-radius: inherit;
-  background: var(--primary);
+  background: linear-gradient(90deg, #36c2ff 0%, var(--primary) 100%);
+  transition: width var(--duration-slow) var(--ease-out);
 }
 
 .items {
   display: flex;
   flex-direction: column;
-  gap: 10px;
+  gap: 2px;
+  margin: 16px -8px 0;
 }
 
 .item {
   display: flex;
   align-items: center;
   gap: 10px;
-  font-size: 12px;
-  line-height: 16px;
+  padding: 6px 8px;
+  border-radius: var(--radius-lg);
+  font-size: 13px;
+  line-height: 18px;
+}
+
+a.item {
+  font-weight: 600;
+  color: var(--foreground);
+  transition: background var(--transition);
+}
+
+a.item:hover {
+  background: var(--muted);
+}
+
+a.item:focus-visible {
+  outline: 2px solid var(--ring);
+  outline-offset: -2px;
+}
+
+.itemDone {
   color: var(--muted-foreground);
 }
 
-.item a {
-  color: var(--primary);
-  font-weight: 500;
+.label {
+  flex: 1;
+  min-width: 0;
 }
 
-.item a:hover {
-  text-decoration: underline;
-}
-
-.done {
+.openIcon,
+.doneIcon {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
   flex-shrink: 0;
+  width: 26px;
+  height: 26px;
+  border-radius: var(--radius-lg);
+}
+
+.openIcon {
+  background: var(--accent);
+  color: var(--primary-hover);
+}
+
+.doneIcon {
+  background: var(--success-bg);
   color: var(--success-fg);
 }
 
-.open {
+.chevron {
   flex-shrink: 0;
-  width: 14px;
-  height: 14px;
-  border: 1.5px solid var(--border);
-  border-radius: var(--radius-full);
+  color: var(--text-faint);
+  transition:
+    transform var(--transition),
+    color var(--transition);
+}
+
+a.item:hover .chevron {
+  transform: translateX(2px);
+  color: var(--primary);
 }

@@ -1,7 +1,26 @@
 import { useRef, useState } from 'react'
 import { useTranslation } from 'react-i18next'
 import { Link } from 'react-router-dom'
-import { ArrowRight, Earth, FileText, Link2, MapPin, Plus, ShieldCheck, SquarePen, Trash2, Upload } from 'lucide-react'
+import {
+  ArrowRight,
+  Award,
+  BadgeCheck,
+  BriefcaseBusiness,
+  Compass,
+  Earth,
+  FileText,
+  GraduationCap,
+  Languages,
+  Link2,
+  MapPin,
+  Plus,
+  ShieldCheck,
+  SquarePen,
+  Target,
+  Trash2,
+  Upload,
+  UserRound,
+} from 'lucide-react'
 import { useGetConfigQuery } from '@/app/api.js'
 import { Avatar, Button, Checkbox, Icon, IconButton, Panel } from '@/components/ui'
 import ConfirmDialog from '@/components/common/ConfirmDialog.jsx'
@@ -35,15 +54,41 @@ export default function ProfilePage() {
   return profile ? <ProfileView profile={profile} /> : null
 }
 
+const SECTION_ICONS = {
+  about: UserRound,
+  strengths: Target,
+  'work-history': BriefcaseBusiness,
+  education: GraduationCap,
+  languages: Languages,
+  'right-to-work': Earth,
+  links: Link2,
+  certificates: Award,
+  'course-certificates': BadgeCheck,
+  'next-step': Compass,
+}
+
 function Section({ name, title, action, children }) {
   return (
     <section className={styles.section} data-section={name}>
       <div className={styles.sectionHead}>
-        <h2 className={styles.sectionTitle}>{title}</h2>
+        <span className={styles.sectionIcon}>
+          <Icon as={SECTION_ICONS[name]} size={16} />
+        </span>
+        <h2 className={cx(styles.sectionTitle, styles.sectionName)}>{title}</h2>
         {action}
       </div>
       {children}
     </section>
+  )
+}
+
+/** An empty section: a dashed card with the hint and, where the section has one, its "none" choice. */
+function Empty({ text, children }) {
+  return (
+    <div className={styles.empty}>
+      <p className={styles.emptyText}>{text}</p>
+      {children}
+    </div>
   )
 }
 
@@ -91,9 +136,12 @@ function CourseCertificates() {
           ))}
         </ul>
       ) : (
-        <p className={styles.detail}>
-          {t('profile:courseCertificates.empty')} <Link to="/candidate/learning">{t('profile:courseCertificates.browse')}</Link>
-        </p>
+        <Empty text={t('profile:courseCertificates.empty')}>
+          <Link to="/candidate/learning" className={styles.emptyLink}>
+            {t('profile:courseCertificates.browse')}
+            <Icon as={ArrowRight} size={12} />
+          </Link>
+        </Empty>
       )}
     </Section>
   )
@@ -230,12 +278,12 @@ function ProfileView({ profile }) {
           )}
 
           <Section name="about" title={t('profile:about.title')}>
-            <p className={styles.about}>{profile.about || t('profile:about.empty')}</p>
+            {profile.about ? <p className={styles.about}>{profile.about}</p> : <Empty text={t('profile:about.empty')} />}
           </Section>
 
           <Section name="strengths" title={t('profile:strengths.title')}>
             {profile.yearsExperience == null && profile.skills.length === 0 ? (
-              <p className={styles.detail}>{t('profile:strengths.empty')}</p>
+              <Empty text={t('profile:strengths.empty')} />
             ) : (
               <>
                 {profile.yearsExperience != null && <p className={styles.detail}>{t('profile:strengths.years', { count: profile.yearsExperience })}</p>}
@@ -278,12 +326,11 @@ function ProfileView({ profile }) {
                   ))}
                 </ul>
               ) : (
-                <>
-                  <p className={styles.detail}>{t(`profile:${section}.empty`)}</p>
+                <Empty text={t(`profile:${section}.empty`)}>
                   <Checkbox className={styles.none} name={`${kind}-none`} checked={none} onChange={(event) => setNone({ kind, none: event.target.checked })}>
                     {t(`profile:${section}.none`)}
                   </Checkbox>
-                </>
+                </Empty>
               )}
             </Section>
           ))}
@@ -308,7 +355,7 @@ function ProfileView({ profile }) {
                 ))}
               </ul>
             ) : (
-              <p className={styles.detail}>{t('profile:languages.empty')}</p>
+              <Empty text={t('profile:languages.empty')} />
             )}
           </Section>
 
@@ -336,7 +383,7 @@ function ProfileView({ profile }) {
                 ))}
               </ul>
             ) : (
-              <p className={styles.detail}>{t('profile:rightToWork.empty')}</p>
+              <Empty text={t('profile:rightToWork.empty')} />
             )}
           </Section>
 
@@ -364,7 +411,7 @@ function ProfileView({ profile }) {
                   ))}
               </ul>
             ) : (
-              <p className={styles.detail}>{t('profile:links.empty')}</p>
+              <Empty text={t('profile:links.empty')} />
             )}
           </Section>
 
@@ -410,7 +457,7 @@ function ProfileView({ profile }) {
                 ))}
               </ul>
             ) : (
-              <p className={styles.detail}>{t('profile:certificates.empty')}</p>
+              <Empty text={t('profile:certificates.empty')} />
             )}
           </Section>
 

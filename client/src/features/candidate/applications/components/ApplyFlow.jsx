@@ -2,23 +2,43 @@ import { useState } from 'react'
 import { useTranslation } from 'react-i18next'
 import { useDispatch } from 'react-redux'
 import { Link } from 'react-router-dom'
-import { ArrowRight, Sparkles } from 'lucide-react'
+import { ChevronRight, Lock, Sparkles } from 'lucide-react'
 import { useGetConfigQuery, useGetMeQuery } from '@/app/api.js'
 import { openUpgrade } from '@/app/upgrade.js'
 import { Button, Checkbox, Icon, Modal, SelectField, TextareaField } from '@/components/ui'
 import { lacksEntitlement } from '@/features/candidate/billing/usePlan.js'
 import { useGetCvVersionsQuery } from '@/features/candidate/cv/api.js'
+import { completenessIcon } from '@/features/candidate/profile/utils/completenessIcons.js'
 import { check, useErrorText, useFormState } from '@/lib/forms.js'
 import { useApplyMutation } from '../api.js'
 import styles from './ApplyFlow.module.css'
+
+/** The checklist share as a ring, with "done/total" in the middle. */
+function ProgressRing({ done, total }) {
+  const radius = 22
+  const length = 2 * Math.PI * radius
+  return (
+    <span className={styles.ring}>
+      <svg viewBox="0 0 52 52" width="52" height="52" aria-hidden="true">
+        <circle className={styles.ringTrack} cx="26" cy="26" r={radius} />
+        <circle className={styles.ringFill} cx="26" cy="26" r={radius} strokeDasharray={length} strokeDashoffset={length * (1 - done / total)} />
+      </svg>
+      <span className={styles.ringValue}>
+        {done}/{total}
+      </span>
+    </span>
+  )
+}
 
 /**
  * The apply gate (§3.4, M-118, A: candidate N3): the missing checklist items with links and, for Free, the upgrade.
  * Apply stays disabled until both are met; the server checks the same in one request.
  */
-function ApplyGate({ missing, planRequired, onClose }) {
+function ApplyGate({ completeness, missing, planRequired, onClose }) {
   const { t } = useTranslation()
   const dispatch = useDispatch()
+  // Step numbers only make sense when both the profile and the plan are open.
+  const numbered = missing.length > 0 && planRequired
   return (
     <Modal
       open
@@ -31,7 +51,7 @@ function ApplyGate({ missing, planRequired, onClose }) {
           <Button variant="secondary" onClick={onClose}>
             {t('applications:gate.close')}
           </Button>
-          <Button variant={planRequired ? 'outline' : 'primary'} disabled>
+          <Button variant={planRequired ? 'outline' : 'primary'} leftIcon={<Icon as={Lock} size={14} />} disabled>
             {t('applications:gate.apply')}
           </Button>
           {planRequired && (
@@ -50,15 +70,31 @@ function ApplyGate({ missing, planRequired, onClose }) {
     >
       <div className={styles.gate} data-apply-gate>
         {missing.length > 0 && (
-          <section>
-            <h3 className={styles.heading}>{t('applications:gate.missingTitle')}</h3>
+          <div className={styles.progress}>
+            <ProgressRing done={completeness.done} total={completeness.total} />
+            <div>
+              <p className={styles.eyebrow}>{t('completeness:title')}</p>
+              <p className={styles.progressText}>{t('completeness:progress', { done: completeness.done, total: completeness.total })}</p>
+            </div>
+          </div>
+        )}
+        {missing.length > 0 && (
+          <section className={styles.step}>
+            <div className={styles.stepHeader}>
+              {numbered && <span className={styles.stepNumber}>1</span>}
+              <h3 className={styles.heading}>{t('applications:gate.missingTitle')}</h3>
+              <span className={styles.count}>{t('applications:gate.openCount', { count: missing.length })}</span>
+            </div>
             <p className={styles.text}>{t('applications:gate.missingText')}</p>
             <ul className={styles.missing}>
               {missing.map((item) => (
                 <li key={item.key} data-missing-item={item.key}>
                   <Link to={item.route} className={styles.missingLink} onClick={onClose}>
-                    {t(`completeness:items.${item.key}`)}
-                    <Icon as={ArrowRight} size={12} />
+                    <span className={styles.itemIcon}>
+                      <Icon as={completenessIcon(item.key)} size={16} />
+                    </span>
+                    <span className={styles.itemLabel}>{t(`completeness:items.${item.key}`)}</span>
+                    <Icon as={ChevronRight} size={16} className={styles.chevron} />
                   </Link>
                 </li>
               ))}
@@ -66,9 +102,20 @@ function ApplyGate({ missing, planRequired, onClose }) {
           </section>
         )}
         {planRequired && (
-          <section data-plan-required>
-            <h3 className={styles.heading}>{t('applications:gate.planTitle')}</h3>
-            <p className={styles.text}>{t('applications:gate.planText')}</p>
+          <section className={styles.step} data-plan-required>
+            <div className={styles.stepHeader}>
+              {numbered && <span className={styles.stepNumber}>2</span>}
+              <h3 className={styles.heading}>{t('applications:gate.planTitle')}</h3>
+            </div>
+            <div className={styles.plan}>
+              <span className={styles.planIcon}>
+                <Icon as={Sparkles} size={18} />
+              </span>
+              <div>
+                <p className={styles.planText}>{t('applications:gate.planText')}</p>
+                <p className={styles.text}>{t('billing:upgrade.description')}</p>
+              </div>
+            </div>
           </section>
         )}
       </div>
@@ -163,7 +210,7 @@ export default function ApplyFlow({ job, onClose, onApplied }) {
   if (!me) return null
   const missing = me.completeness.items.filter((item) => !item.done)
   const planRequired = lacksEntitlement(me, 'apply')
-  if (missing.length > 0 || planRequired) return <ApplyGate missing={missing} planRequired={planRequired} onClose={onClose} />
+  if (missing.length > 0 || planRequired) return <ApplyGate completeness={me.completeness} missing={missing} planRequired={planRequired} onClose={onClose} />
   return <ApplyDialog job={job} onClose={onClose} onApplied={onApplied ?? onClose} />
 }
 

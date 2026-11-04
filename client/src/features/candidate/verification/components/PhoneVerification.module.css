@@ -5,16 +5,30 @@
   gap: 8px 12px;
 }
 
-.numberRow {
-  display: grid;
-  grid-template-columns: minmax(0, 200px) minmax(0, 1fr);
-  align-items: start;
-  gap: 12px;
-  padding-top: 12px;
+/* The number form sits in a soft well under the label. */
+.well {
+  margin-top: 14px;
+  padding: 16px;
+  border-radius: var(--radius-xl);
+  background: var(--muted);
 }
 
+.numberRow {
+  display: grid;
+  grid-template-columns: minmax(0, 200px) minmax(0, 1fr) auto;
+  align-items: start;
+  gap: 12px;
+}
+
+/* Lines the button up with the inputs: label (16px) + gap (8px). */
 .actions {
-  padding-top: 12px;
+  padding-top: 24px;
+}
+
+.tall {
+  min-height: 46px;
+  padding-inline: 18px;
+  white-space: nowrap;
 }
 
 .error {
@@ -25,19 +39,49 @@
 }
 
 .codeForm {
+  margin-top: 16px;
   padding-top: 16px;
+  border-top: 1px dashed var(--border);
 }
 
 .codeShown {
   display: flex;
+  align-items: flex-start;
+  gap: 12px;
+  margin-bottom: 16px;
+  padding: 14px 16px;
+  border: 1px solid rgba(0, 132, 255, 0.2);
+  border-radius: var(--radius-xl);
+  background: var(--card);
+}
+
+.codeIcon {
+  display: inline-flex;
+  flex-shrink: 0;
+  padding: 8px;
+  border-radius: var(--radius-lg);
+  background: var(--accent);
+  color: var(--primary-hover);
+}
+
+.codeText {
+  display: flex;
   flex-direction: column;
   gap: 4px;
-  padding: 12px 16px;
-  border-radius: var(--radius-xl);
-  background: var(--accent);
   font-size: 13px;
-  font-weight: 600;
+  font-weight: 500;
   line-height: 20px;
+  color: var(--foreground);
+}
+
+.code {
+  padding: 1px 8px;
+  border-radius: var(--radius-md);
+  background: var(--accent);
+  font-family: ui-monospace, 'SFMono-Regular', Menlo, Consolas, monospace;
+  font-size: 15px;
+  font-weight: 700;
+  letter-spacing: 2px;
   color: var(--primary-hover);
 }
 
@@ -47,16 +91,16 @@
   color: var(--muted-foreground);
 }
 
-.confirm {
-  padding-top: 24px;
-}
-
-@media (max-width: 559px) {
+@media (max-width: 767px) {
   .numberRow {
     grid-template-columns: minmax(0, 1fr);
   }
 
-  .confirm {
+  .actions {
     padding-top: 0;
+  }
+
+  .tall {
+    width: 100%;
   }
 }

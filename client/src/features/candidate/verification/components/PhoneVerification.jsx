@@ -1,6 +1,6 @@
 import { useState } from 'react'
-import { useTranslation } from 'react-i18next'
-import { ShieldCheck } from 'lucide-react'
+import { Trans, useTranslation } from 'react-i18next'
+import { Check, KeyRound, RotateCw, Send, ShieldCheck } from 'lucide-react'
 import { errorCode, useGetConfigQuery } from '@/app/api.js'
 import { Button, Icon, SelectField, TextField } from '@/components/ui'
 import PillBadge from '@/components/common/PillBadge.jsx'
@@ -78,7 +78,7 @@ export default function PhoneVerification({ phone }) {
             </Button>
           </div>
         ) : (
-          <>
+          <div className={styles.well}>
             <div className={styles.numberRow}>
               <SelectField
                 label={t('verification:phone.country')}
@@ -101,11 +101,18 @@ export default function PhoneVerification({ phone }) {
                 }}
                 error={errors.phone}
               />
-            </div>
-            <div className={styles.actions}>
-              <Button variant="outline" loading={sending} disabled={!number.trim() || cooldown.remaining > 0} onClick={send}>
-                {cooldown.remaining > 0 ? t('verification:phone.resendIn', { count: cooldown.remaining }) : t(sent ? 'verification:phone.resend' : 'verification:phone.send')}
-              </Button>
+              <div className={styles.actions}>
+                <Button
+                  variant={sent ? 'outline' : 'primary'}
+                  className={styles.tall}
+                  leftIcon={sent ? <Icon as={RotateCw} size={14} /> : <Icon as={Send} size={14} />}
+                  loading={sending}
+                  disabled={!number.trim() || cooldown.remaining > 0}
+                  onClick={send}
+                >
+                  {cooldown.remaining > 0 ? t('verification:phone.resendIn', { count: cooldown.remaining }) : t(sent ? 'verification:phone.resend' : 'verification:phone.send')}
+                </Button>
+              </div>
             </div>
             {errors.send && (
               <p className={styles.error} role="alert">
@@ -114,10 +121,15 @@ export default function PhoneVerification({ phone }) {
             )}
             {sent && (
               <form className={styles.codeForm} onSubmit={confirm} noValidate>
-                <p className={styles.codeShown} role="status">
-                  {t('verification:phone.codeShown', { code: sent.code, minutes: Math.round(sent.expiresInSeconds / 60) })}
-                  <span className={styles.codeNote}>{t('verification:phone.codeNote')}</span>
-                </p>
+                <div className={styles.codeShown}>
+                  <span className={styles.codeIcon}>
+                    <Icon as={KeyRound} size={16} />
+                  </span>
+                  <p className={styles.codeText} role="status">
+                    <Trans i18nKey="verification:phone.codeShown" values={{ code: sent.code, minutes: Math.round(sent.expiresInSeconds / 60) }} components={{ code: <strong className={styles.code} /> }} />
+                    <span className={styles.codeNote}>{t('verification:phone.codeNote')}</span>
+                  </p>
+                </div>
                 <div className={styles.numberRow}>
                   <TextField
                     label={t('verification:phone.code')}
@@ -131,15 +143,15 @@ export default function PhoneVerification({ phone }) {
                     }}
                     error={errors.code}
                   />
-                  <div className={styles.confirm}>
-                    <Button type="submit" loading={confirming}>
+                  <div className={styles.actions}>
+                    <Button type="submit" className={styles.tall} leftIcon={<Icon as={Check} size={14} />} loading={confirming}>
                       {t('verification:phone.confirm')}
                     </Button>
                   </div>
                 </div>
               </form>
             )}
-          </>
+          </div>
         )}
       </div>
     </div>

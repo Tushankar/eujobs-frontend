@@ -14,6 +14,7 @@
     "description": "Applying needs a complete profile and the Plus plan, so companies get verified, comparable applications.",
     "missingTitle": "Finish your profile",
     "missingText": "These items are still open:",
+    "openCount": "{{count}} open",
     "planTitle": "Plus plan",
     "planText": "Applying is part of the Plus plan.",
     "upgrade": "Upgrade to apply",
