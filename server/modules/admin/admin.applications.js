@@ -2,6 +2,7 @@ import { t } from '../../lib/i18n.js'
 import { paginate } from '../../lib/pages.js'
 import { Application } from '../applications/applications.model.js'
 import { Company } from '../companies/companies.model.js'
+import { logoUrlsById } from '../companies/companies.service.js'
 import { Job } from '../jobs/jobs.model.js'
 import { User } from '../users/users.model.js'
 import { searchText } from '../../lib/skills.js'
@@ -28,6 +29,7 @@ export async function filteredApplications({ q, status, country }) {
       candidate: { id: String(application.candidateId), name: nameOf.get(String(application.candidateId)) ?? null },
       job: { id: String(application.jobId), title: job?.title ?? null, country: job?.country ?? null },
       company: companyOf.get(String(application.companyId)) ?? null,
+      companyId: String(application.companyId),
       appliedAt: application.appliedAt,
       status: application.status,
     }
@@ -36,8 +38,11 @@ export async function filteredApplications({ q, status, country }) {
   return needle ? rows.filter((row) => [row.candidate.name, row.job.title, row.company].some((text) => searchText(text).includes(needle))) : rows
 }
 
-export async function listApplications(query) {
-  return paginate(await filteredApplications(query), query)
+/** One table page, each row with its company logo for the viewing admin. */
+export async function listApplications(admin, query) {
+  const page = paginate(await filteredApplications(query), query)
+  const logos = await logoUrlsById(page.items.map((row) => row.companyId), admin._id)
+  return { ...page, items: page.items.map((row) => ({ ...row, companyLogoUrl: logos.get(row.companyId) ?? null })) }
 }
 
 /** OQ-6d: headers and the status label in the admin's language. */

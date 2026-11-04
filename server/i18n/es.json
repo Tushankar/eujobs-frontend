@@ -596,5 +596,20 @@
       "brief": "Instrucciones",
       "transcript": "Transcripción de la nota de voz"
     }
+  },
+  "roles": {
+    "copy": "copia",
+    "manager": {
+      "name": "Responsable de equipo",
+      "description": "Supervisa un equipo, gestiona la actividad de selección y revisa los informes operativos."
+    },
+    "accounts_head": {
+      "name": "Responsable de cuentas",
+      "description": "Supervisa la información financiera, las aprobaciones y los informes financieros."
+    },
+    "staff": {
+      "name": "Personal",
+      "description": "Ofrece un acceso operativo limitado para las tareas del día a día."
+    }
   }
 }

@@ -8,6 +8,7 @@ import { sendEmail } from '../../lib/mailer.js'
 import { CandidateProfile } from '../candidates/candidates.model.js'
 import { loadProfile, removePhoto } from '../candidates/candidates.service.js'
 import { Company } from '../companies/companies.model.js'
+import { logoUrls } from '../companies/companies.service.js'
 import { File } from '../files/files.model.js'
 import { Job } from '../jobs/jobs.model.js'
 import { scheduleRecompute } from '../matching/matching.service.js'
@@ -169,8 +170,19 @@ export async function summary() {
 async function targetView(admin, item) {
   if (item.targetType === 'job') {
     const job = await Job.findById(item.targetId)
-    const company = job && (await Company.findById(job.companyId, 'displayName'))
-    return job && { title: job.title, company: company?.displayName ?? null, status: job.status, brief: job.brief ?? '', restricted: Boolean(job.restricted?.at) }
+    const company = job && (await Company.findById(job.companyId, 'displayName logoFileId'))
+    const logoUrl = company ? (await logoUrls([company], admin._id)).get(String(company._id)) : null
+    return (
+      job && {
+        title: job.title,
+        company: company?.displayName ?? null,
+        companyId: company ? String(company._id) : null,
+        companyLogoUrl: logoUrl ?? null,
+        status: job.status,
+        brief: job.brief ?? '',
+        restricted: Boolean(job.restricted?.at),
+      }
+    )
   }
   if (item.targetType === 'candidate_profile') {
     const [user, profile] = await Promise.all([User.findById(item.targetId, 'fullName'), CandidateProfile.findOne({ userId: item.targetId })])
@@ -186,8 +198,8 @@ async function targetView(admin, item) {
     )
   }
   if (item.targetType === 'company') {
-    const company = await Company.findById(item.targetId, 'displayName description')
-    return company && { name: company.displayName, description: company.description ?? '' }
+    const company = await Company.findById(item.targetId, 'displayName description logoFileId')
+    return company && { id: String(company._id), name: company.displayName, description: company.description ?? '', logoUrl: (await logoUrls([company], admin._id)).get(String(company._id)) ?? null }
   }
   return { name: item.targetName }
 }

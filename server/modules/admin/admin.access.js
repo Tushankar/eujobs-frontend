@@ -2,9 +2,11 @@ import { config } from '../../config/env.js'
 import { LIMITS } from '../../config/limits.js'
 import { actorFor, recordAudit } from '../../lib/audit.js'
 import { AppError, fieldError } from '../../lib/errors.js'
+import { t } from '../../lib/i18n.js'
 import { sendEmail } from '../../lib/mailer.js'
 import { EmailToken } from '../auth/auth.model.js'
 import { checkPassword, findEmailToken, hashPassword, issueEmailToken, useEmailToken } from '../auth/auth.service.js'
+import { SYSTEM_ROLES } from '../../seed/data/catalog.js'
 import { User } from '../users/users.model.js'
 import { AdminRole } from './admin.model.js'
 import { effectivePermissions } from './admin.service.js'
@@ -18,10 +20,19 @@ const audit = (admin, type, target, params) => recordAudit({ type: `access.${typ
 
 /* ---------- roles ---------- */
 
-const roleDto = (role, assignedCount) => ({
+/**
+ * P11-Q6: a seeded system role whose name and description are still the seeded ones reads in `language`; once an
+ * admin has changed them, the role reads as written (like every admin-made role).
+ */
+export function roleText(role, language) {
+  const seeded = role.system && SYSTEM_ROLES.find((item) => item.name === role.name && item.description === (role.description ?? ''))
+  if (!seeded) return { name: role.name, description: role.description ?? '' }
+  return { name: t(language, `roles.${seeded.key}.name`), description: t(language, `roles.${seeded.key}.description`) }
+}
+
+const roleDto = (role, assignedCount, language) => ({
   id: String(role._id),
-  name: role.name,
-  description: role.description ?? '',
+  ...roleText(role, language),
   scope: role.scope ?? null,
   permissions: role.permissions,
   status: role.status,
@@ -36,11 +47,11 @@ async function assignedCounts() {
 }
 
 /** GET /admin/roles: active roles first (system roles, then by name), archived last. */
-export async function listRoles() {
+export async function listRoles(language) {
   const [roles, counts] = await Promise.all([AdminRole.find(), assignedCounts()])
   const items = roles
     .sort((a, b) => Number(a.status === 'archived') - Number(b.status === 'archived') || Number(b.system) - Number(a.system) || a.name.localeCompare(b.name))
-    .map((role) => roleDto(role, counts.get(String(role._id)) ?? 0))
+    .map((role) => roleDto(role, counts.get(String(role._id)) ?? 0, language))
   return { items, total: items.length, page: 1, pageSize: items.length }
 }
 
@@ -60,26 +71,28 @@ export async function createRole(admin, body) {
   await assertNameFree(body.name)
   const role = await AdminRole.create({ ...body, nameLower: body.name.toLowerCase(), createdBy: admin._id })
   await audit(admin, 'role_created', { type: 'role', id: role._id }, { role: role.name })
-  return roleDto(role, 0)
+  return roleDto(role, 0, admin.language)
 }
 
-/** "Name (copy)", then "Name (copy 2)", … until the name is free. */
+/** "Name (copy)", then "Name (copy 2)", … in the admin's language, until the name is free; a system role is copied as it reads. */
 export async function duplicateRole(admin, id) {
   const source = await findRole(id)
-  let name = `${source.name} (copy)`
-  for (let n = 2; await AdminRole.exists({ nameLower: name.toLowerCase() }); n += 1) name = `${source.name} (copy ${n})`
+  const text = roleText(source, admin.language)
+  const copy = t(admin.language, 'roles.copy')
+  let name = `${text.name} (${copy})`
+  for (let n = 2; await AdminRole.exists({ nameLower: name.toLowerCase() }); n += 1) name = `${text.name} (${copy} ${n})`
   name = name.slice(0, LIMITS.adminRole.name.max)
   await assertNameFree(name)
   const role = await AdminRole.create({
     name,
     nameLower: name.toLowerCase(),
-    description: source.description,
+    description: text.description,
     scope: source.scope,
     permissions: source.permissions,
     createdBy: admin._id,
   })
   await audit(admin, 'role_duplicated', { type: 'role', id: role._id }, { role: role.name, source: source.name })
-  return roleDto(role, 0)
+  return roleDto(role, 0, admin.language)
 }
 
 /** M-160: nobody removes their own `roles.assign`, by a role edit or an access change. */
@@ -94,6 +107,10 @@ async function assertKeepsRolesAssign(admin, nextAccess) {
 export async function updateRole(admin, id, body) {
   const role = await findRole(id)
   if (role.status === 'archived') throw new AppError('CONFLICT', { params: { status: role.status } })
+  // The edit dialog is prefilled with the translated text of a system role: unchanged text keeps the seeded one.
+  const shown = roleText(role, admin.language)
+  if (body.name === shown.name) body = { ...body, name: role.name }
+  if (body.description === shown.description) body = { ...body, description: role.description }
   await assertNameFree(body.name, role._id)
   if (String(admin.adminAccess?.roleId) === String(role._id)) {
     await assertKeepsRolesAssign(admin, { ...admin.adminAccess.toObject(), role: { ...role.toObject(), permissions: body.permissions } })
@@ -101,7 +118,7 @@ export async function updateRole(admin, id, body) {
   Object.assign(role, body, { nameLower: body.name.toLowerCase() })
   await role.save()
   await audit(admin, 'role_updated', { type: 'role', id: role._id }, { role: role.name })
-  return roleDto(role, (await assignedCounts()).get(String(role._id)) ?? 0)
+  return roleDto(role, (await assignedCounts()).get(String(role._id)) ?? 0, admin.language)
 }
 
 /** M-158: archiving is blocked while users are assigned (`IN_USE { count }`). */
@@ -113,12 +130,12 @@ export async function archiveRole(admin, id) {
   role.status = 'archived'
   await role.save()
   await audit(admin, 'role_archived', { type: 'role', id: role._id }, { role: role.name })
-  return roleDto(role, 0)
+  return roleDto(role, 0, admin.language)
 }
 
 /* ---------- admin staff access ---------- */
 
-async function accessDto(user, roles) {
+async function accessDto(user, roles, language) {
   const role = user.adminAccess?.roleId ? roles.get(String(user.adminAccess.roleId)) : null
   return {
     id: String(user._id),
@@ -126,7 +143,7 @@ async function accessDto(user, roles) {
     email: user.email,
     status: user.status,
     isOwner: user.isOwner,
-    role: role ? { id: String(role._id), name: role.name, status: role.status } : null,
+    role: role ? { id: String(role._id), name: roleText(role, language).name, status: role.status } : null,
     department: user.adminAccess?.department ?? '',
     granted: user.adminAccess?.granted ?? [],
     removed: user.adminAccess?.removed ?? [],
@@ -137,11 +154,11 @@ async function accessDto(user, roles) {
 }
 
 /** GET /admin/access/users (M-154): admin staff only, Owners first, then by name. */
-export async function listAccessUsers() {
+export async function listAccessUsers(language) {
   const [users, roles] = await Promise.all([User.find({ role: 'admin' }), AdminRole.find()])
   const byId = new Map(roles.map((role) => [String(role._id), role]))
   users.sort((a, b) => Number(b.isOwner) - Number(a.isOwner) || a.fullName.localeCompare(b.fullName))
-  const items = await Promise.all(users.map((user) => accessDto(user, byId)))
+  const items = await Promise.all(users.map((user) => accessDto(user, byId, language)))
   return { items, total: items.length, page: 1, pageSize: items.length }
 }
 
@@ -168,7 +185,7 @@ export async function saveAccess(admin, id, { roleId, department, granted, remov
   user.adminAccess = next
   await user.save()
   await audit(admin, 'user_access_saved', { type: 'user', id: user._id }, { name: user.fullName, role: role?.name ?? null })
-  return accessDto(user, new Map(role ? [[String(role._id), role]] : []))
+  return accessDto(user, new Map(role ? [[String(role._id), role]] : []), admin.language)
 }
 
 /** DELETE /admin/access/users/:id: no role, no grants (the department label stays). */
@@ -179,7 +196,7 @@ export async function revokeAccess(admin, id) {
   user.adminAccess = next
   await user.save()
   await audit(admin, 'user_access_revoked', { type: 'user', id: user._id }, { name: user.fullName })
-  return accessDto(user, new Map())
+  return accessDto(user, new Map(), admin.language)
 }
 
 /* ---------- invites (M-159, U21) ---------- */
@@ -203,10 +220,10 @@ export async function invite(admin, { email, fullName, roleId, department }) {
     to: user.email,
     userId: user._id,
     language: user.language,
-    params: { name: user.fullName, inviter: admin.fullName, role: role.name, link: `${config.clientOrigin}/admin/set-password?token=${token}` },
+    params: { name: user.fullName, inviter: admin.fullName, role: roleText(role, user.language).name, link: `${config.clientOrigin}/admin/set-password?token=${token}` },
   })
   await audit(admin, 'admin_invited', { type: 'user', id: user._id }, { name: user.fullName, email: user.email, role: role.name })
-  return accessDto(user, new Map([[String(role._id), role]]))
+  return accessDto(user, new Map([[String(role._id), role]]), admin.language)
 }
 
 /** GET /auth/invite/:token: who the link is for. */

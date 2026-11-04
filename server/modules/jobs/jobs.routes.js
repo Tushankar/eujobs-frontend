@@ -95,7 +95,7 @@ savedRouter.delete('/:jobId', savedParams, async (req, res) => {
 /* /admin/jobs (M-046, P10-Q4): every status with filters and pages; "Open case" also needs moderation.manage (M-164). */
 export const adminRouter = Router()
 adminRouter.get('/', requireAuth, requireRole('admin'), requirePermission('jobs.view'), validate({ query: schemas.adminJobsQuery }), async (req, res) => {
-  res.json(await jobs.adminJobs(req.query))
+  res.json(await jobs.adminJobs(req.user, req.query))
 })
 
 adminRouter.post(

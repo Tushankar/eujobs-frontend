@@ -1,11 +1,14 @@
+/* The actions drop under the title when the row is too narrow for both (long es/fr titles, Phase 11). */
 .root {
   display: flex;
+  flex-wrap: wrap;
   align-items: flex-start;
   justify-content: space-between;
   gap: 16px;
 }
 
 .text {
+  flex: 1 1 12rem;
   min-width: 0;
 }
 

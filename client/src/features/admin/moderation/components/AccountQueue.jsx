@@ -2,6 +2,7 @@ import { useTranslation } from 'react-i18next'
 import { useNavigate } from 'react-router-dom'
 import { Lock, Users } from 'lucide-react'
 import { errorCode } from '@/app/api.js'
+import { CompanyLogo } from '@/components/ui'
 import EmptyState from '@/components/common/EmptyState.jsx'
 import SectionTitle from '@/components/common/SectionTitle.jsx'
 import SegmentedTabs from '@/components/common/SegmentedTabs.jsx'
@@ -45,6 +46,7 @@ export default function AccountQueue({ basePath, openId, status, onStatusChange,
               <QueueRow
                 key={item.id}
                 icon={Users}
+                media={item.company && <CompanyLogo name={item.company.displayName} id={item.company.id} src={item.company.logoUrl ?? undefined} size={44} />}
                 title={item.fullName}
                 lines={[
                   { text: [item.email, item.company?.legalName, item.company?.countryCode && format.country(item.company.countryCode)].filter(Boolean).join(' · '), tone: 'sub' },

@@ -28,7 +28,7 @@ router.get('/permissions', requirePermission('roles.view'), async (req, res) => 
 /* ---------- Access management (§3.13) ---------- */
 
 router.get('/roles', requirePermission('roles.view'), async (req, res) => {
-  res.json(await access.listRoles())
+  res.json(await access.listRoles(req.user.language))
 })
 
 router.post('/roles', requirePermission('roles.create'), validate({ body: schemas.roleBody }), async (req, res) => {
@@ -48,7 +48,7 @@ router.post('/roles/:id/archive', requirePermission('roles.archive'), validate({
 })
 
 router.get('/access/users', requirePermission('roles.view'), async (req, res) => {
-  res.json(await access.listAccessUsers())
+  res.json(await access.listAccessUsers(req.user.language))
 })
 
 router.put('/access/users/:id', requirePermission('roles.assign'), validate({ params: idParams, body: schemas.accessBody }), async (req, res) => {
@@ -66,7 +66,7 @@ router.post('/invitations', requirePermission('users.add'), validate({ body: sch
 /* ---------- Users (M-161) ---------- */
 
 router.get('/users', requirePermission('users.view'), validate({ query: schemas.usersQuery }), async (req, res) => {
-  res.json(await users.listUsers(req.query))
+  res.json(await users.listUsers(req.user, req.query))
 })
 
 router.get('/users/export', requirePermission('users.view'), requirePermission('reports.export'), validate({ query: schemas.usersQuery }), async (req, res) => {
@@ -115,7 +115,7 @@ router.get('/analytics/activity', requirePermission('reports.view'), validate({ 
 /* ---------- Applications and Recruitment (M-206, M-178, P10-Q13, P10-Q14) ---------- */
 
 router.get('/applications', requirePermission('candidates.view'), validate({ query: schemas.applicationsQuery }), async (req, res) => {
-  res.json(await applications.listApplications(req.query))
+  res.json(await applications.listApplications(req.user, req.query))
 })
 
 router.get('/applications/export', requirePermission('candidates.view'), requirePermission('reports.export'), validate({ query: schemas.applicationsQuery }), async (req, res) => {
@@ -124,7 +124,7 @@ router.get('/applications/export', requirePermission('candidates.view'), require
 })
 
 router.get('/recruitment', requirePermission('candidates.view'), validate({ query: schemas.metricsQuery }), async (req, res) => {
-  res.json(await metrics.recruitment(req.query))
+  res.json(await metrics.recruitment(req.user, req.query))
 })
 
 /* ---------- Reports (M-181 … M-183, §3.18) ---------- */

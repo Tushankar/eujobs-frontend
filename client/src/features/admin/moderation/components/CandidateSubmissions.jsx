@@ -15,7 +15,7 @@ export default function CandidateSubmissions({ candidate, items, basePath }) {
   return (
     <li className={styles.card} data-candidate={candidate?.id}>
       <div className={styles.person}>
-        <Avatar name={name} size={40} />
+        <Avatar name={name} src={candidate?.photoUrl ?? undefined} size={40} />
         <div className={styles.who}>
           <h3 className={styles.name}>{name}</h3>
           {candidate?.email && <p className={styles.email}>{candidate.email}</p>}

@@ -596,5 +596,20 @@
       "brief": "Brief",
       "transcript": "Voice note transcript"
     }
+  },
+  "roles": {
+    "copy": "copy",
+    "manager": {
+      "name": "Manager",
+      "description": "Supervises a team, manages recruitment activity, and reviews operational reporting."
+    },
+    "accounts_head": {
+      "name": "Accounts Head",
+      "description": "Oversees finance information, approvals, and financial reporting."
+    },
+    "staff": {
+      "name": "Staff",
+      "description": "Provides limited operational access for day-to-day responsibilities."
+    }
   }
 }

@@ -49,7 +49,7 @@ export default function ProfileMenu({ workspace }) {
       panelClassName={styles.panel}
       trigger={(props) => (
         <button type="button" className={styles.trigger} aria-label={t('shell:profileMenu.open')} {...props}>
-          <Avatar name={me.fullName} src={me.photoUrl ?? undefined} size={32} />
+          <Avatar name={me.fullName} src={(me.photoUrl ?? me.company?.logoUrl) ?? undefined} size={32} />
         </button>
       )}
     >

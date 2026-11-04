@@ -10,8 +10,11 @@
   min-width: 0;
 }
 
+/* Sized by the longest option, so "Cualquier permiso de trabajo" or "Todos los pagadores" is never cut. */
 .filter {
-  flex: 0 0 192px;
+  flex: 0 1 auto;
+  min-width: 192px;
+  max-width: 100%;
 }
 
 /* Figma insets the selected label 20px from the border (the DS field uses 16px). */

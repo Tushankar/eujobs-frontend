@@ -1,0 +1,195 @@
+.sidebar {
+  display: flex;
+  flex-direction: column;
+  gap: 16px;
+}
+
+.card {
+  overflow: hidden;
+}
+
+.heading {
+  padding: 18px 20px 10px;
+  font-family: var(--font-display);
+  font-size: 16px;
+  font-weight: 800;
+  line-height: 22px;
+  color: var(--foreground);
+}
+
+.rows {
+  list-style: none;
+}
+
+.row {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  padding: 12px 20px;
+  border-top: 1px solid var(--border);
+  color: inherit;
+  transition: background var(--transition);
+}
+
+.row:hover {
+  background: var(--muted);
+}
+
+.row:focus-visible {
+  outline: 2px solid var(--primary);
+  outline-offset: -2px;
+}
+
+.icon {
+  flex-shrink: 0;
+  color: var(--muted-foreground);
+}
+
+.done {
+  flex-shrink: 0;
+  color: var(--success-fg);
+}
+
+.text {
+  display: flex;
+  flex: 1;
+  flex-direction: column;
+  min-width: 0;
+}
+
+.label {
+  font-size: 13px;
+  font-weight: 600;
+  line-height: 20px;
+  color: var(--foreground);
+}
+
+.caption {
+  font-size: 12px;
+  line-height: 18px;
+  color: var(--muted-foreground);
+}
+
+.clear,
+.role {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  padding: 12px 20px 16px;
+  border-top: 1px solid var(--border);
+}
+
+/* Permission group row: label, held/total, chevron, then a thin progress bar */
+.groupHead {
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+  width: 100%;
+  padding: 12px 20px 14px;
+  border: 0;
+  border-top: 1px solid var(--border);
+  background: transparent;
+  font: inherit;
+  text-align: left;
+  color: inherit;
+  cursor: pointer;
+  transition: background var(--transition);
+}
+
+.groupHead:hover {
+  background: var(--muted);
+}
+
+.groupHead:focus-visible {
+  outline: 2px solid var(--primary);
+  outline-offset: -2px;
+}
+
+.groupLine {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+}
+
+.groupLine .label {
+  flex: 1;
+}
+
+.groupCount {
+  font-size: 12px;
+  font-weight: 600;
+  line-height: 18px;
+  font-variant-numeric: tabular-nums;
+  color: var(--muted-foreground);
+}
+
+.chevron {
+  transition: transform var(--transition);
+}
+
+.chevronOpen {
+  transform: rotate(180deg);
+}
+
+.bar {
+  display: block;
+  height: 4px;
+  border-radius: var(--radius-full);
+  background: var(--secondary);
+  overflow: hidden;
+}
+
+.fill {
+  display: block;
+  height: 100%;
+  border-radius: inherit;
+  background: var(--muted-foreground);
+}
+
+.fillFull {
+  background: var(--success-fg);
+}
+
+.permissions {
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+  padding: 2px 20px 14px;
+  list-style: none;
+  font-size: 12px;
+  line-height: 16px;
+  color: var(--foreground);
+}
+
+.permissions li {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+}
+
+.permissions .missing {
+  color: var(--muted-foreground);
+}
+
+.footer {
+  padding: 14px 20px 16px;
+  border-top: 1px solid var(--border);
+}
+
+/* Quiet outlined pill link */
+.pill {
+  display: inline-flex;
+  padding: 6px 14px;
+  border: 1px solid var(--border);
+  border-radius: var(--radius-full);
+  background: var(--card);
+  font-size: 13px;
+  font-weight: 600;
+  line-height: 18px;
+  color: var(--foreground);
+  transition: border-color var(--transition);
+}
+
+.pill:hover {
+  border-color: var(--foreground);
+}

@@ -4,6 +4,8 @@ import { paginate } from '../../lib/pages.js'
 import { AppError } from '../../lib/errors.js'
 import { Application } from '../applications/applications.model.js'
 import { CandidateProfile } from '../candidates/candidates.model.js'
+import { photoUrls } from '../candidates/candidates.service.js'
+import { logoUrlsById } from '../companies/companies.service.js'
 import { Company } from '../companies/companies.model.js'
 import { accountRecord } from '../companies/companies.review.js'
 import { validRightToWork } from '../discovery/discovery.population.js'
@@ -130,8 +132,15 @@ export async function filteredUsers(query) {
   )
 }
 
-export async function listUsers(query) {
-  return paginate(await filteredUsers(query), query)
+/** One table page; each row carries its picture for the viewing admin: the candidate's photo, the recruiter's company logo. */
+export async function listUsers(admin, query) {
+  const page = paginate(await filteredUsers(query), query)
+  if (query.role !== 'candidate') {
+    const logos = await logoUrlsById(page.items.map((row) => row.company?.id).filter(Boolean), admin._id)
+    return { ...page, items: page.items.map((row) => ({ ...row, photoUrl: logos.get(row.company?.id) ?? null })) }
+  }
+  const photos = await photoUrls(await CandidateProfile.find({ userId: { $in: page.items.map((row) => row.id) } }, 'userId photo'), admin._id)
+  return { ...page, items: page.items.map((row) => ({ ...row, photoUrl: photos.get(row.id) ?? null })) }
 }
 
 /** OQ-6d: the export rows in the admin's language, headers first. */

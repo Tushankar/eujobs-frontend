@@ -9,8 +9,10 @@
   flex-shrink: 0;
 }
 
+/* At least 192 px, or as wide as the longest option ("Toutes les étapes actives"). */
 .stageFilter {
-  width: 192px;
+  min-width: 192px;
+  max-width: 100%;
   flex-shrink: 0;
 }
 

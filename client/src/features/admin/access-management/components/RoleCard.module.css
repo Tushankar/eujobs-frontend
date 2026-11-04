@@ -81,9 +81,14 @@
   color: var(--muted-foreground);
 }
 
+/* Two actions side by side when they fit; a long translated label puts them on two rows instead of overflowing. */
 .actions {
-  display: grid;
-  grid-template-columns: repeat(2, minmax(0, 1fr));
+  display: flex;
+  flex-wrap: wrap;
   gap: 8px;
   padding-top: 20px;
+}
+
+.actions > * {
+  flex: 1 1 auto;
 }

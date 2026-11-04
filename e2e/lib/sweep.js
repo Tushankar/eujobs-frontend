@@ -71,10 +71,10 @@ async function routeIds(ctx) {
 }
 
 /**
- * Sweeps every route in `language`. Outside English the seeded accounts get that language (explicit) for the run and
+ * Sweeps every route (or the `routes` given, same shape as ROUTES) in `language`. Outside English the seeded accounts get that language (explicit) for the run and
  * their own values back afterwards; the anonymous visitor's choice is set in this browser's storage.
  */
-export async function sweepRoutes(ctx, language) {
+export async function sweepRoutes(ctx, language, routes = ROUTES) {
   const ids = await routeIds(ctx)
   const resolve = (path) => path.replace(/:(\w+)/g, (match, name) => ids[name] ?? match)
   const texts = { ...textsFor(language), language }
@@ -88,7 +88,7 @@ export async function sweepRoutes(ctx, language) {
   const counts = []
   try {
     if (language !== 'en') await db('users', 'updateMany', { filter: { email: { $in: emails } }, update: { $set: { language, languageExplicit: true } } })
-    for (const [group, paths] of Object.entries(ROUTES)) {
+    for (const [group, paths] of Object.entries(routes)) {
       const handle = await ctx.newPage()
       await handle.page.evaluateOnNewDocument((value) => {
         try {

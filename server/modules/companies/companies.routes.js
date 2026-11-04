@@ -65,7 +65,7 @@ export const adminRouter = Router()
 adminRouter.use(requireAuth, requireRole('admin'), requirePermission('moderation.manage'))
 
 adminRouter.get('/', validate({ query: schemas.accountsQuery }), async (req, res) => {
-  res.json({ ...(await review.listAccounts(req.query.status)), counts: await review.accountCounts() })
+  res.json({ ...(await review.listAccounts(req.user, req.query.status)), counts: await review.accountCounts() })
 })
 
 adminRouter.get('/:userId', validate({ params: schemas.accountParams }), async (req, res) => {

@@ -21,7 +21,7 @@ export default function CandidateMovement({ rows, stage, onClearStage }) {
       width: 278,
       render: (row) => (
         <div className={styles.person}>
-          <Avatar name={row.candidate.name ?? ''} size={32} />
+          <Avatar name={row.candidate.name ?? ''} src={row.candidate.photoUrl ?? undefined} size={32} />
           <div>
             <p className={styles.name}>{row.candidate.name}</p>
             <p className={styles.title}>{t('movement.job', { job: row.job.title, company: row.company })}</p>

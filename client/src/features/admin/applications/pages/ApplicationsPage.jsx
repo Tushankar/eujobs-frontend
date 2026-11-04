@@ -9,6 +9,7 @@ import PageTitle from '@/components/common/PageTitle.jsx'
 import Pagination from '@/components/common/Pagination.jsx'
 import PillBadge from '@/components/common/PillBadge.jsx'
 import { Button, Icon, SelectField, TextField } from '@/components/ui'
+import CompanyCell from '@/components/common/CompanyCell.jsx'
 import { useCountryOptions } from '@/lib/countries.js'
 import { downloadFromApi } from '@/lib/download.js'
 import { useErrorText } from '@/lib/forms.js'
@@ -64,7 +65,7 @@ export default function ApplicationsPage() {
         ),
     },
     { key: 'role', header: t('columns.role'), render: (row) => <span className={styles.muted}>{row.job.title}</span> },
-    { key: 'company', header: t('columns.company'), render: (row) => <span className={styles.muted}>{row.company}</span> },
+    { key: 'company', header: t('columns.company'), render: (row) => <CompanyCell name={row.company} id={row.companyId} logoUrl={row.companyLogoUrl} /> },
     { key: 'country', header: t('columns.country'), render: (row) => <span className={styles.muted}>{row.job.country ? format.country(row.job.country) : '—'}</span> },
     { key: 'applied', header: t('columns.applied'), render: (row) => <span className={styles.muted}>{format.date(row.appliedAt)}</span> },
     { key: 'status', header: t('columns.status'), render: (row) => <PillBadge tone={TONES[row.status]}>{t(`enums:applicationStatus.${row.status}`)}</PillBadge> },

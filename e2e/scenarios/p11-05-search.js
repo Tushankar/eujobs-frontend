@@ -56,7 +56,7 @@ export default {
     await signInWithForm(admin.page, ctx.webUrl, '/admin/sign-in', ctx.seedCredentials.email(), ctx.seedCredentials.password)
     await admin.page.goto(`${ctx.webUrl}/admin/candidates`, { waitUntil: 'networkidle0' })
     await waitForSettled(admin.page)
-    const searched = responseTo(admin.page, ['/admin/candidates', 'q=zoe'])
+    const searched = responseTo(admin.page, ['/admin/users', 'q=zoe'])
     await fill(admin.page, 'main input[type="search"], main input', 'zoe angstrom')
     const body = await (await searched).json()
     ctx.check(body.items?.some((row) => row.email === zoe.email || row.fullName === 'Zoë Ångström'), `"zoe angstrom" finds Zoë Ångström (${body.items?.length} rows)`)

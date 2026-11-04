@@ -1,5 +1,6 @@
 import assert from 'node:assert/strict'
 import { before, describe, it } from 'node:test'
+import { roleText } from '../modules/admin/admin.access.js'
 import { AdminRole, AuditEvent } from '../modules/admin/admin.model.js'
 import { EmailToken } from '../modules/auth/auth.model.js'
 import { User } from '../modules/users/users.model.js'
@@ -27,6 +28,32 @@ describe('roles (M-157, M-158)', () => {
     assert.deepEqual((await createRole(admin, roleBody({ permissions: [] }))).body.error.fields, { permissions: 'too_few' })
     assert.deepEqual((await createRole(admin, roleBody({ name: 'mAnAgEr' }))).body.error.fields, { name: 'taken' })
     assert.deepEqual((await createRole(admin, roleBody({ permissions: ['users.edit'] }))).body.error.fields, { 'permissions.0': 'invalid' })
+  })
+
+  it('shows unchanged system roles in the admin’s language and keeps their seeded text (P11-Q6)', async () => {
+    const admin = await owner()
+    await User.updateOne({ _id: admin._id }, { language: 'es' })
+    const list = async (user) => (await api().get(`${v1}/admin/roles`).set(auth(user))).body.items
+    const manager = (await list(admin)).find((role) => role.system && role.scope === 'department' && role.permissions.includes('roles.assign'))
+    assert.deepEqual([manager.name, manager.description.startsWith('Supervisa un equipo')], ['Responsable de equipo', true])
+
+    // A permissions-only edit through the dialog, which is prefilled with the Spanish text, keeps the seeded text.
+    const seeded = await AdminRole.findById(manager.id)
+    const edited = await api().patch(`${v1}/admin/roles/${manager.id}`).set(auth(admin)).send({ name: manager.name, description: manager.description, scope: manager.scope, permissions: [...manager.permissions, 'audit.view'] })
+    assert.equal(edited.body.name, 'Responsable de equipo')
+    assert.deepEqual([(await AdminRole.findById(manager.id)).name, (await AdminRole.findById(manager.id)).description], [seeded.name, seeded.description])
+    const english = await owner()
+    assert.equal((await list(english)).find((role) => role.id === manager.id).name, 'Manager')
+    await AdminRole.updateOne({ _id: manager.id }, { permissions: seeded.permissions })
+
+    // A copy reads as the source did, with the suffix in the admin's language; it is an ordinary role from then on.
+    const copy = await api().post(`${v1}/admin/roles/${manager.id}/duplicate`).set(auth(admin))
+    assert.equal(copy.body.name, 'Responsable de equipo (copia)')
+    assert.equal((await list(english)).find((role) => role.id === copy.body.id).name, 'Responsable de equipo (copia)')
+
+    // Changed text reads as written in every language.
+    assert.deepEqual(roleText({ system: true, name: 'Gerencia', description: 'Texto propio.' }, 'fr'), { name: 'Gerencia', description: 'Texto propio.' })
+    assert.equal(roleText(seeded, 'fr').name, 'Responsable d’équipe')
   })
 
   it('creates, duplicates with a free name, edits and audits', async () => {

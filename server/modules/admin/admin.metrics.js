@@ -2,6 +2,8 @@ import { DateTime } from 'luxon'
 import { t } from '../../lib/i18n.js'
 import { Application, PipelineStage } from '../applications/applications.model.js'
 import { CandidateProfile } from '../candidates/candidates.model.js'
+import { photoUrls } from '../candidates/candidates.service.js'
+import { logoUrls } from '../companies/companies.service.js'
 import { Company } from '../companies/companies.model.js'
 import { ShortlistEntry } from '../discovery/discovery.model.js'
 import { Job } from '../jobs/jobs.model.js'
@@ -205,21 +207,23 @@ export async function activity({ period, tz, country }) {
 /* ---------- Recruitment (M-178, M-179, M-180, OD5, P10-Q13) ---------- */
 
 /** GET /admin/recruitment: cards, current stage counts, the ever-reached funnel, the movement rows and the side lists. */
-export async function recruitment({ country }) {
+export async function recruitment(admin, { country }) {
   const scope = await scopeOf(country)
   const applications = await Application.find({ ...NOT_WITHDRAWN, ...scope.application }).sort({ appliedAt: -1 })
-  const [stages, jobs, users, shortlist, conversations, published, recentJobs] = await Promise.all([
+  const candidateIds = applications.map((application) => application.candidateId)
+  const [stages, jobs, users, profiles, shortlist, conversations, published, recentJobs] = await Promise.all([
     PipelineStage.find({ _id: { $in: applications.map((application) => application.stageId) } }, 'category name'),
     Job.find({ _id: { $in: applications.map((application) => application.jobId) } }, 'title companyId'),
-    User.find({ _id: { $in: applications.map((application) => application.candidateId) } }, 'fullName'),
+    User.find({ _id: { $in: candidateIds } }, 'fullName'),
+    CandidateProfile.find({ userId: { $in: candidateIds } }, 'userId photo'),
     ShortlistEntry.find({}, 'companyId candidateId'),
     Conversation.find({ startedBy: 'recruiter' }, 'companyId candidateId'),
     Job.countDocuments({ status: 'published', ...scope.job }),
     Job.find({ status: 'published', ...scope.job }).sort({ publishedAt: -1 }).limit(SIDEBAR_ROWS),
   ])
-  const companies = new Map(
-    (await Company.find({ _id: { $in: [...jobs, ...recentJobs].map((job) => job.companyId) } }, 'displayName')).map((company) => [String(company._id), company.displayName]),
-  )
+  const companyDocs = await Company.find({ _id: { $in: [...jobs, ...recentJobs].map((job) => job.companyId) } }, 'displayName logoFileId')
+  const companies = new Map(companyDocs.map((company) => [String(company._id), company.displayName]))
+  const [photos, logos] = await Promise.all([photoUrls(profiles, admin._id), logoUrls(companyDocs, admin._id)])
   const byId = (rows) => new Map(rows.map((row) => [String(row._id), row]))
   const stageOf = byId(stages)
   const jobOf = byId(jobs)
@@ -242,9 +246,11 @@ export async function recruitment({ country }) {
     const job = jobOf.get(String(application.jobId))
     return {
       id: String(application._id),
-      candidate: { id: String(application.candidateId), name: userOf.get(String(application.candidateId))?.fullName ?? null },
+      candidate: { id: String(application.candidateId), name: userOf.get(String(application.candidateId))?.fullName ?? null, photoUrl: photos.get(String(application.candidateId)) ?? null },
       job: { id: String(application.jobId), title: job?.title ?? null },
       company: companies.get(String(application.companyId)) ?? null,
+      companyId: String(application.companyId),
+      companyLogoUrl: logos.get(String(application.companyId)) ?? null,
       category: stageOf.get(String(application.stageId))?.category ?? null,
       stageName: stageOf.get(String(application.stageId))?.name ?? null,
       status: application.status,
@@ -262,6 +268,8 @@ export async function recruitment({ country }) {
       id: String(job._id),
       title: job.title,
       company: companies.get(String(job.companyId)) ?? null,
+      companyId: String(job.companyId),
+      companyLogoUrl: logos.get(String(job.companyId)) ?? null,
       workPreference: job.workPreference,
       country: job.country,
       city: job.location?.city ?? null,

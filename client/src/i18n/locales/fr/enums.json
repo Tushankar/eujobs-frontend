@@ -163,6 +163,7 @@
     "verification_approved": "Vérification approuvée",
     "verification_rejected": "Vérification refusée",
     "content_restricted": "Contenu restreint",
+    "content_restriction_lifted": "Restriction levée",
     "certificate_issued": "Certificat délivré",
     "renewal_failed": "Échec du renouvellement",
     "plan_ended": "Fin du plan",

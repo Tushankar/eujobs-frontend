@@ -596,5 +596,20 @@
       "brief": "Consignes",
       "transcript": "Transcription de la note vocale"
     }
+  },
+  "roles": {
+    "copy": "copie",
+    "manager": {
+      "name": "Responsable d’équipe",
+      "description": "Encadre une équipe, gère l’activité de recrutement et suit les rapports opérationnels."
+    },
+    "accounts_head": {
+      "name": "Responsable comptable",
+      "description": "Supervise les informations financières, les validations et les rapports financiers."
+    },
+    "staff": {
+      "name": "Collaborateur",
+      "description": "Dispose d’un accès opérationnel limité pour les tâches du quotidien."
+    }
   }
 }

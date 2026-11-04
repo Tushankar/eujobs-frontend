@@ -6,6 +6,7 @@ import { paginate } from '../../lib/pages.js'
 import { searchText, skillEntries } from '../../lib/skills.js'
 import { validationError } from '../../lib/validate.js'
 import { Company } from '../companies/companies.model.js'
+import { logoUrlsById } from '../companies/companies.service.js'
 import { Country } from '../meta/meta.model.js'
 import { ModerationCase } from '../moderation/moderation.model.js'
 import { refreshRelevantCounts, scheduleRecompute } from '../matching/matching.service.js'
@@ -188,7 +189,7 @@ async function ownJob(company, id) {
  * name and its open moderation case; filtered by status, country (`job.country`, REMOTE included) and a search in
  * the title and company, server-paginated.
  */
-export async function adminJobs({ q, status, country, ...page }) {
+export async function adminJobs(admin, { q, status, country, ...page }) {
   const jobs = await Job.find({ ...(status && { status }), ...(country && { country }) }).sort({ publishedAt: -1, createdAt: -1 })
   const companies = new Map((await Company.find({ _id: { $in: jobs.map((job) => job.companyId) } }, 'displayName')).map((company) => [String(company._id), company]))
   const needle = q && searchText(q)
@@ -196,10 +197,18 @@ export async function adminJobs({ q, status, country, ...page }) {
   const listed = jobs.filter((job) => companies.has(String(job.companyId)))
   const matching = needle ? listed.filter((job) => [job.title, companies.get(String(job.companyId)).displayName].some((text) => searchText(text).includes(needle))) : listed
   const result = paginate(matching, page)
-  const cases = new Map(
-    (await ModerationCase.find({ targetType: 'job', targetId: { $in: result.items.map((job) => job._id) }, status: 'open' }, 'targetId')).map((item) => [String(item.targetId), String(item._id)]),
-  )
-  return { ...result, items: result.items.map((job) => ({ ...jobDto(job, companies.get(String(job.companyId))), openCaseId: cases.get(String(job._id)) ?? null })) }
+  const [found, logos] = await Promise.all([
+    ModerationCase.find({ targetType: 'job', targetId: { $in: result.items.map((job) => job._id) }, status: 'open' }, 'targetId'),
+    logoUrlsById(result.items.map((job) => job.companyId), admin._id),
+  ])
+  const cases = new Map(found.map((item) => [String(item.targetId), String(item._id)]))
+  return {
+    ...result,
+    items: result.items.map((job) => {
+      const dto = jobDto(job, companies.get(String(job.companyId)))
+      return { ...dto, company: { ...dto.company, logoUrl: logos.get(String(job.companyId)) ?? null }, openCaseId: cases.get(String(job._id)) ?? null }
+    }),
+  }
 }
 
 export async function listJobs(company) {

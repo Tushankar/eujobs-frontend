@@ -33,7 +33,7 @@ export const adminRouter = Router()
 adminRouter.use(requireAuth, requireRole('admin'), requirePermission('moderation.manage'))
 
 adminRouter.get('/', validate({ query: schemas.queueQuery }), async (req, res) => {
-  res.json(await verification.listQueue(req.query.status))
+  res.json(await verification.listQueue(req.user, req.query.status))
 })
 
 adminRouter.get('/:id', validate({ params: schemas.submissionParams }), async (req, res) => {

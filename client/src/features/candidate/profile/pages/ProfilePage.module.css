@@ -122,8 +122,9 @@
   border-top: 1px solid var(--border);
 }
 
+/* A real basis: on a phone a long es/fr title keeps its width and the actions move under it. */
 .sectionName {
-  flex: 1;
+  flex: 1 1 10rem;
   min-width: 0;
   font-size: 20px;
   line-height: 28px;

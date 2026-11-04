@@ -336,7 +336,7 @@ export default function UserDetailPage({ role }) {
     <>
       {back}
       <Panel className={styles.hero} padding={24}>
-        <Avatar name={user.fullName} src={profile?.photoUrl ?? undefined} size={72} />
+        <Avatar name={user.fullName} src={(candidate ? profile?.photoUrl : company?.logoUrl) ?? undefined} size={72} />
         <div className={styles.heroText}>
           <div className={styles.heroName}>
             <h1 className={styles.name}>{user.fullName}</h1>

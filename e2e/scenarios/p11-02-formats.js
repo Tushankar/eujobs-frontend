@@ -73,7 +73,7 @@ export default {
       const [owner] = await db('users', 'find', { filter: { email: ownerEmail } })
       const now = { $date: new Date().toISOString() }
       await db('payments', 'insertOne', {
-        doc: { reference: 'LWM-FMT-HUF', payerName: 'Format check', kind: 'course', itemName: 'Format check', amountMinor: 1_234_500, currency: 'HUF', status: 'paid', source: 'seed', paidAt: now, createdAt: now, updatedAt: now },
+        doc: { reference: 'LWM-FMT-HUF', payerRole: 'candidate', payerName: 'Format check', kind: 'course', itemName: 'Format check', amountMinor: 1_234_500, currency: 'HUF', status: 'paid', source: 'seed', paidAt: now, createdAt: now, updatedAt: now },
       })
       try {
         for (const language of ['fr', 'es']) {

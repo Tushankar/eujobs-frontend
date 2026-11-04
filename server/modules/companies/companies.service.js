@@ -27,6 +27,11 @@ export async function logoUrls(companies, viewerId) {
   return new Map(companies.map((company) => [String(company._id), company.logoFileId && byId.has(String(company.logoFileId)) ? signedUrl(byId.get(String(company.logoFileId)), viewerId) : null]))
 }
 
+/** The same, from company ids alone (lists that kept only the name). */
+export async function logoUrlsById(ids, viewerId) {
+  return logoUrls(await Company.find({ _id: { $in: ids } }, 'logoFileId'), viewerId)
+}
+
 /** What candidates and job pages show of a company (M-042, A: recruiter A30). */
 export function publicCompanyDto(company, logoUrl) {
   return {

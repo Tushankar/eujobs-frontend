@@ -3,6 +3,7 @@ import { generate } from '../../lib/ai.js'
 import { actorFor, recordAudit } from '../../lib/audit.js'
 import { AppError, fieldError } from '../../lib/errors.js'
 import { ExplanationFeedback } from '../ai/ai.model.js'
+import { photoUrls } from '../candidates/candidates.service.js'
 import { Company } from '../companies/companies.model.js'
 import { marketCandidates } from '../discovery/discovery.population.js'
 import { Job } from '../jobs/jobs.model.js'
@@ -145,7 +146,7 @@ const jobRow = (job, companies) => ({ id: String(job._id), title: job.title, com
  * A job picker (published jobs, newest first; default the newest), the top 4 of that job's market population by score
  * with the percentage (admins see %, C6), and the code evidence for the selected candidate (default the first).
  */
-export async function oversight({ jobId, candidateId }) {
+export async function oversight(admin, { jobId, candidateId }) {
   const jobs = await Job.find({ status: 'published' }).sort({ publishedAt: -1 })
   const companies = new Map((await Company.find({ _id: { $in: jobs.map((job) => job.companyId) } }, 'displayName')).map((company) => [String(company._id), company.displayName]))
   const job = jobId ? jobs.find((item) => String(item._id) === jobId) : jobs[0]
@@ -158,10 +159,18 @@ export async function oversight({ jobId, candidateId }) {
     .sort((a, b) => b.result.score - a.result.score || a.entry.user.fullName.localeCompare(b.entry.user.fullName))
     .slice(0, M.oversightCandidates)
   const chosen = (candidateId && top.find(({ entry }) => String(entry.user._id) === candidateId)) || top[0]
+  const photos = await photoUrls(top.map(({ entry }) => entry.profile), admin._id)
   return {
     jobs: jobs.map((item) => jobRow(item, companies)),
     job: jobRow(job, companies),
-    candidates: top.map(({ entry, result }) => ({ id: String(entry.user._id), fullName: entry.user.fullName, headline: entry.profile.headline ?? '', score: result.score, label: result.label ?? null })),
+    candidates: top.map(({ entry, result }) => ({
+      id: String(entry.user._id),
+      fullName: entry.user.fullName,
+      photoUrl: photos.get(String(entry.user._id)) ?? null,
+      headline: entry.profile.headline ?? '',
+      score: result.score,
+      label: result.label ?? null,
+    })),
     selected: chosen ? { candidateId: String(chosen.entry.user._id), evidence: matchEvidence(chosen.entry.profile, job) } : null,
   }
 }

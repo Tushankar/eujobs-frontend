@@ -9,6 +9,7 @@ import PageTitle from '@/components/common/PageTitle.jsx'
 import Pagination from '@/components/common/Pagination.jsx'
 import RowActionLink from '@/components/common/RowActionLink.jsx'
 import { Button, Icon, Modal, SelectField, TextareaField, TextField } from '@/components/ui'
+import CompanyCell from '@/components/common/CompanyCell.jsx'
 import aiSparkle from '@/assets/icons/ai-sparkle-blue-16.svg'
 import JobSummaryDialog from '@/features/ai/components/JobSummaryDialog.jsx'
 import JobStatusBadge from '@/features/recruiter/jobs/components/JobStatusBadge.jsx'
@@ -121,7 +122,7 @@ export default function JobsPage() {
 
   const columns = [
     { key: 'title', header: t('columns.role'), width: 220, render: (job) => <span className={styles.title}>{job.title}</span> },
-    { key: 'company', header: t('columns.company'), width: 160, render: (job) => <span className={styles.muted}>{job.company.displayName}</span> },
+    { key: 'company', header: t('columns.company'), width: 160, render: (job) => <CompanyCell name={job.company.displayName} id={job.company.id} logoUrl={job.company.logoUrl} /> },
     { key: 'country', header: t('columns.country'), width: 120, render: (job) => <span className={styles.muted}>{job.country ? format.country(job.country) : '—'}</span> },
     { key: 'salary', header: t('columns.salary'), width: 150, render: (job) => <span className={styles.muted}>{job.salary ? format.salary(job.salary) : '—'}</span> },
     { key: 'status', header: t('columns.status'), width: 110, render: (job) => <JobStatusBadge status={job.status} restricted={Boolean(job.restricted)} /> },

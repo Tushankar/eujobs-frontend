@@ -69,6 +69,7 @@
 
 .newName {
   flex: 1;
+  min-width: 0;
 }
 
 .addButton {
@@ -83,7 +84,8 @@
 }
 
 .category {
-  max-width: 190px;
+  flex-shrink: 0;
+  max-width: 240px; /* fits the longest status label (fr “En cours d’examen (présélection)”) */
   min-height: 32px;
   padding: 4px 8px;
   border: 1px solid var(--border);
@@ -97,8 +99,8 @@
   color: var(--muted-foreground);
 }
 
+/* As wide as its longest status (14 px field text); the name field takes the rest. */
 .newCategory {
-  width: 200px;
   flex-shrink: 0;
 }
 

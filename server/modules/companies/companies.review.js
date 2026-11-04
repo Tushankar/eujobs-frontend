@@ -8,7 +8,7 @@ import { PipelineStage } from '../applications/applications.model.js'
 import { File } from '../files/files.model.js'
 import { User } from '../users/users.model.js'
 import { Company, KycDocument } from './companies.model.js'
-import { companyDto } from './companies.service.js'
+import { companyDto, logoUrls } from './companies.service.js'
 
 /*
  * Moderation › Account review (§3.12, M-165, OQ-2, P4-Q2): recruiters by status, the review detail and the
@@ -42,21 +42,26 @@ export async function allowedActions(admin, status) {
   return ACTIONS[status].filter((decision) => !(decision === 'suspended' || status === 'suspended') || permissions.has('users.deactivate'))
 }
 
-const row = (user, company) => ({
+const row = (user, company, logoUrl = null) => ({
   id: String(user._id),
   fullName: user.fullName,
   email: user.email,
   status: user.status,
-  company: company ? { legalName: company.legalName, displayName: company.displayName, countryCode: company.location?.countryCode ?? null } : null,
+  company: company ? { id: String(company._id), legalName: company.legalName, displayName: company.displayName, countryCode: company.location?.countryCode ?? null, logoUrl } : null,
   submittedAt: company?.submittedAt ?? null,
   createdAt: user.createdAt,
 })
 
 /** Pending review oldest first; the other statuses most recently changed first. */
-export async function listAccounts(status) {
+export async function listAccounts(admin, status) {
   const users = await User.find({ role: 'recruiter', status }).sort(status === 'pending_review' ? {} : { updatedAt: -1 })
-  const companies = new Map((await Company.find({ ownerUserId: { $in: users.map((user) => user._id) } })).map((company) => [String(company.ownerUserId), company]))
-  const items = users.map((user) => row(user, companies.get(String(user._id))))
+  const found = await Company.find({ ownerUserId: { $in: users.map((user) => user._id) } })
+  const companies = new Map(found.map((company) => [String(company.ownerUserId), company]))
+  const logos = await logoUrls(found, admin._id)
+  const items = users.map((user) => {
+    const company = companies.get(String(user._id))
+    return row(user, company, company && logos.get(String(company._id)))
+  })
   if (status === 'pending_review') items.sort((a, b) => new Date(a.submittedAt ?? a.createdAt) - new Date(b.submittedAt ?? b.createdAt))
   return { items, total: items.length, page: 1, pageSize: items.length }
 }

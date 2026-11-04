@@ -1,4 +1,5 @@
 .filter {
-  flex: 0 0 200px;
-  min-width: 0;
+  flex: 0 1 auto;
+  min-width: 200px;
+  max-width: 100%;
 }

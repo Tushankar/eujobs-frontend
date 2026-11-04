@@ -113,8 +113,9 @@
   color: var(--primary);
 }
 
+/* A real basis, so on a phone the text takes its own row instead of being squeezed beside the action. */
 .bannerText {
-  flex: 1;
+  flex: 1 1 12rem;
   min-width: 0;
 }
 

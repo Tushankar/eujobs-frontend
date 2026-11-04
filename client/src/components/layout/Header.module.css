@@ -227,6 +227,17 @@
     display: none;
   }
 
+  /* Only the page name shows on a phone: a long es/fr name ("Por qué te lo recomienda la IA") takes two lines. */
+  .breadcrumb {
+    white-space: normal;
+  }
+
+  .crumbCurrent {
+    display: -webkit-box;
+    -webkit-box-orient: vertical;
+    -webkit-line-clamp: 2;
+  }
+
   .identity {
     padding-left: 8px;
   }

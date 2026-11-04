@@ -3,7 +3,7 @@ import { Link } from 'react-router-dom'
 import { ArrowRight } from 'lucide-react'
 import PillBadge from '@/components/common/PillBadge.jsx'
 import SectionTitle from '@/components/common/SectionTitle.jsx'
-import { Icon, Panel } from '@/components/ui'
+import { CompanyLogo, Icon, Panel } from '@/components/ui'
 import { WORKSPACES, workspacePath } from '@/app/workspaces.js'
 import { useFormat } from '@/lib/preferences.js'
 import styles from './OversightSidebar.module.css'
@@ -11,9 +11,11 @@ import styles from './OversightSidebar.module.css'
 const admin = (to) => workspacePath(WORKSPACES.admin, to)
 const STATUS_TONES = { applied: 'accent', under_review: 'accent', interview: 'success', offer: 'success', hired: 'success', not_selected: 'neutral' }
 
-function ListRow({ title, meta, divided, children }) {
+/** `company` = { name, id, logoUrl }: the company logo leads the row. */
+function ListRow({ title, meta, company, divided, children }) {
   return (
     <li className={divided ? styles.dividedRow : styles.row}>
+      {company?.name && <CompanyLogo name={company.name} id={company.id} src={company.logoUrl ?? undefined} size={32} />}
       <div className={styles.rowText}>
         <p className={styles.rowTitle}>{title}</p>
         <p className={styles.rowMeta}>{meta}</p>
@@ -39,7 +41,13 @@ export default function OversightSidebar({ roles, coverage }) {
         {roles.length ? (
           <ul className={styles.list}>
             {roles.map((role) => (
-              <ListRow key={role.id} title={role.title} meta={`${role.company} · ${where(role)}`} divided>
+              <ListRow
+                key={role.id}
+                title={role.title}
+                meta={`${role.company} · ${where(role)}`}
+                company={{ name: role.company, id: role.companyId, logoUrl: role.companyLogoUrl }}
+                divided
+              >
                 <PillBadge tone="success" dot>
                   {t('enums:jobStatus.published')}
                 </PillBadge>
@@ -55,7 +63,12 @@ export default function OversightSidebar({ roles, coverage }) {
         {coverage.length ? (
           <ul className={styles.list}>
             {coverage.map((item) => (
-              <ListRow key={item.id} title={item.job.title} meta={`${item.candidate.name} · ${format.date(item.appliedAt)}`}>
+              <ListRow
+                key={item.id}
+                title={item.job.title}
+                meta={`${item.candidate.name} · ${format.date(item.appliedAt)}`}
+                company={{ name: item.company, id: item.companyId, logoUrl: item.companyLogoUrl }}
+              >
                 <PillBadge tone={STATUS_TONES[item.status]}>{t(`enums:applicationStatus.${item.status}`)}</PillBadge>
               </ListRow>
             ))}

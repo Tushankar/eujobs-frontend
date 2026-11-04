@@ -74,12 +74,15 @@
   flex-shrink: 0;
 }
 
+/* Long es/fr labels ("Por qué te lo recomienda la IA") wrap onto a second line; the clamp is only a last resort. */
 .linkLabel {
+  display: -webkit-box;
   flex: 1;
   min-width: 0;
   overflow: hidden;
-  text-overflow: ellipsis;
-  white-space: nowrap;
+  overflow-wrap: anywhere;
+  -webkit-box-orient: vertical;
+  -webkit-line-clamp: 2;
 }
 
 .badge {

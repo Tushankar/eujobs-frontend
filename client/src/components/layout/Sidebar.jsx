@@ -149,7 +149,7 @@ export default function Sidebar({ workspace, open, onClose }) {
 
           {me && (
             <div className={styles.user}>
-              <Avatar name={me.fullName} src={me.photoUrl ?? undefined} size={32} className={styles.avatar} />
+              <Avatar name={me.fullName} src={(me.photoUrl ?? me.company?.logoUrl) ?? undefined} size={32} className={styles.avatar} />
               <div className={styles.userText}>
                 <p className={styles.userName}>{me.fullName}</p>
                 <p className={styles.userSubtitle}>{identitySubtitle(me, t)}</p>

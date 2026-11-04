@@ -3,7 +3,7 @@ import { useTranslation } from 'react-i18next'
 import { Check, EyeOff } from 'lucide-react'
 import { useGetConfigQuery } from '@/app/api.js'
 import PillBadge from '@/components/common/PillBadge.jsx'
-import { Avatar, Checkbox } from '@/components/ui'
+import { Avatar, Checkbox, CompanyLogo } from '@/components/ui'
 import { useErrorText } from '@/lib/forms.js'
 import { useFormat } from '@/lib/preferences.js'
 import { cx } from '@/utils/cx.js'
@@ -50,6 +50,8 @@ function Target({ item }) {
   return (
     <>
       {item.targetType === 'candidate_profile' && <Avatar name={target.name} src={target.photoUrl ?? undefined} size={48} />}
+      {item.targetType === 'job' && target.company && <CompanyLogo name={target.company} id={target.companyId} src={target.companyLogoUrl ?? undefined} size={48} />}
+      {item.targetType === 'company' && <CompanyLogo name={target.name} id={target.id} src={target.logoUrl ?? undefined} size={48} />}
       <dl className={styles.facts}>
         {facts.map(([key, value]) => (
           <div key={key} className={own.fact}>

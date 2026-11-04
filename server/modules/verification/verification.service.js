@@ -7,7 +7,8 @@ import { t } from '../../lib/i18n.js'
 import { sanitizedUpload } from '../../lib/images.js'
 import { sendEmail } from '../../lib/mailer.js'
 import { assertCodeResendAllowed, issueCode, normalizePhone, verifyCode } from '../auth/auth.service.js'
-import { loadProfile, refreshCompleteness } from '../candidates/candidates.service.js'
+import { CandidateProfile } from '../candidates/candidates.model.js'
+import { loadProfile, photoUrls, refreshCompleteness } from '../candidates/candidates.service.js'
 import { File } from '../files/files.model.js'
 import { User } from '../users/users.model.js'
 import { VerificationSubmission } from './verification.model.js'
@@ -157,9 +158,9 @@ export async function verificationState(user) {
 
 /* ---------- admin queue (Moderation › Candidate verification) ---------- */
 
-const queueRow = (submission, user) => ({
+const queueRow = (submission, user, photoUrl = null) => ({
   id: String(submission._id),
-  candidate: user ? { id: String(user._id), fullName: user.fullName, email: user.email } : null,
+  candidate: user ? { id: String(user._id), fullName: user.fullName, email: user.email, photoUrl } : null,
   category: submission.category,
   evidenceType: submission.evidenceType ?? null,
   status: submission.status,
@@ -168,11 +169,13 @@ const queueRow = (submission, user) => ({
 })
 
 /** P3-D8: oldest first. Evidence withdrawn by an entry change (U27) leaves the "In review" queue. */
-export async function listQueue(status) {
+export async function listQueue(admin, status) {
   const submissions = await VerificationSubmission.find({ status, ...(status === 'in_review' && { resetAt: null }) }).sort({ submittedAt: 1 })
   const userIds = submissions.map((submission) => submission.userId)
-  const users = new Map((await User.find({ _id: { $in: userIds } }, 'fullName email')).map((user) => [String(user._id), user]))
-  const items = submissions.map((submission) => queueRow(submission, users.get(String(submission.userId))))
+  const [users, profiles] = await Promise.all([User.find({ _id: { $in: userIds } }, 'fullName email'), CandidateProfile.find({ userId: { $in: userIds } }, 'userId photo')])
+  const userOf = new Map(users.map((user) => [String(user._id), user]))
+  const photos = await photoUrls(profiles, admin._id)
+  const items = submissions.map((submission) => queueRow(submission, userOf.get(String(submission.userId)), photos.get(String(submission.userId))))
   return { items, total: items.length, page: 1, pageSize: items.length }
 }
 

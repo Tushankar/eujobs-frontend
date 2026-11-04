@@ -7,14 +7,17 @@ import styles from './QueueRow.module.css'
 
 /**
  * One moderation queue item: icon tile, headline with optional badge, supporting lines, status badge and
- * a link into the review dialog. `lines` = [{ text, tone: 'sub' | 'summary' | 'meta' }].
+ * a link into the review dialog. `lines` = [{ text, tone: 'sub' | 'summary' | 'meta' }]. `media` (a logo or photo)
+ * replaces the icon tile.
  */
-export default function QueueRow({ icon, alert = false, title, badge, lines, status, note, actionLabel, to }) {
+export default function QueueRow({ icon, media, alert = false, title, badge, lines, status, note, actionLabel, to }) {
   return (
     <li className={styles.row}>
-      <span className={cx(styles.tile, alert && styles.alert)}>
-        <Icon as={icon} size={19} />
-      </span>
+      {media ?? (
+        <span className={cx(styles.tile, alert && styles.alert)}>
+          <Icon as={icon} size={19} />
+        </span>
+      )}
       <div className={styles.body}>
         <div className={styles.titleRow}>
           <h3 className={styles.title}>{title}</h3>

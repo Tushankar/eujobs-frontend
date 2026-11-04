@@ -20,7 +20,17 @@
     "profile": "Your profile",
     "saveName": "Save name",
     "nameSaved": "Your name has been saved.",
-    "language": "Language of the workspace"
+    "language": "Language of the workspace",
+    "edit": "Edit",
+    "emailNote": "Your sign-in email. It can’t be changed here.",
+    "todo": "Things to do",
+    "allClear": "All caught up",
+    "allClearText": "Nothing is waiting for a review.",
+    "quickActions": "Quick actions",
+    "access": "Your access",
+    "permissionCount_one": "{{count}} permission",
+    "permissionCount_other": "{{count}} permissions",
+    "groupProgress": "{{held}} of {{total}} permissions"
   },
   "privacy": {
     "title": "Choose how you’re discovered",

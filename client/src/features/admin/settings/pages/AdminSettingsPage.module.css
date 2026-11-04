@@ -1,12 +1,72 @@
-.sections {
-  display: flex;
-  flex-direction: column;
-  gap: 20px;
-  max-width: 768px;
+/* Settings on the left, the side cards (things to do, quick actions, access) on the right; stacked when narrow */
+.layout {
+  display: grid;
+  grid-template-columns: minmax(0, 1fr) 320px;
+  align-items: start;
+  gap: 24px;
+  max-width: 1120px;
   margin-top: 32px;
 }
 
+.sections {
+  display: flex;
+  flex-direction: column;
+  gap: 16px;
+  min-width: 0;
+}
+
+@media (max-width: 1199px) {
+  .layout {
+    grid-template-columns: minmax(0, 1fr);
+    max-width: 768px;
+  }
+}
+
+/*
+ * Two columns (as `sticky-side` elsewhere): the shorter column stays pinned under the header while the taller one
+ * scrolls with the page. Both columns get it because either can be the shorter one (an open row grows the left).
+ */
+@media (min-width: 1200px) {
+  .layout > * {
+    position: sticky;
+    top: calc(var(--header-height) + 24px);
+  }
+}
+
+/* Identity card: who is signed in */
+.identity {
+  display: flex;
+  align-items: center;
+  gap: 16px;
+}
+
+.identityText {
+  min-width: 0;
+}
+
+.name {
+  font-family: var(--font-display);
+  font-size: 20px;
+  font-weight: 800;
+  line-height: 28px;
+  color: var(--foreground);
+}
+
+.meta {
+  padding-top: 2px;
+  font-size: 13px;
+  line-height: 20px;
+  color: var(--muted-foreground);
+  overflow-wrap: anywhere;
+}
+
+/* Settings card: a title, then hairline-separated rows */
+.card {
+  overflow: hidden;
+}
+
 .heading {
+  padding: 20px 24px 12px;
   font-family: var(--font-display);
   font-size: 18px;
   font-weight: 800;
@@ -14,11 +74,106 @@
   color: var(--foreground);
 }
 
-.description {
-  padding-top: 6px;
+.rows {
+  list-style: none;
+}
+
+.row {
+  border-top: 1px solid var(--border);
+}
+
+.rowHead {
+  display: flex;
+  align-items: center;
+  gap: 14px;
+  width: 100%;
+  padding: 16px 24px;
+  border: 0;
+  background: transparent;
+  font: inherit;
+  text-align: left;
+  color: inherit;
+}
+
+button.rowHead {
+  cursor: pointer;
+  transition: background var(--transition);
+}
+
+button.rowHead:hover {
+  background: var(--muted);
+}
+
+button.rowHead:focus-visible {
+  outline: 2px solid var(--primary);
+  outline-offset: -2px;
+}
+
+.rowIcon {
+  flex-shrink: 0;
+  color: var(--muted-foreground);
+}
+
+.rowText {
+  display: flex;
+  flex: 1;
+  flex-direction: column;
+  gap: 2px;
+  min-width: 0;
+}
+
+.label {
+  font-size: 14px;
+  font-weight: 600;
+  line-height: 20px;
+  color: var(--foreground);
+}
+
+.value {
+  display: flex;
+  flex-direction: column;
+  font-size: 13px;
+  line-height: 20px;
+  color: var(--muted-foreground);
+  overflow-wrap: anywhere;
+}
+
+.hint {
   font-size: 12px;
   line-height: 18px;
-  color: var(--muted-foreground);
+}
+
+/* Quiet outlined pill (Edit / Cancel) */
+.pill {
+  flex-shrink: 0;
+  padding: 5px 14px;
+  border: 1px solid var(--border);
+  border-radius: var(--radius-full);
+  background: var(--card);
+  font-size: 13px;
+  font-weight: 600;
+  line-height: 18px;
+  color: var(--foreground);
+}
+
+button.rowHead:hover .pill {
+  border-color: var(--foreground);
+}
+
+.note {
+  padding: 0 24px 16px 58px;
+}
+
+.note > p {
+  margin-top: 0;
+}
+
+.rowOpen .rowHead {
+  padding-bottom: 4px;
+}
+
+.rowBody {
+  padding: 0 24px 20px 58px;
 }
 
 .form {
@@ -26,9 +181,30 @@
   flex-direction: column;
   gap: 16px;
   max-width: 420px;
-  padding-top: 16px;
+  padding-top: 8px;
 }
 
 .submit {
   align-self: flex-start;
+}
+
+.description {
+  max-width: 480px;
+  font-size: 12px;
+  line-height: 18px;
+  color: var(--muted-foreground);
+}
+
+@media (max-width: 639px) {
+  .rowHead,
+  .heading {
+    padding-left: 16px;
+    padding-right: 16px;
+  }
+
+  .note,
+  .rowBody {
+    padding-left: 16px;
+    padding-right: 16px;
+  }
 }

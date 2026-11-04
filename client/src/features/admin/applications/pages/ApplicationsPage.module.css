@@ -10,8 +10,11 @@
   min-width: 0;
 }
 
+/* Sized by the longest option, so "Cualquier permiso de trabajo" or "Todos los pagadores" is never cut. */
 .select {
-  flex: 0 0 176px;
+  flex: 0 1 auto;
+  min-width: 176px;
+  max-width: 100%;
 }
 
 .results {

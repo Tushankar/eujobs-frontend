@@ -78,7 +78,7 @@ export default function UsersDirectory({ role }) {
     header: t('columns.user'),
     render: (row) => (
       <div className={styles.user}>
-        <Avatar name={row.fullName} size={32} />
+        <Avatar name={row.fullName} src={row.photoUrl ?? undefined} size={32} />
         <div className={styles.userText}>
           <p className={styles.name}>{row.fullName}</p>
           <p className={styles.email} title={row.email}>

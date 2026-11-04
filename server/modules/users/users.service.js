@@ -3,7 +3,8 @@ import { fieldError } from '../../lib/errors.js'
 import { AdminRole } from '../admin/admin.model.js'
 import { candidateCounters } from '../applications/applications.stats.js'
 import { candidateSummary, fullNameChanged } from '../candidates/candidates.service.js'
-import { effectivePermissions } from '../admin/admin.service.js'
+import { roleText } from '../admin/admin.access.js'
+import { effectivePermissions, listPermissions } from '../admin/admin.service.js'
 import { checkPassword, hashPassword } from '../auth/auth.service.js'
 import { Company } from '../companies/companies.model.js'
 import { logoUrls } from '../companies/companies.service.js'
@@ -56,9 +57,16 @@ export async function meDto(user) {
   if (user.role === 'admin') {
     dto.isOwner = user.isOwner
     dto.permissions = [...(await effectivePermissions(user))]
+    // Settings › Your access: every catalogue group (catalogue order) with each of its permissions and whether it is held.
+    const groups = new Map()
+    for (const { id, group } of await listPermissions()) {
+      if (!groups.has(group)) groups.set(group, { group, permissions: [] })
+      groups.get(group).permissions.push({ id, held: dto.permissions.includes(id) })
+    }
+    dto.permissionGroups = [...groups.values()]
     // The shell subtitle shows the role name, or "Owner" for owners (M-195).
-    const role = user.adminAccess?.roleId ? await AdminRole.findById(user.adminAccess.roleId, 'name') : null
-    dto.adminRole = role ? { id: String(role._id), name: role.name } : null
+    const role = user.adminAccess?.roleId ? await AdminRole.findById(user.adminAccess.roleId, 'name description system') : null
+    dto.adminRole = role ? { id: String(role._id), name: roleText(role, user.language).name } : null
   } else {
     dto.notifyEmail = user.notifyEmail
   }

@@ -62,6 +62,13 @@ export async function fullNameChanged(userId) {
 const signedFor = (file, userId, options) => (file ? signedUrl(file, userId, options) : null)
 const today = () => new Date().toISOString().slice(0, 10)
 
+/** Candidate photo URLs for one viewer (U39), by user id; each profile needs `userId` and `photo`. */
+export async function photoUrls(profiles, viewerId) {
+  const files = await File.find({ _id: { $in: profiles.map((profile) => profile.photo?.fileId).filter(Boolean) } })
+  const byId = new Map(files.map((file) => [String(file._id), file]))
+  return new Map(profiles.map((profile) => [String(profile.userId), signedFor(byId.get(String(profile.photo?.fileId)), viewerId)]))
+}
+
 /** GET /candidate/profile: every section, the checklist, and signed URLs for the owner's own files. */
 export async function profileDto(user, profile) {
   const fileIds = [profile.photo?.fileId, ...profile.certificates.map((certificate) => certificate.fileId)].filter(Boolean)

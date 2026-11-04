@@ -2,7 +2,7 @@ import { useState } from 'react'
 import { useTranslation } from 'react-i18next'
 import { Check, Pause, X } from 'lucide-react'
 import { errorCode, useGetConfigQuery } from '@/app/api.js'
-import { Button, Icon, Modal, TextareaField } from '@/components/ui'
+import { Avatar, Button, CompanyLogo, Icon, Modal, TextareaField } from '@/components/ui'
 import PillBadge from '@/components/common/PillBadge.jsx'
 import { serverFieldErrors, useErrorText } from '@/lib/forms.js'
 import { useFormat } from '@/lib/preferences.js'
@@ -108,6 +108,7 @@ export default function AccountReview({ userId, onDecided, onClose }) {
     body = (
       <div>
         <div className={styles.candidate}>
+          {company ? <CompanyLogo name={company.displayName} id={company.id} src={company.logoUrl ?? undefined} size={44} /> : <Avatar name={account.fullName} size={44} />}
           <div>
             <h3 className={detailStyles.accountName}>{account.fullName}</h3>
             <p className={detailStyles.accountMeta}>{[account.jobTitle, account.email].filter(Boolean).join(' · ')}</p>

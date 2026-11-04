@@ -47,7 +47,7 @@ adminMatchingRouter.get('/feedback', view, async (req, res) => {
 })
 
 adminMatchingRouter.get('/oversight', view, validate({ query: schemas.oversightQuery }), async (req, res) => {
-  res.json(await admin.oversight(req.query))
+  res.json(await admin.oversight(req.user, req.query))
 })
 
 export const adminAiRouter = Router()

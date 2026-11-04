@@ -24,8 +24,8 @@ const trays = (page) =>
   )
 
 /**
- * P11-03 at 375 px in French: the checkout confirm dialog's long buttons wrap inside the dialog; sidebar labels carry
- * an ellipsis but none is cut; tab and toggle trays fit, wrap or scroll; the recruiter onboarding footer wraps. Each
+ * P11-03 at 375 px in French: the checkout confirm dialog's long buttons wrap inside the dialog; sidebar labels wrap
+ * and none is cut (P11-C1); tab and toggle trays fit, wrap or scroll; the recruiter onboarding footer wraps. Each
  * screen passes the layout check (no text out of its box, clipped or overlapping) and the page does not scroll sideways.
  */
 export default {
@@ -60,16 +60,21 @@ export default {
     await ctx.screenshot(page, '1-checkout-dialog')
     await page.keyboard.press('Escape')
 
-    // Sidebar (the drawer at 375 px): every label has the ellipsis style and none is actually truncated.
+    // Sidebar (the drawer at 375 px): long labels wrap (two lines at most, P11-C1); none is truncated.
     await page.goto(`${ctx.webUrl}/candidate`, { waitUntil: 'networkidle0' })
     await waitForSettled(page)
     await page.click(`header button[aria-label="${fr('shell').openNavigation}"]`)
     await page.waitForFunction(() => document.querySelector('aside nav a'), { timeout: 5000 })
     await settle()
     const labels = await page.$$eval('aside nav a span[class*="linkLabel"]', (spans) =>
-      spans.map((span) => ({ text: span.textContent, ellipsis: getComputedStyle(span).textOverflow === 'ellipsis', cut: span.scrollWidth > span.clientWidth + 1 })),
+      spans.map((span) => ({
+        text: span.textContent,
+        cut: span.scrollWidth > span.clientWidth + 1 || span.scrollHeight > span.clientHeight + 1,
+        lines: Math.round(span.getBoundingClientRect().height / parseFloat(getComputedStyle(span).lineHeight)),
+      })),
     )
-    ctx.check(labels.length > 5 && labels.every((label) => label.ellipsis), `sidebar labels carry an ellipsis (${labels.length})`)
+    ctx.check(labels.length > 5, `sidebar labels (${labels.length})`)
+    ctx.note(`sidebar labels on two lines: ${labels.filter((label) => label.lines > 1).map((label) => label.text).join(', ') || 'none'}`)
     const cut = labels.filter((label) => label.cut).map((label) => label.text)
     ctx.check(!cut.length, `no French sidebar label is cut: ${cut.join(', ')}`)
     await ctx.screenshot(page, '2-sidebar')

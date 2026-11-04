@@ -285,6 +285,19 @@ M-164 lets users report jobs, profiles, companies and messages. M-167 defines "R
 | P11-Q2 CV request wording (owner) | The server's fuller reasons everywhere (screens, emails, CSV), in en, es and fr: "Verify employment history", "Review an earlier role-specific CV", "Compliance or audit check", "Other recruitment purpose". The thing is called "CV request" everywhere (activity, timeline, email subject and heading). P4-13 expects the new texts. | 2026-11-04 |
 | P11-Q3 what "no English" covers (owner) | UI text only: every UI string, enum label, error, email, PDF and CSV text is in es and fr. Database content stays in the language it was written in (seeded jobs, company About, course lessons and quizzes per M-113, messages, stage names per M-142), with the on-demand Translate (M-144). The English-leftover check compares rendered text with the en i18n values only. | 2026-11-04 |
 | P11-Q4 task 8 (owner) | Skipped; Sarah's default country is unchanged and the option stays recorded for later. | 2026-11-04 |
+| P11-Q6 seeded system roles (owner) | The three seeded system roles (Manager, Accounts Head, Staff) read in the admin's language while their name and description are the seeded ones: the server's `roleText` (admin.access.js) uses the `roles.*` server dictionary keys for the role list, the staff access list, `/me` and the invite email. Once an admin changes the text it reads as written; a permissions-only edit through the dialog (prefilled with the translated text) keeps the seeded text. A duplicate copies the text as it reads, with "(copy)" in the admin's language ("copia", "copie"). Custom roles stay as written. API test in `admin.access.test.js`, browser check P11-06. | 2026-11-04 |
+| P11-C1 builder call: sidebar labels | Task 3 asked for an ellipsis on Sidebar labels; the owner asked for no cut-off text, and es/fr labels ("Por qué te lo recomienda la IA", "Processus de recrutement") are longer than the sidebar. Labels now wrap onto a second line (a two-line clamp is only a last resort); P11-03 checks that no label is cut. | 2026-11-04 |
+| P11-C2 builder call: how the translations were made | U43 (the build session writes all copy in en/es/fr): four parallel sub-agents of this session, each on a set of namespaces, from one brief and glossary (Spanish tú, French vous, France/Spain usage; "Local WorkMan", "AI Job Portal" and "Plus" untranslated; the terms already used in the es/fr files of Phases 2–10). The builder then aligned the terms: fr shortlist = "short-list" (screening stays "présélection"), es default stage "Preseleccionados" (as the stage label; `companies.test.js` updated), fr snapshot = "aperçu", "Ai Job Summary" = "Resumen con IA" / "Synthèse IA", es skill gap = "Habilidades que faltan" (as the page title). | 2026-11-04 |
+| P11-C3 builder call: the missing-key check | `client/scripts/check-i18n.js` runs first in `npm run build` (and as `npm run check:i18n`): every en namespace has an es and fr file with every key, the plural forms the language needs (es and fr: `_one`, `_many`, `_other`; `_many` is used for exact millions), the same `{{placeholders}}` and `<tags>`, non-empty values, and no key en does not have. Any gap fails the build. The server side is `foundation.test.js` (every en key, the same placeholders, every email type rendered and translated in every language, a client message for every server error code in en/es/fr). | 2026-11-04 |
+| P11-C4 builder call: Data & account pages | The candidate and recruiter Data & account pages are still the device-only demo pages that Phase 12 replaces, but they show on es/fr screens, so their texts and both Settings layouts moved to `account.layout` / `account.data` keys now. The CSV they download (device-only mock data and its field labels) stays as it is until Phase 12 rewrites the export. Two orphan mock files that nothing imports (`recruiter/find-candidates/data/candidates.js`, `recruiter/jobs/data/jobFields.js`) are left for Phase 12 task 4/5. | 2026-11-04 |
+| P11-C5 builder call: accent-insensitive server filters | Task 2: the admin text filters (Candidates/Recruiters, Applications, Audit, Jobs, Payments) used `toLowerCase` only; they now compare with `searchText` (lib/skills.js, already used by Find jobs and discovery). API test in `admin.lists.test.js`; P11-05 checks it in the browser. | 2026-11-04 |
+| P11-C6 builder call: mail samples | The `mail:test` sample parameters moved to `server/scripts/mailSamples.js` (`mailSample(type, language, origin)`), shared by `mail:test` and P11-04, which renders every email type in es and fr. | 2026-11-04 |
+| P11-C7 builder call: layout and leftover checks | `e2e/lib/i18nChecks.js`. Layout (P11-01, P11-03 and the English sweep): text past its own box; text clipped by an ancestor that hides overflow without scrolling (scroll containers are fine); text cut vertically; a translated label truncated by an ellipsis or a line clamp (user data may be truncated: listed as notes); text over text (visible parts only, at least 40 % of the line height); a native select whose chosen option does not fit. With a modal open only the dialog is checked. English leftover: rendered text, `aria-label`, `placeholder`, `title`, `alt` or the document title equal to a static en value of more than 3 words that the language translates differently. | 2026-11-04 |
+| P11-C8 builder call: layout fixes beyond task 3 | Found by the check in es/fr: `SectionTitle` actions wrap under the title (admin Overview and Analytics chart cards); role-card actions wrap (Access management); the admin user-detail stats wrap at 375 px; admin filter selects size to their longest option (Candidates, Recruiters, Applications, Jobs, Payments, the Overview country filter); the course card button grows for a long label; the Manage stages status selects fit "En cours d’examen (présélection)"; a long email breaks in the course learners table. | 2026-11-04 |
+| P11-C9 builder call: P9-08 | Regenerate is checked by a new generation (the POST answers 200, the AI last-success time moves, the cached summary row is rewritten after the click), not by different wording, since OpenAI may return the same text. | 2026-11-04 |
+| P11-C10 builder call: sweep in any language | `e2e/lib/sweep.js` holds the sweep (the English `sweep` scenario and P11-01 call it); the 404 panel carries `data-not-found` so the sweep recognises it in every language. | 2026-11-04 |
+| P11-C11 builder call: the e2e `fill` helper | It cleared a field with `value = ''`, which React does not see, so a re-render could put the old text back before typing (P10-02 created "mAnAgErOps desk …"). It now clears through the native value setter and an input event. P10-01, P10-02, P11-05 and P2-01 passed with it. | 2026-11-04 |
+| P11-C12 builder call: enum labels | The restored P2-19 found `enums:emailType.content_restriction_lifted` missing in en, es and fr (added in 10b on the server only); the label is added, and `foundation.test.js` now checks that every server enum key has a client label in en, es and fr, so this is caught without a browser. | 2026-11-04 |
 
 _(Answers to any new question asked during the build are appended to this table.)_
 
@@ -2619,6 +2632,47 @@ The course-purchase path is built here but verified in Phase 8. AI pages are gat
 | P11-05 | Search | D | Global search finds "Paramètres" by typing "parametres". Help search is accent-insensitive. |
 
 **API tests.** The server dictionaries have every en key in es and fr; CSV header localisation.
+
+#### Phase 11 handoff (2026-11-04, built, awaiting owner review)
+
+**Before Phase 11 (owner request).**
+- Full server suite: two runs, neither counts. Run 1: 349 tests, 346 pass, 3 fail; the other agent's e2e reseeded `eujobs_test` during it. Run 2: 353 tests, 351 pass, 2 fail; it overlapped another agent's e2e (14:46) and a P11-01 seed. One of its failures was real and is fixed: the Spanish default stage name (P11-C2). The clean total is in Results below.
+- P9-08 checks a new generation, not new wording (P11-C9).
+- `content_restricted` and `content_restriction_lifted` were sent live to +alex (en), for the owner to confirm.
+
+**Built.**
+- Translations: Spanish and French for all 38 client namespaces, including the 23 that were English only (P11-C2). The Data & account demo pages and both Settings layouts were moved to keys (P11-C4). The moderation tabs' aria-label is now a key. The three system roles are translated (P11-Q6).
+- Server texts: every email type in es and fr. The CV-request wording is one set everywhere (P11-Q2). fr "short-list" and es "Preseleccionados" are used in the server dictionaries too.
+- Checks:
+  - `client/scripts/check-i18n.js` fails the build on any missing key, plural form, placeholder or extra key (P11-C3);
+  - `foundation.test.js` covers the server dictionaries and a client message for every error code;
+  - P2-11, P2-19, P9-01, P7-03 and P8-07 no longer skip English-only namespaces (task 5).
+- Formats: the client already used Intl for everything (`lib/format.js`, `useFormat`). The admin server filters now ignore accents (P11-C5).
+- Layout:
+  - task 3: SegmentedTabs and ViewToggle scroll; StatCard values break; PageTitle actions wrap; Dropdown has a max height; Checkbox aligns to the first line. StepFooter, the Modal footer and AuthLayout were already fixed in earlier phases; capitalize was already gone;
+  - sidebar labels wrap (P11-C1); the mobile breadcrumb takes two lines;
+  - task 7: the Overview tabs row wraps;
+  - fixes found by the new layout check (P11-C8).
+- e2e:
+  - `lib/i18nChecks.js` (layout and English-leftover checks, P11-C7);
+  - `lib/sweep.js` (P11-C10);
+  - P11-01 (sweep in es and fr), P11-02 (formats), P11-03 (long labels at 375 px), P11-04 (server texts and certificates), P11-05 (search), P11-06 (system roles).
+
+**Not done.**
+- Task 8 (owner: skipped, P11-Q4).
+- Database content stays as written (P11-Q3): seeded jobs, companies, courses, messages and custom roles. On-demand Translate (M-144) covers what it covers.
+- The downloaded device-only CSV of the Data & account demo page (Phase 12).
+
+**Calls the plan did not specify:** P11-Q1 … Q6 (owner) and P11-C1 … C12 (builder) in the Owner answers table.
+
+**Results** (repo root unless noted; never run the server tests and the e2e at the same time. Other agents run tests and e2e on `eujobs_test` too, so every run below was watched for foreign runs, P11-Q5):
+
+RESULTS_TABLE
+
+**Open.**
+- Live emails waiting for the owner's confirmation: `content_restricted`, `content_restriction_lifted` (sent 2026-11-04), and `admin_invite` (sent earlier).
+- Phase 12: if erasure leaves payments without a payer role, admin Payments must show it without `enums:role.null` (P11-02 found this with a row without `payerRole`; no such row can exist today).
+- Two orphan mock files for Phase 12 (P11-C4).
 
 ### Phase 12: GDPR export and erasure, retention, full regression
 

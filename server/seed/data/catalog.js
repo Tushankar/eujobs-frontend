@@ -79,18 +79,21 @@ export const PLANS = [
 // The three Figma roles (accessData.js) minus the dropped ids (§3.13). Names and descriptions are staff content.
 export const SYSTEM_ROLES = [
   {
+    key: 'manager',
     name: 'Manager',
     description: 'Supervises a team, manages recruitment activity, and reviews operational reporting.',
     scope: 'department',
     permissions: ['users.view', 'roles.view', 'roles.assign', 'candidates.view', 'reports.view'],
   },
   {
+    key: 'accounts_head',
     name: 'Accounts Head',
     description: 'Oversees finance information, approvals, and financial reporting.',
     scope: 'finance_department',
     permissions: ['users.view', 'roles.view', 'finance.view', 'reports.view', 'reports.export', 'audit.view'],
   },
   {
+    key: 'staff',
     name: 'Staff',
     description: 'Provides limited operational access for day-to-day responsibilities.',
     scope: 'department',

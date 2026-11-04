@@ -1,10 +1,14 @@
 /* Browser steps shared by scenarios. */
 
-/** Types into a field after clearing it. */
+/**
+ * Types into a field after clearing it. The clear goes through the native value setter plus an input event, so a React
+ * controlled field's state is cleared too (a plain `value = ''` could be undone by the next render, e.g. P10-02).
+ */
 export async function fill(page, selector, value) {
   await page.waitForSelector(selector)
   await page.$eval(selector, (element) => {
-    element.value = ''
+    Object.getOwnPropertyDescriptor(Object.getPrototypeOf(element), 'value').set.call(element, '')
+    element.dispatchEvent(new Event('input', { bubbles: true }))
   })
   await page.type(selector, value)
 }

@@ -120,7 +120,7 @@ export default function OversightSection() {
                   onClick={() => setSelection({ jobId: data.job.id, candidateId: candidate.id })}
                 >
                   <span className={styles.person}>
-                    <Avatar name={candidate.fullName} size={36} />
+                    <Avatar name={candidate.fullName} src={candidate.photoUrl ?? undefined} size={36} />
                     <span className={styles.personText}>
                       <span className={styles.name}>{candidate.fullName}</span>
                       <span className={styles.role}>{candidate.headline}</span>

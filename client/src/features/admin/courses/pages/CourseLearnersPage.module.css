@@ -26,6 +26,7 @@
 
 .muted {
   margin: 0;
+  overflow-wrap: anywhere; /* a long email breaks instead of being cut by the cell */
   font-size: 12px;
   line-height: 16px;
   color: var(--muted-foreground);

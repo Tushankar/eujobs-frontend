@@ -20,7 +20,18 @@
     "profile": "Votre profil",
     "saveName": "Enregistrer le nom",
     "nameSaved": "Votre nom a été enregistré.",
-    "language": "Langue de l’espace de travail"
+    "language": "Langue de l’espace de travail",
+    "edit": "Modifier",
+    "emailNote": "Votre adresse e-mail de connexion. Elle ne peut pas être modifiée ici.",
+    "todo": "À faire",
+    "allClear": "Tout est à jour",
+    "allClearText": "Rien n’attend de vérification.",
+    "quickActions": "Actions rapides",
+    "access": "Votre accès",
+    "permissionCount_one": "{{count}} autorisation",
+    "permissionCount_many": "{{count}} autorisations",
+    "permissionCount_other": "{{count}} autorisations",
+    "groupProgress": "{{held}} autorisations sur {{total}}"
   },
   "privacy": {
     "title": "Choisissez comment on vous trouve",

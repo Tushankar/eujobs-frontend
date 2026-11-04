@@ -117,3 +117,9 @@
   gap: 8px;
   padding-top: 20px;
 }
+
+/* Half the card, or wider when a translated label needs it ("Reprendre la formation"). */
+.actions > * {
+  min-width: max-content;
+  max-width: 100%;
+}

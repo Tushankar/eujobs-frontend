@@ -165,6 +165,16 @@ describe('server i18n (§2.11)', () => {
     }
   })
 
+  it('has a client label for every enum key in en, es and fr (M-142)', () => {
+    for (const language of ENUMS.language) {
+      const labels = JSON.parse(readFileSync(new URL(`../../client/src/i18n/locales/${language}/enums.json`, import.meta.url), 'utf8'))
+      const missing = Object.entries(ENUMS).flatMap(([name, keys]) =>
+        keys.filter((key) => typeof key.split('.').reduce((node, part) => node?.[part], labels[name]) !== 'string').map((key) => `${name}.${key}`),
+      )
+      assert.deepEqual(missing, [], `${language} enums`)
+    }
+  })
+
   it('has a client message for every server error code in en, es and fr (M-143)', () => {
     for (const language of ENUMS.language) {
       const messages = JSON.parse(readFileSync(new URL(`../../client/src/i18n/locales/${language}/errors.json`, import.meta.url), 'utf8'))
