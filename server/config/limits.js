@@ -122,7 +122,14 @@ export const LIMITS = {
     course_cover: { types: ['jpg', 'png', 'webp'], maxBytes: 5 * MB },
     lesson_video: { types: ['mp4', 'webm'], maxBytes: 500 * MB, toDisk: true },
     lesson_document: { types: ['pdf'], maxBytes: 50 * MB, toDisk: true },
+    // M-182
+    report_voice: { types: ['mp3', 'm4a', 'wav', 'webm', 'ogg'], maxBytes: 25 * MB, toDisk: true },
   },
+  // M-164, U20, OQ-1: content reports; M-167: the decision reason uses the moderation limit
+  report: { details: { max: 500 }, perDay: 10, excerptEarlier: 5 },
+  moderationReason: { max: 300 },
+  // M-181 … M-183: the report brief
+  reportBrief: { max: 500 },
   // U39: images, PDFs and CVs; video 6 hours
   signedUrlTtlMs: 15 * MINUTE,
   videoUrlTtlMs: 6 * HOUR,

@@ -16,6 +16,7 @@ export const EMAIL_TYPES = {
   verification_approved: 'decision',
   verification_rejected: 'decision',
   content_restricted: 'decision',
+  content_restriction_lifted: 'decision',
   certificate_issued: 'decision',
   renewal_failed: 'decision',
   plan_ended: 'decision',

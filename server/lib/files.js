@@ -22,8 +22,21 @@ export const MIME = {
   svg: 'image/svg+xml',
   mp4: 'video/mp4',
   webm: 'video/webm',
+  mp3: 'audio/mpeg',
+  m4a: 'audio/mp4',
+  wav: 'audio/wav',
+  ogg: 'audio/ogg',
 }
 const EXTENSION_ALIASES = { jpeg: 'jpg' }
+// Browsers declare audio files under several names (M-182); file-type names Ogg Opus "opus".
+const DECLARED_ALIASES = {
+  mp3: ['audio/mp3'],
+  m4a: ['audio/x-m4a', 'audio/m4a'],
+  wav: ['audio/x-wav', 'audio/wave', 'audio/vnd.wave'],
+  webm: ['audio/webm'],
+  ogg: ['video/ogg', 'application/ogg'],
+}
+const DETECTED_ALIASES = { opus: 'ogg', oga: 'ogg' }
 
 const extensionOf = (name = '') => {
   const ext = name.includes('.') ? name.slice(name.lastIndexOf('.') + 1).toLowerCase() : ''
@@ -38,8 +51,8 @@ export async function detectFileType({ originalname, mimetype, buffer }, allowed
   const ext = extensionOf(originalname)
   // SVG is text, so magic bytes cannot name it; its start is checked instead (M-150).
   const detected = ext === 'svg' ? (looksLikeSvg(buffer) ? { ext } : undefined) : await fileTypeFromBuffer(buffer)
-  const declaredOk = mimetype === MIME[ext] || mimetype === 'application/octet-stream'
-  if (!detected || !allowed.includes(ext) || detected.ext !== ext || !declaredOk) {
+  const declaredOk = mimetype === MIME[ext] || DECLARED_ALIASES[ext]?.includes(mimetype) || mimetype === 'application/octet-stream'
+  if (!detected || !allowed.includes(ext) || (DETECTED_ALIASES[detected.ext] ?? detected.ext) !== ext || !declaredOk) {
     throw new AppError('FILE_TYPE_NOT_ALLOWED', { params: { types: allowed } })
   }
   return ext
