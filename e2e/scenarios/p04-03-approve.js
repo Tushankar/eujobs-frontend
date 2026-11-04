@@ -39,7 +39,9 @@ export default {
         body.scrollTop = body.scrollHeight
         const after = viewer.getBoundingClientRect()
         const frame = body.getBoundingClientRect()
-        return { scrolled: body.scrollTop > 0, moved: Math.abs(after.top - before), inside: after.top >= frame.top && after.bottom <= frame.bottom }
+        const scrolled = body.scrollTop > 0
+        body.scrollTop = 0
+        return { scrolled, moved: Math.abs(after.top - before), inside: after.top >= frame.top && after.bottom <= frame.bottom }
       })
       ctx.check(pinned.scrolled && pinned.moved < 1 && pinned.inside, `the document stays pinned in view (${JSON.stringify(pinned)})`)
     }

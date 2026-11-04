@@ -54,7 +54,7 @@
 
 .facts > div {
   display: grid;
-  grid-template-columns: 148px minmax(0, 1fr);
+  grid-template-columns: 132px minmax(0, 1fr);
   gap: 12px;
   padding: 9px 0;
   border-top: 1px solid var(--border);
@@ -95,11 +95,17 @@
 
 .checkNote {
   display: inline-flex;
-  align-items: center;
+  align-items: flex-start;
   gap: 5px;
   font-size: 12px;
   font-weight: 500;
+  line-height: 18px;
   color: var(--muted-foreground);
+}
+
+.checkNote svg {
+  flex-shrink: 0;
+  margin-top: 2.5px;
 }
 
 .passed {
