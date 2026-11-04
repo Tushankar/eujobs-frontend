@@ -19,7 +19,7 @@ export default {
   name: 'P10-12 Verified company badge',
   viewports: ['D', 'M'],
   async run(ctx) {
-    const { recruiter, job } = await recruiterWithJob(`Tick ${ctx.viewport}`)
+    const { recruiter, job } = await recruiterWithJob(`Tick${ctx.viewport}`)
     const candidate = await freeCandidate('TickCandidate', 'GB')
     await api(`/candidate/saved-jobs/${job.id}`, { method: 'PUT', token: candidate.token })
     const handle = await ctx.newPage()
