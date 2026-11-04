@@ -1,0 +1,36 @@
+{
+  "title": "Useful data. Ready to share.",
+  "description": "Generate reports with an AI executive summary, stored so you can download the same file again.",
+  "generated": "{{filename}} was generated and downloaded.",
+  "types": {
+    "marketplace_summary": "Marketplace summary",
+    "skills_demand": "Most demanded skills",
+    "platform_activity": "Platform activity"
+  },
+  "form": {
+    "title": "Create a report",
+    "type": "Report type",
+    "period": "Period",
+    "brief": "Report brief",
+    "briefPlaceholder": "For example, focus on hiring-stage movement and roles with low application coverage.",
+    "briefHint": "{{count}} / {{max}} characters. Add context, questions or priorities for the summary.",
+    "briefTooLong": "Keep the brief to {{max}} characters or fewer.",
+    "voiceNote": "Voice note",
+    "attach": "Attach a voice note",
+    "attached": "Audio file attached",
+    "removeVoiceNote": "Remove voice note",
+    "voiceHint": "Optional. The audio is transcribed and the transcript goes into the brief.",
+    "scope": "CSV export · All countries · The executive summary, the brief and the transcript are included · No CVs, private notes or audio.",
+    "submit": "Generate & download",
+    "generating": "Generating…"
+  },
+  "history": {
+    "title": "Export history",
+    "empty": "Your first useful snapshot",
+    "emptyText": "Generate a report to see its export history here.",
+    "meta": "{{filename}} · {{date}} · {{by}}",
+    "brief": "Brief: {{brief}}",
+    "transcript": "Voice note ({{name}}): {{text}}",
+    "download": "Download again"
+  }
+}

@@ -284,7 +284,7 @@ export async function decide(admin, id, { action, reason, removePhoto: removePho
     category: 'moderation',
     actor: actorFor(admin),
     target: { type: item.targetType, id: item.targetId },
-    params: { name: item.targetName ?? '', targetType: item.targetType, reason: reason || '' },
+    params: { name: item.targetName ?? '', targetType: item.targetType, note: reason || '' },
   })
   return caseDetail(admin, id)
 }

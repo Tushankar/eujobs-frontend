@@ -7,7 +7,7 @@ import { AuditEvent } from './admin.model.js'
  * Admin › Audit logs (M-162, M-163, M-206): newest first, by category chip and actor type. The search looks in the
  * actor name and the event's parameters (names, titles, references); the client renders the sentence from `type`.
  */
-const eventDto = (event) => ({
+export const eventDto = (event) => ({
   id: String(event._id),
   type: event.type,
   category: event.category,

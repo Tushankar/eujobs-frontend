@@ -1,24 +1,30 @@
+import { useTranslation } from 'react-i18next'
 import { Link } from 'react-router-dom'
 import { ArrowRight } from 'lucide-react'
 import SectionTitle from '@/components/common/SectionTitle.jsx'
 import { Icon, Panel } from '@/components/ui'
+import { useFormat } from '@/lib/preferences.js'
 import styles from './MarketplaceHealthCard.module.css'
 
-/** "Marketplace health": a short list of counters with a link into the moderation queue. `items` = [{ key, label, value }]. */
-export default function MarketplaceHealthCard({ items }) {
+const KEYS = ['companies', 'coursePurchases', 'checksInReview', 'shortlists', 'outreach', 'pendingReviews']
+
+/** "Marketplace health" (§3.15, OQ-5): all-time counters with a link into the moderation queue. */
+export default function MarketplaceHealthCard({ health }) {
+  const { t } = useTranslation('adminOverview')
+  const format = useFormat()
   return (
     <Panel padding={24} aria-labelledby="marketplace-health-title">
-      <SectionTitle id="marketplace-health-title" title="Marketplace health" description="Human oversight at every step" />
+      <SectionTitle id="marketplace-health-title" title={t('health.title')} description={t('health.description')} />
       <dl className={styles.rows}>
-        {items.map((item) => (
-          <div key={item.key} className={styles.row}>
-            <dt className={styles.label}>{item.label}</dt>
-            <dd className={styles.value}>{item.value}</dd>
+        {KEYS.map((key) => (
+          <div key={key} className={styles.row} data-health={key}>
+            <dt className={styles.label}>{t(`health.${key}`)}</dt>
+            <dd className={styles.value}>{health ? format.number(health[key]) : ''}</dd>
           </div>
         ))}
       </dl>
       <Link to="/admin/moderation" className={styles.link}>
-        Review moderation queue
+        {t('health.moderation')}
         <Icon as={ArrowRight} size={12} />
       </Link>
     </Panel>

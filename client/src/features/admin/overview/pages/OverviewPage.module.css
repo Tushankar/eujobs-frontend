@@ -1,3 +1,16 @@
+.actions {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 12px;
+}
+
+.error {
+  padding-top: 12px;
+  font-size: 12px;
+  line-height: 16px;
+  color: var(--destructive);
+}
+
 .stats {
   display: grid;
   grid-template-columns: repeat(4, minmax(0, 1fr));

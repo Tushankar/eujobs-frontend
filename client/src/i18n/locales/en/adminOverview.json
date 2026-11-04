@@ -1,0 +1,91 @@
+{
+  "eyebrow": "Platform overview",
+  "title": "A healthier marketplace. By design.",
+  "description": "Clear signals, thoughtful oversight, and responsible AI at every step.",
+  "export": "Export report",
+  "country": {
+    "label": "Filter by country",
+    "all": "All countries"
+  },
+  "kpis": {
+    "candidateRegistrations": "Candidate registrations",
+    "activeUsers": "Active users",
+    "publishedJobs": "Published jobs",
+    "applications": "Applications",
+    "verifiedProfiles": "Verified candidate profiles",
+    "courseEnrollments": "Course enrollments",
+    "courseBadges": "Course badges earned",
+    "averageRoleMatch": "Average role match",
+    "allTime": "All time",
+    "acrossRoles_one": "Across {{count}} published role",
+    "acrossRoles_other": "Across {{count}} published roles"
+  },
+  "chart": {
+    "title": "Platform activity",
+    "description": "Registrations and applications",
+    "view": "Chart view",
+    "bars": "Bar view",
+    "line": "Line view",
+    "period": "Period",
+    "registrations": "Registrations",
+    "applications": "Applications",
+    "summary": "{{period}}: {{items}}",
+    "point": "{{label}}: {{registrations}} registrations, {{applications}} applications",
+    "barSummary": "Bar chart. {{items}}",
+    "lineSummary": "Line chart. {{items}}",
+    "registrationsAt": "{{label}}: {{count}} registrations",
+    "applicationsAt": "{{label}}: {{count}} applications"
+  },
+  "health": {
+    "title": "Marketplace health",
+    "description": "Human oversight at every step · All time",
+    "companies": "Companies registered",
+    "coursePurchases": "Course purchases",
+    "checksInReview": "Verification checks in review",
+    "shortlists": "Shortlist activity",
+    "outreach": "Outreach drafts reviewed",
+    "pendingReviews": "Pending user reviews",
+    "moderation": "Review moderation queue"
+  },
+  "skills": {
+    "title": "Most demanded skills",
+    "description": "Required skills of published jobs",
+    "empty": "No published jobs yet.",
+    "bar_one": "{{skill}}: required by {{count}} job",
+    "bar_other": "{{skill}}: required by {{count}} jobs"
+  },
+  "recent": {
+    "title": "Recent platform activity",
+    "auditLog": "View audit log",
+    "item": "{{text}} · {{date}}",
+    "note": "AI assists with evidence. People make decisions. Your marketplace controls reflect that principle."
+  },
+  "analytics": {
+    "title": "Measure what moves people forward.",
+    "description": "A clear view of marketplace engagement, with enough context to act responsibly.",
+    "shortlistConversion": "Shortlist conversion",
+    "conversionCaption_one": "{{shortlisted}} of {{count}} application shortlisted · All time",
+    "conversionCaption_other": "{{shortlisted}} of {{count}} applications shortlisted · All time",
+    "recruiterAccounts": "Recruiter accounts",
+    "companyRegistrations": "Company registrations",
+    "reviewedOutreach": "Reviewed outreach"
+  },
+  "quality": {
+    "title": "Matching quality needs more than a score",
+    "relevance": {
+      "title": "Relevance feedback",
+      "status": "Collected",
+      "text": "Candidates and recruiters can say whether an explanation helped; admins read the totals in AI & matching."
+    },
+    "conversion": {
+      "title": "Recommendation conversion",
+      "status": "Not yet measured",
+      "text": "Track real recommendation views, applications, and shortlists with consent."
+    },
+    "fairness": {
+      "title": "Fairness & quality",
+      "status": "Human review required",
+      "text": "Evaluate role relevance, explanation quality, and bias before changing a matching policy."
+    }
+  }
+}

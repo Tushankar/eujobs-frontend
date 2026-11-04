@@ -218,6 +218,37 @@
       ],
       "action": "Crear tu contraseña",
       "note": "Si no esperabas esta invitación, puedes ignorar este correo."
+    },
+    "content_restricted": {
+      "subject": "Tu contenido se ha restringido",
+      "heading": "Contenido restringido",
+      "body": [
+        "Hola, {{name}}:",
+        "{{summary}}",
+        "Motivo: {{reason}}",
+        "{{photoNote}}"
+      ],
+      "action": "Abrir"
+    },
+    "content_restriction_lifted": {
+      "subject": "Se ha levantado una restricción",
+      "heading": "Restricción levantada",
+      "body": [
+        "Hola, {{name}}:",
+        "{{summary}}"
+      ],
+      "action": "Abrir"
+    },
+    "moderationSummary": {
+      "content_restricted": {
+        "job": "Un administrador ha revisado tu oferta «{{title}}» y la ha restringido. Está en pausa y no se puede volver a publicar mientras dure la restricción.",
+        "profile": "Un administrador ha revisado tu perfil y lo ha restringido. Los reclutadores no pueden encontrarlo en las búsquedas mientras dure la restricción."
+      },
+      "content_restriction_lifted": {
+        "job": "Se ha levantado la restricción de tu oferta «{{title}}». Sigue en pausa hasta que la vuelvas a publicar.",
+        "profile": "Se ha levantado la restricción de tu perfil. Los reclutadores pueden volver a encontrarlo en las búsquedas."
+      },
+      "photoRemoved": "Se ha eliminado tu foto de perfil. Sube una nueva foto para volver a completar tu perfil."
     }
   },
   "verification": {
@@ -362,7 +393,21 @@
     },
     "none": "Ninguno",
     "yes": "Sí",
-    "no": "No"
+    "no": "No",
+    "reportTargetType": {
+      "job": "oferta",
+      "candidate_profile": "perfil de candidato",
+      "company": "empresa",
+      "message": "mensaje"
+    },
+    "reportReason": {
+      "spam": "spam",
+      "scam_or_fraud": "estafa o fraude",
+      "discriminatory": "discriminatorio",
+      "offensive": "ofensivo",
+      "misleading": "engañoso",
+      "other": "otro"
+    }
   },
   "certificate": {
     "tagline": "AI Job Portal",
@@ -418,6 +463,18 @@
       "Tipo de actor",
       "Actor",
       "Evento"
+    ],
+    "applications": [
+      "Candidato",
+      "Oferta",
+      "Empresa",
+      "País de la oferta",
+      "Fecha de solicitud",
+      "Estado"
+    ],
+    "overview": [
+      "Métrica",
+      "Total"
     ]
   },
   "audit": {
@@ -429,7 +486,12 @@
       "account_suspended": "Cuenta de reclutador suspendida: {{name}} ({{company}})",
       "account_reactivated": "Cuenta de reclutador reactivada: {{name}} ({{company}})",
       "verification_approved": "Prueba de verificación aprobada: {{candidate}} ({{category}})",
-      "verification_rejected": "Prueba de verificación rechazada: {{candidate}} ({{category}})"
+      "verification_rejected": "Prueba de verificación rechazada: {{candidate}} ({{category}})",
+      "content_reported": "Contenido denunciado: {{name}} ({{targetType}}, {{reason}})",
+      "case_opened": "Caso abierto desde Ofertas: {{name}} ({{reason}})",
+      "content_dismissed": "Denuncia desestimada: {{name}} ({{targetType}})",
+      "content_restricted": "Contenido restringido: {{name}} ({{targetType}})",
+      "content_lifted": "Restricción levantada: {{name}} ({{targetType}})"
     },
     "learning": {
       "course_created": "Curso creado: {{title}}",
@@ -464,7 +526,11 @@
       "candidates_exported": "Candidatos exportados ({{count}} filas)",
       "recruiters_exported": "Reclutadores exportados ({{count}} filas)",
       "payments_exported": "Pagos exportados ({{count}} filas)",
-      "audit_exported": "Registro de auditoría exportado ({{count}} filas)"
+      "audit_exported": "Registro de auditoría exportado ({{count}} filas)",
+      "overview_exported": "Resumen de la plataforma exportado ({{count}} filas)",
+      "applications_exported": "Solicitudes exportadas ({{count}} filas)",
+      "report_generated": "Informe generado: {{report}} ({{filename}})",
+      "report_downloaded": "Informe descargado de nuevo: {{report}} ({{filename}})"
     },
     "jobs": {
       "status_changed": "Estado de la oferta cambiado: {{title}} ({{company}}), {{from}} → {{to}}",
@@ -474,6 +540,61 @@
       "payment_recorded": "Pago {{reference}}: {{payer}}, {{item}} ({{amount}})",
       "renewal_failed": "Renovación fallida {{reference}}: {{payer}}, {{item}} ({{amount}})",
       "payment_refunded": "Pago reembolsado {{reference}}: {{payer}}, {{item}} ({{amount}})"
+    },
+    "workspace": {
+      "initialized": "Espacio de trabajo inicializado"
+    }
+  },
+  "reports": {
+    "types": {
+      "marketplace_summary": "Resumen del mercado",
+      "skills_demand": "Habilidades más demandadas",
+      "platform_activity": "Actividad de la plataforma"
+    },
+    "periods": {
+      "this_week": "Esta semana",
+      "last_week": "La semana pasada",
+      "last_month": "El mes pasado"
+    },
+    "columns": {
+      "marketplace": [
+        "Métrica",
+        "En el periodo",
+        "Total"
+      ],
+      "skills": [
+        "Habilidad",
+        "Ofertas que la piden"
+      ],
+      "activity": [
+        "Desde",
+        "Hasta",
+        "Registros",
+        "Solicitudes"
+      ]
+    },
+    "metrics": {
+      "candidateRegistrations": "Registros de candidatos",
+      "activeUsers": "Usuarios activos",
+      "publishedJobs": "Ofertas publicadas",
+      "applications": "Solicitudes (sin retiradas)",
+      "verifiedProfiles": "Perfiles de candidato verificados",
+      "courseEnrollments": "Inscripciones en cursos",
+      "courseBadges": "Insignias de cursos obtenidas",
+      "averageRoleMatch": "Coincidencia media por puesto",
+      "companies": "Empresas registradas",
+      "coursePurchases": "Compras de cursos",
+      "checksInReview": "Verificaciones en revisión",
+      "shortlists": "Actividad de preselección",
+      "outreach": "Borradores de contacto revisados",
+      "pendingReviews": "Revisiones de usuarios pendientes",
+      "shortlistConversion": "Conversión a preselección",
+      "recruiterAccounts": "Cuentas de reclutador"
+    },
+    "csv": {
+      "executiveSummary": "Resumen ejecutivo",
+      "brief": "Instrucciones",
+      "transcript": "Transcripción de la nota de voz"
     }
   }
 }

@@ -1,3 +1,4 @@
+import { IANAZone } from 'luxon'
 import { z } from 'zod'
 import { ENUMS } from '../../config/enums.js'
 import { LIMITS } from '../../config/limits.js'
@@ -61,3 +62,26 @@ export const paymentsQuery = z.object({
 })
 
 export const statsQuery = z.object({ country: country.optional() })
+
+// M-170: the browser's IANA time zone; M-138: jobs (and their applications) may be REMOTE.
+const timeZone = z.string().refine((zone) => IANAZone.isValidZone(zone), 'invalid')
+const anyCountry = z.string().trim().toUpperCase().regex(/^([A-Z]{2}|REMOTE)$/)
+
+export const metricsQuery = z.object({ country: anyCountry.optional() })
+export const activityQuery = z.object({ period: z.enum(ENUMS.reportPeriod), tz: timeZone, country: anyCountry.optional() })
+
+// P10-Q14
+export const applicationsQuery = z.object({
+  q: q.optional(),
+  status: z.enum(ENUMS.applicationStatus).optional(),
+  country: anyCountry.optional(),
+  ...pageQuery,
+})
+
+// M-181 … M-183: multipart fields arrive as text.
+export const reportBody = z.object({
+  type: z.enum(ENUMS.reportType),
+  period: z.enum(ENUMS.reportPeriod),
+  brief: z.string().trim().max(LIMITS.reportBrief.max).default(''),
+  tz: timeZone,
+})

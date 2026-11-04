@@ -19,6 +19,16 @@ const SAMPLE_PARAMS = {
   recruiter_approved: { company: 'Mail Test Ltd', link: `${config.clientOrigin}/recruiter/sign-in` },
   recruiter_rejected: { company: 'Mail Test Ltd', reason: 'The registration document is not readable.', link: `${config.clientOrigin}/recruiter/onboarding/review` },
   recruiter_suspended: { company: 'Mail Test Ltd', reason: 'Jobs on this account broke the posting rules.', link: `${config.clientOrigin}/recruiter/onboarding/review` },
+  content_restricted: {
+    summary: 'An administrator reviewed your job “Senior Product Designer” and restricted it. It is paused and cannot be published again while the restriction applies.',
+    reason: 'The salary range does not match the role description.',
+    photoNote: '',
+    link: `${config.clientOrigin}/recruiter/jobs`,
+  },
+  content_restriction_lifted: {
+    summary: 'The restriction on your job “Senior Product Designer” was lifted. It stays paused until you publish it again.',
+    link: `${config.clientOrigin}/recruiter/jobs`,
+  },
   cv_request: { company: 'Mail Test Ltd', details: 'We would like to see the CV you used for your 2023 role.', link: `${config.clientOrigin}/candidate/cv-versions` },
   renewal_failed: { plan: 'Plus', amount: '£9', link: `${config.clientOrigin}/candidate/settings/billing` },
   certificate_issued: {

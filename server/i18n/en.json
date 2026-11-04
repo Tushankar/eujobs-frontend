@@ -218,6 +218,37 @@
       ],
       "action": "Set your password",
       "note": "If you were not expecting this invitation, you can ignore this email."
+    },
+    "content_restricted": {
+      "subject": "Your content was restricted",
+      "heading": "Content restricted",
+      "body": [
+        "Hi {{name}},",
+        "{{summary}}",
+        "Reason: {{reason}}",
+        "{{photoNote}}"
+      ],
+      "action": "Open"
+    },
+    "content_restriction_lifted": {
+      "subject": "A restriction was lifted",
+      "heading": "Restriction lifted",
+      "body": [
+        "Hi {{name}},",
+        "{{summary}}"
+      ],
+      "action": "Open"
+    },
+    "moderationSummary": {
+      "content_restricted": {
+        "job": "An administrator reviewed your job “{{title}}” and restricted it. It is paused and cannot be published again while the restriction applies.",
+        "profile": "An administrator reviewed your profile and restricted it. Recruiters cannot find it in search while the restriction applies."
+      },
+      "content_restriction_lifted": {
+        "job": "The restriction on your job “{{title}}” was lifted. It stays paused until you publish it again.",
+        "profile": "The restriction on your profile was lifted. Recruiters can find it in search again."
+      },
+      "photoRemoved": "Your profile photo was removed. Upload a new photo to complete your profile again."
     }
   },
   "verification": {
@@ -362,7 +393,21 @@
     },
     "none": "None",
     "yes": "Yes",
-    "no": "No"
+    "no": "No",
+    "reportTargetType": {
+      "job": "job",
+      "candidate_profile": "candidate profile",
+      "company": "company",
+      "message": "message"
+    },
+    "reportReason": {
+      "spam": "spam",
+      "scam_or_fraud": "scam or fraud",
+      "discriminatory": "discriminatory",
+      "offensive": "offensive",
+      "misleading": "misleading",
+      "other": "other"
+    }
   },
   "certificate": {
     "tagline": "AI Job Portal",
@@ -418,6 +463,18 @@
       "Actor type",
       "Actor",
       "Event"
+    ],
+    "applications": [
+      "Candidate",
+      "Job",
+      "Company",
+      "Job country",
+      "Applied",
+      "Status"
+    ],
+    "overview": [
+      "Metric",
+      "All time"
     ]
   },
   "audit": {
@@ -429,7 +486,12 @@
       "account_suspended": "Recruiter account suspended: {{name}} ({{company}})",
       "account_reactivated": "Recruiter account reactivated: {{name}} ({{company}})",
       "verification_approved": "Verification evidence approved: {{candidate}} ({{category}})",
-      "verification_rejected": "Verification evidence rejected: {{candidate}} ({{category}})"
+      "verification_rejected": "Verification evidence rejected: {{candidate}} ({{category}})",
+      "content_reported": "Content reported: {{name}} ({{targetType}}, {{reason}})",
+      "case_opened": "Case opened from Jobs: {{name}} ({{reason}})",
+      "content_dismissed": "Report dismissed: {{name}} ({{targetType}})",
+      "content_restricted": "Content restricted: {{name}} ({{targetType}})",
+      "content_lifted": "Restriction lifted: {{name}} ({{targetType}})"
     },
     "learning": {
       "course_created": "Course created: {{title}}",
@@ -464,7 +526,11 @@
       "candidates_exported": "Candidates exported ({{count}} rows)",
       "recruiters_exported": "Recruiters exported ({{count}} rows)",
       "payments_exported": "Payments exported ({{count}} rows)",
-      "audit_exported": "Audit log exported ({{count}} rows)"
+      "audit_exported": "Audit log exported ({{count}} rows)",
+      "overview_exported": "Platform overview exported ({{count}} rows)",
+      "applications_exported": "Applications exported ({{count}} rows)",
+      "report_generated": "Report generated: {{report}} ({{filename}})",
+      "report_downloaded": "Report downloaded again: {{report}} ({{filename}})"
     },
     "jobs": {
       "status_changed": "Job status changed: {{title}} ({{company}}), {{from}} → {{to}}",
@@ -474,6 +540,61 @@
       "payment_recorded": "Payment {{reference}}: {{payer}}, {{item}} ({{amount}})",
       "renewal_failed": "Renewal failed {{reference}}: {{payer}}, {{item}} ({{amount}})",
       "payment_refunded": "Payment refunded {{reference}}: {{payer}}, {{item}} ({{amount}})"
+    },
+    "workspace": {
+      "initialized": "Workspace initialized"
+    }
+  },
+  "reports": {
+    "types": {
+      "marketplace_summary": "Marketplace summary",
+      "skills_demand": "Most demanded skills",
+      "platform_activity": "Platform activity"
+    },
+    "periods": {
+      "this_week": "This week",
+      "last_week": "Last week",
+      "last_month": "Last month"
+    },
+    "columns": {
+      "marketplace": [
+        "Metric",
+        "In period",
+        "All time"
+      ],
+      "skills": [
+        "Skill",
+        "Jobs requiring it"
+      ],
+      "activity": [
+        "From",
+        "To",
+        "Registrations",
+        "Applications"
+      ]
+    },
+    "metrics": {
+      "candidateRegistrations": "Candidate registrations",
+      "activeUsers": "Active users",
+      "publishedJobs": "Published jobs",
+      "applications": "Applications (not withdrawn)",
+      "verifiedProfiles": "Verified candidate profiles",
+      "courseEnrollments": "Course enrollments",
+      "courseBadges": "Course badges earned",
+      "averageRoleMatch": "Average role match",
+      "companies": "Companies registered",
+      "coursePurchases": "Course purchases",
+      "checksInReview": "Verification checks in review",
+      "shortlists": "Shortlist activity",
+      "outreach": "Outreach drafts reviewed",
+      "pendingReviews": "Pending user reviews",
+      "shortlistConversion": "Shortlist conversion",
+      "recruiterAccounts": "Recruiter accounts"
+    },
+    "csv": {
+      "executiveSummary": "Executive summary",
+      "brief": "Brief",
+      "transcript": "Voice note transcript"
     }
   }
 }

@@ -4,9 +4,13 @@ import { auditedExport } from '../../lib/csv.js'
 import { objectId, validate } from '../../lib/validate.js'
 import { requireAuth, requireRole } from '../../middleware/auth.js'
 import { requirePermission } from '../../middleware/permissions.js'
+import { upload } from '../../middleware/upload.js'
 import { adminFileUrl } from '../files/files.service.js'
+import * as reports from '../reports/reports.service.js'
 import * as access from './admin.access.js'
+import * as applications from './admin.applications.js'
 import * as audit from './admin.audit.js'
+import * as metrics from './admin.metrics.js'
 import * as schemas from './admin.schemas.js'
 import { listPermissions } from './admin.service.js'
 import * as users from './admin.users.js'
@@ -83,6 +87,63 @@ router.get('/audit-events', requirePermission('audit.view'), validate({ query: s
 router.get('/audit-events/export', requirePermission('audit.view'), requirePermission('reports.export'), validate({ query: schemas.auditQuery }), async (req, res) => {
   const rows = audit.exportRows(await audit.filteredEvents(req.query), req.user.language)
   await auditedExport(req, res, { type: 'audit_exported', name: 'audit-log', rows })
+})
+
+/* ---------- Overview and Analytics (§3.15) ---------- */
+
+router.get('/overview', requirePermission('dashboard.view'), validate({ query: schemas.metricsQuery }), async (req, res) => {
+  res.json(await metrics.overview(req.query))
+})
+
+router.get('/overview/export', requirePermission('dashboard.view'), requirePermission('reports.export'), validate({ query: schemas.metricsQuery }), async (req, res) => {
+  const rows = metrics.overviewExportRows(await metrics.overview(req.query), req.user.language)
+  await auditedExport(req, res, { type: 'overview_exported', name: 'platform-overview', rows })
+})
+
+router.get('/activity', requirePermission('dashboard.view'), validate({ query: schemas.activityQuery }), async (req, res) => {
+  res.json(await metrics.activity(req.query))
+})
+
+router.get('/analytics', requirePermission('reports.view'), validate({ query: schemas.metricsQuery }), async (req, res) => {
+  res.json(await metrics.analytics(req.query))
+})
+
+router.get('/analytics/activity', requirePermission('reports.view'), validate({ query: schemas.activityQuery }), async (req, res) => {
+  res.json(await metrics.activity(req.query))
+})
+
+/* ---------- Applications and Recruitment (M-206, M-178, P10-Q13, P10-Q14) ---------- */
+
+router.get('/applications', requirePermission('candidates.view'), validate({ query: schemas.applicationsQuery }), async (req, res) => {
+  res.json(await applications.listApplications(req.query))
+})
+
+router.get('/applications/export', requirePermission('candidates.view'), requirePermission('reports.export'), validate({ query: schemas.applicationsQuery }), async (req, res) => {
+  const rows = applications.exportRows(await applications.filteredApplications(req.query), req.user.language)
+  await auditedExport(req, res, { type: 'applications_exported', name: 'applications', rows })
+})
+
+router.get('/recruitment', requirePermission('candidates.view'), validate({ query: schemas.metricsQuery }), async (req, res) => {
+  res.json(await metrics.recruitment(req.query))
+})
+
+/* ---------- Reports (M-181 … M-183, §3.18) ---------- */
+
+router.get('/reports', requirePermission('reports.view'), async (req, res) => {
+  res.json(await reports.listReports())
+})
+
+router.post('/reports', requirePermission('reports.view'), requirePermission('reports.export'), upload('report_voice', { optional: true }), validate({ body: schemas.reportBody }), async (req, res) => {
+  res.status(201).json(await reports.createReport(req.user, req.body, req.file))
+})
+
+router.get('/reports/:id/download', requirePermission('reports.view'), requirePermission('reports.export'), validate({ params: idParams }), async (req, res) => {
+  const { filename, bytes } = await reports.reportFile(req.user, req.params.id)
+  // Every download is served (and audited) in full; the snapshot is not kept in the browser cache.
+  res.set('Cache-Control', 'no-store')
+  res.attachment(filename)
+  res.type('text/csv; charset=utf-8')
+  res.send(bytes)
 })
 
 router.get('/files/:fileId', requirePermission('documents.view'), validate({ params: z.object({ fileId: objectId }) }), async (req, res) => {

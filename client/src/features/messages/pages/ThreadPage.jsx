@@ -8,6 +8,7 @@ import { Button, Icon, Panel } from '@/components/ui'
 import EmptyState from '@/components/common/EmptyState.jsx'
 import Translatable from '@/features/ai/components/Translatable.jsx'
 import { lacksEntitlement } from '@/features/candidate/billing/usePlan.js'
+import ReportButton from '@/features/moderation/components/ReportButton.jsx'
 import { useFormat, usePreferences } from '@/lib/preferences.js'
 import { cx } from '@/utils/cx.js'
 import { useMarkReadMutation, useSendMessageMutation, useThread } from '../api.js'
@@ -79,6 +80,7 @@ export default function ThreadPage() {
               <time className={styles.time} dateTime={message.createdAt}>
                 {format.dateTime(message.createdAt)}
               </time>
+              {!message.mine && <ReportButton targetType="message" targetId={message.id} size="sm" className={styles.report} />}
             </li>
           ))}
         </ol>

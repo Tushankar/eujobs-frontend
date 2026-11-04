@@ -50,3 +50,10 @@
     flex-basis: 96px;
   }
 }
+
+.empty {
+  padding-top: 20px;
+  font-size: 12px;
+  line-height: 16px;
+  color: var(--muted-foreground);
+}

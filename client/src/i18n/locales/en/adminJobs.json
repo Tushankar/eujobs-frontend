@@ -1,0 +1,40 @@
+{
+  "title": "A marketplace of meaningful work.",
+  "description": "Review roles of every status and keep opportunity quality high.",
+  "search": "Search job title or company",
+  "filters": {
+    "status": "Filter by status",
+    "allStatuses": "All statuses",
+    "country": "Filter by country",
+    "allCountries": "All countries"
+  },
+  "columns": {
+    "role": "Role",
+    "company": "Company",
+    "country": "Country",
+    "salary": "Salary",
+    "status": "Status",
+    "actions": "Actions"
+  },
+  "caption": "Jobs",
+  "summary": "Ai Summary",
+  "summaryFor": "Ai Summary for {{title}}",
+  "viewCase": "View case",
+  "viewCaseFor": "View the open case for {{title}}",
+  "openCaseFor": "Open a case for {{title}}",
+  "openCase": {
+    "button": "Open case",
+    "title": "Open a case: {{title}}",
+    "intro": "The case opens in Moderation, where you can dismiss it or restrict the job.",
+    "reason": "Reason",
+    "chooseReason": "Choose a reason",
+    "details": "Details (optional)",
+    "cancel": "Cancel",
+    "submit": "Open case"
+  },
+  "empty": "No jobs yet",
+  "emptyText": "Jobs recruiters create appear here.",
+  "emptyFiltered": "No jobs match",
+  "emptyFilteredText": "Try a different search, status or country.",
+  "clear": "Clear filters"
+}

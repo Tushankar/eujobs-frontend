@@ -137,5 +137,81 @@
       "back": "Back",
       "decidedNow": "Decision saved and emailed to the recruiter."
     }
+  },
+  "title": "Trust is an ongoing practice.",
+  "description": "Review reported content, accounts, and candidate credentials with care, context, and a clear record of every decision.",
+  "content": {
+    "tab": "Content moderation",
+    "title": "Content moderation queue",
+    "description": "Review reported jobs, candidate profiles, companies and messages. Reports are signals for human review, not automatic findings.",
+    "empty": "No reported content",
+    "stat": {
+      "label": "Content reports",
+      "caption": "Open cases awaiting review"
+    },
+    "decisions": {
+      "label": "Content decisions",
+      "caption": "Cases dismissed or restricted"
+    },
+    "priority": {
+      "high": "High priority",
+      "standard": "Standard priority"
+    },
+    "reportCount_one": "{{count}} report",
+    "reportCount_other": "{{count}} reports",
+    "openedFromJobs": "Opened by an admin from Jobs",
+    "decisionNote": "Decision reason: {{reason}}",
+    "review": "Review content",
+    "reviewTitle": "Review reported content",
+    "reports": "Reports",
+    "unknownReporter": "Deleted account",
+    "excerpt": "Message excerpt",
+    "reportedMessage": "reported message",
+    "targetGone": "This content no longer exists.",
+    "facts": {
+      "company": "Company",
+      "status": "Status",
+      "headline": "Headline",
+      "visibility": "Search"
+    },
+    "hidden": "Hidden from recruiter search",
+    "visible": "Visible in recruiter search",
+    "notProvided": "Not provided",
+    "history": "History",
+    "step": {
+      "dismissed": "Dismissed by {{by}} · {{date}}",
+      "restricted": "Restricted by {{by}} · {{date}}",
+      "lifted": "Restriction lifted by {{by}} · {{date}}"
+    },
+    "photoRemoved": "photo removed",
+    "notice": "No automated verdict is available. Review the content in context. Restricting a job pauses and locks it; restricting a profile hides it from recruiter search. The owner is emailed.",
+    "noticeDismissOnly": "Company and message reports can only be dismissed. To act, suspend the recruiter in Account review or restrict the candidate’s profile.",
+    "restrict": "Restrict content",
+    "restrictTitle": "Restrict this content?",
+    "restrictText": {
+      "job": "The job is paused and locked: the recruiter sees your reason and cannot publish it again until the case is dismissed.",
+      "candidate_profile": "The profile is hidden from recruiter search until the case is dismissed. You can also remove the profile photo."
+    },
+    "dismiss": "Dismiss report",
+    "dismissTitle": "Dismiss this report?",
+    "dismissText": "The content stays as it is and the case is closed with your note.",
+    "lift": "Dismiss and lift restriction",
+    "liftTitle": "Lift the restriction?",
+    "liftText": {
+      "job": "The lock is removed; the job stays paused until the recruiter publishes it again. The recruiter is emailed.",
+      "candidate_profile": "The profile is visible in recruiter search again. The candidate is emailed."
+    },
+    "removePhoto": "Also remove the profile photo",
+    "decided": {
+      "restricted": "{{name}}: content restricted.",
+      "dismissed": "{{name}}: report dismissed.",
+      "lifted": "{{name}}: restriction lifted."
+    },
+    "reason": "Reason",
+    "reasonOptional": "Reason (optional)",
+    "reasonHint": "Recorded with the decision and in the audit log.",
+    "reasonRequired": "Add a reason so the decision has a clear record.",
+    "reasonTooLong": "Keep the reason to {{max}} characters or fewer.",
+    "back": "Back"
   }
 }

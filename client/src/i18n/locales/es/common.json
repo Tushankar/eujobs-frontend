@@ -33,5 +33,29 @@
     "next": "Siguiente",
     "page": "Página {{page}} de {{pages}}"
   },
-  "verifiedCompany": "Empresa verificada"
+  "verifiedCompany": "Empresa verificada",
+  "report": {
+    "button": {
+      "job": "Denunciar esta oferta",
+      "company": "Denunciar esta empresa",
+      "candidate_profile": "Denunciar perfil",
+      "message": "Denunciar"
+    },
+    "sent": "Denunciado",
+    "title": {
+      "job": "Denunciar esta oferta",
+      "company": "Denunciar esta empresa",
+      "candidate_profile": "Denunciar este perfil",
+      "message": "Denunciar este mensaje"
+    },
+    "intro": "Cuéntanos qué ocurre. Un administrador revisa cada denuncia y no se le dice a la persona denunciada quién la envió.",
+    "reason": "Motivo",
+    "chooseReason": "Elige un motivo",
+    "details": "Detalles (opcional)",
+    "detailsHint": "{{count}} / {{max}} caracteres",
+    "cancel": "Cancelar",
+    "submit": "Enviar denuncia",
+    "already": "Ya has denunciado esto. Un administrador lo revisará.",
+    "limit": "Puedes enviar hasta {{count}} denuncias al día. Vuelve a intentarlo mañana."
+  }
 }

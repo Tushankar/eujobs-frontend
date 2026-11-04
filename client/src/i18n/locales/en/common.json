@@ -33,5 +33,29 @@
     "next": "Next",
     "page": "Page {{page}} of {{pages}}"
   },
-  "verifiedCompany": "Verified company"
+  "verifiedCompany": "Verified company",
+  "report": {
+    "button": {
+      "job": "Report this job",
+      "company": "Report this company",
+      "candidate_profile": "Report profile",
+      "message": "Report"
+    },
+    "sent": "Reported",
+    "title": {
+      "job": "Report this job",
+      "company": "Report this company",
+      "candidate_profile": "Report this profile",
+      "message": "Report this message"
+    },
+    "intro": "Tell us what is wrong. An administrator reviews every report, and the person you report is not told who sent it.",
+    "reason": "Reason",
+    "chooseReason": "Choose a reason",
+    "details": "Details (optional)",
+    "detailsHint": "{{count}} / {{max}} characters",
+    "cancel": "Cancel",
+    "submit": "Send report",
+    "already": "You have already reported this. An administrator will review it.",
+    "limit": "You can send up to {{count}} reports a day. Try again tomorrow."
+  }
 }

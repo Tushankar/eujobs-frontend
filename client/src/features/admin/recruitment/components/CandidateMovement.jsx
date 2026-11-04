@@ -1,88 +1,71 @@
+import { useTranslation } from 'react-i18next'
 import { Link } from 'react-router-dom'
 import { UserX } from 'lucide-react'
 import DataTable from '@/components/common/DataTable.jsx'
 import EmptyState from '@/components/common/EmptyState.jsx'
 import PillBadge from '@/components/common/PillBadge.jsx'
 import SectionTitle from '@/components/common/SectionTitle.jsx'
-import { Button } from '@/components/ui'
+import { Avatar, Button } from '@/components/ui'
 import { WORKSPACES, workspacePath } from '@/app/workspaces.js'
 import styles from './CandidateMovement.module.css'
 
-const COLUMNS = [
-  {
-    key: 'candidate',
-    header: 'Candidate',
-    width: 278,
-    render: (candidate) => (
-      <div className={styles.person}>
-        <span className={styles.avatar} style={{ background: candidate.tone[0], color: candidate.tone[1] }} aria-hidden="true">
-          {candidate.name
-            .split(' ')
-            .map((part) => part[0])
-            .join('')}
-        </span>
-        <div>
-          <p className={styles.name}>{candidate.name}</p>
-          <p className={styles.title}>{candidate.title}</p>
+/** P10-Q13: one row per non-withdrawn application, newest first, optionally narrowed to one stage category. */
+export default function CandidateMovement({ rows, stage, onClearStage }) {
+  const { t } = useTranslation(['adminRecruitment', 'enums'])
+  const shown = stage ? rows.filter((row) => row.category === stage) : rows
+  const stageLabel = stage && t(`enums:stageCategory.${stage}`)
+  const columns = [
+    {
+      key: 'candidate',
+      header: t('movement.candidate'),
+      width: 278,
+      render: (row) => (
+        <div className={styles.person}>
+          <Avatar name={row.candidate.name ?? ''} size={32} />
+          <div>
+            <p className={styles.name}>{row.candidate.name}</p>
+            <p className={styles.title}>{t('movement.job', { job: row.job.title, company: row.company })}</p>
+          </div>
         </div>
-      </div>
-    ),
-  },
-  {
-    key: 'stage',
-    header: 'Current stage',
-    width: 152,
-    render: ({ stage }) => <PillBadge tone={stage === 'Interview' ? 'accent' : 'neutral'}>{stage}</PillBadge>,
-  },
-  {
-    key: 'shortlist',
-    header: 'Shortlist',
-    width: 177,
-    render: ({ shortlisted }) => (
-      <PillBadge tone={shortlisted ? 'info' : 'neutral'}>{shortlisted ? 'Shortlisted' : 'Not shortlisted'}</PillBadge>
-    ),
-  },
-  { key: 'outreach', header: 'Outreach', render: () => <span className={styles.outreach}>No outreach</span> },
-]
-
-/** Current pipeline state per candidate, optionally narrowed to one stage (set from the stage cards / funnel). */
-export default function CandidateMovement({ candidates, stage, onClearStage }) {
-  const rows = stage ? candidates.filter((candidate) => candidate.stage === stage) : candidates
-
+      ),
+    },
+    {
+      key: 'stage',
+      header: t('movement.stage'),
+      width: 152,
+      render: (row) => <PillBadge tone={row.category === 'interview' ? 'accent' : 'neutral'}>{row.stageName ?? t(`enums:stageCategory.${row.category}`)}</PillBadge>,
+    },
+    {
+      key: 'shortlist',
+      header: t('movement.shortlist'),
+      width: 177,
+      render: (row) => <PillBadge tone={row.shortlisted ? 'info' : 'neutral'}>{t(row.shortlisted ? 'movement.shortlisted' : 'movement.notShortlisted')}</PillBadge>,
+    },
+    { key: 'outreach', header: t('movement.outreach'), render: (row) => <span className={styles.outreach}>{t(row.outreach ? 'movement.outreachSent' : 'movement.noOutreach')}</span> },
+  ]
   return (
     <section aria-labelledby="candidate-movement">
-      <SectionTitle
-        id="candidate-movement"
-        title="Candidate movement"
-        description="Current shortlist and pipeline state from the recruiter workspace."
-      >
+      <SectionTitle id="candidate-movement" title={t('movement.title')} description={t('movement.description')}>
         <Link to={workspacePath(WORKSPACES.admin, 'applications')} className={styles.link}>
-          View applications
+          {t('movement.viewApplications')}
         </Link>
       </SectionTitle>
-
       <div className={styles.body}>
         {stage && (
           <p className={styles.filter} role="status">
-            Showing candidates at the <strong>{stage}</strong> stage
+            {t('movement.filtered', { stage: stageLabel })}
             <Button variant="ghost" size="sm" onClick={onClearStage}>
-              Clear filter
+              {t('movement.clear')}
             </Button>
           </p>
         )}
-        {rows.length > 0 ? (
-          <DataTable
-            className={styles.table}
-            columns={COLUMNS}
-            rows={rows}
-            getRowKey={(candidate) => candidate.id}
-            caption="Candidate movement"
-          />
+        {shown.length > 0 ? (
+          <DataTable className={styles.table} columns={columns} rows={shown} getRowKey={(row) => row.id} caption={t('movement.title')} />
         ) : (
           <EmptyState
             icon={UserX}
-            title={`No candidates at the ${stage} stage`}
-            description="Pick another stage or clear the filter to see everyone."
+            title={stage ? t('movement.emptyStage', { stage: stageLabel }) : t('movement.empty')}
+            description={stage ? t('movement.emptyStageText') : t('movement.emptyText')}
           />
         )}
       </div>

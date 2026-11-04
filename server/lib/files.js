@@ -26,6 +26,7 @@ export const MIME = {
   m4a: 'audio/mp4',
   wav: 'audio/wav',
   ogg: 'audio/ogg',
+  csv: 'text/csv',
 }
 const EXTENSION_ALIASES = { jpeg: 'jpg' }
 // Browsers declare audio files under several names (M-182); file-type names Ogg Opus "opus".

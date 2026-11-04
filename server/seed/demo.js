@@ -21,15 +21,18 @@ import { ensureDefaultPolicy } from '../modules/matching/matching.admin.js'
 import { MatchingPolicy, MatchingPolicyVersion, MatchResult } from '../modules/matching/matching.model.js'
 import { recomputeAll } from '../modules/matching/matching.service.js'
 import { Conversation, Message } from '../modules/messages/messages.model.js'
+import { ModerationCase } from '../modules/moderation/moderation.model.js'
 import { Country } from '../modules/meta/meta.model.js'
 import { currentLegalVersions } from '../modules/meta/meta.service.js'
 import { Counter, Payment, StripeEvent, Subscription } from '../modules/payments/payments.model.js'
+import { ReportExport } from '../modules/reports/reports.model.js'
 import { User } from '../modules/users/users.model.js'
 import { VerificationSubmission } from '../modules/verification/verification.model.js'
 import { seedApplications } from './applications.js'
 import { seedCandidates } from './candidates.js'
 import { seedLearning } from './learning.js'
 import { seedMessages } from './messages.js'
+import { seedModeration } from './moderation.js'
 import { CANDIDATES, CITY_TIME_ZONES } from './data/candidates.js'
 import { DEMO_ACCOUNTS } from './data/demo.js'
 import { PLACES } from './data/places.js'
@@ -123,6 +126,8 @@ export async function seedDemo() {
     MatchingPolicyVersion.deleteMany({}),
     MatchResult.deleteMany({}),
     AiUsage.deleteMany({}),
+    ModerationCase.deleteMany({}),
+    ReportExport.deleteMany({}),
   ])
   await ensureDefaultPolicy()
   // Every stored file is demo data: one folder per purpose under the upload root (never another root).
@@ -151,6 +156,7 @@ export async function seedDemo() {
   await seedLearning({ emailOf, owner, now: now.getTime() })
   await seedApplications({ emailOf, now: now.getTime() })
   await seedMessages({ emailOf, now: now.getTime() })
+  await seedModeration({ emailOf, owner, now: now.getTime() })
   // U6, U7: embeddings, scores and relevant counts of the seeded people and jobs.
   await recomputeAll()
 }

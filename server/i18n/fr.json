@@ -218,6 +218,37 @@
       ],
       "action": "Créer votre mot de passe",
       "note": "Si vous n’attendiez pas cette invitation, vous pouvez ignorer cet e-mail."
+    },
+    "content_restricted": {
+      "subject": "Votre contenu a été restreint",
+      "heading": "Contenu restreint",
+      "body": [
+        "Bonjour {{name}},",
+        "{{summary}}",
+        "Motif : {{reason}}",
+        "{{photoNote}}"
+      ],
+      "action": "Ouvrir"
+    },
+    "content_restriction_lifted": {
+      "subject": "Une restriction a été levée",
+      "heading": "Restriction levée",
+      "body": [
+        "Bonjour {{name}},",
+        "{{summary}}"
+      ],
+      "action": "Ouvrir"
+    },
+    "moderationSummary": {
+      "content_restricted": {
+        "job": "Un administrateur a examiné votre offre « {{title}} » et l’a restreinte. Elle est en pause et ne peut pas être republiée tant que la restriction s’applique.",
+        "profile": "Un administrateur a examiné votre profil et l’a restreint. Les recruteurs ne peuvent pas le trouver dans la recherche tant que la restriction s’applique."
+      },
+      "content_restriction_lifted": {
+        "job": "La restriction de votre offre « {{title}} » a été levée. Elle reste en pause jusqu’à ce que vous la publiiez à nouveau.",
+        "profile": "La restriction de votre profil a été levée. Les recruteurs peuvent à nouveau le trouver dans la recherche."
+      },
+      "photoRemoved": "Votre photo de profil a été supprimée. Ajoutez une nouvelle photo pour compléter à nouveau votre profil."
     }
   },
   "verification": {
@@ -362,7 +393,21 @@
     },
     "none": "Aucun",
     "yes": "Oui",
-    "no": "Non"
+    "no": "Non",
+    "reportTargetType": {
+      "job": "offre",
+      "candidate_profile": "profil de candidat",
+      "company": "entreprise",
+      "message": "message"
+    },
+    "reportReason": {
+      "spam": "spam",
+      "scam_or_fraud": "arnaque ou fraude",
+      "discriminatory": "discriminatoire",
+      "offensive": "offensant",
+      "misleading": "trompeur",
+      "other": "autre"
+    }
   },
   "certificate": {
     "tagline": "AI Job Portal",
@@ -418,6 +463,18 @@
       "Type d’acteur",
       "Acteur",
       "Événement"
+    ],
+    "applications": [
+      "Candidat",
+      "Offre",
+      "Entreprise",
+      "Pays de l’offre",
+      "Date de candidature",
+      "Statut"
+    ],
+    "overview": [
+      "Indicateur",
+      "Total"
     ]
   },
   "audit": {
@@ -429,7 +486,12 @@
       "account_suspended": "Compte recruteur suspendu : {{name}} ({{company}})",
       "account_reactivated": "Compte recruteur réactivé : {{name}} ({{company}})",
       "verification_approved": "Justificatif de vérification approuvé : {{candidate}} ({{category}})",
-      "verification_rejected": "Justificatif de vérification refusé : {{candidate}} ({{category}})"
+      "verification_rejected": "Justificatif de vérification refusé : {{candidate}} ({{category}})",
+      "content_reported": "Contenu signalé : {{name}} ({{targetType}}, {{reason}})",
+      "case_opened": "Dossier ouvert depuis Offres : {{name}} ({{reason}})",
+      "content_dismissed": "Signalement classé : {{name}} ({{targetType}})",
+      "content_restricted": "Contenu restreint : {{name}} ({{targetType}})",
+      "content_lifted": "Restriction levée : {{name}} ({{targetType}})"
     },
     "learning": {
       "course_created": "Cours créé : {{title}}",
@@ -464,7 +526,11 @@
       "candidates_exported": "Candidats exportés ({{count}} lignes)",
       "recruiters_exported": "Recruteurs exportés ({{count}} lignes)",
       "payments_exported": "Paiements exportés ({{count}} lignes)",
-      "audit_exported": "Journal d’audit exporté ({{count}} lignes)"
+      "audit_exported": "Journal d’audit exporté ({{count}} lignes)",
+      "overview_exported": "Vue d’ensemble exportée ({{count}} lignes)",
+      "applications_exported": "Candidatures exportées ({{count}} lignes)",
+      "report_generated": "Rapport généré : {{report}} ({{filename}})",
+      "report_downloaded": "Rapport téléchargé à nouveau : {{report}} ({{filename}})"
     },
     "jobs": {
       "status_changed": "Statut de l’offre modifié : {{title}} ({{company}}), {{from}} → {{to}}",
@@ -474,6 +540,61 @@
       "payment_recorded": "Paiement {{reference}} : {{payer}}, {{item}} ({{amount}})",
       "renewal_failed": "Échec du renouvellement {{reference}} : {{payer}}, {{item}} ({{amount}})",
       "payment_refunded": "Paiement remboursé {{reference}} : {{payer}}, {{item}} ({{amount}})"
+    },
+    "workspace": {
+      "initialized": "Espace de travail initialisé"
+    }
+  },
+  "reports": {
+    "types": {
+      "marketplace_summary": "Synthèse du marché",
+      "skills_demand": "Compétences les plus demandées",
+      "platform_activity": "Activité de la plateforme"
+    },
+    "periods": {
+      "this_week": "Cette semaine",
+      "last_week": "La semaine dernière",
+      "last_month": "Le mois dernier"
+    },
+    "columns": {
+      "marketplace": [
+        "Indicateur",
+        "Sur la période",
+        "Total"
+      ],
+      "skills": [
+        "Compétence",
+        "Offres qui la demandent"
+      ],
+      "activity": [
+        "Du",
+        "Au",
+        "Inscriptions",
+        "Candidatures"
+      ]
+    },
+    "metrics": {
+      "candidateRegistrations": "Inscriptions de candidats",
+      "activeUsers": "Utilisateurs actifs",
+      "publishedJobs": "Offres publiées",
+      "applications": "Candidatures (hors retirées)",
+      "verifiedProfiles": "Profils de candidats vérifiés",
+      "courseEnrollments": "Inscriptions aux cours",
+      "courseBadges": "Badges de cours obtenus",
+      "averageRoleMatch": "Correspondance moyenne par poste",
+      "companies": "Entreprises inscrites",
+      "coursePurchases": "Achats de cours",
+      "checksInReview": "Vérifications en cours d’examen",
+      "shortlists": "Activité de présélection",
+      "outreach": "Brouillons de prise de contact relus",
+      "pendingReviews": "Examens d’utilisateurs en attente",
+      "shortlistConversion": "Conversion en présélection",
+      "recruiterAccounts": "Comptes recruteur"
+    },
+    "csv": {
+      "executiveSummary": "Synthèse",
+      "brief": "Consignes",
+      "transcript": "Transcription de la note vocale"
     }
   }
 }

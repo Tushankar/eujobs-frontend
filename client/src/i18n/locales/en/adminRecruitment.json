@@ -1,0 +1,63 @@
+{
+  "eyebrow": "Recruitment oversight",
+  "title": "See the journey. Protect the decision.",
+  "description": "A read-only view of recruiter activity across roles, applications, shortlists, pipeline stages, and reviewed outreach.",
+  "auditLog": "View audit log",
+  "views": {
+    "data": "Data view",
+    "funnel": "Funnel view",
+    "label": "Recruitment view"
+  },
+  "stats": {
+    "publishedRoles": "Published roles",
+    "applications": "Applications",
+    "applicationsCaption": "All time, not withdrawn",
+    "shortlisted": "Shortlisted",
+    "reviewedOutreach": "Reviewed outreach",
+    "allTime": "All time"
+  },
+  "pipeline": {
+    "title": "Hiring pipeline",
+    "dataText": "Applications at their current stage, withdrawn ones excluded. Recruiters own hiring decisions.",
+    "funnelText": "Applications that ever reached each stage, withdrawn ones excluded."
+  },
+  "stagesLabel": "Pipeline stages",
+  "funnel": {
+    "title": "Funnel View",
+    "label": "Hiring funnel by stage",
+    "stage": "{{stage}}: {{count}} applications. Show applications at this stage."
+  },
+  "movement": {
+    "title": "Candidate movement",
+    "description": "Every application’s current stage, shortlist and outreach state.",
+    "candidate": "Candidate",
+    "job": "{{job}} · {{company}}",
+    "stage": "Current stage",
+    "shortlist": "Shortlist",
+    "outreach": "Outreach",
+    "shortlisted": "Shortlisted",
+    "notShortlisted": "Not shortlisted",
+    "outreachSent": "Outreach sent",
+    "noOutreach": "No outreach",
+    "viewApplications": "View applications",
+    "filtered": "Showing applications at the {{stage}} stage",
+    "clear": "Clear filter",
+    "empty": "No applications yet",
+    "emptyText": "Applications appear here once candidates apply.",
+    "emptyStage": "No applications at the {{stage}} stage",
+    "emptyStageText": "Pick another stage or clear the filter to see everyone."
+  },
+  "sidebar": {
+    "label": "Recruitment oversight",
+    "roles": "Role activity",
+    "rolesText": "The newest published roles",
+    "manage": "Manage",
+    "noRoles": "No published roles yet.",
+    "coverage": "Application coverage",
+    "coverageText": "The newest applications",
+    "noCoverage": "No applications yet.",
+    "noteTitle": "Oversight, not hiring control",
+    "noteText": "Admins review policy, safety, and marketplace integrity. Recruiters remain responsible for fair, human-reviewed hiring decisions.",
+    "openModeration": "Open moderation"
+  }
+}

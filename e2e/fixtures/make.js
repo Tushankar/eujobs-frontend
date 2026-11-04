@@ -2,7 +2,9 @@ import { existsSync, mkdirSync, truncateSync, writeFileSync } from 'node:fs'
 import { join } from 'node:path'
 // The server's in-memory builders (pdfkit, sharp, archiver), so the API tests and the browser checks use the same files.
 import { docx, executable, image, imagePdf, MB, mp4Header, padded, textPdf } from '../../server/test/helpers/fixtures.js'
+import { createRequire } from 'node:module'
 import { launchChrome } from '../lib/browser.js'
+import { openaiApiKey, SERVER_DIR } from '../lib/env.js'
 
 /*
  * P11: test files for the browser checks (part 1 Phase 3, part 2 Phase 4, part 3 Phase 8), written outside the repo.
@@ -100,6 +102,19 @@ const FIXTURES = {
   'worksheet-51mb.pdf': async () => padded(await textPdf(['Oversized worksheet']), 51 * MB),
 }
 
+// P10-Q3 (P11 part 4): one short spoken English MP3 for the report voice note, made once with OpenAI speech.
+export const VOICE_NOTE = 'voice-note.mp3'
+export const VOICE_NOTE_TEXT = 'Please focus this report on interviews and on roles that receive few applications.'
+
+async function makeVoiceNote() {
+  const path = join(FIXTURES_DIR, VOICE_NOTE)
+  if (existsSync(path)) return
+  const OpenAI = createRequire(join(SERVER_DIR, 'package.json'))('openai')
+  const client = new (OpenAI.default ?? OpenAI)({ apiKey: openaiApiKey })
+  const speech = await client.audio.speech.create({ model: 'gpt-4o-mini-tts', voice: 'alloy', input: VOICE_NOTE_TEXT, response_format: 'mp3' })
+  writeFileSync(path, Buffer.from(await speech.arrayBuffer()))
+}
+
 export async function makeFixtures() {
   mkdirSync(FIXTURES_DIR, { recursive: true })
   for (const [name, build] of Object.entries(FIXTURES)) {
@@ -113,6 +128,7 @@ export async function makeFixtures() {
     truncateSync(path, size)
   }
   await makeRecordings()
+  await makeVoiceNote()
 }
 
 export const fixture = (name) => join(FIXTURES_DIR, name)

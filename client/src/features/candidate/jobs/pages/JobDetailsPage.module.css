@@ -398,3 +398,9 @@
   line-height: 20px;
   color: #7a5a1c;
 }
+
+/* M-164: the Report link at the end of a rail card. */
+.report {
+  margin-top: 16px;
+  color: var(--muted-foreground);
+}

@@ -1,3 +1,4 @@
+import { ENUMS } from '../config/enums.js'
 import { interpolate, t } from './i18n.js'
 import { AuditEvent } from '../modules/admin/admin.model.js'
 
@@ -23,6 +24,9 @@ export function describeAudit(event, language) {
   const params = { ...event.params }
   if (params.category) params.category = t(language, `labels.verificationCategory.${params.category}`)
   for (const key of ['from', 'to']) if (params[key]) params[key] = t(language, `labels.jobStatus.${params[key]}`)
+  if (params.targetType) params.targetType = t(language, `labels.reportTargetType.${params.targetType}`)
+  // A report reason is a key (M-164); a decision reason is the admin's own text.
+  if (ENUMS.reportReason.includes(params.reason)) params.reason = t(language, `labels.reportReason.${params.reason}`)
   if (params.amountMinor !== undefined) {
     params.amount = new Intl.NumberFormat(ADMIN_LOCALE[language], { style: 'currency', currency: params.currency }).format(params.amountMinor / 100)
   }

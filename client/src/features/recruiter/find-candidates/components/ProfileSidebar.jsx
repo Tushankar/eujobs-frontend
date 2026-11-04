@@ -4,6 +4,7 @@ import { Button, Icon, Panel, SelectField } from '@/components/ui'
 import { useGetPipelineQuery } from '@/features/recruiter/applications/api.js'
 import ApplicationStageSelect from '@/features/recruiter/applications/components/ApplicationStageSelect.jsx'
 import { MessageCandidateButton } from '@/features/messages/components/StartConversation.jsx'
+import ReportButton from '@/features/moderation/components/ReportButton.jsx'
 import { useFormat } from '@/lib/preferences.js'
 import MatchInsights from './MatchInsights.jsx'
 import styles from './ProfileSidebar.module.css'
@@ -50,6 +51,7 @@ export default function ProfileSidebar({ candidate, jobs, job, onJobChange, onTo
             {t(candidate.shortlisted ? 'discovery:profile.removeShortlist' : 'discovery:profile.addShortlist')}
           </Button>
           <MessageCandidateButton candidate={candidate} job={job} />
+          <ReportButton targetType="candidate_profile" targetId={candidate.id} size="sm" fullWidth />
         </div>
       </Panel>
 

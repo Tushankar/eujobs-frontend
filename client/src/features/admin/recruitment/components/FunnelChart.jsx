@@ -4,8 +4,8 @@ import shortlistedIcon from '@/assets/icons/recruitment-funnel-shortlisted.svg'
 import interviewIcon from '@/assets/icons/recruitment-funnel-interview.svg'
 import offerIcon from '@/assets/icons/recruitment-funnel-offer.svg'
 import hireIcon from '@/assets/icons/recruitment-funnel-hire.svg'
+import { useTranslation } from 'react-i18next'
 import { cx } from '@/utils/cx.js'
-import { FUNNEL_STAGES } from '../data/recruitment.js'
 import styles from './FunnelChart.module.css'
 
 /*
@@ -44,33 +44,37 @@ function bandPath([x, width, left, right]) {
 }
 
 /**
- * Funnel view of the hiring pipeline as an inline SVG. Each stage is a button: choosing one reports it
- * through `onSelectStage` (the page uses it to filter the candidate movement table).
+ * Funnel view of the hiring pipeline as an inline SVG: fixed Figma shapes with real numbers (M-179), each the
+ * applications that ever reached that category, withdrawn ones excluded (M-178). Each stage is a button: choosing one
+ * reports it through `onSelectStage` (the page uses it to filter the candidate movement table).
  */
-export default function FunnelChart({ selectedStage, onSelectStage }) {
+export default function FunnelChart({ funnel, selectedStage, onSelectStage }) {
+  const { t } = useTranslation(['adminRecruitment', 'enums'])
   return (
     <div className={styles.panel}>
-      <h3 className={styles.title}>Funnel View</h3>
+      <h3 className={styles.title}>{t('funnel.title')}</h3>
       <div className={styles.scroll}>
-        <svg className={styles.chart} viewBox={`0 0 ${WIDTH} ${HEIGHT}`} role="group" aria-label="Hiring funnel by stage">
+        <svg className={styles.chart} viewBox={`0 0 ${WIDTH} ${HEIGHT}`} role="group" aria-label={t('funnel.label')}>
           {BANDS.map((band) => (
             <path key={band[0]} d={bandPath(band)} fill={band[4]} />
           ))}
           <ellipse cx={CAP.x + CAP.w / 2} cy={CAP.y + CAP.h / 2} rx={CAP.w / 2} ry={CAP.h / 2} fill={CAP.fill} />
 
-          {FUNNEL_STAGES.map((stage, index) => {
+          {funnel.map((stage, index) => {
             const shape = STAGE_SHAPES[index]
-            const selected = selectedStage === stage.stage
-            const choose = () => onSelectStage(stage.stage)
+            const label = t(`enums:stageCategory.${stage.category}`)
+            const selected = selectedStage === stage.category
+            const choose = () => onSelectStage(stage.category)
             const [iconX, iconY, iconSize] = shape.iconBox
             return (
               <g
-                key={stage.id}
+                key={stage.category}
                 className={cx(styles.stage, selected && styles.selected)}
                 role="button"
                 tabIndex={0}
                 aria-pressed={selected}
-                aria-label={`${stage.label}: ${stage.count} candidates. Show candidates at this stage.`}
+                aria-label={t('funnel.stage', { stage: label, count: stage.count })}
+                data-funnel={stage.category}
                 onClick={choose}
                 onKeyDown={(event) => {
                   if (event.key === 'Enter' || event.key === ' ') {
@@ -101,7 +105,7 @@ export default function FunnelChart({ selectedStage, onSelectStage }) {
                 )}
                 <image href={shape.icon} x={iconX} y={iconY} width={iconSize} height={iconSize} />
                 <text className={styles.label} x={shape.labelX} y={407} textAnchor="middle" dominantBaseline="central">
-                  {stage.label}
+                  {label}
                 </text>
                 <text className={styles.count} x={shape.labelX} y={428} textAnchor="middle" dominantBaseline="central">
                   {stage.count}

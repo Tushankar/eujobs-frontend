@@ -1,4 +1,5 @@
 import { createHash } from 'node:crypto'
+import { createReadStream } from 'node:fs'
 import OpenAI from 'openai'
 import { config } from '../config/env.js'
 import { LIMITS } from '../config/limits.js'
@@ -83,6 +84,21 @@ export function cosine(a, b) {
     normB += b[i] * b[i]
   }
   return normA && normB ? dot / Math.sqrt(normA * normB) : 0
+}
+
+/* ---------- transcription (M-181, M-182) ---------- */
+
+export const TRANSCRIBE_FALLBACK_MODEL = 'whisper-1'
+
+/** The text of an audio file: OPENAI_TRANSCRIBE_MODEL first, then whisper-1 when that model fails. */
+export async function transcribe(path) {
+  const run = (model) => call((ai) => ai.audio.transcriptions.create({ model, file: createReadStream(path) }))
+  const primary = client?.models?.transcribe ?? config.openai.transcribeModel
+  try {
+    return (await run(primary)).text
+  } catch {
+    return (await run(TRANSCRIBE_FALLBACK_MODEL)).text
+  }
 }
 
 /* ---------- generations (§2.9, OD13, U3) ---------- */

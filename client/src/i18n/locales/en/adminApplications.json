@@ -1,0 +1,26 @@
+{
+  "title": "Connections, with context.",
+  "description": "Understand application activity without losing sight of the people behind it.",
+  "export": "Export activity",
+  "search": "Search candidate, job or company",
+  "filters": {
+    "status": "Filter by status",
+    "allStatuses": "All statuses",
+    "country": "Filter by job country",
+    "allCountries": "All countries"
+  },
+  "columns": {
+    "candidate": "Candidate",
+    "role": "Role",
+    "company": "Company",
+    "country": "Job country",
+    "applied": "Applied",
+    "status": "Status"
+  },
+  "caption": "Applications",
+  "empty": "No applications yet",
+  "emptyText": "Applications submitted by candidates appear here.",
+  "emptyFiltered": "No applications match",
+  "emptyFilteredText": "Try a different search, status or country.",
+  "clear": "Clear filters"
+}

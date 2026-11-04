@@ -1,9 +1,17 @@
 .toolbar {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 12px;
   padding-top: 32px;
 }
 
 .search {
-  max-width: 320px;
+  flex: 0 1 320px;
+  min-width: 0;
+}
+
+.select {
+  flex: 0 0 176px;
 }
 
 .results {
@@ -33,10 +41,28 @@
 .actions {
   display: flex;
   align-items: center;
-  gap: 50px;
+  gap: 12px;
 }
 
 .summaryLink.summaryLink {
   padding-inline: 12px;
   color: var(--primary);
+}
+
+/* M-164: the Open case dialog. */
+.caseForm {
+  display: grid;
+  gap: 16px;
+}
+
+.caseIntro {
+  font-size: 14px;
+  line-height: 1.5;
+  color: var(--muted-foreground);
+}
+
+.error {
+  font-size: 12px;
+  line-height: 16px;
+  color: var(--destructive);
 }

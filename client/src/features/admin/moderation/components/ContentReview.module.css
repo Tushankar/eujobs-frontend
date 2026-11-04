@@ -1,0 +1,61 @@
+.reports,
+.history {
+  display: grid;
+  gap: 12px;
+  padding-top: 12px;
+  font-size: 12px;
+  line-height: 18px;
+  color: var(--foreground);
+}
+
+.reportLine {
+  overflow-wrap: anywhere;
+}
+
+.details {
+  padding-top: 4px;
+  color: var(--muted-foreground);
+  overflow-wrap: anywhere;
+}
+
+.fact {
+  display: contents;
+}
+
+.clamp {
+  display: -webkit-box;
+  -webkit-line-clamp: 6;
+  -webkit-box-orient: vertical;
+  overflow: hidden;
+}
+
+/* OQ-1: the reported message and up to 5 earlier ones; the reported one is marked. */
+.excerpt {
+  display: grid;
+  gap: 8px;
+  padding-top: 12px;
+}
+
+.message {
+  padding: 8px 12px;
+  border-radius: var(--radius-lg);
+  background: var(--card);
+  font-size: 12px;
+  line-height: 18px;
+  overflow-wrap: anywhere;
+}
+
+.reported {
+  outline: 2px solid var(--warning-fg);
+}
+
+.sender {
+  display: block;
+  padding-bottom: 2px;
+  font-size: 11px;
+  color: var(--muted-foreground);
+}
+
+.photo {
+  padding-top: 16px;
+}

@@ -36,8 +36,6 @@ function routeTable() {
 }
 
 const ROUTES = routeTable()
-// Phase 10b adds the Overview, Analytics, Reports, Applications and Recruitment routes.
-const PENDING = { 'dashboard.view': 'Phase 10b', 'reports.view': 'Phase 10b', 'candidates.view': 'Phase 10b' }
 
 const call = (route, user) => {
   assert.ok(!/[*{]/.test(route.path), `${route.path}: only :params are supported`)
@@ -55,7 +53,7 @@ describe('admin permission matrix (M-155)', () => {
   })
 
   for (const { id } of PERMISSIONS) {
-    it(`${id}: refused without it, allowed with it`, { todo: PENDING[id] }, async () => {
+    it(`${id}: refused without it, allowed with it`, async () => {
       const guarded = ROUTES.filter((route) => route.permissions.includes(id))
       if (id === 'users.deactivate') {
         // Checked inside the account decisions (OQ-2), not by a route: companies.test.js covers it.

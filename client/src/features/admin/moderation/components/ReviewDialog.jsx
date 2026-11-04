@@ -1,17 +1,17 @@
 import { useState } from 'react'
+import { useTranslation } from 'react-i18next'
 import { Button, Icon, Modal, TextareaField } from '@/components/ui'
 import { cx } from '@/utils/cx.js'
 import styles from './ReviewDialog.module.css'
 
-const MAX_REASON_LENGTH = 300
-
 /**
- * Review dialog of reported content. Step 1 shows the details (`children`) and the
- * decision buttons; choosing one opens step 2, where the admin writes a reason (required for restrictive
- * decisions) and confirms. Nothing is saved until step 2 is confirmed.
+ * Review dialog of a content case (M-167). Step 1 shows the details (`children`) and the decision buttons; choosing
+ * one opens step 2, where the admin writes a reason (required for restrictive decisions, ≤ `maxReason`) and confirms.
+ * `extra(action)` adds controls to step 2 (the photo removal). Nothing is saved until step 2 is confirmed.
  * `actions` = [{ id, label, icon, variant, reasonRequired, confirmTitle, confirmText, confirmLabel }].
  */
-export default function ReviewDialog({ title, actions, previous, onDecide, onClose, children }) {
+export default function ReviewDialog({ title, actions, maxReason, extra, busy, error: serverError, onDecide, onClose, children }) {
+  const { t } = useTranslation('moderation')
   const [pending, setPending] = useState(null)
   const [reason, setReason] = useState('')
   const [error, setError] = useState('')
@@ -24,27 +24,22 @@ export default function ReviewDialog({ title, actions, previous, onDecide, onClo
 
   function confirm() {
     const trimmed = reason.trim()
-    if (pending.reasonRequired && !trimmed) {
-      setError('Add a reason so the decision has a clear record.')
-      return
-    }
-    if (trimmed.length > MAX_REASON_LENGTH) {
-      setError(`Keep the reason to ${MAX_REASON_LENGTH} characters or fewer.`)
-      return
-    }
+    if (pending.reasonRequired && !trimmed) return setError(t('content.reasonRequired'))
+    if (trimmed.length > maxReason) return setError(t('content.reasonTooLong', { max: maxReason }))
     onDecide(pending, trimmed)
   }
 
   return (
-    <Modal open onClose={onClose} title={title} width={512} divided>
+    <Modal open onClose={onClose} title={title} width={560} divided>
       {pending ? (
-        <div>
+        <div data-decision-step={pending.id}>
           <h3 className={styles.confirmTitle}>{pending.confirmTitle}</h3>
           <p className={styles.confirmText}>{pending.confirmText}</p>
           <TextareaField
             className={styles.reason}
-            label={pending.reasonRequired ? 'Reason' : 'Reason (optional)'}
-            hint="Saved with the decision on this device and recorded in the audit log."
+            name="reason"
+            label={t(pending.reasonRequired ? 'content.reason' : 'content.reasonOptional')}
+            hint={t('content.reasonHint')}
             value={reason}
             onChange={(event) => {
               setReason(event.target.value)
@@ -54,11 +49,17 @@ export default function ReviewDialog({ title, actions, previous, onDecide, onClo
             rows={3}
             data-autofocus
           />
+          {extra?.(pending)}
+          {serverError && (
+            <p className={styles.serverError} role="alert">
+              {serverError}
+            </p>
+          )}
           <div className={styles.actions}>
             <Button variant="outline" onClick={() => setPending(null)}>
-              Back
+              {t('content.back')}
             </Button>
-            <Button variant={pending.variant === 'danger' ? 'danger' : 'primary'} onClick={confirm}>
+            <Button variant={pending.variant === 'danger' ? 'danger' : 'primary'} loading={busy} onClick={confirm}>
               {pending.confirmLabel}
             </Button>
           </div>
@@ -66,25 +67,22 @@ export default function ReviewDialog({ title, actions, previous, onDecide, onClo
       ) : (
         <div>
           {children}
-          {previous && (
-            <p className={styles.previous}>
-              <strong>{previous.label}.</strong> {previous.reason ? `Reason: ${previous.reason}` : 'No reason was added.'} You
-              can record a new decision below.
-            </p>
+          {actions.length > 0 && (
+            <div className={styles.actions}>
+              {actions.map((action) => (
+                <Button
+                  key={action.id}
+                  variant={action.variant === 'danger' ? 'outline' : action.variant}
+                  className={cx(action.variant === 'danger' && styles.danger)}
+                  leftIcon={action.icon && <Icon as={action.icon} size={13} />}
+                  onClick={() => choose(action)}
+                  data-action={action.id}
+                >
+                  {action.label}
+                </Button>
+              ))}
+            </div>
           )}
-          <div className={styles.actions}>
-            {actions.map((action) => (
-              <Button
-                key={action.id}
-                variant={action.variant === 'danger' ? 'outline' : action.variant}
-                className={cx(action.variant === 'danger' && styles.danger)}
-                leftIcon={action.icon && <Icon as={action.icon} size={13} />}
-                onClick={() => choose(action)}
-              >
-                {action.label}
-              </Button>
-            ))}
-          </div>
         </div>
       )}
     </Modal>

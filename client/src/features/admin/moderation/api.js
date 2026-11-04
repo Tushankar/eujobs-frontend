@@ -21,6 +21,14 @@ export const moderationApi = api.injectEndpoints({
       query: ({ userId, ...body }) => ({ url: `/admin/moderation/accounts/${userId}/decision`, method: 'POST', body }),
       invalidatesTags: ['AccountReview'],
     }),
+    // Content cases (M-164, M-167, OQ-1)
+    getModerationSummary: build.query({ query: () => '/admin/moderation/summary', providesTags: ['ContentCases'] }),
+    getContentCases: build.query({ query: () => '/admin/moderation/content', providesTags: ['ContentCases'] }),
+    getContentCase: build.query({ query: (id) => `/admin/moderation/content/${id}`, providesTags: ['ContentCases'] }),
+    decideContentCase: build.mutation({
+      query: ({ id, ...body }) => ({ url: `/admin/moderation/content/${id}/decision`, method: 'POST', body }),
+      invalidatesTags: ['ContentCases', 'AdminJobs', 'AdminMetrics'],
+    }),
     // A signed URL for a sensitive file (documents.view, §2.6)
     getAdminFileUrl: build.query({ query: (fileId) => `/admin/files/${fileId}`, keepUnusedDataFor: 0 }),
   }),
@@ -33,5 +41,9 @@ export const {
   useGetAccountQueueQuery,
   useGetAccountQuery,
   useDecideAccountMutation,
+  useGetModerationSummaryQuery,
+  useGetContentCasesQuery,
+  useGetContentCaseQuery,
+  useDecideContentCaseMutation,
   useGetAdminFileUrlQuery,
 } = moderationApi

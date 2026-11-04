@@ -33,5 +33,29 @@
     "next": "Suivant",
     "page": "Page {{page}} sur {{pages}}"
   },
-  "verifiedCompany": "Entreprise vérifiée"
+  "verifiedCompany": "Entreprise vérifiée",
+  "report": {
+    "button": {
+      "job": "Signaler cette offre",
+      "company": "Signaler cette entreprise",
+      "candidate_profile": "Signaler le profil",
+      "message": "Signaler"
+    },
+    "sent": "Signalé",
+    "title": {
+      "job": "Signaler cette offre",
+      "company": "Signaler cette entreprise",
+      "candidate_profile": "Signaler ce profil",
+      "message": "Signaler ce message"
+    },
+    "intro": "Dites-nous ce qui ne va pas. Un administrateur examine chaque signalement et la personne signalée ne sait pas qui l’a envoyé.",
+    "reason": "Motif",
+    "chooseReason": "Choisissez un motif",
+    "details": "Précisions (facultatif)",
+    "detailsHint": "{{count}} / {{max}} caractères",
+    "cancel": "Annuler",
+    "submit": "Envoyer le signalement",
+    "already": "Vous avez déjà signalé ce contenu. Un administrateur va l’examiner.",
+    "limit": "Vous pouvez envoyer jusqu’à {{count}} signalements par jour. Réessayez demain."
+  }
 }

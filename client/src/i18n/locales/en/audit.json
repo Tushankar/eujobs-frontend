@@ -25,7 +25,11 @@
     "course": "Course",
     "certificate": "Certificate",
     "matching_policy": "Matching policy",
-    "verification_submission": "Verification evidence"
+    "verification_submission": "Verification evidence",
+    "candidate_profile": "Candidate profile",
+    "company": "Company",
+    "message": "Message",
+    "report": "Report"
   },
   "types": {
     "moderation": {
@@ -36,7 +40,12 @@
       "account_suspended": "Recruiter account suspended: {{name}} ({{company}})",
       "account_reactivated": "Recruiter account reactivated: {{name}} ({{company}})",
       "verification_approved": "Verification evidence approved: {{candidate}} ({{category}})",
-      "verification_rejected": "Verification evidence rejected: {{candidate}} ({{category}})"
+      "verification_rejected": "Verification evidence rejected: {{candidate}} ({{category}})",
+      "content_reported": "Content reported: {{name}} ({{targetType}}, {{reason}})",
+      "case_opened": "Case opened from Jobs: {{name}} ({{reason}})",
+      "content_dismissed": "Report dismissed: {{name}} ({{targetType}})",
+      "content_restricted": "Content restricted: {{name}} ({{targetType}})",
+      "content_lifted": "Restriction lifted: {{name}} ({{targetType}})"
     },
     "learning": {
       "course_created": "Course created: {{title}}",
@@ -71,7 +80,11 @@
       "candidates_exported": "Candidates exported ({{count}} rows)",
       "recruiters_exported": "Recruiters exported ({{count}} rows)",
       "payments_exported": "Payments exported ({{count}} rows)",
-      "audit_exported": "Audit log exported ({{count}} rows)"
+      "audit_exported": "Audit log exported ({{count}} rows)",
+      "overview_exported": "Platform overview exported ({{count}} rows)",
+      "applications_exported": "Applications exported ({{count}} rows)",
+      "report_generated": "Report generated: {{report}} ({{filename}})",
+      "report_downloaded": "Report downloaded again: {{report}} ({{filename}})"
     },
     "jobs": {
       "status_changed": "Job status changed: {{title}} ({{company}}), {{from}} → {{to}}",
@@ -81,6 +94,9 @@
       "payment_recorded": "Payment {{reference}}: {{payer}}, {{item}} ({{amount}})",
       "renewal_failed": "Renewal failed {{reference}}: {{payer}}, {{item}} ({{amount}})",
       "payment_refunded": "Payment refunded {{reference}}: {{payer}}, {{item}} ({{amount}})"
+    },
+    "workspace": {
+      "initialized": "Workspace initialized"
     }
   }
 }

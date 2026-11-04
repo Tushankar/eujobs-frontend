@@ -8,6 +8,7 @@ import aiGlyph from '@/assets/icons/ai-glyph-blue.svg'
 import Translatable from '@/features/ai/components/Translatable.jsx'
 import { ApplyButton } from '@/features/candidate/applications/components/ApplyFlow.jsx'
 import { MessageCompanyButton } from '@/features/messages/components/StartConversation.jsx'
+import ReportButton from '@/features/moderation/components/ReportButton.jsx'
 import { useJobText } from '@/lib/jobText.js'
 import VerifiedCompany from '@/components/common/VerifiedCompany.jsx'
 import { useFormat } from '@/lib/preferences.js'
@@ -225,6 +226,7 @@ export default function JobDetailsPage() {
               {job.application && <MessageCompanyButton job={job} canStart={job.application.status !== 'withdrawn'} fullWidth />}
             </div>
             {job.application && <p className={styles.railText}>{t('applications:apply.sent')}</p>}
+            <ReportButton targetType="job" targetId={job.id} size="sm" className={styles.report} />
           </section>
 
           <section className={styles.card}>
@@ -250,6 +252,7 @@ export default function JobDetailsPage() {
                 </li>
               )}
             </ul>
+            <ReportButton targetType="company" targetId={company.id} size="sm" className={styles.report} />
           </section>
         </aside>
       </div>

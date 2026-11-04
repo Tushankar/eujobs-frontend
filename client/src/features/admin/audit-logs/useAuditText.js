@@ -14,6 +14,8 @@ export function useAuditText() {
       ...(params.category && { category: t(`enums:verificationCategory.${params.category}`) }),
       ...(params.from && { from: t(`enums:jobStatus.${params.from}`) }),
       ...(params.to && { to: t(`enums:jobStatus.${params.to}`) }),
+      ...(params.targetType && { targetType: t(`enums:reportTargetType.${params.targetType}`) }),
+      ...(params.reason && { reason: t(`enums:reportReason.${params.reason}`, { defaultValue: params.reason }) }),
       ...(params.amountMinor !== undefined && { amount: format.money(params.amountMinor, params.currency) }),
     })
 }

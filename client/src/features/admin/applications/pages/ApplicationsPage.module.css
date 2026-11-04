@@ -1,5 +1,28 @@
-.results {
+.filters {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 12px;
   padding-top: 32px;
+}
+
+.search {
+  flex: 0 1 320px;
+  min-width: 0;
+}
+
+.select {
+  flex: 0 0 176px;
+}
+
+.results {
+  padding-top: 24px;
+}
+
+.error {
+  padding-top: 12px;
+  font-size: 12px;
+  line-height: 16px;
+  color: var(--destructive);
 }
 
 .table {

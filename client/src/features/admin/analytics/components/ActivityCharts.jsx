@@ -1,3 +1,5 @@
+import { useTranslation } from 'react-i18next'
+import { niceCeiling } from '@/features/admin/overview/chartScale.js'
 import styles from './ActivityCharts.module.css'
 
 const WIDTH = 502
@@ -8,18 +10,14 @@ const LINE_BASELINE = 197
 const PLOT_LEFT = 29
 const PLOT_TOP = 8
 
-/** Rounds `max` up to a tidy axis ceiling that splits into five equal steps (e.g. 21 -> 25, 104 -> 120). */
-function niceCeiling(max) {
-  const raw = Math.max(max, 1) / 5
-  const magnitude = 10 ** Math.floor(Math.log10(raw))
-  const step = [1, 2, 2.5, 5, 10].map((factor) => factor * magnitude).find((candidate) => candidate >= raw)
-  return step * 5
-}
-
-function describe(labels, registrations, applications) {
-  return labels
-    .map((label, index) => `${label}: ${registrations[index]} registrations, ${applications[index]} applications`)
-    .join('; ')
+/** The chart in words, for screen readers. */
+function useDescribe() {
+  const { t } = useTranslation('adminOverview')
+  return {
+    t,
+    points: (labels, registrations, applications) =>
+      labels.map((label, index) => t('chart.point', { label, registrations: registrations[index], applications: applications[index] })).join('; '),
+  }
 }
 
 /** Bar-top path with 4px rounded top corners, growing up from the baseline. */
@@ -31,6 +29,7 @@ function barPath(x, width, height) {
 
 /** Paired bars (registrations in brand blue, applications in pale blue) per label. */
 export function BarChart({ labels, registrations, applications }) {
+  const { t, points } = useDescribe()
   const max = Math.max(...registrations, ...applications, 1)
   const barWidth = 20
   const gap = 6
@@ -41,7 +40,7 @@ export function BarChart({ labels, registrations, applications }) {
       className={styles.svg}
       viewBox={`0 0 ${WIDTH} ${HEIGHT}`}
       role="img"
-      aria-label={`Bar chart. ${describe(labels, registrations, applications)}`}
+      aria-label={t('chart.barSummary', { items: points(labels, registrations, applications) })}
     >
       <line x1="0" x2={WIDTH} y1={BASELINE + 0.5} y2={BASELINE + 0.5} className={styles.baseline} />
       {labels.map((label, index) => {
@@ -53,12 +52,12 @@ export function BarChart({ labels, registrations, applications }) {
           <g key={label}>
             {registrationHeight > 0 && (
               <path d={barPath(left, barWidth, registrationHeight)} className={styles.registrations}>
-                <title>{`${label}: ${registrations[index]} registrations`}</title>
+                <title>{t('chart.registrationsAt', { label, count: registrations[index] })}</title>
               </path>
             )}
             {applicationHeight > 0 && (
               <path d={barPath(left + barWidth + gap, barWidth, applicationHeight)} className={styles.applications}>
-                <title>{`${label}: ${applications[index]} applications`}</title>
+                <title>{t('chart.applicationsAt', { label, count: applications[index] })}</title>
               </path>
             )}
             <text x={center} y={BASELINE + 22} textAnchor="middle" className={styles.barLabel}>
@@ -73,6 +72,7 @@ export function BarChart({ labels, registrations, applications }) {
 
 /** Two area-and-line series on a dashed grid with a left value axis. */
 export function LineChart({ labels, registrations, applications }) {
+  const { t, points } = useDescribe()
   const ceiling = niceCeiling(Math.max(...registrations, ...applications))
   const plotWidth = WIDTH - PLOT_LEFT
   const band = plotWidth / labels.length
@@ -93,7 +93,7 @@ export function LineChart({ labels, registrations, applications }) {
           <g key={labels[index]}>
             <circle cx={x} cy={y} r="8" className={styles.ripple} />
             <circle cx={x} cy={y} r="4" className={styles.node}>
-              <title>{`${labels[index]}: ${values[index]} ${key}`}</title>
+              <title>{t(`chart.${key}At`, { label: labels[index], count: values[index] })}</title>
             </circle>
           </g>
         ))}
@@ -106,7 +106,7 @@ export function LineChart({ labels, registrations, applications }) {
       className={styles.svg}
       viewBox={`0 0 ${WIDTH} ${LINE_BASELINE + HEIGHT - BASELINE - 2}`}
       role="img"
-      aria-label={`Line chart. ${describe(labels, registrations, applications)}`}
+      aria-label={t('chart.lineSummary', { items: points(labels, registrations, applications) })}
     >
       <defs>
         <linearGradient id="activity-registrations" x1="0" x2="0" y1="0" y2="1">

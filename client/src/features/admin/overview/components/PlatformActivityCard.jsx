@@ -1,27 +1,27 @@
 import { useId, useState } from 'react'
+import { useTranslation } from 'react-i18next'
 import { ChevronDown, TrendingUp } from 'lucide-react'
 import SectionTitle from '@/components/common/SectionTitle.jsx'
 import { Icon, Panel } from '@/components/ui'
+import { niceCeiling } from '../chartScale.js'
 import { cx } from '@/utils/cx.js'
-import { ACTIVITY_PERIODS, BAR_SCALE_MAX } from '../data/overview.js'
+import { PERIODS, useActivity } from '../useActivity.js'
 import styles from './PlatformActivityCard.module.css'
 
 /* Line view geometry (viewBox units; the SVG scales to the card width). */
 const WIDTH = 756
 const HEIGHT = 244
 const PLOT = { left: 38.5, right: 746, top: 8, bottom: 224.5 }
-const TICKS = [0, 20, 40, 60, 80, 100]
-
-const yOf = (value) => PLOT.bottom - (value / 100) * (PLOT.bottom - PLOT.top)
 
 function ViewToggle({ view, onChange }) {
+  const { t } = useTranslation('adminOverview')
   return (
-    <div className={styles.toggle} role="group" aria-label="Chart view">
+    <div className={styles.toggle} role="group" aria-label={t('chart.view')}>
       <button
         type="button"
         className={cx(styles.toggleButton, view === 'bars' && styles.toggleActive)}
         aria-pressed={view === 'bars'}
-        aria-label="Bar view"
+        aria-label={t('chart.bars')}
         onClick={() => onChange('bars')}
       >
         <span className={styles.barsIcon} aria-hidden="true" />
@@ -30,7 +30,7 @@ function ViewToggle({ view, onChange }) {
         type="button"
         className={cx(styles.toggleButton, view === 'line' && styles.toggleActive)}
         aria-pressed={view === 'line'}
-        aria-label="Line view"
+        aria-label={t('chart.line')}
         onClick={() => onChange('line')}
       >
         <Icon as={TrendingUp} size={12} />
@@ -40,26 +40,21 @@ function ViewToggle({ view, onChange }) {
 }
 
 function BarChart({ data }) {
+  const ceiling = niceCeiling(Math.max(...data.registrations, ...data.applications))
   return (
     <>
       <div className={styles.bars}>
-        {data.days.map((day, index) => (
-          <div key={day} className={styles.barColumn}>
-            <span
-              className={cx(styles.bar, styles.registrationBar)}
-              style={{ height: `${(data.registrations[index] / BAR_SCALE_MAX) * 100}%` }}
-            />
-            <span
-              className={cx(styles.bar, styles.applicationBar)}
-              style={{ height: `${(data.applications[index] / BAR_SCALE_MAX) * 100}%` }}
-            />
+        {data.labels.map((label, index) => (
+          <div key={label} className={styles.barColumn}>
+            <span className={cx(styles.bar, styles.registrationBar)} style={{ height: `${(data.registrations[index] / ceiling) * 100}%` }} />
+            <span className={cx(styles.bar, styles.applicationBar)} style={{ height: `${(data.applications[index] / ceiling) * 100}%` }} />
           </div>
         ))}
       </div>
       <div className={styles.barLabels} aria-hidden="true">
-        {data.days.map((day) => (
-          <span key={day} className={styles.barLabel}>
-            {day}
+        {data.labels.map((label) => (
+          <span key={label} className={styles.barLabel}>
+            {label}
           </span>
         ))}
       </div>
@@ -69,13 +64,16 @@ function BarChart({ data }) {
 
 function LineChart({ data }) {
   const gradientId = useId().replace(/\W/g, '')
-  const band = (PLOT.right - PLOT.left) / data.days.length
+  // M-171: the same real counts as the bars, on an axis scaled to them.
+  const ceiling = niceCeiling(Math.max(...data.registrations, ...data.applications))
+  const ticks = Array.from({ length: 6 }, (_, index) => (ceiling / 5) * index)
+  const yOf = (value) => PLOT.bottom - (value / ceiling) * (PLOT.bottom - PLOT.top)
+  const band = (PLOT.right - PLOT.left) / data.labels.length
   const xOf = (index) => PLOT.left + band * (index + 0.5)
   const series = [
     { values: data.applications, line: styles.applicationLine, dot: styles.applicationDot, halo: styles.applicationHalo, fill: 'applications' },
     { values: data.registrations, line: styles.registrationLine, dot: styles.registrationDot, halo: styles.registrationHalo, fill: 'registrations' },
   ]
-
   return (
     <svg viewBox={`0 0 ${WIDTH} ${HEIGHT}`} className={styles.lineSvg} aria-hidden="true">
       <defs>
@@ -88,8 +86,7 @@ function LineChart({ data }) {
           <stop offset="1" stopColor="#0084ff" stopOpacity="0.01" />
         </linearGradient>
       </defs>
-
-      {TICKS.map((tick) => (
+      {ticks.map((tick) => (
         <g key={tick}>
           {tick > 0 && <line x1={PLOT.left} x2={PLOT.right} y1={yOf(tick)} y2={yOf(tick)} className={styles.grid} />}
           <text x={PLOT.left - 6} y={yOf(tick)} dy="0.35em" textAnchor="end" className={styles.tick}>
@@ -97,19 +94,15 @@ function LineChart({ data }) {
           </text>
         </g>
       ))}
-      {Array.from({ length: data.days.length + 1 }, (_, index) => (
+      {Array.from({ length: data.labels.length + 1 }, (_, index) => (
         <line key={index} x1={PLOT.left + band * index} x2={PLOT.left + band * index} y1={PLOT.top} y2={PLOT.bottom} className={styles.grid} />
       ))}
       <line x1={PLOT.left} x2={PLOT.right} y1={PLOT.bottom} y2={PLOT.bottom} className={styles.axis} />
-
       {series.map(({ values, line, dot, halo, fill }) => {
         const points = values.map((value, index) => `${xOf(index)},${yOf(value)}`)
         return (
           <g key={fill}>
-            <polygon
-              points={`${xOf(0)},${PLOT.bottom} ${points.join(' ')} ${xOf(values.length - 1)},${PLOT.bottom}`}
-              fill={`url(#${gradientId}-${fill})`}
-            />
+            <polygon points={`${xOf(0)},${PLOT.bottom} ${points.join(' ')} ${xOf(values.length - 1)},${PLOT.bottom}`} fill={`url(#${gradientId}-${fill})`} />
             <polyline points={points.join(' ')} className={line} />
             {values.map((value, index) => (
               <g key={index}>
@@ -120,35 +113,38 @@ function LineChart({ data }) {
           </g>
         )
       })}
-
-      {data.days.map((day, index) => (
-        <text key={day} x={xOf(index)} y={PLOT.bottom + 13} dy="0.35em" textAnchor="middle" className={styles.tick}>
-          {day}
+      {data.labels.map((label, index) => (
+        <text key={label} x={xOf(index)} y={PLOT.bottom + 13} dy="0.35em" textAnchor="middle" className={styles.tick}>
+          {label}
         </text>
       ))}
     </svg>
   )
 }
 
-/** "Platform activity": illustrative registrations vs applications as bars or a line, per period. */
-export default function PlatformActivityCard() {
+/** "Platform activity" (M-170, M-171): real registrations and applications per day or week, as bars or a line. */
+export default function PlatformActivityCard({ country }) {
+  const { t } = useTranslation(['adminOverview', 'enums'])
   const [view, setView] = useState('bars')
-  const [periodId, setPeriodId] = useState(ACTIVITY_PERIODS[0].id)
-  const period = ACTIVITY_PERIODS.find((item) => item.id === periodId)
-  const data = view === 'bars' ? period.bars : period.line
-  const summary = `${period.label} activity by day. Registrations: ${data.registrations.join(', ')}. Applications: ${data.applications.join(', ')}.`
-
+  const [period, setPeriod] = useState(PERIODS[0])
+  const data = useActivity('overview', period, country)
+  const summary =
+    data &&
+    t('chart.summary', {
+      period: t(`enums:reportPeriod.${period}`),
+      items: data.labels.map((label, index) => t('chart.point', { label, registrations: data.registrations[index], applications: data.applications[index] })).join('; '),
+    })
   return (
     <Panel padding={24} aria-labelledby="platform-activity-title" className={cx(styles.card, view === 'line' && styles.lineView)}>
-      <SectionTitle id="platform-activity-title" title="Platform activity" description="Illustrative registrations and applications">
+      <SectionTitle id="platform-activity-title" title={t('chart.title')} description={t('chart.description')}>
         <div className={styles.controls}>
           <ViewToggle view={view} onChange={setView} />
           <label className={styles.period}>
-            <span className="sr-only">Period</span>
-            <select value={periodId} onChange={(event) => setPeriodId(event.target.value)} className={styles.select}>
-              {ACTIVITY_PERIODS.map((item) => (
-                <option key={item.id} value={item.id}>
-                  {item.label}
+            <span className="sr-only">{t('chart.period')}</span>
+            <select name="period" value={period} onChange={(event) => setPeriod(event.target.value)} className={styles.select}>
+              {PERIODS.map((item) => (
+                <option key={item} value={item}>
+                  {t(`enums:reportPeriod.${item}`)}
                 </option>
               ))}
             </select>
@@ -156,20 +152,18 @@ export default function PlatformActivityCard() {
           </label>
         </div>
       </SectionTitle>
-
       <ul className={styles.legend}>
         <li className={styles.legendItem}>
           <span className={cx(styles.swatch, styles.registrationSwatch)} />
-          Registrations
+          {t('chart.registrations')}
         </li>
         <li className={styles.legendItem}>
           <span className={cx(styles.swatch, styles.applicationSwatch)} />
-          Applications
+          {t('chart.applications')}
         </li>
       </ul>
-
-      <div className={styles.chart} role="img" aria-label={summary}>
-        {view === 'bars' ? <BarChart data={data} /> : <LineChart data={data} />}
+      <div className={styles.chart} role="img" aria-label={summary ?? ''} data-activity-chart={data ? period : undefined}>
+        {data && (view === 'bars' ? <BarChart data={data} /> : <LineChart data={data} />)}
       </div>
     </Panel>
   )
