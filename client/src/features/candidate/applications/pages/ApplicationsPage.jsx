@@ -1,10 +1,11 @@
 import { useState } from 'react'
 import { useTranslation } from 'react-i18next'
-import { Link } from 'react-router-dom'
+import { Link, useNavigate, useParams } from 'react-router-dom'
 import { ArrowRight, BriefcaseBusiness } from 'lucide-react'
 import { useGetConfigQuery } from '@/app/api.js'
 import { Button, CompanyLogo, Icon } from '@/components/ui'
 import ConfirmDialog from '@/components/common/ConfirmDialog.jsx'
+import NoticeBanner from '@/components/common/NoticeBanner.jsx'
 import DataTable from '@/components/common/DataTable.jsx'
 import EmptyState from '@/components/common/EmptyState.jsx'
 import FilterChips from '@/components/common/FilterChips.jsx'
@@ -12,6 +13,7 @@ import PageTitle from '@/components/common/PageTitle.jsx'
 import StatusBadge from '@/components/common/StatusBadge.jsx'
 import { useCompanyMessageStart } from '@/features/messages/api.js'
 import { CompanyMessageDialog } from '@/features/messages/components/StartConversation.jsx'
+import { useMarkSeen } from '@/features/notifications/api.js'
 import { useJobText } from '@/lib/jobText.js'
 import { useFormat } from '@/lib/preferences.js'
 import { useGetApplicationsQuery, useWithdrawMutation } from '../api.js'
@@ -23,6 +25,7 @@ import styles from './ApplicationsPage.module.css'
 /**
  * Applications (§3.4): every application with its status, dated history (M-075) and next step, withdraw (M-074),
  * Apply again after a withdrawal (a new record; the old one stays withdrawn) and a message to the company (M-084).
+ * /candidate/applications/:applicationId opens that activity dialog (P11b-Q9); an unknown id says it is no longer available.
  */
 export default function ApplicationsPage() {
   const { t } = useTranslation()
@@ -32,7 +35,9 @@ export default function ApplicationsPage() {
   const { data } = useGetApplicationsQuery()
   const [withdraw] = useWithdrawMutation()
   const [filter, setFilter] = useState('all')
-  const [activityId, setActivityId] = useState(null)
+  const navigate = useNavigate()
+  const activityId = useParams().applicationId ?? null
+  const setActivityId = (id) => navigate(id ? `/candidate/applications/${id}` : '/candidate/applications')
   const [withdrawing, setWithdrawing] = useState(null)
   const [reapplying, setReapplying] = useState(null)
   const [messaging, setMessaging] = useState(null)
@@ -41,6 +46,7 @@ export default function ApplicationsPage() {
   const applications = data?.items ?? []
   const rows = applications.filter((application) => filter === 'all' || application.status === filter)
   const activity = applications.find((application) => application.id === activityId)
+  useMarkSeen('application', activity?.id)
   const activeJobs = new Set(applications.filter((application) => application.status !== 'withdrawn').map((application) => application.job.id))
   const canReapply = (application) => application.status === 'withdrawn' && application.job.accepting && !activeJobs.has(application.job.id)
   const filters = [{ id: 'all', label: t('applications:list.all') }, ...(config?.enums.applicationStatus ?? []).map((status) => ({ id: status, label: t(`enums:applicationStatus.${status}`) }))]
@@ -88,6 +94,8 @@ export default function ApplicationsPage() {
   return (
     <div>
       <PageTitle className={styles.pageTitle} title={t('applications:list.title')} description={t('applications:list.description')} />
+
+      {data && activityId && !activity && <NoticeBanner>{t('notifications:unavailable')}</NoticeBanner>}
 
       <FilterChips className={styles.chips} label={t('applications:list.filtersLabel')} options={filters} value={filter} onChange={setFilter} />
 

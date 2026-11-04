@@ -1,6 +1,8 @@
 import { Router } from 'express'
-import { requireApprovedRecruiter, requireAuth, requireRole, requireVerifiedEmail } from '../../middleware/auth.js'
+import { requireApprovedRecruiter, requireAuth, requireVerifiedEmail } from '../../middleware/auth.js'
 import { validate } from '../../lib/validate.js'
+import { switchesBody } from '../notifications/notifications.schemas.js'
+import { setEmailSwitches } from '../notifications/notifications.service.js'
 import * as schemas from './users.schemas.js'
 import * as users from './users.service.js'
 
@@ -17,10 +19,10 @@ router.patch('/', validate({ body: schemas.mePatchBody }), async (req, res) => {
   res.json(await users.meDto(req.user))
 })
 
-// M-094: one call for the badges, polled by the client; the candidate's active applications, unread messages for both roles.
+// M-094, P11b-Q2: one call for the badges, polled by the client: the candidate's active applications, unread messages
+// (candidates and recruiters) and every role's unread notifications (the bell and the sidebar sections).
 router.get(
   '/counters',
-  requireRole('candidate', 'recruiter'),
   (req, res, next) => (req.user.role === 'recruiter' ? requireApprovedRecruiter(req, res, next) : next()),
   async (req, res) => {
     res.json(await users.counters(req.user))
@@ -37,17 +39,10 @@ router.post('/legal/accept', requireVerifiedEmail, async (req, res) => {
   res.json(await users.meDto(req.user))
 })
 
-// No in-app toggle and no admin email preferences (OD6): candidates and recruiters only.
-router.patch(
-  '/notifications',
-  requireVerifiedEmail,
-  requireRole('candidate', 'recruiter'),
-  validate({ body: schemas.notificationsBody }),
-  async (req, res) => {
-    req.user.notifyEmail = req.body.notifyEmail
-    await req.user.save()
-    res.json(await users.meDto(req.user))
-  },
-)
+// P11b-Q3, Q12: one email switch per category, for every role; in-app notifications are always on.
+router.patch('/notifications', requireVerifiedEmail, validate({ body: switchesBody }), async (req, res) => {
+  await setEmailSwitches(req.user, req.body.emailSwitches)
+  res.json(await users.meDto(req.user))
+})
 
 export default router

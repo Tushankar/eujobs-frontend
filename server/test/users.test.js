@@ -25,7 +25,7 @@ describe('GET /me', () => {
     const res = await api().get('/api/v1/me').set(auth(candidate))
     assert.equal(res.status, 200)
     assert.equal(res.body.role, 'candidate')
-    assert.equal(res.body.notifyEmail, true)
+    assert.equal(res.body.emailSwitches.applications, true)
     assert.equal(res.body.onboardingCompleted, false)
     assert.equal(res.body.passwordHash, undefined)
 
@@ -42,7 +42,7 @@ describe('GET /me', () => {
     assert.equal(adminMe.isOwner, true)
     assert.equal(adminMe.permissions.length, 21)
     assert.equal(adminMe.adminRole, null)
-    assert.equal(adminMe.notifyEmail, undefined)
+    assert.equal(adminMe.emailSwitches.account_reviews, true)
 
     const staff = await createUser({ role: 'admin', adminAccess: { roleId: (await AdminRole.findOne({ name: 'Staff' }))._id } })
     const staffMe = (await api().get('/api/v1/me').set(auth(staff))).body
@@ -94,15 +94,16 @@ describe('POST /me/password (M-010)', () => {
   })
 })
 
-describe('PATCH /me/notifications (M-095, OD6)', () => {
-  it('turns the email toggle off for candidates and recruiters, not admins', async () => {
+describe('PATCH /me/notifications (P11b-Q3, Q12; supersedes OD6)', () => {
+  it('saves the email switches of the role, admins included; another role’s category is ignored', async () => {
     const candidate = await createUser()
-    const res = await api().patch('/api/v1/me/notifications').set(auth(candidate)).send({ notifyEmail: false })
-    assert.equal(res.body.notifyEmail, false)
+    const res = await api().patch('/api/v1/me/notifications').set(auth(candidate)).send({ emailSwitches: { messages: false, account_reviews: false } })
+    assert.equal(res.body.emailSwitches.messages, false)
+    assert.equal(res.body.emailSwitches.account_reviews, undefined)
     const admin = await createUser({ role: 'admin' })
-    const denied = await api().patch('/api/v1/me/notifications').set(auth(admin)).send({ notifyEmail: false })
-    assert.equal(denied.status, 403)
-    assert.equal(denied.body.error.code, 'FORBIDDEN')
+    const saved = await api().patch('/api/v1/me/notifications').set(auth(admin)).send({ emailSwitches: { content_reports: false } })
+    assert.equal(saved.status, 200)
+    assert.equal(saved.body.emailSwitches.content_reports, false)
   })
 })
 

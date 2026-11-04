@@ -172,7 +172,7 @@ describe('recruiter sign-up and the email code (M-002, M-004, U37)', () => {
     assert.equal(me.phone.e164, '+442079460958')
     const meRes = await api().get('/api/v1/me').set('Authorization', `Bearer ${token}`)
     assert.equal(meRes.status, 200)
-    const blocked = await api().patch('/api/v1/me/notifications').set('Authorization', `Bearer ${token}`).send({ notifyEmail: false })
+    const blocked = await api().patch('/api/v1/me/notifications').set('Authorization', `Bearer ${token}`).send({ emailSwitches: { messages: false } })
     assert.equal(blocked.status, 403)
     assert.equal(blocked.body.error.code, 'EMAIL_UNVERIFIED')
   })

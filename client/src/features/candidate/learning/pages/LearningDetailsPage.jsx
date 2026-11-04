@@ -13,6 +13,7 @@ import { useCourseText } from '@/features/learning/useCourseText.js'
 import Translatable from '@/features/ai/components/Translatable.jsx'
 import LessonRow from '../components/LessonRow.jsx'
 import styles from './LearningDetailsPage.module.css'
+import { useMarkSeen } from '@/features/notifications/api.js'
 
 const BASE = '/candidate/learning'
 
@@ -22,6 +23,8 @@ export default function LearningDetailsPage() {
   const format = useFormat()
   const text = useCourseText()
   const { courseId } = useParams()
+  // P11b-Q10: opening this item marks its notifications read.
+  useMarkSeen('course', courseId)
   const { data: course, isError } = useGetCourseQuery(courseId)
 
   const back = (

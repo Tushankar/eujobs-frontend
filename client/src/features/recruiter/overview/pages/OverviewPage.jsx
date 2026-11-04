@@ -16,6 +16,7 @@ import HiringMomentumCard from '../components/HiringMomentumCard.jsx'
 import SectionHeading from '../components/SectionHeading.jsx'
 import TalentCard from '../components/TalentCard.jsx'
 import styles from './OverviewPage.module.css'
+import { useMarkSeen } from '@/features/notifications/api.js'
 
 const ROLES_SHOWN = 5
 
@@ -31,6 +32,8 @@ function partOfDay(hour) {
  * meeting; open roles.
  */
 export default function OverviewPage() {
+  // P11b-Q10: opening this item marks its notifications read.
+  useMarkSeen('page', 'overview')
   const { t } = useTranslation()
   const { data: me } = useGetMeQuery()
   const { data: overview } = useGetRecruiterOverviewQuery()

@@ -16,6 +16,7 @@ import * as learningRoutes from '../modules/learning/learning.routes.js'
 import * as matchingRoutes from '../modules/matching/matching.routes.js'
 import messagesRoutes from '../modules/messages/messages.routes.js'
 import * as moderationRoutes from '../modules/moderation/moderation.routes.js'
+import notificationRoutes from '../modules/notifications/notifications.routes.js'
 import metaRoutes from '../modules/meta/meta.routes.js'
 import * as paymentRoutes from '../modules/payments/payments.routes.js'
 import placesRoutes from '../modules/places/places.routes.js'
@@ -76,6 +77,7 @@ router.use('/recruiter/pipeline', applicationRoutes.pipelineRouter)
 router.use('/skills', jobRoutes.skillsRouter)
 router.use('/conversations', messagesRoutes)
 router.use('/reports', moderationRoutes.reportsRouter)
+router.use('/notifications', notificationRoutes)
 router.use('/courses', learningRoutes.coursesRouter)
 router.use('/learning', learningRoutes.learningRouter)
 router.use('/public/certificates', learningRoutes.publicCertificatesRouter)

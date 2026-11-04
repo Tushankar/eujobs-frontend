@@ -298,6 +298,21 @@ M-164 lets users report jobs, profiles, companies and messages. M-167 defines "R
 | P11-C10 builder call: sweep in any language | `e2e/lib/sweep.js` holds the sweep (the English `sweep` scenario and P11-01 call it); the 404 panel carries `data-not-found` so the sweep recognises it in every language. | 2026-11-04 |
 | P11-C11 builder call: the e2e `fill` helper | It cleared a field with `value = ''`, which React does not see, so a re-render could put the old text back before typing (P10-02 created "mAnAgErOps desk …"). It now clears through the native value setter and an input event. P10-01, P10-02, P11-05 and P2-01 passed with it. | 2026-11-04 |
 | P11-C12 builder call: enum labels | The restored P2-19 found `enums:emailType.content_restriction_lifted` missing in en, es and fr (added in 10b on the server only); the label is added, and `foundation.test.js` now checks that every server enum key has a client label in en, es and fr, so this is caught without a browser. | 2026-11-04 |
+| P11b-Q1 notification events (owner; supersedes M-093/OD6) | Every notification opens the exact item it is about. **Candidate:** application status changed (screening, interview, offer, hired, not selected) → that application; new message → that conversation; CV request from a company → CV page requests; verification approved/rejected → Verification page; new job matching a job alert (Plus only) → job details; payment paid / renewal failed / plan ended → Billing; course purchased, certificate issued → that course / certificate; profile restricted / restriction lifted → profile. **Recruiter:** account approved / rejected / suspended → review page or Overview; new application on your job → that application; candidate withdrew → that application; new message → that conversation; CV request approved/declined → that candidate's profile; job restricted / lifted → that job; payment paid / failed → Billing; certificate issued → certificate. **Admin**, only admins whose permission covers the event (the Owner gets all): recruiter submitted or resubmitted for review → that Account review item; candidate verification submitted → that verification item; new content report → that moderation case; renewal payment failed → that payment; invited admin joined → Access management. | 2026-11-04 |
+| P11b-Q2 notifications on screen (owner) | The header bell shows the unread count and a dropdown of the latest 10; clicking one opens the exact section and marks it read. "See all" opens a Notifications page per role with All/Unread and "Mark all as read". Each sidebar item shows the count of its unread notifications, cleared when they are opened; the unread-messages and active-applications badges keep working. Refresh through the existing 15-second `/me/counters` poll; no websockets, no Redis. | 2026-11-04 |
+| P11b-Q3 email switches (owner) | Settings → Notifications for all three roles (admins in admin Settings): one email on/off switch per category. In-app notifications always show. Security and account-decision emails (password reset, invite, approved/rejected/suspended, verification decision, renewal failed, plan ended) always send and cannot be switched off. | 2026-11-04 |
+| P11b-Q4 admin emails (owner) | Sent at once, only to admins whose permission covers the event; each admin can switch categories off; they count toward the daily non-critical cap and never go to reserved domains. Rules for the phase: store the type and parameters, never the finished text (rendered in the reader's current language, en/es/fr, check-i18n passes); reuse the existing email throttles; an item that is gone or no longer accessible shows "no longer available", never a crash or the 403 page; a notification is only visible to its own user, and admins never see events outside their permissions. | 2026-11-04 |
+| P11b-Q5 retention (owner) | 90 days: a notification older than 90 days is deleted (TTL index), read or not. | 2026-11-04 |
+| P11b-Q6 grouping (owner) | Collapse while unread: one unread notification per conversation, updated to the latest message with a count; status changes of one application replace its unread notification with the latest status. Once read, the next event starts a new one. New applications stay one per application; a job matching several alerts gives one notification. | 2026-11-04 |
+| P11b-Q7 new emails (owner) | Only the five admin events get new emails. Candidate withdrew, CV request approved/declined, payment paid and course purchased are in-app only. | 2026-11-04 |
+| P11b-Q8 status timing (owner) | The in-app "application status changed" notification is created by the same delayed task as the email (10 minutes after the last move, U33), so an undone move never shows. Other events appear at once. | 2026-11-04 |
+| P11b-Q9 item pages (owner) | The URL opens the item in place: `/candidate/applications/:id` opens that application's activity dialog; `/recruiter/applications/:id` shows the list filtered to its job with the row highlighted and scrolled into view; `/admin/payments/:id` opens the payment details dialog. Closing returns to the list. | 2026-11-04 |
+| P11b-Q10 sidebar badges (owner) | Messages keeps only its unread-messages badge (reading the conversation clears both). Candidate Applications keeps its neutral active count and gets a separate accent count of unread application notifications. Other items show only the notification count. Opening the exact item from anywhere (bell, Notifications page or the page itself) marks its notifications read; visiting the section list does not. | 2026-11-04 |
+| P11b-Q11 payments (owner) | No duplicates: a candidate's course purchase → only "course purchased" (opens the course); candidate "payment paid" = Plus invoices (first and renewals) → Billing. A recruiter's course purchase → "payment paid" → Billing. Recruiter "payment failed" is not built: recruiters only buy courses, and a declined card stays inside Stripe Checkout, so no failed recruiter payment is ever recorded. | 2026-11-04 |
+| P11b-Q12 categories and admin permissions (owner) | Email categories: candidate = Applications (status + rejection), Messages, CV requests, Job alerts; recruiter = New applications, Messages; admin = Account reviews, Verification, Content reports, Failed renewals, Admin joined. Default on; the former single email toggle is copied into every category. Admin events go to admins holding the permission of the page they open: `moderation.manage` (account review, verification, content reports), `finance.view` (failed renewal), `roles.view` (admin joined). | 2026-11-04 |
+| P11b-Q13 seed (owner) | `seed:demo` creates one notification per seeded event that is still waiting, dated like the event: Sarah's unread messages from Emma and Oliver, the two open moderation cases and James Chen's pending account review for admins with `moderation.manage`. | 2026-11-04 |
+| P11b-Q14 rejected or suspended recruiters (owner) | Their notification is stored (it opens the review page) and shows in the bell once the account is active again; the always-on email and the review page's reason tell them now. No bell on the onboarding layout. | 2026-11-04 |
+| P11b-Q15 job-alert timing (owner) | One in-app notification per matching job at the job's first publish, whatever the alert's frequency; the email keeps its frequency. | 2026-11-04 |
 
 _(Answers to any new question asked during the build are appended to this table.)_
 
@@ -782,7 +797,7 @@ Every recruiter workspace endpoint returns `RECRUITER_NOT_APPROVED` unless the s
 | Photo | required; JPG/PNG/WebP ≤ 5 MB; square; stored 400×400 + 96×96; shown in the shell and to recruiters; no pre-moderation; admins can remove it through moderation; never a matching input | M-013 |
 | External certificates | optional file or URL; with a file the candidate can request verification; recruiters see "Verified" only for reviewed ones | M-025 |
 | Privacy | `discoverable` (default on), `resumeVisible` (default off), `matchingConsent` (default on) | M-187, A: candidate S54 |
-| Email notifications | one toggle, default on; there is no in-app toggle | M-095, OD6 |
+| Email notifications | ~~one toggle, default on; there is no in-app toggle~~ superseded (P11b-Q3, Q12): one email switch per category, default on; in-app notifications are always on | M-095, ~~OD6~~ P11b |
 
 **Completeness checklist.** One server function returns `{ complete, done, total, percent, items: [{ key, done, route }] }`. It is embedded in `/me` and used by the apply gate, discovery (M-054), the promo card (M-196), the admin columns (M-161) and every checklist UI (M-015; ordering item 12).
 
@@ -881,7 +896,7 @@ Every recruiter workspace endpoint returns `RECRUITER_NOT_APPROVED` unless the s
 - **Default outreach text (M-088).** A translatable template in the recruiter's UI language; the candidate can translate it on demand.
 - **New-message email (M-089, U13).** Sent when a message is unread for 15 min and no email went out for that conversation in the last 60 min. In the recipient's language; under the toggle and the cap.
 - **Counters (M-094).** One `GET /me/counters` every 15 s, paused in hidden tabs. Candidates: unread messages and active applications (not withdrawn, not `not_selected`, as in M-082). Recruiters: unread messages. Badges are hidden at 0.
-- **Bell (M-093, OD6).** No dot and no feed; the bell links to notification settings.
+- ~~**Bell (M-093, OD6).** No dot and no feed; the bell links to notification settings.~~ **Superseded 2026-11-04 by Phase 11b (P11b-Q1 … Q15):** in-app notifications for all three roles, a bell with the unread count and a dropdown of the latest 10, a Notifications page per role, per-section sidebar counts, and one email switch per category (see §3.21).
 - **Translate** per message (M-144; paid for candidates, free for recruiters). **Report** a message (M-164).
 - **Outreach (M-180).** Each recruiter-started conversation counts as "reviewed outreach".
 
@@ -1209,7 +1224,7 @@ All emails are in the recipient's language (S). Classes are defined in §2.8.
 | `new_applications` | recruiter | at most one per job per hour | non-critical | OD14 |
 | `cv_request` | candidate | earlier-version request | non-critical (OQ-6c) | U19 |
 
-No other emails exist. Admins receive only invite and reset emails (OD6).
+No other emails exist. ~~Admins receive only invite and reset emails (OD6).~~ Superseded by Phase 11b (P11b-Q4, Q7, Q12): admins also receive the five admin event emails (`admin_account_review`, `admin_verification_submitted`, `admin_content_report`, `admin_renewal_failed`, `admin_joined`), non-critical, sent at once to admins whose permission covers the event, under their category switch and the cap. Non-critical candidate and recruiter emails follow the category switch of their type (§3.21).
 
 ### 3.18 AI features and limits
 
@@ -1244,10 +1259,10 @@ No other emails exist. Admins receive only invite and reset emails (OD6).
 - **Profile menu and sidebar identity (M-195).** The subtitle shows the candidate's plan, the recruiter's company or the admin's role (Owner for owners). Photo or initials, with the email under the name. "Profile" goes to My profile, Company or admin Settings.
 - **Footer (M-197).** "© {current year} Local WorkMan" plus Terms, Privacy and Imprint links. The demo footer note goes away.
 - **Sign-in pages (M-198).** Demo notes are removed. The admin page shows a restricted-access notice: authorised staff only, accounts created by an administrator.
-- **Admin Settings (M-199, OD6).** Name, password change, language. No email preferences.
+- **Admin Settings (M-199, ~~OD6~~).** Name, password change, language, and (Phase 11b, P11b-Q3) the email switches of the admin's notification categories.
 - **Help (M-200).** FAQs come from a database collection per audience, with per-language text seeded with rewritten answers. No admin editor.
 - **Removals and small changes (M-201, M-202, M-203).** Remove the recruiter Overview "Compare" checkbox. The greeting uses local time of day and the first name, computed on the client. Remove the word "privacy" from the recruiter settings copy.
-- **Bell (M-093, OD6).** No dot; it links to notification settings.
+- ~~**Bell (M-093, OD6).** No dot; it links to notification settings.~~ Superseded by Phase 11b: the bell shows the unread count and the latest 10 (§3.21).
 - **Demo leftovers (S).** The workspace switch is removed. "Reset demo" is removed and "Delete my data" becomes real.
 
 ### 3.20 Seed data
@@ -2667,7 +2682,18 @@ The course-purchase path is built here but verified in Phase 8. AI pages are gat
 
 **Results** (repo root unless noted; never run the server tests and the e2e at the same time. Other agents run tests and e2e on `eujobs_test` too, so every run below was watched for foreign runs, P11-Q5):
 
-RESULTS_TABLE
+| Command | Result |
+|---|---|
+| `cd server && npm test`, last full run (17:06–17:23, with the files as they were then) | 356 tests: 335 pass, 21 fail, 0 todo. **No clean Phase 11 total.** Phase 11's server work was committed by the owner at 16:58 (`9b8fba8`); from then on the working tree also held another session's uncommitted "Phase 11b" (notifications: `modules/notifications`, 5 new email types, `/me` and counter fields, mailer and `seed/demo.js` changes). Every failure is in that work: the enum count (23 → 28) and the new email types without dictionary entries or client labels (foundation ×3, caught by the P11-C12 test); `notifyEmail` replaced by `emailSwitches` and the email toggle (mailer, messages, users); counters with a `notifications` field (messages); seed contents (seed ×4); and the users and verification tests that ran after a foreign test run started at 17:23:01 on `eujobs_test`. Every Phase 11 test file passed (admin access, lists, matrix, moderation, metrics, companies, jobs, payments, and the new i18n tests). |
+| Earlier full runs | Run 1: 349 tests, 346 pass, 3 fail (another agent's e2e ran meanwhile). Run 2: 353 tests, 351 pass, 2 fail (overlapped other runs); one real failure was the Spanish default stage name (P11-C2, test updated). Run 3: cut off by a session restart. |
+| Phase 11 test files, alone and in sequence | `companies`, `jobs`, `admin.lists`, `foundation`: 52/52 (15:01). `foundation` + `admin.access` (with the P11-Q6 and P11-C12 tests): 28/28 (16:42). |
+| `cd server && npm run lint`; `npx oxlint .` in `e2e/` | clean |
+| `cd client && npm run lint && npm run build` | clean; the build runs the translation check first: "es, fr match en" |
+| `node e2e/run.js` P11-01 (es and fr sweep, every role) | D and M pass (16:15–16:37, no foreign run): public 13, onboarding 5, candidate 27, recruiter 29, admin 29 routes per language. 0 missing keys, 0 English leftovers, 0 layout problems. Notes list 35 (D) / 36 (M) truncated user-data items (message previews, long emails, the admin's name in the sidebar). Runs 1–4 failed: seed collisions with other agents, then the layout findings fixed in P11-C1 and P11-C8. |
+| `node e2e/run.js sweep` (English, with the layout check) | D and M pass |
+| P11-02, P11-03 (M), P11-04, P11-05, P11-06 (D, M) | all pass. P11-02 and P11-05 first failed on scenario mistakes (a payment row without a payer role; the wrong API path), which were fixed. P11-02 samples: en-DE "€10" and "£90,000 – £113,000"; fr-BE "10 €" and "90 000–113 000 £GB"; es-ES "10 €" and "90.000-113.000 GBP"; en-IE "€10"; admin fr "12 345 HUF", es "12.345 HUF" |
+| P9-08 (owner pre-step) | pass twice: once Regenerate returned the same wording (the old failure case), once new wording |
+| Changed earlier scenarios | P2-11 (D, M), P2-19, P4-13, P7-03, P8-07 (D, M), P9-01 (D, M), P10-01 (D, M), P10-02, P2-01 (D, M): all pass. P2-19 first found the missing enum label (P11-C12). P10-02 first hit the `fill` race (P11-C11). The P2-19/P7-03/P8-07/P9-01 group started while 2 foreign test processes were running and still passed. |
 
 **Open.**
 - Live emails waiting for the owner's confirmation: `content_restricted`, `content_restriction_lifted` (sent 2026-11-04), and `admin_invite` (sent earlier).
@@ -2758,7 +2784,7 @@ RESULTS_TABLE
 | Antivirus scanning of uploads | not in v1 | M-185 (rejected option) |
 | OCR for image-only PDFs; video transcoding | not in v1 | U18, M-102 |
 | Email change in the app | not in v1 | M-010, C21 |
-| Notification feed or bell dropdown | not in v1 | M-093, OD6 |
+| ~~Notification feed or bell dropdown~~ | ~~not in v1~~ superseded: built in Phase 11b (P11b-Q1 … Q15) | ~~M-093, OD6~~ |
 | Server-side global search | not in v1 | M-194 |
 | Admin FAQ editor; admin Plans screen | not in v1 | M-200, M-116 |
 | Recruiter teams (several recruiters per company) | later | M-145 |
@@ -2777,7 +2803,7 @@ RESULTS_TABLE
 | C1 | The stale md vs the JSON on M-017 and M-159 | The JSON is authoritative. Salary is optional and not counted (M-017). Admins are invited by email (M-159). P1 done. |
 | C2 | "One phone per account" vs on-screen codes | OD3: drop phone uniqueness. |
 | C3 | Right-to-work filter vs the legal review before a sponsorship filter | OD4: ship "Has right to work in {country}" in test mode; legal review before go-live. |
-| C4 | Toggles that control nothing | OD6: remove the in-app toggle and the admin email preferences. |
+| C4 | Toggles that control nothing | OD6: remove the in-app toggle and the admin email preferences. Superseded by Phase 11b: in-app is always on; every role has one email switch per category (P11b-Q3, Q12). |
 | C5 | The CV-request "notification" has no channel | U19: an email under the toggle plus a pending list on the CV page. |
 | C6 | Score visibility for recruiters | Recruiters get ranking and evidence only. Paid candidates and admins see the number. |
 | C7 | The relevant-count population vs who Find candidates can open | Use the M-054 + M-055 population (U7). |
@@ -2859,7 +2885,7 @@ RESULTS_TABLE
 | OD3 | Drop "one phone per account". |
 | OD4 | Ship "Has right to work in {country}" (citizen/settled or valid permit) in test mode; legal review before go-live. |
 | OD5 | Each stage picks one of 6 fixed categories. The candidate status derives from it. The admin funnel counts categories; the recruiter funnel lists the company's stages. |
-| OD6 | Remove the in-app toggle (no bell feed in v1) and the admin email notification preferences. |
+| OD6 | ~~Remove the in-app toggle (no bell feed in v1) and the admin email notification preferences.~~ **Superseded 2026-11-04 by Phase 11b** (P11b-Q1 … Q15): bell feed, Notifications page, per-category email switches for all three roles; in-app always on. |
 | OD7 | Speech-to-text: `gpt-4o-mini-transcribe`, with `whisper-1` as fallback. **Resolved:** a real transcription test passed (P4). |
 | OD8 | The seed creates real Stripe test customers and subscriptions (`pm_card_visa`) tagged `metadata.seed=true` (plus `metadata.db`), removed on re-seed. Historical seed payments are `source: seed`, without receipt links. |
 | OD9 | The Owner uses `SEED_ADMIN_EMAIL`. The demo accounts use plus-aliases of it (S). Every other seed account uses `@example.com`. Reserved domains are never mailed, only logged. Non-critical emails are capped at 400 per rolling 24 h. Verification, code, reset and invite emails are always sent. |

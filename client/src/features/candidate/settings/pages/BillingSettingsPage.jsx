@@ -13,6 +13,7 @@ import { useErrorText } from '@/lib/forms.js'
 import { useFormat } from '@/lib/preferences.js'
 import SettingsCard from '../components/SettingsCard.jsx'
 import styles from './BillingSettingsPage.module.css'
+import { useMarkSeen } from '@/features/notifications/api.js'
 
 /** The plan pill: active, retrying a failed renewal (M-120) or ending at period end (M-121). */
 function planState(subscription) {
@@ -27,6 +28,8 @@ const STATE_TONE = { active: 'success', ending: 'warning', retrying: 'warning' }
  * Customer Portal for cancelling, cards and invoices (M-121), the Free upsell, and the payment history (M-122).
  */
 export default function BillingSettingsPage() {
+  // P11b-Q10: opening this item marks its notifications read.
+  useMarkSeen('page', 'billing')
   const { t } = useTranslation('billing')
   const format = useFormat()
   const errorText = useErrorText()

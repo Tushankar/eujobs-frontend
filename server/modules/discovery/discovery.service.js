@@ -12,6 +12,7 @@ import { File } from '../files/files.model.js'
 import { Job } from '../jobs/jobs.model.js'
 import { badgesOf } from '../learning/learning.certificates.js'
 import { relevantCandidates, resultsBy } from '../matching/matching.service.js'
+import { notify } from '../notifications/notifications.service.js'
 import { User } from '../users/users.model.js'
 import { VerificationSubmission } from '../verification/verification.model.js'
 import { CandidateNote, ProfileView, RecruiterActivity, ShortlistEntry } from './discovery.model.js'
@@ -322,6 +323,7 @@ export async function requestCv(user, company, candidateId, { reason, details })
   if (await CvAccessRequest.exists({ companyId: company._id, candidateId, status: 'pending' })) throw new AppError('CONFLICT', { params: { reason: 'pending' } })
   await CvAccessRequest.create({ companyId: company._id, candidateId, requestedBy: user._id, reason, details: details || undefined })
   await recordActivity({ companyId: company._id, candidateId, actorId: user._id, type: 'cv_request', params: { reason } })
+  await notify(candidate, 'cv_request', { params: { company: company.displayName, reason }, target: { kind: 'page', id: 'cv_requests' } })
   await sendEmail({
     type: 'cv_request',
     to: candidate.email,

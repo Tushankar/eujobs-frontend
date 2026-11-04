@@ -8,6 +8,7 @@ import { matchesKeywords } from '../../lib/skills.js'
 import { Company } from '../companies/companies.model.js'
 import { Job } from '../jobs/jobs.model.js'
 import { haystack, visibleFilter } from '../jobs/jobs.search.js'
+import { notify } from '../notifications/notifications.service.js'
 import { planState } from '../payments/payments.service.js'
 import { User } from '../users/users.model.js'
 import { AlertMatch, JobAlert } from './alerts.model.js'
@@ -57,11 +58,21 @@ async function claimMatches(alert, jobs, mode, now) {
 async function sendInstantAlerts({ jobId }, task, now) {
   const job = await Job.findOne({ _id: jobId, ...(await visibleFilter()) })
   if (!job) return
-  const alerts = await JobAlert.find({ frequency: 'instant', active: true, country: job.country })
+  const alerts = await JobAlert.find({ active: true, country: job.country })
   const entitled = await entitledIds(alerts.map((alert) => alert.candidateId))
   const company = await Company.findById(job.companyId, 'displayName industry')
+  const notified = new Set()
   for (const alert of alerts.filter((item) => entitled.has(String(item.candidateId)) && alertMatches(item, job, company))) {
-    if (!(await claimMatches(alert, [job], 'instant', now)).length) continue
+    // P11b-Q15: in-app at the first publish whatever the alert's frequency; one per job even when several alerts match.
+    if (!notified.has(String(alert.candidateId))) {
+      notified.add(String(alert.candidateId))
+      await notify({ _id: alert.candidateId, role: 'candidate' }, 'job_alert', {
+        params: { job: job.title, company: company.displayName, alert: alert.name },
+        target: { kind: 'job', id: job._id },
+        groupKey: `job_alert:${job._id}`,
+      })
+    }
+    if (alert.frequency !== 'instant' || !(await claimMatches(alert, [job], 'instant', now)).length) continue
     const user = await User.findById(alert.candidateId)
     await sendEmail({
       type: 'alert_instant',

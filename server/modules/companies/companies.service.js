@@ -1,11 +1,14 @@
+import { config } from '../../config/env.js'
 import { actorFor, recordAudit } from '../../lib/audit.js'
 import { AppError, fieldError } from '../../lib/errors.js'
 import { removeFiles, signedUrl, storeFile } from '../../lib/files.js'
+import { interpolate, t } from '../../lib/i18n.js'
 import { reencodeImage, sanitizedUpload } from '../../lib/images.js'
 import { sanitizeSvg } from '../../lib/svg.js'
 import { normalizePhone } from '../auth/auth.service.js'
 import { File } from '../files/files.model.js'
 import { reissueCertificates } from '../learning/learning.certificates.js'
+import { notifyAdmins } from '../notifications/notifications.service.js'
 import { resolvePlace } from '../places/places.service.js'
 import { updateMe } from '../users/users.service.js'
 import { Company, KycDocument } from './companies.model.js'
@@ -198,6 +201,15 @@ export async function submit(user) {
     actor: actorFor(user),
     target: { type: 'user', id: user._id },
     params: { name: user.fullName, company: company.legalName },
+  })
+  // P11b-Q1: account reviewers are told at once; a resubmission says so.
+  await notifyAdmins('admin_account_review', {
+    params: { name: user.fullName, company: company.legalName, resubmitted },
+    target: { kind: 'account', id: user._id },
+    emailParams: (language) => ({
+      summary: interpolate(t(language, `email.adminSummary.${resubmitted ? 'accountResubmitted' : 'accountSubmitted'}`), { recruiter: user.fullName, company: company.legalName }),
+      link: `${config.clientOrigin}/admin/moderation/accounts/${user._id}`,
+    }),
   })
 }
 

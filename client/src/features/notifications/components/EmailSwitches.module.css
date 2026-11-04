@@ -1,0 +1,30 @@
+.description {
+  padding-top: 8px;
+  font-size: 12px;
+  line-height: 20px;
+  color: var(--muted-foreground);
+}
+
+.list {
+  margin-top: 8px;
+  padding: 0;
+  list-style: none;
+}
+
+.note {
+  display: flex;
+  align-items: flex-start;
+  gap: 8px;
+  margin-top: 16px;
+  padding: 12px 16px;
+  border: 1px solid var(--border);
+  border-radius: var(--radius-xl);
+  font-size: 12px;
+  line-height: 20px;
+  color: var(--muted-foreground);
+}
+
+.note svg {
+  flex-shrink: 0;
+  margin-top: 3px;
+}

@@ -25,9 +25,10 @@ describe('mailer (§2.8, OD9)', () => {
     assert.deepEqual(capturedMail.map((mail) => mail.type), ['password_reset'])
   })
 
-  it('skips non-critical mail when the user turned email off', async () => {
-    const user = await createUser({ notifyEmail: false })
+  it('skips non-critical mail of a category the user switched off (P11b-Q12)', async () => {
+    const user = await createUser({ emailOff: ['applications'] })
     assert.equal(await sendEmail({ type: 'application_status', to: user.email, userId: user._id }), 'skipped_toggle')
+    assert.equal(await sendEmail({ type: 'cv_request', to: user.email, userId: user._id, params: { company: 'X', reason: 'Y' } }), 'sent')
     assert.equal(await resetEmail(user.email, user._id), 'sent')
   })
 

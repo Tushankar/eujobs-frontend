@@ -1,8 +1,8 @@
 import { bodyText, clickText, signInWithForm } from '../lib/flows.js'
 
 /**
- * P2-12 (M-195, M-093, M-197, M-138): identity from /me (name, email, plan or role subtitle, photo or initials),
- * no workspace switch, a bell without a dot that opens notification settings, the footer, and a
+ * P2-12 (M-195, M-197, M-138; the bell per P11b-Q2): identity from /me (name, email, plan or role subtitle, photo or
+ * initials), no workspace switch, the bell as a dropdown button without a count, the footer, and a
  * scrolling country list at 375 px.
  */
 export default {
@@ -32,11 +32,9 @@ export default {
     await ctx.screenshot(page, '1-candidate-menu')
 
     ctx.check(!(await page.$('[aria-label="Switch workspace"]')), 'no workspace switch')
-    const bell = await page.$eval('header a[aria-label="Notification settings"]', (link) => ({
-      href: link.getAttribute('href'),
-      extras: link.parentElement.children.length,
-    }))
-    ctx.check(bell.href === '/candidate/settings/notifications' && bell.extras === 1, `bell ${JSON.stringify(bell)}: links to settings, no dot`)
+    // P11b-Q2 (supersedes M-093, OD6): the bell opens the notifications dropdown; no count while nothing is unread.
+    const bell = await page.$eval('header [data-bell]', (button) => ({ tag: button.tagName, popup: button.getAttribute('aria-haspopup'), count: Boolean(button.querySelector('[data-bell-count]')) }))
+    ctx.check(bell.tag === 'BUTTON' && bell.popup === 'true' && !bell.count, `bell ${JSON.stringify(bell)}: a dropdown button, no count`)
     const footer = await page.$eval('footer', (element) => ({
       text: element.innerText,
       links: [...element.querySelectorAll('a')].map((link) => link.getAttribute('href')),

@@ -9,6 +9,7 @@ import ProfileSidebar from '../components/ProfileSidebar.jsx'
 import ProfileSummary from '../components/ProfileSummary.jsx'
 import ProfileTabs from '../components/ProfileTabs.jsx'
 import styles from './CandidateProfilePage.module.css'
+import { useMarkSeen } from '@/features/notifications/api.js'
 
 const LIST_PATH = '/recruiter/find-candidates'
 
@@ -19,6 +20,8 @@ const LIST_PATH = '/recruiter/find-candidates'
 export default function CandidateProfilePage() {
   const { t } = useTranslation()
   const { candidateId } = useParams()
+  // P11b-Q10: opening this item marks its notifications read.
+  useMarkSeen('candidate', candidateId)
   const { jobs, job, setJobId, ready } = useMatchJob()
   const toggleShortlist = useShortlistToggle()
   const { data: candidate, error } = useGetCandidateProfileQuery({ id: candidateId, jobId: job?.id }, { skip: !ready })

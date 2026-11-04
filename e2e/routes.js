@@ -4,7 +4,7 @@
  * seeded courses Alex and Sarah are enrolled in with their first lessons (:candidateCourse, :candidateLesson, :recruiterCourse,
  * :recruiterLesson). `public` holds the pages
  * without a session and `recruiterOnboarding` the steps a recruiter sees before approval. Each phase adds its
- * new screens.
+ * new screens. Phase 11b: the Notifications page of each workspace.
  */
 const candidateProfile = '/recruiter/find-candidates/:emma'
 
@@ -61,6 +61,7 @@ export const ROUTES = {
     // M-125: without a Stripe session id the return page explains it and links back.
     '/candidate/checkout/return',
     '/candidate/help',
+    '/candidate/notifications',
   ],
   recruiter: [
     '/recruiter',
@@ -92,6 +93,7 @@ export const ROUTES = {
     '/recruiter/settings/billing',
     '/recruiter/checkout/return',
     '/recruiter/help',
+    '/recruiter/notifications',
   ],
   admin: [
     '/admin',
@@ -123,5 +125,6 @@ export const ROUTES = {
     '/admin/audit-logs',
     '/admin/settings',
     '/admin/help',
+    '/admin/notifications',
   ],
 }

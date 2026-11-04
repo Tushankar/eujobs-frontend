@@ -1,15 +1,17 @@
-import { useState } from 'react'
+import { useEffect, useRef, useState } from 'react'
 import { useTranslation } from 'react-i18next'
-import { Link, useSearchParams } from 'react-router-dom'
+import { Link, useParams, useSearchParams } from 'react-router-dom'
 import { ArrowUpRight, FileText, Search } from 'lucide-react'
 import { Avatar, Icon, SelectField, TextField } from '@/components/ui'
 import DataTable from '@/components/common/DataTable.jsx'
 import EmptyState from '@/components/common/EmptyState.jsx'
+import NoticeBanner from '@/components/common/NoticeBanner.jsx'
 import PageTitle from '@/components/common/PageTitle.jsx'
+import { useMarkSeen } from '@/features/notifications/api.js'
 import { useGetRecruiterJobsQuery } from '@/features/recruiter/jobs/api.js'
 import { useFormat } from '@/lib/preferences.js'
 import { foldText } from '@/lib/text.js'
-import { useGetCompanyApplicationsQuery, useGetPipelineQuery } from '../api.js'
+import { useGetCompanyApplicationQuery, useGetCompanyApplicationsQuery, useGetPipelineQuery } from '../api.js'
 import ApplicationStageSelect from '../components/ApplicationStageSelect.jsx'
 import styles from './ApplicationsPage.module.css'
 
@@ -19,7 +21,8 @@ const STATUS_FILTERS = ['not_selected', 'withdrawn']
 /**
  * Applications (M-076, M-077, M-090): one row per application with the job and the applied date, a job filter,
  * a stage filter with "Not selected" and "Withdrawn", a stage select per row and a confirmed rejection.
- * `?jobId=` opens it filtered (the job details link).
+ * `?jobId=` opens it filtered (the job details link). /recruiter/applications/:applicationId (a notification, P11b-Q9)
+ * filters it to that application's job and status and highlights the row; an unknown id says it is no longer available.
  */
 export default function ApplicationsPage() {
   const { t } = useTranslation()
@@ -33,6 +36,25 @@ export default function ApplicationsPage() {
   const { data: pipeline } = useGetPipelineQuery()
   const { data: jobs } = useGetRecruiterJobsQuery()
   const stages = pipeline?.items ?? []
+  const focusId = useParams().applicationId
+  const { data: focus, isError: focusMissing } = useGetCompanyApplicationQuery(focusId, { skip: !focusId })
+  useMarkSeen('application', focus?.id)
+
+  // Once per opened application: the list shows its job and, for a closed one, its status.
+  const filtered = useRef(null)
+  useEffect(() => {
+    if (!focus || filtered.current === focus.id) return
+    filtered.current = focus.id
+    const next = new URLSearchParams()
+    next.set('jobId', focus.job.id)
+    if (STATUS_FILTERS.includes(focus.status)) next.set('stage', focus.status)
+    setParams(next, { replace: true })
+  }, [focus, setParams])
+
+  const focusShown = Boolean(focus && data?.items.some((row) => row.id === focus.id))
+  useEffect(() => {
+    if (focusShown) document.querySelector(`[data-application-row="${focus.id}"]`)?.scrollIntoView({ block: 'center' })
+  }, [focusShown, focus?.id])
 
   function setFilter(name, value) {
     const next = new URLSearchParams(params)
@@ -98,6 +120,7 @@ export default function ApplicationsPage() {
   return (
     <div>
       <PageTitle title={t('applications:recruiter.title')} description={t('applications:recruiter.description')} />
+      {focusMissing && <NoticeBanner>{t('notifications:unavailable')}</NoticeBanner>}
 
       <div className={styles.filters}>
         <TextField
@@ -118,7 +141,13 @@ export default function ApplicationsPage() {
         ) : rows.length === 0 ? (
           <EmptyState icon={Search} title={t('applications:recruiter.empty')} description={t('applications:recruiter.emptyText')} />
         ) : (
-          <DataTable caption={t('applications:recruiter.caption')} columns={columns} rows={rows} getRowKey={(row) => row.id} />
+          <DataTable
+            caption={t('applications:recruiter.caption')}
+            columns={columns}
+            rows={rows}
+            getRowKey={(row) => row.id}
+            getRowProps={(row) => ({ 'data-application-row': row.id, ...(row.id === focus?.id && { className: styles.focused, 'aria-current': 'true' }) })}
+          />
         )}
       </div>
     </div>

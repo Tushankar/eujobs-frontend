@@ -9,10 +9,7 @@
     "saved": "Tu contraseña se ha cambiado."
   },
   "notifications": {
-    "title": "Avisos útiles. Menos ruido.",
-    "email": "Avisos por correo",
-    "candidate": "Alertas de empleo, novedades de tus candidaturas y mensajes nuevos por correo. Los correos de cuenta y seguridad se envían siempre.",
-    "recruiter": "Nuevas candidaturas y mensajes nuevos por correo. Los correos de cuenta y seguridad se envían siempre."
+    "title": "Avisos útiles. Menos ruido."
   },
   "admin": {
     "title": "Configuración",

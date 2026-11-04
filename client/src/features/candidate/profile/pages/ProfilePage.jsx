@@ -28,9 +28,12 @@ import LinksDialog from '../components/LinksDialog.jsx'
 import ProfileSummaryButton from '../components/ProfileSummaryButton.jsx'
 import RightToWorkDialog from '../components/RightToWorkDialog.jsx'
 import styles from './ProfilePage.module.css'
+import { useMarkSeen } from '@/features/notifications/api.js'
 
 /** "My profile" (§3.2, OD16): section cards with their editors, the photo, and the server's completeness checklist. */
 export default function ProfilePage() {
+  // P11b-Q10: opening this item marks its notifications read.
+  useMarkSeen('page', 'profile')
   const { data: profile } = useGetProfileQuery()
   return profile ? <ProfileView profile={profile} /> : null
 }

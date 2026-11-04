@@ -52,7 +52,7 @@ export default function DataAccountSettingsPage() {
   useEffect(clearResultFlag, [])
 
   function handleExport() {
-    downloadCsv(profileExportRows({ profile, cv, verification, privacy, notifyEmail: me.notifyEmail }), 'candidate-profile.csv')
+    downloadCsv(profileExportRows({ profile, cv, verification, privacy, notifyEmail: Object.values(me.emailSwitches).some(Boolean) }), 'candidate-profile.csv')
     setStatus('data.export.candidateDone')
   }
 

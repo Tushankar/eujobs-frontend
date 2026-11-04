@@ -375,7 +375,7 @@ describe('status emails (M-091, U13, U33, OQ-6e)', () => {
     const [mail] = statusMails(spanish)
     assert.deepEqual([mail.language, mail.params.status, mail.subject], ['es', 'Entrevista', 'Novedades sobre tu candidatura a Senior Product Designer'])
 
-    const quiet = await applicantCandidate({ notifyEmail: false })
+    const quiet = await applicantCandidate({ emailOff: ['applications'] })
     const quietApplication = await applied(quiet, job)
     await moveTo(recruiter, company, quietApplication, 'Interview')
     await tickAt(22 * MINUTE)
@@ -467,7 +467,7 @@ describe('new applications to the recruiter (OD14)', () => {
     await tickAt(61 * MINUTE)
     assert.equal(mails(recruiter)[0].params.countLabel, '1 new application')
 
-    await User.updateOne({ _id: recruiter._id }, { notifyEmail: false })
+    await User.updateOne({ _id: recruiter._id }, { emailOff: ['new_applications'] })
     await applied(await applicantCandidate(), job)
     await tickAt(130 * MINUTE)
     assert.equal(mails(recruiter).length, 1)
@@ -481,19 +481,21 @@ describe('counters, KPI, funnel and momentum (M-082, M-083, M-094, M-170, M-178)
     const second = await publish((await Company.findOne({ ownerUserId: recruiter._id })), recruiter, { title: 'UX Researcher' })
     const user = await applicantCandidate()
     const counters = async (who) => (await api().get(`${v1}/me/counters`).set(auth(who))).body
-    assert.deepEqual(await counters(user), { unreadMessages: 0, activeApplications: 0 })
+    assert.deepEqual(await counters(user), { unreadMessages: 0, activeApplications: 0, notifications: { unread: 0, sections: {} } })
     const one = await applied(user, job)
     const two = await applied(user, second)
     assert.equal((await counters(user)).activeApplications, 2)
     await api().post(`${v1}/candidate/applications/${one.id}/withdraw`).set(auth(user))
     await reject(recruiter, two, false)
     assert.equal((await counters(user)).activeApplications, 0)
-    assert.deepEqual(await counters(recruiter), { unreadMessages: 0 })
+    // P11b-Q2: no application badge for recruiters; the two new applications and the withdrawal are notifications.
+    assert.deepEqual(await counters(recruiter), { unreadMessages: 0, notifications: { unread: 3, sections: { applications: 3 } } })
 
     const unapproved = await createUser({ role: 'recruiter', status: 'onboarding' })
     assert.equal((await api().get(`${v1}/me/counters`).set(auth(unapproved))).status, 403)
+    // P11b-Q2: admins poll the counters for their notifications.
     const admin = await createUser({ role: 'admin' })
-    assert.equal((await api().get(`${v1}/me/counters`).set(auth(admin))).status, 403)
+    assert.deepEqual(await counters(admin), { notifications: { unread: 0, sections: {} } })
   })
 
   it('computes the Applications KPI and the funnel over the company\'s stages ever reached', async () => {

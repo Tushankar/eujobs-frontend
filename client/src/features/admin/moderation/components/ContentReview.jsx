@@ -12,6 +12,7 @@ import { CASE_TONES } from '../tones.js'
 import ReviewDialog from './ReviewDialog.jsx'
 import styles from './ReviewDetails.module.css'
 import own from './ContentReview.module.css'
+import { useMarkSeen } from '@/features/notifications/api.js'
 
 /** The reported job, profile or company as it is now; a message case shows its stored excerpt instead (OQ-1). */
 function Target({ item }) {
@@ -67,6 +68,8 @@ function Target({ item }) {
 
 /** Moderation › Content: one case with its reports, the target, the history and the decisions it allows (M-167). */
 export default function ContentReview({ id, onDecided, onClose }) {
+  // P11b-Q10: opening this item marks its notifications read.
+  useMarkSeen('case', id)
   const { t } = useTranslation(['moderation', 'enums'])
   const format = useFormat()
   const errorText = useErrorText()

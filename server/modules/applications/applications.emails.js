@@ -5,6 +5,7 @@ import { scheduleTask, taskHandlers } from '../../jobs/scheduler.js'
 import { interpolate, t } from '../../lib/i18n.js'
 import { sendEmail } from '../../lib/mailer.js'
 import { Company } from '../companies/companies.model.js'
+import { notify } from '../notifications/notifications.service.js'
 import { Job } from '../jobs/jobs.model.js'
 import { User } from '../users/users.model.js'
 import { Application } from './applications.model.js'
@@ -49,6 +50,12 @@ async function sendStatusEmail({ applicationId }) {
   if (rejected && !application.rejectNotify) return
   const [candidate, job] = await Promise.all([User.findById(application.candidateId), Job.findById(application.jobId, 'title companyId')])
   const company = await Company.findById(application.companyId, 'displayName')
+  // P11b-Q8: the in-app notification comes with this delayed task, so an undone move never shows; Q6: one unread per application.
+  await notify(candidate, 'application_status', {
+    params: { job: job.title, company: company.displayName, status: application.status },
+    target: { kind: 'application', id: application._id },
+    groupKey: `application:${application._id}`,
+  })
   await sendEmail({
     type: rejected ? 'application_rejected' : 'application_status',
     to: candidate.email,

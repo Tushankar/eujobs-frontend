@@ -174,7 +174,12 @@
     "application_rejected": "Candidatura no seleccionada",
     "new_message": "Mensaje nuevo",
     "new_applications": "Nuevas candidaturas",
-    "cv_request": "Solicitud de CV"
+    "cv_request": "Solicitud de CV",
+    "admin_account_review": "Cuenta por revisar",
+    "admin_verification_submitted": "Verificación por revisar",
+    "admin_content_report": "Denuncia de contenido",
+    "admin_renewal_failed": "Renovación fallida (administración)",
+    "admin_joined": "Nuevo administrador"
   },
   "emailClass": { "critical": "Crítico", "decision": "Decisión", "non_critical": "No crítico" },
   "emailStatus": {
@@ -228,5 +233,40 @@
     "recruitment": "Selección",
     "finance": "Finanzas e informes",
     "governance": "Gobernanza"
+  },
+  "emailCategory": {
+    "applications": "Candidaturas",
+    "messages": "Mensajes",
+    "cv_requests": "Solicitudes de CV",
+    "job_alerts": "Alertas de empleo",
+    "new_applications": "Nuevas candidaturas",
+    "account_reviews": "Revisiones de cuenta",
+    "verification": "Verificación",
+    "content_reports": "Denuncias de contenido",
+    "failed_renewals": "Renovaciones fallidas",
+    "admin_joined": "Nuevos administradores"
+  },
+  "notificationType": {
+    "application_status": "Novedad de candidatura",
+    "message": "Mensaje",
+    "cv_request": "Solicitud de CV",
+    "verification_decided": "Verificación",
+    "job_alert": "Alerta de empleo",
+    "payment_paid": "Pago",
+    "renewal_failed": "Pago fallido",
+    "plan_ended": "Plan",
+    "course_purchased": "Curso",
+    "certificate_issued": "Certificado",
+    "content_restricted": "Moderación",
+    "content_lifted": "Moderación",
+    "account_decided": "Cuenta",
+    "application_new": "Nueva candidatura",
+    "application_withdrawn": "Candidatura retirada",
+    "cv_request_decided": "Solicitud de CV",
+    "admin_account_review": "Revisión de cuenta",
+    "admin_verification_submitted": "Verificación",
+    "admin_content_report": "Denuncia de contenido",
+    "admin_renewal_failed": "Renovación fallida",
+    "admin_joined": "Accesos"
   }
 }

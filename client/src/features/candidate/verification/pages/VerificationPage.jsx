@@ -11,6 +11,7 @@ import CheckRow from '../components/CheckRow.jsx'
 import PhoneVerification from '../components/PhoneVerification.jsx'
 import SubmitEvidenceModal from '../components/SubmitEvidenceModal.jsx'
 import styles from './VerificationPage.module.css'
+import { useMarkSeen } from '@/features/notifications/api.js'
 
 const CHECK_ICONS = { identity: ShieldCheck, academic: GraduationCap, employment: BriefcaseBusiness }
 // P3-D8: a new submission only when there is none yet or the last one was rejected.
@@ -18,6 +19,8 @@ const canSubmit = (status) => status === 'not_started' || status === 'rejected'
 
 /** "Verification" (M-003, M-004, M-023, M-166): contact checks, the reviewed checks and the per-entry requests. */
 export default function VerificationPage() {
+  // P11b-Q10: opening this item marks its notifications read.
+  useMarkSeen('page', 'verification')
   const { t } = useTranslation()
   const { data: state } = useGetVerificationQuery()
   // Each opening gets a new key, so the dialog starts empty.

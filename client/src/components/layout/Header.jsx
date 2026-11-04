@@ -1,12 +1,13 @@
 import { useEffect, useState } from 'react'
 import { useTranslation } from 'react-i18next'
-import { Link, matchPath, useLocation, useMatches } from 'react-router-dom'
-import { Bell, Check, ChevronRight, Earth, Menu, MapPin, Search } from 'lucide-react'
+import { matchPath, useLocation, useMatches } from 'react-router-dom'
+import { Check, ChevronRight, Earth, Menu, MapPin, Search } from 'lucide-react'
 import { Dropdown, Icon, IconButton } from '@/components/ui'
 import { workspacePath } from '@/app/workspaces.js'
 import { LANGUAGES, languageName } from '@/i18n/index.js'
 import { useCountryOptions } from '@/lib/countries.js'
 import { usePreferences, useFormat } from '@/lib/preferences.js'
+import NotificationBell from '@/features/notifications/components/NotificationBell.jsx'
 import GlobalSearch from './GlobalSearch.jsx'
 import ProfileMenu from './ProfileMenu.jsx'
 import { useDocumentTitle } from './useDocumentTitle.js'
@@ -147,13 +148,8 @@ export default function Header({ workspace, onOpenMenu }) {
         {workspace.showLocation && <CountryDropdown />}
 
         <div className={styles.identity}>
-          {/* M-093, OD6: no dot; the bell opens the notification settings (admin Settings for admins). */}
-          <IconButton
-            as={Link}
-            to={workspacePath(workspace, workspace.id === 'admin' ? 'settings' : 'settings/notifications')}
-            icon={Bell}
-            label={t('shell:notifications')}
-          />
+          {/* P11b-Q2 (supersedes M-093, OD6): the unread count and the latest notifications. */}
+          <NotificationBell workspace={workspace} />
         </div>
         <ProfileMenu workspace={workspace} />
       </div>

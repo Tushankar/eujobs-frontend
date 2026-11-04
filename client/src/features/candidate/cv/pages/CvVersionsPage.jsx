@@ -27,6 +27,7 @@ import SnapshotDialog from '../components/SnapshotDialog.jsx'
 import UploadDropzone from '../components/UploadDropzone.jsx'
 import VersionRow from '../components/VersionRow.jsx'
 import styles from './CvVersionsPage.module.css'
+import { useMarkSeen } from '@/features/notifications/api.js'
 
 /**
  * "CV & versions" (M-027 … M-031, U18): upload (text extracted on the server), the version history, the live
@@ -36,6 +37,8 @@ import styles from './CvVersionsPage.module.css'
  * (P3-Q3, back in Phase 9) for the snapshots of two versions.
  */
 export default function CvVersionsPage() {
+  // P11b-Q10: opening this item marks its notifications read.
+  useMarkSeen('page', 'cv_requests')
   const { t } = useTranslation()
   const errorText = useErrorText()
   const { data: config } = useGetConfigQuery()

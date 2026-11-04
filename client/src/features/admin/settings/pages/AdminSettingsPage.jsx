@@ -7,6 +7,7 @@ import PageTitle from '@/components/common/PageTitle.jsx'
 import { useUpdateMeMutation } from '@/app/api.js'
 import { identitySubtitle } from '@/components/layout/identity.js'
 import ChangePasswordForm from '@/features/account/components/ChangePasswordForm.jsx'
+import EmailSwitches from '@/features/notifications/components/EmailSwitches.jsx'
 import { LANGUAGES, languageName } from '@/i18n/index.js'
 import { check, serverFieldErrors, useErrorText } from '@/lib/forms.js'
 import { usePreferences } from '@/lib/preferences.js'
@@ -53,7 +54,7 @@ function SettingRow({ id, icon, label, value, note, open, onToggle, children }) 
 }
 
 /**
- * Admin Settings (M-199, OD6): own name, password and language; no email preferences and no permission needed.
+ * Admin Settings (M-199): own name, password and language, and the email switches (P11b-Q3); no permission needed.
  * An identity card, then one card of rows that each open their own form; one row is open at a time.
  */
 export default function AdminSettingsPage() {
@@ -151,6 +152,14 @@ export default function AdminSettingsPage() {
                 <ChangePasswordForm />
               </SettingRow>
             </ul>
+          </Panel>
+
+          {/* P11b-Q3, Q12 (supersedes OD6): the email switches of the admin's notification categories. */}
+          <Panel padding={0} className={styles.card} data-card="notifications">
+            <h2 className={styles.heading}>{t('notifications:settings.title')}</h2>
+            <div className={styles.switches}>
+              <EmailSwitches />
+            </div>
           </Panel>
         </div>
         <SettingsSidebar me={me} />

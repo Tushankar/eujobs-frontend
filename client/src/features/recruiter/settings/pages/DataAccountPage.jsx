@@ -72,7 +72,7 @@ export default function DataAccountPage() {
         ['Name', me.fullName],
         ['Email', me.email],
         ['Market location', me.pickerCountry ? format.country(me.pickerCountry) : ''],
-        ['Email alerts', me.notifyEmail ? 'On' : 'Off'],
+        ['Email alerts', Object.values(me.emailSwitches).some(Boolean) ? 'On' : 'Off'],
       ],
       'recruiter-profile.csv',
     )

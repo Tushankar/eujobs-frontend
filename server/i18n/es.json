@@ -249,6 +249,59 @@
         "profile": "Se ha levantado la restricción de tu perfil. Los reclutadores pueden volver a encontrarlo en las búsquedas."
       },
       "photoRemoved": "Se ha eliminado tu foto de perfil. Sube una nueva foto para volver a completar tu perfil."
+    },
+    "adminSummary": {
+      "accountSubmitted": "{{recruiter}} ({{company}}) envió su cuenta de reclutador para revisión.",
+      "accountResubmitted": "{{recruiter}} ({{company}}) corrigió su cuenta de reclutador y la volvió a enviar para revisión."
+    },
+    "admin_account_review": {
+      "subject": "Cuenta de reclutador por revisar",
+      "heading": "Revisión de cuenta",
+      "body": [
+        "Hola, {{name}}:",
+        "{{summary}}",
+        "Revisa los datos y los documentos de la empresa y, después, aprueba o rechaza la cuenta."
+      ],
+      "action": "Abrir la revisión de cuenta"
+    },
+    "admin_verification_submitted": {
+      "subject": "Verificación por revisar: {{candidate}}",
+      "heading": "Verificación enviada",
+      "body": [
+        "Hola, {{name}}:",
+        "{{candidate}} envió pruebas para la comprobación de {{check}}.",
+        "Revisa el documento y, después, apruébalo o recházalo."
+      ],
+      "action": "Abrir la verificación"
+    },
+    "admin_content_report": {
+      "subject": "Nueva denuncia de contenido",
+      "heading": "Contenido denunciado",
+      "body": [
+        "Hola, {{name}}:",
+        "Un usuario denunció este contenido.",
+        "{{content}}",
+        "Motivo: {{reason}}"
+      ],
+      "action": "Abrir el caso"
+    },
+    "admin_renewal_failed": {
+      "subject": "Falló el pago de renovación: {{reference}}",
+      "heading": "Falló el pago de renovación",
+      "body": [
+        "Hola, {{name}}:",
+        "Falló la renovación de Plus de {{payer}} por {{amount}} ({{reference}}). Stripe volverá a intentarlo en los próximos días."
+      ],
+      "action": "Abrir el pago"
+    },
+    "admin_joined": {
+      "subject": "{{admin}} se unió al espacio de administración",
+      "heading": "Nuevo administrador",
+      "body": [
+        "Hola, {{name}}:",
+        "{{admin}} aceptó la invitación y creó una contraseña. Ya puede iniciar sesión en el espacio de administración."
+      ],
+      "action": "Abrir su acceso"
     }
   },
   "verification": {

@@ -3,7 +3,10 @@ import { applyApi, completeCandidate, MINUTE, recruiterWithJob, tickIn } from '.
 import { openAs } from '../lib/payments.js'
 import { api, db, mailTo } from '../lib/testApi.js'
 
-/** P6-10 (M-095, §2.8): the candidate turns emails off → a stage change sends nothing; EmailLog says `skipped_toggle`. */
+/**
+ * P6-10 (§2.8; switches per P11b-Q12): the candidate turns the Applications email switch (the first) off → a stage
+ * change sends no email (EmailLog says `skipped_toggle`) and the in-app notification still comes (P11b-Q3).
+ */
 export default {
   name: 'P6-10 Toggle off',
   viewports: ['D'],
@@ -28,6 +31,8 @@ export default {
     ctx.check((await mailTo(candidate.email, 'application_status')).length === 0, 'no status email')
     const logs = await db('emaillogs', 'find', { filter: { userId: { $oid: candidate.id }, type: 'application_status' } })
     ctx.check(logs.length === 1 && logs[0].status === 'skipped_toggle', `logged skipped_toggle (${JSON.stringify(logs.map((log) => log.status))})`)
+    const { items } = (await api('/notifications', { token: candidate.token })).body
+    ctx.check(items.some((item) => item.type === 'application_status'), 'the in-app notification still shows')
     ctx.assertClean(handle.issues, 'toggle off')
   },
 }

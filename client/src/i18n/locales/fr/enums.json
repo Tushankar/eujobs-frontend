@@ -174,7 +174,12 @@
     "application_rejected": "Candidature non retenue",
     "new_message": "Nouveau message",
     "new_applications": "Nouvelles candidatures",
-    "cv_request": "Demande de CV"
+    "cv_request": "Demande de CV",
+    "admin_account_review": "Compte à vérifier",
+    "admin_verification_submitted": "Vérification à examiner",
+    "admin_content_report": "Signalement de contenu",
+    "admin_renewal_failed": "Échec de renouvellement (administration)",
+    "admin_joined": "Nouvel administrateur"
   },
   "emailClass": { "critical": "Essentiel", "decision": "Décision", "non_critical": "Non essentiel" },
   "emailStatus": {
@@ -228,5 +233,40 @@
     "recruitment": "Recrutement",
     "finance": "Finances et rapports",
     "governance": "Gouvernance"
+  },
+  "emailCategory": {
+    "applications": "Candidatures",
+    "messages": "Messages",
+    "cv_requests": "Demandes de CV",
+    "job_alerts": "Alertes emploi",
+    "new_applications": "Nouvelles candidatures",
+    "account_reviews": "Vérifications de compte",
+    "verification": "Vérification",
+    "content_reports": "Signalements de contenu",
+    "failed_renewals": "Renouvellements échoués",
+    "admin_joined": "Nouveaux administrateurs"
+  },
+  "notificationType": {
+    "application_status": "Suivi de candidature",
+    "message": "Message",
+    "cv_request": "Demande de CV",
+    "verification_decided": "Vérification",
+    "job_alert": "Alerte emploi",
+    "payment_paid": "Paiement",
+    "renewal_failed": "Paiement échoué",
+    "plan_ended": "Offre",
+    "course_purchased": "Cours",
+    "certificate_issued": "Certificat",
+    "content_restricted": "Modération",
+    "content_lifted": "Modération",
+    "account_decided": "Compte",
+    "application_new": "Nouvelle candidature",
+    "application_withdrawn": "Candidature retirée",
+    "cv_request_decided": "Demande de CV",
+    "admin_account_review": "Vérification de compte",
+    "admin_verification_submitted": "Vérification",
+    "admin_content_report": "Signalement de contenu",
+    "admin_renewal_failed": "Renouvellement échoué",
+    "admin_joined": "Accès"
   }
 }

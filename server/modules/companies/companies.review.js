@@ -6,6 +6,7 @@ import { sendEmail } from '../../lib/mailer.js'
 import { effectivePermissions } from '../admin/admin.service.js'
 import { PipelineStage } from '../applications/applications.model.js'
 import { File } from '../files/files.model.js'
+import { notify } from '../notifications/notifications.service.js'
 import { User } from '../users/users.model.js'
 import { Company, KycDocument } from './companies.model.js'
 import { companyDto, logoUrls } from './companies.service.js'
@@ -142,6 +143,8 @@ export async function decideAccount(admin, userId, { decision, reason }) {
   }
 
   const link = decision === 'approved' ? `${config.clientOrigin}/recruiter/sign-in` : `${config.clientOrigin}/recruiter/onboarding/review`
+  // P11b-Q1, Q14: approved opens the Overview; rejected and suspended the review page (shown once the account is active again).
+  await notify(user, 'account_decided', { params: { decision }, target: { kind: 'page', id: decision === 'approved' ? 'overview' : 'review' } })
   await sendEmail({
     type: `recruiter_${decision}`,
     to: user.email,

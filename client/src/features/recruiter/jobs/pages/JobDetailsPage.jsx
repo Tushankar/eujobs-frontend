@@ -12,11 +12,14 @@ import JobNotFound from '../components/JobNotFound.jsx'
 import JobPosting from '../components/JobPosting.jsx'
 import JobTalentList from '../components/JobTalentList.jsx'
 import styles from './JobDetailsPage.module.css'
+import { useMarkSeen } from '@/features/notifications/api.js'
 
 /** One recruiter job (A: recruiter A14): the posting, its applicants, the relevant talent (M-051 fallback) and links into discovery. */
 export default function JobDetailsPage() {
   const { t } = useTranslation()
   const { jobId } = useParams()
+  // P11b-Q10: opening this item marks its notifications read.
+  useMarkSeen('job', jobId)
   const jobText = useJobText()
   const { data: job, error } = useGetRecruiterJobQuery(jobId)
   const location = useLocation()

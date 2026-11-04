@@ -6,6 +6,7 @@ import { removeFiles, signedUrl, storeFile } from '../../lib/files.js'
 import { sendEmail } from '../../lib/mailer.js'
 import { certificatePdf } from '../../lib/pdf.js'
 import { File } from '../files/files.model.js'
+import { notify } from '../notifications/notifications.service.js'
 import { User } from '../users/users.model.js'
 import { Certificate } from './learning.model.js'
 
@@ -48,6 +49,8 @@ export async function issueCertificate(user, course) {
   }
   certificate.pdfFileId = (await storePdf(certificate, user))._id
   await certificate.save()
+  // P11b-Q1: opens the course page, which shows the certificate (as the email's main link).
+  await notify(user, 'certificate_issued', { params: { course: course.title, code: certificate.code }, target: { kind: 'course', id: course._id } })
   await sendEmail({
     type: 'certificate_issued',
     to: user.email,

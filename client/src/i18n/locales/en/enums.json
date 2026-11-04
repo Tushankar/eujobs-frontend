@@ -174,7 +174,12 @@
     "application_rejected": "Application not selected",
     "new_message": "New message",
     "new_applications": "New applications",
-    "cv_request": "CV request"
+    "cv_request": "CV request",
+    "admin_account_review": "Account to review",
+    "admin_verification_submitted": "Verification to review",
+    "admin_content_report": "Content report",
+    "admin_renewal_failed": "Failed renewal (admin)",
+    "admin_joined": "Admin joined"
   },
   "emailClass": { "critical": "Critical", "decision": "Decision", "non_critical": "Non-critical" },
   "emailStatus": {
@@ -228,5 +233,40 @@
     "recruitment": "Recruitment",
     "finance": "Finance & reporting",
     "governance": "Governance"
+  },
+  "emailCategory": {
+    "applications": "Applications",
+    "messages": "Messages",
+    "cv_requests": "CV requests",
+    "job_alerts": "Job alerts",
+    "new_applications": "New applications",
+    "account_reviews": "Account reviews",
+    "verification": "Verification",
+    "content_reports": "Content reports",
+    "failed_renewals": "Failed renewals",
+    "admin_joined": "Admins joining"
+  },
+  "notificationType": {
+    "application_status": "Application update",
+    "message": "Message",
+    "cv_request": "CV request",
+    "verification_decided": "Verification",
+    "job_alert": "Job alert",
+    "payment_paid": "Payment",
+    "renewal_failed": "Payment failed",
+    "plan_ended": "Plan",
+    "course_purchased": "Course",
+    "certificate_issued": "Certificate",
+    "content_restricted": "Moderation",
+    "content_lifted": "Moderation",
+    "account_decided": "Account",
+    "application_new": "New application",
+    "application_withdrawn": "Withdrawn application",
+    "cv_request_decided": "CV request",
+    "admin_account_review": "Account review",
+    "admin_verification_submitted": "Verification",
+    "admin_content_report": "Content report",
+    "admin_renewal_failed": "Failed renewal",
+    "admin_joined": "Access"
   }
 }

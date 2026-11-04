@@ -114,6 +114,15 @@
   color: var(--primary);
 }
 
+/* P11b-Q10: unread notifications of the section, in the bell's colour; it keeps that colour on the active row. */
+.badgeAlert,
+.active .badge.badgeAlert {
+  border-radius: var(--radius-full);
+  background: var(--destructive);
+  font-weight: 700;
+  color: #fff;
+}
+
 .badgeAi {
   display: inline-flex;
   align-items: center;

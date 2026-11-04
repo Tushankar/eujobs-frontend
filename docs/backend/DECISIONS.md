@@ -1062,6 +1062,8 @@ The bell shows a permanent dot and links to notification settings. What should i
 
 **Decision:** Remove dot, keep settings link. No feed in v1.
 
+**Superseded 2026-11-04** by BACKEND_PLAN Phase 11b (owner answers P11b-Q1 … Q15): bell with unread count, dropdown of the latest 10, Notifications page, per-section sidebar counts.
+
 *Context:* Audits disagree: SHR-Q19 and ADM-Q45 (a), CAN-Q4 (b), REC-RQ-77 (c). Recommend (a): there is no design for a feed, the decided Messages badge already shows unread messages, and emails cover the other events; a feed can follow.
 
 *Rejected:* Notification dropdown; Dot for new messages/applications.
@@ -1085,6 +1087,8 @@ Messages poll about every 15 s with an unread badge (decided). Which counts does
 Settings have two toggles (in-app, email). What do they control?
 
 **Decision:** Two toggles. Email toggle covers job-alert, application-update, new-application and message emails; verification, reset, decisions, certificates and payment emails always sent; in-app toggle controls the bell/dot.
+
+**Superseded 2026-11-04** by BACKEND_PLAN Phase 11b (P11b-Q3, Q12): in-app notifications are always on; one email switch per category for all three roles; security and decision emails stay always on.
 
 *Context:* REC-RQ-76 and CAN-Q69 agree.
 

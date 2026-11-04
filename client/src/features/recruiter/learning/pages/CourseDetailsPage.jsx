@@ -13,6 +13,7 @@ import QuizCard from '@/features/learning/components/QuizCard.jsx'
 import { useCourseText } from '@/features/learning/useCourseText.js'
 import LessonRow from '../components/LessonRow.jsx'
 import styles from './CourseDetailsPage.module.css'
+import { useMarkSeen } from '@/features/notifications/api.js'
 
 const LIBRARY_PATH = '/recruiter/learning'
 
@@ -22,6 +23,8 @@ export default function CourseDetailsPage() {
   const format = useFormat()
   const text = useCourseText()
   const { courseId } = useParams()
+  // P11b-Q10: opening this item marks its notifications read.
+  useMarkSeen('course', courseId)
   const { data: course, isError } = useGetCourseQuery(courseId)
 
   const backLink = (

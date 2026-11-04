@@ -7,6 +7,7 @@ import { connectDb, disconnectDb } from '../../lib/db.js'
 import { capturedMail } from '../../lib/mailer.js'
 import { resetRateLimits } from '../../middleware/rateLimit.js'
 import { hashPassword, signToken } from '../../modules/auth/auth.service.js'
+import { Notification } from '../../modules/notifications/notifications.model.js'
 import { User } from '../../modules/users/users.model.js'
 
 export const api = () => request(app)
@@ -17,12 +18,12 @@ export const auth = (user) => ({ Authorization: `Bearer ${signToken(user)}` })
 let counter = 0
 export const testEmail = (name = 'user') => `${name}.${process.pid}.${++counter}@inbox.localworkman.eu`
 
-/** Connects once per file; before each test empties `models` and clears rate limits and captured mail. */
+/** Connects once per file; before each test empties `models` and the notifications (every event writes some), and clears rate limits and captured mail. */
 export function useTestDb(models = []) {
   before(() => connectDb())
   after(() => disconnectDb())
   beforeEach(async () => {
-    await Promise.all(models.map((model) => model.deleteMany({})))
+    await Promise.all([...models, Notification].map((model) => model.deleteMany({})))
     await resetRateLimits()
     capturedMail.length = 0
   })

@@ -10,6 +10,8 @@ const MOVE_CHANGES = ['CompanyApplications', 'Pipeline', 'RecruiterOverview', 'C
 export const recruiterApplicationsApi = api.injectEndpoints({
   endpoints: (build) => ({
     getCompanyApplications: build.query({ query: (params) => ({ url: '/recruiter/applications', params }), providesTags: ['CompanyApplications'] }),
+    // P11b-Q9: one row, any status, for a notification's deep link.
+    getCompanyApplication: build.query({ query: (id) => `/recruiter/applications/${id}`, providesTags: ['CompanyApplications'] }),
     moveApplication: build.mutation({ query: ({ id, stageId }) => ({ url: `/recruiter/applications/${id}/stage`, method: 'PATCH', body: { stageId } }), invalidatesTags: MOVE_CHANGES }),
     rejectApplication: build.mutation({ query: ({ id, notify }) => ({ url: `/recruiter/applications/${id}/reject`, method: 'POST', body: { notify } }), invalidatesTags: MOVE_CHANGES }),
     getPipeline: build.query({ query: () => '/recruiter/pipeline', providesTags: ['Pipeline'] }),
@@ -24,6 +26,7 @@ export const recruiterApplicationsApi = api.injectEndpoints({
 
 export const {
   useGetCompanyApplicationsQuery,
+  useGetCompanyApplicationQuery,
   useMoveApplicationMutation,
   useRejectApplicationMutation,
   useGetPipelineQuery,

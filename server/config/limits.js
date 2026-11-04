@@ -78,6 +78,8 @@ export const LIMITS = {
   // M-086, M-089, U13
   message: { body: { max: 2000 } },
   messageEmail: { unreadDelayMs: 15 * MINUTE, perConversationMs: HOUR },
+  // P11b-Q2, Q5: the bell lists the latest 10; the Notifications page 20 a page; kept 90 days
+  notifications: { latest: 10, pageSize: 20, retentionDays: 90 },
   // M-031, §3.6
   // digestItems: a digest lists at most this many jobs, then "See all" (owner change to P7-C4)
   jobAlert: { max: 10, name: { max: 80 }, keywords: { max: 120 }, digestItems: 20 },

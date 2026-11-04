@@ -53,7 +53,8 @@
     "resetPassword": "Réinitialiser le mot de passe",
     "emailCode": "Vérifiez votre e-mail professionnel",
     "checkoutReturn": "Paiement",
-    "setPassword": "Créez votre mot de passe"
+    "setPassword": "Créez votre mot de passe",
+    "notifications": "Notifications"
   },
   "workspaces": {
     "candidate": {
@@ -111,7 +112,6 @@
   },
   "openNavigation": "Ouvrir la navigation",
   "breadcrumb": "Fil d’Ariane",
-  "notifications": "Paramètres des notifications",
   "search": {
     "trigger": "Rechercher...",
     "shortcut": "Ctrl K",

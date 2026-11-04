@@ -1,0 +1,88 @@
+{
+  "bell": {
+    "label": "Notifications",
+    "labelUnread_one": "Notifications, {{count}} unread",
+    "labelUnread_other": "Notifications, {{count}} unread",
+    "markAllRead": "Mark all as read",
+    "seeAll": "See all notifications",
+    "empty": "No notifications yet",
+    "emptyText": "Updates about your account show here."
+  },
+  "page": {
+    "description": "Everything that happened on your account in the last 90 days.",
+    "filters": "Show",
+    "all": "All",
+    "unread": "Unread",
+    "empty": "No notifications yet",
+    "emptyText": "Updates about your applications, messages and account show here.",
+    "emptyUnread": "You are all caught up",
+    "emptyUnreadText": "You have no unread notifications."
+  },
+  "unreadMark": "Unread",
+  "unavailable": "This item is no longer available.",
+  "types": {
+    "application_status": "{{company}} updated your application for {{job}}: {{status}}",
+    "message_one": "New message from {{sender}}",
+    "message_other": "{{count}} new messages from {{sender}}",
+    "cv_request": "{{company}} asked to see an earlier version of your CV. Reason: {{reason}}",
+    "verification_decided": {
+      "approved": "Verification approved: {{category}}",
+      "rejected": "Verification not approved: {{category}}. The reason is on your Verification page."
+    },
+    "job_alert": "New job for your alert “{{alert}}”: {{job}} at {{company}}",
+    "payment_paid": "Payment received: {{item}} · {{amount}}",
+    "renewal_failed": "We could not renew your Plus plan ({{amount}}). Update your card in Billing.",
+    "plan_ended": "Your Plus plan has ended. You are on Free now.",
+    "course_purchased": "You bought “{{course}}”. You can start learning.",
+    "certificate_issued": "Certificate issued for “{{course}}”",
+    "content_restricted": {
+      "job": "An administrator restricted your job “{{title}}”",
+      "profile": "An administrator restricted your profile"
+    },
+    "content_lifted": {
+      "job": "The restriction on your job “{{title}}” was lifted",
+      "profile": "The restriction on your profile was lifted"
+    },
+    "account_decided": {
+      "approved": "Your recruiter account was approved",
+      "rejected": "Your recruiter account was not approved",
+      "suspended": "Your recruiter account was suspended"
+    },
+    "application_new": "{{candidate}} applied to {{job}}",
+    "application_withdrawn": "{{candidate}} withdrew their application to {{job}}",
+    "cv_request_decided": {
+      "approved": "{{candidate}} shared a CV version with you",
+      "declined": "{{candidate}} declined your CV request"
+    },
+    "admin_account_review": {
+      "submitted": "{{name}} ({{company}}) submitted a recruiter account for review",
+      "resubmitted": "{{name}} ({{company}}) resubmitted a recruiter account for review"
+    },
+    "admin_verification_submitted": "{{candidate}} submitted evidence for review: {{category}}",
+    "admin_content_report_one": "{{target}} reported: {{name}} · {{reason}}",
+    "admin_content_report_other": "{{target}} reported {{count}} times: {{name}} · {{reason}}",
+    "admin_renewal_failed": "Plus renewal failed for {{payer}} · {{reference}} · {{amount}}",
+    "admin_joined": "{{name}} joined the admin workspace"
+  },
+  "settings": {
+    "title": "Email notifications",
+    "description": "Notifications always show in the app. Choose which ones also come by email.",
+    "alwaysOn": {
+      "candidate": "Always sent: password reset, verification and moderation decisions, certificates, a failed renewal and the end of your plan.",
+      "recruiter": "Always sent: password reset, account decisions (approved, rejected, suspended), moderation decisions and certificates.",
+      "admin": "Always sent: password reset and invitations."
+    },
+    "categories": {
+      "applications": "Status changes on your applications, including when you are not selected.",
+      "messages": "A message still unread after 15 minutes, at most one email per conversation an hour.",
+      "cv_requests": "A company asks to see an earlier version of your CV.",
+      "job_alerts": "New jobs that match your job alerts, at the frequency you chose.",
+      "new_applications": "New applications to your jobs, at most one email per job an hour.",
+      "account_reviews": "A recruiter submits or resubmits an account for review.",
+      "verification": "A candidate submits evidence for a verification check.",
+      "content_reports": "Someone reports a job, a profile, a company or a message.",
+      "failed_renewals": "A candidate’s Plus renewal payment fails.",
+      "admin_joined": "An invited admin accepts the invitation."
+    }
+  }
+}

@@ -1,6 +1,6 @@
 import nodemailer from 'nodemailer'
 import { config } from '../config/env.js'
-import { EMAIL_TYPES } from '../config/enums.js'
+import { EMAIL_CATEGORY, EMAIL_TYPES } from '../config/enums.js'
 import { LIMITS } from '../config/limits.js'
 import { User } from '../modules/users/users.model.js'
 import { EmailLog } from './mail/emailLog.model.js'
@@ -8,7 +8,7 @@ import { renderEmail } from './mail/templates.js'
 
 /*
  * Send pipeline (§2.8, OD9): reserved domains are only logged; non-critical mail respects the user's
- * toggle and the rolling 24 h cap; critical and decision mail always goes out. In test mode messages
+ * category switch (P11b-Q12) and the rolling 24 h cap; critical and decision mail always goes out. In test mode messages
  * are captured in memory (read through /_test/mail) instead of sent.
  */
 const RESERVED_DOMAINS = ['example.com', 'example.org', 'example.net', 'test', 'invalid', 'localhost']
@@ -30,11 +30,12 @@ export function isReservedAddress(address) {
   return RESERVED_DOMAINS.some((reserved) => domain === reserved || domain.endsWith(`.${reserved}`))
 }
 
-async function skipReason(emailClass, to, userId) {
+async function skipReason(type, emailClass, to, userId) {
   if (isReservedAddress(to)) return 'suppressed_reserved'
   if (emailClass !== 'non_critical') return null
-  const user = userId ? await User.findById(userId, 'notifyEmail') : null
-  if (user && !user.notifyEmail) return 'skipped_toggle'
+  // P11b-Q12: the recipient switched this email's category off.
+  const user = userId ? await User.findById(userId, 'emailOff') : null
+  if (user?.emailOff?.includes(EMAIL_CATEGORY[type])) return 'skipped_toggle'
   const sentToday = await EmailLog.countDocuments({
     class: 'non_critical',
     status: 'sent',
@@ -48,7 +49,7 @@ export async function sendEmail({ type, to, userId, language = 'en', params = {}
   const emailClass = EMAIL_TYPES[type]
   const log = (status, error) => EmailLog.create({ type, class: emailClass, userId, to, language, status, error })
 
-  const skipped = await skipReason(emailClass, to, userId)
+  const skipped = await skipReason(type, emailClass, to, userId)
   if (skipped) {
     await log(skipped)
     return skipped

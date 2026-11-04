@@ -22,7 +22,8 @@ const userSchema = new Schema(
     timezone: String,
     tokenVersion: { type: Number, default: 0 },
     legal: { termsVersion: String, privacyVersion: String, acceptedAt: Date },
-    notifyEmail: { type: Boolean, default: true },
+    // P11b-Q3, Q12: the email categories this user switched off (EMAIL_CATEGORIES); every category is on by default.
+    emailOff: { type: [{ type: String, enum: ENUMS.emailCategory }], default: undefined },
     // Candidates (M-187, A: candidate S54); enforced by discovery and matching from Phase 4.
     privacy: {
       discoverable: { type: Boolean, default: true },

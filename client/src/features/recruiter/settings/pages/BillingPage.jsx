@@ -6,9 +6,12 @@ import PaymentsTable from '@/features/payments/components/PaymentsTable.jsx'
 import SettingsCard from '../components/SettingsCard.jsx'
 import SettingsLayout from '../components/SettingsLayout.jsx'
 import styles from './BillingPage.module.css'
+import { useMarkSeen } from '@/features/notifications/api.js'
 
 /** Settings > Billing: the recruiter's own course payments with their Stripe receipts (M-122, A: recruiter A33). */
 export default function BillingPage() {
+  // P11b-Q10: opening this item marks its notifications read.
+  useMarkSeen('page', 'billing')
   const { t } = useTranslation('billing')
   const { data: payments = [] } = useGetMyPaymentsQuery()
 

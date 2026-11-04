@@ -11,6 +11,7 @@ import { recordActivity } from '../discovery/discovery.service.js'
 import { File } from '../files/files.model.js'
 import { Job } from '../jobs/jobs.model.js'
 import { isVisible, visibleFilter } from '../jobs/jobs.search.js'
+import { notifyCompany } from '../notifications/notifications.service.js'
 import { User } from '../users/users.model.js'
 import { cancelStageEmail, scheduleNewApplicationsEmail, scheduleStageEmail } from './applications.emails.js'
 import { ACTIVE_FILTER, Application, PipelineStage } from './applications.model.js'
@@ -145,6 +146,7 @@ export async function apply(user, { jobId, cvVersionId, coverNote, consent }) {
   }
   await recordActivity({ companyId: job.companyId, candidateId: user._id, type: 'applied', params: { jobId: String(job._id), jobTitle: job.title } })
   await scheduleNewApplicationsEmail(job, now)
+  await notifyCompany(job.companyId, 'application_new', { params: { candidate: user.fullName, job: job.title }, target: { kind: 'application', id: application._id } })
   return (await candidateDtos(user, [application]))[0]
 }
 
@@ -161,6 +163,7 @@ export async function withdraw(user, id) {
   await cancelStageEmail(application)
   const job = await Job.findById(application.jobId, 'title')
   await recordActivity({ companyId: application.companyId, candidateId: user._id, type: 'withdrawn', params: { jobId: String(job._id), jobTitle: job.title } })
+  await notifyCompany(application.companyId, 'application_withdrawn', { params: { candidate: user.fullName, job: job.title }, target: { kind: 'application', id: application._id } })
   return (await candidateDtos(user, [application]))[0]
 }
 
@@ -234,6 +237,13 @@ export async function listCompanyApplications(viewer, company, { jobId, stageId,
     pageSize: items.length,
     counts: { active: countOf(['applied', 'under_review', 'interview', 'offer', 'hired']), not_selected: countOf(['not_selected']), withdrawn: countOf(['withdrawn']) },
   }
+}
+
+/** GET /recruiter/applications/:id: one row of this company, whatever its status (P11b-Q9). */
+export async function companyApplication(viewer, company, id) {
+  const application = await Application.findOne({ _id: id, companyId: company._id })
+  if (!application) throw new AppError('NOT_FOUND')
+  return (await recruiterDtos(viewer, [application]))[0]
 }
 
 async function ownApplication(company, id) {

@@ -7,6 +7,7 @@ import { sendEmail } from '../../lib/mailer.js'
 import { EmailToken } from '../auth/auth.model.js'
 import { checkPassword, findEmailToken, hashPassword, issueEmailToken, useEmailToken } from '../auth/auth.service.js'
 import { SYSTEM_ROLES } from '../../seed/data/catalog.js'
+import { notifyAdmins } from '../notifications/notifications.service.js'
 import { User } from '../users/users.model.js'
 import { AdminRole } from './admin.model.js'
 import { effectivePermissions } from './admin.service.js'
@@ -243,5 +244,12 @@ export async function acceptInvite(raw, password) {
   Object.assign(user, { passwordHash, status: 'active', emailVerifiedAt: new Date() })
   await user.save()
   await audit(user, 'invite_accepted', { type: 'user', id: user._id }, { name: user.fullName })
+  // P11b-Q1: admins who manage access are told (not the new admin).
+  await notifyAdmins('admin_joined', {
+    params: { name: user.fullName },
+    target: { kind: 'admin', id: user._id },
+    exclude: user._id,
+    emailParams: () => ({ admin: user.fullName, link: `${config.clientOrigin}/admin/access-management/users/${user._id}` }),
+  })
   return { role: user.role }
 }

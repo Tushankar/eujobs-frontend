@@ -6,6 +6,7 @@ import { callStripe, fromUnix, stripe } from '../../lib/stripe.js'
 import { Course, Enrollment } from '../learning/learning.model.js'
 import { enroll } from '../learning/learning.service.js'
 import { userCurrency } from '../meta/meta.service.js'
+import { notify, notifyAdmins } from '../notifications/notifications.service.js'
 import { User } from '../users/users.model.js'
 import { AppConfig, Counter, Payment, Plan, StripeEvent, Subscription } from './payments.model.js'
 
@@ -208,6 +209,7 @@ async function syncSubscription(stripeSubscriptionId) {
   }
   const after = await Subscription.findOneAndUpdate({ userId: user._id }, { $set: next }, { upsert: true, returnDocument: 'after' })
   if (isPaid(before) && !isPaid(after)) {
+    await notify(user, 'plan_ended', { target: BILLING })
     const plan = await Plan.findOne({ key: after.planKey }, 'name')
     await sendEmail({
       type: 'plan_ended',
@@ -217,6 +219,23 @@ async function syncSubscription(stripeSubscriptionId) {
       params: { name: user.fullName, plan: plan.name[user.language], link: `${config.clientOrigin}/candidate/settings/billing` },
     })
   }
+}
+
+const BILLING = { kind: 'page', id: 'billing' }
+
+/** A failed renewal (P11b-Q1): the candidate opens Billing; admins with `finance.view` open the payment and get its email. */
+async function notifyRenewalFailed(user, payment, amount) {
+  await notify(user, 'renewal_failed', { params: amount, target: BILLING })
+  await notifyAdmins('admin_renewal_failed', {
+    params: { payer: user.fullName, reference: payment.reference, ...amount },
+    target: { kind: 'payment', id: payment._id },
+    emailParams: (language) => ({
+      payer: user.fullName,
+      reference: payment.reference,
+      amount: formatAmount(language, amount.amountMinor, amount.currency),
+      link: `${config.clientOrigin}/admin/payments/${payment._id}`,
+    }),
+  })
 }
 
 async function onSubscription(object) {
@@ -276,6 +295,9 @@ async function onInvoice(object) {
       // The first invoice is the candidate's own purchase; renewals and their failures are system events.
       const actor = paid && invoice.billing_reason === 'subscription_create' ? actorFor(user) : SYSTEM_ACTOR
       await auditPayment(created, paid ? 'payment_recorded' : 'renewal_failed', actor)
+      const amount = { amountMinor: created.amountMinor, currency: created.currency }
+      if (paid) await notify(user, 'payment_paid', { params: { item: created.itemName, ...amount }, target: BILLING })
+      else await notifyRenewalFailed(user, created, amount)
     }
     if (!created) {
       await Payment.updateOne({ 'stripe.invoiceId': invoice.id }, { $set: fields })
@@ -328,7 +350,12 @@ async function onCheckoutCompleted(object) {
     stripe: { checkoutSessionId: session.id, paymentIntentId: intent?.id, chargeId: charge?.id },
     paidAt: fromUnix(charge?.created) ?? new Date(),
   })
-  if (!recorded) await auditPayment(payment, 'payment_recorded', actorFor(user))
+  if (!recorded) {
+    await auditPayment(payment, 'payment_recorded', actorFor(user))
+    // P11b-Q11: a candidate is told about the course; a recruiter's course purchase is their "payment paid".
+    if (user.role === 'candidate') await notify(user, 'course_purchased', { params: { course: course.title }, target: { kind: 'course', id: course._id } })
+    else await notify(user, 'payment_paid', { params: { item: course.title, amountMinor: payment.amountMinor, currency: payment.currency }, target: BILLING })
+  }
   await enroll({ userId: user._id, courseId: course._id, source: 'purchase', paymentId: payment._id })
 }
 

@@ -11,6 +11,7 @@ import { logoUrls } from '../companies/companies.service.js'
 import { reissueCertificates } from '../learning/learning.certificates.js'
 import { unreadCount } from '../messages/messages.service.js'
 import { currentLegalVersions, findEnabledCountry } from '../meta/meta.service.js'
+import { counts as notificationCounts, emailSwitches } from '../notifications/notifications.service.js'
 import { planState } from '../payments/payments.service.js'
 
 /**
@@ -67,16 +68,18 @@ export async function meDto(user) {
     // The shell subtitle shows the role name, or "Owner" for owners (M-195).
     const role = user.adminAccess?.roleId ? await AdminRole.findById(user.adminAccess.roleId, 'name description system') : null
     dto.adminRole = role ? { id: String(role._id), name: roleText(role, user.language).name } : null
-  } else {
-    dto.notifyEmail = user.notifyEmail
   }
+  // P11b-Q3, Q12: the email switches of this role's categories.
+  dto.emailSwitches = emailSwitches(user)
   return dto
 }
 
-/** GET /me/counters (M-094): unread messages for both roles; recruiters have no application badge. */
+/** GET /me/counters (M-094, P11b-Q2): unread messages (candidates, recruiters), the candidate's active applications, unread notifications. */
 export async function counters(user) {
+  const notifications = await notificationCounts(user)
+  if (user.role === 'admin') return { notifications }
   const unreadMessages = await unreadCount(user, user.companyId)
-  return user.role === 'candidate' ? { unreadMessages, ...(await candidateCounters(user)) } : { unreadMessages }
+  return user.role === 'candidate' ? { unreadMessages, ...(await candidateCounters(user)), notifications } : { unreadMessages, notifications }
 }
 
 /** PATCH /me. Until the language is explicit, the country's default language follows the country (M-134). */

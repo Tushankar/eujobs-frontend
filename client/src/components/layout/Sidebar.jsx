@@ -10,6 +10,7 @@ import { signOut } from '@/app/session.js'
 import { openUpgrade } from '@/app/upgrade.js'
 import PlanChip from '@/features/candidate/billing/components/PlanChip.jsx'
 import { lacksEntitlement, usePlan } from '@/features/candidate/billing/usePlan.js'
+import { useSectionBadge } from '@/features/notifications/api.js'
 import { useFormat, usePreferences } from '@/lib/preferences.js'
 import aiSparkle from '@/assets/icons/ai-sparkle-blue.svg'
 import aiNavIcon from '@/assets/icons/ai-nav.svg'
@@ -23,6 +24,16 @@ function LiveBadge({ useText, className, name }) {
   const text = useText()
   return text ? (
     <span className={className} data-nav-badge={name}>
+      {text}
+    </span>
+  ) : null
+}
+
+function SectionBadge({ section }) {
+  const { t } = useTranslation()
+  const text = useSectionBadge(section)
+  return text ? (
+    <span className={cx(styles.badge, styles.badgeAlert)} data-notification-badge={section} aria-label={t('notifications:bell.labelUnread', { count: Number(text) })}>
       {text}
     </span>
   ) : null
@@ -48,6 +59,8 @@ function NavItem({ workspace, item, me }) {
           {locked && <PlanChip className={cx(styles.badge, styles.badgeLock)} />}
           {!locked && item.badge?.useText && <LiveBadge useText={item.badge.useText} className={styles.badge} name={item.key} />}
           {!locked && item.badge?.textKey && <span className={cx(styles.badge, item.badge.tone === 'ai' && styles.badgeAi)}>{t(`shell:${item.badge.textKey}`)}</span>}
+          {/* P11b-Q10: unread notifications of this section; Messages keeps only its unread-messages badge. */}
+          {item.key !== 'messages' && <SectionBadge section={item.key} />}
         </>
       )}
     </NavLink>

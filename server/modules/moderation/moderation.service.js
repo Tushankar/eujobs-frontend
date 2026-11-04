@@ -13,6 +13,7 @@ import { File } from '../files/files.model.js'
 import { Job } from '../jobs/jobs.model.js'
 import { scheduleRecompute } from '../matching/matching.service.js'
 import { Conversation, Message } from '../messages/messages.model.js'
+import { notify, notifyAdmins } from '../notifications/notifications.service.js'
 import { User } from '../users/users.model.js'
 import { ModerationCase } from './moderation.model.js'
 
@@ -72,11 +73,12 @@ export async function report(user, company, body) {
   const entry = { reporterId: user._id, reason: body.reason, details: body.details || undefined, at: new Date() }
   const open = await ModerationCase.findOne({ targetType: body.targetType, targetId: body.targetId, status: 'open' })
   if (open?.reports.some((item) => item.reporterId.equals(user._id))) throw new AppError('CONFLICT', { params: { reason: 'already_reported' } })
+  let item = open
   if (open) {
     open.reports.push(entry)
     await open.save()
   } else {
-    await ModerationCase.create({
+    item = await ModerationCase.create({
       targetType: body.targetType,
       targetId: body.targetId,
       targetName: target.name,
@@ -93,6 +95,17 @@ export async function report(user, company, body) {
     actor: actorFor(user),
     target: { type: body.targetType, id: body.targetId },
     params: { name: target.name, targetType: body.targetType, reason: body.reason },
+  })
+  // P11b-Q1, Q6: moderators get one unread notification per case (a later report updates it) and an email per report.
+  await notifyAdmins('admin_content_report', {
+    params: { name: target.name, targetType: body.targetType, reason: body.reason },
+    target: { kind: 'case', id: item._id },
+    groupKey: `case:${item._id}`,
+    emailParams: (language) => ({
+      content: `${t(language, `labels.reportTargetType.${body.targetType}`)}: ${target.name}`,
+      reason: t(language, `labels.reportReason.${body.reason}`),
+      link: `${config.clientOrigin}/admin/moderation/content/${item._id}`,
+    }),
   })
   return { reported: true }
 }
@@ -259,6 +272,11 @@ async function emailOwner(item, type, { reason = '', link, photoRemoved = false 
   if (!owner) return
   const { language } = owner
   const content = item.targetType === 'job' ? 'job' : 'profile'
+  // P11b-Q1: the job opens that job; the profile opens My profile.
+  await notify(owner, type === 'content_restricted' ? 'content_restricted' : 'content_lifted', {
+    params: { content, title: item.targetName ?? '' },
+    target: content === 'job' ? { kind: 'job', id: item.targetId } : { kind: 'page', id: 'profile' },
+  })
   const params = {
     name: owner.fullName,
     summary: interpolate(t(language, `email.moderationSummary.${type}.${content}`), { title: item.targetName ?? '' }),

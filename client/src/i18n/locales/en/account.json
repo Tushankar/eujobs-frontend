@@ -9,10 +9,7 @@
     "saved": "Your password has been changed."
   },
   "notifications": {
-    "title": "Useful updates. Less noise.",
-    "email": "Email updates",
-    "candidate": "Job alerts, application updates and new messages by email. Account and security emails are always sent.",
-    "recruiter": "New applications and new messages by email. Account and security emails are always sent."
+    "title": "Useful updates. Less noise."
   },
   "admin": {
     "title": "Settings",

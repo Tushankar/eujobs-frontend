@@ -1,0 +1,91 @@
+{
+  "bell": {
+    "label": "Notifications",
+    "labelUnread_one": "Notifications, {{count}} non lue",
+    "labelUnread_many": "Notifications, {{count}} non lues",
+    "labelUnread_other": "Notifications, {{count}} non lues",
+    "markAllRead": "Tout marquer comme lu",
+    "seeAll": "Voir toutes les notifications",
+    "empty": "Aucune notification pour le moment",
+    "emptyText": "Les nouvelles de votre compte s’affichent ici."
+  },
+  "page": {
+    "description": "Tout ce qui s’est passé sur votre compte ces 90 derniers jours.",
+    "filters": "Afficher",
+    "all": "Toutes",
+    "unread": "Non lues",
+    "empty": "Aucune notification pour le moment",
+    "emptyText": "Les nouvelles de vos candidatures, de vos messages et de votre compte s’affichent ici.",
+    "emptyUnread": "Vous êtes à jour",
+    "emptyUnreadText": "Vous n’avez aucune notification non lue."
+  },
+  "unreadMark": "Non lue",
+  "unavailable": "Cet élément n’est plus disponible.",
+  "types": {
+    "application_status": "{{company}} a mis à jour votre candidature pour {{job}} : {{status}}",
+    "message_one": "Nouveau message de {{sender}}",
+    "message_many": "{{count}} nouveaux messages de {{sender}}",
+    "message_other": "{{count}} nouveaux messages de {{sender}}",
+    "cv_request": "{{company}} demande à voir une version antérieure de votre CV. Motif : {{reason}}",
+    "verification_decided": {
+      "approved": "Vérification approuvée : {{category}}",
+      "rejected": "Vérification refusée : {{category}}. Le motif figure sur votre page Vérification."
+    },
+    "job_alert": "Nouvelle offre pour votre alerte « {{alert}} » : {{job}} chez {{company}}",
+    "payment_paid": "Paiement reçu : {{item}} · {{amount}}",
+    "renewal_failed": "Nous n’avons pas pu renouveler votre offre Plus ({{amount}}). Mettez à jour votre carte dans Facturation.",
+    "plan_ended": "Votre offre Plus a pris fin. Vous êtes maintenant sur l’offre Free.",
+    "course_purchased": "Vous avez acheté « {{course}} ». Vous pouvez commencer.",
+    "certificate_issued": "Certificat délivré pour « {{course}} »",
+    "content_restricted": {
+      "job": "Un administrateur a restreint votre offre « {{title}} »",
+      "profile": "Un administrateur a restreint votre profil"
+    },
+    "content_lifted": {
+      "job": "La restriction de votre offre « {{title}} » a été levée",
+      "profile": "La restriction de votre profil a été levée"
+    },
+    "account_decided": {
+      "approved": "Votre compte recruteur a été approuvé",
+      "rejected": "Votre compte recruteur n’a pas été approuvé",
+      "suspended": "Votre compte recruteur a été suspendu"
+    },
+    "application_new": "{{candidate}} a postulé à {{job}}",
+    "application_withdrawn": "{{candidate}} a retiré sa candidature à {{job}}",
+    "cv_request_decided": {
+      "approved": "{{candidate}} vous a partagé une version de son CV",
+      "declined": "{{candidate}} a refusé votre demande de CV"
+    },
+    "admin_account_review": {
+      "submitted": "{{name}} ({{company}}) a soumis un compte recruteur pour vérification",
+      "resubmitted": "{{name}} ({{company}}) a soumis de nouveau un compte recruteur pour vérification"
+    },
+    "admin_verification_submitted": "{{candidate}} a envoyé un justificatif à examiner : {{category}}",
+    "admin_content_report_one": "Signalement ({{target}}) : {{name}} · {{reason}}",
+    "admin_content_report_many": "{{count}} signalements ({{target}}) : {{name}} · {{reason}}",
+    "admin_content_report_other": "{{count}} signalements ({{target}}) : {{name}} · {{reason}}",
+    "admin_renewal_failed": "Échec du renouvellement Plus de {{payer}} · {{reference}} · {{amount}}",
+    "admin_joined": "{{name}} a rejoint l’espace d’administration"
+  },
+  "settings": {
+    "title": "Notifications par e-mail",
+    "description": "Les notifications s’affichent toujours dans l’application. Choisissez celles que vous recevez aussi par e-mail.",
+    "alwaysOn": {
+      "candidate": "Toujours envoyés : réinitialisation du mot de passe, décisions de vérification et de modération, certificats, échec d’un renouvellement et fin de votre offre.",
+      "recruiter": "Toujours envoyés : réinitialisation du mot de passe, décisions sur le compte (approuvé, refusé, suspendu), décisions de modération et certificats.",
+      "admin": "Toujours envoyés : réinitialisation du mot de passe et invitations."
+    },
+    "categories": {
+      "applications": "Les changements de statut de vos candidatures, y compris quand vous n’êtes pas retenu.",
+      "messages": "Un message toujours non lu au bout de 15 minutes, au plus un e-mail par conversation et par heure.",
+      "cv_requests": "Une entreprise demande à voir une version antérieure de votre CV.",
+      "job_alerts": "Les nouvelles offres qui correspondent à vos alertes, à la fréquence choisie.",
+      "new_applications": "Les nouvelles candidatures à vos offres, au plus un e-mail par offre et par heure.",
+      "account_reviews": "Un recruteur soumet ou soumet de nouveau un compte pour vérification.",
+      "verification": "Un candidat envoie un justificatif pour une vérification.",
+      "content_reports": "Quelqu’un signale une offre, un profil, une entreprise ou un message.",
+      "failed_renewals": "Le paiement de renouvellement Plus d’un candidat échoue.",
+      "admin_joined": "Un administrateur invité accepte l’invitation."
+    }
+  }
+}

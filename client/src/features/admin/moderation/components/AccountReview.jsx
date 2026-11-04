@@ -14,6 +14,7 @@ import dialogStyles from './ReviewDialog.module.css'
 import detailStyles from './ReviewDetails.module.css'
 import styles from './VerificationReview.module.css'
 import accountStyles from './AccountReview.module.css'
+import { useMarkSeen } from '@/features/notifications/api.js'
 
 const ICONS = { approved: Check, rejected: X, suspended: Pause }
 
@@ -23,6 +24,8 @@ const ICONS = { approved: Check, rejected: X, suspended: Pause }
  * reason (required for Reject and Suspend, ≤ 300, P4-D4).
  */
 export default function AccountReview({ userId, onDecided, onClose }) {
+  // P11b-Q10: opening this item marks its notifications read.
+  useMarkSeen('account', userId)
   const { t } = useTranslation()
   const format = useFormat()
   const errorText = useErrorText()

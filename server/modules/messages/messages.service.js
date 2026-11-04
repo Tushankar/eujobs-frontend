@@ -7,6 +7,7 @@ import { logoUrls } from '../companies/companies.service.js'
 import { accessibleCandidate, recordActivity } from '../discovery/discovery.service.js'
 import { File } from '../files/files.model.js'
 import { Job } from '../jobs/jobs.model.js'
+import { markSeen, notify, notifyCompany } from '../notifications/notifications.service.js'
 import { User } from '../users/users.model.js'
 import { scheduleMessageEmail } from './messages.emails.js'
 import { Conversation, Message } from './messages.model.js'
@@ -100,7 +101,19 @@ async function addMessage(conversation, user, body) {
     await recordActivity({ companyId: conversation.companyId, candidateId: user._id, type: 'message_reply', params: {} })
   }
   await scheduleMessageEmail(conversation, otherSide(side), message.createdAt)
+  await notifyMessage(conversation, user)
   return message
+}
+
+/** P11b-Q6: one unread notification per conversation for the other side, with the sender and how many messages. */
+async function notifyMessage(conversation, user) {
+  const options = { target: { kind: 'conversation', id: conversation._id }, groupKey: `conversation:${conversation._id}` }
+  if (user.role === 'candidate') {
+    await notifyCompany(conversation.companyId, 'message', { ...options, params: { sender: user.fullName } })
+    return
+  }
+  const [candidate, company] = await Promise.all([User.findById(conversation.candidateId), Company.findById(conversation.companyId, 'displayName')])
+  if (candidate) await notify(candidate, 'message', { ...options, params: { sender: company.displayName } })
 }
 
 /** The thread of this pair, created on first use; `created` tells whether it is new. */
@@ -157,6 +170,8 @@ export async function markRead(user, company, id) {
   const conversation = await ownConversation(user, company, id)
   await Message.updateMany({ conversationId: conversation._id, senderRole: otherSide(user.role), readAt: null }, { readAt: new Date() })
   await Conversation.updateOne({ _id: conversation._id }, { [`unread.${user.role}`]: 0 }, { timestamps: false })
+  // P11b-Q10: reading the conversation clears its notification too.
+  await markSeen(user, { kind: 'conversation', id: conversation._id })
 }
 
 /** M-094: unread messages across this user's threads (the candidate's own, or every thread of the recruiter's company). */

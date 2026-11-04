@@ -8,6 +8,7 @@ import { requireEntitlement } from '../middleware/entitlements.js'
 import { errorHandler } from '../middleware/error.js'
 import { Company } from '../modules/companies/companies.model.js'
 import { Course, Enrollment } from '../modules/learning/learning.model.js'
+import { Notification } from '../modules/notifications/notifications.model.js'
 import { Counter, Payment, Plan, StripeEvent, Subscription } from '../modules/payments/payments.model.js'
 import { isPaid, nextReference } from '../modules/payments/payments.service.js'
 import { User } from '../modules/users/users.model.js'
@@ -15,7 +16,7 @@ import { seedCatalog } from '../seed/catalog.js'
 import { PLUS_PRICES } from '../seed/data/catalog.js'
 import { api, auth, createUser, mailTo, useTestDb } from './helpers/index.js'
 
-useTestDb([User, Company, Subscription, Payment, Counter, StripeEvent, Course, Enrollment])
+useTestDb([User, Company, Subscription, Payment, Counter, StripeEvent, Course, Enrollment, Notification])
 before(() => seedCatalog())
 
 const DAY = 24 * 60 * 60
@@ -408,6 +409,41 @@ describe('webhook (§2.10; signed constructed payloads)', () => {
     assert.deepEqual([rows[0].kind, rows[0].itemName, rows[0].amountMinor, rows[0].currency, rows[0].method.type], ['course', 'Portfolio storytelling', 3400, 'EUR', 'link'])
     const enrollments = await Enrollment.find({ userId: user._id })
     assert.deepEqual([enrollments.length, enrollments[0].source, String(enrollments[0].paymentId)], [1, 'purchase', String(rows[0]._id)])
+  })
+
+  it('notifies payments (P11b-Q1, Q11): Plus paid and failed to the candidate and finance admins only, plan ended, course purchases', async () => {
+    const finance = await createUser({ role: 'admin', adminAccess: { granted: ['finance.view'] } })
+    const moderator = await createUser({ role: 'admin', adminAccess: { granted: ['moderation.manage'] } })
+    const feed = async (user) => (await api().get('/api/v1/notifications').set(auth(user))).body.items
+    const { user, ids, subscription, invoice, charge } = await subscriber('notify')
+    await send('customer.subscription.created', ids.sub)
+    await send('invoice.paid', ids.in1)
+    await send('invoice.paid', ids.in1)
+    let items = await feed(user)
+    assert.deepEqual(items.map((item) => [item.type, item.params, item.path]), [['payment_paid', { item: 'Plus', amountMinor: 900, currency: 'GBP' }, '/candidate/settings/billing']])
+
+    put(invoice('in_notify_2', 'pi_notify_2', { status: 'open', amount_paid: 0, billing_reason: 'subscription_cycle', next_payment_attempt: null }))
+    put({ id: 'pi_notify_2', latest_charge: charge('ch_notify_2', { failure_code: 'card_declined' }) })
+    put(subscription({ status: 'past_due', latest_invoice: 'in_notify_2' }))
+    await send('invoice.payment_failed', 'in_notify_2')
+    items = await feed(user)
+    assert.deepEqual(items.map((item) => item.type), ['plan_ended', 'renewal_failed', 'payment_paid'])
+    const failed = await Payment.findOne({ 'stripe.invoiceId': 'in_notify_2' })
+    const [adminItem] = await feed(finance)
+    assert.deepEqual([adminItem.type, adminItem.params.reference, adminItem.path], ['admin_renewal_failed', failed.reference, `/admin/payments/${failed._id}`])
+    assert.equal(mailTo(finance.email, 'admin_renewal_failed').length, 1)
+    assert.deepEqual([(await feed(moderator)).length, mailTo(moderator.email).length], [0, 0])
+
+    // Course purchases: the candidate is told about the course only; a recruiter gets "payment paid".
+    const recruiter = await createUser({ role: 'recruiter', status: 'active' })
+    const course = await Course.create({ audience: 'candidate', title: 'Portfolio storytelling', status: 'published', prices: [{ currency: 'EUR', amountMinor: 3400 }] })
+    for (const [buyer, id] of [[user, 'cs_notify_candidate'], [recruiter, 'cs_notify_recruiter']]) {
+      put({ id, mode: 'payment', payment_status: 'paid', amount_total: 3400, currency: 'eur', metadata: { kind: 'course', itemId: String(course._id), userId: String(buyer._id) }, payment_intent: { id: `pi_${id}`, latest_charge: { id: `ch_${id}`, created: NOW } } })
+      await send('checkout.session.completed', id)
+    }
+    const [purchase] = await feed(user)
+    assert.deepEqual([purchase.type, purchase.params, purchase.path], ['course_purchased', { course: 'Portfolio storytelling' }, `/candidate/learning/${course._id}`])
+    assert.deepEqual((await feed(recruiter)).map((item) => [item.type, item.params.item, item.path]), [['payment_paid', 'Portfolio storytelling', '/recruiter/settings/billing']])
   })
 
   it('ignores objects of another database and events it does not handle', async () => {

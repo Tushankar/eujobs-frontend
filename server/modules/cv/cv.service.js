@@ -6,6 +6,8 @@ import { loadProfile, saveProfile } from '../candidates/candidates.service.js'
 import { Company } from '../companies/companies.model.js'
 import { recordActivity, recordCvUpdated } from '../discovery/discovery.service.js'
 import { File, FileAccessLog } from '../files/files.model.js'
+import { notify, notifyCompany } from '../notifications/notifications.service.js'
+import { User } from '../users/users.model.js'
 import { CvAccessRequest, CvVersion } from './cv.model.js'
 
 /* CV versions (M-027 … M-031, U18, P3-D7). A deleted version keeps its record with no file. */
@@ -134,6 +136,10 @@ export async function decideRequest(user, id, { decision, versionId }) {
   request.set({ status: decision, cvVersionId: version?._id, decidedAt: new Date() })
   await request.save()
   await recordActivity({ companyId: request.companyId, candidateId: user._id, type: 'cv_request_decided', params: { decision, version: version?.number } })
+  // P11b-Q1: the recruiter who asked (or, if that account is gone, the company's recruiter) opens the candidate's profile.
+  const asker = await User.findOne({ _id: request.requestedBy, companyId: request.companyId, status: 'active' })
+  const options = { params: { candidate: user.fullName, decision }, target: { kind: 'candidate', id: user._id } }
+  await (asker ? notify(asker, 'cv_request_decided', options) : notifyCompany(request.companyId, 'cv_request_decided', options))
 }
 
 /** GET /candidate/cv/downloads: every view of the candidate's CV files by a company (M-187). */

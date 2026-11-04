@@ -28,6 +28,63 @@ export const EMAIL_TYPES = {
   new_message: 'non_critical',
   new_applications: 'non_critical',
   cv_request: 'non_critical',
+  admin_account_review: 'non_critical',
+  admin_verification_submitted: 'non_critical',
+  admin_content_report: 'non_critical',
+  admin_renewal_failed: 'non_critical',
+  admin_joined: 'non_critical',
+}
+
+/** The email switch (category) of each non-critical type (P11b-Q12); critical and decision emails have none. */
+export const EMAIL_CATEGORY = {
+  application_status: 'applications',
+  application_rejected: 'applications',
+  new_message: 'messages',
+  cv_request: 'cv_requests',
+  alert_instant: 'job_alerts',
+  alert_daily: 'job_alerts',
+  alert_weekly: 'job_alerts',
+  new_applications: 'new_applications',
+  admin_account_review: 'account_reviews',
+  admin_verification_submitted: 'verification',
+  admin_content_report: 'content_reports',
+  admin_renewal_failed: 'failed_renewals',
+  admin_joined: 'admin_joined',
+}
+
+/** The email switches each role sees in Settings → Notifications, in this order (P11b-Q3, Q12). */
+export const EMAIL_CATEGORIES = {
+  candidate: ['applications', 'messages', 'cv_requests', 'job_alerts'],
+  recruiter: ['new_applications', 'messages'],
+  admin: ['account_reviews', 'verification', 'content_reports', 'failed_renewals', 'admin_joined'],
+}
+
+/**
+ * In-app notification types (P11b-Q1): the sidebar item (nav key) that counts them, per role (null: the bell only),
+ * and for admin types the permission that sees them (P11b-Q12) and the email they send at once (P11b-Q4).
+ */
+export const NOTIFICATION_TYPES = {
+  application_status: { sections: { candidate: 'applications' } },
+  message: { sections: { candidate: 'messages', recruiter: 'messages' } },
+  cv_request: { sections: { candidate: 'cvVersions' } },
+  verification_decided: { sections: { candidate: 'verification' } },
+  job_alert: { sections: { candidate: 'jobAlerts' } },
+  payment_paid: { sections: { candidate: null, recruiter: null } },
+  renewal_failed: { sections: { candidate: null } },
+  plan_ended: { sections: { candidate: null } },
+  course_purchased: { sections: { candidate: 'learning' } },
+  certificate_issued: { sections: { candidate: 'learning', recruiter: 'recruiterLearning' } },
+  content_restricted: { sections: { candidate: 'myProfile', recruiter: 'jobs' } },
+  content_lifted: { sections: { candidate: 'myProfile', recruiter: 'jobs' } },
+  account_decided: { sections: { recruiter: 'overview' } },
+  application_new: { sections: { recruiter: 'applications' } },
+  application_withdrawn: { sections: { recruiter: 'applications' } },
+  cv_request_decided: { sections: { recruiter: 'findCandidates' } },
+  admin_account_review: { sections: { admin: 'moderation' }, permission: 'moderation.manage', email: 'admin_account_review' },
+  admin_verification_submitted: { sections: { admin: 'moderation' }, permission: 'moderation.manage', email: 'admin_verification_submitted' },
+  admin_content_report: { sections: { admin: 'moderation' }, permission: 'moderation.manage', email: 'admin_content_report' },
+  admin_renewal_failed: { sections: { admin: 'payments' }, permission: 'finance.view', email: 'admin_renewal_failed' },
+  admin_joined: { sections: { admin: 'accessManagement' }, permission: 'roles.view', email: 'admin_joined' },
 }
 
 /** Admin permission catalogue (§3.13, M-156) in matrix order; groups follow Figma (owner answer P1-Q1). */
@@ -139,6 +196,8 @@ export const ENUMS = {
     'report_summary',
   ],
   emailType: Object.keys(EMAIL_TYPES),
+  emailCategory: [...new Set(Object.values(EMAIL_CATEGORY))],
+  notificationType: Object.keys(NOTIFICATION_TYPES),
   emailClass: ['critical', 'decision', 'non_critical'],
   emailStatus: ['sent', 'failed', 'suppressed_reserved', 'skipped_toggle', 'skipped_cap'],
   filePurpose: [

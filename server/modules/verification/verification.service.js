@@ -10,6 +10,7 @@ import { assertCodeResendAllowed, issueCode, normalizePhone, verifyCode } from '
 import { CandidateProfile } from '../candidates/candidates.model.js'
 import { loadProfile, photoUrls, refreshCompleteness } from '../candidates/candidates.service.js'
 import { File } from '../files/files.model.js'
+import { notify, notifyAdmins } from '../notifications/notifications.service.js'
 import { User } from '../users/users.model.js'
 import { VerificationSubmission } from './verification.model.js'
 
@@ -87,7 +88,17 @@ export async function submitEvidence(user, { category, evidenceType, entryId }, 
     const buffer = await sanitizedUpload(upload)
     fileId = (await storeFile({ ownerId: user._id, purpose: 'evidence', buffer, ext: upload.ext, originalName: upload.originalname }))._id
   }
-  await VerificationSubmission.create({ userId: user._id, category, evidenceType, entryId: entry?._id, fileId, previousSubmissionId: last?._id })
+  const submission = await VerificationSubmission.create({ userId: user._id, category, evidenceType, entryId: entry?._id, fileId, previousSubmissionId: last?._id })
+  // P11b-Q1: admins who review verification are told at once.
+  await notifyAdmins('admin_verification_submitted', {
+    params: { candidate: user.fullName, category },
+    target: { kind: 'submission', id: submission._id },
+    emailParams: (language) => ({
+      candidate: user.fullName,
+      check: t(language, `verification.category.${category}`),
+      link: `${config.clientOrigin}/admin/moderation/verification/${submission._id}`,
+    }),
+  })
 }
 
 /** A check's state: approved (counted), in review, rejected (latest) or not started. */
@@ -235,6 +246,7 @@ export async function decide(admin, id, { decision, reason }) {
   await refreshCompleteness(submission.userId)
 
   const user = await User.findById(submission.userId)
+  await notify(user, 'verification_decided', { params: { decision, category: submission.category }, target: { kind: 'page', id: 'verification' } })
   await sendEmail({
     type: `verification_${decision}`,
     to: user.email,

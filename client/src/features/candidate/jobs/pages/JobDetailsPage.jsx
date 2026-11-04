@@ -15,6 +15,7 @@ import { useFormat } from '@/lib/preferences.js'
 import { useGetJobQuery, useSaveToggle } from '../api.js'
 import MatchBadge from '../components/MatchBadge.jsx'
 import styles from './JobDetailsPage.module.css'
+import { useMarkSeen } from '@/features/notifications/api.js'
 
 /** A bulleted section; with `source`, the items can be translated on demand (M-144). */
 function ListSection({ title, items, source }) {
@@ -114,6 +115,8 @@ export default function JobDetailsPage() {
   const format = useFormat()
   const jobText = useJobText()
   const { jobId } = useParams()
+  // P11b-Q10: opening this item marks its notifications read.
+  useMarkSeen('job', jobId)
   const { data: job, error } = useGetJobQuery(jobId)
   const toggleSave = useSaveToggle()
 

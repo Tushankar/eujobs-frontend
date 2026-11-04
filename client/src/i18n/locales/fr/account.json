@@ -9,10 +9,7 @@
     "saved": "Votre mot de passe a été modifié."
   },
   "notifications": {
-    "title": "Des nouvelles utiles. Moins de bruit.",
-    "email": "Notifications par e-mail",
-    "candidate": "Alertes emploi, suivi de vos candidatures et nouveaux messages par e-mail. Les e-mails liés au compte et à la sécurité sont toujours envoyés.",
-    "recruiter": "Nouvelles candidatures et nouveaux messages par e-mail. Les e-mails liés au compte et à la sécurité sont toujours envoyés."
+    "title": "Des nouvelles utiles. Moins de bruit."
   },
   "admin": {
     "title": "Paramètres",

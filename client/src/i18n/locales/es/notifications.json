@@ -1,0 +1,91 @@
+{
+  "bell": {
+    "label": "Notificaciones",
+    "labelUnread_one": "Notificaciones, {{count}} sin leer",
+    "labelUnread_many": "Notificaciones, {{count}} sin leer",
+    "labelUnread_other": "Notificaciones, {{count}} sin leer",
+    "markAllRead": "Marcar todas como leídas",
+    "seeAll": "Ver todas las notificaciones",
+    "empty": "Aún no tienes notificaciones",
+    "emptyText": "Aquí verás las novedades de tu cuenta."
+  },
+  "page": {
+    "description": "Todo lo que ha pasado en tu cuenta en los últimos 90 días.",
+    "filters": "Mostrar",
+    "all": "Todas",
+    "unread": "Sin leer",
+    "empty": "Aún no tienes notificaciones",
+    "emptyText": "Aquí verás las novedades de tus candidaturas, mensajes y cuenta.",
+    "emptyUnread": "Estás al día",
+    "emptyUnreadText": "No tienes notificaciones sin leer."
+  },
+  "unreadMark": "Sin leer",
+  "unavailable": "Este elemento ya no está disponible.",
+  "types": {
+    "application_status": "{{company}} actualizó tu candidatura a {{job}}: {{status}}",
+    "message_one": "Nuevo mensaje de {{sender}}",
+    "message_many": "{{count}} mensajes nuevos de {{sender}}",
+    "message_other": "{{count}} mensajes nuevos de {{sender}}",
+    "cv_request": "{{company}} pidió ver una versión anterior de tu CV. Motivo: {{reason}}",
+    "verification_decided": {
+      "approved": "Verificación aprobada: {{category}}",
+      "rejected": "Verificación no aprobada: {{category}}. El motivo está en tu página de Verificación."
+    },
+    "job_alert": "Nueva oferta para tu alerta “{{alert}}”: {{job}} en {{company}}",
+    "payment_paid": "Pago recibido: {{item}} · {{amount}}",
+    "renewal_failed": "No pudimos renovar tu plan Plus ({{amount}}). Actualiza tu tarjeta en Facturación.",
+    "plan_ended": "Tu plan Plus ha terminado. Ahora tienes el plan Free.",
+    "course_purchased": "Compraste “{{course}}”. Ya puedes empezar a aprender.",
+    "certificate_issued": "Certificado emitido para “{{course}}”",
+    "content_restricted": {
+      "job": "Un administrador restringió tu oferta “{{title}}”",
+      "profile": "Un administrador restringió tu perfil"
+    },
+    "content_lifted": {
+      "job": "Se levantó la restricción de tu oferta “{{title}}”",
+      "profile": "Se levantó la restricción de tu perfil"
+    },
+    "account_decided": {
+      "approved": "Tu cuenta de reclutador fue aprobada",
+      "rejected": "Tu cuenta de reclutador no fue aprobada",
+      "suspended": "Tu cuenta de reclutador fue suspendida"
+    },
+    "application_new": "{{candidate}} se postuló a {{job}}",
+    "application_withdrawn": "{{candidate}} retiró su candidatura a {{job}}",
+    "cv_request_decided": {
+      "approved": "{{candidate}} compartió contigo una versión de su CV",
+      "declined": "{{candidate}} rechazó tu solicitud de CV"
+    },
+    "admin_account_review": {
+      "submitted": "{{name}} ({{company}}) envió una cuenta de reclutador para revisión",
+      "resubmitted": "{{name}} ({{company}}) volvió a enviar una cuenta de reclutador para revisión"
+    },
+    "admin_verification_submitted": "{{candidate}} envió pruebas para revisión: {{category}}",
+    "admin_content_report_one": "Denuncia de {{target}}: {{name}} · {{reason}}",
+    "admin_content_report_many": "{{count}} denuncias de {{target}}: {{name}} · {{reason}}",
+    "admin_content_report_other": "{{count}} denuncias de {{target}}: {{name}} · {{reason}}",
+    "admin_renewal_failed": "Falló la renovación de Plus de {{payer}} · {{reference}} · {{amount}}",
+    "admin_joined": "{{name}} se unió al espacio de administración"
+  },
+  "settings": {
+    "title": "Notificaciones por correo",
+    "description": "Las notificaciones siempre aparecen en la aplicación. Elige cuáles quieres recibir también por correo.",
+    "alwaysOn": {
+      "candidate": "Siempre se envían: restablecimiento de contraseña, decisiones de verificación y de moderación, certificados, una renovación fallida y el fin de tu plan.",
+      "recruiter": "Siempre se envían: restablecimiento de contraseña, decisiones sobre la cuenta (aprobada, rechazada, suspendida), decisiones de moderación y certificados.",
+      "admin": "Siempre se envían: restablecimiento de contraseña e invitaciones."
+    },
+    "categories": {
+      "applications": "Cambios de estado de tus candidaturas, también cuando no te seleccionan.",
+      "messages": "Un mensaje que sigue sin leer después de 15 minutos, como máximo un correo por conversación cada hora.",
+      "cv_requests": "Una empresa pide ver una versión anterior de tu CV.",
+      "job_alerts": "Nuevas ofertas que coinciden con tus alertas, con la frecuencia que elegiste.",
+      "new_applications": "Nuevas candidaturas a tus ofertas, como máximo un correo por oferta cada hora.",
+      "account_reviews": "Un reclutador envía o vuelve a enviar una cuenta para revisión.",
+      "verification": "Un candidato envía pruebas para una verificación.",
+      "content_reports": "Alguien denuncia una oferta, un perfil, una empresa o un mensaje.",
+      "failed_renewals": "Falla el pago de renovación de Plus de un candidato.",
+      "admin_joined": "Un administrador invitado acepta la invitación."
+    }
+  }
+}

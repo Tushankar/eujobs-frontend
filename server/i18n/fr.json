@@ -249,6 +249,59 @@
         "profile": "La restriction de votre profil a été levée. Les recruteurs peuvent à nouveau le trouver dans la recherche."
       },
       "photoRemoved": "Votre photo de profil a été supprimée. Ajoutez une nouvelle photo pour compléter à nouveau votre profil."
+    },
+    "adminSummary": {
+      "accountSubmitted": "{{recruiter}} ({{company}}) a soumis son compte recruteur pour vérification.",
+      "accountResubmitted": "{{recruiter}} ({{company}}) a corrigé son compte recruteur et l’a soumis de nouveau pour vérification."
+    },
+    "admin_account_review": {
+      "subject": "Compte recruteur à vérifier",
+      "heading": "Vérification de compte",
+      "body": [
+        "Bonjour {{name}},",
+        "{{summary}}",
+        "Contrôlez les informations et les documents de l’entreprise, puis approuvez ou refusez le compte."
+      ],
+      "action": "Ouvrir la vérification du compte"
+    },
+    "admin_verification_submitted": {
+      "subject": "Vérification à examiner : {{candidate}}",
+      "heading": "Justificatif envoyé",
+      "body": [
+        "Bonjour {{name}},",
+        "{{candidate}} a envoyé un justificatif pour la vérification « {{check}} ».",
+        "Examinez le document, puis approuvez-le ou refusez-le."
+      ],
+      "action": "Ouvrir la vérification"
+    },
+    "admin_content_report": {
+      "subject": "Nouveau signalement de contenu",
+      "heading": "Contenu signalé",
+      "body": [
+        "Bonjour {{name}},",
+        "Un utilisateur a signalé ce contenu.",
+        "{{content}}",
+        "Motif : {{reason}}"
+      ],
+      "action": "Ouvrir le dossier"
+    },
+    "admin_renewal_failed": {
+      "subject": "Échec du paiement de renouvellement : {{reference}}",
+      "heading": "Échec du paiement de renouvellement",
+      "body": [
+        "Bonjour {{name}},",
+        "Le renouvellement Plus de {{payer}} d’un montant de {{amount}} a échoué ({{reference}}). Stripe va réessayer dans les prochains jours."
+      ],
+      "action": "Ouvrir le paiement"
+    },
+    "admin_joined": {
+      "subject": "{{admin}} a rejoint l’espace d’administration",
+      "heading": "Nouvel administrateur",
+      "body": [
+        "Bonjour {{name}},",
+        "{{admin}} a accepté l’invitation et créé un mot de passe. Cette personne peut maintenant se connecter à l’espace d’administration."
+      ],
+      "action": "Ouvrir ses accès"
     }
   },
   "verification": {

@@ -13,6 +13,7 @@ import DocumentViewer from './DocumentViewer.jsx'
 import dialogStyles from './ReviewDialog.module.css'
 import detailStyles from './ReviewDetails.module.css'
 import styles from './VerificationReview.module.css'
+import { useMarkSeen } from '@/features/notifications/api.js'
 
 /** The profile claim the evidence must match (A: admin §9.2), as it is now. */
 function Claim({ category, claim }) {
@@ -42,6 +43,8 @@ function Claim({ category, claim }) {
 
 /** Review dialog of one submission (M-166): details, then Approve or Reject with a reason (≤ 300). */
 export default function VerificationReview({ id, onDecided, onClose }) {
+  // P11b-Q10: opening this item marks its notifications read.
+  useMarkSeen('submission', id)
   const { t } = useTranslation()
   const format = useFormat()
   const errorText = useErrorText()

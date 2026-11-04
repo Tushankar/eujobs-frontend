@@ -84,3 +84,8 @@
     width: 100%;
   }
 }
+
+/* P11b-Q9: the application a notification opened. */
+.focused td {
+  background: var(--accent);
+}

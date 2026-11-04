@@ -1,8 +1,10 @@
 import { useState } from 'react'
+import { useLocation, useNavigate, useParams } from 'react-router-dom'
 import { useTranslation } from 'react-i18next'
 import { CircleAlert, Download, Repeat, Search, TrendingUp, Wallet } from 'lucide-react'
 import { can } from '@/app/permissions.js'
 import EmptyState from '@/components/common/EmptyState.jsx'
+import NoticeBanner from '@/components/common/NoticeBanner.jsx'
 import PageTitle from '@/components/common/PageTitle.jsx'
 import Pagination from '@/components/common/Pagination.jsx'
 import PillBadge from '@/components/common/PillBadge.jsx'
@@ -14,6 +16,7 @@ import { downloadFromApi } from '@/lib/download.js'
 import { useErrorText } from '@/lib/forms.js'
 import { useUrlFilters } from '@/lib/useUrlFilters.js'
 import { useFormat, usePreferences } from '@/lib/preferences.js'
+import { useMarkSeen } from '@/features/notifications/api.js'
 import { useGetAdminPaymentQuery, useGetAdminPaymentsQuery, useGetPaymentStatsQuery } from '../api.js'
 import styles from './PaymentsPage.module.css'
 
@@ -42,11 +45,12 @@ function MoneyLines({ totals }) {
   )
 }
 
-/** M-123: the row with the subscription's status and period for a plan payment. */
+/** M-123: the row with the subscription's status and period for a plan payment; a gone row says so (P11b-Q4). */
 function PaymentDetails({ id, onClose }) {
   const { t } = useTranslation(['adminPayments', 'enums'])
   const format = useFormat()
-  const { data: payment } = useGetAdminPaymentQuery(id)
+  const { data: payment, isError } = useGetAdminPaymentQuery(id)
+  useMarkSeen('payment', payment?.id)
   const subscription = payment?.subscription
   const rows = payment
     ? [
@@ -78,6 +82,7 @@ function PaymentDetails({ id, onClose }) {
         </Button>
       }
     >
+      {isError && <NoticeBanner>{t('notifications:unavailable')}</NoticeBanner>}
       <dl className={styles.details}>
         {rows.map(([key, value]) => (
           <div key={key} className={styles.detail} data-detail={key}>
@@ -101,7 +106,11 @@ export default function PaymentsPage() {
   const { me } = usePreferences()
   const countries = useCountryOptions().filter((country) => !country.isRemote)
   const { params, setFilter, search, setSearch, clearFilters } = useUrlFilters()
-  const [selected, setSelected] = useState(null)
+  // P11b-Q9: /admin/payments/:paymentId opens that payment's details; the list keeps its filters.
+  const selected = useParams().paymentId ?? null
+  const navigate = useNavigate()
+  const location = useLocation()
+  const setSelected = (id) => navigate({ pathname: id ? `/admin/payments/${id}` : '/admin/payments', search: location.search })
   const [exporting, setExporting] = useState(false)
   const [exportError, setExportError] = useState('')
   const filters = Object.fromEntries(['q', ...Object.keys(FILTERS), 'country'].map((name) => [name, params.get(name) ?? '']))

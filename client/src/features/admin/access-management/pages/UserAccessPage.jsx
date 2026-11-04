@@ -15,6 +15,7 @@ import AccessToolbar from '../components/AccessToolbar.jsx'
 import InviteDialog from '../components/InviteDialog.jsx'
 import ManageAccessModal from '../components/ManageAccessModal.jsx'
 import styles from './UserAccessPage.module.css'
+import { useMarkSeen } from '@/features/notifications/api.js'
 
 const admin = (to) => workspacePath(WORKSPACES.admin, to)
 const STATUS_TONES = { active: 'success', invited: 'warning' }
@@ -27,6 +28,8 @@ export default function UserAccessPage() {
   const { t } = useTranslation(['access', 'enums'])
   const { me } = usePreferences()
   const { userId } = useParams()
+  // P11b-Q10: opening this item marks its notifications read.
+  useMarkSeen('admin', userId)
   const { pathname, state } = useLocation()
   const navigate = useNavigate()
   const { data: users = [], isSuccess } = useGetAccessUsersQuery()

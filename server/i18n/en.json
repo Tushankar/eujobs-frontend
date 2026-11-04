@@ -249,6 +249,59 @@
         "profile": "The restriction on your profile was lifted. Recruiters can find it in search again."
       },
       "photoRemoved": "Your profile photo was removed. Upload a new photo to complete your profile again."
+    },
+    "adminSummary": {
+      "accountSubmitted": "{{recruiter}} ({{company}}) submitted their recruiter account for review.",
+      "accountResubmitted": "{{recruiter}} ({{company}}) fixed their recruiter account and submitted it again for review."
+    },
+    "admin_account_review": {
+      "subject": "Recruiter account to review",
+      "heading": "Account review",
+      "body": [
+        "Hi {{name}},",
+        "{{summary}}",
+        "Check the company details and documents, then approve or reject the account."
+      ],
+      "action": "Open account review"
+    },
+    "admin_verification_submitted": {
+      "subject": "Verification to review: {{candidate}}",
+      "heading": "Verification submitted",
+      "body": [
+        "Hi {{name}},",
+        "{{candidate}} submitted evidence for the {{check}} check.",
+        "Review the document, then approve or reject it."
+      ],
+      "action": "Open verification"
+    },
+    "admin_content_report": {
+      "subject": "New content report",
+      "heading": "Content reported",
+      "body": [
+        "Hi {{name}},",
+        "A user reported this content.",
+        "{{content}}",
+        "Reason: {{reason}}"
+      ],
+      "action": "Open the case"
+    },
+    "admin_renewal_failed": {
+      "subject": "Renewal payment failed: {{reference}}",
+      "heading": "Renewal payment failed",
+      "body": [
+        "Hi {{name}},",
+        "The {{amount}} Plus renewal of {{payer}} failed ({{reference}}). Stripe will try again over the next days."
+      ],
+      "action": "Open the payment"
+    },
+    "admin_joined": {
+      "subject": "{{admin}} joined the admin workspace",
+      "heading": "Admin joined",
+      "body": [
+        "Hi {{name}},",
+        "{{admin}} accepted the invitation and set a password. They can now sign in to the admin workspace."
+      ],
+      "action": "Open their access"
     }
   },
   "verification": {

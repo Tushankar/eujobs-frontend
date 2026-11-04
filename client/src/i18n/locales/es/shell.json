@@ -53,7 +53,8 @@
     "resetPassword": "Restablecer contraseña",
     "emailCode": "Verifica tu correo de trabajo",
     "checkoutReturn": "Pago",
-    "setPassword": "Crea tu contraseña"
+    "setPassword": "Crea tu contraseña",
+    "notifications": "Notificaciones"
   },
   "workspaces": {
     "candidate": {
@@ -111,7 +112,6 @@
   },
   "openNavigation": "Abrir la navegación",
   "breadcrumb": "Ruta de navegación",
-  "notifications": "Configuración de notificaciones",
   "search": {
     "trigger": "Buscar...",
     "shortcut": "Ctrl K",

@@ -53,6 +53,24 @@ export function mailSample(type, language, origin) {
       link: `${origin}/candidate/jobs`,
       secondaryLink: `${origin}/candidate/job-alerts`,
     },
+    // Phase 11b admin emails: the parts a server task translates come in the recipient's language, as they send them.
+    admin_account_review: {
+      summary: interpolate(t(language, 'email.adminSummary.accountSubmitted'), { recruiter: 'Mail Tester', company: 'Mail Test Ltd' }),
+      link: `${origin}/admin/moderation/accounts`,
+    },
+    admin_verification_submitted: { candidate: 'Mail Tester', check: t(language, 'verification.category.identity'), link: `${origin}/admin/moderation/verification` },
+    admin_content_report: {
+      content: `${t(language, 'labels.reportTargetType.job')}: Senior Product Designer`,
+      reason: t(language, 'labels.reportReason.misleading'),
+      link: `${origin}/admin/moderation`,
+    },
+    admin_renewal_failed: {
+      payer: 'Mail Tester',
+      reference: 'LWM-000099',
+      amount: new Intl.NumberFormat(language, { style: 'currency', currency: 'GBP' }).format(9),
+      link: `${origin}/admin/payments`,
+    },
+    admin_joined: { admin: 'Mail Tester', link: `${origin}/admin/access-management` },
   }
   SAMPLE_PARAMS.alert_weekly = SAMPLE_PARAMS.alert_daily
   // Verification emails name the check in the recipient's language, as the decision does.

@@ -37,6 +37,11 @@ recruiterRouter.get('/', validate({ query: schemas.recruiterListQuery }), async 
   res.json(await applications.listCompanyApplications(req.user, req.company, req.query))
 })
 
+// P11b-Q9: one row, any status, so a notification opens the list filtered to it.
+recruiterRouter.get('/:id', idParams, async (req, res) => {
+  res.json(await applications.companyApplication(req.user, req.company, req.params.id))
+})
+
 recruiterRouter.patch('/:id/stage', idParams, validate({ body: schemas.stageMoveBody }), async (req, res) => {
   res.json(await applications.moveToStage(req.user, req.company, req.params.id, req.body.stageId))
 })
