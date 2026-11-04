@@ -36,8 +36,11 @@ export default {
       first.allow(403, '/api/v1/admin/moderation/accounts')
       await signInWithForm(first.page, ctx.webUrl, '/admin/sign-in', reader.email, ctx.seedCredentials.password)
       await first.page.goto(`${ctx.webUrl}/admin/moderation/verification`, { waitUntil: 'networkidle0' })
-      await waitForText(first.page, "Your role doesn't include this permission.")
-      await waitForText(first.page, 'This queue needs the moderation.manage permission.')
+      // Since Phase 10 (P10-C1, OD16) a page without its permission shows the 403 page instead of an empty queue.
+      await waitForText(first.page, 'You don’t have access to this page')
+      await waitForText(first.page, 'This page needs the “Manage moderation” permission.')
+      const refused = await first.page.evaluate(async () => (await fetch('/api/v1/admin/moderation/verification', { headers: { Authorization: `Bearer ${localStorage.getItem('lwm-auth-token')}` } })).json())
+      ctx.check(refused.error?.code === 'PERMISSION_DENIED' && refused.error.params.permission === 'moderation.manage', 'the API refuses with PERMISSION_DENIED')
       await ctx.screenshot(first.page, '1-no-moderation')
       ctx.assertClean(first.issues, 'without moderation.manage')
 
