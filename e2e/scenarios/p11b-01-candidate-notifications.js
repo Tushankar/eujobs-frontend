@@ -10,9 +10,9 @@ const switchState = (page) => page.$$eval('[data-email-switches] [role="switch"]
 /**
  * P11b-01 (P11b-Q1, Q2, Q3, Q8, Q9, Q10): a Plus candidate with an application. The recruiter moves it to Interview
  * (shown after the 10-minute window) and sends a message: the bell counts 2, the Applications item shows its own
- * accent count beside the active-applications number, the dropdown lists both. Clicking the status opens that
+ * accent count beside the active-applications number, the dropdown lists both (above the read payment row). Clicking the status opens that
  * application's activity dialog and clears its counts; clicking the message opens the conversation and clears the
- * rest. The Notifications page shows both read and an empty Unread view. Settings → Notifications saves the Messages
+ * rest. The Notifications page shows all three read and an empty Unread view. Settings → Notifications saves the Messages
  * email switch.
  */
 export default {
@@ -48,7 +48,7 @@ export default {
 
     await openBell(page)
     const rows = await rowsOf(page)
-    ctx.check(JSON.stringify(rows.map((row) => row.type)) === '["message","application_status"]', `dropdown rows ${JSON.stringify(rows)}`)
+    ctx.check(JSON.stringify(rows.map((row) => [row.type, row.read])) === '[["message",false],["application_status",false],["payment_paid",true]]', `dropdown rows ${JSON.stringify(rows)}`)
     ctx.check(rows[0].text.includes('New message from') && rows[1].text.includes(`${job.title}: Interview`), `row texts ${JSON.stringify(rows.map((row) => row.text))}`)
     await handle.checkOverflow()
     await ctx.screenshot(page, '1-dropdown')
@@ -69,7 +69,7 @@ export default {
 
     await page.goto(`${ctx.webUrl}/candidate/notifications`, { waitUntil: 'networkidle0' })
     const listed = await rowsOf(page, 'main')
-    ctx.check(listed.length === 2 && listed.every((row) => row.read), `the page lists both, read (${JSON.stringify(listed)})`)
+    ctx.check(listed.length === 3 && listed.every((row) => row.read), `the page lists all three, read (${JSON.stringify(listed)})`)
     await clickText(page, 'Unread', 'main [role="group"] button')
     await page.waitForFunction(() => document.querySelector('main').innerText.includes('You are all caught up'))
     await handle.checkOverflow()
