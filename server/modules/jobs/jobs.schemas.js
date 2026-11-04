@@ -2,6 +2,7 @@ import ISO6391 from 'iso-639-1'
 import { z } from 'zod'
 import { ENUMS } from '../../config/enums.js'
 import { LIMITS } from '../../config/limits.js'
+import { pageQuery } from '../../lib/pages.js'
 import { objectId } from '../../lib/validate.js'
 import { placeId } from '../places/places.schemas.js'
 

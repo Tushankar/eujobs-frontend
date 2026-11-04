@@ -4,6 +4,8 @@ import { objectId, validate } from '../../lib/validate.js'
 import { requireApprovedRecruiter, requireAuth, requireRole } from '../../middleware/auth.js'
 import { requirePermission } from '../../middleware/permissions.js'
 import { relevantTalent } from '../discovery/discovery.service.js'
+import { caseBody } from '../moderation/moderation.schemas.js'
+import { openJobCase } from '../moderation/moderation.service.js'
 import * as schemas from './jobs.schemas.js'
 import * as search from './jobs.search.js'
 import * as jobs from './jobs.service.js'
@@ -90,8 +92,22 @@ savedRouter.delete('/:jobId', savedParams, async (req, res) => {
   res.json({ saved: false })
 })
 
-/* GET /admin/jobs (P9-Q5): the minimal admin list for the AI summaries; Phase 10 adds the filter and the rest (M-046). */
+/* /admin/jobs (M-046, P10-Q4): every status with filters and pages; "Open case" also needs moderation.manage (M-164). */
 export const adminRouter = Router()
-adminRouter.get('/', requireAuth, requireRole('admin'), requirePermission('jobs.view'), async (req, res) => {
-  res.json(await jobs.adminJobs())
+adminRouter.get('/', requireAuth, requireRole('admin'), requirePermission('jobs.view'), validate({ query: schemas.adminJobsQuery }), async (req, res) => {
+  res.json(await jobs.adminJobs(req.query))
 })
+
+adminRouter.post(
+  '/:id/case',
+  requireAuth,
+  requireRole('admin'),
+  requirePermission('jobs.view'),
+  requirePermission('moderation.manage'),
+  jobParams,
+  validate({ body: caseBody }),
+  async (req, res) => {
+    const opened = await openJobCase(req.user, req.params.id, req.body)
+    res.status(opened.created ? 201 : 200).json(opened)
+  },
+)
