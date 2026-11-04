@@ -1,0 +1,10 @@
+.joined {
+  white-space: nowrap;
+}
+
+.tick {
+  display: inline-flex;
+  margin-left: 4px;
+  vertical-align: -2px;
+  color: var(--primary);
+}

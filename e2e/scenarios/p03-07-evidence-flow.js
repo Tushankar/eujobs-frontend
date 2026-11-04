@@ -54,7 +54,8 @@ export default {
     await signInWithForm(owner.page, ctx.webUrl, '/admin/sign-in', ctx.seedCredentials.email(null), ctx.seedCredentials.password)
     const details = await openReview(owner.page, ctx.webUrl, name)
     ctx.check(details.includes(`Account name: ${name}`), 'the claim is the account name')
-    ctx.check(Boolean(await owner.page.$('[role="dialog"] img[alt^="Evidence file"]')), 'the evidence image is previewed')
+    // The preview needs its own signed URL (GET /admin/files/:id), which arrives after the submission.
+    ctx.check(Boolean(await owner.page.waitForSelector('[role="dialog"] img[alt^="Evidence file"]').catch(() => null)), 'the evidence image is previewed')
     await owner.checkOverflow()
     await ctx.screenshot(owner.page, '2-review')
 

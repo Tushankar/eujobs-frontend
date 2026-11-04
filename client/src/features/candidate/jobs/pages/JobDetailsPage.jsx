@@ -9,6 +9,7 @@ import Translatable from '@/features/ai/components/Translatable.jsx'
 import { ApplyButton } from '@/features/candidate/applications/components/ApplyFlow.jsx'
 import { MessageCompanyButton } from '@/features/messages/components/StartConversation.jsx'
 import { useJobText } from '@/lib/jobText.js'
+import VerifiedCompany from '@/components/common/VerifiedCompany.jsx'
 import { useFormat } from '@/lib/preferences.js'
 import { useGetJobQuery, useSaveToggle } from '../api.js'
 import MatchBadge from '../components/MatchBadge.jsx'
@@ -163,7 +164,7 @@ export default function JobDetailsPage() {
             <CompanyLogo name={company.displayName} id={company.id} src={company.logoUrl ?? undefined} size={44} />
             <div className={styles.heroText}>
               <div className={styles.heroRow}>
-                <span className={styles.company}>{company.displayName}</span>
+                <VerifiedCompany className={styles.company} name={company.displayName} verified={company.verified} />
                 <MatchBadge job={job} />
               </div>
               <p className={styles.posted}>{[company.industry, job.publishedAt && t('findJobs:details.posted', { time: format.relative(job.publishedAt) })].filter(Boolean).join(' · ')}</p>
@@ -227,7 +228,9 @@ export default function JobDetailsPage() {
           </section>
 
           <section className={styles.card}>
-            <h2 className={styles.aboutTitle}>{t('findJobs:details.aboutCompany', { company: company.displayName })}</h2>
+            <h2 className={styles.aboutTitle}>
+              <VerifiedCompany name={t('findJobs:details.aboutCompany', { company: company.displayName })} verified={company.verified} />
+            </h2>
             {company.description && (
               <Translatable source={{ entity: 'company', id: company.id, field: 'description' }} texts={[company.description]}>
                 {([description]) => <p className={styles.aboutText}>{description}</p>}

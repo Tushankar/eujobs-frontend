@@ -225,6 +225,30 @@ describe('candidate job browsing (M-043, M-044, M-052, M-053, OD2, U8, U25, P4-Q
     assert.deepEqual(overview, { recommended: { count: 1, newThisWeek: 1, byScore: false }, savedJobs: 1, profileViews: { last30: 0, previous30: 0 } })
   })
 
+  it('marks the company verified while it is approved and its recruiter active (P10-Q8)', async () => {
+    const { user, company } = await approvedRecruiter()
+    const job = await published(user)
+    const candidate = await listedCandidate()
+    const cardOf = async () => (await findJobs(candidate)).body.items.find((item) => item.id === job.id)
+    assert.equal((await cardOf()).company.verified, true)
+    assert.equal((await api().get(`/api/v1/jobs/${job.id}`).set(auth(candidate))).body.company.verified, true)
+    await api().put(`/api/v1/candidate/saved-jobs/${job.id}`).set(auth(candidate))
+    assert.equal((await api().get('/api/v1/jobs/recommended').set(auth(candidate))).body.items[0].company.verified, true)
+
+    // Suspended: the job leaves Find jobs (M-044); where the candidate still sees it, the tick is gone.
+    await User.updateOne({ _id: user._id }, { status: 'suspended' })
+    assert.equal(await cardOf(), undefined)
+    const details = (await api().get(`/api/v1/jobs/${job.id}`).set(auth(candidate))).body
+    assert.deepEqual([details.accepting, details.company.verified], [false, false])
+    const [saved] = (await api().get('/api/v1/candidate/saved-jobs').set(auth(candidate))).body.items
+    assert.deepEqual([saved.id, saved.company.verified], [job.id, false])
+
+    // Active again but the company never approved (no verifiedAt): no tick either.
+    await User.updateOne({ _id: user._id }, { status: 'active' })
+    await Company.updateOne({ _id: company._id }, { $unset: { verifiedAt: 1 } })
+    assert.equal((await cardOf()).company.verified, false)
+  })
+
   it('hides drafts from candidates (P4-17)', async () => {
     const { user } = await approvedRecruiter()
     const draft = await create(user, jobBody())

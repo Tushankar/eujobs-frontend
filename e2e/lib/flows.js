@@ -38,6 +38,8 @@ export async function signInWithForm(page, webUrl, signInPath, email, password) 
   await page.click('button[type="submit"]')
   await login
   await page.waitForFunction((path) => location.pathname !== path, { timeout: 15_000 }, signInPath)
+  // The router keeps the sign-in page on screen until the landing page's data has loaded, so its heading is no sign.
+  await page.waitForFunction(() => !document.querySelector('input[name="password"]'), { timeout: 15_000 })
   await waitForSettled(page)
 }
 

@@ -2506,19 +2506,19 @@ The course-purchase path is built here but verified in Phase 8. AI pages are gat
 |---|---|
 | `cd server && npm test` | 334 tests: 331 pass, 0 fail, 3 todo (the 10b permissions, P10-C8); new files `admin.matrix.test.js` (19 + 3 todo), `admin.access.test.js` (9), `admin.lists.test.js` (9) |
 | `cd server && npm run lint` | clean |
-| `cd client && npm run lint && npm run build` | lint clean after the last change; the last build ran before the final `useUrlFilters` edit (search text kept on the page), so it must run again |
+| `cd client && npm run lint && npm run build` | clean, built (after the last change) |
 | `npx oxlint .` in `e2e/` | clean |
-| `node e2e/run.js phase-10` (10a scenarios) | 9 of 9: P10-01, 02, 03, 04, 08 in one run, P10-09 (D and M) in its own run after the last fix; the final clean run of all of them is still to do |
+| `node e2e/run.js phase-10` (10a scenarios) | 9 of 9 in one clean run after the last change (P10-01, 04, 09 at 1440 and 375 px; P10-02, 03, 08 at 1440 px) |
 | `node e2e/run.js phase-4` (P10-Q2) | 21 of 24; the 3 failures were a missing `responseTo` import in P4-08 and P4-10 (the edit script added the calls, not the import), which after the fix passed 3 of 3. P4-06, the original network-idle flake, passed at 1440 and 375 px |
 | `node e2e/run.js phase-9` (P10-Q2) | 17 of 17, real OpenAI |
-| Changed Phase 2, 3 and 6 scenarios; P5-01, 04, 05, 09 and P8-04 (shared payments table, global search) | **not run yet**: the session's shell stopped starting processes (exit code 107 on every command) right after the first group seeded; nothing was checked |
-| `node e2e/run.js sweep` | **not run yet**, same reason |
+| Changed Phase 2, 3 and 6 scenarios (P2-01, 03, 06, 08, 10, 11, 16, P3-01, 07, P6-10) and P5-01, 04, 05, 09, P8-04 (shared payments table, global search) | 17 of 23 in the first run (after a session restart; the earlier attempt stopped when the shell died); the 6 failures, P2-11, P3-07 and P5-09 at 1440 and 375 px, came from the new sign-in wait (the router keeps the sign-in page on screen until the landing page's data has loaded, so its heading passed the "settled" check; `signInWithForm` now also waits for the sign-in form to go) and from P3-07's evidence preview, which loads by its own request; after the fix 6 of 6 |
+| `node e2e/run.js sweep` | D and M pass |
 
 **Fixed during the checks.** Real bugs: the search box of the four admin tables lost characters when typing fast (its text came only from the URL); two quick filter changes undid each other (React Router builds every update from the last rendered URL). Both are fixed in `lib/useUrlFilters.js`. Scenario fixes: `_id` from `/_test/db` is `{ $oid }`; `innerText` is upper-cased by CSS; puppeteer drops a body's BOM (checked from Node); Intl's no-break space; waits that matched the sidebar instead of the page; a sticky header over the search box at 375 px; a triple click does not select a search field.
 
 **Open.**
 - The new namespaces `access`, `adminUsers`, `adminPayments` and `audit` are English until Phase 11.
-- `npm run mail:test` now knows `admin_invite`; one live invite email for the owner to confirm is not sent yet (the shell stopped first).
+- `npm run mail:test` now knows `admin_invite`; no live invite email has been sent for the owner to confirm (it reaches a real inbox, so it waits for the owner's go-ahead).
 
 ### Phase 11: Translations (es, fr), formats and long-text layout
 

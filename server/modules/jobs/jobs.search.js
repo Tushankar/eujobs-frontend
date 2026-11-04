@@ -45,6 +45,9 @@ async function cardContext(user, jobs) {
   const companies = await Company.find({ _id: { $in: [...new Set(jobs.map((job) => String(job.companyId)))] } })
   const logos = await logoUrls(companies, user._id)
   const byId = new Map(companies.map((company) => [String(company._id), company]))
+  // Owner decision P10-Q8: "Verified company" while the company is approved and its recruiter is active (not suspended).
+  const activeOwners = new Set((await User.find({ _id: { $in: companies.map((company) => company.ownerUserId) }, status: 'active' }, '_id')).map((owner) => String(owner._id)))
+  const verified = (company) => Boolean(company.verifiedAt) && activeOwners.has(String(company.ownerUserId))
   const profile = await CandidateProfile.findOne({ userId: user._id }, 'skills')
   const saved = new Set((await SavedJob.find({ candidateId: user._id, jobId: { $in: jobs.map((job) => job._id) } }, 'jobId')).map((entry) => String(entry.jobId)))
   const applied = new Map(
@@ -67,7 +70,7 @@ async function cardContext(user, jobs) {
       const { matched, total } = skillOverlap(skills, job)
       return {
         ...jobFieldsDto(job),
-        company: publicCompanyDto(company, logos.get(String(company._id))),
+        company: { ...publicCompanyDto(company, logos.get(String(company._id))), verified: verified(company) },
         saved: saved.has(String(job._id)),
         // The candidate's own active application to this job (Phase 6); the Apply button reads it.
         application: applied.get(String(job._id)) ?? null,

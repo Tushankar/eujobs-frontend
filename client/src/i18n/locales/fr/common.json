@@ -32,5 +32,6 @@
     "previous": "Précédent",
     "next": "Suivant",
     "page": "Page {{page}} sur {{pages}}"
-  }
+  },
+  "verifiedCompany": "Entreprise vérifiée"
 }

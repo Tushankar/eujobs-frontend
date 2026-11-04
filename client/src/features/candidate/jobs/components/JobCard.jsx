@@ -9,6 +9,7 @@ import aiGlyph from '@/assets/icons/ai-glyph-blue.svg'
 import JobSummaryButton from '@/features/ai/components/JobSummaryButton.jsx'
 import { ApplyButton } from '@/features/candidate/applications/components/ApplyFlow.jsx'
 import { useJobText } from '@/lib/jobText.js'
+import VerifiedCompany from '@/components/common/VerifiedCompany.jsx'
 import { useFormat } from '@/lib/preferences.js'
 import JobExplanation from './JobExplanation.jsx'
 import MatchBadge from './MatchBadge.jsx'
@@ -36,7 +37,7 @@ export default function JobCard({ job, onToggleSave }) {
         <CompanyLogo name={company} id={job.company.id} src={job.company.logoUrl ?? undefined} size={44} />
         <div className={styles.headText}>
           <div className={styles.eyebrow}>
-            <span className={styles.company}>{company}</span>
+            <VerifiedCompany className={styles.company} name={company} verified={job.company.verified} />
             <MatchBadge job={job} />
             {job.accepting === false && <StatusBadge tone="warning">{t('findJobs:card.notAccepting')}</StatusBadge>}
           </div>

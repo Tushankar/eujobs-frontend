@@ -108,7 +108,7 @@ function CompanyForm({ company }) {
               {company.verifiedAt && (
                 <PillBadge tone="success">
                   <Icon as={ShieldCheck} size={10} />
-                  {t('company:verified')}
+                  {t('common:verifiedCompany')}
                 </PillBadge>
               )}
             </div>
