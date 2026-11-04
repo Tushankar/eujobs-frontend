@@ -1,6 +1,6 @@
 import { useState } from 'react'
 import { useTranslation } from 'react-i18next'
-import { Check, ChevronRight, FileText, Pause, X } from 'lucide-react'
+import { Check, ChevronRight, CircleCheck, FileText, Pause, X } from 'lucide-react'
 import { errorCode, useGetConfigQuery } from '@/app/api.js'
 import { Avatar, Button, CompanyLogo, Icon, Modal, TextareaField } from '@/components/ui'
 import PillBadge from '@/components/common/PillBadge.jsx'
@@ -102,10 +102,27 @@ export default function AccountReview({ userId, onDecided, onClose }) {
       </Button>
     ))
 
-  const summary = [
-    [dialog('email'), dialog(account.emailVerified ? 'emailVerified' : 'emailUnverified')],
-    [dialog('phone'), account.phone.e164 ? `${account.phone.e164} · ${dialog(account.phone.verified ? 'phoneConfirmed' : 'phoneUnconfirmed')}` : notProvided],
-    account.submittedAt && [dialog('submittedAt'), format.dateTime(account.submittedAt)],
+  // A passed check in green, anything else muted.
+  const check = (ok, okKey, failKey) => (
+    <span className={cx(accountStyles.checkNote, ok && accountStyles.passed)}>
+      {ok && <Icon as={CircleCheck} size={13} />}
+      {dialog(ok ? okKey : failKey)}
+    </span>
+  )
+  const contact = [
+    ['email', check(account.emailVerified, 'emailVerified', 'emailUnverified')],
+    [
+      'phone',
+      account.phone.e164 ? (
+        <>
+          <span>{account.phone.e164}</span>
+          {check(account.phone.verified, 'phoneConfirmed', 'phoneUnconfirmed')}
+        </>
+      ) : (
+        notProvided
+      ),
+    ],
+    account.submittedAt && ['submittedAt', format.dateTime(account.submittedAt)],
   ].filter(Boolean)
 
   const facts = company
@@ -141,10 +158,10 @@ export default function AccountReview({ userId, onDecided, onClose }) {
             <PillBadge tone={ACCOUNT_TONES[account.status]}>{t(`moderation:accounts.status.${account.status}`)}</PillBadge>
           </div>
 
-          <dl className={styles.summary}>
-            {summary.map(([label, value]) => (
-              <div key={label}>
-                <dt>{label}</dt>
+          <dl className={cx(accountStyles.card, accountStyles.facts, accountStyles.contact)}>
+            {contact.map(([key, value]) => (
+              <div key={key}>
+                <dt>{dialog(key)}</dt>
                 <dd>{value}</dd>
               </div>
             ))}

@@ -82,6 +82,30 @@
   color: var(--muted-foreground);
 }
 
+/* Contact checks: the facts rows as a card of their own; a value can stack a number over its check. */
+.contact {
+  padding: 2px 16px;
+}
+
+.contact dd {
+  display: flex;
+  flex-direction: column;
+  gap: 2px;
+}
+
+.checkNote {
+  display: inline-flex;
+  align-items: center;
+  gap: 5px;
+  font-size: 12px;
+  font-weight: 500;
+  color: var(--muted-foreground);
+}
+
+.passed {
+  color: var(--success-fg);
+}
+
 /* ---------- KYC documents: rows that pick the file shown in the viewer ---------- */
 
 .documents {
