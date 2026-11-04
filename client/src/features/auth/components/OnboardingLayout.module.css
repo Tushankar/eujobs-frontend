@@ -46,45 +46,46 @@
   background: var(--card);
 }
 
+/* The sidebar stays in view while the step card scrolls (the onboarding header is not sticky, so 24px from the top). */
+@media (min-width: 1024px) {
+  .sidebar {
+    position: sticky;
+    top: 24px;
+    max-height: calc(100vh - 48px);
+    overflow-y: auto;
+    scrollbar-width: none;
+  }
+
+  .sidebar::-webkit-scrollbar {
+    display: none;
+  }
+}
+
 .intro {
   padding: 24px;
   border-bottom: 1px solid var(--border);
 }
 
-.introIcon {
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  width: 40px;
-  height: 40px;
-  border-radius: var(--radius-xl);
-  background: var(--accent);
-  color: var(--primary);
-}
-
 .eyebrow {
-  padding-top: 16px;
-  font-size: 10px;
+  font-size: 12px;
   font-weight: 600;
-  line-height: 15px;
-  letter-spacing: 1px;
-  text-transform: uppercase;
-  color: var(--primary);
+  line-height: 16px;
+  color: var(--muted-foreground);
 }
 
 .title {
-  padding-top: 8px;
+  padding-top: 6px;
   font-family: var(--font-display);
-  font-size: 24px;
-  font-weight: 800;
-  line-height: 30px;
+  font-size: 22px;
+  font-weight: 700;
+  line-height: 28px;
   color: var(--foreground);
 }
 
 .description {
-  padding-top: 12px;
-  font-size: 12px;
-  line-height: 24px;
+  padding-top: 8px;
+  font-size: 13px;
+  line-height: 20px;
   color: var(--muted-foreground);
 }
 
@@ -101,16 +102,26 @@
 }
 
 .step {
+  position: relative;
   display: flex;
   align-items: center;
   gap: 12px;
   padding: 10px 12px;
-  border-radius: var(--radius-xl);
-  transition: background-color var(--duration-slow) var(--ease-out);
 }
 
-.stepCurrent {
-  background: var(--accent);
+/* A thin line joins each marker to the next; green once the step is done. */
+.step:not(:last-child)::after {
+  content: '';
+  position: absolute;
+  top: 40px;
+  bottom: -12px;
+  left: 26px;
+  width: 1px;
+  background: var(--border);
+}
+
+.stepDone:not(:last-child)::after {
+  background: #249756;
 }
 
 .marker {
@@ -147,10 +158,10 @@
 }
 
 .marker_current {
-  border-color: var(--primary);
-  background: var(--card);
+  border-color: var(--foreground);
+  background: var(--foreground);
   font-weight: 600;
-  color: var(--primary);
+  color: var(--card);
 }
 
 .marker_done {
@@ -161,15 +172,15 @@
 
 .stepLabel {
   display: block;
-  font-size: 12px;
-  line-height: 16px;
+  font-size: 13px;
+  line-height: 18px;
   color: var(--muted-foreground);
   transition: color var(--duration-slow) var(--ease-out);
 }
 
 .label_current {
   font-weight: 600;
-  color: var(--accent-foreground);
+  color: var(--foreground);
 }
 
 .label_done {
@@ -179,8 +190,8 @@
 .stepStatus {
   display: block;
   padding-top: 2px;
-  font-size: 10px;
-  line-height: 13.333px;
+  font-size: 12px;
+  line-height: 16px;
   color: var(--muted-foreground);
 }
 
@@ -194,7 +205,7 @@
 .privacyIcon {
   flex-shrink: 0;
   margin-top: 2px;
-  color: var(--primary);
+  color: var(--muted-foreground);
 }
 
 .privacyTitle {
@@ -206,8 +217,8 @@
 
 .privacyText {
   padding-top: 4px;
-  font-size: 10px;
-  line-height: 20px;
+  font-size: 12px;
+  line-height: 18px;
   color: var(--muted-foreground);
 }
 
@@ -218,13 +229,10 @@
   border: 1px solid var(--border);
   border-radius: var(--radius-xl);
   background: var(--card);
-  box-shadow:
-    0 1px 3px rgba(0, 0, 0, 0.1),
-    0 1px 2px -1px rgba(0, 0, 0, 0.1);
 }
 
 .cardHeader {
-  padding: 24px 32px;
+  padding: 20px 32px;
   border-bottom: 1px solid var(--border);
 }
 
@@ -236,33 +244,21 @@
 }
 
 .stepCount {
-  font-size: 10px;
+  font-size: 13px;
   font-weight: 600;
-  line-height: 15px;
-  letter-spacing: 1px;
-  text-transform: uppercase;
-  color: var(--primary);
+  line-height: 18px;
+  color: var(--foreground);
 }
 
 .percentBadge {
-  padding: 4px 8px;
-  border-radius: var(--radius-md);
-  background: var(--accent);
-  font-size: 10px;
-  font-weight: 500;
-  line-height: 15px;
-  color: var(--accent-foreground);
-}
-
-/* Final step: the application is waiting for review */
-.percentBadgeReview {
-  background: #fdf5e6;
-  color: #a47d2e;
+  font-size: 13px;
+  line-height: 18px;
+  color: var(--muted-foreground);
 }
 
 .track {
-  height: 6px;
-  margin-top: 16px;
+  height: 4px;
+  margin-top: 12px;
   overflow: hidden;
   border-radius: var(--radius-full);
   background: var(--muted);

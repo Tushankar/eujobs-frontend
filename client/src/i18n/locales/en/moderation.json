@@ -100,7 +100,6 @@
       "noDocuments": "No documents uploaded.",
       "submittedAt": "Submitted",
       "history": "Earlier decisions",
-      "decided": "{{decision}} by {{name}}, {{date}}",
       "decision": {
         "approved": "Approved",
         "rejected": "Rejected",

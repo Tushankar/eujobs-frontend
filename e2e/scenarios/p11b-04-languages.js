@@ -60,9 +60,10 @@ export default {
     ctx.assertClean(es.issues, 'es candidate')
 
     // French moderator: two reports of one job collapse into one unread notification with the count.
+    // The recruiter first: its account review would otherwise be a second (correct) notification for the moderator.
+    const { job } = await recruiterWithJob(`Signal${ctx.viewport}`)
     const moderator = await invitedAdmin(`Moderateur${ctx.viewport}`, (await roleWith(`Moderation fr ${ctx.viewport}`, ['moderation.manage', 'documents.view'])).id)
     await api('/me', { method: 'PATCH', token: moderator.token, body: { language: 'fr', languageExplicit: true } })
-    const { job } = await recruiterWithJob(`Signal${ctx.viewport}`)
     for (const reason of ['spam', 'misleading']) {
       const reporter = await freeCandidate(`Reporter${reason}${ctx.viewport}`, 'GB')
       await api('/reports', { method: 'POST', token: reporter.token, body: { targetType: 'job', targetId: job.id, reason, details: '' } })

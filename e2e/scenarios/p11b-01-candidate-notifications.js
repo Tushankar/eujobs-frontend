@@ -23,6 +23,11 @@ export default {
     const candidate = await completeCandidate(`BellCandidate${ctx.viewport}`)
     const { body: application } = await applyApi(candidate.token, job.id)
 
+    // The real Plus payment (Stripe webhook) is the first notification: payment received, opening Billing (P11b-Q11).
+    const [paid] = (await api('/notifications', { token: candidate.token })).body.items
+    ctx.check(paid?.type === 'payment_paid' && paid.path === '/candidate/settings/billing', `payment notification ${JSON.stringify(paid)}`)
+    await api('/notifications/read-all', { method: 'POST', token: candidate.token })
+
     const handle = await ctx.newPage()
     const { page } = handle
     await openAs(ctx, handle, candidate.email, '/candidate')

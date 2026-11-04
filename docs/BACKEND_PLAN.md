@@ -1290,6 +1290,40 @@ No other emails exist. ~~Admins receive only invite and reset emails (OD6).~~ Su
 - **Payments (OD8, M-122).** Today's paid mock payments become rows with `source: seed` and no receipt link. The mock's declined Checkout attempts are dropped, because M-122 does not record declines.
 - **Coherence.** Seeded applicants passed the apply gate: each has a complete profile with approved checks. Applicants other than Emma have one historical Plus payment (`source: seed`, no receipt link, dated before their first application) and no active subscription, which is the M-119 lapsed state (OQ-4). Seeded enrollments match their seed payments. Seeded jobs belong to approved companies, one recruiter per company (M-145).
 
+### 3.21 Notifications (Phase 11b; supersedes M-093, OD6)
+
+Owner answers P11b-Q1 … Q15.
+
+- **Store, not text.** A notification stores its type, parameters, target (`{ kind, id }`), sidebar section and, for admin types, the permission; never finished text. The client renders it in the reader's current language (`notifications` namespace, enum labels for statuses, reasons and checks).
+- **Events (P11b-Q1).** Every notification opens the exact item:
+
+  | Role | Type | Opens |
+  |---|---|---|
+  | Candidate | `application_status` (after the 10-minute window, Q8) | `/candidate/applications/:id` (the activity dialog, Q9) |
+  | Candidate, recruiter | `message` (one unread per conversation, with the count, Q6) | the conversation |
+  | Candidate | `cv_request` | CV & versions |
+  | Candidate | `verification_decided` | Verification |
+  | Candidate (Plus) | `job_alert` (at the first publish, whatever the frequency, one per job, Q15) | job details |
+  | Candidate | `payment_paid` (Plus invoices), `renewal_failed`, `plan_ended` | Billing |
+  | Candidate | `course_purchased` (Q11), `certificate_issued` | the course page (which shows the certificate) |
+  | Candidate | `content_restricted`, `content_lifted` (profile) | My profile |
+  | Recruiter | `account_decided` (approved → Overview; rejected/suspended → review page, seen once active again, Q14) | Overview / review |
+  | Recruiter | `application_new`, `application_withdrawn` | `/recruiter/applications/:id` (filtered to its job, row highlighted, Q9) |
+  | Recruiter | `cv_request_decided` (to the recruiter who asked) | the candidate's profile |
+  | Recruiter | `content_restricted`, `content_lifted` (job) | the job |
+  | Recruiter | `payment_paid` (course purchases; no "payment failed", Q11), `certificate_issued` | Billing / the course page |
+  | Admin (`moderation.manage`) | `admin_account_review` (submitted or resubmitted), `admin_verification_submitted`, `admin_content_report` (user reports; one unread per case with the count) | the Account review, verification or case item |
+  | Admin (`finance.view`) | `admin_renewal_failed` | `/admin/payments/:id` (the details dialog, Q9) |
+  | Admin (`roles.view`) | `admin_joined` (not to the new admin) | the admin's access page |
+
+- **Grouping (Q6).** While unread, a repeat of the same conversation, application status or case updates the notification (latest parameters and time, count + 1); once read, the next event starts a new one.
+- **Reading (Q2, Q10).** The bell shows the unread count and the latest 10 (`LIMITS.notifications.latest`); "See all" opens Notifications (All/Unread, Mark all as read, 20 a page). Opening a notification marks it read; opening the item from anywhere (its page, the thread) marks its notifications read too, once, when it opens (one that arrives while the page stays open stays unread until the item is opened again). Each sidebar item shows its unread count in the bell's colour; Messages keeps only the unread-messages badge and the candidate's Applications keeps its active count beside it. Counts come with `/me/counters` (15 s poll, now for admins too).
+- **Availability (Q4).** `POST /notifications/:id/open` checks that the item exists and is open to the reader (the candidate job rule of M-043, the recruiter's own company, an admin's current permission) and answers `{ available, path }`; otherwise the row says "This item is no longer available.". Direct item URLs (`/candidate/applications/:id`, `/recruiter/applications/:id`, `/admin/payments/:id`) say the same for a missing item.
+- **Visibility (Q4).** A notification is read only by its user; an admin sees an admin type only while holding its permission (checked when listing, counting and opening).
+- **Email switches (Q3, Q12).** `users.emailOff` lists the switched-off categories (all on by default): candidate Applications, Messages, CV requests, Job alerts; recruiter New applications, Messages; admin Account reviews, Verification, Content reports, Failed renewals, Admin joined. The former single toggle was copied into every category at startup. Critical and decision emails have no switch (certificate issued and content restricted/lifted stay decision emails). In-app notifications always show.
+- **Admin emails (Q4, Q7).** The five admin types email at once, in each admin's language, as non-critical mail (their switch, the daily cap, never to reserved domains). No other new emails.
+- **Retention (Q5).** A TTL index deletes a notification 90 days after its latest event.
+
 ---
 
 ## 4. Data model
@@ -1348,7 +1382,7 @@ This catalogue must exist before any schema (ordering item 2). The client has on
 
 | Collection | Key fields | Indexes | Drives |
 |---|---|---|---|
-| `users` | `role`, `email` (trimmed, lowercased), `passwordHash`, `fullName`, `status`, `isOwner`, `emailVerifiedAt`, `phone { e164, verifiedAt }`, `language`, `languageExplicit`, `pickerCountry`, `timezone`, `tokenVersion`, `legal { termsVersion, privacyVersion, acceptedAt }`, `notifyEmail` (default true), `privacy { discoverable, resumeVisible, matchingConsent }` (candidates), `onboardingCompletedAt` (candidates), `companyId` (recruiters), `adminAccess { roleId, department, granted[], removed[] }` (admins), `stripeCustomerId`, `lastLoginAt` | unique `email`; `{ role, status }` | M-001 … M-014, M-095, M-133 … M-136, M-145, M-154 … M-160, M-187, U12, U21, U37, OD3 (phone not unique), OD6 |
+| `users` | `role`, `email` (trimmed, lowercased), `passwordHash`, `fullName`, `status`, `isOwner`, `emailVerifiedAt`, `phone { e164, verifiedAt }`, `language`, `languageExplicit`, `pickerCountry`, `timezone`, `tokenVersion`, `legal { termsVersion, privacyVersion, acceptedAt }`, ~~`notifyEmail` (default true)~~ `emailOff[]` (switched-off email categories, P11b-Q12), `privacy { discoverable, resumeVisible, matchingConsent }` (candidates), `onboardingCompletedAt` (candidates), `companyId` (recruiters), `adminAccess { roleId, department, granted[], removed[] }` (admins), `stripeCustomerId`, `lastLoginAt` | unique `email`; `{ role, status }` | M-001 … M-014, M-095, M-133 … M-136, M-145, M-154 … M-160, M-187, U12, U21, U37, OD3 (phone not unique), OD6 |
 | `emailtokens` | `userId`, `purpose` (`verify_email`, `reset_password`, `admin_invite`), `tokenHash`, `expiresAt`, `usedAt` | unique `tokenHash`; TTL on `expiresAt` + 7 days | M-001, M-009, U21 |
 | `verificationcodes` | `userId`, `channel` (`email`, `phone`), `target`, `codeHash`, `expiresAt`, `attempts`, `sentAt`, `consumedAt` | TTL; `{ userId, channel }` | M-002 … M-004 |
 | `countries` | `code` (ISO2 or `REMOTE`), `currency`, `defaultLanguage`, `isRemote`, `order`, `enabled` | unique `code` | M-139, M-130, M-134 |
@@ -1419,6 +1453,7 @@ This catalogue must exist before any schema (ordering item 2). The client has on
 | `aiusages` | `userId`, `day` (UTC YYYY-MM-DD), `count` | unique pair | OD13 |
 | `moderationcases` | `targetType`, `targetId`, `reports [{ reporterId, reason, details, at }]`, `excerpt [{ senderRole, body, at }]`, `status`, `decision { action, reason, by, at }`, `history[]`, `openedBy` (`user`, `admin`) | `{ status, createdAt }`; `{ targetType, targetId }` | M-164, M-167, U20, OQ-1 |
 | `reportexports` | `type`, `period`, `language`, `brief`, `voiceFileId`, `transcript`, `aiSummary`, `csvFileId`, `filename`, `createdBy`, `generatedAt` | `generatedAt` | M-181 … M-183, U23 |
+| `notifications` | `userId`, `type`, `params`, `target { kind, id }`, `section`, `permission` (admin types), `groupKey`, `count`, `at`, `readAt` | `{ userId, at: -1 }`; `{ userId, readAt, section }`; `{ userId, groupKey, readAt }`; TTL on `at` (90 days) | §3.21, P11b |
 
 ### 4.3 Unique indexes and TTL (ordering item 16)
 
@@ -1428,7 +1463,7 @@ Created at startup with `syncIndexes`, before any data. These are the unique ind
 - Pairs and triples: `savedjobs`, `shortlistentries`, `candidatenotes`, `conversations`, `profileviews`, `enrollments`, `aicaches`, `aiusages`, `matchresults`, `embeddings`.
 - `applications` (partial), `emailtokens.tokenHash`, `countries.code`, `plans.key`, `permissions.id`, `adminroles.nameLower`, `matchingpolicies` active (partial), `jobruns.name`, `scheduledtasks.key` (partial), `legaldocuments`.
 
-TTL indexes on `emailtokens` and `verificationcodes`.
+TTL indexes on `emailtokens`, `verificationcodes` and `notifications` (90 days after `at`, P11b-Q5).
 
 ---
 
@@ -1453,8 +1488,10 @@ All paths are under `/api/v1`. **Who:**
 | POST `/auth/forgot-password` · POST `/auth/reset-password` | Pub | neutral 202; reset returns `{ role }` (M-009) |
 | GET `/auth/invite/:token` · POST `/auth/invite/accept` | Pub | check the invite; set the password (U21) |
 | GET `/me` · PATCH `/me` | Any | profile of the session (role, status, plan, entitlements, completeness, company, permissions, legal flags); `{ fullName, language, pickerCountry, timezone }` |
-| POST `/me/password` · POST `/me/legal/accept` · PATCH `/me/notifications` | Any (notifications: C, R) | M-010, M-191/U22, M-095 |
-| GET `/me/counters` | C, R✓ | unread messages, active applications (M-094) |
+| POST `/me/password` · POST `/me/legal/accept` · PATCH `/me/notifications` | Any | M-010, M-191/U22; notifications: `{ emailSwitches: { category: bool } }` for every role (P11b-Q3, Q12) |
+| GET `/me/counters` | C, R✓, A | unread messages, active applications (M-094); `notifications { unread, sections }` (P11b-Q2) |
+| GET `/notifications?filter=all\|unread&page&pageSize` · POST `/notifications/:id/open` · POST `/notifications/read-all` · POST `/notifications/seen { kind, id }` | Any (own only) | list, open (`{ available, path }`), mark all read, mark an opened item's notifications read (§3.21) |
+| GET `/recruiter/applications/:id` | R✓ | one own row, any status (P11b-Q9) |
 | GET `/me/payments` | C, R✓ | own payments with receipt links (M-122) |
 | GET `/me/export` · DELETE `/me` | C, R | ZIP export (M-190); erasure with the password (M-188, M-189) |
 
@@ -2699,6 +2736,30 @@ The course-purchase path is built here but verified in Phase 8. AI pages are gat
 - Live emails waiting for the owner's confirmation: `content_restricted`, `content_restriction_lifted` (sent 2026-11-04), and `admin_invite` (sent earlier).
 - Phase 12: if erasure leaves payments without a payer role, admin Payments must show it without `enums:role.null` (P11-02 found this with a row without `payerRole`; no such row can exist today).
 - Two orphan mock files for Phase 12 (P11-C4).
+
+### Phase 11b: Notifications (candidate, recruiter, admin)
+
+**Scope.** In-app notifications for the three roles with deep links, the bell dropdown, a Notifications page per role, per-section sidebar counts, per-category email switches for every role and the five admin emails (§3.21). Supersedes M-093/OD6.
+
+**Decisions.** P11b-Q1 … Q15 (owner, 2026-11-04), M-089, M-091, OD14, U13, U33, OQ-6c.
+
+**Tasks**
+
+1. Server: `modules/notifications` (model, service, routes), catalogue entries (`NOTIFICATION_TYPES`, `EMAIL_CATEGORY`, `EMAIL_CATEGORIES`, five admin email types, `LIMITS.notifications`), hooks at every event of §3.21, `users.emailOff` with the startup copy of the old toggle, the mailer's per-category check, `/me/counters` for admins, `GET /recruiter/applications/:id`, `seed:demo` notifications (Q13), mail samples.
+2. Client: the bell and dropdown, the Notifications page in each workspace, sidebar section counts, the email switches in the three Settings pages, item URLs (Q9), "seen" on every item page (Q10), the `notifications` namespace and enum labels in en/es/fr.
+3. Update P2-12 (bell), P2-16 (switches) and P6-10 (the Applications switch; the in-app notification still comes).
+
+**Browser verification**
+
+| # | Scenario | Viewports | Expected |
+|---|---|---|---|
+| P11b-01 | Candidate | D, M | A status change (after 10 min) and a message: bell 2, Applications accent count beside the active count, Messages only its own badge; the dropdown lists both; the status opens the activity dialog, the message the thread; counts clear; the page shows both read and an empty Unread view; the Messages switch saves. |
+| P11b-02 | Recruiter | D, M | "Account approved" opens the Overview; a new application opens the list filtered to its job with the row highlighted; a withdrawal is listed unread; Mark all as read clears the bell; the New applications switch saves. |
+| P11b-03 | Admin | D, M | Evidence submitted: the moderation admin gets bell, Moderation count and email; the notification opens the verification item; a finance-only admin gets nothing; the Verification switch saves in admin Settings. |
+| P11b-04 | es and fr | D, M | A Spanish candidate's two verification decisions and a French moderator's grouped report (2 reports) read in their language with no English left and a clean layout; opening clears the counts; the French switches. |
+| P11b-05 | No longer available | D, M | A notification of a deleted item says "This item is no longer available." and is marked read; direct links to a missing application (candidate, recruiter) and payment say the same; no 403 page, no crash. |
+
+**API tests.** `notifications.test.js` (every event to the right users only, admins without the permission get nothing, grouping, the 10-minute status rule, reading, counts, mark all read, seen, visibility, unavailable items, the deep links, the switches and the always-on emails, the old toggle's copy) and the payment notifications in `payments.test.js`.
 
 ### Phase 12: GDPR export and erasure, retention, full regression
 

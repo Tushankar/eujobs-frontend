@@ -4,6 +4,7 @@ import { Lock, Users } from 'lucide-react'
 import { errorCode } from '@/app/api.js'
 import { CompanyLogo } from '@/components/ui'
 import EmptyState from '@/components/common/EmptyState.jsx'
+import PillBadge from '@/components/common/PillBadge.jsx'
 import SectionTitle from '@/components/common/SectionTitle.jsx'
 import SegmentedTabs from '@/components/common/SegmentedTabs.jsx'
 import { useFormat } from '@/lib/preferences.js'
@@ -48,6 +49,7 @@ export default function AccountQueue({ basePath, openId, status, onStatusChange,
                 icon={Users}
                 media={item.company && <CompanyLogo name={item.company.displayName} id={item.company.id} src={item.company.logoUrl ?? undefined} size={44} />}
                 title={item.fullName}
+                badge={<PillBadge tone="neutral">{t('enums:role.recruiter')}</PillBadge>}
                 lines={[
                   { text: [item.email, item.company?.legalName, item.company?.countryCode && format.country(item.company.countryCode)].filter(Boolean).join(' · '), tone: 'sub' },
                   {

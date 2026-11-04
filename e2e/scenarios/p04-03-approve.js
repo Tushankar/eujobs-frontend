@@ -24,8 +24,25 @@ export default {
     await (await row.asElement().$('a')).click()
     await waitForText(page, 'Phone confirmed on screen (no SMS)')
     await waitForText(page, recruiter.company.legalName)
-    await page.waitForFunction(() => [...document.querySelectorAll('[role="dialog"] a')].some((link) => link.textContent.includes('kyc-identity.pdf')))
-    await page.waitForSelector('[role="dialog"] img')
+    // The first KYC file opens in the viewer; picking the registration row shows the image.
+    await page.waitForSelector('[role="dialog"] [data-document-viewer] [title="kyc-identity.pdf"]')
+    await page.waitForSelector('[role="dialog"] [data-document-viewer] iframe')
+    await clickText(page, 'Registration certificate', '[role="dialog"] button')
+    await page.waitForSelector('[role="dialog"] [data-document-viewer] img')
+    if (ctx.viewport === 'D') {
+      // The document stays pinned and wholly visible while the details column scrolls.
+      const pinned = await page.evaluate(() => {
+        const viewer = document.querySelector('[role="dialog"] [data-document-viewer]')
+        let body = viewer.parentElement
+        while (getComputedStyle(body).overflowY !== 'auto') body = body.parentElement
+        const before = viewer.getBoundingClientRect().top
+        body.scrollTop = body.scrollHeight
+        const after = viewer.getBoundingClientRect()
+        const frame = body.getBoundingClientRect()
+        return { scrolled: body.scrollTop > 0, moved: Math.abs(after.top - before), inside: after.top >= frame.top && after.bottom <= frame.bottom }
+      })
+      ctx.check(pinned.scrolled && pinned.moved < 1 && pinned.inside, `the document stays pinned in view (${JSON.stringify(pinned)})`)
+    }
     await owner.checkOverflow()
     await ctx.screenshot(page, '2-review')
     await clickText(page, 'Approve', '[role="dialog"] button')

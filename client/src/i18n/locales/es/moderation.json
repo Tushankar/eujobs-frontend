@@ -101,7 +101,6 @@
       "noDocuments": "No se ha subido ningún documento.",
       "submittedAt": "Enviada",
       "history": "Decisiones anteriores",
-      "decided": "{{decision}} por {{name}}, {{date}}",
       "decision": {
         "approved": "Aprobada",
         "rejected": "Rechazada",

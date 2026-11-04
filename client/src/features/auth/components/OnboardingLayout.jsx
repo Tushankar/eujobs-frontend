@@ -1,7 +1,7 @@
 import { useState } from 'react'
 import { useTranslation } from 'react-i18next'
 import { Link, Navigate, Outlet, useLocation, useNavigate } from 'react-router-dom'
-import { Building2, Check, LogOut, ShieldCheck } from 'lucide-react'
+import { Check, LogOut, ShieldCheck } from 'lucide-react'
 import { cx } from '@/utils/cx.js'
 import { Button, Icon } from '@/components/ui'
 import { BRAND } from '@/app/brand.js'
@@ -10,8 +10,6 @@ import BrandLogo from '@/components/layout/BrandLogo.jsx'
 import { useGetOnboardingQuery } from '../api.js'
 import { ONBOARDING_STEPS } from '../data/onboarding.js'
 import styles from './OnboardingLayout.module.css'
-
-const REVIEW_INDEX = ONBOARDING_STEPS.length - 1
 
 /**
  * Shell of the recruiter onboarding (Figma frames "Account registration" to "Admin review & approval"): header,
@@ -39,7 +37,6 @@ export default function OnboardingLayout() {
   }
 
   const percent = ((currentIndex + 1) / ONBOARDING_STEPS.length) * 100
-  const isLastStep = currentIndex === REVIEW_INDEX
 
   function stepState(step, index) {
     if (index === currentIndex) return 'current'
@@ -70,9 +67,6 @@ export default function OnboardingLayout() {
       <main className={styles.main}>
         <aside className={styles.sidebar}>
           <div className={styles.intro}>
-            <span className={styles.introIcon}>
-              <Icon as={Building2} size={19} />
-            </span>
             <p className={styles.eyebrow}>{t('auth:onboarding.eyebrow')}</p>
             <h1 className={styles.title}>{t('auth:onboarding.title')}</h1>
             <p className={styles.description}>{t('auth:onboarding.description')}</p>
@@ -83,7 +77,7 @@ export default function OnboardingLayout() {
               {ONBOARDING_STEPS.map((step, index) => {
                 const status = stepState(step, index)
                 return (
-                  <li key={step.id} className={cx(styles.step, status === 'current' && styles.stepCurrent)} aria-current={status === 'current' ? 'step' : undefined}>
+                  <li key={step.id} className={cx(styles.step, status === 'done' && styles.stepDone)} aria-current={status === 'current' ? 'step' : undefined}>
                     <span className={cx(styles.marker, styles[`marker_${status}`])}>
                       {status === 'done' ? <Icon as={Check} size={13} strokeWidth={2.2} className={styles.markerCheck} /> : index + 1}
                     </span>
@@ -112,7 +106,7 @@ export default function OnboardingLayout() {
               <p className={styles.stepCount} key={currentIndex}>
                 {t('auth:onboarding.stepCount', { current: currentIndex + 1, total: ONBOARDING_STEPS.length })}
               </p>
-              <span className={cx(styles.percentBadge, isLastStep && styles.percentBadgeReview)} key={`percent-${currentIndex}`}>
+              <span className={styles.percentBadge} key={`percent-${currentIndex}`}>
                 {t('auth:onboarding.percent', { percent })}
               </span>
             </div>

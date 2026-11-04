@@ -1,6 +1,6 @@
 import { useState } from 'react'
 import { useTranslation } from 'react-i18next'
-import { Check, Pause, X } from 'lucide-react'
+import { Check, ChevronRight, FileText, Pause, X } from 'lucide-react'
 import { errorCode, useGetConfigQuery } from '@/app/api.js'
 import { Avatar, Button, CompanyLogo, Icon, Modal, TextareaField } from '@/components/ui'
 import PillBadge from '@/components/common/PillBadge.jsx'
@@ -9,7 +9,7 @@ import { useFormat } from '@/lib/preferences.js'
 import { cx } from '@/utils/cx.js'
 import { useDecideAccountMutation, useGetAccountQuery } from '../api.js'
 import { ACCOUNT_TONES } from '../tones.js'
-import FilePreview from './FilePreview.jsx'
+import DocumentViewer from './DocumentViewer.jsx'
 import dialogStyles from './ReviewDialog.module.css'
 import detailStyles from './ReviewDetails.module.css'
 import styles from './VerificationReview.module.css'
@@ -17,11 +17,12 @@ import accountStyles from './AccountReview.module.css'
 import { useMarkSeen } from '@/features/notifications/api.js'
 
 const ICONS = { approved: Check, rejected: X, suspended: Pause }
+const DECISION_TONES = { approved: 'success', rejected: 'danger', suspended: 'danger' }
 
 /**
- * Review dialog of one recruiter (§3.12, M-165, OQ-2): applicant, company record, contact checks, KYC files
- * (`documents.view`), dates and earlier decisions; then the decisions the server allows for this status, with a
- * reason (required for Reject and Suspend, ≤ 300, P4-D4).
+ * Review dialog of one recruiter (§3.12, M-165, OQ-2): the selected KYC file on the left (`documents.view`);
+ * applicant, contact checks, company record, documents and earlier decisions on the right; the decisions the server
+ * allows for this status in the footer, with a reason (required for Reject and Suspend, ≤ 300, P4-D4).
  */
 export default function AccountReview({ userId, onDecided, onClose }) {
   // P11b-Q10: opening this item marks its notifications read.
@@ -36,6 +37,7 @@ export default function AccountReview({ userId, onDecided, onClose }) {
   const [reason, setReason] = useState('')
   const [reasonError, setReasonError] = useState(null)
   const [failure, setFailure] = useState(null)
+  const [selectedId, setSelectedId] = useState(null)
   const max = config?.limits.accountDecisionReason.max
   const dialog = (key, params) => t(`moderation:accounts.dialog.${key}`, params)
   // Approving a suspended account reactivates it (OQ-2).
@@ -56,152 +58,198 @@ export default function AccountReview({ userId, onDecided, onClose }) {
     }
   }
 
-  let body
-  if (!account) body = <p className={detailStyles.contextText}>{error ? errorText.code(error) : t('common:loading')}</p>
-  else if (pending)
-    body = (
-      <div>
-        <h3 className={dialogStyles.confirmTitle}>{dialog(`confirm.${actionKey(pending)}.title`)}</h3>
-        <p className={dialogStyles.confirmText}>{dialog(`confirm.${actionKey(pending)}.text`)}</p>
-        <TextareaField
-          className={dialogStyles.reason}
-          label={dialog(reasonRequired ? 'reasonLabel' : 'reasonOptional')}
-          name="reason"
-          hint={dialog('reasonHint', { max })}
-          value={reason}
-          onChange={(event) => {
-            setReason(event.target.value)
-            setReasonError(null)
-          }}
-          error={errorText.field('decisionReason', reasonError)}
-          rows={3}
-          data-autofocus
-        />
-        {failure && (
-          <p className={styles.failure} role="alert">
-            {errorText.code(failure)}
-          </p>
-        )}
-        <div className={dialogStyles.actions}>
-          <Button variant="outline" onClick={() => setPending(null)}>
-            {dialog('back')}
-          </Button>
-          <Button variant={pending === 'approved' ? 'primary' : 'danger'} loading={isLoading} onClick={confirm}>
-            {dialog(`confirm.${actionKey(pending)}.button`)}
-          </Button>
-        </div>
-      </div>
-    )
-  else {
-    const { company } = account
-    const notProvided = dialog('notProvided')
-    const facts = company
-      ? [
-          ['legalName', company.legalName],
-          ['displayName', company.displayName],
-          ['website', company.website],
-          ['businessEmail', company.businessEmail],
-          ['industry', company.industry],
-          ['size', company.size && t(`enums:companySize.${company.size}`)],
-          ['location', company.location && t('common:city.value', { city: company.location.city, country: format.country(company.location.countryCode) })],
-          ['businessAddress', company.businessAddress],
-          ['registrationDetails', company.registrationDetails],
-        ]
-      : []
-    body = (
-      <div>
-        <div className={styles.candidate}>
-          {company ? <CompanyLogo name={company.displayName} id={company.id} src={company.logoUrl ?? undefined} size={44} /> : <Avatar name={account.fullName} size={44} />}
-          <div>
-            <h3 className={detailStyles.accountName}>{account.fullName}</h3>
-            <p className={detailStyles.accountMeta}>{[account.jobTitle, account.email].filter(Boolean).join(' · ')}</p>
-          </div>
-          <PillBadge tone={ACCOUNT_TONES[account.status]}>{t(`moderation:accounts.status.${account.status}`)}</PillBadge>
-        </div>
-        <dl className={detailStyles.facts}>
-          <dt>{dialog('email')}</dt>
-          <dd>{dialog(account.emailVerified ? 'emailVerified' : 'emailUnverified')}</dd>
-          <dt>{dialog('phone')}</dt>
-          <dd>{account.phone.e164 ? `${account.phone.e164} · ${dialog(account.phone.verified ? 'phoneConfirmed' : 'phoneUnconfirmed')}` : notProvided}</dd>
-          {account.submittedAt && (
-            <>
-              <dt>{dialog('submittedAt')}</dt>
-              <dd>{format.dateTime(account.submittedAt)}</dd>
-            </>
-          )}
-        </dl>
-        {company && (
-          <div className={detailStyles.context}>
-            <p className={detailStyles.eyebrow}>{dialog('company')}</p>
-            <dl className={cx(detailStyles.facts, accountStyles.facts)}>
-              {facts.map(([key, value]) => (
-                <div key={key} className={accountStyles.fact}>
-                  <dt>{dialog(key)}</dt>
-                  <dd>{value || notProvided}</dd>
-                </div>
-              ))}
-            </dl>
-          </div>
-        )}
-        <div className={detailStyles.context}>
-          <p className={detailStyles.eyebrow}>{dialog('documents')}</p>
-          {account.documents.length === 0 && <p className={detailStyles.contextText}>{dialog('noDocuments')}</p>}
-          <ul className={accountStyles.documents}>
-            {account.documents.map((document) => (
-              <li key={document.id}>
-                <p className={detailStyles.contextText}>
-                  <strong>{dialog(`documentType.${document.type}`)}</strong> · {format.date(document.uploadedAt)}
-                </p>
-                {document.fileId ? (
-                  <FilePreview file={{ id: document.fileId, name: document.name, mime: document.mime }} />
-                ) : (
-                  <p className={detailStyles.contextText}>{dialog('fileDeleted')}</p>
-                )}
-              </li>
-            ))}
-          </ul>
-        </div>
-        {account.history.length > 0 && (
-          <div className={styles.history}>
-            <p className={detailStyles.eyebrow}>{dialog('history')}</p>
-            <ul>
-              {account.history.map((entry) => (
-                <li key={`${entry.decision}-${entry.at}`}>
-                  {dialog('decided', { decision: dialog(`decision.${entry.decision}`), name: entry.by ?? '', date: format.dateTime(entry.at) })}
-                  {entry.reason && ` · ${dialog('reason', { reason: entry.reason })}`}
-                </li>
-              ))}
-            </ul>
-          </div>
-        )}
-        {account.actions.length === 0 ? (
-          account.status === 'rejected' && <p className={dialogStyles.previous}>{dialog('noActions')}</p>
-        ) : (
-          <div className={dialogStyles.actions}>
-            {account.actions.map((decision) => (
-              <Button
-                key={decision}
-                variant={decision === 'approved' ? 'primary' : 'outline'}
-                className={decision === 'approved' ? undefined : dialogStyles.danger}
-                leftIcon={<Icon as={ICONS[decision]} size={13} />}
-                onClick={() => {
-                  setPending(decision)
-                  setReason('')
-                  setReasonError(null)
-                }}
-              >
-                {dialog(`action.${actionKey(decision)}`)}
-              </Button>
-            ))}
-          </div>
-        )}
-      </div>
+  if (!account) {
+    return (
+      <Modal open onClose={onClose} title={dialog('title')} width={600}>
+        <p className={detailStyles.contextText}>{error ? errorText.code(error) : t('common:loading')}</p>
+      </Modal>
     )
   }
 
+  const { company } = account
+  const notProvided = dialog('notProvided')
+  // The viewer shows one stored file at a time; deleted files (M-186) stay listed without a preview.
+  const stored = account.documents.filter((document) => document.fileId)
+  const shown = stored.find((document) => document.id === selectedId) ?? stored[0]
+
+  let footer = null
+  if (pending)
+    footer = (
+      <>
+        <Button variant="secondary" onClick={() => setPending(null)}>
+          {dialog('back')}
+        </Button>
+        <Button variant={pending === 'approved' ? 'primary' : 'danger'} loading={isLoading} onClick={confirm}>
+          {dialog(`confirm.${actionKey(pending)}.button`)}
+        </Button>
+      </>
+    )
+  else if (account.actions.length > 0)
+    footer = account.actions.map((decision) => (
+      <Button
+        key={decision}
+        variant={decision === 'approved' ? 'primary' : 'outline'}
+        className={decision === 'approved' ? undefined : dialogStyles.danger}
+        leftIcon={<Icon as={ICONS[decision]} size={13} />}
+        onClick={() => {
+          setPending(decision)
+          setReason('')
+          setReasonError(null)
+          setFailure(null)
+        }}
+      >
+        {dialog(`action.${actionKey(decision)}`)}
+      </Button>
+    ))
+
+  const summary = [
+    [dialog('email'), dialog(account.emailVerified ? 'emailVerified' : 'emailUnverified')],
+    [dialog('phone'), account.phone.e164 ? `${account.phone.e164} · ${dialog(account.phone.verified ? 'phoneConfirmed' : 'phoneUnconfirmed')}` : notProvided],
+    account.submittedAt && [dialog('submittedAt'), format.dateTime(account.submittedAt)],
+  ].filter(Boolean)
+
+  const facts = company
+    ? [
+        ['legalName', company.legalName],
+        ['businessEmail', company.businessEmail],
+        ['industry', company.industry],
+        ['size', company.size && t(`enums:companySize.${company.size}`)],
+        ['location', company.location && t('common:city.value', { city: company.location.city, country: format.country(company.location.countryCode) })],
+        ['businessAddress', company.businessAddress],
+        ['registrationDetails', company.registrationDetails],
+      ]
+    : []
+
   return (
-    <Modal open onClose={onClose} title={dialog('title')} width={600} divided>
-      {body}
+    <Modal open onClose={onClose} title={dialog('title')} width={shown ? 1040 : 600} footer={footer}>
+      <div className={cx(styles.review, shown && styles.withFile)}>
+        {shown && (
+          <div className={styles.document}>
+            <DocumentViewer key={shown.id} file={{ id: shown.fileId, name: shown.name, mime: shown.mime }} />
+          </div>
+        )}
+        <div className={styles.details}>
+          <div className={styles.person}>
+            <Avatar name={account.fullName} size={44} />
+            <div className={styles.personText}>
+              <div className={accountStyles.nameRow}>
+                <h3 className={styles.personName}>{account.fullName}</h3>
+                <PillBadge tone="neutral">{t('enums:role.recruiter')}</PillBadge>
+              </div>
+              <p className={styles.personEmail}>{[account.jobTitle, account.email].filter(Boolean).join(' · ')}</p>
+            </div>
+            <PillBadge tone={ACCOUNT_TONES[account.status]}>{t(`moderation:accounts.status.${account.status}`)}</PillBadge>
+          </div>
+
+          <dl className={styles.summary}>
+            {summary.map(([label, value]) => (
+              <div key={label}>
+                <dt>{label}</dt>
+                <dd>{value}</dd>
+              </div>
+            ))}
+          </dl>
+
+          {company && (
+            <section className={accountStyles.card}>
+              <div className={accountStyles.companyHead}>
+                <CompanyLogo name={company.displayName} id={company.id} src={company.logoUrl ?? undefined} size={40} />
+                <div className={styles.personText}>
+                  <p className={accountStyles.companyName}>{company.displayName}</p>
+                  {company.website ? (
+                    <a className={accountStyles.website} href={company.website} target="_blank" rel="noopener noreferrer">
+                      {company.website.replace(/^https?:\/\//, '').replace(/\/$/, '')}
+                    </a>
+                  ) : (
+                    <p className={styles.personEmail}>{notProvided}</p>
+                  )}
+                </div>
+              </div>
+              <p className={accountStyles.cardLabel}>{dialog('company')}</p>
+              <dl className={accountStyles.facts}>
+                {facts.map(([key, value]) => (
+                  <div key={key}>
+                    <dt>{dialog(key)}</dt>
+                    <dd className={cx(!value && accountStyles.missing)}>{value || notProvided}</dd>
+                  </div>
+                ))}
+              </dl>
+            </section>
+          )}
+
+          <div>
+            <p className={styles.sectionLabel}>{dialog('documents')}</p>
+            {account.documents.length === 0 ? (
+              <p className={styles.decided}>{dialog('noDocuments')}</p>
+            ) : (
+              <ul className={accountStyles.documents}>
+                {account.documents.map((document) => (
+                  <li key={document.id}>
+                    <button
+                      type="button"
+                      className={cx(accountStyles.document, document.id === shown?.id && accountStyles.selected)}
+                      disabled={!document.fileId}
+                      aria-pressed={document.id === shown?.id}
+                      onClick={() => setSelectedId(document.id)}
+                    >
+                      <Icon as={FileText} size={16} />
+                      <span className={accountStyles.documentText}>
+                        <span className={accountStyles.documentType}>{dialog(`documentType.${document.type}`)}</span>
+                        <span className={accountStyles.documentMeta}>{document.fileId ? `${document.name} · ${format.date(document.uploadedAt)}` : dialog('fileDeleted')}</span>
+                      </span>
+                      {document.fileId && <Icon as={ChevronRight} size={14} />}
+                    </button>
+                  </li>
+                ))}
+              </ul>
+            )}
+          </div>
+
+          {account.history.length > 0 && (
+            <div>
+              <p className={styles.sectionLabel}>{dialog('history')}</p>
+              <ul className={styles.timeline}>
+                {account.history.map((entry) => (
+                  <li key={`${entry.decision}-${entry.at}`}>
+                    <PillBadge tone={DECISION_TONES[entry.decision]}>{dialog(`decision.${entry.decision}`)}</PillBadge>
+                    <span>
+                      {[entry.by, format.dateTime(entry.at)].filter(Boolean).join(' · ')}
+                      {entry.reason && ` · ${dialog('reason', { reason: entry.reason })}`}
+                    </span>
+                  </li>
+                ))}
+              </ul>
+            </div>
+          )}
+
+          {account.actions.length === 0 && account.status === 'rejected' && <p className={styles.decided}>{dialog('noActions')}</p>}
+
+          {pending && (
+            <div className={cx(styles.confirm, pending !== 'approved' && styles.confirmReject)}>
+              <h3 className={styles.confirmTitle}>{dialog(`confirm.${actionKey(pending)}.title`)}</h3>
+              <p className={styles.confirmText}>{dialog(`confirm.${actionKey(pending)}.text`)}</p>
+              <TextareaField
+                label={dialog(reasonRequired ? 'reasonLabel' : 'reasonOptional')}
+                name="reason"
+                hint={dialog('reasonHint', { max })}
+                value={reason}
+                onChange={(event) => {
+                  setReason(event.target.value)
+                  setReasonError(null)
+                }}
+                error={errorText.field('decisionReason', reasonError)}
+                rows={3}
+                data-autofocus
+              />
+              {failure && (
+                <p className={styles.failure} role="alert">
+                  {errorText.code(failure)}
+                </p>
+              )}
+            </div>
+          )}
+        </div>
+      </div>
     </Modal>
   )
 }

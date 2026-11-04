@@ -1,58 +1,63 @@
-.result {
-  display: flex;
-  align-items: center;
-  gap: 24px;
-  padding-top: 48px;
-}
+/* ---------- Status: neutral icon, title with the status badge, text and date ---------- */
 
 .status {
   display: flex;
-  flex-shrink: 0;
-  flex-direction: column;
-  align-items: center;
+  align-items: flex-start;
   gap: 16px;
+  margin-top: 28px;
+  padding: 20px 24px;
+  border: 1px solid var(--border);
+  border-radius: var(--radius-xl);
+  background: var(--card);
 }
 
 .statusIcon {
+  flex-shrink: 0;
+  margin-top: 2px;
+  color: var(--muted-foreground);
+}
+
+.statusBody {
+  flex: 1;
+  min-width: 0;
+}
+
+.statusHead {
   display: flex;
+  flex-wrap: wrap;
   align-items: center;
-  justify-content: center;
-  width: 64px;
-  height: 64px;
-  border-radius: 16px;
-  background: var(--accent);
-  color: var(--primary);
+  gap: 6px 12px;
 }
 
-.statusBadge {
-  padding: 4px 8px;
-  border-radius: var(--radius-md);
-  background: #fdf5e6;
-  font-size: 10px;
-  font-weight: 500;
-  line-height: 15px;
-  color: #a47d2e;
+.statusTitle {
+  font-family: var(--font-display);
+  font-size: 20px;
+  font-weight: 700;
+  line-height: 28px;
+  color: var(--foreground);
 }
 
-/* Rejected and suspended use the destructive tone */
-.statusIconAlert {
-  background: #fdeceb;
-  color: var(--destructive);
+.statusText {
+  max-width: 600px;
+  padding-top: 6px;
+  font-size: 14px;
+  line-height: 22px;
+  color: var(--muted-foreground);
 }
 
-.statusBadgeAlert {
-  background: #fdeceb;
-  color: var(--destructive);
+.meta {
+  padding-top: 8px;
+  font-size: 12px;
+  line-height: 18px;
+  color: var(--muted-foreground);
 }
 
+/* The admin's reason: the one thing to act on, so a dark left rule. */
 .reason {
-  display: flex;
-  flex-direction: column;
-  gap: 4px;
-  max-width: 576px;
-  margin-top: 16px;
+  margin-top: 14px;
   padding: 12px 16px;
-  border-radius: var(--radius-xl);
+  border-left: 3px solid var(--foreground);
+  border-radius: var(--radius-md);
   background: var(--muted);
   font-size: 13px;
   font-weight: 600;
@@ -61,16 +66,140 @@
   overflow-wrap: anywhere;
 }
 
-.reasonDate {
-  padding-top: 8px;
-  font-size: 12px;
+.reason .meta {
+  padding-top: 2px;
   font-weight: 400;
+}
+
+/* ---------- Your application: company header, then label/value rows with hairline dividers ---------- */
+
+.application {
+  margin-top: 16px;
+  border: 1px solid var(--border);
+  border-radius: var(--radius-xl);
+  background: var(--card);
+}
+
+.sectionTitle {
+  padding: 18px 24px 0;
+  font-size: 16px;
+  font-weight: 700;
+  line-height: 24px;
+  color: var(--foreground);
+}
+
+.company {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  padding: 14px 24px 16px;
+  border-bottom: 1px solid var(--border);
+}
+
+.companyText {
+  min-width: 0;
+}
+
+.companyName {
+  font-size: 15px;
+  font-weight: 600;
+  line-height: 22px;
+  color: var(--foreground);
+  overflow-wrap: anywhere;
+}
+
+.companyMeta {
+  font-size: 13px;
   line-height: 18px;
   color: var(--muted-foreground);
 }
 
-.reason .reasonDate {
-  padding-top: 0;
+.rows {
+  margin: 0;
+  padding: 0 24px 4px;
+}
+
+.row {
+  display: grid;
+  grid-template-columns: 160px minmax(0, 1fr);
+  gap: 16px;
+  align-items: start;
+  padding: 14px 0;
+  border-top: 1px solid var(--border);
+  font-size: 13px;
+  line-height: 20px;
+}
+
+.row:first-child {
+  border-top: 0;
+}
+
+.row dt {
+  color: var(--muted-foreground);
+}
+
+.row dd {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: 4px 12px;
+  margin: 0;
+  min-width: 0;
+}
+
+.value {
+  font-weight: 600;
+  color: var(--foreground);
+  overflow-wrap: anywhere;
+}
+
+.person {
+  display: inline-flex;
+  align-items: center;
+  gap: 10px;
+  min-width: 0;
+}
+
+/* Colour only for status: a passed check is green. */
+.check {
+  display: inline-flex;
+  align-items: center;
+  gap: 4px;
+  font-size: 12px;
+  font-weight: 500;
+  color: var(--success-fg);
+}
+
+.documents {
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
+  width: 100%;
+  margin: 0;
+  list-style: none;
+}
+
+.documents li {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  min-width: 0;
+  color: var(--muted-foreground);
+}
+
+.fileName {
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+  font-size: 12px;
+}
+
+.access {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  font-weight: 600;
+  color: var(--foreground);
 }
 
 .error {
@@ -80,85 +209,31 @@
   color: var(--destructive);
 }
 
-.resultTitle {
-  padding-top: 20px;
-  font-family: var(--font-display);
-  font-size: 30px;
-  font-weight: 800;
-  line-height: 36px;
-  color: var(--foreground);
-}
-
-.resultText {
-  max-width: 576px;
-  padding-top: 16px;
-  font-size: 14px;
-  line-height: 28px;
-  color: var(--muted-foreground);
-}
-
-.summary {
-  display: grid;
-  grid-template-columns: repeat(2, minmax(0, 1fr));
-  gap: 12px;
-  margin: 0;
-  padding-top: 24px;
-}
-
-.summaryItem {
-  min-width: 0;
-  padding: 16px;
-  border: 1px solid var(--border);
-  border-radius: var(--radius-xl);
-  background: var(--muted);
-}
-
-.summaryLabel {
-  font-size: 10px;
-  line-height: 15px;
-  color: var(--muted-foreground);
-}
-
-.summaryValue {
-  margin: 0;
-  padding-top: 4px;
-  font-size: 12px;
-  font-weight: 600;
-  line-height: 16px;
-  color: var(--foreground);
-  overflow-wrap: anywhere;
-}
-
 .actions {
   display: flex;
   flex-wrap: wrap;
   justify-content: flex-end;
   gap: 12px;
-  padding: 28px 0 20px;
-}
-
-/* Figma shows the locked action as the primary button at 40% opacity */
-.locked.locked:disabled {
-  background: var(--primary);
-  color: var(--primary-foreground);
-  box-shadow: var(--shadow-button);
-  opacity: 0.4;
+  padding: 24px 0 20px;
 }
 
 @media (max-width: 767px) {
-  .result {
-    flex-direction: column;
-    align-items: flex-start;
-    padding-top: 32px;
+  .status {
+    padding: 16px;
   }
 
-  .resultTitle {
-    padding-top: 0;
-    font-size: 24px;
-    line-height: 32px;
+  .sectionTitle,
+  .company {
+    padding-left: 16px;
+    padding-right: 16px;
   }
 
-  .summary {
+  .rows {
+    padding: 0 16px 4px;
+  }
+
+  .row {
     grid-template-columns: minmax(0, 1fr);
+    gap: 4px;
   }
 }

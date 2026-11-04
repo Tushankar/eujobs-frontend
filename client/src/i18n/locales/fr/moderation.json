@@ -101,7 +101,6 @@
       "noDocuments": "Aucun document importé.",
       "submittedAt": "Envoyé",
       "history": "Décisions précédentes",
-      "decided": "{{decision}} par {{name}}, {{date}}",
       "decision": {
         "approved": "Approuvé",
         "rejected": "Refusé",

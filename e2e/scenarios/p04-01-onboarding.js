@@ -62,6 +62,17 @@ export default {
     await clickText(page, es.verify.submit, 'button[type="submit"]')
     await waitForPath(page, '/recruiter/onboarding/review')
     await waitForText(page, es.review.badge.pending_review)
+    await waitForText(page, es.review.applicationTitle)
+    if (ctx.viewport === 'D') {
+      // The step sidebar stays pinned while the page scrolls.
+      const sidebar = await page.evaluate(() => {
+        const aside = document.querySelector('main aside')
+        window.scrollTo(0, document.documentElement.scrollHeight)
+        return { scrolled: window.scrollY > 0, top: aside.getBoundingClientRect().top }
+      })
+      ctx.check(sidebar.scrolled && Math.round(sidebar.top) === 24, `the sidebar stays pinned (${JSON.stringify(sidebar)})`)
+      await page.evaluate(() => window.scrollTo(0, 0))
+    }
     await handle.checkOverflow()
     await ctx.screenshot(page, '4-under-review')
 

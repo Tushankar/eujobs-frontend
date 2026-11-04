@@ -31,17 +31,18 @@ export function useSectionBadge(section) {
 }
 
 /**
- * The page of `kind` + `id` is open: its unread notifications become read (P11b-Q10). Sent once per item, and only
- * while something is unread.
+ * The page of `kind` + `id` opened: its unread notifications become read (P11b-Q10). Decided once, when the item opens
+ * and the counters are known (sent only if something is unread); a notification that arrives while the page stays
+ * open remains unread until the item is opened again.
  */
 export function useMarkSeen(kind, id) {
-  const { unread } = useNotificationCounts()
+  const counts = useCounters()?.notifications
   const [markSeen] = notificationsApi.useMarkSeenMutation()
-  const sent = useRef(null)
+  const decided = useRef(null)
   const key = id ? `${kind}:${id}` : null
   useEffect(() => {
-    if (!key || !unread || sent.current === key) return
-    sent.current = key
-    markSeen({ kind, id: String(id) })
-  }, [key, kind, id, unread, markSeen])
+    if (!key || !counts || decided.current === key) return
+    decided.current = key
+    if (counts.unread) markSeen({ kind, id: String(id) })
+  }, [key, kind, id, counts, markSeen])
 }
