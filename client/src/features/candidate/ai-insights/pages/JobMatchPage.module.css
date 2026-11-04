@@ -167,8 +167,6 @@
 }
 
 .side {
-  position: sticky;
-  top: calc(var(--header-height) + 24px);
   display: flex;
   flex-direction: column;
   gap: 20px;
@@ -215,10 +213,6 @@
 @media (max-width: 1023px) {
   .layout {
     grid-template-columns: minmax(0, 1fr);
-  }
-
-  .side {
-    position: static;
   }
 
   .tiles {

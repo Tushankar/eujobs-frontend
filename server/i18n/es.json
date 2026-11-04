@@ -95,8 +95,8 @@
       "action": "Ver el estado de la cuenta"
     },
     "cv_request": {
-      "subject": "{{company}} ha pedido ver un CV anterior",
-      "heading": "Solicitud de una versión anterior del CV",
+      "subject": "Solicitud de CV de {{company}}",
+      "heading": "Solicitud de CV",
       "body": [
         "Hola, {{name}}:",
         "{{company}} ha pedido ver una versión anterior de tu CV.",
@@ -263,7 +263,7 @@
   "stages": {
     "applied": "Candidatura",
     "screening": "Cribado",
-    "shortlisted": "Preselección",
+    "shortlisted": "Preseleccionados",
     "interview": "Entrevista",
     "offer": "Oferta",
     "hired": "Contratación"

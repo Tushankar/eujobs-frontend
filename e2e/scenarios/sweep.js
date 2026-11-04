@@ -1,85 +1,13 @@
-import { ROUTES } from '../routes.js'
-import { signInWithForm } from '../lib/flows.js'
-import { db } from '../lib/testApi.js'
+import { sweepRoutes } from '../lib/sweep.js'
 
-/*
- * Visits every route of e2e/routes.js per group, signed in through the sign-in form with the seeded
- * accounts (no session for `public`). A route fails on any page check, a redirect away from it, the
- * 404 panel, the router error screen or a near-empty page.
- */
-const GROUPS = {
-  public: null,
-  candidate: { signIn: '/sign-in', account: 'alex' },
-  // James is still onboarding, so these are the pages he can reach.
-  recruiterOnboarding: { signIn: '/recruiter/sign-in', account: 'james' },
-  recruiter: { signIn: '/recruiter/sign-in', account: 'sarah' },
-  admin: { signIn: '/admin/sign-in', account: null },
-}
-// The onboarding layout opens the first step that is still open, so those pages may redirect by design.
-const REDIRECTS_ALLOWED = new Set(['recruiterOnboarding'])
-
-async function visit(ctx, handle, group, path) {
-  const { page } = handle
-  handle.issues.length = 0
-  await page.goto(`${ctx.webUrl}${path}`, { waitUntil: 'networkidle0' })
-  await handle.checkOverflow()
-  const state = await page.evaluate(() => ({
-    path: location.pathname,
-    notFound: [...document.querySelectorAll('h1')].some((h1) => h1.textContent.trim() === 'Page not found'),
-    routerError: document.body.innerText.includes('Unexpected Application Error'),
-    textLength: document.body.innerText.trim().length,
-  }))
-  await ctx.screenshot(page, `${group}${path}`)
-
-  const problems = [...handle.issues]
-  if (!REDIRECTS_ALLOWED.has(group) && state.path !== path) problems.push(`landed on ${state.path}`)
-  if (state.notFound) problems.push('404 page')
-  if (state.routerError) problems.push('router error screen')
-  if (state.textLength < 50) problems.push('near-empty page')
-  return problems
-}
-
+/* The route sweep in English (lib/sweep.js): every route of every role, with the page and layout checks. */
 export default {
   name: 'Route sweep',
   viewports: ['D', 'M'],
   async run(ctx) {
-    // The seeded ids behind the route placeholders.
-    const [acme] = await db('companies', 'find', { filter: { displayName: 'Acme Studio' } })
-    const [job] = await db('jobs', 'find', { filter: { companyId: acme._id, title: 'Product Designer, Growth' } })
-    const [emma] = await db('users', 'find', { filter: { email: ctx.seedCredentials.email('emma') } })
-    const [sarah] = await db('users', 'find', { filter: { email: ctx.seedCredentials.email('sarah') } })
-    const [thread] = await db('conversations', 'find', { filter: { companyId: acme._id, candidateId: emma._id } })
-    const course = async (title) => (await db('courses', 'find', { filter: { title } }))[0]
-    const candidateCourse = await course('Interaction design foundations')
-    const recruiterCourse = await course('Hiring Technology & Product Talent')
-    const id = (doc) => doc._id.$oid ?? doc._id
-    const ids = {
-      job: id(job),
-      emma: id(emma),
-      sarah: id(sarah),
-      thread: id(thread),
-      candidateCourse: id(candidateCourse),
-      candidateLesson: id(candidateCourse.lessons[0]),
-      recruiterCourse: id(recruiterCourse),
-      recruiterLesson: id(recruiterCourse.lessons[0]),
-    }
-    const resolve = (path) => path.replace(/:(\w+)/g, (match, name) => ids[name] ?? match)
-
-    const failures = []
-    const counts = []
-    for (const [group, paths] of Object.entries(ROUTES)) {
-      const handle = await ctx.newPage()
-      const login = GROUPS[group]
-      if (login) {
-        await signInWithForm(handle.page, ctx.webUrl, login.signIn, ctx.seedCredentials.email(login.account), ctx.seedCredentials.password)
-      }
-      for (const path of paths.map(resolve)) {
-        const problems = await visit(ctx, handle, group, path)
-        if (problems.length) failures.push(`${group} ${path}: ${problems.join('; ')}`)
-      }
-      counts.push(`${group} ${paths.length}`)
-    }
+    const { failures, notes, counts } = await sweepRoutes(ctx, 'en')
     ctx.note(`routes: ${counts.join(', ')}`)
+    if (notes.length) ctx.note(`truncated data (ellipsis), ${notes.length}:\n      ${notes.join('\n      ')}`)
     ctx.check(!failures.length, `${failures.length} route(s) failed:\n  ${failures.join('\n  ')}`)
   },
 }

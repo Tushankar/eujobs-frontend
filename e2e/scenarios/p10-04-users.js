@@ -35,7 +35,8 @@ export default {
       await openAsAdmin(ctx, handle, ctx.seedCredentials.email(null), '/admin/candidates', ctx.seedCredentials.password)
       await page.waitForSelector('main table tbody tr')
       const columns = await headers(page)
-      for (const name of ['Country', 'Right to work', 'Verification', 'Completeness', 'Plan']) ctx.check(columns.includes(name), `column ${name} (got ${columns.join(', ')})`)
+      // Location = country + right to work; Profile = verification + completeness (two-line cells).
+      for (const name of ['Location', 'Profile', 'Plan', 'Learning', 'Status']) ctx.check(columns.includes(name), `column ${name} (got ${columns.join(', ')})`)
 
       // Each seeded candidate's row reads as the server computed it.
       const { body: all } = await api('/admin/users?role=candidate&pageSize=100', { token })

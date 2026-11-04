@@ -13,11 +13,6 @@ const EMPTY_LIST_KEYS = ['lwm.candidate.savedJobs', 'lwm.candidate.applications'
 
 /** One-shot flag so the page can confirm the action after the reload that applies it. */
 const RESULT_FLAG_KEY = 'lwm.session.candidateData'
-export const RESULT_MESSAGES = {
-  reset: 'Demo workspace reset. Sample data is back in all three workspaces.',
-  deleted: 'Local candidate information was deleted from this device.',
-}
-
 function removeKeys(predicate) {
   Object.keys(window.localStorage)
     .filter(predicate)

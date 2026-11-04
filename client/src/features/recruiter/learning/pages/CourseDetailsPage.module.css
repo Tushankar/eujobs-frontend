@@ -150,8 +150,6 @@
 }
 
 .aside {
-  position: sticky;
-  top: 96px;
   display: flex;
   flex-direction: column;
   gap: 20px;
@@ -243,10 +241,6 @@
 @media (max-width: 1023px) {
   .layout {
     grid-template-columns: minmax(0, 1fr);
-  }
-
-  .aside {
-    position: static;
   }
 
   .outcomes {

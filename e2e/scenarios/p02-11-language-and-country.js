@@ -1,17 +1,5 @@
-import { existsSync } from 'node:fs'
 import { bodyText, clickText, responseTo, signInWithForm } from '../lib/flows.js'
 import { db } from '../lib/testApi.js'
-
-const SPANISH = new URL('../../client/src/i18n/locales/es/', import.meta.url)
-
-/**
- * Temporary until Phase 11 (P4-Q5): a missing Spanish key is expected in a namespace that has no Spanish file yet
- * (English-only, P4-D14), as P2-19 treats them.
- */
-const notEnglishOnly = (issue) => {
-  const namespace = issue.match(/^console error: Missing i18n key ([\w-]+):/)?.[1]
-  return !namespace || existsSync(new URL(`${namespace}.json`, SPANISH))
-}
 
 /** Opens the language or country choices: header dropdowns at 1440 px, the profile menu at 375 px. */
 async function openChoices(page, viewport, which) {
@@ -57,12 +45,8 @@ export default {
       ctx.check((await bodyText(page)).includes('Polonia'), 'Poland is kept after a reload')
       ctx.check(await page.evaluate(() => document.documentElement.lang === 'es'), 'an explicit language survives a country change')
       await ctx.screenshot(page, '2-poland')
-      // Raw key names are far longer than any label, so the 375 px overflow check means nothing while they show.
-      const rawKeys = handle.issues.some((issue) => !notEnglishOnly(issue))
-      ctx.assertClean(
-        handle.issues.filter(notEnglishOnly).filter((issue) => !(rawKeys && issue.startsWith('horizontal overflow'))),
-        'signed-in choices',
-      )
+      // Phase 11: every namespace has Spanish, so any missing key or 375 px overflow fails.
+      ctx.assertClean(handle.issues, 'signed-in choices')
 
       const anonymous = await ctx.newPage()
       await anonymous.page.goto(`${ctx.webUrl}/sign-in`, { waitUntil: 'networkidle0' })

@@ -17,6 +17,26 @@
 }
 
 /*
+ * The side column of a two-column page: while the main column scrolls it stays pinned under the header, so the
+ * page never shows an empty area beside a long section. Taller than the window, it scrolls on its own (scrollbar
+ * hidden). Only from 1024px, where every such layout has two columns; below that it is part of the normal flow.
+ */
+@media (min-width: 1024px) {
+  .sticky-side {
+    position: sticky;
+    top: calc(var(--header-height) + 24px);
+    align-self: start;
+    max-height: calc(100vh - var(--header-height) - 48px);
+    overflow-y: auto;
+    scrollbar-width: none;
+  }
+
+  .sticky-side::-webkit-scrollbar {
+    display: none;
+  }
+}
+
+/*
  * Entrances. `stagger` cascades its direct children in; `stagger-page` does the same for a routed
  * page, which renders either one wrapper element or several sibling sections (see WorkspaceLayout).
  * From the 5th child on they all share the last delay, so a long page never waits on its tail. Put the class

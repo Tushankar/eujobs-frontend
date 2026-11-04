@@ -1,0 +1,40 @@
+{
+  "title": "Un marché de l’emploi porteur de sens.",
+  "description": "Examinez les offres de tous statuts et maintenez une haute qualité des opportunités.",
+  "search": "Rechercher un intitulé de poste ou une entreprise",
+  "filters": {
+    "status": "Filtrer par statut",
+    "allStatuses": "Tous les statuts",
+    "country": "Filtrer par pays",
+    "allCountries": "Tous les pays"
+  },
+  "columns": {
+    "role": "Poste",
+    "company": "Entreprise",
+    "country": "Pays",
+    "salary": "Salaire",
+    "status": "Statut",
+    "actions": "Actions"
+  },
+  "caption": "Offres",
+  "summary": "Synthèse IA",
+  "summaryFor": "Synthèse IA de {{title}}",
+  "viewCase": "Voir le dossier",
+  "viewCaseFor": "Voir le dossier ouvert pour {{title}}",
+  "openCaseFor": "Ouvrir un dossier pour {{title}}",
+  "openCase": {
+    "button": "Ouvrir un dossier",
+    "title": "Ouvrir un dossier : {{title}}",
+    "intro": "Le dossier s’ouvre dans Modération, où vous pouvez le classer ou restreindre l’offre.",
+    "reason": "Motif",
+    "chooseReason": "Choisissez un motif",
+    "details": "Détails (facultatif)",
+    "cancel": "Annuler",
+    "submit": "Ouvrir le dossier"
+  },
+  "empty": "Aucune offre pour l’instant",
+  "emptyText": "Les offres créées par les recruteurs apparaissent ici.",
+  "emptyFiltered": "Aucune offre ne correspond",
+  "emptyFilteredText": "Essayez une autre recherche, un autre statut ou un autre pays.",
+  "clear": "Effacer les filtres"
+}

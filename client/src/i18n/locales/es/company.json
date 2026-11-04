@@ -1,0 +1,24 @@
+{
+  "title": "Cuenta la historia de tu equipo.",
+  "lead": "Ayuda a las personas adecuadas a entender qué estás construyendo y por qué importa.",
+  "createRole": "Crear tu próxima oferta",
+  "legalName": "Razón social",
+  "legalNameHint": "Se verificó en tu revisión KYC, así que no se puede cambiar aquí.",
+  "fields": {
+    "displayName": "Nombre de la empresa",
+    "displayNameHint": "El nombre que ven los candidatos en tus ofertas.",
+    "industry": "Sector",
+    "city": "Ciudad de la empresa",
+    "website": "Sitio web",
+    "size": "Tamaño de la empresa",
+    "description": "Qué estás construyendo"
+  },
+  "logo": {
+    "upload": "Subir logotipo",
+    "replace": "Cambiar logotipo",
+    "remove": "Quitar logotipo",
+    "uploading": "Subiendo…"
+  },
+  "save": "Guardar perfil de empresa",
+  "saved": "Perfil de empresa guardado."
+}

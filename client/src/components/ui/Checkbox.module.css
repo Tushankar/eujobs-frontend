@@ -1,6 +1,6 @@
 .checkbox {
   display: inline-flex;
-  align-items: center;
+  align-items: flex-start;
   gap: 8px;
   cursor: pointer;
   font-size: 12px;
@@ -17,6 +17,7 @@
 
 .box {
   display: inline-flex;
+  flex-shrink: 0;
   align-items: center;
   justify-content: center;
   width: 16px;

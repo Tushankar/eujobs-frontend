@@ -1,4 +1,4 @@
-import { clickText, setValue, signInWithForm, toggleCheckbox, waitForText } from '../lib/flows.js'
+import { clickText, pickMonth, signInWithForm, toggleCheckbox, waitForText } from '../lib/flows.js'
 import { onboardedCandidate } from '../lib/candidates.js'
 import { TEST_PASSWORD } from '../lib/testApi.js'
 
@@ -34,9 +34,15 @@ export default {
     await saveAndExpect(page, '1 of 10 complete')
 
     await clickText(page, 'Edit languages', 'button')
-    await page.waitForSelector('select[name="language-0"]')
-    await page.select('select[name="language-0"]', 'en')
+    // The language field is a searchable list: type, then pick the option.
+    await page.waitForSelector('input[name="language-0"]')
+    await page.click('input[name="language-0"]')
+    await page.type('input[name="language-0"]', 'Engl')
+    const names = await page.$$eval('[role="option"]', (options) => options.map((option) => option.textContent))
+    ctx.check(names[0] === 'English' && names.every((name) => !/^[a-z]{2}$/.test(name)), `typing filters to named languages: ${JSON.stringify(names.slice(0, 5))}`)
+    await page.click('[role="option"][data-value="en"]')
     await page.select('select[name="level-0"]', 'c1')
+    await ctx.screenshot(page, '0-languages')
     await saveAndExpect(page, '2 of 10 complete')
 
     await clickText(page, 'Edit right to work', 'button')
@@ -57,7 +63,7 @@ export default {
     await page.waitForSelector('input[name="title"]')
     await page.type('input[name="title"]', 'Designer')
     await page.type('input[name="employer"]', 'Studio North')
-    await setValue(page, 'input[name="start"]', '2021-03')
+    await pickMonth(page, 'start', '2021-03')
     await toggleCheckbox(page, 'ongoing')
     await saveAndExpect(page, '5 of 11 complete')
 
@@ -65,8 +71,9 @@ export default {
     await page.waitForSelector('input[name="institution"]')
     await page.type('input[name="institution"]', 'University of Leeds')
     await page.type('input[name="degree"]', 'BA Graphic Design')
-    await setValue(page, 'input[name="start"]', '2016-09')
-    await setValue(page, 'input[name="end"]', '2019-06')
+    await pickMonth(page, 'start', '2016-09')
+    await pickMonth(page, 'end', '2019-06')
+    await ctx.screenshot(page, '1b-education-dates')
     await saveAndExpect(page, '6 of 12 complete')
     await ctx.screenshot(page, '2-twelve-items')
     ctx.assertClean(handle.issues, 'completeness walk')

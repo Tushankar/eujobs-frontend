@@ -121,8 +121,10 @@
   color: var(--primary);
 }
 
+/* Tabs plus "Preferences": the link drops under the tabs when long translations need the width (Phase 11 task 7). */
 .tabsRow {
   display: flex;
+  flex-wrap: wrap;
   align-items: center;
   justify-content: space-between;
   gap: 16px;

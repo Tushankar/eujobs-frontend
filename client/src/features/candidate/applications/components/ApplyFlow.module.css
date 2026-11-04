@@ -10,9 +10,9 @@
   align-items: center;
   gap: 16px;
   padding: 16px;
-  border: 1px solid rgba(0, 132, 255, 0.16);
+  border: 1px solid var(--border);
   border-radius: var(--radius-xl);
-  background: linear-gradient(135deg, var(--accent) 0%, var(--card) 100%);
+  background: var(--muted);
 }
 
 .ring {
@@ -32,7 +32,7 @@
 }
 
 .ringTrack {
-  stroke: rgba(0, 132, 255, 0.14);
+  stroke: var(--border);
 }
 
 .ringFill {
@@ -48,8 +48,9 @@
   align-items: center;
   justify-content: center;
   font-family: var(--font-display);
-  font-size: 12px;
+  font-size: 11px;
   font-weight: 800;
+  letter-spacing: -0.3px;
   color: var(--foreground);
   font-variant-numeric: tabular-nums;
 }
@@ -61,7 +62,7 @@
   line-height: 16px;
   letter-spacing: 0.4px;
   text-transform: uppercase;
-  color: var(--primary-hover);
+  color: var(--muted-foreground);
 }
 
 .progressText {
@@ -112,13 +113,10 @@
 
 .count {
   flex-shrink: 0;
-  padding: 2px 8px;
-  border-radius: var(--radius-full);
-  background: var(--warning-bg);
-  font-size: 11px;
+  font-size: 12px;
   font-weight: 600;
   line-height: 16px;
-  color: var(--warning-fg);
+  color: var(--muted-foreground);
 }
 
 .text {
@@ -165,10 +163,7 @@
 .itemIcon {
   display: inline-flex;
   flex-shrink: 0;
-  padding: 7px;
-  border-radius: var(--radius-lg);
-  background: var(--accent);
-  color: var(--primary-hover);
+  color: var(--muted-foreground);
 }
 
 .itemLabel {
@@ -200,21 +195,16 @@
   gap: 14px;
   margin-top: 8px;
   padding: 16px;
-  border: 1px solid transparent;
+  border: 1px solid var(--border);
   border-radius: var(--radius-xl);
-  background:
-    linear-gradient(var(--card), var(--card)) padding-box,
-    linear-gradient(135deg, #7c5cff 0%, var(--primary) 55%, #36c2ff 100%) border-box;
+  background: var(--card);
 }
 
 .planIcon {
   display: inline-flex;
   flex-shrink: 0;
-  padding: 9px;
-  border-radius: var(--radius-lg);
-  background: linear-gradient(135deg, #7c5cff 0%, var(--primary) 100%);
-  color: #ffffff;
-  box-shadow: 0 6px 14px -6px rgba(0, 132, 255, 0.6);
+  padding: 2px 0;
+  color: var(--foreground);
 }
 
 .planText {

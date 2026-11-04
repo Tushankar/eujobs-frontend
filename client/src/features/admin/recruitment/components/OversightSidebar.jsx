@@ -29,7 +29,7 @@ export default function OversightSidebar({ roles, coverage }) {
   const format = useFormat()
   const where = (role) => [t(`enums:workPreference.${role.workPreference}`), role.city ? `${role.city}, ${format.country(role.country)}` : format.country(role.country)].join(' · ')
   return (
-    <aside className={styles.column} aria-label={t('sidebar.label')}>
+    <aside className={`${styles.column} sticky-side`} aria-label={t('sidebar.label')}>
       <Panel padding={24} aria-labelledby="role-activity">
         <SectionTitle id="role-activity" title={t('sidebar.roles')} description={t('sidebar.rolesText')}>
           <Link to={admin('jobs?status=published')} className={styles.link}>

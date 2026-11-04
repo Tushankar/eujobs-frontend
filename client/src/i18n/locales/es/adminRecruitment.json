@@ -1,0 +1,63 @@
+{
+  "eyebrow": "Supervisión de la selección",
+  "title": "Observa el recorrido. Protege la decisión.",
+  "description": "Una vista de solo lectura de la actividad de los reclutadores en ofertas, candidaturas, preselecciones, etapas del proceso y contactos revisados.",
+  "auditLog": "Ver registro de auditoría",
+  "views": {
+    "data": "Vista de datos",
+    "funnel": "Vista de embudo",
+    "label": "Vista de selección"
+  },
+  "stats": {
+    "publishedRoles": "Ofertas publicadas",
+    "applications": "Candidaturas",
+    "applicationsCaption": "Todo el periodo, sin retiradas",
+    "shortlisted": "Preseleccionados",
+    "reviewedOutreach": "Contactos revisados",
+    "allTime": "Todo el periodo"
+  },
+  "pipeline": {
+    "title": "Proceso de selección",
+    "dataText": "Candidaturas en su etapa actual, sin contar las retiradas. Las decisiones de contratación corresponden a los reclutadores.",
+    "funnelText": "Candidaturas que alguna vez llegaron a cada etapa, sin contar las retiradas."
+  },
+  "stagesLabel": "Etapas del proceso",
+  "funnel": {
+    "title": "Vista de embudo",
+    "label": "Embudo de selección por etapa",
+    "stage": "{{stage}}: {{count}} candidaturas. Mostrar las candidaturas en esta etapa."
+  },
+  "movement": {
+    "title": "Movimiento de candidatos",
+    "description": "La etapa actual, la preselección y el contacto de cada candidatura.",
+    "candidate": "Candidato",
+    "job": "{{job}} · {{company}}",
+    "stage": "Etapa actual",
+    "shortlist": "Preselección",
+    "outreach": "Contacto",
+    "shortlisted": "Preseleccionado",
+    "notShortlisted": "No preseleccionado",
+    "outreachSent": "Contacto enviado",
+    "noOutreach": "Sin contacto",
+    "viewApplications": "Ver candidaturas",
+    "filtered": "Candidaturas en la etapa {{stage}}",
+    "clear": "Borrar filtro",
+    "empty": "Aún no hay candidaturas",
+    "emptyText": "Las candidaturas aparecen aquí cuando los candidatos se postulan.",
+    "emptyStage": "No hay candidaturas en la etapa {{stage}}",
+    "emptyStageText": "Elige otra etapa o borra el filtro para ver a todos."
+  },
+  "sidebar": {
+    "label": "Supervisión de la selección",
+    "roles": "Actividad de las ofertas",
+    "rolesText": "Las ofertas publicadas más recientes",
+    "manage": "Gestionar",
+    "noRoles": "Aún no hay ofertas publicadas.",
+    "coverage": "Cobertura de candidaturas",
+    "coverageText": "Las candidaturas más recientes",
+    "noCoverage": "Aún no hay candidaturas.",
+    "noteTitle": "Supervisión, no control de la contratación",
+    "noteText": "La administración revisa las políticas, la seguridad y la integridad del mercado. Los reclutadores siguen siendo responsables de tomar decisiones de contratación justas y revisadas por personas.",
+    "openModeration": "Abrir moderación"
+  }
+}

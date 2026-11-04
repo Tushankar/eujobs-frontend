@@ -57,7 +57,8 @@
   /* Figma's modal frames show no scrim or blur (sampled pixels under the overlay equal the page colours).
      The D S page documents ink #20253499 + blur; set --modal-backdrop to var(--backdrop) and
      --modal-blur to 4px to switch to that recipe. */
-  --modal-backdrop: transparent;
+  /* Owner choice (2026-11-04): LinkedIn-style dimmed page behind dialogs. */
+  --modal-backdrop: rgba(17, 21, 31, 0.55);
   --modal-blur: 0;
 
   /* Layout */

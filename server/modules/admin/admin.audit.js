@@ -2,6 +2,7 @@ import { describeAudit } from '../../lib/audit.js'
 import { t } from '../../lib/i18n.js'
 import { paginate } from '../../lib/pages.js'
 import { AuditEvent } from './admin.model.js'
+import { searchText } from '../../lib/skills.js'
 
 /*
  * Admin › Audit logs (M-162, M-163, M-206): newest first, by category chip and actor type. The search looks in the
@@ -17,12 +18,12 @@ export const eventDto = (event) => ({
   at: event.at,
 })
 
-const searchable = (event) => [event.actor.name, ...Object.values(event.params ?? {})].filter((value) => typeof value === 'string').join(' ').toLowerCase()
+const searchable = (event) => [event.actor.name, ...Object.values(event.params ?? {})].filter((value) => typeof value === 'string').join(' ')
 
 export async function filteredEvents({ category, actorType, q }) {
   const filter = { ...(category && { category }), ...(actorType && { 'actor.type': actorType }) }
   const events = await AuditEvent.find(filter).sort({ at: -1, _id: -1 })
-  return q ? events.filter((event) => searchable(event).includes(q.toLowerCase())) : events
+  return q ? events.filter((event) => searchText(searchable(event)).includes(searchText(q))) : events
 }
 
 export async function listEvents(query) {

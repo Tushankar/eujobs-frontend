@@ -7,6 +7,7 @@ import { Company } from '../companies/companies.model.js'
 import { User } from '../users/users.model.js'
 import { Payment, Subscription } from './payments.model.js'
 import { isPaid, paymentDto } from './payments.service.js'
+import { searchText } from '../../lib/skills.js'
 
 /*
  * Admin › Payments (M-122, M-123, U34, P10-Q5 … Q7): every row of `payments`, Stripe and seeded, newest first.
@@ -48,8 +49,8 @@ async function rowsFor(filter, country) {
 export async function filteredPayments({ q, status, payer, kind, source, country }) {
   const filter = { ...(status && { status }), ...(payer && { payerRole: payer }), ...(kind && { kind }), ...(source && { source }) }
   const rows = await rowsFor(filter, country)
-  const needle = q?.toLowerCase()
-  return needle ? rows.filter((row) => [row.reference, row.payerName, row.itemName].some((text) => text?.toLowerCase().includes(needle))) : rows
+  const needle = q && searchText(q)
+  return needle ? rows.filter((row) => [row.reference, row.payerName, row.itemName].some((text) => searchText(text).includes(needle))) : rows
 }
 
 export async function listPayments(query) {

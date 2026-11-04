@@ -44,7 +44,7 @@ function CompanyApplications({ candidate }) {
 export default function ProfileSidebar({ candidate, jobs, job, onJobChange, onToggleShortlist }) {
   const { t } = useTranslation()
   return (
-    <aside className={styles.sidebar}>
+    <aside className={`${styles.sidebar} sticky-side`}>
       <Panel padding={20}>
         <div className={styles.actions}>
           <Button variant="outline" fullWidth leftIcon={<Icon as={Bookmark} size={14} strokeWidth={2} />} aria-pressed={candidate.shortlisted} onClick={onToggleShortlist}>

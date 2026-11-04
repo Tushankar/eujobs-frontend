@@ -206,7 +206,7 @@ export default function JobDetailsPage() {
           <ListSection title={t('findJobs:details.languages')} items={conditions} />
         </article>
 
-        <aside className={styles.rail} aria-label={t('findJobs:details.railTitle')}>
+        <aside className={`${styles.rail} sticky-side`} aria-label={t('findJobs:details.railTitle')}>
           <section className={styles.card}>
             <h2 className={styles.railTitle}>{t('findJobs:details.railTitle')}</h2>
             <p className={styles.railText}>{t('findJobs:details.railText')}</p>

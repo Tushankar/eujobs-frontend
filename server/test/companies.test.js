@@ -162,7 +162,7 @@ describe('account review (M-165, OQ-2, P4-Q2, P4-D4)', () => {
     assert.deepEqual(stages.map((stage) => [stage.name, stage.category]), [
       ['Candidatura', 'applied'],
       ['Cribado', 'screening'],
-      ['Preselección', 'shortlisted'],
+      ['Preseleccionados', 'shortlisted'],
       ['Entrevista', 'interview'],
       ['Oferta', 'offer'],
       ['Contratación', 'hired'],

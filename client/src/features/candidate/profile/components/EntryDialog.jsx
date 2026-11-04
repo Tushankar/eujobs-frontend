@@ -4,6 +4,7 @@ import { Checkbox, TextareaField, TextField } from '@/components/ui'
 import { check, useErrorText, useFormState } from '@/lib/forms.js'
 import { useAddEntryMutation, useUpdateEntryMutation } from '../api.js'
 import FormDialog from './FormDialog.jsx'
+import MonthField from './MonthField.jsx'
 import dialogStyles from './FormDialog.module.css'
 
 /*
@@ -61,8 +62,8 @@ export default function EntryDialog({ open, kind, entry, onSaved, onClose }) {
         ))}
       </div>
       <div className={dialogStyles.row}>
-        <TextField label={label('start')} name="start" type="month" value={values.start} onChange={(event) => set('start', event.target.value)} error={field('start')} />
-        <TextField label={label('end')} name="end" type="month" disabled={values.ongoing} value={values.ongoing ? '' : values.end} onChange={(event) => set('end', event.target.value)} error={field('end')} />
+        <MonthField label={label('start')} name="start" value={values.start} onChange={(month) => set('start', month)} error={field('start')} />
+        <MonthField label={label('end')} name="end" disabled={values.ongoing} value={values.ongoing ? '' : values.end} onChange={(month) => set('end', month)} error={field('end')} />
       </div>
       <Checkbox name="ongoing" checked={values.ongoing} onChange={(event) => set('ongoing', event.target.checked)}>
         {label(ongoing)}

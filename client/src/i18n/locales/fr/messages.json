@@ -11,6 +11,7 @@
       "recruiter": "Lancez une conversation depuis le profil d’un candidat."
     },
     "unread_one": "{{count}} non lu",
+    "unread_many": "{{count}} non lus",
     "unread_other": "{{count}} non lus"
   },
   "about": "À propos de {{job}}",

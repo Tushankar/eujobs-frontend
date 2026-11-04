@@ -191,10 +191,10 @@ async function ownJob(company, id) {
 export async function adminJobs({ q, status, country, ...page }) {
   const jobs = await Job.find({ ...(status && { status }), ...(country && { country }) }).sort({ publishedAt: -1, createdAt: -1 })
   const companies = new Map((await Company.find({ _id: { $in: jobs.map((job) => job.companyId) } }, 'displayName')).map((company) => [String(company._id), company]))
-  const needle = q?.toLowerCase()
+  const needle = q && searchText(q)
   // A job whose company no longer exists is not listed (nothing can be done with it).
   const listed = jobs.filter((job) => companies.has(String(job.companyId)))
-  const matching = needle ? listed.filter((job) => [job.title, companies.get(String(job.companyId)).displayName].some((text) => text?.toLowerCase().includes(needle))) : listed
+  const matching = needle ? listed.filter((job) => [job.title, companies.get(String(job.companyId)).displayName].some((text) => searchText(text).includes(needle))) : listed
   const result = paginate(matching, page)
   const cases = new Map(
     (await ModerationCase.find({ targetType: 'job', targetId: { $in: result.items.map((job) => job._id) }, status: 'open' }, 'targetId')).map((item) => [String(item.targetId), String(item._id)]),

@@ -1,0 +1,91 @@
+{
+  "eyebrow": "La confiance, en contexte",
+  "title": "Une vérification que vous comprenez.",
+  "description": "Confirmez vos coordonnées, découvrez ce que signifie chaque contrôle et envoyez vos justificatifs quand vous êtes prêt.",
+  "basic": {
+    "title": "Vérification de base",
+    "lead": "Les contrôles des coordonnées renforcent l’intégrité du compte. Ils ne vérifient ni les compétences, ni l’identité, ni les diplômes, ni l’expérience professionnelle.",
+    "email": "Adresse e-mail"
+  },
+  "verified": "Vérifié",
+  "notVerified": "Non vérifié",
+  "phone": {
+    "label": "Numéro de téléphone",
+    "country": "Pays",
+    "number": "Numéro de téléphone",
+    "numberHint": "Votre numéro, avec ou sans l’indicatif du pays.",
+    "send": "Envoyer le code",
+    "resend": "Envoyer un nouveau code",
+    "resendIn": "Envoyer un nouveau code dans {{count}} s",
+    "codeShown": "Votre code est <code>{{code}}</code>. Saisissez-le ci-dessous dans les {{minutes}} minutes.",
+    "codeNote": "Nous affichons le code ici au lieu de l’envoyer par SMS.",
+    "code": "Code",
+    "confirm": "Confirmer",
+    "verifiedNumber": "{{phone}} est vérifié.",
+    "change": "Utiliser un autre numéro"
+  },
+  "checks": {
+    "title": "Vérification du profil",
+    "lead": "Un administrateur examine chaque contrôle. Les recruteurs voient une coche pour chaque contrôle approuvé.",
+    "bannerTitle": "Contrôles nécessaires pour votre profil",
+    "bannerLead": "L’identité est toujours nécessaire. Les contrôles des diplômes et de l’expérience professionnelle sont nécessaires lorsque votre profil en mentionne.",
+    "progress": "{{done}} sur {{total}} vérifiés"
+  },
+  "check": {
+    "identity": {
+      "label": "Identité",
+      "description": "Pièce d’identité officielle avec photo, comparée aux informations du titulaire du compte.",
+      "accepted": "Justificatifs acceptés : passeport, permis de conduire ou carte nationale d’identité."
+    },
+    "academic": {
+      "label": "Diplômes",
+      "description": "Justificatif de diplôme comparé à une entrée de formation de votre profil.",
+      "accepted": "Justificatifs acceptés : attestation de diplôme, diplôme ou relevé de notes officiel.",
+      "notNeeded": "Nécessaire dès que votre profil mentionne une formation."
+    },
+    "employment": {
+      "label": "Documents professionnels",
+      "description": "Justificatif professionnel comparé à un poste de votre profil.",
+      "accepted": "Justificatifs acceptés : attestation d’emploi, page du contrat ou référence vérifiée.",
+      "notNeeded": "Nécessaire dès que votre profil mentionne une expérience."
+    }
+  },
+  "submitted": "Envoyé le {{date}} · {{file}}",
+  "submittedType": "Envoyé le {{date}} · {{type}} · {{file}}",
+  "reason": "Non approuvé : {{reason}}",
+  "submit": "Envoyer des justificatifs",
+  "resubmit": "Envoyer de nouveaux justificatifs",
+  "submitLabel": "Envoyer des justificatifs pour {{check}}",
+  "rightToWork": {
+    "title": "Droit au travail",
+    "lead": "Facultatif : justificatif pour une entrée de droit au travail, examiné par un administrateur.",
+    "empty": "Ajoutez d’abord votre droit au travail dans Mon profil."
+  },
+  "certificates": {
+    "title": "Certificats externes",
+    "lead": "Facultatif : demandez à un administrateur d’examiner le fichier d’un certificat. Les recruteurs ne voient « Vérifié » que pour les certificats examinés.",
+    "empty": "Ajoutez d’abord des certificats dans Mon profil.",
+    "noFile": "Ajoutez un fichier à ce certificat dans Mon profil pour demander un examen.",
+    "request": "Demander un examen",
+    "requestLabel": "Demander l’examen de {{name}}"
+  },
+  "dialog": {
+    "title": "Envoyer des justificatifs : {{check}}",
+    "description": "Un administrateur compare le fichier à votre profil. Les justificatifs sont supprimés 30 jours après la décision.",
+    "type": "Type de justificatif",
+    "entry": "Entrée de profil concernée",
+    "file": "Fichier justificatif",
+    "confirm": "Ce justificatif m’appartient et il est exact.",
+    "submit": "Envoyer pour examen"
+  },
+  "summary": {
+    "title": "Votre statut actuel",
+    "email": "E-mail",
+    "phone": "Téléphone",
+    "checks": "Contrôles des justificatifs"
+  },
+  "badge": {
+    "title": "Ce que signifie un badge",
+    "text": "Un badge ne couvre que les contrôles indiqués à côté. Ce n’est ni une recommandation, ni un avis d’embauche, ni une garantie que les informations du profil sont exactes."
+  }
+}

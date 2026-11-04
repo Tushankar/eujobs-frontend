@@ -1,0 +1,36 @@
+{
+  "title": "Des données utiles. Prêtes à partager.",
+  "description": "Générez des rapports avec une synthèse exécutive rédigée par l’IA, conservés pour que vous puissiez retélécharger le même fichier.",
+  "generated": "{{filename}} a été généré et téléchargé.",
+  "types": {
+    "marketplace_summary": "Synthèse du marché",
+    "skills_demand": "Compétences les plus demandées",
+    "platform_activity": "Activité de la plateforme"
+  },
+  "form": {
+    "title": "Créer un rapport",
+    "type": "Type de rapport",
+    "period": "Période",
+    "brief": "Consignes du rapport",
+    "briefPlaceholder": "Par exemple, mettez l’accent sur la progression entre les étapes de recrutement et sur les offres qui reçoivent peu de candidatures.",
+    "briefHint": "{{count}} / {{max}} caractères. Ajoutez du contexte, des questions ou des priorités pour la synthèse.",
+    "briefTooLong": "Les consignes doivent comporter {{max}} caractères au maximum.",
+    "voiceNote": "Note vocale",
+    "attach": "Joindre une note vocale",
+    "attached": "Fichier audio joint",
+    "removeVoiceNote": "Supprimer la note vocale",
+    "voiceHint": "Facultatif. L’audio est transcrit et la transcription est ajoutée aux consignes.",
+    "scope": "Export CSV · Tous les pays · La synthèse exécutive, les consignes et la transcription sont incluses · Pas de CV, de notes privées ni d’audio.",
+    "submit": "Générer et télécharger",
+    "generating": "Génération…"
+  },
+  "history": {
+    "title": "Historique des exports",
+    "empty": "Votre premier instantané utile",
+    "emptyText": "Générez un rapport pour voir son historique d’export ici.",
+    "meta": "{{filename}} · {{date}} · {{by}}",
+    "brief": "Consignes : {{brief}}",
+    "transcript": "Note vocale ({{name}}) : {{text}}",
+    "download": "Télécharger à nouveau"
+  }
+}

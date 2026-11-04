@@ -39,6 +39,7 @@
   font-weight: 700;
   line-height: 28px;
   letter-spacing: -0.7px;
+  overflow-wrap: anywhere;
   color: var(--foreground);
 }
 

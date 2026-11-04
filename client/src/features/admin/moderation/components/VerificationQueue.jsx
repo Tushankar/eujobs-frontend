@@ -6,19 +6,27 @@ import { errorCode } from '@/app/api.js'
 import EmptyState from '@/components/common/EmptyState.jsx'
 import SectionTitle from '@/components/common/SectionTitle.jsx'
 import SegmentedTabs from '@/components/common/SegmentedTabs.jsx'
-import { useFormat } from '@/lib/preferences.js'
 import { useGetVerificationQueueQuery } from '../api.js'
-import QueueRow from './QueueRow.jsx'
+import CandidateSubmissions from './CandidateSubmissions.jsx'
 import VerificationReview from './VerificationReview.jsx'
 import pageStyles from '../pages/ModerationPage.module.css'
 
 const STATUSES = ['in_review', 'approved', 'rejected']
-const STATUS_TONES = { in_review: 'warning', approved: 'success', rejected: 'danger' }
+
+/** The queue (oldest first) grouped per candidate; a candidate sits where their oldest submission was. */
+function byCandidate(items) {
+  const groups = new Map()
+  for (const item of items) {
+    const key = item.candidate?.id ?? item.id
+    if (!groups.has(key)) groups.set(key, { key, candidate: item.candidate, items: [] })
+    groups.get(key).items.push(item)
+  }
+  return [...groups.values()]
+}
 
 /** Moderation › Candidate verification (M-166, P3-D8): the server queue, oldest first, and the review dialog. */
 export default function VerificationQueue({ basePath, openId, onDecided }) {
   const { t } = useTranslation()
-  const format = useFormat()
   const navigate = useNavigate()
   const [status, setStatus] = useState('in_review')
   const { data: queue, error } = useGetVerificationQueueQuery(status)
@@ -45,22 +53,8 @@ export default function VerificationQueue({ basePath, openId, onDecided }) {
           <EmptyState icon={ShieldCheck} title={t('moderation:verification.empty')} />
         ) : (
           <ul className={pageStyles.list}>
-            {queue?.items.map((item) => (
-              <QueueRow
-                key={item.id}
-                icon={ShieldCheck}
-                title={item.candidate?.fullName ?? ''}
-                lines={[
-                  {
-                    text: [t(`enums:verificationCategory.${item.category}`), item.evidenceType && t(`enums:evidenceType.${item.evidenceType}`)].filter(Boolean).join(' · '),
-                    tone: 'sub',
-                  },
-                  { text: t('moderation:verification.submitted', { date: format.dateTime(item.submittedAt) }), tone: 'meta' },
-                ]}
-                status={{ tone: STATUS_TONES[item.status], label: t(`enums:verificationStatus.${item.status}`) }}
-                actionLabel={t('moderation:verification.review')}
-                to={`${basePath}/${item.id}`}
-              />
+            {byCandidate(queue?.items ?? []).map((group) => (
+              <CandidateSubmissions key={group.key} candidate={group.candidate} items={group.items} basePath={basePath} />
             ))}
           </ul>
         )}

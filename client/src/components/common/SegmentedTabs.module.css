@@ -2,9 +2,17 @@
   position: relative;
   display: inline-flex;
   gap: 4px;
+  max-width: 100%;
   padding: 4px;
+  overflow-x: auto;
   border-radius: var(--radius-xl);
   background: #eef0f4;
+  scrollbar-width: none;
+}
+
+/* Long translated tabs scroll inside the tray instead of pushing it past the page. */
+.tray::-webkit-scrollbar {
+  display: none;
 }
 
 /* The active pill: one element that slides under the tabs (positioned by useActiveIndicator). */

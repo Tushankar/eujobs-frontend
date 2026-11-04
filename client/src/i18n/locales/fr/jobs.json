@@ -1,0 +1,196 @@
+{
+  "page": {
+    "title": "La bonne présentation. Les bonnes personnes.",
+    "description": "Créez, gérez et affinez les postes qui façonneront votre équipe.",
+    "create": "Créer une offre",
+    "filterLabel": "Filtrer les offres par statut",
+    "all": "Toutes les offres",
+    "search": "Rechercher dans vos postes",
+    "caption": "Vos postes",
+    "emptyFiltered": "Aucun poste ne correspond à vos filtres",
+    "emptyFilteredText": "Essayez un autre statut ou une autre recherche.",
+    "empty": "Aucune offre pour l’instant",
+    "emptyText": "Vous n’avez pas encore créé d’offre.",
+    "clearFilters": "Effacer les filtres"
+  },
+  "table": {
+    "role": "Poste",
+    "workPreference": "Mode de travail",
+    "candidates": "Candidats",
+    "status": "Statut",
+    "actions": "Actions",
+    "relevant_one": "{{count}} pertinent",
+    "relevant_many": "{{count}} pertinents",
+    "relevant_other": "{{count}} pertinents",
+    "manage": "Gérer {{title}}",
+    "view": "Voir {{title}}",
+    "edit": "Modifier l’offre",
+    "viewCandidates": "Voir les candidats",
+    "delete": "Supprimer le brouillon",
+    "restricted": "Restreinte",
+    "statusActions": {
+      "paused": "Mettre en pause",
+      "closed": "Clôturer l’offre",
+      "published": "Publier l’offre",
+      "resume": "Reprendre la publication",
+      "reopen": "Rouvrir l’offre"
+    },
+    "closeTitle": "Clôturer cette offre ?",
+    "closeText": "{{title}} n’acceptera plus de nouveaux candidats. Vous pouvez la rouvrir à tout moment.",
+    "deleteTitle": "Supprimer ce brouillon ?",
+    "deleteText": "{{title}} sera supprimé. Seuls les brouillons peuvent être supprimés ; les postes publiés sont clôturés à la place.",
+    "locked": "Cette offre est restreinte par la modération et ne peut pas être publiée tant que la restriction n’est pas levée."
+  },
+  "steps": {
+    "basics": "Informations de base",
+    "responsibilities": "Missions",
+    "required-skills": "Compétences requises",
+    "preferred-skills": "Compétences souhaitées",
+    "experience": "Expérience et langues",
+    "location": "Lieu et mode de travail",
+    "quality": "Contrôles qualité",
+    "review": "Récapitulatif",
+    "publish": "Publication"
+  },
+  "wizard": {
+    "newEyebrow": "Constituez votre prochaine équipe",
+    "newTitle": "Un bon recrutement commence par la clarté.",
+    "editEyebrow": "Affinez votre poste",
+    "editTitle": "Rendez la présentation encore plus claire.",
+    "description": "Transformez votre poste en prérequis structurés. Vous fixez le cap.",
+    "stepCount": "Étape {{current}} sur {{total}}",
+    "cancel": "Annuler",
+    "back": "Retour",
+    "continue": "Continuer",
+    "saveDraft": "Enregistrer comme brouillon",
+    "publish": "Publier l’offre",
+    "saveChanges": "Enregistrer les modifications",
+    "newNote": "Votre brouillon est enregistré dans votre liste d’offres après la première étape, puis à chaque étape.",
+    "draftNote": "Ce brouillon est enregistré à chaque étape. Retrouvez-le sous Brouillon dans vos offres.",
+    "liveNote": "Les modifications d’un poste en ligne sont enregistrées à la fin et visibles immédiatement par les candidats."
+  },
+  "fields": {
+    "title": "Intitulé du poste",
+    "titlePlaceholder": "ex. : Designer produit senior",
+    "company": "Entreprise",
+    "companyHint": "Le nom affiché de votre entreprise, issu de la page Entreprise.",
+    "employmentType": "Type de contrat",
+    "brief": "Présentation du poste",
+    "briefHint": "Quelques phrases sur l’équipe, l’impact du poste et ce qui définit la réussite.",
+    "responsibilities": "Missions",
+    "responsibilitiesHint": "Une mission par ligne, jusqu’à {{max}}. Facultatif, mais trois ou plus facilitent la correspondance.",
+    "requiredSkills": "Compétences requises",
+    "requiredSkillsHint": "Compétences que les candidats doivent indiquer dans leur profil pour être jugés pertinents.",
+    "preferredSkills": "Compétences souhaitées",
+    "preferredSkillsHint": "Un plus. Elles n’excluent jamais un candidat. Facultatif.",
+    "level": "Niveau de séniorité",
+    "levelPlaceholder": "Choisissez un niveau",
+    "experienceYears": "Années d’expérience minimum",
+    "experiencePlaceholder": "ex. : 5",
+    "languages": "Langues requises",
+    "languagesHint": "Facultatif. Les candidats voient le niveau minimum pour chaque langue.",
+    "language": "Langue",
+    "minLevel": "Niveau minimum",
+    "addLanguage": "Ajouter une langue",
+    "removeLanguage": "Retirer {{language}}",
+    "workPreference": "Mode de travail",
+    "workPreferencePlaceholder": "Choisissez un mode de travail",
+    "city": "Ville du poste",
+    "cityHint": "La ville détermine le pays de l’offre et la devise du salaire.",
+    "remoteCountries": "Pays éligibles",
+    "remoteCountriesHint": "Facultatif. Laissez vide pour accepter des candidats partout dans l’UE et au Royaume-Uni.",
+    "addCountry": "Ajouter un pays",
+    "removeCountry": "Retirer {{country}}",
+    "salaryMin": "Salaire minimum ({{currency}})",
+    "salaryMax": "Salaire maximum ({{currency}})",
+    "salaryNoCurrency": "Salaire",
+    "salaryNeedsPlace": "Choisissez d’abord le mode de travail et la ville : ils déterminent la devise.",
+    "salaryPeriod": "Période",
+    "salaryNote": "Le salaire est facultatif, mais les postes avec une fourchette attirent généralement des candidats plus pertinents.",
+    "visaSponsorship": "Parrainage de visa possible"
+  },
+  "skills": {
+    "placeholder": "Saisissez une compétence et appuyez sur Entrée",
+    "add": "Ajouter",
+    "added": "Ajouté : {{label}}",
+    "remove": "Retirer {{skill}}",
+    "duplicate": "{{skill}} figure déjà dans la liste.",
+    "inOther": "{{skill}} figure déjà dans l’autre liste de compétences.",
+    "suggestions": "Suggestions"
+  },
+  "quality": {
+    "intro": "Ces contrôles appliquent les mêmes règles sur le serveur pour chaque offre. Ils ne classent ni ne rejettent jamais de candidats.",
+    "title_words": {
+      "ok": "L’intitulé est assez précis pour que les candidats recherchent par poste et par niveau.",
+      "warn": "L’intitulé est court. Les candidats recherchent par poste et par niveau : ajoutez les deux."
+    },
+    "brief_length": {
+      "ok": "La présentation donne assez de contexte sur le poste.",
+      "warn": "La présentation fait moins de {{min}} caractères. Quelques phrases de plus sur l’équipe et l’impact facilitent la correspondance."
+    },
+    "responsibilities": {
+      "ok": "{{count}} missions sont indiquées.",
+      "warn": "Moins de {{min}} missions sont indiquées. Ajoutez les principaux résultats attendus du poste."
+    },
+    "required_skills": {
+      "ok": "{{count}} compétences requises sont indiquées, une bonne base pour la correspondance.",
+      "warn": "{{count}} compétences requises sont indiquées. Entre {{min}} et {{max}}, la correspondance dispose d’assez d’éléments."
+    },
+    "salary_range": {
+      "ok": "Une fourchette de salaire complète est visible par les candidats.",
+      "warn": "Aucune fourchette de salaire complète n’est affichée. Les postes avec une fourchette attirent généralement des candidats plus pertinents."
+    }
+  },
+  "review": {
+    "untitled": "Poste sans intitulé",
+    "chooseStatus": "Enregistrez ce poste comme brouillon pour le terminer plus tard, ou publiez-le pour l’afficher avec vos postes ouverts.",
+    "ready": "Tout est prêt. L’enregistrement met à jour ce poste immédiatement.",
+    "role": "Poste",
+    "where": "Lieu",
+    "requiredSkills": "Compétences requises",
+    "salary": "Salaire",
+    "notSet": "Non défini",
+    "none": "Aucune",
+    "notShown": "Non affiché"
+  },
+  "posting": {
+    "noBrief": "Aucune présentation n’a encore été ajoutée. Utilisez Modifier le poste pour en ajouter une.",
+    "responsibilities": "Missions",
+    "requiredSkills": "Compétences requises",
+    "preferredSkills": "Compétences souhaitées",
+    "languages": "Langues",
+    "languageLevel": "{{language}} · {{level}} ou plus",
+    "eligible": "Pays éligibles : {{countries}}",
+    "visa": "Parrainage de visa possible"
+  },
+  "details": {
+    "back": "Retour aux offres",
+    "dismiss": "Fermer le message",
+    "edit": "Modifier le poste",
+    "brief": "Présentation du poste",
+    "activity": "Activité du poste",
+    "relevant_one": "{{count}} profil pertinent",
+    "relevant_many": "{{count}} profils pertinents",
+    "relevant_other": "{{count}} profils pertinents",
+    "discover": "Découvrir des candidats",
+    "applications": "Examiner les candidatures",
+    "tip": "Une présentation claire rend la correspondance plus utile. Revoyez régulièrement les prérequis et gardez des critères obligatoires liés au poste.",
+    "talent": "Découvrir des talents pertinents",
+    "talentEmpty": "Aucun profil avec des compétences pertinentes pour l’instant. Des suggestions apparaîtront ici à mesure que les candidats mettront à jour leur profil.",
+    "openTalent": "Ouvrir {{name}} dans Trouver des candidats",
+    "restricted": "Restreinte par la modération : {{reason}}",
+    "years_one": "{{count}} an d’expérience",
+    "years_many": "{{count}} ans d’expérience",
+    "years_other": "{{count}} ans d’expérience"
+  },
+  "notices": {
+    "published": "Offre publiée. Elle apparaît désormais dans vos postes ouverts.",
+    "draft": "Brouillon enregistré. Retrouvez-le sous Brouillon dans vos offres.",
+    "saved": "Modifications enregistrées. Les candidats les voient immédiatement."
+  },
+  "notFound": {
+    "title": "Nous n’avons pas trouvé cette offre",
+    "text": "Elle a peut-être été supprimée, ou le lien est incorrect. Vos autres offres se trouvent toujours dans la liste des offres.",
+    "back": "Retour aux offres"
+  }
+}

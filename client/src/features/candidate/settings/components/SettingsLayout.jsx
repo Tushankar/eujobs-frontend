@@ -1,27 +1,26 @@
+import { useTranslation } from 'react-i18next'
 import { NavLink, Outlet } from 'react-router-dom'
 import PageTitle from '@/components/common/PageTitle.jsx'
 import { cx } from '@/utils/cx.js'
 import styles from './SettingsLayout.module.css'
 
 const TABS = [
-  { label: 'Privacy & visibility', to: '/candidate/settings/privacy' },
-  { label: 'Notifications', to: '/candidate/settings/notifications' },
-  { label: 'Data & account', to: '/candidate/settings/data-account' },
-  { label: 'Billing', to: '/candidate/settings/billing' },
+  { key: 'privacy', to: '/candidate/settings/privacy' },
+  { key: 'notifications', to: '/candidate/settings/notifications' },
+  { key: 'data', to: '/candidate/settings/data-account' },
+  { key: 'billing', to: '/candidate/settings/billing' },
 ]
 
 /** Shared frame of the four settings tabs: page title, tab navigation and the routed tab content. */
 export default function SettingsLayout() {
+  const { t } = useTranslation('account')
   return (
     <>
-      <PageTitle
-        title="Your workspace. Your terms."
-        description="Simple controls for your privacy, notifications, and personal information."
-      />
-      <nav className={styles.tabs} aria-label="Settings sections">
+      <PageTitle title={t('layout.title')} description={t('layout.description')} />
+      <nav className={styles.tabs} aria-label={t('layout.sections')}>
         {TABS.map((tab) => (
           <NavLink key={tab.to} to={tab.to} className={({ isActive }) => cx(styles.tab, isActive && styles.tabActive)}>
-            {tab.label}
+            {t(`layout.tabs.${tab.key}`)}
           </NavLink>
         ))}
       </nav>

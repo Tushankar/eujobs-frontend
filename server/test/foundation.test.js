@@ -1,8 +1,10 @@
 import assert from 'node:assert/strict'
 import { spawnSync } from 'node:child_process'
+import { readFileSync } from 'node:fs'
 import { describe, it } from 'node:test'
 import mongoose from 'mongoose'
 import { ENUMS } from '../config/enums.js'
+import { ERROR_STATUS } from '../lib/errors.js'
 import { dictionaries } from '../lib/i18n.js'
 import { renderEmail } from '../lib/mail/templates.js'
 import { api, useTestDb } from './helpers/index.js'
@@ -135,6 +137,40 @@ describe('server i18n (§2.11)', () => {
       assert.deepEqual(shape(dictionaries[language]), shape(dictionaries.en))
     })
   }
+
+  // Phase 11: the same {{placeholders}} in every language, so no parameter is lost in translation.
+  const placeholders = (node, prefix = '') =>
+    Object.entries(node).flatMap(([key, value]) => {
+      if (value && typeof value === 'object') return placeholders(value, `${prefix}${key}.`)
+      return [`${prefix}${key}:${[...String(value).matchAll(/\{\{(\w+)\}\}/g)].map((match) => match[1]).sort().join(',')}`]
+    })
+  for (const language of ['es', 'fr']) {
+    it(`${language} keeps every en placeholder`, () => {
+      assert.deepEqual(placeholders(dictionaries[language]), placeholders(dictionaries.en))
+    })
+  }
+
+  it('renders every email type in every language, translated and with every parameter filled', () => {
+    for (const type of ENUMS.emailType) {
+      const names = new Set(JSON.stringify(dictionaries.en.email[type]).match(/\{\{\w+\}\}/g)?.map((name) => name.slice(2, -2)) ?? [])
+      const params = { link: 'http://localhost/link', secondaryLink: 'http://localhost/second', ...(dictionaries.en.email[type].more && { moreLink: 'http://localhost/more' }), ...Object.fromEntries([...names].map((name) => [name, `[${name}]`])) }
+      const english = renderEmail(type, 'en', params)
+      for (const language of ENUMS.language) {
+        const email = renderEmail(type, language, params)
+        assert.ok(email.subject && email.html.includes(`lang="${language}"`), `${type} ${language}`)
+        assert.ok(!/\{\{/.test(email.subject + email.text), `${type} ${language}: an unfilled placeholder`)
+        for (const name of names) assert.ok(`${email.subject}\n${email.text}`.includes(`[${name}]`), `${type} ${language}: {{${name}}} is not shown`)
+        if (language !== 'en') assert.notEqual(email.text, english.text, `${type} ${language} is not translated`)
+      }
+    }
+  })
+
+  it('has a client message for every server error code in en, es and fr (M-143)', () => {
+    for (const language of ENUMS.language) {
+      const messages = JSON.parse(readFileSync(new URL(`../../client/src/i18n/locales/${language}/errors.json`, import.meta.url), 'utf8'))
+      for (const code of Object.keys(ERROR_STATUS)) assert.equal(typeof messages[code], 'string', `${language} errors:${code}`)
+    }
+  })
 
   it('renders every Phase 1 template in every language', () => {
     const params = { name: 'Ana', link: 'http://localhost/x', secondaryLink: 'http://localhost/y', code: '123456' }

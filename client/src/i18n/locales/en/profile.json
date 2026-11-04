@@ -94,6 +94,8 @@
   },
   "form": {
     "save": "Save",
+    "month": "Month",
+    "year": "Year",
     "core": {
       "title": "Edit profile",
       "fullName": "Full name",
@@ -118,9 +120,9 @@
       "addTitle": "Add a role",
       "editTitle": "Edit role",
       "title": "Job title",
-      "employer": "Employer",
-      "start": "Start month",
-      "end": "End month",
+      "employer": "Company or organisation",
+      "start": "Start date",
+      "end": "End date",
       "current": "I currently work here",
       "description": "What you did (optional)"
     },
@@ -129,8 +131,8 @@
       "editTitle": "Edit education",
       "institution": "Institution",
       "degree": "Degree or qualification",
-      "start": "Start month",
-      "end": "End month",
+      "start": "Start date",
+      "end": "End date",
       "stillStudying": "Still studying"
     },
     "languages": {
@@ -138,6 +140,8 @@
       "language": "Language",
       "level": "Level",
       "choose": "Choose a language",
+      "search": "Search languages",
+      "noResults": "No language matches “{{query}}”.",
       "add": "Add a language",
       "remove": "Remove {{language}}"
     },
@@ -161,8 +165,8 @@
       "editTitle": "Edit certificate",
       "name": "Certificate name",
       "issuer": "Issued by",
-      "issuedOn": "Issue month",
-      "expiresOn": "Expiry month (optional)",
+      "issuedOn": "Issue date",
+      "expiresOn": "Expiry date (optional)",
       "url": "Credential link (optional)",
       "file": "Certificate file (optional)",
       "fileHint": "{{limits}}. With a file you can ask for verification.",

@@ -180,7 +180,7 @@ export default function JobMatchPage() {
             </Panel>
           </div>
 
-          <aside className={styles.side} aria-label={t('jobMatch.nextTitle')}>
+          <aside className={`${styles.side} sticky-side`} aria-label={t('jobMatch.nextTitle')}>
             <Panel padding={24}>
               <h2 className={styles.title}>{t('jobMatch.nextTitle')}</h2>
               <p className={styles.sideText}>{t('jobMatch.nextText')}</p>

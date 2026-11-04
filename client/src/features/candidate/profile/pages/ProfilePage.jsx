@@ -1,26 +1,7 @@
 import { useRef, useState } from 'react'
 import { useTranslation } from 'react-i18next'
 import { Link } from 'react-router-dom'
-import {
-  ArrowRight,
-  Award,
-  BadgeCheck,
-  BriefcaseBusiness,
-  Compass,
-  Earth,
-  FileText,
-  GraduationCap,
-  Languages,
-  Link2,
-  MapPin,
-  Plus,
-  ShieldCheck,
-  SquarePen,
-  Target,
-  Trash2,
-  Upload,
-  UserRound,
-} from 'lucide-react'
+import { ArrowRight, Earth, FileText, Link2, MapPin, Plus, ShieldCheck, SquarePen, Trash2, Upload } from 'lucide-react'
 import { useGetConfigQuery } from '@/app/api.js'
 import { Avatar, Button, Checkbox, Icon, IconButton, Panel } from '@/components/ui'
 import ConfirmDialog from '@/components/common/ConfirmDialog.jsx'
@@ -54,26 +35,14 @@ export default function ProfilePage() {
   return profile ? <ProfileView profile={profile} /> : null
 }
 
-const SECTION_ICONS = {
-  about: UserRound,
-  strengths: Target,
-  'work-history': BriefcaseBusiness,
-  education: GraduationCap,
-  languages: Languages,
-  'right-to-work': Earth,
-  links: Link2,
-  certificates: Award,
-  'course-certificates': BadgeCheck,
-  'next-step': Compass,
-}
+// The completeness ring around the photo (viewBox 100).
+const RING_RADIUS = 47
+const RING_LENGTH = 2 * Math.PI * RING_RADIUS
 
 function Section({ name, title, action, children }) {
   return (
     <section className={styles.section} data-section={name}>
       <div className={styles.sectionHead}>
-        <span className={styles.sectionIcon}>
-          <Icon as={SECTION_ICONS[name]} size={16} />
-        </span>
         <h2 className={cx(styles.sectionTitle, styles.sectionName)}>{title}</h2>
         {action}
       </div>
@@ -244,7 +213,23 @@ function ProfileView({ profile }) {
       <div className={styles.layout}>
         <Panel padding={32} className={styles.main}>
           <div className={styles.identity}>
-            <Avatar name={profile.fullName} src={profile.photoUrl ?? undefined} size={80} />
+            <div className={cx(styles.avatarRing, profile.completeness.complete && styles.avatarRingDone)} title={t('completeness:progress', profile.completeness)}>
+              <svg viewBox="0 0 100 100" aria-hidden="true">
+                <circle className={styles.ringTrack} cx="50" cy="50" r={RING_RADIUS} />
+                <circle
+                  className={styles.ringFill}
+                  cx="50"
+                  cy="50"
+                  r={RING_RADIUS}
+                  strokeDasharray={RING_LENGTH}
+                  strokeDashoffset={RING_LENGTH * (1 - profile.completeness.percent / 100)}
+                />
+              </svg>
+              <Avatar name={profile.fullName} src={profile.photoUrl ?? undefined} size={80} />
+              <span className={styles.avatarPercent} data-profile-percent>
+                {format.number(profile.completeness.percent / 100, { style: 'percent' })}
+              </span>
+            </div>
             <div className={styles.who}>
               <h2 className={styles.name}>{profile.fullName}</h2>
               {profile.headline && <p className={styles.headline}>{profile.headline}</p>}
@@ -304,7 +289,7 @@ function ProfileView({ profile }) {
               name={kind}
               title={t(`profile:${section}.title`)}
               action={
-                <Button variant="secondary" size="sm" leftIcon={<Icon as={Plus} size={14} />} onClick={() => openDialog(kind)}>
+                <Button variant="secondary" size="sm" className={styles.sectionAction} leftIcon={<Icon as={Plus} size={14} />} onClick={() => openDialog(kind)}>
                   {t(`profile:${section}.add`)}
                 </Button>
               }
@@ -339,7 +324,7 @@ function ProfileView({ profile }) {
             name="languages"
             title={t('profile:languages.title')}
             action={
-              <Button variant="secondary" size="sm" leftIcon={<Icon as={SquarePen} size={14} />} onClick={() => openDialog('languages')}>
+              <Button variant="secondary" size="sm" className={styles.sectionAction} leftIcon={<Icon as={SquarePen} size={14} />} onClick={() => openDialog('languages')}>
                 {t('profile:languages.edit')}
               </Button>
             }
@@ -363,7 +348,7 @@ function ProfileView({ profile }) {
             name="right-to-work"
             title={t('profile:rightToWork.title')}
             action={
-              <Button variant="secondary" size="sm" leftIcon={<Icon as={SquarePen} size={14} />} onClick={() => openDialog('rightToWork')}>
+              <Button variant="secondary" size="sm" className={styles.sectionAction} leftIcon={<Icon as={SquarePen} size={14} />} onClick={() => openDialog('rightToWork')}>
                 {t('profile:rightToWork.edit')}
               </Button>
             }
@@ -391,7 +376,7 @@ function ProfileView({ profile }) {
             name="links"
             title={t('profile:links.title')}
             action={
-              <Button variant="secondary" size="sm" leftIcon={<Icon as={SquarePen} size={14} />} onClick={() => openDialog('links')}>
+              <Button variant="secondary" size="sm" className={styles.sectionAction} leftIcon={<Icon as={SquarePen} size={14} />} onClick={() => openDialog('links')}>
                 {t('profile:links.edit')}
               </Button>
             }
@@ -419,7 +404,7 @@ function ProfileView({ profile }) {
             name="certificates"
             title={t('profile:certificates.title')}
             action={
-              <Button variant="secondary" size="sm" leftIcon={<Icon as={Plus} size={14} />} onClick={() => openDialog('certificate')}>
+              <Button variant="secondary" size="sm" className={styles.sectionAction} leftIcon={<Icon as={Plus} size={14} />} onClick={() => openDialog('certificate')}>
                 {t('profile:certificates.add')}
               </Button>
             }
@@ -489,7 +474,19 @@ function ProfileView({ profile }) {
 
         <aside className={styles.side}>
           <Panel padding={24}>
-            <CompletenessChecklist completeness={profile.completeness} heading={<h2 className={styles.sectionTitle}>{t('completeness:title')}</h2>} />
+            <CompletenessChecklist
+              completeness={profile.completeness}
+              heading={<h2 className={styles.sectionTitle}>{t('completeness:title')}</h2>}
+              onOpen={{
+                basics: () => openDialog('core'),
+                work_history: () => openDialog('work-history'),
+                education: () => openDialog('education'),
+                languages: () => openDialog('languages'),
+                right_to_work: () => openDialog('rightToWork'),
+                photo: () => photoInput.current.click(),
+                links: () => openDialog('links'),
+              }}
+            />
           </Panel>
 
           <Panel padding={24}>

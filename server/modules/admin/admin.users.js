@@ -15,6 +15,7 @@ import { Subscription } from '../payments/payments.model.js'
 import { User } from '../users/users.model.js'
 import { VerificationSubmission } from '../verification/verification.model.js'
 import { AuditEvent } from './admin.model.js'
+import { searchText } from '../../lib/skills.js'
 
 /*
  * Admin › Candidates and Recruiters (M-161, M-169, M-206): the tables with their filters, the detail pages and the
@@ -111,7 +112,7 @@ async function recruiterRows() {
   })
 }
 
-const matchesText = (row, q) => !q || [row.fullName, row.email, row.company?.displayName].some((text) => text?.toLowerCase().includes(q.toLowerCase()))
+const matchesText = (row, q) => !q || [row.fullName, row.email, row.company?.displayName].some((text) => searchText(text).includes(searchText(q)))
 
 /** Every row of one table matching the query (search, status or state, country and the candidate filters). */
 export async function filteredUsers(query) {

@@ -1,5 +1,8 @@
 import { useTranslation } from 'react-i18next'
-import { CompanyLogo, Panel, SelectField } from '@/components/ui'
+import { Link } from 'react-router-dom'
+import { BriefcaseBusiness, Search, SquarePen } from 'lucide-react'
+import { Button, CompanyLogo, Icon, Panel, SelectField } from '@/components/ui'
+import EmptyState from '@/components/common/EmptyState.jsx'
 import { useJobText } from '@/lib/jobText.js'
 import styles from './RolePicker.module.css'
 
@@ -10,9 +13,22 @@ export default function RolePicker({ roles, jobId, onChange }) {
   const job = roles.find((role) => role.id === jobId)
   if (!roles.length) {
     return (
-      <Panel className={styles.picker} padding={20}>
-        <p className={styles.meta}>{t('picker.none')}</p>
-      </Panel>
+      <EmptyState
+        size="lg"
+        icon={BriefcaseBusiness}
+        title={t('picker.noneTitle')}
+        description={t('picker.noneText')}
+        action={
+          <div className={styles.emptyActions}>
+            <Button as={Link} to="/candidate/jobs" leftIcon={<Icon as={Search} size={14} />}>
+              {t('shell:nav.findJobs')}
+            </Button>
+            <Button as={Link} to="/candidate/profile" variant="outline" leftIcon={<Icon as={SquarePen} size={14} />}>
+              {t('profile:edit')}
+            </Button>
+          </div>
+        }
+      />
     )
   }
   return (

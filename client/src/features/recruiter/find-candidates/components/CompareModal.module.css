@@ -2,11 +2,12 @@
   overflow-x: auto;
 }
 
+/* Fits the dialog: cells wrap instead of the table forcing a sideways scroll (kept only as a fallback). */
 .table {
   width: 100%;
-  min-width: 560px;
   border-collapse: collapse;
   text-align: left;
+  overflow-wrap: anywhere;
 }
 
 .person {

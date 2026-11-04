@@ -1,4 +1,5 @@
 {
+  "queues": "Moderation queues",
   "verification": {
     "tab": "Candidate verification",
     "title": "Candidate verification queue",
@@ -8,6 +9,8 @@
     "noPermission": "This queue needs the {{permission}} permission.",
     "submitted": "Submitted {{date}}",
     "review": "Review evidence",
+    "count_one": "{{count}} submission",
+    "count_other": "{{count}} submissions",
     "stat": {
       "label": "Credential reviews",
       "caption": "Candidate checks awaiting review"
@@ -23,6 +26,8 @@
       "claimMissing": "The linked profile entry was removed.",
       "file": "File",
       "openFile": "Open {{name}}",
+      "openNewTab": "Open in new tab",
+      "noInline": "This file type can’t be shown here. Open it in a new tab to review it.",
       "noPreview": "Previews need the {{permission}} permission.",
       "previewAlt": "Evidence file {{name}}",
       "history": "Earlier submissions",

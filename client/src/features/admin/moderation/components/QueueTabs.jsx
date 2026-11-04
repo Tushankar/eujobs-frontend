@@ -1,3 +1,4 @@
+import { useTranslation } from 'react-i18next'
 import { Link } from 'react-router-dom'
 import { Icon } from '@/components/ui'
 import { cx } from '@/utils/cx.js'
@@ -9,8 +10,9 @@ import styles from './QueueTabs.module.css'
  * `tabs` = [{ id, label, icon, count, to }].
  */
 export default function QueueTabs({ tabs, value }) {
+  const { t } = useTranslation('moderation')
   return (
-    <div className={styles.tray} role="tablist" aria-label="Moderation queues">
+    <div className={styles.tray} role="tablist" aria-label={t('queues')}>
       {tabs.map((tab) => {
         const active = tab.id === value
         return (

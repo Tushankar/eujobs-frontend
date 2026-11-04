@@ -6,12 +6,13 @@ import { api, db } from '../lib/testApi.js'
 
 const aiStatus = async () => (await db('appconfigs', 'find', { filter: { key: 'ai' } }))[0]?.value ?? {}
 const usageOf = async (userId) => (await db('aiusages', 'find', { filter: { userId: { $oid: userId } } }))[0]?.count ?? 0
+const when = (value) => new Date(value?.$date ?? value ?? 0)
 const overviewText = (page) => page.$eval('[data-summary-overview]', (element) => element.textContent)
 
 /**
  * P9-08 (M-058, M-059, P9-Q5): the AI job summary on a Plus candidate's card, on a recruiter's job row and on the admin
  * Jobs page. The second open is a cache hit: no OpenAI call and the cap unchanged. A Free candidate's button opens the
- * upgrade dialog without any request. The admin regenerates a real job's summary and sees the text change.
+ * upgrade dialog without any request. The admin regenerates a real job's summary: a new generation is made (the wording may repeat).
  */
 export default {
   name: 'P9-08 Job summaries',
@@ -75,12 +76,22 @@ export default {
     await admin.page.click(`[data-admin-job="${job.id}"] a`)
     await admin.page.waitForSelector('[data-summary-overview]', { visible: true, timeout: 60_000 })
     const original = await overviewText(admin.page)
+    // Regenerate is checked by the new generation, not by different wording: OpenAI may return the same text.
+    const [statusBefore, clickedAt] = [await aiStatus(), new Date()]
+    const regenerated = admin.page.waitForResponse(
+      (response) => response.request().method() === 'POST' && response.url().includes(`/admin/jobs/${job.id}/ai-summary/regenerate`),
+      { timeout: 60_000 },
+    )
     await admin.page.click('[data-regenerate]')
-    await admin.page.waitForFunction((previous) => {
-      const text = document.querySelector('[data-summary-overview]')?.textContent
-      return text && text !== previous
-    }, { timeout: 60_000 }, original)
-    ctx.note(`Regenerated: "${original.slice(0, 60)}…" → "${(await overviewText(admin.page)).slice(0, 60)}…"`)
+    const response = await regenerated
+    ctx.check(response.status() === 200, `the Regenerate request was made and answered 200 (${response.status()})`)
+    const { overview } = await response.json()
+    await admin.page.waitForFunction((text) => document.querySelector('[data-summary-overview]')?.textContent === text, { timeout: 15_000 }, overview)
+    const statusAfter = await aiStatus()
+    ctx.check(when(statusAfter.lastSuccessAt) > when(statusBefore.lastSuccessAt), 'a new OpenAI generation (the last-success time moved)')
+    const cached = await db('aicaches', 'find', { filter: { kind: 'job_summary', language: 'en', 'output.overview': overview } })
+    ctx.check(cached.some((row) => when(row.updatedAt) >= clickedAt), 'the cached summary was rewritten after the click')
+    ctx.note(`Regenerated (${original === overview ? 'same wording' : 'new wording'}): "${original.slice(0, 60)}…" → "${overview.slice(0, 60)}…"`)
     const owner = (await db('users', 'find', { filter: { isOwner: true } }))[0]
     ctx.check((await usageOf(owner._id.$oid)) === 0, 'an admin is not counted')
     await ctx.screenshot(admin.page, '4-admin-regenerated')

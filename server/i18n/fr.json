@@ -95,8 +95,8 @@
       "action": "Voir l’état du compte"
     },
     "cv_request": {
-      "subject": "{{company}} souhaite voir un ancien CV",
-      "heading": "Demande d’une version antérieure du CV",
+      "subject": "Demande de CV de {{company}}",
+      "heading": "Demande de CV",
       "body": [
         "Bonjour {{name}},",
         "{{company}} souhaite voir une version antérieure de votre CV.",
@@ -263,7 +263,7 @@
   "stages": {
     "applied": "Candidature",
     "screening": "Présélection",
-    "shortlisted": "Liste restreinte",
+    "shortlisted": "Short-list",
     "interview": "Entretien",
     "offer": "Offre",
     "hired": "Embauche"
@@ -585,10 +585,10 @@
       "companies": "Entreprises inscrites",
       "coursePurchases": "Achats de cours",
       "checksInReview": "Vérifications en cours d’examen",
-      "shortlists": "Activité de présélection",
+      "shortlists": "Activité de short-list",
       "outreach": "Brouillons de prise de contact relus",
       "pendingReviews": "Examens d’utilisateurs en attente",
-      "shortlistConversion": "Conversion en présélection",
+      "shortlistConversion": "Conversion en short-list",
       "recruiterAccounts": "Comptes recruteur"
     },
     "csv": {

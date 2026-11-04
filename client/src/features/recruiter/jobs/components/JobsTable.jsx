@@ -165,13 +165,15 @@ export default function JobsTable({ jobs, sort, onSort, caption }) {
                   </Link>
                   <p className={styles.roleMeta}>{[jobText.place(job), job.employmentType && t(`enums:employmentType.${job.employmentType}`)].filter(Boolean).join(' · ')}</p>
                 </td>
-                <td className={cx(styles.td, styles.muted)}>{job.workPreference && t(`enums:workPreference.${job.workPreference}`)}</td>
-                <td className={styles.td}>
+                <td className={cx(styles.td, styles.muted)} data-label={t('jobs:table.workPreference')}>
+                  {job.workPreference && <span>{t(`enums:workPreference.${job.workPreference}`)}</span>}
+                </td>
+                <td className={styles.td} data-label={t('jobs:table.candidates')}>
                   <Link to={`/recruiter/find-candidates?jobId=${job.id}`} className={styles.relevant}>
                     {t('jobs:table.relevant', { count: job.relevantCount })}
                   </Link>
                 </td>
-                <td className={styles.td}>
+                <td className={styles.td} data-label={t('jobs:table.status')}>
                   <JobStatusBadge status={job.status} restricted={Boolean(job.restricted)} />
                 </td>
                 <td className={styles.td}>

@@ -1,0 +1,178 @@
+{
+  "title": "Un profil qui vous ressemble.",
+  "description": "Votre expérience est plus qu’une liste. Racontez l’histoire qui se cache derrière.",
+  "edit": "Modifier le profil",
+  "saved": "Profil enregistré.",
+  "photo": {
+    "upload": "Importer une photo",
+    "change": "Changer de photo",
+    "remove": "Supprimer la photo",
+    "hint": "{{limits}}. La photo est recadrée au format carré."
+  },
+  "about": {
+    "title": "Quelques mots sur moi",
+    "empty": "Présentez-vous en quelques mots aux recruteurs dans Modifier le profil."
+  },
+  "strengths": {
+    "title": "Expérience et points forts",
+    "years_one": "{{count}} an d’expérience professionnelle",
+    "years_many": "{{count}} ans d’expérience professionnelle",
+    "years_other": "{{count}} ans d’expérience professionnelle",
+    "empty": "Ajoutez vos années d’expérience et vos compétences dans Modifier le profil."
+  },
+  "workHistory": {
+    "title": "Expérience",
+    "add": "Ajouter un poste",
+    "empty": "Ajoutez les postes que vous avez occupés, ou indiquez que vous n’avez pas encore d’expérience professionnelle.",
+    "none": "Pas encore d’expérience professionnelle"
+  },
+  "education": {
+    "title": "Diplômes",
+    "add": "Ajouter un diplôme",
+    "empty": "Ajoutez vos diplômes, ou indiquez que vous n’avez pas de diplôme.",
+    "none": "Aucun diplôme"
+  },
+  "period": "{{start}} – {{end}}",
+  "present": "Aujourd’hui",
+  "stillStudying": "Études en cours",
+  "languages": {
+    "title": "Langues",
+    "edit": "Modifier les langues",
+    "empty": "Ajoutez les langues que vous parlez et votre niveau."
+  },
+  "rightToWork": {
+    "title": "Droit au travail",
+    "edit": "Modifier le droit au travail",
+    "empty": "Ajoutez votre droit au travail dans l’UE, au Royaume-Uni ou les deux.",
+    "validUntil": "Valable jusqu’au {{date}}",
+    "expired": "Permis expiré"
+  },
+  "links": {
+    "title": "Liens",
+    "edit": "Modifier les liens",
+    "empty": "Ajoutez un profil LinkedIn ou un lien vers votre portfolio.",
+    "linkedin": "LinkedIn",
+    "portfolio": "Portfolio"
+  },
+  "certificates": {
+    "title": "Certificats",
+    "add": "Ajouter un certificat",
+    "empty": "Facultatif : certificats obtenus en dehors de Local WorkMan.",
+    "issued": "Délivré le {{date}}",
+    "expires": "Expire le {{date}}",
+    "link": "Voir l’attestation",
+    "file": "Ouvrir le fichier"
+  },
+  "courseCertificates": {
+    "title": "Certificats et badges",
+    "meta": "Délivré le {{date}} · {{code}}",
+    "check": "Vérification publique",
+    "empty": "Les certificats de formation obtenus sur Local WorkMan apparaissent ici.",
+    "browse": "Parcourir les formations"
+  },
+  "nextStep": {
+    "title": "La bonne prochaine étape",
+    "salary": "À partir de {{amount}} {{period}}"
+  },
+  "resume": {
+    "title": "Votre CV",
+    "none": "Aucun CV importé pour l’instant",
+    "update": "Mettre à jour le CV"
+  },
+  "control": {
+    "title": "Votre histoire. Votre choix.",
+    "text": "Choisissez qui peut découvrir votre profil et quand votre CV est partagé.",
+    "link": "Gérer la confidentialité"
+  },
+  "actions": {
+    "edit": "Modifier {{name}}",
+    "delete": "Supprimer {{name}}"
+  },
+  "deleteDialog": {
+    "title": "Supprimer cette entrée ?",
+    "body": "Cette entrée ({{name}}) sera retirée de votre profil. Une vérification qui y est liée ne comptera plus.",
+    "confirm": "Supprimer"
+  },
+  "form": {
+    "save": "Enregistrer",
+    "month": "Mois",
+    "year": "Année",
+    "core": {
+      "title": "Modifier le profil",
+      "fullName": "Nom complet",
+      "headline": "Poste actuel ou titre",
+      "city": "Où vous résidez",
+      "about": "Quelques mots sur moi",
+      "count": "{{count}} / {{max}} caractères",
+      "years": "Années d’expérience",
+      "skills": "Points forts",
+      "skillsHint": "Ajoutez jusqu’à {{max}} compétences. Appuyez sur Entrée pour en ajouter une.",
+      "skillPlaceholder": "Ajouter une compétence",
+      "addSkill": "Ajouter",
+      "removeSkill": "Retirer {{skill}}",
+      "workPreference": "Préférence de travail",
+      "availability": "Disponibilité",
+      "salary": "Salaire minimum en {{currency}} (facultatif)",
+      "salaryNoCurrency": "Salaire minimum (facultatif)",
+      "salaryNeedsCity": "Choisissez d’abord votre ville pour définir la devise.",
+      "period": "Période du salaire"
+    },
+    "work": {
+      "addTitle": "Ajouter un poste",
+      "editTitle": "Modifier le poste",
+      "title": "Intitulé du poste",
+      "employer": "Entreprise ou organisation",
+      "start": "Date de début",
+      "end": "Date de fin",
+      "current": "J’occupe actuellement ce poste",
+      "description": "Vos missions (facultatif)"
+    },
+    "education": {
+      "addTitle": "Ajouter un diplôme",
+      "editTitle": "Modifier le diplôme",
+      "institution": "Établissement",
+      "degree": "Diplôme ou qualification",
+      "start": "Date de début",
+      "end": "Date de fin",
+      "stillStudying": "Études en cours"
+    },
+    "languages": {
+      "title": "Langues",
+      "language": "Langue",
+      "level": "Niveau",
+      "choose": "Choisir une langue",
+      "search": "Rechercher une langue",
+      "noResults": "Aucune langue ne correspond à « {{query}} ».",
+      "add": "Ajouter une langue",
+      "remove": "Retirer {{language}}"
+    },
+    "rightToWork": {
+      "title": "Droit au travail",
+      "hint": "Une entrée pour l’UE, le Royaume-Uni ou les deux. Votre nationalité n’est jamais demandée.",
+      "status": "Situation",
+      "expires": "Permis valable jusqu’au",
+      "add": "Ajouter : {{region}}",
+      "remove": "Retirer : {{region}}"
+    },
+    "links": {
+      "title": "Liens",
+      "linkedin": "Profil LinkedIn",
+      "linkedinHint": "Par exemple https://www.linkedin.com/in/votre-nom",
+      "portfolio": "Portfolio",
+      "portfolioHint": "Tout lien commençant par https://"
+    },
+    "certificate": {
+      "addTitle": "Ajouter un certificat",
+      "editTitle": "Modifier le certificat",
+      "name": "Nom du certificat",
+      "issuer": "Délivré par",
+      "issuedOn": "Date de délivrance",
+      "expiresOn": "Date d’expiration (facultatif)",
+      "url": "Lien vers l’attestation (facultatif)",
+      "file": "Fichier du certificat (facultatif)",
+      "fileHint": "{{limits}}. Avec un fichier, vous pouvez demander une vérification.",
+      "currentFile": "Fichier actuel : {{name}}",
+      "removeFile": "Supprimer le fichier"
+    }
+  }
+}

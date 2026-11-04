@@ -38,5 +38,43 @@
       "description": "Allow your profile to be used in AI matching. No protected characteristics are used."
     },
     "note": "Every download of your CV is logged."
+  },
+  "layout": {
+    "title": "Your workspace. Your terms.",
+    "description": "Simple controls for your privacy, notifications, and personal information.",
+    "sections": "Settings sections",
+    "tabs": {
+      "privacy": "Privacy & visibility",
+      "notifications": "Notifications",
+      "data": "Data & account",
+      "billing": "Billing"
+    }
+  },
+  "data": {
+    "title": "Understand and control your data",
+    "notice": "This interactive prototype stores reviewed profile fields and workspace activity in this browser. Original resume files are processed locally and are not saved; version history contains file names and reviewed profile snapshots only. No real account or server-side data exists.",
+    "export": {
+      "label": "Download your profile",
+      "description": "A portable CSV of your reviewed information.",
+      "action": "Export data",
+      "candidateDone": "Profile exported as candidate-profile.csv. The file was created in your browser and not sent anywhere.",
+      "recruiterDone": "Profile exported as recruiter-profile.csv."
+    },
+    "delete": {
+      "label": "Delete local candidate information",
+      "description": "Remove your profile, saved jobs, applications, and alerts. Payment records are kept.",
+      "action": "Delete my data",
+      "confirmTitle": "Delete local candidate information?",
+      "confirmBody": "This removes your profile, CV versions, verification progress, learning progress, saved jobs, applications, and alerts from this device, and your plan goes back to Free. Your settings are kept. Payment records are kept as finance records; only Reset demo clears them. This can’t be undone.",
+      "done": "Local candidate information was deleted from this device."
+    },
+    "reset": {
+      "label": "Reset demo workspace",
+      "description": "Restore sample data across all three workspaces.",
+      "action": "Reset demo",
+      "confirmTitle": "Reset demo workspace?",
+      "confirmBody": "This restores the sample data in the candidate, recruiter, and admin workspaces and clears the changes saved on this device. This can’t be undone.",
+      "done": "Demo workspace reset. Sample data is back in all three workspaces."
+    }
   }
 }

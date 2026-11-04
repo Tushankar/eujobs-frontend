@@ -1,84 +1,24 @@
 import { config } from '../config/env.js'
+import { ENUMS } from '../config/enums.js'
 import { connectDb, disconnectDb } from '../lib/db.js'
-import { interpolate, t } from '../lib/i18n.js'
 import { sendEmail } from '../lib/mailer.js'
 import { demoAddress } from '../seed/demo.js'
+import { mailSample } from './mailSamples.js'
 
 /*
  * npm run mail:test <type> <to> (development only, §2.13): sends one live email for the owner to
  * confirm. <to> may be "+tag", the plus-alias of SEED_ADMIN_EMAIL; the address is never printed.
  */
-const SAMPLE_PARAMS = {
-  verify_email: { link: `${config.clientOrigin}/verify-email?token=mail-test` },
-  already_registered: { link: `${config.clientOrigin}/sign-in`, secondaryLink: `${config.clientOrigin}/forgot-password` },
-  recruiter_email_code: { code: '123456' },
-  password_reset: { link: `${config.clientOrigin}/reset-password?token=mail-test` },
-  admin_invite: { inviter: 'Workspace admin', role: 'Staff', link: `${config.clientOrigin}/admin/set-password?token=mail-test` },
-  verification_approved: { link: `${config.clientOrigin}/candidate/verification` },
-  verification_rejected: { reason: 'The photo page is not readable.', link: `${config.clientOrigin}/candidate/verification` },
-  recruiter_approved: { company: 'Mail Test Ltd', link: `${config.clientOrigin}/recruiter/sign-in` },
-  recruiter_rejected: { company: 'Mail Test Ltd', reason: 'The registration document is not readable.', link: `${config.clientOrigin}/recruiter/onboarding/review` },
-  recruiter_suspended: { company: 'Mail Test Ltd', reason: 'Jobs on this account broke the posting rules.', link: `${config.clientOrigin}/recruiter/onboarding/review` },
-  content_restricted: {
-    summary: 'An administrator reviewed your job “Senior Product Designer” and restricted it. It is paused and cannot be published again while the restriction applies.',
-    reason: 'The salary range does not match the role description.',
-    photoNote: '',
-    link: `${config.clientOrigin}/recruiter/jobs`,
-  },
-  content_restriction_lifted: {
-    summary: 'The restriction on your job “Senior Product Designer” was lifted. It stays paused until you publish it again.',
-    link: `${config.clientOrigin}/recruiter/jobs`,
-  },
-  cv_request: { company: 'Mail Test Ltd', details: 'We would like to see the CV you used for your 2023 role.', link: `${config.clientOrigin}/candidate/cv-versions` },
-  renewal_failed: { plan: 'Plus', amount: '£9', link: `${config.clientOrigin}/candidate/settings/billing` },
-  certificate_issued: {
-    course: 'Interaction design foundations',
-    code: 'LWM-7K3P-Q9XD',
-    link: `${config.clientOrigin}/candidate/learning`,
-    secondaryLink: `${config.clientOrigin}/certificates/LWM-7K3P-Q9XD`,
-  },
-  plan_ended: { plan: 'Plus', link: `${config.clientOrigin}/candidate/settings/billing` },
-  application_status: { job: 'Senior Product Designer', company: 'Mail Test Ltd', link: `${config.clientOrigin}/candidate/applications` },
-  application_rejected: { job: 'Senior Product Designer', company: 'Mail Test Ltd', link: `${config.clientOrigin}/candidate/jobs` },
-  new_applications: { job: 'Senior Product Designer', link: `${config.clientOrigin}/recruiter/applications` },
-  new_message: { sender: 'Mail Test Ltd', link: `${config.clientOrigin}/candidate/messages` },
-  alert_instant: {
-    alertName: 'Product design roles',
-    job: 'Senior Product Designer',
-    items: ['Senior Product Designer · Mail Test Ltd · London'],
-    link: `${config.clientOrigin}/candidate/jobs`,
-    secondaryLink: `${config.clientOrigin}/candidate/job-alerts`,
-  },
-  alert_daily: {
-    alertName: 'Product design roles',
-    items: ['Senior Product Designer · Mail Test Ltd · London', 'UX Designer · Mail Test Ltd · Dublin'],
-    link: `${config.clientOrigin}/candidate/jobs`,
-    secondaryLink: `${config.clientOrigin}/candidate/job-alerts`,
-  },
-}
-SAMPLE_PARAMS.alert_weekly = SAMPLE_PARAMS.alert_daily
 
 const [type, target, language = 'en'] = process.argv.slice(2)
 if (config.isTest) throw new Error('mail:test runs in development only')
-if (!SAMPLE_PARAMS[type] || !target) {
-  throw new Error(`Usage: npm run mail:test <${Object.keys(SAMPLE_PARAMS).join('|')}> <+tag|address> [en|es|fr]`)
+const params = type && mailSample(type, language, config.clientOrigin)
+if (!params || !target) {
+  throw new Error(`Usage: npm run mail:test <${ENUMS.emailType.filter((name) => mailSample(name, 'en', '')).join('|')}> <+tag|address> [en|es|fr]`)
 }
 
 const to = target.startsWith('+') ? demoAddress(target.slice(1)) : target
 await connectDb()
-// Verification emails name the check in the recipient's language, as the decision does.
-const check = type.startsWith('verification_') ? { check: t(language, 'verification.category.identity') } : {}
-// So does the reason a recruiter picked for a CV request.
-const reason = type === 'cv_request' ? { reason: t(language, 'cvRequestReason.verify_employment') } : {}
-// Application emails carry the status, the next step and the count in the recipient's language, as the tasks do.
-const application =
-  type === 'application_status'
-    ? { status: t(language, 'labels.applicationStatus.interview'), nextStep: t(language, 'labels.nextStep.interview') }
-    : type === 'new_applications'
-      ? { countLabel: interpolate(t(language, 'labels.newApplications.other'), { count: 2 }) }
-      : type.startsWith('alert_')
-        ? { countLabel: interpolate(t(language, 'labels.alertJobs.other'), { count: 2 }) }
-        : {}
-const status = await sendEmail({ type, to, language, params: { name: 'Mail test', ...check, ...reason, ...application, ...SAMPLE_PARAMS[type] } })
+const status = await sendEmail({ type, to, language, params })
 console.log(`mail:test ${type} (${language}) to ${target.startsWith('+') ? `the ${target} alias` : 'the given address'}: ${status}`)
 await disconnectDb()

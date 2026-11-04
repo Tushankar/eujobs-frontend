@@ -1,0 +1,40 @@
+{
+  "title": "Un mercado de trabajo con sentido.",
+  "description": "Revisa las ofertas en cualquier estado y mantén alta la calidad de las oportunidades.",
+  "search": "Buscar puesto o empresa",
+  "filters": {
+    "status": "Filtrar por estado",
+    "allStatuses": "Todos los estados",
+    "country": "Filtrar por país",
+    "allCountries": "Todos los países"
+  },
+  "columns": {
+    "role": "Puesto",
+    "company": "Empresa",
+    "country": "País",
+    "salary": "Salario",
+    "status": "Estado",
+    "actions": "Acciones"
+  },
+  "caption": "Ofertas",
+  "summary": "Resumen con IA",
+  "summaryFor": "Resumen con IA de {{title}}",
+  "viewCase": "Ver caso",
+  "viewCaseFor": "Ver el caso abierto de {{title}}",
+  "openCaseFor": "Abrir un caso para {{title}}",
+  "openCase": {
+    "button": "Abrir caso",
+    "title": "Abrir un caso: {{title}}",
+    "intro": "El caso se abre en Moderación, donde puedes desestimarlo o restringir la oferta.",
+    "reason": "Motivo",
+    "chooseReason": "Elige un motivo",
+    "details": "Detalles (opcional)",
+    "cancel": "Cancelar",
+    "submit": "Abrir caso"
+  },
+  "empty": "Aún no hay ofertas",
+  "emptyText": "Aquí aparecen las ofertas que crean los reclutadores.",
+  "emptyFiltered": "Ninguna oferta coincide",
+  "emptyFilteredText": "Prueba con otra búsqueda, estado o país.",
+  "clear": "Borrar filtros"
+}

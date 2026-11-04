@@ -1,28 +1,31 @@
 import { useTranslation } from 'react-i18next'
 import { Link, useParams } from 'react-router-dom'
-import { ArrowLeft, UserX } from 'lucide-react'
+import { ArrowLeft, FileText, ShieldCheck, UserX } from 'lucide-react'
 import { errorCode } from '@/app/api.js'
 import { can } from '@/app/permissions.js'
 import { WORKSPACES, workspacePath } from '@/app/workspaces.js'
 import EmptyState from '@/components/common/EmptyState.jsx'
-import PageTitle from '@/components/common/PageTitle.jsx'
 import PillBadge from '@/components/common/PillBadge.jsx'
-import { Icon, Panel } from '@/components/ui'
+import { Avatar, Icon, Panel } from '@/components/ui'
 import { useAuditText } from '@/features/admin/audit-logs/useAuditText.js'
 import { useGetAdminFileUrlQuery } from '@/features/admin/moderation/api.js'
 import { useFormat, usePreferences } from '@/lib/preferences.js'
 import { useGetAdminUserQuery } from '../api.js'
+import { CATEGORY_ICONS, STATE_TONES, STATUS_TONES, SUBMISSION_TONES, VERIFICATION_TONES } from '../tones.js'
 import styles from './UserDetailPage.module.css'
 
-/** One labelled section of facts; `rows` = [label, value] pairs (empty values are skipped). */
-function Facts({ title, rows, children }) {
+/** One labelled section of facts; `rows` = [label, value] pairs (empty values are skipped); `badge` sits beside the title. */
+function Facts({ title, badge, rows, children }) {
   return (
     <Panel className={styles.section} aria-label={title}>
-      <h2 className={styles.heading}>{title}</h2>
+      <div className={styles.headingRow}>
+        <h2 className={styles.heading}>{title}</h2>
+        {badge}
+      </div>
       {rows && (
         <dl className={styles.facts}>
           {rows
-            .filter(([, value]) => value !== null && value !== undefined && value !== '')
+            .filter(([, value]) => value !== null && value !== undefined && value !== '' && value !== false)
             .map(([label, value]) => (
               <div key={label} className={styles.fact}>
                 <dt>{label}</dt>
@@ -40,9 +43,11 @@ function Facts({ title, rows, children }) {
 function FileLink({ fileId, name }) {
   const { t } = useTranslation('adminUsers')
   const { data } = useGetAdminFileUrlQuery(fileId)
+  const label = name ?? t('detail.openFile')
   return data ? (
-    <a className={styles.link} href={`${import.meta.env.VITE_API_URL ?? ''}${data.url}`} target="_blank" rel="noopener noreferrer">
-      {name ?? t('detail.openFile')}
+    <a className={styles.file} href={`${import.meta.env.VITE_API_URL ?? ''}${data.url}`} target="_blank" rel="noopener noreferrer" title={label}>
+      <Icon as={FileText} size={14} />
+      <span className={styles.fileName}>{label}</span>
     </a>
   ) : null
 }
@@ -101,7 +106,8 @@ function Learning({ learning }) {
   )
 }
 
-function CandidateSections({ user }) {
+/** A candidate's sections: `part="main"` the growing ones (profile, verification, applications, learning), `part="side"` the short facts. */
+function CandidateSections({ user, part }) {
   const { t } = useTranslation(['adminUsers', 'enums', 'adminPayments'])
   const format = useFormat()
   const { me } = usePreferences()
@@ -109,6 +115,40 @@ function CandidateSections({ user }) {
   const yesNo = (value) => (value ? t('detail.yes') : t('detail.no'))
   const { profile, verification, plan } = user
   const subscription = plan.subscription
+  if (part === 'side') {
+    return (
+      <>
+        <Facts
+          title={t('detail.plan')}
+          rows={[
+            [t('columns.plan'), t(`enums:planKey.${plan.plan}`)],
+            [t('adminPayments:details.subscription'), subscription ? t(`adminPayments:subscriptionStatus.${subscription.status}`) : t('detail.noSubscription')],
+            [t('adminPayments:details.period'), subscription?.currentPeriodStart && `${format.date(subscription.currentPeriodStart)} – ${format.date(subscription.currentPeriodEnd)}`],
+            [t('adminPayments:details.renewal'), subscription?.cancelAtPeriodEnd && t('detail.cancelAtPeriodEnd')],
+          ]}
+        />
+        <Facts
+          title={t('detail.privacy')}
+          rows={[
+            [t('detail.discoverable'), yesNo(user.privacy.discoverable)],
+            [t('detail.resumeVisible'), yesNo(user.privacy.resumeVisible)],
+            [t('detail.matchingConsent'), yesNo(user.privacy.matchingConsent)],
+          ]}
+        />
+        <Facts title={t('detail.rightToWork')}>
+          <List
+            items={user.rightToWork}
+            empty={t('noRightToWork')}
+            render={(entry) => (
+              <li key={entry.region} className={styles.item}>
+                {t(`enums:rtwRegion.${entry.region}`)} · {t(`enums:rtwStatus.${entry.status}`)}
+              </li>
+            )}
+          />
+        </Facts>
+      </>
+    )
+  }
   return (
     <>
       <Facts
@@ -129,62 +169,41 @@ function CandidateSections({ user }) {
         {profile?.restricted && <p className={styles.warning}>{t('detail.restricted', { reason: profile.restricted.reason })}</p>}
       </Facts>
       <Facts
-        title={t('detail.privacy')}
-        rows={[
-          [t('detail.discoverable'), yesNo(user.privacy.discoverable)],
-          [t('detail.resumeVisible'), yesNo(user.privacy.resumeVisible)],
-          [t('detail.matchingConsent'), yesNo(user.privacy.matchingConsent)],
-        ]}
-      />
-      <Facts title={t('detail.verification')}>
-        <PillBadge>{t(`verificationState.${verification.state}`, { count: verification.count })}</PillBadge>
+        title={t('detail.verification')}
+        badge={<PillBadge tone={VERIFICATION_TONES[verification.state]}>{t(`verificationState.${verification.state}`, { count: verification.count })}</PillBadge>}
+      >
         {!documents && verification.submissions.some((submission) => submission.fileId) && <p className={styles.muted}>{t('detail.documentsLocked')}</p>}
+        {/* One aligned row per submission: icon · what + when · file · status. */}
         <List
           items={verification.submissions}
           empty={t('detail.noSubmissions')}
           render={(submission) => (
-            <li key={submission.id} className={styles.item} data-submission={submission.category}>
-              <span>
-                {t(`enums:verificationCategory.${submission.category}`)}
-                {submission.evidenceType && ` · ${t(`enums:evidenceType.${submission.evidenceType}`)}`} · {t(`enums:verificationStatus.${submission.status}`)}
+            <li key={submission.id} className={styles.submission} data-submission={submission.category}>
+              <span className={styles.submissionIcon}>
+                <Icon as={CATEGORY_ICONS[submission.category] ?? ShieldCheck} size={16} />
               </span>
-              <span className={styles.muted}>
-                {[
-                  t('detail.submitted', { date: format.date(submission.submittedAt) }),
-                  submission.reviewedAt && t('detail.reviewed', { date: format.date(submission.reviewedAt) }),
-                  submission.reason && t('detail.reason', { reason: submission.reason }),
-                ]
-                  .filter(Boolean)
-                  .join(' · ')}
-              </span>
-              {submission.fileId ? documents && <FileLink fileId={submission.fileId} name={submission.fileName} /> : <span className={styles.muted}>{t('detail.fileRemoved')}</span>}
+              <div className={styles.submissionText}>
+                <p className={styles.submissionTitle}>
+                  {[t(`enums:verificationCategory.${submission.category}`), submission.evidenceType && t(`enums:evidenceType.${submission.evidenceType}`)].filter(Boolean).join(' · ')}
+                </p>
+                <p className={styles.muted}>
+                  {[
+                    t('detail.submitted', { date: format.date(submission.submittedAt) }),
+                    submission.reviewedAt && t('detail.reviewed', { date: format.date(submission.reviewedAt) }),
+                    submission.reason && t('detail.reason', { reason: submission.reason }),
+                  ]
+                    .filter(Boolean)
+                    .join(' · ')}
+                </p>
+              </div>
+              <div className={styles.submissionFile}>
+                {submission.fileId ? documents && <FileLink fileId={submission.fileId} name={submission.fileName} /> : <span className={styles.muted}>{t('detail.fileRemoved')}</span>}
+              </div>
+              <PillBadge tone={SUBMISSION_TONES[submission.status]}>{t(`enums:verificationStatus.${submission.status}`)}</PillBadge>
             </li>
           )}
         />
       </Facts>
-      <Facts title={t('detail.rightToWork')}>
-        <List
-          items={user.rightToWork}
-          empty={t('noRightToWork')}
-          render={(entry) => (
-            <li key={entry.region} className={styles.item}>
-              {t(`enums:rtwRegion.${entry.region}`)} · {t(`enums:rtwStatus.${entry.status}`)}
-            </li>
-          )}
-        />
-      </Facts>
-      <Facts
-        title={t('detail.plan')}
-        rows={[
-          [t('columns.plan'), t(`enums:planKey.${plan.plan}`)],
-          [t('adminPayments:details.subscription'), subscription ? t('detail.subscription', { status: t(`adminPayments:subscriptionStatus.${subscription.status}`) }) : t('detail.noSubscription')],
-          [
-            t('adminPayments:details.period'),
-            subscription?.currentPeriodStart && t('detail.period', { start: format.date(subscription.currentPeriodStart), end: format.date(subscription.currentPeriodEnd) }),
-          ],
-          [t('adminPayments:details.renewal'), subscription?.cancelAtPeriodEnd && t('detail.cancelAtPeriodEnd')],
-        ]}
-      />
       <Facts title={t('detail.applications')}>
         <List
           items={user.applications}
@@ -206,11 +225,23 @@ function CandidateSections({ user }) {
   )
 }
 
-function RecruiterSections({ user }) {
+/** A recruiter's sections: `part="main"` company, KYC files, review history, learning; `part="side"` the job counts. */
+function RecruiterSections({ user, part }) {
   const { t } = useTranslation(['adminUsers', 'enums'])
   const format = useFormat()
   const { me } = usePreferences()
   const { company } = user
+  if (part === 'side') {
+    return (
+      <Facts
+        title={t('detail.jobs')}
+        rows={[
+          [t('detail.jobs'), t('detail.jobsCounts', user.jobs)],
+          [t('detail.received'), t('detail.receivedCount', user.applications)],
+        ]}
+      />
+    )
+  }
   return (
     <>
       <Facts
@@ -258,13 +289,6 @@ function RecruiterSections({ user }) {
           )}
         />
       </Facts>
-      <Facts
-        title={t('detail.jobs')}
-        rows={[
-          [t('detail.jobs'), t('detail.jobsCounts', user.jobs)],
-          [t('detail.received'), t('detail.receivedCount', user.applications)],
-        ]}
-      />
       <Learning learning={user.learning} />
     </>
   )
@@ -298,25 +322,64 @@ export default function UserDetailPage({ role }) {
   if (!user) return back
 
   const phone = user.phone.e164 && t(user.phone.verified ? 'detail.phoneVerified' : 'detail.phoneUnverified', { phone: user.phone.e164 })
+  const candidate = role === 'candidate'
+  const { profile, company } = user
+  const subtitle = candidate
+    ? [profile?.headline, profile?.location && `${profile.location.city}, ${format.country(profile.location.countryCode)}`]
+    : [user.jobTitle, company?.displayName]
+  const stats = candidate && [
+    [t('detail.completeness'), profile ? format.number(profile.completeness.percent / 100, { style: 'percent' }) : '—'],
+    [t('columns.plan'), t(`enums:planKey.${user.plan.plan}`)],
+    [t('columns.verification'), t(`verificationState.${user.verification.state}`, { count: user.verification.count })],
+  ]
   return (
     <>
       {back}
-      <PageTitle title={user.fullName} description={user.email} actions={<PillBadge dot>{role === 'candidate' ? t(`enums:userStatus.${user.status}`) : t(`recruiterState.${user.state}`)}</PillBadge>} />
-      <div className={styles.grid}>
-        <Facts
-          title={t('detail.account')}
-          rows={[
-            [t('detail.email'), user.email],
-            [t('detail.emailVerified'), user.emailVerified ? t('detail.yes') : t('detail.no')],
-            [t('detail.phone'), phone || t('detail.none')],
-            [t('detail.jobTitle'), user.jobTitle],
-            [t('detail.language'), format.languageName(user.language)],
-            [t('detail.joined'), format.date(user.joinedAt)],
-            [t('detail.lastLogin'), user.lastLoginAt ? format.dateTime(user.lastLoginAt) : t('detail.never')],
-          ]}
-        />
-        {role === 'candidate' ? <CandidateSections user={user} /> : <RecruiterSections user={user} />}
-        <History events={user.history} />
+      <Panel className={styles.hero} padding={24}>
+        <Avatar name={user.fullName} src={profile?.photoUrl ?? undefined} size={72} />
+        <div className={styles.heroText}>
+          <div className={styles.heroName}>
+            <h1 className={styles.name}>{user.fullName}</h1>
+            <PillBadge tone={candidate ? (STATUS_TONES[user.status] ?? 'neutral') : STATE_TONES[user.state]} dot>
+              {candidate ? t(`enums:userStatus.${user.status}`) : t(`recruiterState.${user.state}`)}
+            </PillBadge>
+          </div>
+          {subtitle.some(Boolean) && <p className={styles.subtitle}>{subtitle.filter(Boolean).join(' · ')}</p>}
+          <p className={styles.meta}>
+            {user.email} · {t('detail.joined')} {format.date(user.joinedAt)}
+          </p>
+        </div>
+        {stats && (
+          <dl className={styles.stats}>
+            {stats.map(([label, value]) => (
+              <div key={label} className={styles.stat}>
+                <dt>{label}</dt>
+                <dd>{value}</dd>
+              </div>
+            ))}
+          </dl>
+        )}
+      </Panel>
+      {/* Two independent columns (LinkedIn-style): each stacks its own cards, so a long section never leaves a gap beside a short one. */}
+      <div className={styles.layout}>
+        <div className={styles.column}>
+          {candidate ? <CandidateSections user={user} part="main" /> : <RecruiterSections user={user} part="main" />}
+          <History events={user.history} />
+        </div>
+        <aside className={`${styles.column} sticky-side`}>
+          <Facts
+            title={t('detail.account')}
+            rows={[
+              [t('detail.emailVerified'), user.emailVerified ? t('detail.yes') : t('detail.no')],
+              [t('detail.phone'), phone || t('detail.none')],
+              [t('detail.jobTitle'), user.jobTitle],
+              [t('detail.language'), format.languageName(user.language)],
+              [t('detail.joined'), format.date(user.joinedAt)],
+              [t('detail.lastLogin'), user.lastLoginAt ? format.dateTime(user.lastLoginAt) : t('detail.never')],
+            ]}
+          />
+          {candidate ? <CandidateSections user={user} part="side" /> : <RecruiterSections user={user} part="side" />}
+        </aside>
       </div>
     </>
   )

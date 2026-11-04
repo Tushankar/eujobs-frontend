@@ -34,8 +34,7 @@ export default {
     // The Spanish inbox shows both messages unread.
     const handle = await ctx.newPage()
     await signInWithForm(handle.page, ctx.webUrl, '/sign-in', reader.email, TEST_PASSWORD)
-    // Sign-in lands on the Overview, still English-only in Spanish until Phase 11 (P4-Q5); this check is the inbox.
-    handle.issues.length = 0
+    // Sign-in lands on the Overview, which is checked in Spanish too (Phase 11 removed the P4-Q5 exception).
     await handle.page.goto(`${ctx.webUrl}/candidate/messages`, { waitUntil: 'networkidle0' })
     await waitForText(handle.page, '2 sin leer')
     await ctx.screenshot(handle.page, '1-spanish-inbox')

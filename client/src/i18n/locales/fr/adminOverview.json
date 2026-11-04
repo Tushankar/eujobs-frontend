@@ -1,0 +1,94 @@
+{
+  "eyebrow": "Vue d’ensemble de la plateforme",
+  "title": "Un marché plus sain. Par conception.",
+  "description": "Des signaux clairs, une supervision attentive et une IA responsable à chaque étape.",
+  "export": "Exporter le rapport",
+  "country": {
+    "label": "Filtrer par pays",
+    "all": "Tous les pays"
+  },
+  "kpis": {
+    "candidateRegistrations": "Inscriptions de candidats",
+    "activeUsers": "Utilisateurs actifs",
+    "publishedJobs": "Offres publiées",
+    "applications": "Candidatures",
+    "verifiedProfiles": "Profils candidats vérifiés",
+    "courseEnrollments": "Inscriptions aux formations",
+    "courseBadges": "Badges de formation obtenus",
+    "averageRoleMatch": "Correspondance moyenne avec les postes",
+    "allTime": "Depuis le début",
+    "acrossRoles_one": "Sur {{count}} offre publiée",
+    "acrossRoles_many": "Sur {{count}} offres publiées",
+    "acrossRoles_other": "Sur {{count}} offres publiées"
+  },
+  "chart": {
+    "title": "Activité de la plateforme",
+    "description": "Inscriptions et candidatures",
+    "view": "Vue du graphique",
+    "bars": "Vue en barres",
+    "line": "Vue en courbe",
+    "period": "Période",
+    "registrations": "Inscriptions",
+    "applications": "Candidatures",
+    "summary": "{{period}} : {{items}}",
+    "point": "{{label}} : {{registrations}} inscriptions, {{applications}} candidatures",
+    "barSummary": "Graphique en barres. {{items}}",
+    "lineSummary": "Graphique en courbe. {{items}}",
+    "registrationsAt": "{{label}} : {{count}} inscriptions",
+    "applicationsAt": "{{label}} : {{count}} candidatures"
+  },
+  "health": {
+    "title": "Santé du marché",
+    "description": "Supervision humaine à chaque étape · Depuis le début",
+    "companies": "Entreprises inscrites",
+    "coursePurchases": "Achats de formations",
+    "checksInReview": "Vérifications en cours d’examen",
+    "shortlists": "Activité de short-list",
+    "outreach": "Brouillons de prise de contact relus",
+    "pendingReviews": "Examens d’utilisateurs en attente",
+    "moderation": "Examiner la file de modération"
+  },
+  "skills": {
+    "title": "Compétences les plus demandées",
+    "description": "Compétences requises par les offres publiées",
+    "empty": "Aucune offre publiée pour l’instant.",
+    "bar_one": "{{skill}} : requise par {{count}} offre",
+    "bar_many": "{{skill}} : requise par {{count}} offres",
+    "bar_other": "{{skill}} : requise par {{count}} offres"
+  },
+  "recent": {
+    "title": "Activité récente de la plateforme",
+    "auditLog": "Voir le journal d’audit",
+    "item": "{{text}} · {{date}}",
+    "note": "L’IA aide à analyser les éléments. Les personnes prennent les décisions. Les contrôles de votre marché reflètent ce principe."
+  },
+  "analytics": {
+    "title": "Mesurez ce qui fait avancer les gens.",
+    "description": "Une vue claire de l’engagement sur le marché, avec assez de contexte pour agir de manière responsable.",
+    "shortlistConversion": "Conversion en short-list",
+    "conversionCaption_one": "{{shortlisted}} sur {{count}} candidature ajoutée à la short-list · Depuis le début",
+    "conversionCaption_many": "{{shortlisted}} sur {{count}} candidatures ajoutées à la short-list · Depuis le début",
+    "conversionCaption_other": "{{shortlisted}} sur {{count}} candidatures ajoutées à la short-list · Depuis le début",
+    "recruiterAccounts": "Comptes recruteurs",
+    "companyRegistrations": "Inscriptions d’entreprises",
+    "reviewedOutreach": "Prises de contact relues"
+  },
+  "quality": {
+    "title": "La qualité de la correspondance ne se résume pas à un score",
+    "relevance": {
+      "title": "Retours sur la pertinence",
+      "status": "Collectés",
+      "text": "Les candidats et les recruteurs peuvent indiquer si une explication les a aidés ; les administrateurs consultent les totaux dans IA et correspondance."
+    },
+    "conversion": {
+      "title": "Conversion des recommandations",
+      "status": "Pas encore mesurée",
+      "text": "Suivez les vues réelles des recommandations, les candidatures et les short-lists, avec consentement."
+    },
+    "fairness": {
+      "title": "Équité et qualité",
+      "status": "Examen humain requis",
+      "text": "Évaluez la pertinence pour le poste, la qualité des explications et les biais avant de modifier une règle de correspondance."
+    }
+  }
+}

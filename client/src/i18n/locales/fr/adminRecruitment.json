@@ -1,0 +1,63 @@
+{
+  "eyebrow": "Supervision du recrutement",
+  "title": "Voir le parcours. Protéger la décision.",
+  "description": "Une vue en lecture seule de l’activité des recruteurs : offres, candidatures, short-lists, étapes du processus et prises de contact relues.",
+  "auditLog": "Voir le journal d’audit",
+  "views": {
+    "data": "Vue des données",
+    "funnel": "Vue en entonnoir",
+    "label": "Vue du recrutement"
+  },
+  "stats": {
+    "publishedRoles": "Offres publiées",
+    "applications": "Candidatures",
+    "applicationsCaption": "Depuis le début, hors candidatures retirées",
+    "shortlisted": "Ajoutés à la short-list",
+    "reviewedOutreach": "Prises de contact relues",
+    "allTime": "Depuis le début"
+  },
+  "pipeline": {
+    "title": "Processus de recrutement",
+    "dataText": "Candidatures à leur étape actuelle, hors candidatures retirées. Les décisions d’embauche appartiennent aux recruteurs.",
+    "funnelText": "Candidatures ayant atteint chaque étape, hors candidatures retirées."
+  },
+  "stagesLabel": "Étapes du processus",
+  "funnel": {
+    "title": "Vue en entonnoir",
+    "label": "Entonnoir de recrutement par étape",
+    "stage": "{{stage}} : {{count}} candidatures. Afficher les candidatures à cette étape."
+  },
+  "movement": {
+    "title": "Parcours des candidats",
+    "description": "L’étape actuelle, la short-list et la prise de contact de chaque candidature.",
+    "candidate": "Candidat",
+    "job": "{{job}} · {{company}}",
+    "stage": "Étape actuelle",
+    "shortlist": "Short-list",
+    "outreach": "Prise de contact",
+    "shortlisted": "Ajouté à la short-list",
+    "notShortlisted": "Hors short-list",
+    "outreachSent": "Prise de contact envoyée",
+    "noOutreach": "Aucune prise de contact",
+    "viewApplications": "Voir les candidatures",
+    "filtered": "Candidatures à l’étape {{stage}}",
+    "clear": "Effacer le filtre",
+    "empty": "Aucune candidature pour l’instant",
+    "emptyText": "Les candidatures apparaissent ici dès que des candidats postulent.",
+    "emptyStage": "Aucune candidature à l’étape {{stage}}",
+    "emptyStageText": "Choisissez une autre étape ou effacez le filtre pour voir tout le monde."
+  },
+  "sidebar": {
+    "label": "Supervision du recrutement",
+    "roles": "Activité des offres",
+    "rolesText": "Les dernières offres publiées",
+    "manage": "Gérer",
+    "noRoles": "Aucune offre publiée pour l’instant.",
+    "coverage": "Couverture des candidatures",
+    "coverageText": "Les dernières candidatures",
+    "noCoverage": "Aucune candidature pour l’instant.",
+    "noteTitle": "Superviser, pas décider des embauches",
+    "noteText": "L’administration examine les règles, la sécurité et l’intégrité du marché. Les recruteurs restent responsables de décisions d’embauche équitables et examinées par des personnes.",
+    "openModeration": "Ouvrir la modération"
+  }
+}

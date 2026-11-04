@@ -13,11 +13,96 @@
   color: var(--foreground);
 }
 
-.grid {
+/* Profile header: photo, name + status, subtitle, contact line, and (candidates) three quick stats. */
+.hero {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: 20px 24px;
+}
+
+.heroText {
+  flex: 1 1 280px;
+  min-width: 0;
+}
+
+.heroName {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: 8px 12px;
+}
+
+.name {
+  font-family: var(--font-display);
+  font-size: 26px;
+  font-weight: 800;
+  line-height: 32px;
+  letter-spacing: -0.4px;
+  color: var(--foreground);
+}
+
+.subtitle {
+  padding-top: 4px;
+  font-size: 14px;
+  line-height: 20px;
+  color: var(--foreground);
+}
+
+.meta {
+  padding-top: 4px;
+  font-size: 13px;
+  line-height: 18px;
+  color: var(--muted-foreground);
+  overflow-wrap: anywhere;
+}
+
+.stats {
+  display: flex;
+  margin: 0;
+  border: 1px solid var(--border);
+  border-radius: var(--radius-xl);
+}
+
+.stat {
+  min-width: 108px;
+  padding: 12px 16px;
+}
+
+.stat + .stat {
+  border-left: 1px solid var(--border);
+}
+
+.stat dt {
+  font-size: 11px;
+  line-height: 16px;
+  color: var(--muted-foreground);
+}
+
+.stat dd {
+  margin: 0;
+  padding-top: 2px;
+  font-family: var(--font-display);
+  font-size: 15px;
+  font-weight: 700;
+  line-height: 20px;
+  color: var(--foreground);
+}
+
+/* Main column (growing sections) + side column (short facts); each column stacks its own cards. */
+.layout {
   display: grid;
-  grid-template-columns: repeat(2, minmax(0, 1fr));
+  grid-template-columns: minmax(0, 1fr) minmax(300px, 360px);
+  align-items: start;
   gap: 16px;
-  padding-top: 24px;
+  padding-top: 16px;
+}
+
+.column {
+  display: flex;
+  flex-direction: column;
+  gap: 16px;
+  min-width: 0;
 }
 
 .section {
@@ -27,25 +112,97 @@
   min-width: 0;
 }
 
+.headingRow {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  justify-content: space-between;
+  gap: 8px 12px;
+  padding-bottom: 4px;
+}
+
 .heading {
   font-family: var(--font-display);
-  font-size: 15px;
+  font-size: 16px;
   font-weight: 700;
-  line-height: 20px;
+  line-height: 22px;
   color: var(--foreground);
 }
 
+/* A verification submission: icon · what + when · file · status, on one aligned row. */
+.submission {
+  display: grid;
+  grid-template-columns: auto minmax(0, 1fr) auto auto;
+  align-items: center;
+  gap: 12px 14px;
+  padding: 12px 0;
+}
+
+.submission + .submission {
+  border-top: 1px solid var(--border);
+}
+
+.submission:first-child {
+  padding-top: 0;
+}
+
+.submission:last-child {
+  padding-bottom: 0;
+}
+
+.submissionIcon {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  width: 32px;
+  height: 32px;
+  border: 1px solid var(--border);
+  border-radius: var(--radius-lg);
+  color: var(--muted-foreground);
+}
+
+.submissionText {
+  min-width: 0;
+}
+
+.submissionTitle {
+  font-size: 13px;
+  font-weight: 600;
+  line-height: 18px;
+  color: var(--foreground);
+}
+
+.submissionTitle + .muted {
+  padding-top: 2px;
+}
+
+.submissionFile {
+  min-width: 0;
+  max-width: 220px;
+}
+
+/* Label / value rows: a fixed label column, hairlines between rows. */
 .facts {
   display: grid;
-  gap: 10px;
+  margin: 0;
 }
 
 .fact {
   display: grid;
-  grid-template-columns: minmax(0, 2fr) minmax(0, 3fr);
-  gap: 12px;
-  font-size: 12px;
-  line-height: 16px;
+  /* Label column: 38% in the narrow side column, at most 200px in the wide main one. */
+  grid-template-columns: min(38%, 200px) minmax(0, 1fr);
+  gap: 16px;
+  padding: 10px 0;
+  font-size: 13px;
+  line-height: 18px;
+}
+
+.fact + .fact {
+  border-top: 1px solid var(--border);
+}
+
+.fact:first-child {
+  padding-top: 0;
 }
 
 .fact dt {
@@ -53,23 +210,34 @@
 }
 
 .fact dd {
+  margin: 0;
   overflow-wrap: anywhere;
   color: var(--foreground);
 }
 
 .list {
   display: grid;
-  gap: 10px;
+  margin: 0;
+  list-style: none;
 }
 
 .item {
   display: flex;
   flex-direction: column;
   gap: 2px;
-  font-size: 12px;
-  line-height: 16px;
+  padding: 10px 0;
+  font-size: 13px;
+  line-height: 18px;
   color: var(--foreground);
   overflow-wrap: anywhere;
+}
+
+.item + .item {
+  border-top: 1px solid var(--border);
+}
+
+.item:first-child {
+  padding-top: 0;
 }
 
 .muted {
@@ -84,15 +252,86 @@
   color: var(--destructive);
 }
 
-.link {
+/* A sensitive file: a quiet chip with the file name ("…" when long, full name on hover). */
+.file {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  max-width: 100%;
+  padding: 5px 10px;
+  border: 1px solid var(--border);
+  border-radius: var(--radius-full);
   font-size: 12px;
   font-weight: 600;
   line-height: 16px;
-  color: var(--primary);
+  color: var(--foreground);
+  transition:
+    border-color var(--transition),
+    background var(--transition);
+}
+
+.file:hover {
+  border-color: var(--foreground);
+  background: var(--muted);
+}
+
+.file svg {
+  flex-shrink: 0;
+  color: var(--muted-foreground);
+}
+
+.fileName {
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
 }
 
 @media (max-width: 1023px) {
-  .grid {
+  .layout {
     grid-template-columns: minmax(0, 1fr);
+  }
+
+  /* One column: the short facts (account, plan) come before the long sections. */
+  .layout > aside {
+    order: -1;
+  }
+}
+
+@media (max-width: 639px) {
+  /* Phone: icon, text and status on the first line; the file chip under the text. */
+  .submission {
+    grid-template-columns: auto minmax(0, 1fr) auto;
+    grid-template-areas:
+      'icon text status'
+      '. file file';
+    align-items: start;
+  }
+
+  .submissionIcon {
+    grid-area: icon;
+  }
+
+  .submissionText {
+    grid-area: text;
+  }
+
+  .submission > :last-child {
+    grid-area: status;
+  }
+
+  .submissionFile {
+    grid-area: file;
+    max-width: none;
+  }
+}
+
+@media (max-width: 559px) {
+  .stats {
+    width: 100%;
+  }
+
+  .stat {
+    flex: 1;
+    min-width: 0;
   }
 }

@@ -1,0 +1,224 @@
+{
+  "queues": "Colas de moderación",
+  "verification": {
+    "tab": "Verificación de candidatos",
+    "title": "Cola de verificación de candidatos",
+    "description": "Revisa las pruebas del candidato frente a la entrada del perfil que acreditan. Apruébalas o recházalas con un motivo con el que el candidato pueda actuar.",
+    "statusFilter": "Filtrar por estado",
+    "empty": "No hay nada en esta cola.",
+    "noPermission": "Esta cola requiere el permiso {{permission}}.",
+    "submitted": "Enviado el {{date}}",
+    "review": "Revisar pruebas",
+    "count_one": "{{count}} envío",
+    "count_many": "{{count}} envíos",
+    "count_other": "{{count}} envíos",
+    "stat": {
+      "label": "Revisiones de credenciales",
+      "caption": "Comprobaciones de candidatos pendientes de revisión"
+    },
+    "dialog": {
+      "title": "Revisar pruebas del candidato",
+      "candidate": "Candidato",
+      "check": "Comprobación",
+      "evidence": "Pruebas",
+      "submitted": "Enviado",
+      "claim": "Con qué deben coincidir las pruebas",
+      "claimName": "Nombre de la cuenta: {{name}}",
+      "claimMissing": "Se ha eliminado la entrada del perfil vinculada.",
+      "file": "Archivo",
+      "openFile": "Abrir {{name}}",
+      "openNewTab": "Abrir en una pestaña nueva",
+      "noInline": "Este tipo de archivo no se puede mostrar aquí. Ábrelo en una pestaña nueva para revisarlo.",
+      "noPreview": "Las vistas previas requieren el permiso {{permission}}.",
+      "previewAlt": "Archivo de pruebas {{name}}",
+      "history": "Envíos anteriores",
+      "decided": "{{status}} por {{name}}, {{date}}",
+      "reason": "Motivo: {{reason}}",
+      "approve": "Aprobar",
+      "reject": "Rechazar",
+      "back": "Volver",
+      "approveTitle": "¿Aprobar estas pruebas?",
+      "approveText": "La comprobación cuenta para el perfil del candidato y los reclutadores ven una marca de verificación. El candidato recibe un correo.",
+      "confirmApprove": "Aprobar pruebas",
+      "rejectTitle": "¿Rechazar estas pruebas?",
+      "rejectText": "El candidato ve el motivo por correo y en la página de Verificación, y puede enviar nuevas pruebas.",
+      "reasonLabel": "Motivo",
+      "reasonHint": "Hasta {{max}} caracteres.",
+      "confirmReject": "Rechazar pruebas",
+      "decidedNow": "Decisión guardada y enviada por correo al candidato.",
+      "period": "{{start}} – {{end}}",
+      "present": "actualidad",
+      "validUntil": "válido hasta el {{date}}"
+    }
+  },
+  "accounts": {
+    "tab": "Revisión de cuentas",
+    "title": "Cola de revisión de cuentas",
+    "description": "Aprueba, rechaza o suspende cuentas de reclutadores tras comprobar los datos de la empresa y los documentos KYC.",
+    "statusFilter": "Filtrar por estado de la cuenta",
+    "status": {
+      "pending_review": "Pendiente de revisión",
+      "active": "Activa",
+      "suspended": "Suspendida",
+      "rejected": "Rechazada"
+    },
+    "empty": "No hay cuentas de reclutadores con este estado.",
+    "submitted": "Enviada el {{date}}",
+    "joined": "Se unió el {{date}}",
+    "review": "Revisar cuenta",
+    "stat": {
+      "label": "Cuentas pendientes",
+      "caption": "Decisiones sobre reclutadores pendientes"
+    },
+    "dialog": {
+      "title": "Revisar cuenta de reclutador",
+      "applicant": "Solicitante",
+      "jobTitle": "Cargo",
+      "email": "Correo electrónico",
+      "emailVerified": "Verificado con un código",
+      "emailUnverified": "Sin verificar",
+      "phone": "Teléfono",
+      "phoneConfirmed": "Teléfono confirmado en pantalla (sin SMS)",
+      "phoneUnconfirmed": "Sin confirmar",
+      "company": "Datos de la empresa",
+      "legalName": "Razón social",
+      "displayName": "Nombre visible",
+      "website": "Sitio web",
+      "businessEmail": "Correo de empresa",
+      "industry": "Sector",
+      "size": "Tamaño",
+      "location": "Ciudad",
+      "businessAddress": "Dirección de la empresa",
+      "registrationDetails": "Datos de registro",
+      "notProvided": "No indicado",
+      "documents": "Documentos KYC",
+      "documentType": {
+        "identity": "Documento de identidad",
+        "registration": "Certificado de registro",
+        "authorization": "Acreditación de autorización"
+      },
+      "fileDeleted": "Se elimina 30 días después de la decisión.",
+      "noDocuments": "No se ha subido ningún documento.",
+      "submittedAt": "Enviada",
+      "history": "Decisiones anteriores",
+      "decided": "{{decision}} por {{name}}, {{date}}",
+      "decision": {
+        "approved": "Aprobada",
+        "rejected": "Rechazada",
+        "suspended": "Suspendida"
+      },
+      "reason": "Motivo: {{reason}}",
+      "noActions": "No hay ninguna decisión disponible para esta cuenta hasta que el reclutador vuelva a enviarla.",
+      "action": {
+        "approved": "Aprobar",
+        "reactivate": "Reactivar",
+        "rejected": "Rechazar",
+        "suspended": "Suspender"
+      },
+      "confirm": {
+        "approved": {
+          "title": "¿Aprobar a este reclutador?",
+          "text": "Se abre el espacio de trabajo del reclutador y se crean las etapas predeterminadas del proceso de selección. El reclutador recibe un correo.",
+          "button": "Aprobar cuenta"
+        },
+        "reactivate": {
+          "title": "¿Reactivar a este reclutador?",
+          "text": "El reclutador puede volver a iniciar sesión y sus ofertas publicadas vuelven a mostrarse a los candidatos. El reclutador recibe un correo.",
+          "button": "Reactivar cuenta"
+        },
+        "rejected": {
+          "title": "¿Rechazar esta solicitud?",
+          "text": "El reclutador ve el motivo por correo y en la página de estado, y puede corregir los datos y volver a enviarla.",
+          "button": "Rechazar solicitud"
+        },
+        "suspended": {
+          "title": "¿Suspender a este reclutador?",
+          "text": "Se cierra la sesión del reclutador, sus ofertas dejan de mostrarse a los candidatos y recibe un correo con el motivo.",
+          "button": "Suspender cuenta"
+        }
+      },
+      "reasonLabel": "Motivo",
+      "reasonOptional": "Motivo (opcional)",
+      "reasonHint": "Hasta {{max}} caracteres. Se registra con la decisión y en el registro de auditoría.",
+      "back": "Volver",
+      "decidedNow": "Decisión guardada y enviada por correo al reclutador."
+    }
+  },
+  "title": "La confianza es una práctica continua.",
+  "description": "Revisa el contenido denunciado, las cuentas y las credenciales de los candidatos con cuidado, contexto y un registro claro de cada decisión.",
+  "content": {
+    "tab": "Moderación de contenido",
+    "title": "Cola de moderación de contenido",
+    "description": "Revisa las ofertas, perfiles de candidatos, empresas y mensajes denunciados. Las denuncias son indicios para una revisión humana, no conclusiones automáticas.",
+    "empty": "No hay contenido denunciado",
+    "stat": {
+      "label": "Denuncias de contenido",
+      "caption": "Casos abiertos pendientes de revisión"
+    },
+    "decisions": {
+      "label": "Decisiones sobre contenido",
+      "caption": "Casos desestimados o restringidos"
+    },
+    "priority": {
+      "high": "Prioridad alta",
+      "standard": "Prioridad estándar"
+    },
+    "reportCount_one": "{{count}} denuncia",
+    "reportCount_many": "{{count}} denuncias",
+    "reportCount_other": "{{count}} denuncias",
+    "openedFromJobs": "Abierto por un administrador desde Ofertas",
+    "decisionNote": "Motivo de la decisión: {{reason}}",
+    "review": "Revisar contenido",
+    "reviewTitle": "Revisar contenido denunciado",
+    "reports": "Denuncias",
+    "unknownReporter": "Cuenta eliminada",
+    "excerpt": "Extracto del mensaje",
+    "reportedMessage": "mensaje denunciado",
+    "targetGone": "Este contenido ya no existe.",
+    "facts": {
+      "company": "Empresa",
+      "status": "Estado",
+      "headline": "Titular",
+      "visibility": "Búsqueda"
+    },
+    "hidden": "Oculto en la búsqueda de reclutadores",
+    "visible": "Visible en la búsqueda de reclutadores",
+    "notProvided": "No indicado",
+    "history": "Historial",
+    "step": {
+      "dismissed": "Desestimado por {{by}} · {{date}}",
+      "restricted": "Restringido por {{by}} · {{date}}",
+      "lifted": "Restricción levantada por {{by}} · {{date}}"
+    },
+    "photoRemoved": "foto eliminada",
+    "notice": "No hay ningún veredicto automático. Revisa el contenido en su contexto. Restringir una oferta la pone en pausa y la bloquea; restringir un perfil lo oculta en la búsqueda de reclutadores. Se avisa al propietario por correo.",
+    "noticeDismissOnly": "Las denuncias de empresas y mensajes solo se pueden desestimar. Para actuar, suspende al reclutador en Revisión de cuentas o restringe el perfil del candidato.",
+    "restrict": "Restringir contenido",
+    "restrictTitle": "¿Restringir este contenido?",
+    "restrictText": {
+      "job": "La oferta se pone en pausa y se bloquea: el reclutador ve tu motivo y no puede volver a publicarla hasta que se desestime el caso.",
+      "candidate_profile": "El perfil queda oculto en la búsqueda de reclutadores hasta que se desestime el caso. También puedes eliminar la foto de perfil."
+    },
+    "dismiss": "Desestimar denuncia",
+    "dismissTitle": "¿Desestimar esta denuncia?",
+    "dismissText": "El contenido se queda como está y el caso se cierra con tu nota.",
+    "lift": "Desestimar y levantar restricción",
+    "liftTitle": "¿Levantar la restricción?",
+    "liftText": {
+      "job": "Se quita el bloqueo; la oferta sigue en pausa hasta que el reclutador vuelva a publicarla. Se avisa al reclutador por correo.",
+      "candidate_profile": "El perfil vuelve a ser visible en la búsqueda de reclutadores. Se avisa al candidato por correo."
+    },
+    "removePhoto": "Eliminar también la foto de perfil",
+    "decided": {
+      "restricted": "{{name}}: contenido restringido.",
+      "dismissed": "{{name}}: denuncia desestimada.",
+      "lifted": "{{name}}: restricción levantada."
+    },
+    "reason": "Motivo",
+    "reasonOptional": "Motivo (opcional)",
+    "reasonHint": "Se registra con la decisión y en el registro de auditoría.",
+    "reasonRequired": "Añade un motivo para que la decisión quede bien registrada.",
+    "reasonTooLong": "El motivo no debe superar los {{max}} caracteres.",
+    "back": "Volver"
+  }
+}

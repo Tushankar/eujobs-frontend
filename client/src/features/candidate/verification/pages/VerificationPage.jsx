@@ -130,7 +130,7 @@ export default function VerificationPage() {
           <CertificateChecks certificates={state.certificates} />
         </div>
 
-        <aside className={styles.side}>
+        <aside className={`${styles.side} sticky-side`}>
           <Panel padding={24}>
             <h2 className={styles.sectionTitle}>{t('verification:summary.title')}</h2>
             <dl className={styles.statusList}>

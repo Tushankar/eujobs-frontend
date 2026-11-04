@@ -88,7 +88,7 @@ export default function JobDetailsPage() {
             </div>
           </section>
 
-          <aside className={styles.tip}>
+          <aside className={`${styles.tip} sticky-side`}>
             <img src={aiSparkle} alt="" width={14} height={14} />
             <p>{t('jobs:details.tip')}</p>
           </aside>

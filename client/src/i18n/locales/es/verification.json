@@ -1,0 +1,91 @@
+{
+  "eyebrow": "Confianza, con contexto",
+  "title": "Una verificación que entiendes.",
+  "description": "Confirma tus datos de contacto, descubre qué significa cada comprobación y envía tus pruebas cuando estés listo.",
+  "basic": {
+    "title": "Verificación básica",
+    "lead": "Las comprobaciones de contacto ayudan a la integridad de la cuenta. No verifican habilidades, identidad, formación ni experiencia laboral.",
+    "email": "Correo electrónico"
+  },
+  "verified": "Verificado",
+  "notVerified": "Sin verificar",
+  "phone": {
+    "label": "Número de teléfono",
+    "country": "País",
+    "number": "Número de teléfono",
+    "numberHint": "Tu número, con o sin el prefijo del país.",
+    "send": "Enviar código",
+    "resend": "Enviar un nuevo código",
+    "resendIn": "Enviar un nuevo código en {{count}} s",
+    "codeShown": "Tu código es <code>{{code}}</code>. Introdúcelo abajo en menos de {{minutes}} minutos.",
+    "codeNote": "Te mostramos el código aquí en lugar de enviarte un SMS.",
+    "code": "Código",
+    "confirm": "Confirmar",
+    "verifiedNumber": "{{phone}} está verificado.",
+    "change": "Usar otro número"
+  },
+  "checks": {
+    "title": "Verificación del perfil",
+    "lead": "Un administrador revisa cada comprobación. Los reclutadores ven una marca de verificación por cada una aprobada.",
+    "bannerTitle": "Comprobaciones que necesita tu perfil",
+    "bannerLead": "La identidad siempre es necesaria. Las comprobaciones de formación y experiencia laboral son necesarias cuando tu perfil las incluye.",
+    "progress": "{{done}} de {{total}} verificadas"
+  },
+  "check": {
+    "identity": {
+      "label": "Identidad",
+      "description": "Documento oficial con foto revisado frente a los datos del titular de la cuenta.",
+      "accepted": "Pruebas aceptadas: pasaporte, permiso de conducir o documento nacional de identidad."
+    },
+    "academic": {
+      "label": "Títulos académicos",
+      "description": "Pruebas de la titulación revisadas frente a una entrada de formación de tu perfil.",
+      "accepted": "Pruebas aceptadas: título universitario, diploma o certificado académico oficial.",
+      "notNeeded": "Necesaria cuando tu perfil incluya formación."
+    },
+    "employment": {
+      "label": "Documentos laborales",
+      "description": "Pruebas laborales revisadas frente a un puesto de tu perfil.",
+      "accepted": "Pruebas aceptadas: carta de la empresa, página del contrato o referencia verificada.",
+      "notNeeded": "Necesaria cuando tu perfil incluya experiencia."
+    }
+  },
+  "submitted": "Enviado el {{date}} · {{file}}",
+  "submittedType": "Enviado el {{date}} · {{type}} · {{file}}",
+  "reason": "No aprobado: {{reason}}",
+  "submit": "Enviar pruebas",
+  "resubmit": "Enviar nuevas pruebas",
+  "submitLabel": "Enviar pruebas para {{check}}",
+  "rightToWork": {
+    "title": "Permiso de trabajo",
+    "lead": "Opcional: pruebas de una entrada de permiso de trabajo, revisadas por un administrador.",
+    "empty": "Primero añade tu permiso de trabajo en Mi perfil."
+  },
+  "certificates": {
+    "title": "Certificados externos",
+    "lead": "Opcional: pide a un administrador que revise el archivo de un certificado. Los reclutadores solo ven “Verificado” en los certificados revisados.",
+    "empty": "Primero añade certificados en Mi perfil.",
+    "noFile": "Añade un archivo a este certificado en Mi perfil para solicitar una revisión.",
+    "request": "Solicitar revisión",
+    "requestLabel": "Solicitar una revisión de {{name}}"
+  },
+  "dialog": {
+    "title": "Enviar pruebas: {{check}}",
+    "description": "Un administrador revisa el archivo frente a tu perfil. Los archivos de pruebas se eliminan 30 días después de la decisión.",
+    "type": "Tipo de prueba",
+    "entry": "Entrada del perfil que acredita",
+    "file": "Archivo de pruebas",
+    "confirm": "Estas pruebas son mías y son exactas.",
+    "submit": "Enviar a revisión"
+  },
+  "summary": {
+    "title": "Tu estado actual",
+    "email": "Correo electrónico",
+    "phone": "Teléfono",
+    "checks": "Comprobaciones de credenciales"
+  },
+  "badge": {
+    "title": "Qué significa una insignia",
+    "text": "Una insignia solo representa las comprobaciones indicadas a su lado. No es un aval, una recomendación de contratación ni una garantía de que los datos del perfil sean exactos."
+  }
+}

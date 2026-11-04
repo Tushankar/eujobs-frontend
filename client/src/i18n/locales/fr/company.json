@@ -1,0 +1,24 @@
+{
+  "title": "Racontez l’histoire de votre équipe.",
+  "lead": "Aidez les bonnes personnes à comprendre ce que vous construisez, et pourquoi c’est important.",
+  "createRole": "Créer votre prochaine offre",
+  "legalName": "Raison sociale",
+  "legalNameHint": "Vérifiée lors de votre contrôle KYC, elle ne peut pas être modifiée ici.",
+  "fields": {
+    "displayName": "Nom de l’entreprise",
+    "displayNameHint": "Le nom que les candidats voient sur vos offres.",
+    "industry": "Secteur",
+    "city": "Ville de l’entreprise",
+    "website": "Site web",
+    "size": "Taille de l’entreprise",
+    "description": "Ce que vous construisez"
+  },
+  "logo": {
+    "upload": "Importer le logo",
+    "replace": "Remplacer le logo",
+    "remove": "Supprimer le logo",
+    "uploading": "Importation…"
+  },
+  "save": "Enregistrer le profil de l’entreprise",
+  "saved": "Profil de l’entreprise enregistré."
+}

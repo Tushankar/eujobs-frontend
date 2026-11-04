@@ -1,0 +1,178 @@
+{
+  "title": "Un perfil que se parece a ti.",
+  "description": "Tu experiencia es más que una lista. Cuenta la historia que hay detrás.",
+  "edit": "Editar perfil",
+  "saved": "Perfil guardado.",
+  "photo": {
+    "upload": "Subir foto",
+    "change": "Cambiar foto",
+    "remove": "Quitar foto",
+    "hint": "{{limits}}. La foto se recorta en forma cuadrada."
+  },
+  "about": {
+    "title": "Un poco sobre mí",
+    "empty": "Cuéntales un poco sobre ti a los reclutadores en Editar perfil."
+  },
+  "strengths": {
+    "title": "Experiencia y puntos fuertes",
+    "years_one": "{{count}} año de experiencia profesional",
+    "years_many": "{{count}} años de experiencia profesional",
+    "years_other": "{{count}} años de experiencia profesional",
+    "empty": "Añade tus años de experiencia y tus habilidades en Editar perfil."
+  },
+  "workHistory": {
+    "title": "Experiencia",
+    "add": "Añadir un puesto",
+    "empty": "Añade los puestos que has ocupado o indícanos que aún no tienes experiencia laboral.",
+    "none": "Aún sin experiencia laboral"
+  },
+  "education": {
+    "title": "Formación",
+    "add": "Añadir formación",
+    "empty": "Añade tus titulaciones o indícanos que no tienes una titulación oficial.",
+    "none": "Sin titulación oficial"
+  },
+  "period": "{{start}} – {{end}}",
+  "present": "Actualidad",
+  "stillStudying": "Estudiando actualmente",
+  "languages": {
+    "title": "Idiomas",
+    "edit": "Editar idiomas",
+    "empty": "Añade los idiomas que hablas y tu nivel."
+  },
+  "rightToWork": {
+    "title": "Permiso de trabajo",
+    "edit": "Editar permiso de trabajo",
+    "empty": "Añade tu permiso de trabajo en la UE, el Reino Unido o ambos.",
+    "validUntil": "Válido hasta el {{date}}",
+    "expired": "Permiso caducado"
+  },
+  "links": {
+    "title": "Enlaces",
+    "edit": "Editar enlaces",
+    "empty": "Añade un perfil de LinkedIn o un enlace a tu portafolio.",
+    "linkedin": "LinkedIn",
+    "portfolio": "Portafolio"
+  },
+  "certificates": {
+    "title": "Certificados",
+    "add": "Añadir un certificado",
+    "empty": "Opcional: certificados obtenidos fuera de Local WorkMan.",
+    "issued": "Emitido el {{date}}",
+    "expires": "Caduca el {{date}}",
+    "link": "Ver credencial",
+    "file": "Abrir archivo"
+  },
+  "courseCertificates": {
+    "title": "Certificados e insignias",
+    "meta": "Emitido el {{date}} · {{code}}",
+    "check": "Comprobación pública",
+    "empty": "Aquí aparecen los certificados de cursos que obtengas en Local WorkMan.",
+    "browse": "Ver cursos"
+  },
+  "nextStep": {
+    "title": "El siguiente paso adecuado",
+    "salary": "Desde {{amount}} {{period}}"
+  },
+  "resume": {
+    "title": "Tu CV",
+    "none": "Aún no has subido ningún CV",
+    "update": "Actualizar CV"
+  },
+  "control": {
+    "title": "Tu historia. Tu control.",
+    "text": "Elige quién puede descubrir tu perfil y cuándo se comparte tu CV.",
+    "link": "Gestionar privacidad"
+  },
+  "actions": {
+    "edit": "Editar {{name}}",
+    "delete": "Eliminar {{name}}"
+  },
+  "deleteDialog": {
+    "title": "¿Eliminar esta entrada?",
+    "body": "{{name}} se eliminará de tu perfil. Una verificación vinculada a esta entrada dejará de contar.",
+    "confirm": "Eliminar"
+  },
+  "form": {
+    "save": "Guardar",
+    "month": "Mes",
+    "year": "Año",
+    "core": {
+      "title": "Editar perfil",
+      "fullName": "Nombre completo",
+      "headline": "Puesto actual o titular",
+      "city": "Dónde vives",
+      "about": "Un poco sobre mí",
+      "count": "{{count}} / {{max}} caracteres",
+      "years": "Años de experiencia",
+      "skills": "Puntos fuertes",
+      "skillsHint": "Añade hasta {{max}} habilidades. Pulsa Intro para añadir una.",
+      "skillPlaceholder": "Añade una habilidad",
+      "addSkill": "Añadir",
+      "removeSkill": "Quitar {{skill}}",
+      "workPreference": "Preferencia de trabajo",
+      "availability": "Disponibilidad",
+      "salary": "Salario mínimo en {{currency}} (opcional)",
+      "salaryNoCurrency": "Salario mínimo (opcional)",
+      "salaryNeedsCity": "Elige primero tu ciudad para fijar la moneda.",
+      "period": "Periodo del salario"
+    },
+    "work": {
+      "addTitle": "Añadir un puesto",
+      "editTitle": "Editar puesto",
+      "title": "Puesto",
+      "employer": "Empresa u organización",
+      "start": "Fecha de inicio",
+      "end": "Fecha de fin",
+      "current": "Trabajo aquí actualmente",
+      "description": "Qué hacías (opcional)"
+    },
+    "education": {
+      "addTitle": "Añadir formación",
+      "editTitle": "Editar formación",
+      "institution": "Centro",
+      "degree": "Título o titulación",
+      "start": "Fecha de inicio",
+      "end": "Fecha de fin",
+      "stillStudying": "Estudiando actualmente"
+    },
+    "languages": {
+      "title": "Idiomas",
+      "language": "Idioma",
+      "level": "Nivel",
+      "choose": "Elige un idioma",
+      "search": "Buscar idiomas",
+      "noResults": "Ningún idioma coincide con “{{query}}”.",
+      "add": "Añadir un idioma",
+      "remove": "Quitar {{language}}"
+    },
+    "rightToWork": {
+      "title": "Permiso de trabajo",
+      "hint": "Una entrada para la UE, el Reino Unido o ambos. Nunca te pedimos tu nacionalidad.",
+      "status": "Situación",
+      "expires": "Permiso válido hasta",
+      "add": "Añadir {{region}}",
+      "remove": "Quitar {{region}}"
+    },
+    "links": {
+      "title": "Enlaces",
+      "linkedin": "Perfil de LinkedIn",
+      "linkedinHint": "Por ejemplo, https://www.linkedin.com/in/tu-nombre",
+      "portfolio": "Portafolio",
+      "portfolioHint": "Cualquier enlace que empiece por https://"
+    },
+    "certificate": {
+      "addTitle": "Añadir un certificado",
+      "editTitle": "Editar certificado",
+      "name": "Nombre del certificado",
+      "issuer": "Emitido por",
+      "issuedOn": "Fecha de emisión",
+      "expiresOn": "Fecha de caducidad (opcional)",
+      "url": "Enlace a la credencial (opcional)",
+      "file": "Archivo del certificado (opcional)",
+      "fileHint": "{{limits}}. Con un archivo puedes solicitar la verificación.",
+      "currentFile": "Archivo actual: {{name}}",
+      "removeFile": "Quitar el archivo"
+    }
+  }
+}

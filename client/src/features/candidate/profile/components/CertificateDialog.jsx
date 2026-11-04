@@ -6,8 +6,11 @@ import { check, checkUpload, useErrorText, useFormState, useUploadText } from '@
 import { useAddCertificateMutation, useRemoveCertificateFileMutation, useSetCertificateFileMutation, useUpdateCertificateMutation } from '../api.js'
 import FormDialog from './FormDialog.jsx'
 import dialogStyles from './FormDialog.module.css'
+import MonthField from './MonthField.jsx'
 
 const HTTPS = /^https:\/\/[^\s/$.?#].[^\s]*$/i
+// How far ahead the expiry year list reaches.
+const EXPIRY_YEARS_AHEAD = 15
 
 /** M-025, P3-D3: a self-declared certificate with an optional link and file; with a file it can be verified. */
 export default function CertificateDialog({ open, certificate, onSaved, onClose }) {
@@ -60,8 +63,16 @@ export default function CertificateDialog({ open, certificate, onSaved, onClose 
         <TextField label={label('issuer')} name="issuer" value={values.issuer} onChange={(event) => set('issuer', event.target.value)} error={errorText.field('issuer', errors.issuer)} />
       </div>
       <div className={dialogStyles.row}>
-        <TextField label={label('issuedOn')} name="issuedOn" type="month" value={values.issuedOn} onChange={(event) => set('issuedOn', event.target.value)} error={errorText.field('issuedOn', errors.issuedOn)} />
-        <TextField label={label('expiresOn')} name="expiresOn" type="month" value={values.expiresOn} onChange={(event) => set('expiresOn', event.target.value)} error={errorText.field('expiresOn', errors.expiresOn)} />
+        <MonthField label={label('issuedOn')} name="issuedOn" value={values.issuedOn} onChange={(month) => set('issuedOn', month)} error={errorText.field('issuedOn', errors.issuedOn)} />
+        <MonthField
+          label={label('expiresOn')}
+          name="expiresOn"
+          optional
+          futureYears={EXPIRY_YEARS_AHEAD}
+          value={values.expiresOn}
+          onChange={(month) => set('expiresOn', month)}
+          error={errorText.field('expiresOn', errors.expiresOn)}
+        />
       </div>
       <TextField label={label('url')} name="url" type="url" value={values.url} onChange={(event) => set('url', event.target.value)} error={errorText.field('url', errors.url)} />
       <Field id="certificate-file" label={label('file')} hint={t('profile:form.certificate.fileHint', { limits: uploadText.limits })} error={errors.file && (errors.file.text ?? errorText.field('file', errors.file))}>

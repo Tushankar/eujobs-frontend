@@ -1,0 +1,26 @@
+{
+  "title": "Des mises en relation, avec du contexte.",
+  "description": "Comprenez l’activité des candidatures sans perdre de vue les personnes qui sont derrière.",
+  "export": "Exporter l’activité",
+  "search": "Rechercher un candidat, une offre ou une entreprise",
+  "filters": {
+    "status": "Filtrer par statut",
+    "allStatuses": "Tous les statuts",
+    "country": "Filtrer par pays de l’offre",
+    "allCountries": "Tous les pays"
+  },
+  "columns": {
+    "candidate": "Candidat",
+    "role": "Poste",
+    "company": "Entreprise",
+    "country": "Pays de l’offre",
+    "applied": "Date",
+    "status": "Statut"
+  },
+  "caption": "Candidatures",
+  "empty": "Aucune candidature pour l’instant",
+  "emptyText": "Les candidatures envoyées par les candidats apparaissent ici.",
+  "emptyFiltered": "Aucune candidature ne correspond",
+  "emptyFilteredText": "Essayez une autre recherche, un autre statut ou un autre pays.",
+  "clear": "Effacer les filtres"
+}

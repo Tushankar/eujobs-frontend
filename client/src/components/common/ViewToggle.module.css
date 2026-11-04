@@ -4,9 +4,16 @@
 
   position: relative;
   display: inline-flex;
+  max-width: 100%;
   padding: 4px;
+  overflow-x: auto;
   border: 1px solid var(--border);
   border-radius: var(--radius-xl);
+  scrollbar-width: none;
+}
+
+.tray::-webkit-scrollbar {
+  display: none;
 }
 
 /* The active pill: one element that slides under the items (positioned by useActiveIndicator). */
@@ -93,6 +100,8 @@
 
 .wide .item {
   min-height: 48px;
+  white-space: normal;
+  text-align: center;
 }
 
 .wide .active,

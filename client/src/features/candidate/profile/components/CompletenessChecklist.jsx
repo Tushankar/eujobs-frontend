@@ -12,7 +12,7 @@ import styles from './CompletenessChecklist.module.css'
  * The server's checklist (§3.2, M-015): "x of N", a meter and every item; open items link to where they are
  * done. `items` limits the list (the Overview shows only the next open items).
  */
-export default function CompletenessChecklist({ completeness, items = completeness.items, heading }) {
+export default function CompletenessChecklist({ completeness, items = completeness.items, heading, onOpen }) {
   const { t } = useTranslation()
   const format = useFormat()
   const { done, total, percent, complete } = completeness
@@ -51,13 +51,27 @@ export default function CompletenessChecklist({ completeness, items = completene
                 <span className={styles.label}>{t(`completeness:items.${item.key}`)}</span>
               </span>
             ) : (
-              <Link to={item.route} className={styles.item}>
-                <span className={styles.openIcon}>
-                  <Icon as={completenessIcon(item.key)} size={14} />
-                </span>
-                <span className={styles.label}>{t(`completeness:items.${item.key}`)}</span>
-                <Icon as={ChevronRight} size={14} className={styles.chevron} />
-              </Link>
+              (() => {
+                const content = (
+                  <>
+                    <span className={styles.openIcon}>
+                      <Icon as={completenessIcon(item.key)} size={14} />
+                    </span>
+                    <span className={styles.label}>{t(`completeness:items.${item.key}`)}</span>
+                    <Icon as={ChevronRight} size={14} className={styles.chevron} />
+                  </>
+                )
+                // On My profile an item opens its editor in place; elsewhere it links to the page that does it.
+                return onOpen?.[item.key] ? (
+                  <button type="button" className={cx(styles.item, styles.link)} onClick={onOpen[item.key]}>
+                    {content}
+                  </button>
+                ) : (
+                  <Link to={item.route} className={cx(styles.item, styles.link)}>
+                    {content}
+                  </Link>
+                )
+              })()
             )}
           </li>
         ))}

@@ -1,0 +1,45 @@
+{
+  "status": {
+    "loading": "Redactando con IA…",
+    "unavailable": "El servicio de IA no ha respondido. Los datos mostrados no han cambiado; vuelve a intentarlo en un momento.",
+    "notFound": "Esto ya no está disponible.",
+    "retry": "Reintentar",
+    "limit": "Has usado las 50 generaciones con IA de hoy. Vuelven a estar disponibles a partir del {{time}}. Los textos redactados antes siguen visibles.",
+    "plan": "Los textos con IA forman parte de Plus.",
+    "upgrade": "Ver Plus"
+  },
+  "badge": "Redactado por IA",
+  "translate": {
+    "action": "Traducir",
+    "done": "Traducido por IA al {{language}}",
+    "original": "Ver original"
+  },
+  "jobSummary": {
+    "action": "Resumen de la oferta con IA",
+    "actionLabel": "Resumen con IA de la oferta {{title}}",
+    "title": "Resumen de la oferta con IA",
+    "lead": "Redactado por IA a partir de la oferta. Consulta la oferta antes de fiarte de él; no es una decisión de contratación.",
+    "overview": "Resumen",
+    "highlights": "Lo más destacado",
+    "considerations": "A tener en cuenta",
+    "skills": "Habilidades requeridas",
+    "close": "Cerrar",
+    "regenerate": "Regenerar",
+    "regenerated": "Se ha redactado un nuevo resumen."
+  },
+  "profileSummary": {
+    "action": "Resumen con IA",
+    "title": "Resumen con IA",
+    "lead": "Un resumen listo para reclutadores, redactado por IA a partir de tu perfil y tu CV activo. Léelo antes de usarlo.",
+    "copy": "Copiar resumen",
+    "copied": "Resumen copiado en el portapapeles.",
+    "copyFailed": "Este navegador bloquea la copia. Selecciona el texto y cópialo manualmente.",
+    "close": "Cerrar"
+  },
+  "explanation": {
+    "title": "Por qué esta oferta",
+    "strengths": "Puntos fuertes",
+    "gaps": "Carencias y dudas",
+    "openQuestions": "Preguntas que hacer"
+  }
+}

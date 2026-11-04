@@ -8,7 +8,7 @@ export default function NotFoundPage({ homePath = '/sign-in', workspaceId }) {
   const { t } = useTranslation()
   const { pathname } = useLocation()
   return (
-    <div className={styles.wrapper}>
+    <div className={styles.wrapper} data-not-found>
       <Panel padding={32} className={styles.panel}>
         <p className={styles.code}>404</p>
         <h1 className={styles.title}>{t('shell:notFound.title')}</h1>

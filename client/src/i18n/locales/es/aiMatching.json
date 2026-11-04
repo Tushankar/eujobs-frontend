@@ -1,0 +1,141 @@
+{
+  "page": {
+    "eyebrow": "IA responsable",
+    "title": "Haz visible el razonamiento.",
+    "description": "Señales relevantes para el puesto. Pruebas claras. Decisiones humanas, siempre.",
+    "create": "Crear política",
+    "loadError": "No se han podido cargar las políticas de compatibilidad."
+  },
+  "signals": {
+    "skills": {
+      "label": "Habilidades relevantes",
+      "description": "Proporción de las habilidades requeridas para el puesto que figuran en el perfil del candidato."
+    },
+    "experience": {
+      "label": "Experiencia relevante",
+      "description": "Significado del perfil, la experiencia y el CV activo comparado con el texto de la oferta. Los años por sí solos nunca deciden la compatibilidad."
+    },
+    "location": {
+      "label": "Ubicación y preferencias de trabajo",
+      "description": "Un país o una modalidad de trabajo distintos limitan la puntuación por debajo de “Compatible”."
+    },
+    "humanReview": {
+      "label": "Exigir revisión humana",
+      "description": "Siempre activa. La IA no puede seleccionar, rechazar, contactar ni contratar a un candidato por sí sola."
+    }
+  },
+  "editor": {
+    "edit": "Editar nombre y descripción",
+    "cancel": "Cancelar",
+    "saveDetails": "Guardar datos",
+    "save": "Guardar política revisada",
+    "activate": "Activar",
+    "archive": "Archivar borrador",
+    "archivedNote": "Las políticas archivadas son de solo lectura.",
+    "note": "Al guardar la política activa, o al activar una política, se recalculan todas las puntuaciones de compatibilidad con esa versión.",
+    "saved": "Versión {{version}} guardada.",
+    "savedActive": "Versión {{version}} guardada. Se están recalculando las puntuaciones de compatibilidad.",
+    "activated": "“{{name}}” es ahora la política activa. Se están recalculando las puntuaciones de compatibilidad.",
+    "archived": "Se ha archivado “{{name}}”.",
+    "detailsSaved": "Nombre y descripción guardados.",
+    "history": "Historial de versiones",
+    "historyItem": "Versión {{version}} · {{date}}",
+    "signalsOn": "Activas: {{signals}}"
+  },
+  "library": {
+    "title": "Biblioteca de políticas",
+    "description": "Selecciona una política para revisarla o activarla.",
+    "updated": "Actualizada el {{date}}"
+  },
+  "guidance": {
+    "title": "Pruebas, no absolutos.",
+    "text": "No uses nunca características protegidas como datos de entrada para la compatibilidad. Muestra las posibles carencias junto a los puntos fuertes y haz que cada recomendación pueda revisarse."
+  },
+  "status": {
+    "title": "Estado del servicio",
+    "connected": "Última llamada correcta: {{time}}",
+    "noCalls": "Aún no hay llamadas a OpenAI",
+    "lastError": "Última llamada fallida: {{time}}",
+    "models": "Modelos",
+    "model": {
+      "fast": "Rápido",
+      "main": "Principal",
+      "embedding": "Embeddings",
+      "transcribe": "Transcripción"
+    }
+  },
+  "create": {
+    "title": "Crear política de compatibilidad",
+    "intro": "Crea un borrador con nombre y todas las señales aprobadas activadas. La revisión humana siempre es obligatoria y no se puede desactivar.",
+    "name": "Nombre de la política",
+    "namePlaceholder": "Por ejemplo, puestos de producto en Reino Unido",
+    "description": "Descripción de la política",
+    "descriptionPlaceholder": "Describe los puestos, el mercado o el contexto de revisión al que se aplica esta política.",
+    "descriptionHint": "Explica cuándo debe usarse esta política.",
+    "assistTitle": "Sugerencia de política asistida por IA",
+    "assistIdle": "Añade un nombre y una descripción para recibir una sugerencia personalizada.",
+    "assistDone": "Sugerencia añadida a la descripción. Revísala y edítala antes de crear el borrador.",
+    "improve": "Mejorar descripción",
+    "improving": "Redactando una sugerencia…",
+    "assistNote": "Redactado por OpenAI. Revisa y edita el resultado antes de crear el borrador.",
+    "cancel": "Cancelar",
+    "submit": "Crear borrador de política",
+    "created": "Se ha creado el borrador “{{name}}”. Revisa sus señales y actívalo."
+  },
+  "errors": {
+    "name": {
+      "required": "Introduce un nombre para la política.",
+      "too_short": "El nombre debe tener al menos {{min}} caracteres.",
+      "too_long": "El nombre debe tener {{max}} caracteres como máximo.",
+      "taken": "Ya existe una política con este nombre. Elige otro."
+    },
+    "description": {
+      "required": "Describe los puestos, el mercado o el contexto de revisión al que se aplica esta política.",
+      "too_short": "Añade más detalle: al menos {{min}} caracteres.",
+      "too_long": "La descripción no debe superar los {{max}} caracteres."
+    },
+    "signals": {
+      "skills_or_experience": "Activa las habilidades o la experiencia."
+    }
+  },
+  "oversight": {
+    "title": "Supervisión de la compatibilidad para reclutadores",
+    "description": "Los mejores candidatos de una oferta según la puntuación de compatibilidad. Los reclutadores ven esta clasificación y las pruebas, nunca el porcentaje.",
+    "job": "Oferta",
+    "noJobs": "Aún no hay ofertas publicadas.",
+    "noCandidates": "Ningún candidato del mercado de esta oferta tiene aún puntuación de compatibilidad.",
+    "percentLabel": "Puntuación de compatibilidad {{score}}",
+    "caption": "Habilidades, experiencia y preferencias de trabajo. La revisión humana sigue siendo obligatoria.",
+    "select": "Ver las pruebas de {{name}}"
+  },
+  "evidence": {
+    "title": "Pruebas de compatibilidad de {{name}}",
+    "subtitle": "Calculado a partir del perfil y la oferta; no lo ha redactado ninguna IA.",
+    "matched": "Habilidades indicadas para esta oferta",
+    "missing": "Habilidades requeridas no indicadas",
+    "none": "Ninguna",
+    "years": "{{candidate}} años declarados · la oferta pide {{required}}+",
+    "yearsNoRequirement": "{{candidate}} años declarados · sin mínimo",
+    "workMode": "Prefiere: {{candidate}} · oferta: {{job}}",
+    "location": {
+      "met": "La ubicación encaja con la oferta",
+      "notMet": "La ubicación o la modalidad no encajan con la oferta"
+    },
+    "languages": "Idiomas requeridos",
+    "language": "{{language}}: requiere {{minLevel}}, tiene {{level}}",
+    "languageMissing": "{{language}}: requiere {{minLevel}}, no indicado",
+    "rightToWork": {
+      "true": "Permiso de trabajo en el país de la oferta",
+      "false": "No indica permiso de trabajo en el país de la oferta"
+    },
+    "disclaimer": "Basado en las pruebas del perfil y las preferencias indicadas; no es una decisión de contratación. Tú tienes el control."
+  },
+  "feedback": {
+    "title": "Valoraciones de las explicaciones",
+    "description": "Lo que respondieron los candidatos a “¿Te ha resultado útil esta explicación?” en “Por qué se recomienda”. Se guarda por candidato y oferta; no entrena ningún modelo.",
+    "totals": "{{helpful}} útiles · {{needsReview}} por revisar",
+    "job": "{{helpful}} útiles · {{needsReview}} por revisar",
+    "empty": "Aún no hay valoraciones.",
+    "removedJob": "Una oferta eliminada"
+  }
+}

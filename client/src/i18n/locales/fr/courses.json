@@ -1,0 +1,260 @@
+{
+  "page": {
+    "eyebrow": "Administration des formations",
+    "title": "Concevez des formations avec un objectif clair.",
+    "description": "Créez, vérifiez, publiez et maintenez les formations que les candidats et les recruteurs voient dans leur espace de formation.",
+    "create": "Nouvelle formation"
+  },
+  "tabs": {
+    "label": "Public de la formation",
+    "candidate": "Formations candidats",
+    "recruiter": "Formations recruteurs"
+  },
+  "stats": {
+    "total": "Total des formations",
+    "totalCaption": "Brouillons, publiées et dépubliées",
+    "published": "Publiées",
+    "publishedCaption": {
+      "candidate": "Visibles dans les formations candidats",
+      "recruiter": "Visibles dans les formations recruteurs"
+    },
+    "paid": "Formations payantes",
+    "paidCaption": "Contenu à achat unique",
+    "active": "Apprenants actifs",
+    "activeCaption": "Au moins une leçon terminée, formation pas encore achevée"
+  },
+  "filters": {
+    "search": "Rechercher une formation ou une compétence",
+    "status": "Filtrer par statut de formation",
+    "allStatuses": "Tous les statuts"
+  },
+  "notice": {
+    "published": "« {{title}} » a été publiée.",
+    "unpublished": "« {{title}} » a été dépubliée. Les apprenants inscrits conservent l’accès."
+  },
+  "empty": {
+    "title": "Aucune formation ne correspond à vos filtres",
+    "text": "Essayez une autre recherche ou choisissez Tous les statuts."
+  },
+  "table": {
+    "caption": "Formations",
+    "course": "Formation",
+    "lessons_one": "{{count}} leçon",
+    "lessons_many": "{{count}} leçons",
+    "lessons_other": "{{count}} leçons",
+    "level": "Niveau",
+    "access": "Accès",
+    "free": "Gratuite",
+    "paid": "Payante",
+    "learning": "Apprenants",
+    "learners": "{{enrolled}} inscrits, {{purchased}} achats, {{completions}} terminés",
+    "status": "Statut",
+    "updated": "Mise à jour",
+    "actions": "Actions",
+    "manage": "Gérer",
+    "manageLabel": "Gérer {{title}}",
+    "publish": "Publier",
+    "unpublish": "Dépublier",
+    "publishLabel": "Publier {{title}}",
+    "unpublishLabel": "Dépublier {{title}}",
+    "revenue": "Revenus",
+    "more": "+{{count}} autres",
+    "noRevenue": "—",
+    "learnersAction": "Apprenants",
+    "learnersLabel": "Apprenants de {{title}}"
+  },
+  "builder": {
+    "back": "Retour aux formations",
+    "newTitle": "Nouvelle formation",
+    "newDescription": "Commencez par un titre. La formation reste un brouillon jusqu’à sa publication.",
+    "create": "Créer le brouillon",
+    "description": "Modifiez les informations vues par les apprenants, les leçons et le quiz final, puis prévisualisez et publiez.",
+    "publish": "Publier",
+    "unpublish": "Dépublier",
+    "locked": "Des apprenants sont inscrits : les leçons et le quiz sont verrouillés. Les textes et les prix peuvent encore changer.",
+    "problemsTitle": "Avant de pouvoir publier",
+    "tabsLabel": "Sections de l’éditeur de formation",
+    "tab": {
+      "details": "Détails",
+      "lessons": "Leçons",
+      "quiz": "Quiz",
+      "preview": "Aperçu"
+    },
+    "saved": "Enregistré"
+  },
+  "details": {
+    "title": "Titre de la formation",
+    "category": "Catégorie ou parcours",
+    "categoryHint": "Affiché sur les cartes, par exemple Design d’interaction.",
+    "level": "Niveau",
+    "choose": "Choisir…",
+    "language": "Langue de la formation",
+    "summary": "Synthèse",
+    "about": "À propos de cette formation",
+    "lead": "Texte d’introduction",
+    "tagline": "Accroche",
+    "designedFor": "Public visé",
+    "pipelineCategory": "Catégorie du processus de recrutement",
+    "pipelineHint": "Suggérée aux recruteurs ayant des candidatures actives à cette étape.",
+    "skillTags": "Étiquettes de compétences",
+    "skillTagsHint": "Séparez-les par des virgules. Suggérée aux candidats à qui ces compétences manquent.",
+    "outcomes": "Acquis",
+    "outcomeLabel": "Acquis {{number}}",
+    "removeOutcome": "Retirer l’acquis",
+    "addOutcome": "Ajouter un acquis",
+    "cover": "Image de couverture",
+    "price": "Prix",
+    "free": "Formation gratuite",
+    "priceHint": "Prix unique dans chaque devise, TVA comprise. Les 8 sont nécessaires pour publier une formation payante.",
+    "save": "Enregistrer les détails"
+  },
+  "upload": {
+    "choose": "Choisir un fichier",
+    "replace": "Remplacer le fichier",
+    "progress": "Progression de l’import"
+  },
+  "lessons": {
+    "listLabel": "Leçons",
+    "emptyTitle": "Aucune leçon pour l’instant",
+    "emptyText": "Ajoutez une leçon vidéo, texte, PDF ou lien. Une formation doit compter au moins une leçon pour être publiée.",
+    "add": "Ajouter une leçon",
+    "addTitle": "Ajouter une leçon",
+    "editTitle": "Modifier la leçon",
+    "save": "Enregistrer la leçon",
+    "title": "Titre de la leçon",
+    "type": "Type de leçon",
+    "video": "Vidéo (MP4 H.264/AAC ou WebM)",
+    "unplayable": "Ce navigateur ne peut pas lire la vidéo. Vérifiez le fichier avant de publier.",
+    "document": "Document PDF",
+    "markdown": "Texte de la leçon (Markdown)",
+    "markdownHint": "Titres, listes et liens https. Tout contenu dangereux est supprimé.",
+    "preview": "Aperçu du texte",
+    "url": "Lien",
+    "urlHint": "Liens https uniquement.",
+    "duration": "Durée en secondes",
+    "durationVideoHint": "Lue depuis la vidéo lors de l’import. Vous pouvez la modifier.",
+    "durationHint": "Facultatif. Compte dans la durée de la formation.",
+    "contentLanguage": "Langue du contenu",
+    "isPreview": "Aperçu gratuit : s’ouvre sans achat",
+    "previewBadge": "Aperçu gratuit",
+    "moveUp": "Monter « {{title}} »",
+    "moveDown": "Descendre « {{title}} »",
+    "edit": "Modifier « {{title}} »",
+    "delete": "Supprimer « {{title}} »",
+    "deleteTitle": "Supprimer cette leçon ?",
+    "deleteText": "« {{title}} » et son fichier seront supprimés.",
+    "deleteConfirm": "Supprimer la leçon"
+  },
+  "quiz": {
+    "passMark": "Seuil de réussite (%)",
+    "passMarkHint": "Les apprenants réussissent à partir de ce score.",
+    "question": "Question {{number}}",
+    "removeQuestion": "Retirer la question {{number}}",
+    "text": "Question",
+    "type": "Type de réponse",
+    "optionsSingle": "Options : cochez la bonne réponse",
+    "optionsMultiple": "Options : cochez toutes les bonnes réponses",
+    "markCorrect": "L’option {{number}} est correcte",
+    "option": "Option {{number}}",
+    "removeOption": "Retirer l’option {{number}}",
+    "addOption": "Ajouter une option",
+    "addQuestion": "Ajouter une question",
+    "save": "Enregistrer le quiz"
+  },
+  "preview": {
+    "designedFor": "Public visé : {{text}}",
+    "noPrices": "Aucun prix pour l’instant",
+    "quiz_one": "Quiz final : {{count}} question, seuil de réussite {{passMark}} %.",
+    "quiz_many": "Quiz final : {{count}} questions, seuil de réussite {{passMark}} %.",
+    "quiz_other": "Quiz final : {{count}} questions, seuil de réussite {{passMark}} %."
+  },
+  "problems": {
+    "category": {
+      "required": "Ajoutez une catégorie ou un parcours."
+    },
+    "level": {
+      "required": "Choisissez un niveau."
+    },
+    "summary": {
+      "required": "Ajoutez une synthèse.",
+      "too_short": "La synthèse doit comporter au moins 20 caractères."
+    },
+    "about": {
+      "required": "Ajoutez le texte À propos.",
+      "too_short": "Le texte À propos doit comporter au moins 20 caractères."
+    },
+    "lead": {
+      "required": "Ajoutez le texte d’introduction.",
+      "too_short": "Le texte d’introduction doit comporter au moins 20 caractères."
+    },
+    "tagline": {
+      "required": "Ajoutez une accroche."
+    },
+    "designedFor": {
+      "required": "Indiquez à qui s’adresse la formation."
+    },
+    "pipelineCategory": {
+      "required": "Choisissez une catégorie du processus de recrutement."
+    },
+    "coverFileId": {
+      "required": "Importez une image de couverture."
+    },
+    "outcomes": {
+      "required": "Ajoutez au moins un acquis."
+    },
+    "skillTags": {
+      "required": "Ajoutez au moins une étiquette de compétence."
+    },
+    "price": "Ajoutez le prix en {{currency}}, ou rendez la formation gratuite.",
+    "lessons": {
+      "too_few": "Ajoutez au moins une leçon.",
+      "required": "Ajoutez au moins une leçon."
+    },
+    "lesson": {
+      "videoFileId": "Leçon {{number}} : importez la vidéo.",
+      "durationSec": "Leçon {{number}} : ajoutez la durée de la vidéo.",
+      "documentFileId": "Leçon {{number}} : importez le PDF.",
+      "textMarkdown": "Leçon {{number}} : ajoutez le texte de la leçon.",
+      "url": "Leçon {{number}} : ajoutez le lien."
+    },
+    "quiz": {
+      "too_few": "Ajoutez au moins une question au quiz.",
+      "required": "Ajoutez au moins une question au quiz."
+    }
+  },
+  "totals": {
+    "learning": "Totaux de la page : {{enrolled}} inscrits, {{purchased}} achats, {{completions}} terminés",
+    "revenue": "revenus {{amounts}}"
+  },
+  "learners": {
+    "eyebrow": "Apprenants de la formation",
+    "description_one": "{{count}} apprenant, du plus récent au plus ancien.",
+    "description_many": "{{count}} apprenants, du plus récent au plus ancien.",
+    "description_other": "{{count}} apprenants, du plus récent au plus ancien.",
+    "caption": "Apprenants",
+    "learner": "Apprenant",
+    "deleted": "Compte supprimé",
+    "source": "Origine",
+    "sources": {
+      "free": "Gratuit",
+      "purchase": "Achat",
+      "seed": "Données initiales"
+    },
+    "enrolled": "Inscription",
+    "progress": "Progression",
+    "lessons": "{{done}} leçons sur {{total}}",
+    "bestScore": "Meilleur score",
+    "certificate": "Certificat",
+    "status": {
+      "valid": "Valide",
+      "revoked": "Révoqué",
+      "no_longer_valid": "N’est plus valide"
+    },
+    "revoke": "Révoquer",
+    "revokeTitle": "Révoquer ce certificat ?",
+    "revokeDescription": "{{code}} de {{name}}. La vérification publique affichera Révoqué. Cette action est consignée dans le journal d’audit.",
+    "reason": "Motif",
+    "emptyTitle": "Aucun apprenant pour l’instant",
+    "emptyText": "Les apprenants apparaissent ici dès qu’ils s’inscrivent à la formation ou l’achètent."
+  }
+}

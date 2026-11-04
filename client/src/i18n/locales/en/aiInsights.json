@@ -14,7 +14,8 @@
   "picker": {
     "label": "Compare with a role",
     "meta": "{{company}} · {{mode}}",
-    "none": "No roles to compare yet. Save a job or add skills to your profile to see recommendations."
+    "noneTitle": "No roles to compare yet",
+    "noneText": "Save a job or add skills to your profile, and the roles that fit you show up here to compare."
   },
   "overview": {
     "eyebrow": "AI Profile Insights",

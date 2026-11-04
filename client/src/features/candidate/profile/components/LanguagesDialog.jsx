@@ -7,6 +7,7 @@ import { useErrorText, useFormState } from '@/lib/forms.js'
 import { useFormat, usePreferences } from '@/lib/preferences.js'
 import { useSetLanguagesMutation } from '../api.js'
 import FormDialog from './FormDialog.jsx'
+import LanguageField from './LanguageField.jsx'
 import dialogStyles from './FormDialog.module.css'
 
 /** M-020, P3-D5: ISO 639-1 languages, named in the UI language, one level each. */
@@ -19,10 +20,16 @@ export default function LanguagesDialog({ open, languages, onSaved, onClose }) {
   const { data: codes = [] } = useGetLanguageCodesQuery()
   const [setLanguages, { isLoading }] = useSetLanguagesMutation()
   const { values, set, errors, failure, run } = useFormState(() => ({ rows: languages.length ? languages : [{ code: '', level: '' }] }))
-  const languageOptions = useMemo(
-    () => codes.map((code) => ({ value: code, label: format.languageName(code) })).sort((a, b) => a.label.localeCompare(b.label, language)),
-    [codes, format, language],
-  )
+  const languageOptions = useMemo(() => {
+    // Intl has no name for a few rare codes (it echoes the code): those are left out unless already saved.
+    // Two codes can share a name (ak and tw are both "Akan"); those get the code added so they stay apart.
+    const saved = new Set(languages.map((entry) => entry.code))
+    const named = codes.map((code) => ({ value: code, label: format.languageName(code) })).filter((option) => option.label !== option.value || saved.has(option.value))
+    const counts = named.reduce((map, option) => map.set(option.label, (map.get(option.label) ?? 0) + 1), new Map())
+    return named
+      .map((option) => (counts.get(option.label) > 1 ? { ...option, label: `${option.label} (${option.value.toUpperCase()})` } : option))
+      .sort((a, b) => a.label.localeCompare(b.label, language))
+  }, [codes, format, language, languages])
   const levelOptions = (config?.enums.languageLevel ?? []).map((level) => ({ value: level, label: t(`enums:languageLevel.${level}`) }))
   const max = config?.limits.profile.languages.max ?? 0
   const update = (index, change) => set('rows', values.rows.map((row, i) => (i === index ? { ...row, ...change } : row)))
@@ -43,13 +50,14 @@ export default function LanguagesDialog({ open, languages, onSaved, onClose }) {
     <FormDialog open={open} title={t('profile:form.languages.title')} busy={isLoading} failure={failure} onClose={onClose} onSubmit={handleSubmit}>
       {values.rows.map((row, index) => (
         <div key={index} className={dialogStyles.listRow}>
-          <SelectField
+          <LanguageField
             label={t('profile:form.languages.language')}
             name={`language-${index}`}
-            placeholder={t('profile:form.languages.choose')}
+            placeholder={t('profile:form.languages.search')}
+            noResults={(query) => t('profile:form.languages.noResults', { query })}
             options={languageOptions}
             value={row.code}
-            onChange={(event) => update(index, { code: event.target.value })}
+            onChange={(code) => update(index, { code })}
             error={errorText.field('language', errors[`${index}.code`] ?? errors[`languages.${index}.code`] ?? (index === 0 ? errors.languages : undefined))}
           />
           <SelectField

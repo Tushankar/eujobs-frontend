@@ -20,6 +20,7 @@ import aiNavIcon from '@/assets/icons/ai-nav.svg'
 import accessManagementIcon from '@/assets/icons/access-management.svg'
 import { useActiveApplicationsBadge } from '@/features/candidate/applications/api.js'
 import { useUnreadMessagesBadge } from '@/features/messages/api.js'
+import { useProfileCompletionBadge } from '@/features/candidate/profile/api.js'
 
 /*
  * Per-role workspace configuration: sidebar navigation and header variant, as seen in the Figma
@@ -44,7 +45,7 @@ export const WORKSPACES = {
       { key: 'applications', to: 'applications', icon: BriefcaseBusiness, badge: { useText: useActiveApplicationsBadge } },
       { key: 'messages', to: 'messages', icon: MessageSquare, badge: { useText: useUnreadMessagesBadge } },
       { key: 'jobAlerts', to: 'job-alerts', icon: Bell, entitlement: 'job_alerts' },
-      { key: 'myProfile', to: 'profile', icon: Users },
+      { key: 'myProfile', to: 'profile', icon: Users, badge: { useText: useProfileCompletionBadge } },
       { key: 'cvVersions', to: 'cv-versions', icon: FileText },
       { key: 'verification', to: 'verification', icon: ShieldCheck },
       { key: 'aiInsights', to: 'ai-insights', iconSrc: aiNavIcon, badge: { textKey: 'nav.aiBadge', tone: 'ai' }, entitlement: 'ai' },

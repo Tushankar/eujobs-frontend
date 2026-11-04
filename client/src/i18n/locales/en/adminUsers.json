@@ -37,7 +37,9 @@
     "plan": "Plan",
     "company": "Company",
     "learning": "Learning",
-    "status": "Status"
+    "status": "Status",
+    "location": "Location",
+    "profile": "Profile"
   },
   "verificationState": {
     "not_started": "Not started",
@@ -47,6 +49,13 @@
   },
   "recruiterState": { "pending": "Pending", "approved": "Approved", "rejected": "Rejected", "suspended": "Suspended" },
   "learning": "{{enrolled}} enrolled, {{certificates}} certificates",
+  "courses_one": "{{count}} course",
+  "courses_other": "{{count}} courses",
+  "certificates_one": "{{count}} certificate",
+  "certificates_other": "{{count}} certificates",
+  "rightToWorkLine": "Right to work: {{value}}",
+  "profileComplete": "{{percent}} complete",
+  "joinedOn": "Joined {{date}}",
   "noRightToWork": "None",
   "noCountry": "—",
   "manage": "Manage",
@@ -95,8 +104,6 @@
     "documentsLocked": "Opening files needs the “View documents” permission.",
     "rightToWork": "Right to work",
     "plan": "Plan",
-    "subscription": "Subscription: {{status}}",
-    "period": "Current period {{start}} – {{end}}",
     "cancelAtPeriodEnd": "Ends at the end of the period",
     "noSubscription": "No subscription",
     "applications": "Applications",

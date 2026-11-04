@@ -35,7 +35,7 @@
     "confirm": "Delete version"
   },
   "requests": {
-    "title": "Requests for earlier versions",
+    "title": "CV requests",
     "lead": "Companies can ask to see an earlier CV for a specific purpose. Nothing is shared unless you approve and choose the version.",
     "empty": "No requests from companies.",
     "row": "{{company}} · {{reason}}",

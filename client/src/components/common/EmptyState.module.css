@@ -14,8 +14,8 @@
   padding: 12px;
   margin-bottom: 16px;
   border-radius: var(--radius-xl);
-  background: var(--accent);
-  color: var(--primary);
+  background: var(--muted);
+  color: var(--muted-foreground);
 }
 
 .title {

@@ -1,0 +1,196 @@
+{
+  "page": {
+    "title": "El resumen adecuado. Las personas adecuadas.",
+    "description": "Crea, gestiona y mejora los puestos que darán forma a tu equipo.",
+    "create": "Crear oferta",
+    "filterLabel": "Filtrar ofertas por estado",
+    "all": "Todas las ofertas",
+    "search": "Buscar en tus puestos",
+    "caption": "Tus puestos",
+    "emptyFiltered": "Ningún puesto coincide con los filtros",
+    "emptyFilteredText": "Prueba con otro estado o una búsqueda diferente.",
+    "empty": "Aún no hay ofertas",
+    "emptyText": "Todavía no has creado ninguna oferta.",
+    "clearFilters": "Borrar filtros"
+  },
+  "table": {
+    "role": "Puesto",
+    "workPreference": "Modalidad de trabajo",
+    "candidates": "Candidatos",
+    "status": "Estado",
+    "actions": "Acciones",
+    "relevant_one": "{{count}} relevante",
+    "relevant_many": "{{count}} relevantes",
+    "relevant_other": "{{count}} relevantes",
+    "manage": "Gestionar {{title}}",
+    "view": "Ver {{title}}",
+    "edit": "Editar oferta",
+    "viewCandidates": "Ver candidatos",
+    "delete": "Eliminar borrador",
+    "restricted": "Restringida",
+    "statusActions": {
+      "paused": "Pausar oferta",
+      "closed": "Cerrar oferta",
+      "published": "Publicar oferta",
+      "resume": "Reanudar publicación",
+      "reopen": "Reabrir oferta"
+    },
+    "closeTitle": "¿Cerrar esta oferta?",
+    "closeText": "{{title}} dejará de aceptar nuevos candidatos. Puedes reabrirla en cualquier momento.",
+    "deleteTitle": "¿Eliminar este borrador?",
+    "deleteText": "Se eliminará {{title}}. Solo se pueden eliminar borradores; los puestos publicados se cierran.",
+    "locked": "Esta oferta está restringida por moderación y no se puede publicar hasta que se levante la restricción."
+  },
+  "steps": {
+    "basics": "Información básica",
+    "responsibilities": "Responsabilidades",
+    "required-skills": "Habilidades requeridas",
+    "preferred-skills": "Habilidades deseadas",
+    "experience": "Experiencia e idiomas",
+    "location": "Ubicación y modalidad",
+    "quality": "Controles de calidad",
+    "review": "Revisión",
+    "publish": "Publicación"
+  },
+  "wizard": {
+    "newEyebrow": "Forma tu próximo equipo",
+    "newTitle": "Una buena contratación empieza con claridad.",
+    "editEyebrow": "Mejora tu puesto",
+    "editTitle": "Haz el resumen aún más claro.",
+    "description": "Convierte tu puesto en requisitos estructurados. Tú marcas la dirección.",
+    "stepCount": "Paso {{current}} de {{total}}",
+    "cancel": "Cancelar",
+    "back": "Atrás",
+    "continue": "Continuar",
+    "saveDraft": "Guardar como borrador",
+    "publish": "Publicar oferta",
+    "saveChanges": "Guardar cambios",
+    "newNote": "Tu borrador se guarda en tu lista de ofertas tras el primer paso y de nuevo en cada paso.",
+    "draftNote": "Este borrador se guarda en cada paso. Lo encontrarás en Borrador, en tus ofertas.",
+    "liveNote": "Los cambios en un puesto publicado se guardan al terminar y los candidatos los ven al momento."
+  },
+  "fields": {
+    "title": "Título del puesto",
+    "titlePlaceholder": "p. ej., Diseñador de producto sénior",
+    "company": "Empresa",
+    "companyHint": "El nombre visible de tu empresa, de la página Empresa.",
+    "employmentType": "Tipo de contrato",
+    "brief": "Resumen del puesto",
+    "briefHint": "Unas frases sobre el equipo, el impacto del puesto y qué se considera un buen resultado.",
+    "responsibilities": "Responsabilidades",
+    "responsibilitiesHint": "Una responsabilidad por línea, hasta {{max}}. Opcional, pero tres o más ayudan a la compatibilidad.",
+    "requiredSkills": "Habilidades requeridas",
+    "requiredSkillsHint": "Habilidades que los candidatos deben indicar en su perfil para considerarse relevantes.",
+    "preferredSkills": "Habilidades deseadas",
+    "preferredSkillsHint": "Son un plus. Nunca excluyen a un candidato. Opcional.",
+    "level": "Nivel profesional",
+    "levelPlaceholder": "Elige un nivel",
+    "experienceYears": "Años mínimos de experiencia",
+    "experiencePlaceholder": "p. ej., 5",
+    "languages": "Idiomas requeridos",
+    "languagesHint": "Opcional. Los candidatos ven el nivel mínimo de cada idioma.",
+    "language": "Idioma",
+    "minLevel": "Nivel mínimo",
+    "addLanguage": "Añadir un idioma",
+    "removeLanguage": "Quitar {{language}}",
+    "workPreference": "Modalidad de trabajo",
+    "workPreferencePlaceholder": "Elige una modalidad de trabajo",
+    "city": "Ciudad del puesto",
+    "cityHint": "La ciudad determina el país de la oferta y la moneda del salario.",
+    "remoteCountries": "Países admitidos",
+    "remoteCountriesHint": "Opcional. Déjalo vacío para aceptar candidatos de cualquier lugar de la UE y el Reino Unido.",
+    "addCountry": "Añadir un país",
+    "removeCountry": "Quitar {{country}}",
+    "salaryMin": "Salario mínimo ({{currency}})",
+    "salaryMax": "Salario máximo ({{currency}})",
+    "salaryNoCurrency": "Salario",
+    "salaryNeedsPlace": "Elige primero la modalidad de trabajo y la ciudad: determinan la moneda.",
+    "salaryPeriod": "Periodo",
+    "salaryNote": "El salario es opcional, pero los puestos con una horquilla suelen atraer a candidatos más relevantes.",
+    "visaSponsorship": "Patrocinio de visado disponible"
+  },
+  "skills": {
+    "placeholder": "Escribe una habilidad y pulsa Intro",
+    "add": "Añadir",
+    "added": "Se ha añadido {{label}}",
+    "remove": "Quitar {{skill}}",
+    "duplicate": "{{skill}} ya está en la lista.",
+    "inOther": "{{skill}} ya está en la otra lista de habilidades.",
+    "suggestions": "Sugerencias"
+  },
+  "quality": {
+    "intro": "Estos controles aplican las mismas reglas en el servidor a cada oferta. Nunca clasifican ni rechazan candidatos.",
+    "title_words": {
+      "ok": "El título es lo bastante específico para que los candidatos busquen por puesto y nivel.",
+      "warn": "El título es corto. Los candidatos buscan por puesto y nivel, así que añade ambos."
+    },
+    "brief_length": {
+      "ok": "El resumen da suficiente contexto sobre el puesto.",
+      "warn": "El resumen tiene menos de {{min}} caracteres. Unas frases más sobre el equipo y el impacto ayudan a la compatibilidad."
+    },
+    "responsibilities": {
+      "ok": "Hay {{count}} responsabilidades indicadas.",
+      "warn": "Hay menos de {{min}} responsabilidades indicadas. Añade los principales resultados del puesto."
+    },
+    "required_skills": {
+      "ok": "Hay {{count}} habilidades requeridas, un buen número para la compatibilidad.",
+      "warn": "Hay {{count}} habilidades requeridas. Entre {{min}} y {{max}} dan a la compatibilidad información suficiente."
+    },
+    "salary_range": {
+      "ok": "Los candidatos ven una horquilla salarial completa.",
+      "warn": "No se muestra una horquilla salarial completa. Los puestos con horquilla suelen atraer a candidatos más relevantes."
+    }
+  },
+  "review": {
+    "untitled": "Puesto sin título",
+    "chooseStatus": "Guarda este puesto como borrador para terminarlo más tarde o publícalo para mostrarlo con tus puestos abiertos.",
+    "ready": "Todo está listo. Al guardar, este puesto se actualiza al momento.",
+    "role": "Puesto",
+    "where": "Dónde",
+    "requiredSkills": "Habilidades requeridas",
+    "salary": "Salario",
+    "notSet": "Sin definir",
+    "none": "Ninguno",
+    "notShown": "No se muestra"
+  },
+  "posting": {
+    "noBrief": "Aún no se ha añadido un resumen del puesto. Usa Editar puesto para añadirlo.",
+    "responsibilities": "Responsabilidades",
+    "requiredSkills": "Habilidades requeridas",
+    "preferredSkills": "Habilidades deseadas",
+    "languages": "Idiomas",
+    "languageLevel": "{{language}} · {{level}} o superior",
+    "eligible": "Países admitidos: {{countries}}",
+    "visa": "Patrocinio de visado disponible"
+  },
+  "details": {
+    "back": "Volver a ofertas",
+    "dismiss": "Cerrar mensaje",
+    "edit": "Editar puesto",
+    "brief": "Resumen del puesto",
+    "activity": "Actividad del puesto",
+    "relevant_one": "{{count}} perfil relevante",
+    "relevant_many": "{{count}} perfiles relevantes",
+    "relevant_other": "{{count}} perfiles relevantes",
+    "discover": "Descubrir candidatos",
+    "applications": "Revisar candidaturas",
+    "tip": "Un resumen claro hace más útil la compatibilidad. Revisa los requisitos con regularidad y mantén los criterios obligatorios relevantes para el puesto.",
+    "talent": "Descubrir talento relevante",
+    "talentEmpty": "Aún no hay perfiles con habilidades relevantes indicadas. Aparecerán sugerencias aquí cuando los candidatos actualicen sus perfiles.",
+    "openTalent": "Abrir a {{name}} en Buscar candidatos",
+    "restricted": "Restringida por moderación: {{reason}}",
+    "years_one": "{{count}} año de experiencia",
+    "years_many": "{{count}} años de experiencia",
+    "years_other": "{{count}} años de experiencia"
+  },
+  "notices": {
+    "published": "Oferta publicada. Ya aparece en tus puestos abiertos.",
+    "draft": "Borrador guardado. Lo encontrarás en Borrador, en tus ofertas.",
+    "saved": "Cambios guardados. Los candidatos ya los ven."
+  },
+  "notFound": {
+    "title": "No hemos encontrado esa oferta",
+    "text": "Puede que se haya eliminado o que el enlace sea incorrecto. Tus otras ofertas siguen en la lista de ofertas.",
+    "back": "Volver a ofertas"
+  }
+}

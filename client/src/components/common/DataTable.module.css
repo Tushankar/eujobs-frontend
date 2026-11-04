@@ -3,37 +3,134 @@
   border: 1px solid var(--border);
   border-radius: var(--radius-xl);
   background: var(--card);
+  container-type: inline-size;
 }
 
 .scroll {
   position: relative; /* contains the absolutely-positioned .sr-only caption / header text so it can't widen the page */
-  overflow-x: auto;
+  overflow-x: auto; /* last resort only: the table fits its container, and stacks when that is narrow */
 }
 
 .table {
   width: 100%;
-  min-width: 720px;
   border-collapse: collapse;
   text-align: left;
 }
 
+/* Pages set --table-cell-padding for the row rhythm; the sides stay 16px (20px at the edges) so columns fit. */
 .th {
-  padding: 16px 24px 15px;
+  padding: 14px 16px 13px;
   border-bottom: 1px solid var(--border);
   background: var(--table-header-bg, #fafbfc);
-  font-size: 10px;
-  font-weight: 500;
-  line-height: 13.3px;
+  font-size: 11px;
+  font-weight: 600;
+  line-height: 16px;
+  letter-spacing: 0.2px;
+  white-space: nowrap;
   color: var(--muted-foreground);
 }
 
 .td {
-  height: var(--table-row-height, 81px);
-  padding: var(--table-cell-padding, 20px 24px);
+  height: var(--table-row-height, 72px);
+  padding: var(--table-cell-padding, 16px);
+  padding-inline: 16px;
   border-bottom: 1px solid var(--border);
   vertical-align: middle;
+  /* Words wrap at spaces; only a single word longer than the line (a URL) may break. */
+  overflow-wrap: break-word;
+}
+
+.th:first-child,
+.td:first-child {
+  padding-left: 20px;
+}
+
+.th:last-child,
+.td:last-child {
+  padding-right: 20px;
+}
+
+.row {
+  transition: background var(--transition);
+}
+
+.row:hover {
+  background: #fafbfc;
 }
 
 .row:last-child .td {
   border-bottom: 0;
+}
+
+/* Narrow container: every row is a card; the header row is read from each cell's data-label instead. */
+@container (max-width: 760px) {
+  .table,
+  .table tbody,
+  .table tr,
+  .td {
+    display: block;
+    width: 100%;
+  }
+
+  .table thead {
+    position: absolute;
+    width: 1px;
+    height: 1px;
+    overflow: hidden;
+    clip-path: inset(50%);
+    white-space: nowrap;
+  }
+
+  .row {
+    padding: 16px 20px;
+    border-bottom: 1px solid var(--border);
+  }
+
+  .row:last-child {
+    border-bottom: 0;
+  }
+
+  .td,
+  .row:last-child .td {
+    display: grid;
+    grid-template-columns: minmax(96px, 34%) minmax(0, 1fr);
+    align-items: center;
+    gap: 12px;
+    height: auto;
+    padding: 5px 0;
+    border-bottom: 0;
+  }
+
+  .td::before {
+    content: attr(data-label);
+    font-size: 12px;
+    line-height: 16px;
+    color: var(--muted-foreground);
+  }
+
+  /* The first column (the name, the job) is the card's title, without a label. */
+  .td:first-child {
+    display: block;
+    padding: 0 0 8px;
+  }
+
+  .td:first-child::before {
+    content: none;
+  }
+
+  /* A cell without a label (the row's actions) uses the full width. */
+  .td:not([data-label]) {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 8px;
+    padding-top: 10px;
+  }
+
+  .td:not([data-label])::before {
+    content: none;
+  }
+
+  .td > * {
+    justify-self: start;
+  }
 }

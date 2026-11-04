@@ -4,6 +4,7 @@ import { Application } from '../applications/applications.model.js'
 import { Company } from '../companies/companies.model.js'
 import { Job } from '../jobs/jobs.model.js'
 import { User } from '../users/users.model.js'
+import { searchText } from '../../lib/skills.js'
 
 /*
  * Admin › Applications (M-206, P10-Q14): every application, newest first, with the candidate-facing status; filtered
@@ -31,8 +32,8 @@ export async function filteredApplications({ q, status, country }) {
       status: application.status,
     }
   })
-  const needle = q?.toLowerCase()
-  return needle ? rows.filter((row) => [row.candidate.name, row.job.title, row.company].some((text) => text?.toLowerCase().includes(needle))) : rows
+  const needle = q && searchText(q)
+  return needle ? rows.filter((row) => [row.candidate.name, row.job.title, row.company].some((text) => searchText(text).includes(needle))) : rows
 }
 
 export async function listApplications(query) {

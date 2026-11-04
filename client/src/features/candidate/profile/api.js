@@ -1,4 +1,5 @@
-import { api, formData } from '@/app/api.js'
+import { api, formData, useGetMeQuery } from '@/app/api.js'
+import { useFormat } from '@/lib/preferences.js'
 
 /*
  * The candidate profile (§3.2). Every change answers with the full profile, which is written straight into
@@ -58,3 +59,10 @@ export const {
   useSetCertificateFileMutation,
   useRemoveCertificateFileMutation,
 } = profileApi
+
+/** The sidebar badge on My profile: the checklist share ("20%") until the profile is complete (§3.2). */
+export function useProfileCompletionBadge() {
+  const completeness = useGetMeQuery().data?.completeness
+  const format = useFormat()
+  return completeness && !completeness.complete ? format.number(completeness.percent / 100, { style: 'percent' }) : null
+}

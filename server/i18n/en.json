@@ -95,8 +95,8 @@
       "action": "Open account status"
     },
     "cv_request": {
-      "subject": "{{company}} asked to see an earlier CV",
-      "heading": "Request for an earlier CV version",
+      "subject": "CV request from {{company}}",
+      "heading": "CV request",
       "body": [
         "Hi {{name}},",
         "{{company}} asked to see an earlier version of your CV.",

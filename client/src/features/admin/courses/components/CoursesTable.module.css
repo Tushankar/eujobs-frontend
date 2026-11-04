@@ -21,7 +21,6 @@
 }
 
 .muted {
-  white-space: nowrap;
   font-size: 12px;
   line-height: 16px;
   color: var(--muted-foreground);

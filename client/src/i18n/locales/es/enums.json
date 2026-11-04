@@ -81,10 +81,10 @@
   "stageTone": { "neutral": "Neutro", "primary": "Destacado", "success": "Éxito" },
   "alertFrequency": { "instant": "Al momento", "daily": "Diaria", "weekly": "Semanal" },
   "cvRequestReason": {
-    "verify_employment": "Verificar la experiencia",
-    "earlier_role_cv": "CV de un puesto anterior",
-    "compliance": "Cumplimiento normativo",
-    "other": "Otro"
+    "verify_employment": "Verificar el historial laboral",
+    "earlier_role_cv": "Revisar un CV anterior para un puesto concreto",
+    "compliance": "Control de cumplimiento o auditoría",
+    "other": "Otro fin de selección"
   },
   "cvRequestStatus": { "pending": "Pendiente", "approved": "Aprobada", "declined": "Rechazada" },
   "activityType": {
@@ -97,7 +97,7 @@
     "note_updated": "Nota actualizada",
     "outreach": "Mensaje enviado",
     "message_reply": "Respondió",
-    "cv_request": "CV anterior solicitado",
+    "cv_request": "CV solicitado",
     "cv_request_decided": "Solicitud de CV respondida",
     "cv_updated": "CV actualizado",
     "cv_download": "CV descargado"

@@ -1,0 +1,260 @@
+{
+  "page": {
+    "eyebrow": "Administración de formación",
+    "title": "Crea formación con un propósito claro.",
+    "description": "Crea, revisa, publica y mantén los cursos que candidatos y reclutadores ven en su espacio de formación.",
+    "create": "Nuevo curso"
+  },
+  "tabs": {
+    "label": "Público del curso",
+    "candidate": "Cursos para candidatos",
+    "recruiter": "Cursos para reclutadores"
+  },
+  "stats": {
+    "total": "Total de cursos",
+    "totalCaption": "Borradores, publicados y retirados",
+    "published": "Publicados",
+    "publishedCaption": {
+      "candidate": "Visibles en la formación de candidatos",
+      "recruiter": "Visibles en la formación de reclutadores"
+    },
+    "paid": "Cursos de pago",
+    "paidCaption": "Contenido de pago único",
+    "active": "Alumnos activos",
+    "activeCaption": "Al menos una lección hecha, aún sin completar"
+  },
+  "filters": {
+    "search": "Buscar curso o habilidad",
+    "status": "Filtrar por estado del curso",
+    "allStatuses": "Todos los estados"
+  },
+  "notice": {
+    "published": "Se ha publicado “{{title}}”.",
+    "unpublished": "Se ha retirado “{{title}}”. Los alumnos inscritos mantienen el acceso."
+  },
+  "empty": {
+    "title": "Ningún curso coincide con los filtros",
+    "text": "Prueba con otra búsqueda o elige Todos los estados."
+  },
+  "table": {
+    "caption": "Cursos",
+    "course": "Curso",
+    "lessons_one": "{{count}} lección",
+    "lessons_many": "{{count}} lecciones",
+    "lessons_other": "{{count}} lecciones",
+    "level": "Nivel",
+    "access": "Acceso",
+    "free": "Gratis",
+    "paid": "De pago",
+    "learning": "Alumnos",
+    "learners": "{{enrolled}} inscritos, {{purchased}} compras, {{completions}} completados",
+    "status": "Estado",
+    "updated": "Actualizado",
+    "actions": "Acciones",
+    "manage": "Gestionar",
+    "manageLabel": "Gestionar {{title}}",
+    "publish": "Publicar",
+    "unpublish": "Retirar",
+    "publishLabel": "Publicar {{title}}",
+    "unpublishLabel": "Retirar {{title}}",
+    "revenue": "Ingresos",
+    "more": "+{{count}} más",
+    "noRevenue": "—",
+    "learnersAction": "Alumnos",
+    "learnersLabel": "Alumnos de {{title}}"
+  },
+  "builder": {
+    "back": "Volver a cursos",
+    "newTitle": "Nuevo curso",
+    "newDescription": "Empieza con un título. El curso sigue siendo un borrador hasta que lo publiques.",
+    "create": "Crear borrador",
+    "description": "Edita los detalles que ven los alumnos, las lecciones y el cuestionario final; después, revisa la vista previa y publica.",
+    "publish": "Publicar",
+    "unpublish": "Retirar",
+    "locked": "Hay alumnos inscritos, así que las lecciones y el cuestionario están bloqueados. Los textos y los precios aún se pueden cambiar.",
+    "problemsTitle": "Antes de poder publicar",
+    "tabsLabel": "Secciones del editor de cursos",
+    "tab": {
+      "details": "Detalles",
+      "lessons": "Lecciones",
+      "quiz": "Cuestionario",
+      "preview": "Vista previa"
+    },
+    "saved": "Guardado"
+  },
+  "details": {
+    "title": "Título del curso",
+    "category": "Categoría o itinerario",
+    "categoryHint": "Se muestra en las tarjetas, por ejemplo Diseño de interacción.",
+    "level": "Nivel",
+    "choose": "Elige…",
+    "language": "Idioma del curso",
+    "summary": "Resumen",
+    "about": "Sobre este curso",
+    "lead": "Texto introductorio",
+    "tagline": "Eslogan",
+    "designedFor": "Dirigido a",
+    "pipelineCategory": "Categoría del proceso de selección",
+    "pipelineHint": "Se sugiere a los reclutadores con candidaturas activas en esta etapa.",
+    "skillTags": "Etiquetas de habilidades",
+    "skillTagsHint": "Sepáralas con comas. Se sugiere a los candidatos a los que les faltan estas habilidades.",
+    "outcomes": "Resultados",
+    "outcomeLabel": "Resultado {{number}}",
+    "removeOutcome": "Quitar resultado",
+    "addOutcome": "Añadir resultado",
+    "cover": "Imagen de portada",
+    "price": "Precio",
+    "free": "Curso gratuito",
+    "priceHint": "Precio único en cada moneda, IVA incluido. Se necesitan los 8 para publicar un curso de pago.",
+    "save": "Guardar detalles"
+  },
+  "upload": {
+    "choose": "Elegir archivo",
+    "replace": "Sustituir archivo",
+    "progress": "Progreso de la subida"
+  },
+  "lessons": {
+    "listLabel": "Lecciones",
+    "emptyTitle": "Aún no hay lecciones",
+    "emptyText": "Añade una lección de vídeo, texto, PDF o enlace. Un curso necesita al menos una lección para publicarse.",
+    "add": "Añadir lección",
+    "addTitle": "Añadir lección",
+    "editTitle": "Editar lección",
+    "save": "Guardar lección",
+    "title": "Título de la lección",
+    "type": "Tipo de lección",
+    "video": "Vídeo (MP4 H.264/AAC o WebM)",
+    "unplayable": "Este navegador no puede reproducir el vídeo. Revisa el archivo antes de publicar.",
+    "document": "Documento PDF",
+    "markdown": "Texto de la lección (Markdown)",
+    "markdownHint": "Títulos, listas y enlaces https. Se elimina todo lo que no sea seguro.",
+    "preview": "Vista previa del texto",
+    "url": "Enlace",
+    "urlHint": "Solo enlaces https.",
+    "duration": "Duración en segundos",
+    "durationVideoHint": "Se obtiene del vídeo al subirlo. Puedes cambiarla.",
+    "durationHint": "Opcional. Cuenta para la duración del curso.",
+    "contentLanguage": "Idioma del contenido",
+    "isPreview": "Vista previa gratuita: se abre sin comprar",
+    "previewBadge": "Vista previa gratuita",
+    "moveUp": "Subir “{{title}}”",
+    "moveDown": "Bajar “{{title}}”",
+    "edit": "Editar “{{title}}”",
+    "delete": "Eliminar “{{title}}”",
+    "deleteTitle": "¿Eliminar esta lección?",
+    "deleteText": "Se eliminarán “{{title}}” y su archivo.",
+    "deleteConfirm": "Eliminar lección"
+  },
+  "quiz": {
+    "passMark": "Nota de aprobado (%)",
+    "passMarkHint": "Los alumnos aprueban con esta puntuación o más.",
+    "question": "Pregunta {{number}}",
+    "removeQuestion": "Quitar la pregunta {{number}}",
+    "text": "Pregunta",
+    "type": "Tipo de respuesta",
+    "optionsSingle": "Opciones: marca la correcta",
+    "optionsMultiple": "Opciones: marca todas las correctas",
+    "markCorrect": "La opción {{number}} es correcta",
+    "option": "Opción {{number}}",
+    "removeOption": "Quitar la opción {{number}}",
+    "addOption": "Añadir opción",
+    "addQuestion": "Añadir pregunta",
+    "save": "Guardar cuestionario"
+  },
+  "preview": {
+    "designedFor": "Dirigido a: {{text}}",
+    "noPrices": "Aún no hay precios",
+    "quiz_one": "Cuestionario final: {{count}} pregunta, nota de aprobado {{passMark}} %.",
+    "quiz_many": "Cuestionario final: {{count}} preguntas, nota de aprobado {{passMark}} %.",
+    "quiz_other": "Cuestionario final: {{count}} preguntas, nota de aprobado {{passMark}} %."
+  },
+  "problems": {
+    "category": {
+      "required": "Añade una categoría o itinerario."
+    },
+    "level": {
+      "required": "Elige un nivel."
+    },
+    "summary": {
+      "required": "Añade un resumen.",
+      "too_short": "El resumen debe tener al menos 20 caracteres."
+    },
+    "about": {
+      "required": "Añade el texto Sobre este curso.",
+      "too_short": "El texto Sobre este curso debe tener al menos 20 caracteres."
+    },
+    "lead": {
+      "required": "Añade el texto introductorio.",
+      "too_short": "El texto introductorio debe tener al menos 20 caracteres."
+    },
+    "tagline": {
+      "required": "Añade un eslogan."
+    },
+    "designedFor": {
+      "required": "Indica a quién va dirigido el curso."
+    },
+    "pipelineCategory": {
+      "required": "Elige una categoría del proceso de selección."
+    },
+    "coverFileId": {
+      "required": "Sube una imagen de portada."
+    },
+    "outcomes": {
+      "required": "Añade al menos un resultado."
+    },
+    "skillTags": {
+      "required": "Añade al menos una etiqueta de habilidad."
+    },
+    "price": "Añade el precio en {{currency}} o haz que el curso sea gratuito.",
+    "lessons": {
+      "too_few": "Añade al menos una lección.",
+      "required": "Añade al menos una lección."
+    },
+    "lesson": {
+      "videoFileId": "Lección {{number}}: sube el vídeo.",
+      "durationSec": "Lección {{number}}: añade la duración del vídeo.",
+      "documentFileId": "Lección {{number}}: sube el PDF.",
+      "textMarkdown": "Lección {{number}}: añade el texto de la lección.",
+      "url": "Lección {{number}}: añade el enlace."
+    },
+    "quiz": {
+      "too_few": "Añade al menos una pregunta al cuestionario.",
+      "required": "Añade al menos una pregunta al cuestionario."
+    }
+  },
+  "totals": {
+    "learning": "Totales de la página: {{enrolled}} inscritos, {{purchased}} compras, {{completions}} completados",
+    "revenue": "ingresos {{amounts}}"
+  },
+  "learners": {
+    "eyebrow": "Alumnos del curso",
+    "description_one": "{{count}} alumno, del más reciente al más antiguo.",
+    "description_many": "{{count}} alumnos, del más reciente al más antiguo.",
+    "description_other": "{{count}} alumnos, del más reciente al más antiguo.",
+    "caption": "Alumnos",
+    "learner": "Alumno",
+    "deleted": "Cuenta eliminada",
+    "source": "Origen",
+    "sources": {
+      "free": "Gratis",
+      "purchase": "Compra",
+      "seed": "Datos iniciales"
+    },
+    "enrolled": "Inscripción",
+    "progress": "Progreso",
+    "lessons": "{{done}} de {{total}} lecciones",
+    "bestScore": "Mejor puntuación",
+    "certificate": "Certificado",
+    "status": {
+      "valid": "Válido",
+      "revoked": "Revocado",
+      "no_longer_valid": "Ya no es válido"
+    },
+    "revoke": "Revocar",
+    "revokeTitle": "¿Revocar este certificado?",
+    "revokeDescription": "{{code}} de {{name}}. La comprobación pública mostrará Revocado. Queda anotado en el registro de auditoría.",
+    "reason": "Motivo",
+    "emptyTitle": "Aún no hay alumnos",
+    "emptyText": "Los alumnos aparecen aquí cuando se inscriben en el curso o lo compran."
+  }
+}

@@ -6,7 +6,7 @@ import ChangePasswordForm from '@/features/account/components/ChangePasswordForm
 import { usePreferences, useFormat } from '@/lib/preferences.js'
 import SettingsCard from '../components/SettingsCard.jsx'
 import SettingsLayout from '../components/SettingsLayout.jsx'
-import { DATA_NOTICE, RESET_FLAG_KEY, STORAGE_PREFIX } from '../data/account.js'
+import { RESET_FLAG_KEY, STORAGE_PREFIX } from '../data/account.js'
 import styles from './DataAccountPage.module.css'
 
 function csvCell(value) {
@@ -61,7 +61,7 @@ export default function DataAccountPage() {
   const { me } = usePreferences()
   const format = useFormat()
   const [confirmingReset, setConfirmingReset] = useState(false)
-  const [status, setStatus] = useState(() => (readResetFlag() ? 'Demo workspace reset. Sample data is back in all three workspaces.' : ''))
+  const [status, setStatus] = useState(() => (readResetFlag() ? 'data.reset.done' : ''))
 
   useEffect(clearResetFlag, [])
 
@@ -76,7 +76,7 @@ export default function DataAccountPage() {
       ],
       'recruiter-profile.csv',
     )
-    setStatus('Profile exported as recruiter-profile.csv.')
+    setStatus('data.export.recruiterDone')
   }
 
   return (
@@ -85,55 +85,52 @@ export default function DataAccountPage() {
         <p className={styles.description}>{t('account:password.description')}</p>
         <ChangePasswordForm />
       </SettingsCard>
-      <SettingsCard title="Understand and control your data">
-        <p className={styles.notice}>{DATA_NOTICE}</p>
+      <SettingsCard title={t('account:data.title')}>
+        <p className={styles.notice}>{t('account:data.notice')}</p>
 
         <div className={styles.actions}>
           <div className={styles.action}>
             <div>
-              <p className={styles.label}>Download your profile</p>
-              <p className={styles.description}>A portable CSV of your reviewed information.</p>
+              <p className={styles.label}>{t('account:data.export.label')}</p>
+              <p className={styles.description}>{t('account:data.export.description')}</p>
             </div>
             <Button variant="outline" leftIcon={<Icon as={Download} size={13} strokeWidth={2} />} onClick={handleExport}>
-              Export data
+              {t('account:data.export.action')}
             </Button>
           </div>
           <div className={styles.action}>
             <div>
-              <p className={styles.label}>Reset demo workspace</p>
-              <p className={styles.description}>Restore sample data across all three workspaces.</p>
+              <p className={styles.label}>{t('account:data.reset.label')}</p>
+              <p className={styles.description}>{t('account:data.reset.description')}</p>
             </div>
             <Button variant="outline" onClick={() => setConfirmingReset(true)}>
-              Reset demo
+              {t('account:data.reset.action')}
             </Button>
           </div>
         </div>
 
         <p className={styles.status} role="status">
-          {status}
+          {status && t(`account:${status}`)}
         </p>
       </SettingsCard>
 
       <Modal
         open={confirmingReset}
         onClose={() => setConfirmingReset(false)}
-        title="Reset demo workspace?"
+        title={t('account:data.reset.confirmTitle')}
         width={440}
         footer={
           <>
             <Button variant="outline" onClick={() => setConfirmingReset(false)}>
-              Cancel
+              {t('common:cancel')}
             </Button>
             <Button variant="danger" onClick={resetDemoData}>
-              Reset demo
+              {t('account:data.reset.action')}
             </Button>
           </>
         }
       >
-        <p className={styles.confirmText}>
-          This restores the sample data in the candidate, recruiter, and admin workspaces and clears the changes saved on
-          this device. It can&apos;t be undone.
-        </p>
+        <p className={styles.confirmText}>{t('account:data.reset.confirmBody')}</p>
       </Modal>
     </SettingsLayout>
   )

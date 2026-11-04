@@ -9,18 +9,17 @@ import PageTitle from '@/components/common/PageTitle.jsx'
 import Pagination from '@/components/common/Pagination.jsx'
 import PillBadge from '@/components/common/PillBadge.jsx'
 import RowActionLink from '@/components/common/RowActionLink.jsx'
-import { Button, Icon, SelectField, TextField } from '@/components/ui'
+import { Avatar, Button, Icon, SelectField, TextField } from '@/components/ui'
 import { useCountryOptions } from '@/lib/countries.js'
 import { downloadFromApi } from '@/lib/download.js'
 import { useErrorText } from '@/lib/forms.js'
 import { useUrlFilters } from '@/lib/useUrlFilters.js'
 import { useFormat, usePreferences } from '@/lib/preferences.js'
+import { cx } from '@/utils/cx.js'
 import { useGetAdminUsersQuery } from '../api.js'
+import { STATE_TONES, STATUS_TONES, VERIFICATION_TONES } from '../tones.js'
 import styles from './UsersDirectory.module.css'
 
-const STATUS_TONES = { active: 'success', unverified: 'warning', invited: 'warning' }
-const STATE_TONES = { pending: 'warning', approved: 'success', rejected: 'danger', suspended: 'danger' }
-const VERIFICATION_TONES = { verified: 'success', partial: 'info', in_review: 'warning', not_started: 'neutral' }
 const FILTERS = {
   candidate: ['status', 'country', 'verification', 'plan', 'rightToWork'],
   recruiter: ['state', 'country'],
@@ -78,48 +77,72 @@ export default function UsersDirectory({ role }) {
     key: 'user',
     header: t('columns.user'),
     render: (row) => (
-      <>
-        <p className={styles.name}>{row.fullName}</p>
-        <p className={styles.email}>{row.email}</p>
-      </>
+      <div className={styles.user}>
+        <Avatar name={row.fullName} size={32} />
+        <div className={styles.userText}>
+          <p className={styles.name}>{row.fullName}</p>
+          <p className={styles.email} title={row.email}>
+            {row.email}
+          </p>
+        </div>
+      </div>
     ),
   }
   const muted = (text) => <span className={styles.muted}>{text}</span>
+  // Two-line cells (LinkedIn-style): the main value, then a quieter second line.
+  // Short second lines stay on one line; `wrap` lets a long one (right to work) wrap.
+  const stack = (main, sub, wrap = false) => (
+    <div className={styles.stack}>
+      {main}
+      <span className={cx(styles.sub, wrap && styles.subWrap)}>{sub}</span>
+    </div>
+  )
+  const country = (row) => <span className={styles.main}>{row.country ? format.country(row.country) : t('noCountry')}</span>
+  const rightToWork = (row) =>
+    row.rightToWork
+      .filter((entry) => entry.valid)
+      .map((entry) => `${t(`enums:rtwRegion.${entry.region}`)} · ${t(`enums:rtwStatus.${entry.status}`)}`)
+      .join(', ') || t('noRightToWork')
   const columns = [
     user,
-    { key: 'joined', header: t('columns.joined'), render: (row) => muted(format.date(row.joinedAt)) },
     ...(role === 'recruiter' ? [{ key: 'company', header: t('columns.company'), render: (row) => muted(row.company?.displayName ?? t('noCountry')) }] : []),
-    { key: 'country', header: t('columns.country'), render: (row) => muted(row.country ? format.country(row.country) : t('noCountry')) },
+    role === 'candidate'
+      ? { key: 'location', header: t('columns.location'), render: (row) => stack(country(row), t('rightToWorkLine', { value: rightToWork(row) }), true) }
+      : { key: 'country', header: t('columns.country'), render: country },
     ...(role === 'candidate'
       ? [
           {
-            key: 'rightToWork',
-            header: t('columns.rightToWork'),
+            key: 'profile',
+            header: t('columns.profile'),
             render: (row) =>
-              muted(row.rightToWork.filter((entry) => entry.valid).map((entry) => `${t(`enums:rtwRegion.${entry.region}`)} · ${t(`enums:rtwStatus.${entry.status}`)}`).join(', ') || t('noRightToWork')),
+              stack(
+                <PillBadge tone={VERIFICATION_TONES[row.verification.state]}>{t(`verificationState.${row.verification.state}`, { count: row.verification.count })}</PillBadge>,
+                t('profileComplete', { percent: format.number(row.completeness / 100, { style: 'percent' }) }),
+              ),
           },
-          {
-            key: 'verification',
-            header: t('columns.verification'),
-            render: ({ verification }) => <PillBadge tone={VERIFICATION_TONES[verification.state]}>{t(`verificationState.${verification.state}`, { count: verification.count })}</PillBadge>,
-          },
-          { key: 'completeness', header: t('columns.completeness'), render: (row) => muted(format.number(row.completeness / 100, { style: 'percent' })) },
           { key: 'plan', header: t('columns.plan'), render: (row) => <PillBadge tone={row.plan === 'plus' ? 'accent' : 'neutral'}>{t(`enums:planKey.${row.plan}`)}</PillBadge> },
         ]
       : []),
-    { key: 'learning', header: t('columns.learning'), render: (row) => muted(t('learning', row.learning)) },
+    {
+      key: 'learning',
+      header: t('columns.learning'),
+      render: (row) => stack(<span className={styles.main}>{t('courses', { count: row.learning.enrolled })}</span>, t('certificates', { count: row.learning.certificates })),
+    },
     {
       key: 'status',
       header: t('columns.status'),
       render: (row) =>
-        role === 'candidate' ? (
-          <PillBadge tone={STATUS_TONES[row.status] ?? 'neutral'} dot>
-            {t(`enums:userStatus.${row.status}`)}
-          </PillBadge>
-        ) : (
-          <PillBadge tone={STATE_TONES[row.state]} dot>
-            {t(`recruiterState.${row.state}`)}
-          </PillBadge>
+        stack(
+          role === 'candidate' ? (
+            <PillBadge tone={STATUS_TONES[row.status] ?? 'neutral'} dot>
+              {t(`enums:userStatus.${row.status}`)}
+            </PillBadge>
+          ) : (
+            <PillBadge tone={STATE_TONES[row.state]} dot>
+              {t(`recruiterState.${row.state}`)}
+            </PillBadge>
+          ),
+          t('joinedOn', { date: format.date(row.joinedAt) }),
         ),
     },
     {

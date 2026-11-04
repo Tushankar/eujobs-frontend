@@ -37,7 +37,7 @@ export default {
 
     await page.goto(`${ctx.webUrl}${base}/resume`, { waitUntil: 'networkidle0' })
     await waitForText(page, 'keeps their CV private')
-    await clickText(page, 'Request earlier version', 'button')
+    await clickText(page, 'Send a CV request', 'button')
     await page.waitForSelector('select[name="reason"] option[value="verify_employment"]')
     await page.select('select[name="reason"]', 'verify_employment')
     await page.waitForFunction(() => document.querySelector('select[name="reason"]').value === 'verify_employment')
@@ -51,7 +51,7 @@ export default {
     const emmaPage = await ctx.newPage()
     await signInWithForm(emmaPage.page, ctx.webUrl, '/sign-in', emmaEmail, ctx.seedCredentials.password)
     await emmaPage.page.goto(`${ctx.webUrl}/candidate/cv-versions`, { waitUntil: 'networkidle0' })
-    await waitForText(emmaPage.page, 'Acme Studio · Verify employment')
+    await waitForText(emmaPage.page, 'Acme Studio · Verify employment history')
     const requestId = (await pageApi(emmaPage.page, '/candidate/cv/requests')).body.items[0].id
     const versionId = (await pageApi(emmaPage.page, '/candidate/cv')).body.items.find((version) => version.number === 1).id
     await emmaPage.page.select(`select[name="share-${requestId}"]`, versionId)

@@ -12,29 +12,19 @@ import { INITIAL_VERIFICATION, VERIFICATION_STORAGE_KEY } from '../../verificati
 import ChangePasswordForm from '@/features/account/components/ChangePasswordForm.jsx'
 import { usePreferences } from '@/lib/preferences.js'
 import SettingsCard from '../components/SettingsCard.jsx'
-import { DATA_NOTICE, DEFAULT_PRIVACY, PRIVACY_STORAGE_KEY } from '../data/settings.js'
+import { DEFAULT_PRIVACY, PRIVACY_STORAGE_KEY } from '../data/settings.js'
 import {
   clearResultFlag,
   deleteCandidateData,
   profileExportRows,
   readResultFlag,
   resetDemoData,
-  RESULT_MESSAGES,
 } from '../utils/localData.js'
 import styles from './DataAccountSettingsPage.module.css'
 
-const CONFIRMATIONS = {
-  data: {
-    title: 'Delete local candidate information?',
-    body: 'This removes your profile, CV versions, verification progress, learning progress, saved jobs, applications, and alerts from this device, and your plan goes back to Free. Your settings are kept. Payment records are kept as finance records; only Reset demo clears them. This can’t be undone.',
-    confirmLabel: 'Delete my data',
-  },
-  reset: {
-    title: 'Reset demo workspace?',
-    body: 'This restores the sample data in the candidate, recruiter, and admin workspaces and clears the changes saved on this device. This can’t be undone.',
-    confirmLabel: 'Reset demo',
-  },
-}
+// The confirm dialogs and the result line after a reload (the flag names the action that ran).
+const CONFIRMATIONS = { data: 'delete', reset: 'reset' }
+const RESULTS = { reset: 'reset', deleted: 'delete' }
 
 function ActionRow({ label, description, tone, children }) {
   return (
@@ -57,13 +47,13 @@ export default function DataAccountSettingsPage() {
   const { t } = useTranslation()
   const { me } = usePreferences()
   const [confirming, setConfirming] = useState(null)
-  const [status, setStatus] = useState(() => RESULT_MESSAGES[readResultFlag()] ?? '')
+  const [status, setStatus] = useState(() => RESULTS[readResultFlag()] && `data.${RESULTS[readResultFlag()]}.done`)
 
   useEffect(clearResultFlag, [])
 
   function handleExport() {
     downloadCsv(profileExportRows({ profile, cv, verification, privacy, notifyEmail: me.notifyEmail }), 'candidate-profile.csv')
-    setStatus('Profile exported as candidate-profile.csv. The file was created in your browser and not sent anywhere.')
+    setStatus('data.export.candidateDone')
   }
 
   function handleConfirm() {
@@ -76,51 +66,51 @@ export default function DataAccountSettingsPage() {
     }
   }
 
-  const dialog = confirming ? CONFIRMATIONS[confirming] : null
+  const dialog = confirming && `account:data.${CONFIRMATIONS[confirming]}`
 
   return (
     <>
       <SettingsCard title={t('account:password.title')} description={t('account:password.description')}>
         <ChangePasswordForm />
       </SettingsCard>
-      <SettingsCard title="Understand and control your data">
-        <p className={styles.notice}>{DATA_NOTICE}</p>
+      <SettingsCard title={t('account:data.title')}>
+        <p className={styles.notice}>{t('account:data.notice')}</p>
 
         <ul className={styles.actions}>
-          <ActionRow label="Download your profile" description="A portable CSV of your reviewed information.">
+          <ActionRow label={t('account:data.export.label')} description={t('account:data.export.description')}>
             <Button variant="outline" leftIcon={<Icon as={Download} size={13} />} onClick={handleExport}>
-              Export data
+              {t('account:data.export.action')}
             </Button>
           </ActionRow>
           <ActionRow
             tone="danger"
-            label="Delete local candidate information"
-            description="Remove your profile, saved jobs, applications, and alerts. Payment records are kept."
+            label={t('account:data.delete.label')}
+            description={t('account:data.delete.description')}
           >
             <Button variant="outline" className={styles.dangerButton} onClick={() => setConfirming('data')}>
-              Delete my data
+              {t('account:data.delete.action')}
             </Button>
           </ActionRow>
-          <ActionRow label="Reset demo workspace" description="Restore sample data across all three workspaces.">
+          <ActionRow label={t('account:data.reset.label')} description={t('account:data.reset.description')}>
             <Button variant="outline" onClick={() => setConfirming('reset')}>
-              Reset demo
+              {t('account:data.reset.action')}
             </Button>
           </ActionRow>
         </ul>
 
         <p className={styles.status} role="status">
-          {status}
+          {status && t(`account:${status}`)}
         </p>
 
         <ConfirmDialog
           open={Boolean(dialog)}
-          title={dialog?.title ?? ''}
-          confirmLabel={dialog?.confirmLabel}
+          title={dialog ? t(`${dialog}.confirmTitle`) : ''}
+          confirmLabel={dialog && t(`${dialog}.action`)}
           tone="danger"
           onConfirm={handleConfirm}
           onClose={() => setConfirming(null)}
         >
-          <p className={styles.confirmText}>{dialog?.body}</p>
+          <p className={styles.confirmText}>{dialog && t(`${dialog}.confirmBody`)}</p>
         </ConfirmDialog>
       </SettingsCard>
     </>

@@ -71,6 +71,15 @@ describe('admin Candidates and Recruiters (M-161, M-169, M-206)', () => {
     assert.equal((await get(admin, '/admin/users?role=candidate&pageSize=101')).body.error.fields.pageSize, 'too_big')
   })
 
+  it('searches without accents or case (Phase 11 task 2)', async () => {
+    const admin = await owner()
+    const zoe = await listedCandidate({ fullName: 'Zoë Ångström' })
+    await listedCandidate({ fullName: 'Rene Ruiz' })
+    const ids = async (q) => (await get(admin, `/admin/users?role=candidate&q=${encodeURIComponent(q)}`)).body.items.map((row) => row.id)
+    for (const q of ['zoe angstrom', 'ZOË', 'Ångström']) assert.deepEqual(await ids(q), [String(zoe._id)], q)
+    assert.equal((await ids('rené')).length, 1)
+  })
+
   it('maps recruiter statuses to Pending, Approved, Rejected and Suspended', async () => {
     const admin = await owner()
     await approvedRecruiter({ fullName: 'Ada Approved' })

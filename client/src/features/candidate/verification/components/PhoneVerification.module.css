@@ -15,9 +15,17 @@
 
 .numberRow {
   display: grid;
-  grid-template-columns: minmax(0, 200px) minmax(0, 1fr) auto;
+  grid-template-columns: minmax(0, 200px) minmax(0, 1fr);
   align-items: start;
   gap: 12px;
+}
+
+.codeForm .numberRow {
+  grid-template-columns: minmax(0, 200px) auto;
+}
+
+.sendRow {
+  padding-top: 14px;
 }
 
 /* Lines the button up with the inputs: label (16px) + gap (8px). */
@@ -50,7 +58,7 @@
   gap: 12px;
   margin-bottom: 16px;
   padding: 14px 16px;
-  border: 1px solid rgba(0, 132, 255, 0.2);
+  border: 1px solid var(--border);
   border-radius: var(--radius-xl);
   background: var(--card);
 }
@@ -58,10 +66,8 @@
 .codeIcon {
   display: inline-flex;
   flex-shrink: 0;
-  padding: 8px;
-  border-radius: var(--radius-lg);
-  background: var(--accent);
-  color: var(--primary-hover);
+  padding-top: 2px;
+  color: var(--muted-foreground);
 }
 
 .codeText {
@@ -75,14 +81,14 @@
 }
 
 .code {
-  padding: 1px 8px;
+  padding: 1px 6px;
   border-radius: var(--radius-md);
-  background: var(--accent);
+  background: var(--muted);
   font-family: ui-monospace, 'SFMono-Regular', Menlo, Consolas, monospace;
   font-size: 15px;
   font-weight: 700;
   letter-spacing: 2px;
-  color: var(--primary-hover);
+  color: var(--foreground);
 }
 
 .codeNote {
@@ -96,11 +102,16 @@
     grid-template-columns: minmax(0, 1fr);
   }
 
+  .codeForm .numberRow {
+    grid-template-columns: minmax(0, 1fr);
+  }
+
   .actions {
     padding-top: 0;
   }
 
-  .tall {
+  .tall,
+  .sendRow button {
     width: 100%;
   }
 }

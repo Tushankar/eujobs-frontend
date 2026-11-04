@@ -1,0 +1,45 @@
+{
+  "status": {
+    "loading": "Rédaction par l’IA…",
+    "unavailable": "Le service d’IA n’a pas répondu. Les éléments affichés restent inchangés ; réessayez dans un instant.",
+    "notFound": "Ce contenu n’est plus disponible.",
+    "retry": "Réessayer",
+    "limit": "Vous avez utilisé les 50 générations IA du jour. Elles redeviennent disponibles à partir du {{time}}. Les textes rédigés auparavant restent affichés.",
+    "plan": "Les textes IA sont inclus dans Plus.",
+    "upgrade": "Découvrir Plus"
+  },
+  "badge": "Rédigé par l’IA",
+  "translate": {
+    "action": "Traduire",
+    "done": "Traduit par l’IA en {{language}}",
+    "original": "Voir l’original"
+  },
+  "jobSummary": {
+    "action": "Synthèse IA de l’offre",
+    "actionLabel": "Synthèse IA de l’offre {{title}}",
+    "title": "Synthèse IA de l’offre",
+    "lead": "Rédigée par l’IA à partir de l’offre. Consultez l’offre avant de vous y fier ; ce n’est pas une décision d’embauche.",
+    "overview": "Vue d’ensemble",
+    "highlights": "Points clés",
+    "considerations": "À vérifier",
+    "skills": "Compétences requises",
+    "close": "Fermer",
+    "regenerate": "Régénérer",
+    "regenerated": "Une nouvelle synthèse a été rédigée."
+  },
+  "profileSummary": {
+    "action": "Synthèse IA",
+    "title": "Synthèse IA",
+    "lead": "Une synthèse prête pour les recruteurs, rédigée par l’IA à partir de votre profil et de votre CV actif. Relisez-la avant de l’utiliser.",
+    "copy": "Copier la synthèse",
+    "copied": "Synthèse copiée dans le presse-papiers.",
+    "copyFailed": "La copie est bloquée dans ce navigateur. Sélectionnez le texte et copiez-le manuellement.",
+    "close": "Fermer"
+  },
+  "explanation": {
+    "title": "Pourquoi cette offre",
+    "strengths": "Points forts",
+    "gaps": "Écarts et questions ouvertes",
+    "openQuestions": "Questions à poser"
+  }
+}

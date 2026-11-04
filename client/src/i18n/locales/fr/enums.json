@@ -81,10 +81,10 @@
   "stageTone": { "neutral": "Neutre", "primary": "Mis en avant", "success": "Réussite" },
   "alertFrequency": { "instant": "Immédiate", "daily": "Quotidienne", "weekly": "Hebdomadaire" },
   "cvRequestReason": {
-    "verify_employment": "Vérifier l’expérience",
-    "earlier_role_cv": "CV d’un poste précédent",
-    "compliance": "Conformité",
-    "other": "Autre"
+    "verify_employment": "Vérifier le parcours professionnel",
+    "earlier_role_cv": "Consulter un ancien CV adapté à un poste",
+    "compliance": "Contrôle de conformité ou audit",
+    "other": "Autre finalité de recrutement"
   },
   "cvRequestStatus": { "pending": "En attente", "approved": "Acceptée", "declined": "Refusée" },
   "activityType": {
@@ -92,12 +92,12 @@
     "withdrawn": "A retiré sa candidature",
     "stage_changed": "Étape modifiée",
     "rejected": "Non retenu",
-    "shortlisted": "Ajouté à la présélection",
-    "unshortlisted": "Retiré de la présélection",
+    "shortlisted": "Ajouté à la short-list",
+    "unshortlisted": "Retiré de la short-list",
     "note_updated": "Note mise à jour",
     "outreach": "Message envoyé",
     "message_reply": "A répondu",
-    "cv_request": "CV précédent demandé",
+    "cv_request": "CV demandé",
     "cv_request_decided": "Demande de CV traitée",
     "cv_updated": "CV mis à jour",
     "cv_download": "CV téléchargé"
@@ -146,7 +146,7 @@
     "insights": "Analyses",
     "translation": "Traduction",
     "profile_summary": "Résumé du profil",
-    "cv_snapshot": "Synthèse du CV",
+    "cv_snapshot": "Aperçu du CV",
     "cv_draft": "Brouillon de CV",
     "policy_suggestion": "Suggestion de règles",
     "report_summary": "Résumé du rapport"

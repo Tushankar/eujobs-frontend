@@ -14,12 +14,13 @@
 .listRow {
   display: grid;
   grid-template-columns: minmax(0, 1fr) minmax(0, 1fr) auto;
-  align-items: end;
+  align-items: start;
   gap: 12px;
 }
 
+/* Lines up with the fields: label (16px) + gap (8px) + half the 46px control minus half the 36px button. */
 .remove {
-  margin-bottom: 4px;
+  margin-top: 29px;
 }
 
 .failure {
@@ -42,5 +43,6 @@
 
   .remove {
     justify-self: start;
+    margin-top: 0;
   }
 }

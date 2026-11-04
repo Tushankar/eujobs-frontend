@@ -1,0 +1,94 @@
+{
+  "eyebrow": "Resumen de la plataforma",
+  "title": "Un mercado más sano. Por diseño.",
+  "description": "Señales claras, supervisión cuidadosa e IA responsable en cada paso.",
+  "export": "Exportar informe",
+  "country": {
+    "label": "Filtrar por país",
+    "all": "Todos los países"
+  },
+  "kpis": {
+    "candidateRegistrations": "Registros de candidatos",
+    "activeUsers": "Usuarios activos",
+    "publishedJobs": "Ofertas publicadas",
+    "applications": "Candidaturas",
+    "verifiedProfiles": "Perfiles de candidato verificados",
+    "courseEnrollments": "Inscripciones en cursos",
+    "courseBadges": "Insignias de cursos obtenidas",
+    "averageRoleMatch": "Compatibilidad media con los puestos",
+    "allTime": "Todo el periodo",
+    "acrossRoles_one": "En {{count}} oferta publicada",
+    "acrossRoles_many": "En {{count}} ofertas publicadas",
+    "acrossRoles_other": "En {{count}} ofertas publicadas"
+  },
+  "chart": {
+    "title": "Actividad de la plataforma",
+    "description": "Registros y candidaturas",
+    "view": "Vista del gráfico",
+    "bars": "Vista de barras",
+    "line": "Vista de líneas",
+    "period": "Periodo",
+    "registrations": "Registros",
+    "applications": "Candidaturas",
+    "summary": "{{period}}: {{items}}",
+    "point": "{{label}}: {{registrations}} registros, {{applications}} candidaturas",
+    "barSummary": "Gráfico de barras. {{items}}",
+    "lineSummary": "Gráfico de líneas. {{items}}",
+    "registrationsAt": "{{label}}: {{count}} registros",
+    "applicationsAt": "{{label}}: {{count}} candidaturas"
+  },
+  "health": {
+    "title": "Salud del mercado",
+    "description": "Supervisión humana en cada paso · Todo el periodo",
+    "companies": "Empresas registradas",
+    "coursePurchases": "Compras de cursos",
+    "checksInReview": "Verificaciones en revisión",
+    "shortlists": "Actividad de preselección",
+    "outreach": "Borradores de contacto revisados",
+    "pendingReviews": "Revisiones de usuarios pendientes",
+    "moderation": "Revisar la cola de moderación"
+  },
+  "skills": {
+    "title": "Habilidades más demandadas",
+    "description": "Habilidades requeridas en las ofertas publicadas",
+    "empty": "Aún no hay ofertas publicadas.",
+    "bar_one": "{{skill}}: requerida en {{count}} oferta",
+    "bar_many": "{{skill}}: requerida en {{count}} ofertas",
+    "bar_other": "{{skill}}: requerida en {{count}} ofertas"
+  },
+  "recent": {
+    "title": "Actividad reciente de la plataforma",
+    "auditLog": "Ver registro de auditoría",
+    "item": "{{text}} · {{date}}",
+    "note": "La IA ayuda con las pruebas. Las personas toman las decisiones. Los controles de tu mercado reflejan ese principio."
+  },
+  "analytics": {
+    "title": "Mide lo que hace avanzar a las personas.",
+    "description": "Una visión clara de la actividad del mercado, con el contexto necesario para actuar con responsabilidad.",
+    "shortlistConversion": "Conversión a preselección",
+    "conversionCaption_one": "{{shortlisted}} de {{count}} candidatura preseleccionada · Todo el periodo",
+    "conversionCaption_many": "{{shortlisted}} de {{count}} candidaturas preseleccionadas · Todo el periodo",
+    "conversionCaption_other": "{{shortlisted}} de {{count}} candidaturas preseleccionadas · Todo el periodo",
+    "recruiterAccounts": "Cuentas de reclutadores",
+    "companyRegistrations": "Registros de empresas",
+    "reviewedOutreach": "Contactos revisados"
+  },
+  "quality": {
+    "title": "La calidad de la compatibilidad necesita algo más que una puntuación",
+    "relevance": {
+      "title": "Valoraciones de relevancia",
+      "status": "Recopiladas",
+      "text": "Candidatos y reclutadores pueden indicar si una explicación les ha sido útil; los administradores consultan los totales en IA y compatibilidad."
+    },
+    "conversion": {
+      "title": "Conversión de recomendaciones",
+      "status": "Aún sin medir",
+      "text": "Mide las visualizaciones reales de recomendaciones, las candidaturas y las preselecciones, con consentimiento."
+    },
+    "fairness": {
+      "title": "Equidad y calidad",
+      "status": "Requiere revisión humana",
+      "text": "Evalúa la relevancia para el puesto, la calidad de las explicaciones y los sesgos antes de cambiar una política de compatibilidad."
+    }
+  }
+}

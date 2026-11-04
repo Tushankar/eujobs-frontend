@@ -1,0 +1,224 @@
+{
+  "queues": "Files de modération",
+  "verification": {
+    "tab": "Vérification des candidats",
+    "title": "File de vérification des candidats",
+    "description": "Comparez les justificatifs du candidat à l’entrée du profil qu’ils attestent. Approuvez-les, ou refusez-les avec un motif sur lequel le candidat peut agir.",
+    "statusFilter": "Filtrer par statut",
+    "empty": "Rien dans cette file.",
+    "noPermission": "Cette file nécessite l’autorisation {{permission}}.",
+    "submitted": "Envoyé le {{date}}",
+    "review": "Examiner les justificatifs",
+    "count_one": "{{count}} envoi",
+    "count_many": "{{count}} envois",
+    "count_other": "{{count}} envois",
+    "stat": {
+      "label": "Examens de justificatifs",
+      "caption": "Contrôles de candidats en attente d’examen"
+    },
+    "dialog": {
+      "title": "Examiner les justificatifs du candidat",
+      "candidate": "Candidat",
+      "check": "Contrôle",
+      "evidence": "Justificatifs",
+      "submitted": "Envoyé",
+      "claim": "Ce que les justificatifs doivent attester",
+      "claimName": "Nom du compte : {{name}}",
+      "claimMissing": "L’entrée de profil associée a été supprimée.",
+      "file": "Fichier",
+      "openFile": "Ouvrir {{name}}",
+      "openNewTab": "Ouvrir dans un nouvel onglet",
+      "noInline": "Ce type de fichier ne peut pas s’afficher ici. Ouvrez-le dans un nouvel onglet pour le vérifier.",
+      "noPreview": "Les aperçus nécessitent l’autorisation {{permission}}.",
+      "previewAlt": "Fichier justificatif {{name}}",
+      "history": "Envois précédents",
+      "decided": "{{status}} par {{name}}, {{date}}",
+      "reason": "Motif : {{reason}}",
+      "approve": "Approuver",
+      "reject": "Refuser",
+      "back": "Retour",
+      "approveTitle": "Approuver ces justificatifs ?",
+      "approveText": "Le contrôle est pris en compte dans le profil du candidat et les recruteurs voient une coche. Le candidat reçoit un e-mail.",
+      "confirmApprove": "Approuver les justificatifs",
+      "rejectTitle": "Refuser ces justificatifs ?",
+      "rejectText": "Le candidat voit le motif par e-mail et sur la page Vérification, et peut envoyer de nouveaux justificatifs.",
+      "reasonLabel": "Motif",
+      "reasonHint": "Jusqu’à {{max}} caractères.",
+      "confirmReject": "Refuser les justificatifs",
+      "decidedNow": "Décision enregistrée et envoyée par e-mail au candidat.",
+      "period": "{{start}} – {{end}}",
+      "present": "aujourd’hui",
+      "validUntil": "valable jusqu’au {{date}}"
+    }
+  },
+  "accounts": {
+    "tab": "Examen des comptes",
+    "title": "File d’examen des comptes",
+    "description": "Approuvez, refusez ou suspendez les comptes recruteurs après avoir vérifié les données de l’entreprise et les documents KYC.",
+    "statusFilter": "Filtrer par statut du compte",
+    "status": {
+      "pending_review": "En attente de validation",
+      "active": "Actif",
+      "suspended": "Suspendu",
+      "rejected": "Refusé"
+    },
+    "empty": "Aucun compte recruteur avec ce statut.",
+    "submitted": "Envoyé le {{date}}",
+    "joined": "Inscrit le {{date}}",
+    "review": "Examiner le compte",
+    "stat": {
+      "label": "Comptes en attente",
+      "caption": "Décisions sur des recruteurs à prendre"
+    },
+    "dialog": {
+      "title": "Examiner le compte recruteur",
+      "applicant": "Demandeur",
+      "jobTitle": "Intitulé du poste",
+      "email": "E-mail",
+      "emailVerified": "Vérifié par code",
+      "emailUnverified": "Non vérifié",
+      "phone": "Téléphone",
+      "phoneConfirmed": "Téléphone confirmé à l’écran (sans SMS)",
+      "phoneUnconfirmed": "Non confirmé",
+      "company": "Données de l’entreprise",
+      "legalName": "Raison sociale",
+      "displayName": "Nom affiché",
+      "website": "Site web",
+      "businessEmail": "E-mail professionnel",
+      "industry": "Secteur",
+      "size": "Taille",
+      "location": "Ville",
+      "businessAddress": "Adresse de l’entreprise",
+      "registrationDetails": "Informations d’immatriculation",
+      "notProvided": "Non renseigné",
+      "documents": "Documents KYC",
+      "documentType": {
+        "identity": "Pièce d’identité",
+        "registration": "Certificat d’immatriculation",
+        "authorization": "Justificatif d’autorisation"
+      },
+      "fileDeleted": "Supprimé 30 jours après la décision.",
+      "noDocuments": "Aucun document importé.",
+      "submittedAt": "Envoyé",
+      "history": "Décisions précédentes",
+      "decided": "{{decision}} par {{name}}, {{date}}",
+      "decision": {
+        "approved": "Approuvé",
+        "rejected": "Refusé",
+        "suspended": "Suspendu"
+      },
+      "reason": "Motif : {{reason}}",
+      "noActions": "Aucune décision n’est possible pour ce compte tant que le recruteur n’a pas renvoyé sa demande.",
+      "action": {
+        "approved": "Approuver",
+        "reactivate": "Réactiver",
+        "rejected": "Refuser",
+        "suspended": "Suspendre"
+      },
+      "confirm": {
+        "approved": {
+          "title": "Approuver ce recruteur ?",
+          "text": "L’espace de travail du recruteur s’ouvre et les étapes par défaut du processus de recrutement sont créées. Le recruteur reçoit un e-mail.",
+          "button": "Approuver le compte"
+        },
+        "reactivate": {
+          "title": "Réactiver ce recruteur ?",
+          "text": "Le recruteur peut se reconnecter et ses offres publiées sont de nouveau visibles par les candidats. Le recruteur reçoit un e-mail.",
+          "button": "Réactiver le compte"
+        },
+        "rejected": {
+          "title": "Refuser cette demande ?",
+          "text": "Le recruteur voit le motif par e-mail et sur la page de statut, et peut corriger les informations et renvoyer sa demande.",
+          "button": "Refuser la demande"
+        },
+        "suspended": {
+          "title": "Suspendre ce recruteur ?",
+          "text": "Le recruteur est déconnecté, ses offres ne sont plus visibles par les candidats et il reçoit un e-mail indiquant le motif.",
+          "button": "Suspendre le compte"
+        }
+      },
+      "reasonLabel": "Motif",
+      "reasonOptional": "Motif (facultatif)",
+      "reasonHint": "Jusqu’à {{max}} caractères. Enregistré avec la décision et dans le journal d’audit.",
+      "back": "Retour",
+      "decidedNow": "Décision enregistrée et envoyée par e-mail au recruteur."
+    }
+  },
+  "title": "La confiance se construit au quotidien.",
+  "description": "Examinez les contenus signalés, les comptes et les justificatifs des candidats avec soin, en contexte, et avec une trace claire de chaque décision.",
+  "content": {
+    "tab": "Modération des contenus",
+    "title": "File de modération des contenus",
+    "description": "Examinez les offres, profils de candidats, entreprises et messages signalés. Les signalements sont des indices pour un examen humain, pas des constats automatiques.",
+    "empty": "Aucun contenu signalé",
+    "stat": {
+      "label": "Signalements de contenu",
+      "caption": "Dossiers ouverts en attente d’examen"
+    },
+    "decisions": {
+      "label": "Décisions sur les contenus",
+      "caption": "Dossiers classés ou restreints"
+    },
+    "priority": {
+      "high": "Priorité haute",
+      "standard": "Priorité normale"
+    },
+    "reportCount_one": "{{count}} signalement",
+    "reportCount_many": "{{count}} signalements",
+    "reportCount_other": "{{count}} signalements",
+    "openedFromJobs": "Ouvert par un administrateur depuis Offres",
+    "decisionNote": "Motif de la décision : {{reason}}",
+    "review": "Examiner le contenu",
+    "reviewTitle": "Examiner le contenu signalé",
+    "reports": "Signalements",
+    "unknownReporter": "Compte supprimé",
+    "excerpt": "Extrait du message",
+    "reportedMessage": "message signalé",
+    "targetGone": "Ce contenu n’existe plus.",
+    "facts": {
+      "company": "Entreprise",
+      "status": "Statut",
+      "headline": "Titre",
+      "visibility": "Recherche"
+    },
+    "hidden": "Masqué dans la recherche des recruteurs",
+    "visible": "Visible dans la recherche des recruteurs",
+    "notProvided": "Non renseigné",
+    "history": "Historique",
+    "step": {
+      "dismissed": "Classé par {{by}} · {{date}}",
+      "restricted": "Restreint par {{by}} · {{date}}",
+      "lifted": "Restriction levée par {{by}} · {{date}}"
+    },
+    "photoRemoved": "photo supprimée",
+    "notice": "Aucun verdict automatique n’est disponible. Examinez le contenu dans son contexte. Restreindre une offre la met en pause et la verrouille ; restreindre un profil le masque dans la recherche des recruteurs. Le propriétaire est averti par e-mail.",
+    "noticeDismissOnly": "Les signalements d’entreprises et de messages peuvent uniquement être classés. Pour agir, suspendez le recruteur dans Examen des comptes ou restreignez le profil du candidat.",
+    "restrict": "Restreindre le contenu",
+    "restrictTitle": "Restreindre ce contenu ?",
+    "restrictText": {
+      "job": "L’offre est mise en pause et verrouillée : le recruteur voit votre motif et ne peut pas la republier tant que le dossier n’est pas classé.",
+      "candidate_profile": "Le profil est masqué dans la recherche des recruteurs tant que le dossier n’est pas classé. Vous pouvez aussi supprimer la photo de profil."
+    },
+    "dismiss": "Classer le signalement",
+    "dismissTitle": "Classer ce signalement ?",
+    "dismissText": "Le contenu reste tel quel et le dossier est clos avec votre note.",
+    "lift": "Classer et lever la restriction",
+    "liftTitle": "Lever la restriction ?",
+    "liftText": {
+      "job": "Le verrou est retiré ; l’offre reste en pause jusqu’à ce que le recruteur la republie. Le recruteur est averti par e-mail.",
+      "candidate_profile": "Le profil est de nouveau visible dans la recherche des recruteurs. Le candidat est averti par e-mail."
+    },
+    "removePhoto": "Supprimer aussi la photo de profil",
+    "decided": {
+      "restricted": "{{name}} : contenu restreint.",
+      "dismissed": "{{name}} : signalement classé.",
+      "lifted": "{{name}} : restriction levée."
+    },
+    "reason": "Motif",
+    "reasonOptional": "Motif (facultatif)",
+    "reasonHint": "Enregistré avec la décision et dans le journal d’audit.",
+    "reasonRequired": "Ajoutez un motif pour que la décision soit clairement tracée.",
+    "reasonTooLong": "Le motif ne doit pas dépasser {{max}} caractères.",
+    "back": "Retour"
+  }
+}

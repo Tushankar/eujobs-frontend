@@ -11,11 +11,6 @@
   min-width: 0;
 }
 
-.claim {
-  color: var(--foreground);
-  overflow-wrap: anywhere;
-}
-
 .preview {
   display: flex;
   flex-direction: column;
@@ -58,4 +53,205 @@
   font-size: 12px;
   line-height: 18px;
   color: var(--destructive);
+}
+
+/* ---------- Verification review: document on the left, details and decision on the right ---------- */
+
+.review {
+  display: grid;
+  gap: 24px;
+}
+
+.withFile {
+  grid-template-columns: minmax(0, 1.35fr) minmax(300px, 1fr);
+  align-items: stretch;
+}
+
+/* The document fills the dialog's height; the details column scrolls with the body if it is longer. */
+.document {
+  height: min(640px, calc(100dvh - 230px));
+  min-height: 360px;
+}
+
+.details {
+  display: flex;
+  flex-direction: column;
+  gap: 20px;
+  min-width: 0;
+}
+
+.person {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+}
+
+.personText {
+  flex: 1;
+  min-width: 0;
+}
+
+.personName {
+  font-family: var(--font-display);
+  font-size: 17px;
+  font-weight: 700;
+  line-height: 24px;
+  color: var(--foreground);
+}
+
+.personEmail {
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+  font-size: 13px;
+  line-height: 18px;
+  color: var(--muted-foreground);
+}
+
+/* Check · Evidence · Submitted as one bordered strip. */
+/* 1px gaps over a border-coloured background draw the dividers, however the cells wrap. */
+.summary {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(110px, 1fr));
+  gap: 1px;
+  margin: 0;
+  overflow: hidden;
+  border: 1px solid var(--border);
+  border-radius: var(--radius-xl);
+  background: var(--border);
+}
+
+.summary > div {
+  min-width: 0;
+  padding: 12px 14px;
+  background: var(--card);
+}
+
+.summary dt {
+  font-size: 11px;
+  line-height: 16px;
+  color: var(--muted-foreground);
+}
+
+.summary dd {
+  margin: 0;
+  padding-top: 2px;
+  font-size: 13px;
+  font-weight: 600;
+  line-height: 18px;
+  color: var(--foreground);
+  overflow-wrap: anywhere;
+}
+
+/* What the document must match: the one thing the reviewer compares against the file. */
+.match {
+  padding: 16px;
+  border: 1px solid var(--border);
+  border-left: 3px solid var(--foreground);
+  border-radius: var(--radius-lg);
+  background: var(--muted);
+}
+
+.matchLabel {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  font-size: 11px;
+  font-weight: 600;
+  line-height: 16px;
+  letter-spacing: 0.3px;
+  text-transform: uppercase;
+  color: var(--muted-foreground);
+}
+
+.matchValue {
+  padding-top: 8px;
+  font-size: 15px;
+  font-weight: 600;
+  line-height: 22px;
+  color: var(--foreground);
+  overflow-wrap: anywhere;
+}
+
+.decided {
+  padding: 12px 14px;
+  border-radius: var(--radius-lg);
+  background: var(--muted);
+  font-size: 13px;
+  line-height: 20px;
+  color: var(--muted-foreground);
+}
+
+.sectionLabel {
+  padding-bottom: 8px;
+  font-size: 12px;
+  font-weight: 600;
+  line-height: 16px;
+  color: var(--foreground);
+}
+
+.timeline {
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+  margin: 0;
+  list-style: none;
+}
+
+.timeline li {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: 6px 10px;
+  font-size: 12px;
+  line-height: 18px;
+  color: var(--muted-foreground);
+}
+
+/* The decision being confirmed (the footer holds Back and Confirm). */
+.confirm {
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+  padding: 16px;
+  border: 1px solid var(--border);
+  border-radius: var(--radius-xl);
+}
+
+.confirmReject {
+  border-color: #ffc9c9;
+}
+
+.confirmTitle {
+  font-family: var(--font-display);
+  font-size: 15px;
+  font-weight: 700;
+  line-height: 22px;
+  color: var(--foreground);
+}
+
+.confirmText {
+  font-size: 13px;
+  line-height: 20px;
+  color: var(--muted-foreground);
+}
+
+@media (max-width: 859px) {
+  .withFile {
+    grid-template-columns: minmax(0, 1fr);
+  }
+
+  .document {
+    height: 380px;
+    min-height: 0;
+  }
+
+  /* Two per row; an odd last item takes the whole row, so no empty cell shows. */
+  .summary {
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+  }
+
+  .summary > div:last-child:nth-child(odd) {
+    grid-column: 1 / -1;
+  }
 }

@@ -98,7 +98,7 @@ export default function JobWizard({ initialValues, initialStep = 0, reachable = 
 
   return (
     <div className={styles.wizard}>
-      <aside className={styles.sidebar}>
+      <aside className={`${styles.sidebar} sticky-side`}>
         <ol className={styles.steps}>
           {JOB_STEPS.map((id, index) => {
             const active = index === step

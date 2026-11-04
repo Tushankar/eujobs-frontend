@@ -1,16 +1,14 @@
 /*
  * Phase 2 tasks 3 and 4: the formatters with the locale rule (§3.11, OQ-6b: en-DE, fr-BE, en-IE
  * samples), and the translation catalogue — every enum key of GET /meta/config has a label in
- * en/es/fr, and every namespace that has a Spanish or French file has every English key (plural forms
- * aside). Namespaces of screens migrated after Phase 2 are English until Phase 11 and are listed.
+ * en/es/fr, and every namespace has a Spanish and a French file with every English key (plural forms
+ * aside); a missing file fails (Phase 11 task 5).
  */
 export default {
   name: 'P2-19 Formats and catalogue',
   viewports: ['D'],
   async run(ctx) {
     const handle = await ctx.newPage()
-    // A namespace without a Spanish or French file answers 404 (it is English-only until Phase 11).
-    handle.allow(404, '/src/i18n/locales/')
     const { page } = handle
     await page.goto(`${ctx.webUrl}/sign-in`, { waitUntil: 'networkidle0' })
 
@@ -44,7 +42,6 @@ export default {
       const { enums } = await (await fetch('/api/v1/meta/config')).json()
       const load = async (language, namespace) => (await import(`/src/i18n/locales/${language}/${namespace}.json`)).default
       const loadIfAny = (language, namespace) => load(language, namespace).catch(() => null)
-      const englishOnly = new Set()
       const flatten = (node, prefix = '') =>
         Object.entries(node).flatMap(([key, value]) => (typeof value === 'object' ? flatten(value, `${prefix}${key}.`) : [`${prefix}${key}`]))
       const base = (key) => key.replace(/_(zero|one|two|few|many|other)$/, '')
@@ -61,7 +58,7 @@ export default {
         for (const namespace of NAMESPACES) {
           const translated = await loadIfAny(language, namespace)
           if (!translated) {
-            englishOnly.add(namespace)
+            problems.push(`${language} ${namespace}: no file`)
             continue
           }
           const have = new Set(flatten(translated).map(base))
@@ -70,10 +67,9 @@ export default {
           }
         }
       }
-      return { languages: LANGUAGES, namespaces: NAMESPACES, enumCount: Object.values(enums).flat().length, problems, englishOnly: [...englishOnly] }
+      return { languages: LANGUAGES, namespaces: NAMESPACES, enumCount: Object.values(enums).flat().length, problems }
     })
     ctx.note(`catalogue: ${catalogue.languages.join('/')} × ${catalogue.namespaces.length} namespaces, ${catalogue.enumCount} enum keys`)
-    ctx.note(`English only until Phase 11: ${catalogue.englishOnly.join(', ') || 'none'}`)
     ctx.check(!catalogue.problems.length, `missing translations:\n  ${catalogue.problems.join('\n  ')}`)
     ctx.assertClean(handle.issues, 'formats and catalogue')
   },

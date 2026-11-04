@@ -1,5 +1,5 @@
 import { PLACES } from '../../server/seed/data/places.js'
-import { clickText, setValue, signInWithForm, waitForText } from '../lib/flows.js'
+import { clickText, pickMonth, setValue, signInWithForm, waitForText } from '../lib/flows.js'
 import { onboardedCandidate } from '../lib/candidates.js'
 import { api, TEST_PASSWORD } from '../lib/testApi.js'
 
@@ -71,8 +71,8 @@ export default {
     await page.waitForSelector('input[name="title"]')
     await page.type('input[name="title"]', 'Designer')
     await page.type('input[name="employer"]', 'Studio')
-    await setValue(page, 'input[name="start"]', '2022-05')
-    await setValue(page, 'input[name="end"]', '2021-01')
+    await pickMonth(page, 'start', '2022-05')
+    await pickMonth(page, 'end', '2021-01')
     await clickText(page, 'Save', '[role="dialog"] button')
     await waitForText(page, 'Choose an end date after the start date.')
     await ctx.screenshot(page, '3-dates')

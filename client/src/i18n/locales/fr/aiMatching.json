@@ -1,0 +1,141 @@
+{
+  "page": {
+    "eyebrow": "IA responsable",
+    "title": "Rendez le raisonnement visible.",
+    "description": "Des signaux liés au poste. Des preuves claires. Des décisions humaines, toujours.",
+    "create": "Créer une règle",
+    "loadError": "Impossible de charger les règles de correspondance."
+  },
+  "signals": {
+    "skills": {
+      "label": "Compétences pertinentes",
+      "description": "Part des compétences requises pour le poste qui figurent dans le profil du candidat."
+    },
+    "experience": {
+      "label": "Expérience pertinente",
+      "description": "Sens du profil, de l’expérience et du CV actif comparé au texte de l’offre. Le nombre d’années ne décide jamais seul d’une correspondance."
+    },
+    "location": {
+      "label": "Lieu et préférences de travail",
+      "description": "Un pays ou un mode de travail différent plafonne le score en dessous de « Compatible »."
+    },
+    "humanReview": {
+      "label": "Exiger un examen humain",
+      "description": "Toujours activé. L’IA ne peut pas sélectionner, refuser, contacter ni embaucher un candidat de manière autonome."
+    }
+  },
+  "editor": {
+    "edit": "Modifier le nom et la description",
+    "cancel": "Annuler",
+    "saveDetails": "Enregistrer les informations",
+    "save": "Enregistrer la règle examinée",
+    "activate": "Activer",
+    "archive": "Archiver le brouillon",
+    "archivedNote": "Les règles archivées sont en lecture seule.",
+    "note": "Enregistrer la règle active, ou activer une règle, recalcule tous les scores de correspondance avec cette version.",
+    "saved": "Version {{version}} enregistrée.",
+    "savedActive": "Version {{version}} enregistrée. Les scores de correspondance sont en cours de recalcul.",
+    "activated": "« {{name}} » est désormais la règle active. Les scores de correspondance sont en cours de recalcul.",
+    "archived": "« {{name}} » a été archivée.",
+    "detailsSaved": "Nom et description enregistrés.",
+    "history": "Historique des versions",
+    "historyItem": "Version {{version}} · {{date}}",
+    "signalsOn": "Activés : {{signals}}"
+  },
+  "library": {
+    "title": "Bibliothèque de règles",
+    "description": "Sélectionnez une règle à examiner ou à activer.",
+    "updated": "Mise à jour le {{date}}"
+  },
+  "guidance": {
+    "title": "Des preuves, pas des absolus.",
+    "text": "N’utilisez jamais de caractéristiques protégées comme critères de correspondance. Montrez les écarts possibles à côté des points forts et rendez chaque recommandation vérifiable."
+  },
+  "status": {
+    "title": "État du service",
+    "connected": "Dernier appel réussi : {{time}}",
+    "noCalls": "Aucun appel à OpenAI pour l’instant",
+    "lastError": "Dernier appel en échec : {{time}}",
+    "models": "Modèles",
+    "model": {
+      "fast": "Rapide",
+      "main": "Principal",
+      "embedding": "Embeddings",
+      "transcribe": "Transcription"
+    }
+  },
+  "create": {
+    "title": "Créer une règle de correspondance",
+    "intro": "Créez un brouillon nommé avec tous les signaux approuvés activés. L’examen humain est toujours obligatoire et ne peut pas être désactivé.",
+    "name": "Nom de la règle",
+    "namePlaceholder": "Par exemple, postes produit au Royaume-Uni",
+    "description": "Description de la règle",
+    "descriptionPlaceholder": "Décrivez les postes, le marché ou le contexte d’examen couverts par cette règle.",
+    "descriptionHint": "Expliquez quand utiliser cette règle.",
+    "assistTitle": "Suggestion de règle assistée par IA",
+    "assistIdle": "Ajoutez un nom et une description pour recevoir une suggestion adaptée.",
+    "assistDone": "Suggestion ajoutée à la description. Relisez-la et modifiez-la avant de créer le brouillon.",
+    "improve": "Améliorer la description",
+    "improving": "Rédaction d’une suggestion…",
+    "assistNote": "Rédigé par OpenAI. Relisez et modifiez le résultat avant de créer le brouillon.",
+    "cancel": "Annuler",
+    "submit": "Créer le brouillon",
+    "created": "Le brouillon « {{name}} » a été créé. Vérifiez ses signaux, puis activez-le."
+  },
+  "errors": {
+    "name": {
+      "required": "Saisissez un nom de règle.",
+      "too_short": "Le nom doit comporter au moins {{min}} caractères.",
+      "too_long": "Le nom ne doit pas dépasser {{max}} caractères.",
+      "taken": "Une règle porte déjà ce nom. Choisissez-en un autre."
+    },
+    "description": {
+      "required": "Décrivez les postes, le marché ou le contexte d’examen couverts par cette règle.",
+      "too_short": "Ajoutez plus de détails : au moins {{min}} caractères.",
+      "too_long": "La description ne doit pas dépasser {{max}} caractères."
+    },
+    "signals": {
+      "skills_or_experience": "Activez les compétences ou l’expérience."
+    }
+  },
+  "oversight": {
+    "title": "Supervision des correspondances côté recruteurs",
+    "description": "Les meilleurs candidats d’une offre selon le score de correspondance. Les recruteurs voient ce classement et les preuves, jamais le pourcentage.",
+    "job": "Offre",
+    "noJobs": "Aucune offre publiée pour l’instant.",
+    "noCandidates": "Aucun candidat du marché de cette offre n’a encore de score de correspondance.",
+    "percentLabel": "Score de correspondance {{score}}",
+    "caption": "Compétences, expérience et préférences de travail. L’examen humain reste obligatoire.",
+    "select": "Afficher les preuves pour {{name}}"
+  },
+  "evidence": {
+    "title": "Preuves de correspondance pour {{name}}",
+    "subtitle": "Calculé à partir du profil et de l’offre ; aucune IA ne l’a rédigé.",
+    "matched": "Compétences indiquées pour cette offre",
+    "missing": "Compétences requises non indiquées",
+    "none": "Aucune",
+    "years": "{{candidate}} ans déclarés · l’offre demande {{required}}+",
+    "yearsNoRequirement": "{{candidate}} ans déclarés · aucun minimum",
+    "workMode": "Préfère : {{candidate}} · offre : {{job}}",
+    "location": {
+      "met": "Le lieu correspond à l’offre",
+      "notMet": "Le lieu ou le mode de travail ne correspond pas à l’offre"
+    },
+    "languages": "Langues requises",
+    "language": "{{language}} : {{minLevel}} requis, niveau {{level}}",
+    "languageMissing": "{{language}} : {{minLevel}} requis, non indiqué",
+    "rightToWork": {
+      "true": "Droit au travail dans le pays de l’offre",
+      "false": "Aucun droit au travail indiqué dans le pays de l’offre"
+    },
+    "disclaimer": "Fondé sur les éléments du profil et les préférences indiquées ; ce n’est pas une décision d’embauche. Vous gardez le contrôle."
+  },
+  "feedback": {
+    "title": "Retours sur les explications",
+    "description": "Ce que les candidats ont répondu à « Cette explication vous a-t-elle été utile ? » dans « Pourquoi cette recommandation ». Enregistré par candidat et par offre ; cela n’entraîne aucun modèle.",
+    "totals": "{{helpful}} utiles · {{needsReview}} à revoir",
+    "job": "{{helpful}} utiles · {{needsReview}} à revoir",
+    "empty": "Aucun retour pour l’instant.",
+    "removedJob": "Une offre supprimée"
+  }
+}

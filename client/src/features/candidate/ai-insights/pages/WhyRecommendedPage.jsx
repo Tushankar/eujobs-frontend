@@ -147,7 +147,7 @@ export default function WhyRecommendedPage() {
             </Panel>
           </div>
 
-          <aside className={styles.side} aria-label={t('why.sourceTitle')}>
+          <aside className={`${styles.side} sticky-side`} aria-label={t('why.sourceTitle')}>
             <Panel padding={24}>
               <h2 className={styles.title}>{t('why.sourceTitle')}</h2>
               <ul className={styles.sources}>

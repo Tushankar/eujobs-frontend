@@ -1,0 +1,102 @@
+{
+  "title": "Decisiones claras. Un registro claro.",
+  "description": "Revisa los eventos de administración, usuarios y sistema de toda la plataforma, del más reciente al más antiguo.",
+  "export": "Exportar CSV",
+  "search": "Buscar eventos, personas o referencias",
+  "categories": "Filtrar por categoría",
+  "allCategories": "Todos los eventos",
+  "actorType": "Filtrar por autor",
+  "allActors": "Todos los autores",
+  "listLabel": "Eventos de auditoría",
+  "empty": "Ningún evento coincide",
+  "emptyText": "Prueba con otra búsqueda o elige otra categoría o autor.",
+  "detail": {
+    "category": "Categoría",
+    "actor": "Registrado por",
+    "time": "Hora",
+    "target": "Objeto"
+  },
+  "actor": "{{name}} · {{type}}",
+  "target": {
+    "user": "Cuenta",
+    "role": "Rol",
+    "job": "Oferta",
+    "payment": "Pago",
+    "course": "Curso",
+    "certificate": "Certificado",
+    "matching_policy": "Política de compatibilidad",
+    "verification_submission": "Pruebas de verificación",
+    "candidate_profile": "Perfil de candidato",
+    "company": "Empresa",
+    "message": "Mensaje",
+    "report": "Informe"
+  },
+  "types": {
+    "moderation": {
+      "account_submitted": "{{name}} ha enviado {{company}} a revisión",
+      "account_resubmitted": "{{name}} ha vuelto a enviar {{company}} a revisión",
+      "account_approved": "Cuenta de reclutador aprobada: {{name}} ({{company}})",
+      "account_rejected": "Cuenta de reclutador rechazada: {{name}} ({{company}})",
+      "account_suspended": "Cuenta de reclutador suspendida: {{name}} ({{company}})",
+      "account_reactivated": "Cuenta de reclutador reactivada: {{name}} ({{company}})",
+      "verification_approved": "Pruebas de verificación aprobadas: {{candidate}} ({{category}})",
+      "verification_rejected": "Pruebas de verificación rechazadas: {{candidate}} ({{category}})",
+      "content_reported": "Contenido denunciado: {{name}} ({{targetType}}, {{reason}})",
+      "case_opened": "Caso abierto desde Ofertas: {{name}} ({{reason}})",
+      "content_dismissed": "Denuncia desestimada: {{name}} ({{targetType}})",
+      "content_restricted": "Contenido restringido: {{name}} ({{targetType}})",
+      "content_lifted": "Restricción levantada: {{name}} ({{targetType}})"
+    },
+    "learning": {
+      "course_created": "Curso creado: {{title}}",
+      "course_details_updated": "Detalles del curso actualizados: {{title}}",
+      "lesson_added": "Lección añadida a {{title}}: {{lesson}}",
+      "lesson_updated": "Lección actualizada en {{title}}: {{lesson}}",
+      "lesson_deleted": "Lección eliminada de {{title}}: {{lesson}}",
+      "lessons_reordered": "Lecciones reordenadas: {{title}}",
+      "quiz_saved": "Cuestionario guardado para {{title}} ({{questions}} preguntas)",
+      "course_published": "Curso publicado: {{title}}",
+      "course_unpublished": "Curso retirado: {{title}}",
+      "certificate_revoked": "Certificado {{code}} revocado: {{name}}, {{title}}"
+    },
+    "policy": {
+      "created": "Política de compatibilidad creada: {{name}}",
+      "updated": "Detalles de la política de compatibilidad actualizados: {{name}}",
+      "saved": "Señales de la política de compatibilidad guardadas: {{name}} (v{{version}})",
+      "activated": "Política de compatibilidad activada: {{name}} (v{{version}})",
+      "archived": "Política de compatibilidad archivada: {{name}}"
+    },
+    "access": {
+      "role_created": "Rol creado: {{role}}",
+      "role_duplicated": "Rol duplicado: {{role}} (a partir de {{source}})",
+      "role_updated": "Rol actualizado: {{role}}",
+      "role_archived": "Rol archivado: {{role}}",
+      "user_access_saved": "Acceso guardado para {{name}}",
+      "user_access_revoked": "Acceso revocado para {{name}}",
+      "admin_invited": "Administrador invitado: {{name}} ({{email}}) como {{role}}",
+      "invite_accepted": "Invitación aceptada: {{name}}"
+    },
+    "reports": {
+      "candidates_exported": "Candidatos exportados ({{count}} filas)",
+      "recruiters_exported": "Reclutadores exportados ({{count}} filas)",
+      "payments_exported": "Pagos exportados ({{count}} filas)",
+      "audit_exported": "Registro de auditoría exportado ({{count}} filas)",
+      "overview_exported": "Resumen de la plataforma exportado ({{count}} filas)",
+      "applications_exported": "Candidaturas exportadas ({{count}} filas)",
+      "report_generated": "Informe generado: {{report}} ({{filename}})",
+      "report_downloaded": "Informe descargado de nuevo: {{report}} ({{filename}})"
+    },
+    "jobs": {
+      "status_changed": "Estado de la oferta cambiado: {{title}} ({{company}}), {{from}} → {{to}}",
+      "cv_downloaded": "CV descargado: {{candidate}}, versión {{version}} ({{company}})"
+    },
+    "payments": {
+      "payment_recorded": "Pago {{reference}}: {{payer}}, {{item}} ({{amount}})",
+      "renewal_failed": "Renovación fallida {{reference}}: {{payer}}, {{item}} ({{amount}})",
+      "payment_refunded": "Pago reembolsado {{reference}}: {{payer}}, {{item}} ({{amount}})"
+    },
+    "workspace": {
+      "initialized": "Espacio de trabajo inicializado"
+    }
+  }
+}

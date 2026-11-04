@@ -1,0 +1,36 @@
+{
+  "title": "Datos útiles. Listos para compartir.",
+  "description": "Genera informes con un resumen ejecutivo hecho con IA, guardados para que puedas volver a descargar el mismo archivo.",
+  "generated": "Se ha generado y descargado {{filename}}.",
+  "types": {
+    "marketplace_summary": "Resumen del mercado",
+    "skills_demand": "Habilidades más demandadas",
+    "platform_activity": "Actividad de la plataforma"
+  },
+  "form": {
+    "title": "Crear un informe",
+    "type": "Tipo de informe",
+    "period": "Periodo",
+    "brief": "Indicaciones del informe",
+    "briefPlaceholder": "Por ejemplo, céntrate en el avance por etapas de selección y en las ofertas con pocas candidaturas.",
+    "briefHint": "{{count}} / {{max}} caracteres. Añade contexto, preguntas o prioridades para el resumen.",
+    "briefTooLong": "Las indicaciones deben tener {{max}} caracteres como máximo.",
+    "voiceNote": "Nota de voz",
+    "attach": "Adjuntar una nota de voz",
+    "attached": "Archivo de audio adjunto",
+    "removeVoiceNote": "Quitar nota de voz",
+    "voiceHint": "Opcional. El audio se transcribe y la transcripción se añade a las indicaciones.",
+    "scope": "Exportación CSV · Todos los países · Incluye el resumen ejecutivo, las indicaciones y la transcripción · Sin CV, notas privadas ni audio.",
+    "submit": "Generar y descargar",
+    "generating": "Generando…"
+  },
+  "history": {
+    "title": "Historial de exportaciones",
+    "empty": "Tu primera instantánea útil",
+    "emptyText": "Genera un informe para ver aquí su historial de exportaciones.",
+    "meta": "{{filename}} · {{date}} · {{by}}",
+    "brief": "Indicaciones: {{brief}}",
+    "transcript": "Nota de voz ({{name}}): {{text}}",
+    "download": "Volver a descargar"
+  }
+}

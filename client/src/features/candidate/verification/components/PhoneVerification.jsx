@@ -101,18 +101,17 @@ export default function PhoneVerification({ phone }) {
                 }}
                 error={errors.phone}
               />
-              <div className={styles.actions}>
-                <Button
-                  variant={sent ? 'outline' : 'primary'}
-                  className={styles.tall}
-                  leftIcon={sent ? <Icon as={RotateCw} size={14} /> : <Icon as={Send} size={14} />}
-                  loading={sending}
-                  disabled={!number.trim() || cooldown.remaining > 0}
-                  onClick={send}
-                >
-                  {cooldown.remaining > 0 ? t('verification:phone.resendIn', { count: cooldown.remaining }) : t(sent ? 'verification:phone.resend' : 'verification:phone.send')}
-                </Button>
-              </div>
+            </div>
+            <div className={styles.sendRow}>
+              <Button
+                variant={sent ? 'outline' : 'primary'}
+                leftIcon={sent ? <Icon as={RotateCw} size={14} /> : <Icon as={Send} size={14} />}
+                loading={sending}
+                disabled={!number.trim() || cooldown.remaining > 0}
+                onClick={send}
+              >
+                {cooldown.remaining > 0 ? t('verification:phone.resendIn', { count: cooldown.remaining }) : t(sent ? 'verification:phone.resend' : 'verification:phone.send')}
+              </Button>
             </div>
             {errors.send && (
               <p className={styles.error} role="alert">
@@ -126,7 +125,9 @@ export default function PhoneVerification({ phone }) {
                     <Icon as={KeyRound} size={16} />
                   </span>
                   <p className={styles.codeText} role="status">
-                    <Trans i18nKey="verification:phone.codeShown" values={{ code: sent.code, minutes: Math.round(sent.expiresInSeconds / 60) }} components={{ code: <strong className={styles.code} /> }} />
+                    <span>
+                      <Trans i18nKey="verification:phone.codeShown" values={{ code: sent.code, minutes: Math.round(sent.expiresInSeconds / 60) }} components={{ code: <strong className={styles.code} /> }} />
+                    </span>
                     <span className={styles.codeNote}>{t('verification:phone.codeNote')}</span>
                   </p>
                 </div>

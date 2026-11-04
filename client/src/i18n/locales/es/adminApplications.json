@@ -1,0 +1,26 @@
+{
+  "title": "Conexiones, con contexto.",
+  "description": "Entiende la actividad de las candidaturas sin perder de vista a las personas que hay detrás.",
+  "export": "Exportar actividad",
+  "search": "Buscar candidato, oferta o empresa",
+  "filters": {
+    "status": "Filtrar por estado",
+    "allStatuses": "Todos los estados",
+    "country": "Filtrar por país de la oferta",
+    "allCountries": "Todos los países"
+  },
+  "columns": {
+    "candidate": "Candidato",
+    "role": "Puesto",
+    "company": "Empresa",
+    "country": "País de la oferta",
+    "applied": "Fecha",
+    "status": "Estado"
+  },
+  "caption": "Candidaturas",
+  "empty": "Aún no hay candidaturas",
+  "emptyText": "Aquí aparecen las candidaturas que envían los candidatos.",
+  "emptyFiltered": "Ninguna candidatura coincide",
+  "emptyFilteredText": "Prueba con otra búsqueda, estado o país.",
+  "clear": "Borrar filtros"
+}

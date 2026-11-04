@@ -1,21 +1,9 @@
-import { existsSync } from 'node:fs'
 import { inCountry, percent, resultsBy } from '../lib/matching.js'
 import { openAs } from '../lib/payments.js'
 import { login } from '../lib/recruiters.js'
 import { api, db } from '../lib/testApi.js'
 
 const LABELS = { strong: 'Strong match', good: 'Good match' }
-
-const FRENCH = new URL('../../client/src/i18n/locales/fr/', import.meta.url)
-/** P9-Q6 (until Phase 11): a missing French key is expected in a namespace with no French file yet, and the overflow it causes. */
-const frenchIssues = (issues) => {
-  const englishOnly = (issue) => {
-    const namespace = issue.match(/^console error: Missing i18n key ([\w-]+):/)?.[1]
-    return namespace && !existsSync(new URL(`${namespace}.json`, FRENCH))
-  }
-  const rawKeys = issues.some(englishOnly)
-  return issues.filter((issue) => !englishOnly(issue) && !(rawKeys && issue.startsWith('horizontal overflow')))
-}
 
 /** Opens the first card's "matching skills" disclosure and waits for the AI explanation (M-057). */
 async function explanation(page) {
@@ -60,7 +48,7 @@ export default {
       await ctx.screenshot(emma.page, '2-explanation-en')
       ctx.assertClean(emma.issues, 'Plus job cards')
 
-      // French: a new cache entry in French (P9-Q6 allows the English-only screen keys meanwhile).
+      // French: a new cache entry in French, on a screen with every key in French (Phase 11 removed the P9-Q6 exception).
       // The cache outlives a reseed (it saves OpenAI calls between runs), so earlier French explanations are cleared first.
       await db('aicaches', 'deleteMany', { filter: { kind: 'match_explanation', language: 'fr' } })
       const frenchBefore = 0
@@ -76,7 +64,7 @@ export default {
         ctx.check(text !== english, 'not the English text')
         await french.checkOverflow()
         await ctx.screenshot(french.page, '3-explanation-fr')
-        ctx.assertClean(frenchIssues(french.issues), 'French explanation')
+        ctx.assertClean(french.issues, 'French explanation')
       } finally {
         await api('/me', { method: 'PATCH', token: emmaToken, body: { language: 'en', languageExplicit: true } })
       }

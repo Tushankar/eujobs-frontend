@@ -77,6 +77,12 @@ export async function setValue(page, selector, value) {
   )
 }
 
+/** Picks "YYYY-MM" in a Month + Year field (the `${name}Month` and `${name}Year` selects). */
+export async function pickMonth(page, name, value) {
+  await page.select(`select[name="${name}Month"]`, value.slice(5, 7))
+  await page.select(`select[name="${name}Year"]`, value.slice(0, 4))
+}
+
 /** Chooses a file in a file input. */
 export async function chooseFile(page, selector, path) {
   const input = await page.waitForSelector(selector)

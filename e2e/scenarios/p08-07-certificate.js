@@ -43,8 +43,7 @@ export default {
     const pdf = await certificatePdf(learner.token)
     for (const expected of [NAME, title, 'CERTIFICAT DE RÉUSSITE', 'Délivré le', code]) ctx.check(pdf.text.includes(expected), `the PDF shows "${expected}"`)
     ctx.check(/\/FontFile2/.test(pdf.raw) && /Inter-Bold/.test(pdf.raw), 'the Inter fonts are embedded')
-    // The learning screens are English until Phase 11 (P8-C5), so the browser part runs in English.
-    await api('/me', { method: 'PATCH', token: learner.token, body: { language: 'en' } })
+    // The browser part runs in the learner's French (the learning screens are translated since Phase 11).
 
     const handle = await ctx.newPage()
     const { page } = handle

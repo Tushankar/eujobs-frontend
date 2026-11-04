@@ -38,5 +38,43 @@
       "description": "Permite usar tu perfil en la compatibilidad con IA. No se usa ninguna característica protegida."
     },
     "note": "Cada descarga de tu CV queda registrada."
+  },
+  "layout": {
+    "title": "Tu espacio de trabajo. Tus condiciones.",
+    "description": "Controles sencillos para tu privacidad, tus notificaciones y tus datos personales.",
+    "sections": "Secciones de la configuración",
+    "tabs": {
+      "privacy": "Privacidad y visibilidad",
+      "notifications": "Notificaciones",
+      "data": "Datos y cuenta",
+      "billing": "Facturación"
+    }
+  },
+  "data": {
+    "title": "Entiende y controla tus datos",
+    "notice": "Este prototipo interactivo guarda en este navegador los datos del perfil revisados y la actividad del espacio de trabajo. Los archivos de currículum originales se procesan en local y no se guardan; el historial de versiones solo contiene nombres de archivo y extractos revisados del perfil. No existe ninguna cuenta real ni datos en un servidor.",
+    "export": {
+      "label": "Descargar tu perfil",
+      "description": "Un CSV portátil con tu información revisada.",
+      "action": "Exportar datos",
+      "candidateDone": "Perfil exportado como candidate-profile.csv. El archivo se creó en tu navegador y no se envió a ningún sitio.",
+      "recruiterDone": "Perfil exportado como recruiter-profile.csv."
+    },
+    "delete": {
+      "label": "Borrar la información local del candidato",
+      "description": "Borra tu perfil, ofertas guardadas, candidaturas y alertas. Los registros de pago se conservan.",
+      "action": "Borrar mis datos",
+      "confirmTitle": "¿Borrar la información local del candidato?",
+      "confirmBody": "Se borrarán de este dispositivo tu perfil, las versiones del CV, el progreso de verificación, el progreso de formación, las ofertas guardadas, las candidaturas y las alertas, y tu plan volverá a Gratis. Tu configuración se conserva. Los registros de pago se conservan como registros contables; solo Restablecer demo los borra. Esta acción no se puede deshacer.",
+      "done": "La información local del candidato se ha borrado de este dispositivo."
+    },
+    "reset": {
+      "label": "Restablecer el espacio de demostración",
+      "description": "Recupera los datos de ejemplo en los tres espacios de trabajo.",
+      "action": "Restablecer demo",
+      "confirmTitle": "¿Restablecer el espacio de demostración?",
+      "confirmBody": "Se recuperan los datos de ejemplo en los espacios de candidato, reclutador y administración, y se borran los cambios guardados en este dispositivo. Esta acción no se puede deshacer.",
+      "done": "Espacio de demostración restablecido. Los datos de ejemplo vuelven a estar en los tres espacios de trabajo."
+    }
   }
 }

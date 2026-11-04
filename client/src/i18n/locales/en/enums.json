@@ -81,10 +81,10 @@
   "stageTone": { "neutral": "Neutral", "primary": "Highlighted", "success": "Success" },
   "alertFrequency": { "instant": "Instant", "daily": "Daily", "weekly": "Weekly" },
   "cvRequestReason": {
-    "verify_employment": "Verify employment",
-    "earlier_role_cv": "CV for an earlier role",
-    "compliance": "Compliance",
-    "other": "Other"
+    "verify_employment": "Verify employment history",
+    "earlier_role_cv": "Review an earlier role-specific CV",
+    "compliance": "Compliance or audit check",
+    "other": "Other recruitment purpose"
   },
   "cvRequestStatus": { "pending": "Pending", "approved": "Approved", "declined": "Declined" },
   "activityType": {
@@ -97,7 +97,7 @@
     "note_updated": "Note updated",
     "outreach": "Message sent",
     "message_reply": "Replied",
-    "cv_request": "Earlier CV requested",
+    "cv_request": "CV requested",
     "cv_request_decided": "CV request answered",
     "cv_updated": "CV updated",
     "cv_download": "CV downloaded"

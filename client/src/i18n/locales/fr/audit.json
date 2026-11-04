@@ -1,0 +1,102 @@
+{
+  "title": "Des décisions claires. Une trace claire.",
+  "description": "Consultez les événements d’administration, des utilisateurs et du système sur toute la plateforme, du plus récent au plus ancien.",
+  "export": "Exporter en CSV",
+  "search": "Rechercher des événements, des personnes ou des références",
+  "categories": "Filtrer par catégorie",
+  "allCategories": "Tous les événements",
+  "actorType": "Filtrer par auteur",
+  "allActors": "Tous les auteurs",
+  "listLabel": "Événements d’audit",
+  "empty": "Aucun événement ne correspond",
+  "emptyText": "Essayez une autre recherche, ou choisissez une autre catégorie ou un autre auteur.",
+  "detail": {
+    "category": "Catégorie",
+    "actor": "Enregistré par",
+    "time": "Heure",
+    "target": "Objet"
+  },
+  "actor": "{{name}} · {{type}}",
+  "target": {
+    "user": "Compte",
+    "role": "Rôle",
+    "job": "Offre",
+    "payment": "Paiement",
+    "course": "Formation",
+    "certificate": "Certificat",
+    "matching_policy": "Règle de correspondance",
+    "verification_submission": "Justificatifs de vérification",
+    "candidate_profile": "Profil candidat",
+    "company": "Entreprise",
+    "message": "Message",
+    "report": "Rapport"
+  },
+  "types": {
+    "moderation": {
+      "account_submitted": "{{name}} a soumis {{company}} pour examen",
+      "account_resubmitted": "{{name}} a de nouveau soumis {{company}} pour examen",
+      "account_approved": "Compte recruteur approuvé : {{name}} ({{company}})",
+      "account_rejected": "Compte recruteur refusé : {{name}} ({{company}})",
+      "account_suspended": "Compte recruteur suspendu : {{name}} ({{company}})",
+      "account_reactivated": "Compte recruteur réactivé : {{name}} ({{company}})",
+      "verification_approved": "Justificatifs de vérification approuvés : {{candidate}} ({{category}})",
+      "verification_rejected": "Justificatifs de vérification refusés : {{candidate}} ({{category}})",
+      "content_reported": "Contenu signalé : {{name}} ({{targetType}}, {{reason}})",
+      "case_opened": "Dossier ouvert depuis Offres : {{name}} ({{reason}})",
+      "content_dismissed": "Signalement classé : {{name}} ({{targetType}})",
+      "content_restricted": "Contenu restreint : {{name}} ({{targetType}})",
+      "content_lifted": "Restriction levée : {{name}} ({{targetType}})"
+    },
+    "learning": {
+      "course_created": "Formation créée : {{title}}",
+      "course_details_updated": "Détails de la formation mis à jour : {{title}}",
+      "lesson_added": "Leçon ajoutée à {{title}} : {{lesson}}",
+      "lesson_updated": "Leçon mise à jour dans {{title}} : {{lesson}}",
+      "lesson_deleted": "Leçon supprimée de {{title}} : {{lesson}}",
+      "lessons_reordered": "Leçons réordonnées : {{title}}",
+      "quiz_saved": "Quiz enregistré pour {{title}} ({{questions}} questions)",
+      "course_published": "Formation publiée : {{title}}",
+      "course_unpublished": "Formation dépubliée : {{title}}",
+      "certificate_revoked": "Certificat {{code}} révoqué : {{name}}, {{title}}"
+    },
+    "policy": {
+      "created": "Règle de correspondance créée : {{name}}",
+      "updated": "Détails de la règle de correspondance mis à jour : {{name}}",
+      "saved": "Signaux de la règle de correspondance enregistrés : {{name}} (v{{version}})",
+      "activated": "Règle de correspondance activée : {{name}} (v{{version}})",
+      "archived": "Règle de correspondance archivée : {{name}}"
+    },
+    "access": {
+      "role_created": "Rôle créé : {{role}}",
+      "role_duplicated": "Rôle dupliqué : {{role}} (à partir de {{source}})",
+      "role_updated": "Rôle mis à jour : {{role}}",
+      "role_archived": "Rôle archivé : {{role}}",
+      "user_access_saved": "Accès enregistré pour {{name}}",
+      "user_access_revoked": "Accès révoqué pour {{name}}",
+      "admin_invited": "Administrateur invité : {{name}} ({{email}}) en tant que {{role}}",
+      "invite_accepted": "Invitation acceptée : {{name}}"
+    },
+    "reports": {
+      "candidates_exported": "Candidats exportés ({{count}} lignes)",
+      "recruiters_exported": "Recruteurs exportés ({{count}} lignes)",
+      "payments_exported": "Paiements exportés ({{count}} lignes)",
+      "audit_exported": "Journal d’audit exporté ({{count}} lignes)",
+      "overview_exported": "Vue d’ensemble de la plateforme exportée ({{count}} lignes)",
+      "applications_exported": "Candidatures exportées ({{count}} lignes)",
+      "report_generated": "Rapport généré : {{report}} ({{filename}})",
+      "report_downloaded": "Rapport téléchargé à nouveau : {{report}} ({{filename}})"
+    },
+    "jobs": {
+      "status_changed": "Statut de l’offre modifié : {{title}} ({{company}}), {{from}} → {{to}}",
+      "cv_downloaded": "CV téléchargé : {{candidate}}, version {{version}} ({{company}})"
+    },
+    "payments": {
+      "payment_recorded": "Paiement {{reference}} : {{payer}}, {{item}} ({{amount}})",
+      "renewal_failed": "Échec du renouvellement {{reference}} : {{payer}}, {{item}} ({{amount}})",
+      "payment_refunded": "Paiement remboursé {{reference}} : {{payer}}, {{item}} ({{amount}})"
+    },
+    "workspace": {
+      "initialized": "Espace de travail initialisé"
+    }
+  }
+}
