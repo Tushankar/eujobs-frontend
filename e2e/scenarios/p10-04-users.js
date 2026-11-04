@@ -1,4 +1,4 @@
-import { invitedAdmin, openAsAdmin, roleWith } from '../lib/admins.js'
+import { exportText, invitedAdmin, openAsAdmin, roleWith } from '../lib/admins.js'
 import { clickText, responseTo, waitForPath, waitForText } from '../lib/flows.js'
 import { ownerToken } from '../lib/recruiters.js'
 import { api, date, db } from '../lib/testApi.js'
@@ -84,7 +84,7 @@ export default {
       // The export: a BOM, English headers for this admin, and an audit event.
       const exported = responseTo(page, '/api/v1/admin/users/export')
       await clickText(page, 'Export CSV', 'button')
-      const csv = await (await exported).text()
+      const csv = await exportText((await exported).url(), token)
       ctx.check(csv.charCodeAt(0) === 0xfeff, 'the CSV starts with a BOM')
       ctx.check(csv.slice(1).startsWith('Name,Email,Joined,Status,Country,Right to work,Verification,Completeness %,Plan'), `English headers (${csv.slice(1, 90)})`)
       const audited = await db('auditevents', 'find', { filter: { type: 'reports.candidates_exported' } })
@@ -92,16 +92,16 @@ export default {
       // Headers follow the admin's language: a French-speaking admin who may export.
       const exporter = await invitedAdmin('Exporter', (await roleWith('Exporter', ['users.view', 'reports.export'])).id)
       await api('/me', { method: 'PATCH', token: exporter.token, body: { language: 'fr', languageExplicit: true } })
-      const french = await fetch(`${new URL(page.url()).origin}/api/v1/admin/users/export?role=candidate`, { headers: { Authorization: `Bearer ${exporter.token}` } })
-      const frenchText = await french.text()
-      ctx.check(frenchText.slice(1).startsWith('Nom,E-mail,Inscription,Statut,Pays'), `French headers for a French admin (${frenchText.slice(1, 60)})`)
+      const frenchText = await exportText(`${new URL(page.url()).origin}/api/v1/admin/users/export?role=candidate`, exporter.token)
+      ctx.check(frenchText.charCodeAt(0) === 0xfeff && frenchText.slice(1).startsWith('Nom,E-mail,Inscription,Statut,Pays'), `French headers for a French admin (${frenchText.slice(1, 60)})`)
 
       // Manage → the detail page.
       await page.goto(`${ctx.webUrl}/admin/candidates?q=Emma`, { waitUntil: 'networkidle0' })
       await page.waitForSelector('main table a[aria-label="Manage Emma Wilson"]')
       await page.click('main table a[aria-label="Manage Emma Wilson"]')
       await waitForPath(page, '/admin/candidates/')
-      await waitForText(page, 'Applications')
+      // The sidebar also says Applications: wait for the page's own section headings.
+      await page.waitForFunction(() => [...document.querySelectorAll('main section h2')].some((title) => title.innerText === 'Applications'))
       const sections = await page.$$eval('main section h2', (titles) => titles.map((title) => title.innerText))
       for (const name of ['Account', 'Profile', 'Privacy', 'Verification', 'Right to work', 'Plan', 'Applications', 'Learning', 'History']) {
         ctx.check(sections.includes(name), `the detail page has ${name} (got ${sections.join(', ')})`)
@@ -121,7 +121,7 @@ export default {
       await handle.checkOverflow()
       await ctx.screenshot(page, '6-recruiters')
       await page.click('main table a[aria-label="Manage Sarah Miller"]')
-      await waitForText(page, 'KYC documents')
+      await page.waitForFunction(() => [...document.querySelectorAll('main section h2')].some((title) => title.innerText === 'KYC documents'))
       const recruiterSections = await page.$$eval('main section h2', (titles) => titles.map((title) => title.innerText))
       for (const name of ['Account', 'Company', 'KYC documents', 'Review history', 'Jobs', 'Learning', 'History']) {
         ctx.check(recruiterSections.includes(name), `the recruiter page has ${name} (got ${recruiterSections.join(', ')})`)

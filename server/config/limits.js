@@ -145,7 +145,7 @@ export const LIMITS = {
     policyDescription: { min: 20, max: 500 },
     oversightCandidates: 4,
   },
-  // M-157, M-158, A: admin §2.2; department is a descriptive label (P10-C)
+  // M-157, M-158, A: admin §2.2; department is a descriptive label (P10-C1)
   adminRole: { name: { min: 2, max: 40 }, description: { max: 240 }, department: { max: 60 } },
   // M-206: the four paginated admin tables
   adminTable: { pageSize: 20, maxPageSize: 100 },

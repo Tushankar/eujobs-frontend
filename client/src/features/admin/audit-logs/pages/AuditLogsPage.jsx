@@ -1,6 +1,5 @@
 import { useState } from 'react'
 import { useTranslation } from 'react-i18next'
-import { useSearchParams } from 'react-router-dom'
 import { Download, Search } from 'lucide-react'
 import { can } from '@/app/permissions.js'
 import EmptyState from '@/components/common/EmptyState.jsx'
@@ -10,6 +9,7 @@ import Pagination from '@/components/common/Pagination.jsx'
 import { Button, Icon, SelectField, TextField } from '@/components/ui'
 import { downloadFromApi } from '@/lib/download.js'
 import { useErrorText } from '@/lib/forms.js'
+import { useUrlFilters } from '@/lib/useUrlFilters.js'
 import { usePreferences } from '@/lib/preferences.js'
 import { useGetAuditEventsQuery } from '../api.js'
 import AuditEventRow from '../components/AuditEventRow.jsx'
@@ -27,7 +27,7 @@ export default function AuditLogsPage() {
   const { t } = useTranslation(['audit', 'enums'])
   const errorText = useErrorText()
   const { me } = usePreferences()
-  const [params, setParams] = useSearchParams()
+  const { params, setFilter, search, setSearch } = useUrlFilters()
   const [openId, setOpenId] = useState(null)
   const [exporting, setExporting] = useState(false)
   const [exportError, setExportError] = useState('')
@@ -35,12 +35,8 @@ export default function AuditLogsPage() {
   const query = { page: Number(params.get('page')) || 1, ...Object.fromEntries(Object.entries(filters).filter(([, value]) => value)) }
   const { data, isSuccess } = useGetAuditEventsQuery(query, { refetchOnMountOrArgChange: true })
 
-  function setFilter(name, value) {
-    const next = new URLSearchParams(params)
-    if (value) next.set(name, value)
-    else next.delete(name)
-    if (name !== 'page') next.delete('page')
-    setParams(next, { replace: true })
+  function changeFilter(name, value) {
+    setFilter(name, value)
     setOpenId(null)
   }
 
@@ -83,22 +79,25 @@ export default function AuditLogsPage() {
           aria-label={t('search')}
           placeholder={t('search')}
           type="search"
-          value={filters.q}
-          onChange={(event) => setFilter('q', event.target.value)}
+          value={search}
+          onChange={(event) => {
+            setSearch(event.target.value)
+            setOpenId(null)
+          }}
         />
         <SelectField
           className={styles.actor}
           name="actorType"
           aria-label={t('actorType')}
           value={filters.actorType}
-          onChange={(event) => setFilter('actorType', event.target.value)}
+          onChange={(event) => changeFilter('actorType', event.target.value)}
           options={[{ value: '', label: t('allActors') }, ...ACTOR_TYPES.map((type) => ({ value: type, label: t(`enums:actorType.${type}`) }))]}
         />
         <FilterChips
           label={t('categories')}
           options={[{ id: 'all', label: t('allCategories') }, ...CATEGORIES.map((id) => ({ id, label: t(`enums:auditCategory.${id}`) }))]}
           value={filters.category || 'all'}
-          onChange={(next) => setFilter('category', next === 'all' ? '' : next)}
+          onChange={(next) => changeFilter('category', next === 'all' ? '' : next)}
         />
       </div>
 
@@ -112,7 +111,7 @@ export default function AuditLogsPage() {
         ) : (
           isSuccess && <EmptyState icon={Search} title={t('empty')} description={t('emptyText')} />
         )}
-        {data && <Pagination page={data.page} pageSize={data.pageSize} total={data.total} onChange={(next) => setFilter('page', String(next))} />}
+        {data && <Pagination page={data.page} pageSize={data.pageSize} total={data.total} onChange={(next) => changeFilter('page', String(next))} />}
       </section>
     </>
   )

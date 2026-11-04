@@ -1,9 +1,9 @@
-import { openAsAdmin } from '../lib/admins.js'
+import { exportText, openAsAdmin } from '../lib/admins.js'
 import { completeCandidate, recruiterWithJob } from '../lib/applicants.js'
-import { clickText, responseTo, waitForText } from '../lib/flows.js'
+import { clickText, responseTo } from '../lib/flows.js'
 import { API_URL } from '../lib/env.js'
 import { freeCandidate, rowsOf, stripe, subscribeThroughApi, until, waitForPlan } from '../lib/payments.js'
-import { submittedRecruiter } from '../lib/recruiters.js'
+import { ownerToken, submittedRecruiter } from '../lib/recruiters.js'
 import { api, db } from '../lib/testApi.js'
 
 const rows = (page) => page.$$eval('main li[data-audit-type]', (items) => items.map((item) => ({ type: item.dataset.auditType, actor: item.dataset.actorType, text: item.innerText })))
@@ -53,7 +53,7 @@ export default {
     ctx.check(jobRows.some((row) => row.type === 'jobs.status_changed' && row.text.includes(job.title) && row.text.includes('Published → Paused') && row.actor === 'user'), 'the recruiter’s status change is listed')
     ctx.check(jobRows.some((row) => row.type === 'jobs.cv_downloaded' && row.text.includes(candidate.fullName) && row.actor === 'user'), 'the CV download is listed')
     await page.click('main li[data-audit-type="jobs.cv_downloaded"] button')
-    await waitForText(page, 'Recorded by')
+    await page.waitForSelector('main li[data-audit-type="jobs.cv_downloaded"] dl')
     await ctx.screenshot(page, '2-jobs')
 
     // Moderation: the KYC submission.
@@ -79,7 +79,7 @@ export default {
     await page.select('select[name="actorType"]', '')
     const exported = responseTo(page, '/api/v1/admin/audit-events/export')
     await clickText(page, 'Export CSV', 'button')
-    const csv = await (await exported).text()
+    const csv = await exportText((await exported).url(), await ownerToken())
     ctx.check(csv.charCodeAt(0) === 0xfeff && csv.slice(1).startsWith('Date,Category,Actor type,Actor,Event'), `the export (${csv.slice(1, 60)})`)
     await page.reload({ waitUntil: 'networkidle0' })
     await page.waitForSelector('main li[data-audit-type="reports.audit_exported"][data-actor-type="admin"]')

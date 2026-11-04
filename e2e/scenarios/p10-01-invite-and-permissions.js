@@ -63,7 +63,7 @@ export default {
     await invitee.page.keyboard.up('Control')
     await invitee.page.waitForSelector('#global-search-input')
     const found = await invitee.page.$$eval('[role="dialog"] ul button', (buttons) => buttons.map((button) => button.textContent.trim()))
-    ctx.check(JSON.stringify(found) === JSON.stringify([...STAFF_PAGES, 'Settings', 'Help']), `search shows only permitted pages (got ${found.join(', ')})`)
+    ctx.check(JSON.stringify(found) === JSON.stringify([...STAFF_PAGES, 'Settings', 'Help & resources']), `search shows only permitted pages (got ${found.join(', ')})`)
     await ctx.screenshot(invitee.page, '5-search')
     await invitee.page.keyboard.press('Escape')
 

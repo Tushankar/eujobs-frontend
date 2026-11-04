@@ -1,6 +1,5 @@
 import { useState } from 'react'
 import { useTranslation } from 'react-i18next'
-import { useSearchParams } from 'react-router-dom'
 import { CircleAlert, Download, Repeat, Search, TrendingUp, Wallet } from 'lucide-react'
 import { can } from '@/app/permissions.js'
 import EmptyState from '@/components/common/EmptyState.jsx'
@@ -13,6 +12,7 @@ import PaymentsTable from '@/features/payments/components/PaymentsTable.jsx'
 import { useCountryOptions } from '@/lib/countries.js'
 import { downloadFromApi } from '@/lib/download.js'
 import { useErrorText } from '@/lib/forms.js'
+import { useUrlFilters } from '@/lib/useUrlFilters.js'
 import { useFormat, usePreferences } from '@/lib/preferences.js'
 import { useGetAdminPaymentQuery, useGetAdminPaymentsQuery, useGetPaymentStatsQuery } from '../api.js'
 import styles from './PaymentsPage.module.css'
@@ -100,7 +100,7 @@ export default function PaymentsPage() {
   const errorText = useErrorText()
   const { me } = usePreferences()
   const countries = useCountryOptions().filter((country) => !country.isRemote)
-  const [params, setParams] = useSearchParams()
+  const { params, setFilter, search, setSearch, clearFilters } = useUrlFilters()
   const [selected, setSelected] = useState(null)
   const [exporting, setExporting] = useState(false)
   const [exportError, setExportError] = useState('')
@@ -108,14 +108,6 @@ export default function PaymentsPage() {
   const query = { page: Number(params.get('page')) || 1, ...Object.fromEntries(Object.entries(filters).filter(([, value]) => value)) }
   const { data, isSuccess } = useGetAdminPaymentsQuery(query, { refetchOnMountOrArgChange: true })
   const { data: stats } = useGetPaymentStatsQuery(filters.country ? { country: filters.country } : {}, { refetchOnMountOrArgChange: true })
-
-  function setFilter(name, value) {
-    const next = new URLSearchParams(params)
-    if (value) next.set(name, value)
-    else next.delete(name)
-    if (name !== 'page') next.delete('page')
-    setParams(next, { replace: true })
-  }
 
   async function exportCsv() {
     setExporting(true)
@@ -168,8 +160,8 @@ export default function PaymentsPage() {
           name="q"
           aria-label={t('filters.search')}
           placeholder={t('filters.search')}
-          value={filters.q}
-          onChange={(event) => setFilter('q', event.target.value)}
+          value={search}
+          onChange={(event) => setSearch(event.target.value)}
         />
         {[...Object.keys(FILTERS), 'country'].map((name) => (
           <SelectField
@@ -200,7 +192,7 @@ export default function PaymentsPage() {
               title={t('empty')}
               description={t('emptyText')}
               action={
-                <Button variant="outline" onClick={() => setParams({}, { replace: true })}>
+                <Button variant="outline" onClick={clearFilters}>
                   {t('clear')}
                 </Button>
               }

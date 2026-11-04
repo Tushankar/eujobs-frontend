@@ -71,7 +71,7 @@ export default {
 
     // Archive with an admin assigned → blocked; the unused copy → archived.
     const [original] = await db('adminroles', 'find', { filter: { name } })
-    await invitedAdmin('Holder', String(original._id))
+    await invitedAdmin('Holder', original._id.$oid ?? String(original._id))
     await page.reload({ waitUntil: 'networkidle0' })
     handle.allow(409, '/archive')
     await page.click(`${card(name)} button[aria-label="Archive ${name}"]`)

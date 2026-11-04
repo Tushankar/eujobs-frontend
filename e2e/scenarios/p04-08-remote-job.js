@@ -1,5 +1,5 @@
 import { onboardedCandidate } from '../lib/candidates.js'
-import { clickText, signInWithForm, waitForText } from '../lib/flows.js'
+import { clickText, responseTo, signInWithForm, waitForText } from '../lib/flows.js'
 import { approvedRecruiter, jobBody, login, postJob } from '../lib/recruiters.js'
 import { api, TEST_PASSWORD } from '../lib/testApi.js'
 

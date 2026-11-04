@@ -1,11 +1,14 @@
-import { openAsAdmin } from '../lib/admins.js'
+import { exportText, openAsAdmin } from '../lib/admins.js'
 import { clickText, responseTo, waitForText } from '../lib/flows.js'
 import { advanceClock, freeCandidate, rowsOf, stripe, subscribeThroughApi, TEST_DB, until, waitForPlan } from '../lib/payments.js'
 import { ownerToken } from '../lib/recruiters.js'
 import { api, db } from '../lib/testApi.js'
 
-// OQ-6b: an English-speaking admin formats as en-IE.
-const money = ({ amountMinor, currency }) => new Intl.NumberFormat('en-IE', { style: 'currency', currency }).format(amountMinor / 100)
+// OQ-6b: an English-speaking admin formats as en-IE; whole amounts show no decimals (as the client's formatMoney).
+const money = ({ amountMinor, currency }) => {
+  const digits = amountMinor % 100 === 0 ? 0 : 2
+  return new Intl.NumberFormat('en-IE', { style: 'currency', currency, minimumFractionDigits: digits, maximumFractionDigits: digits }).format(amountMinor / 100)
+}
 
 /** U34: totals per currency, largest first; the card shows at most 3, then "+n more". */
 function perCurrency(entries) {
@@ -17,6 +20,17 @@ const cardLines = (totals) => [...totals.slice(0, 3).map(money), ...(totals.leng
 
 const cardValue = (page, label) =>
   page.$$eval('main section', (cards, wanted) => cards.find((card) => card.querySelector('p')?.innerText.trim() === wanted)?.querySelector('p span')?.innerText.trim(), label)
+/**
+ * Empties the search box from the keyboard (a triple click does not select a search field's text). The field is focused,
+ * not clicked: at 375 px the sticky header can cover it.
+ */
+async function clearSearch(page) {
+  await page.focus('input[name="q"]')
+  await page.keyboard.down('Control')
+  await page.keyboard.press('a')
+  await page.keyboard.up('Control')
+  await page.keyboard.press('Backspace')
+}
 const rowsShown = (page) => page.$$eval('main table tbody tr', (rows) => rows.map((row) => row.innerText.replace(/\s+/g, ' ')))
 
 let setup
@@ -72,7 +86,8 @@ export default {
     for (const [label, value] of Object.entries(expected)) {
       await page.waitForFunction((text) => document.querySelector('main').innerText.includes(text.split(' ')[0]), {}, value)
       const shown = (await cardValue(page, label))?.replace(/\s+/g, ' ')
-      ctx.check(shown === value, `${label}: ${value} (shown ${shown})`)
+      // Intl separates some currencies with a no-break space, so both sides compare with plain spaces.
+      ctx.check(shown === value.replace(/\s+/g, ' '), `${label}: ${value} (shown ${shown})`)
     }
     await handle.checkOverflow()
     await ctx.screenshot(page, '1-cards')
@@ -80,10 +95,19 @@ export default {
     // A renewal, a failed renewal and a refund are rows.
     const search = async (text, count) => {
       const answered = responseTo(page, ['/api/v1/admin/payments?', `q=${encodeURIComponent(text).replace(/%20/g, '+')}`])
-      await page.click('input[name="q"]', { clickCount: 3 })
+      await clearSearch(page)
       await page.type('input[name="q"]', text)
       await answered.catch(() => {})
-      await page.waitForFunction((wanted, n) => [...document.querySelectorAll('main table tbody tr')].filter((row) => row.innerText.includes(wanted)).length === n, {}, text, count)
+      // The search has applied when every row is the payer's.
+      await page.waitForFunction(
+        (wanted, n) => {
+          const rows = [...document.querySelectorAll('main table tbody tr')]
+          return rows.length === n && rows.every((row) => row.innerText.includes(wanted))
+        },
+        {},
+        text,
+        count,
+      )
       return rowsShown(page)
     }
     const renewalRows = await search(renewing.fullName, 3)
@@ -106,8 +130,7 @@ export default {
     ctx.check(await page.$('main table [data-payment-status="refunded"]'), 'the refund is a row')
 
     // Seeded rows carry their badge (P10-Q5).
-    await page.click('input[name="q"]', { clickCount: 3 })
-    await page.keyboard.press('Backspace')
+    await clearSearch(page)
     const seeded = responseTo(page, ['/api/v1/admin/payments?', 'source=seed'])
     await page.select('select[name="source"]', 'seed')
     await seeded
@@ -128,7 +151,7 @@ export default {
 
     const exported = responseTo(page, '/api/v1/admin/payments/export')
     await clickText(page, 'Export CSV', 'button')
-    const csv = await (await exported).text()
+    const csv = await exportText((await exported).url(), await ownerToken())
     ctx.check(csv.charCodeAt(0) === 0xfeff && csv.includes('Reference,Date,Payer'), 'the export')
     ctx.assertClean(handle.issues, 'payments')
   },

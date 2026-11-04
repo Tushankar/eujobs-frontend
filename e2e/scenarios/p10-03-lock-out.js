@@ -14,7 +14,7 @@ export default {
     const admin = await invitedAdmin('Manager', manager.id)
     const [owner] = await db('users', 'find', { filter: { isOwner: true } })
 
-    const ownerRevoke = await api(`/admin/access/users/${owner._id}`, { method: 'DELETE', token: admin.token })
+    const ownerRevoke = await api(`/admin/access/users/${owner._id.$oid ?? owner._id}`, { method: 'DELETE', token: admin.token })
     ctx.check(ownerRevoke.status === 409 && ownerRevoke.body.error.params.reason === 'owner', `revoking the Owner → OWNER_PROTECTED (got ${JSON.stringify(ownerRevoke.body)})`)
 
     const handle = await ctx.newPage()

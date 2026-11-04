@@ -13,6 +13,7 @@ const SAMPLE_PARAMS = {
   already_registered: { link: `${config.clientOrigin}/sign-in`, secondaryLink: `${config.clientOrigin}/forgot-password` },
   recruiter_email_code: { code: '123456' },
   password_reset: { link: `${config.clientOrigin}/reset-password?token=mail-test` },
+  admin_invite: { inviter: 'Workspace admin', role: 'Staff', link: `${config.clientOrigin}/admin/set-password?token=mail-test` },
   verification_approved: { link: `${config.clientOrigin}/candidate/verification` },
   verification_rejected: { reason: 'The photo page is not readable.', link: `${config.clientOrigin}/candidate/verification` },
   recruiter_approved: { company: 'Mail Test Ltd', link: `${config.clientOrigin}/recruiter/sign-in` },

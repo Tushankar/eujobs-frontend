@@ -1,6 +1,5 @@
 import { useState } from 'react'
 import { useTranslation } from 'react-i18next'
-import { useSearchParams } from 'react-router-dom'
 import { Download, Users } from 'lucide-react'
 import { can } from '@/app/permissions.js'
 import { WORKSPACES, workspacePath } from '@/app/workspaces.js'
@@ -14,6 +13,7 @@ import { Button, Icon, SelectField, TextField } from '@/components/ui'
 import { useCountryOptions } from '@/lib/countries.js'
 import { downloadFromApi } from '@/lib/download.js'
 import { useErrorText } from '@/lib/forms.js'
+import { useUrlFilters } from '@/lib/useUrlFilters.js'
 import { useFormat, usePreferences } from '@/lib/preferences.js'
 import { useGetAdminUsersQuery } from '../api.js'
 import styles from './UsersDirectory.module.css'
@@ -44,7 +44,7 @@ export default function UsersDirectory({ role }) {
   const errorText = useErrorText()
   const { me } = usePreferences()
   const countries = useCountryOptions().filter((country) => !country.isRemote)
-  const [params, setParams] = useSearchParams()
+  const { params, setFilter, search, setSearch, clearFilters } = useUrlFilters()
   const [exporting, setExporting] = useState(false)
   const [exportError, setExportError] = useState('')
   const filters = Object.fromEntries(['q', ...FILTERS[role]].map((name) => [name, params.get(name) ?? '']))
@@ -52,14 +52,6 @@ export default function UsersDirectory({ role }) {
   const query = { role, page, ...Object.fromEntries(Object.entries(filters).filter(([, value]) => value)) }
   const { data, isSuccess } = useGetAdminUsersQuery(query, { refetchOnMountOrArgChange: true })
   const listPath = workspacePath(WORKSPACES.admin, `${role}s`)
-
-  function setFilter(name, value) {
-    const next = new URLSearchParams(params)
-    if (value) next.set(name, value)
-    else next.delete(name)
-    if (name !== 'page') next.delete('page')
-    setParams(next, { replace: true })
-  }
 
   async function exportCsv() {
     setExporting(true)
@@ -167,8 +159,8 @@ export default function UsersDirectory({ role }) {
           aria-label={t('search')}
           placeholder={t('search')}
           className={styles.search}
-          value={filters.q}
-          onChange={(event) => setFilter('q', event.target.value)}
+          value={search}
+          onChange={(event) => setSearch(event.target.value)}
         />
         {FILTERS[role].map((name) => (
           <SelectField
@@ -199,7 +191,7 @@ export default function UsersDirectory({ role }) {
               title={t('empty')}
               description={t('emptyText')}
               action={
-                <Button variant="outline" onClick={() => setParams({}, { replace: true })}>
+                <Button variant="outline" onClick={clearFilters}>
                   {t('filters.clear')}
                 </Button>
               }
