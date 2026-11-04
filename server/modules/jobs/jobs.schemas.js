@@ -37,6 +37,14 @@ export const jobBody = z.object({
 
 export const jobParams = z.object({ id: objectId })
 export const statusBody = z.object({ status: z.enum(ENUMS.jobStatus) })
+// Admin › Jobs (M-046, P10-Q4, P10-Q15): status, country (REMOTE included), search, server pages.
+export const adminJobsQuery = z.object({
+  q: z.string().trim().max(100).optional(),
+  status: z.enum(ENUMS.jobStatus).optional(),
+  country: z.string().trim().toUpperCase().regex(/^([A-Z]{2}|REMOTE)$/).optional(),
+  ...pageQuery,
+})
+
 export const suggestionsQuery = z.object({ q: z.string().trim().max(J.requiredSkills.itemMax).default('') })
 
 /* Candidate browsing (M-137, OD2, U25, P4-Q4). Lists of values arrive as comma-separated text. */

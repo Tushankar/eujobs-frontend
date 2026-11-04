@@ -2,10 +2,12 @@ import { LIMITS } from '../../config/limits.js'
 import { scheduleTask } from '../../jobs/scheduler.js'
 import { actorFor, recordAudit } from '../../lib/audit.js'
 import { AppError, fieldError } from '../../lib/errors.js'
+import { paginate } from '../../lib/pages.js'
 import { searchText, skillEntries } from '../../lib/skills.js'
 import { validationError } from '../../lib/validate.js'
 import { Company } from '../companies/companies.model.js'
 import { Country } from '../meta/meta.model.js'
+import { ModerationCase } from '../moderation/moderation.model.js'
 import { refreshRelevantCounts, scheduleRecompute } from '../matching/matching.service.js'
 import { resolvePlace } from '../places/places.service.js'
 import { Job } from './jobs.model.js'
@@ -181,12 +183,21 @@ async function ownJob(company, id) {
   return job
 }
 
-/** P9-Q5: every job that is not a draft, newest first, with its company's display name. */
-export async function adminJobs() {
-  const jobs = await Job.find({ status: { $ne: 'draft' } }).sort({ publishedAt: -1 })
+/**
+ * Admin › Jobs (M-046, P9-Q5, P10-Q4, P10-Q15): every job of every status, newest first, with its company's display
+ * name and its open moderation case; filtered by status, country (`job.country`, REMOTE included) and a search in
+ * the title and company, server-paginated.
+ */
+export async function adminJobs({ q, status, country, ...page }) {
+  const jobs = await Job.find({ ...(status && { status }), ...(country && { country }) }).sort({ publishedAt: -1, createdAt: -1 })
   const companies = new Map((await Company.find({ _id: { $in: jobs.map((job) => job.companyId) } }, 'displayName')).map((company) => [String(company._id), company]))
-  const items = jobs.map((job) => jobDto(job, companies.get(String(job.companyId))))
-  return { items, total: items.length, page: 1, pageSize: items.length }
+  const needle = q?.toLowerCase()
+  const matching = needle ? jobs.filter((job) => [job.title, companies.get(String(job.companyId))?.displayName].some((text) => text?.toLowerCase().includes(needle))) : jobs
+  const result = paginate(matching, page)
+  const cases = new Map(
+    (await ModerationCase.find({ targetType: 'job', targetId: { $in: result.items.map((job) => job._id) }, status: 'open' }, 'targetId')).map((item) => [String(item.targetId), String(item._id)]),
+  )
+  return { ...result, items: result.items.map((job) => ({ ...jobDto(job, companies.get(String(job.companyId))), openCaseId: cases.get(String(job._id)) ?? null })) }
 }
 
 export async function listJobs(company) {
