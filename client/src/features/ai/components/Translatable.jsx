@@ -11,8 +11,9 @@ import styles from './Translatable.module.css'
 /**
  * Translate on demand (M-144): `source` names the text on the server ({ entity, id, field, entryId }); `children(texts)`
  * renders the original `texts` or their translation into the reader's language, with "Show original" to go back.
+ * `meta` (a message's time, Report) shares the line of the Translate control.
  */
-export default function Translatable({ source, texts, children }) {
+export default function Translatable({ source, texts, children, meta }) {
   const { t } = useTranslation('ai')
   const { language } = usePreferences()
   const [translate, state] = useTranslateMutation()
@@ -33,6 +34,7 @@ export default function Translatable({ source, texts, children }) {
     <div className={styles.root} data-translatable={source.field}>
       {children(translated || texts)}
       <div className={styles.controls}>
+        {meta}
         {translated ? (
           <>
             <span className={styles.note}>{t('translate.done', { language: languageName(language) })}</span>

@@ -23,11 +23,14 @@
     "locked": "Replying is part of Plus. On the Free plan you can read every message.",
     "upgrade": "Upgrade to reply",
     "send": "Send",
+    "suggestions": "Suggested replies",
+    "suggestionsHint": "Written by AI. Pick one to edit it before sending.",
     "closed": "This conversation is closed: the other side deleted their account."
   },
   "form": {
     "label": "Message",
-    "count": "{{count}} / {{max}} characters"
+    "count": "{{count}} / {{max}} characters",
+    "placeholder": "Write a message…"
   },
   "start": {
     "button": "Message the company",

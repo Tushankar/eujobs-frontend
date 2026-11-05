@@ -24,11 +24,14 @@
     "locked": "Répondre fait partie de Plus. Avec l’offre Free, vous pouvez lire tous les messages.",
     "upgrade": "Passer à Plus pour répondre",
     "send": "Envoyer",
+    "suggestions": "Réponses suggérées",
+    "suggestionsHint": "Rédigées par l’IA. Choisissez-en une pour la modifier avant l’envoi.",
     "closed": "Cette conversation est fermée : l’autre partie a supprimé son compte."
   },
   "form": {
     "label": "Message",
-    "count": "{{count}} / {{max}} caractères"
+    "count": "{{count}} / {{max}} caractères",
+    "placeholder": "Écrivez un message…"
   },
   "start": {
     "button": "Écrire à l’entreprise",

@@ -24,11 +24,14 @@
     "locked": "Responder forma parte de Plus. Con el plan Free puedes leer todos los mensajes.",
     "upgrade": "Mejora tu plan para responder",
     "send": "Enviar",
+    "suggestions": "Respuestas sugeridas",
+    "suggestionsHint": "Escritas por IA. Elige una para editarla antes de enviarla.",
     "closed": "Esta conversación está cerrada: la otra parte eliminó su cuenta."
   },
   "form": {
     "label": "Mensaje",
-    "count": "{{count}} / {{max}} caracteres"
+    "count": "{{count}} / {{max}} caracteres",
+    "placeholder": "Escribe un mensaje…"
   },
   "start": {
     "button": "Escribir a la empresa",

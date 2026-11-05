@@ -18,11 +18,13 @@ export const messagesApi = api.injectEndpoints({
     getThread: build.query({ query: (id) => `/conversations/${id}/messages`, providesTags: ['Conversations'] }),
     startConversation: build.mutation({ query: (body) => ({ url: '/conversations', method: 'POST', body }), invalidatesTags: ['Conversations', 'CandidateActivity'] }),
     sendMessage: build.mutation({ query: ({ id, body }) => ({ url: `/conversations/${id}/messages`, method: 'POST', body: { body } }), invalidatesTags: ['Conversations', 'CandidateActivity'] }),
+    // AI suggested replies to the latest message; the message id keys the cache, so a new message asks again.
+    getReplySuggestions: build.query({ query: ({ id }) => `/conversations/${id}/reply-suggestions` }),
     markRead: build.mutation({ query: (id) => ({ url: `/conversations/${id}/read`, method: 'POST' }), invalidatesTags: ['Conversations', 'Counters'] }),
   }),
 })
 
-export const { useStartConversationMutation, useSendMessageMutation, useMarkReadMutation } = messagesApi
+export const { useStartConversationMutation, useSendMessageMutation, useMarkReadMutation, useGetReplySuggestionsQuery } = messagesApi
 
 export function useConversations() {
   const visible = usePageVisible()

@@ -151,7 +151,8 @@
     "cv_draft": "Borrador del CV",
     "policy_suggestion": "Sugerencia de política",
     "report_summary": "Resumen del informe",
-    "skill_name": "Nombre de habilidad"
+    "skill_name": "Nombre de habilidad",
+    "reply_suggestions": "Respuestas sugeridas"
   },
   "emailType": {
     "verify_email": "Confirmación del correo",

@@ -76,7 +76,8 @@ export const LIMITS = {
   pipeline: { stages: { min: 2, max: 12 }, stageName: { min: 1, max: 24 } },
   applicationEmail: { statusDelayMs: 10 * MINUTE, newApplicationsWindowMs: HOUR },
   // M-086, M-089, U13
-  message: { body: { max: 2000 } },
+  // replySuggestions: the latest messages (each cut to `chars`) the suggested replies read, and how many come back.
+  message: { body: { max: 2000 }, replySuggestions: { messages: 4, chars: 600, count: 3 } },
   messageEmail: { unreadDelayMs: 15 * MINUTE, perConversationMs: HOUR },
   // P11b-Q2, Q5: the bell lists the latest 10; the Notifications page 20 a page; kept 90 days
   notifications: { latest: 10, pageSize: 20, retentionDays: 90 },

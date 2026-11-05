@@ -1,4 +1,4 @@
-import { useId } from 'react'
+import { useEffect, useId, useRef } from 'react'
 import { useTranslation } from 'react-i18next'
 import { useGetConfigQuery } from '@/app/api.js'
 import { Button, TextareaField } from '@/components/ui'
@@ -8,8 +8,9 @@ import styles from './MessageForm.module.css'
 /**
  * A message body (M-086: text only, up to the server's limit) with the character count. `onSubmit(body)` returns a
  * promise; a failure maps the server's field errors. Used by the thread composer and the start dialog (`formId`).
+ * `draft` ({ text }, a new object each time) replaces the body and focuses it: a picked suggested reply.
  */
-export default function MessageForm({ initialBody = '', submitLabel, onSubmit, resetOnSuccess = false, formId, rows = 3, autoFocus = false }) {
+export default function MessageForm({ initialBody = '', submitLabel, onSubmit, resetOnSuccess = false, formId, rows = 3, autoFocus = false, draft, placeholder }) {
   const { t } = useTranslation()
   const errorText = useErrorText()
   const { data: config } = useGetConfigQuery()
@@ -17,6 +18,13 @@ export default function MessageForm({ initialBody = '', submitLabel, onSubmit, r
   const { values, set, errors, failure, run } = useFormState({ body: initialBody })
   const generatedId = useId()
   const id = formId ?? generatedId
+  const field = useRef(null)
+
+  useEffect(() => {
+    if (!draft) return
+    set('body', draft.text)
+    field.current?.focus()
+  }, [draft, set])
 
   async function handleSubmit(event) {
     event.preventDefault()
@@ -30,7 +38,9 @@ export default function MessageForm({ initialBody = '', submitLabel, onSubmit, r
       <TextareaField
         label={t('messages:form.label')}
         name="body"
+        ref={field}
         rows={rows}
+        placeholder={placeholder}
         data-autofocus={autoFocus || undefined}
         value={values.body}
         hint={max ? t('messages:form.count', { count: values.body.length, max }) : undefined}

@@ -151,7 +151,8 @@
     "cv_draft": "CV draft",
     "policy_suggestion": "Policy suggestion",
     "report_summary": "Report summary",
-    "skill_name": "Skill name"
+    "skill_name": "Skill name",
+    "reply_suggestions": "Suggested replies"
   },
   "emailType": {
     "verify_email": "Email confirmation",

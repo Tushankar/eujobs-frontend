@@ -1,7 +1,10 @@
+import { LIMITS } from '../../config/limits.js'
 import { AppError, fieldError } from '../../lib/errors.js'
 import { signedUrl } from '../../lib/files.js'
 import { Application } from '../applications/applications.model.js'
 import { CandidateProfile } from '../candidates/candidates.model.js'
+import { write } from '../ai/ai.facts.js'
+import { PROMPTS } from '../ai/ai.prompts.js'
 import { Company } from '../companies/companies.model.js'
 import { logoUrls } from '../companies/companies.service.js'
 import { accessibleCandidate, recordActivity } from '../discovery/discovery.service.js'
@@ -88,6 +91,27 @@ export async function getMessages(user, company, id) {
   const messages = await Message.find({ conversationId: conversation._id }).sort({ createdAt: 1 })
   const [dto] = await conversationDtos(user, [conversation])
   return { conversation: dto, items: messages.map((message) => messageDto(message, user.role)) }
+}
+
+/**
+ * GET /conversations/:id/reply-suggestions: three replies to the latest message when it is the other side's, from the
+ * last few messages only (few tokens) and cached per message and language, so reopening the thread costs nothing.
+ */
+export async function replySuggestions(user, company, id) {
+  const conversation = await ownConversation(user, company, id)
+  const R = LIMITS.message.replySuggestions
+  const latest = (await Message.find({ conversationId: conversation._id }).sort({ createdAt: -1 }).limit(R.messages)).reverse()
+  const last = latest.at(-1)
+  if (conversation.closedAt || !last || last.senderRole === user.role) return { messageId: last ? String(last._id) : null, replies: [] }
+  const [dto] = await conversationDtos(user, [conversation])
+  const input = {
+    you: user.role,
+    otherSide: { role: otherSide(user.role), name: dto.counterpart?.name ?? null },
+    job: dto.job?.title ?? null,
+    messages: latest.map((message) => ({ from: message.senderRole === user.role ? 'you' : 'them', text: message.body.slice(0, R.chars) })),
+  }
+  const { replies } = await write(PROMPTS.replySuggestions, { user, input, subjectId: conversation.candidateId })
+  return { messageId: String(last._id), replies: replies.map((reply) => reply.trim()).filter(Boolean).slice(0, R.count) }
 }
 
 /** Adds a message: the other side's unread count, its delayed email (U13) and, for a candidate's answer, a `message_reply` event. */

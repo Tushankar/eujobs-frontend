@@ -20,7 +20,7 @@ const CATALOGUE = {
   planKey: 4, entitlement: 7, paymentKind: 2, paymentStatus: 3, paymentSource: 2, courseAudience: 2,
   courseLevel: 3, courseStatus: 3, lessonType: 4, questionType: 2, certificateStatus: 3, reportTargetType: 4,
   reportReason: 6, caseStatus: 3, accountDecision: 3, auditCategory: 8, actorType: 3, roleScope: 4,
-  roleStatus: 2, policySignal: 3, policyStatus: 3, matchLabel: 2, aiKind: 10, emailType: 29, emailCategory: 10, notificationType: 21, emailClass: 3,
+  roleStatus: 2, policySignal: 3, policyStatus: 3, matchLabel: 2, aiKind: 11, emailType: 29, emailCategory: 10, notificationType: 21, emailClass: 3,
   emailStatus: 5, filePurpose: 13, reportType: 3, reportPeriod: 3, legalDoc: 3, faqAudience: 3, taskType: 5,
   permission: 21, permissionGroup: 5,
 }

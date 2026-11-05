@@ -64,6 +64,15 @@ export const PROMPTS = {
     schema: object({ summary: text }),
     instructions: `${RULES}\nWrite a recruiter-ready summary of this candidate in the third person: three to five sentences on role, experience, strongest skills and work preferences. No headings, no lists.`,
   },
+  // Suggested replies under the latest message from the other side of a thread; the reader edits before sending.
+  replySuggestions: {
+    kind: 'reply_suggestions',
+    schema: object({ replies: texts }),
+    instructions: `${RULES}
+Suggest exactly ${LIMITS.message.replySuggestions.count} short replies the reader ("you" in the input) could send next in this conversation between a candidate and a recruiter. Each reply answers the latest message, in the reader's own voice, polite and professional, at most two sentences.
+Make them differ in intent (for example: say yes and move forward, ask one useful question, decline politely or propose a next step).
+Never invent dates, times, salaries, availability, experience or contact details, and never use placeholders such as [name] or [date]; ask instead when a detail is needed.`,
+  },
   // M-144: user content in the reader's language.
   translate: {
     kind: 'translation',

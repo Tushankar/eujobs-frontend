@@ -151,7 +151,8 @@
     "cv_draft": "Brouillon de CV",
     "policy_suggestion": "Suggestion de règles",
     "report_summary": "Résumé du rapport",
-    "skill_name": "Nom de compétence"
+    "skill_name": "Nom de compétence",
+    "reply_suggestions": "Réponses suggérées"
   },
   "emailType": {
     "verify_email": "Confirmation de l’e-mail",
