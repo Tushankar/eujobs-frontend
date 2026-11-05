@@ -10,6 +10,8 @@ export const learningApi = api.injectEndpoints({
     getCourses: build.query({ query: () => '/courses', transformResponse: (response) => response.items, providesTags: ['Courses', 'Enrollments'] }),
     getCourse: build.query({ query: (id) => `/courses/${id}`, providesTags: ['Courses', 'Enrollments'] }),
     getLesson: build.query({ query: ({ courseId, lessonId }) => `/learning/courses/${courseId}/lessons/${lessonId}`, providesTags: ['Enrollments'] }),
+    // "My courses" (owner 2026-11-05): own enrolments with progress, purchase and certificate.
+    getEnrollments: build.query({ query: () => '/learning/enrollments', transformResponse: (response) => response.items, providesTags: ['Enrollments', 'Certificates'] }),
     enrollFree: build.mutation({ query: (courseId) => ({ url: '/learning/enrollments', method: 'POST', body: { courseId } }), invalidatesTags: ['Enrollments'] }),
     // A completed lesson refreshes the course pages (curriculum states, quiz unlock).
     recordProgress: build.mutation({
@@ -31,6 +33,7 @@ export const {
   useGetCoursesQuery,
   useGetCourseQuery,
   useGetLessonQuery,
+  useGetEnrollmentsQuery,
   useEnrollFreeMutation,
   useRecordProgressMutation,
   useGetQuizQuery,

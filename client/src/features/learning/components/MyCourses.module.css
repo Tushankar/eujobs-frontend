@@ -1,0 +1,163 @@
+/* A card of divided rows: thumbnail, title and meta, progress, then the action on the right. */
+.list {
+  margin: 0;
+  padding: 0;
+  list-style: none;
+  border: 1px solid var(--border);
+  border-radius: var(--radius-xl);
+  background: var(--card);
+}
+
+.row {
+  display: flex;
+  align-items: center;
+  gap: 16px;
+  padding: 16px 20px;
+}
+
+.row + .row {
+  border-top: 1px solid var(--border);
+}
+
+.thumb {
+  flex: none;
+  width: 72px;
+  height: 48px;
+  border-radius: var(--radius-lg);
+  object-fit: cover;
+}
+
+.thumbIcon {
+  display: grid;
+  place-items: center;
+  border: 1px solid var(--border);
+  color: var(--muted-foreground);
+}
+
+.main {
+  display: grid;
+  flex: 1;
+  gap: 4px;
+  min-width: 0;
+}
+
+.title {
+  overflow: hidden;
+  font-size: 15px;
+  font-weight: 600;
+  line-height: 22px;
+  color: var(--foreground);
+  text-decoration: none;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+.title:hover {
+  text-decoration: underline;
+}
+
+.meta {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 6px;
+  margin: 0;
+  font-size: 13px;
+  line-height: 18px;
+  color: var(--muted-foreground);
+}
+
+.progress {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  margin-top: 4px;
+}
+
+.track {
+  flex: 1;
+  max-width: 260px;
+  height: 6px;
+  overflow: hidden;
+  border-radius: var(--radius-full);
+  background: var(--secondary);
+}
+
+.fill {
+  display: block;
+  height: 100%;
+  border-radius: inherit;
+  background: var(--primary);
+}
+
+.fillDone {
+  background: var(--success-fg);
+}
+
+.progressText {
+  font-size: 12px;
+  line-height: 16px;
+  color: var(--muted-foreground);
+  white-space: nowrap;
+}
+
+.doneText {
+  font-weight: 600;
+  color: var(--success-fg);
+}
+
+.certificate,
+.receipt {
+  justify-self: start;
+  font-size: 12px;
+  font-weight: 600;
+  color: var(--primary-hover);
+  text-decoration: none;
+}
+
+.certificate:hover,
+.receipt:hover {
+  text-decoration: underline;
+}
+
+.payment {
+  display: grid;
+  flex: none;
+  justify-items: end;
+  gap: 2px;
+}
+
+.amount {
+  font-size: 14px;
+  font-weight: 700;
+  color: var(--foreground);
+}
+
+.receipt {
+  display: inline-flex;
+  align-items: center;
+  gap: 4px;
+}
+
+.action {
+  flex: none;
+}
+
+@media (max-width: 640px) {
+  .row {
+    flex-wrap: wrap;
+    padding: 14px 16px;
+  }
+
+  .main {
+    flex-basis: calc(100% - 88px);
+  }
+
+  .payment {
+    justify-items: start;
+    margin-left: 88px;
+  }
+
+  .action {
+    margin-left: 88px;
+  }
+}

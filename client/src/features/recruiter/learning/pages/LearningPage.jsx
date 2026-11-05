@@ -6,7 +6,8 @@ import EmptyState from '@/components/common/EmptyState.jsx'
 import PageTitle from '@/components/common/PageTitle.jsx'
 import StatCard from '@/components/common/StatCard.jsx'
 import SectionHeading from '@/features/recruiter/overview/components/SectionHeading.jsx'
-import { useGetCoursesQuery, useGetSuggestionsQuery } from '@/features/learning/api.js'
+import { useGetCoursesQuery, useGetEnrollmentsQuery, useGetSuggestionsQuery } from '@/features/learning/api.js'
+import MyCourses from '@/features/learning/components/MyCourses.jsx'
 import CourseCard, { CourseCardSkeleton } from '../components/CourseCard.jsx'
 import SuggestionCard, { SuggestionCardSkeleton } from '../components/SuggestionCard.jsx'
 import styles from './LearningPage.module.css'
@@ -22,6 +23,7 @@ export default function LearningPage() {
   const { t } = useTranslation('learning')
   const { data: catalogue = [], isLoading } = useGetCoursesQuery()
   const { data: suggestions, isLoading: suggestionsLoading } = useGetSuggestionsQuery()
+  const { data: enrollments = [], isLoading: enrollmentsLoading } = useGetEnrollmentsQuery()
   const [query, setQuery] = useState('')
   const [stream, setStream] = useState('all')
 
@@ -48,6 +50,13 @@ export default function LearningPage() {
         <StatCard label={t('stats.certificates')} value={certificates} caption={t('stats.certificatesCaption')} icon={Award} loading={isLoading} />
         <StatCard label={t('stats.streams')} value={streams.length} caption={t('stats.streamsCaption')} icon={Layers} loading={isLoading} />
       </div>
+
+      {(enrollmentsLoading || enrollments.length > 0) && (
+        <section className={styles.myCourses} aria-labelledby="my-courses" data-my-courses>
+          <SectionHeading id="my-courses" title={t('myCourses.title')} description={t('myCourses.lead')} />
+          <MyCourses items={enrollments} loading={enrollmentsLoading} />
+        </section>
+      )}
 
       <section className={styles.suggestions} aria-labelledby="suggested" data-suggestions>
         <div className={styles.suggestionsHead}>

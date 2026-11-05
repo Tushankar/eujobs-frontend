@@ -9,6 +9,12 @@
   padding-top: 32px;
 }
 
+.myCourses {
+  display: grid;
+  gap: 16px;
+  padding-top: 32px;
+}
+
 .suggestionsHead {
   display: flex;
   align-items: center;

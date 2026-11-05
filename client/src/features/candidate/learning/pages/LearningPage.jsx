@@ -7,7 +7,8 @@ import StatCard from '@/components/common/StatCard.jsx'
 import { useGetConfigQuery } from '@/app/api.js'
 import { Skeleton, SkeletonRegion } from '@/components/ui'
 import { useFormat } from '@/lib/preferences.js'
-import { useGetCoursesQuery, useGetSuggestionsQuery } from '@/features/learning/api.js'
+import { useGetCoursesQuery, useGetEnrollmentsQuery, useGetSuggestionsQuery } from '@/features/learning/api.js'
+import MyCourses from '@/features/learning/components/MyCourses.jsx'
 import CourseCard, { CourseCardSkeleton } from '../components/CourseCard.jsx'
 import LevelTabs from '../components/LevelTabs.jsx'
 import styles from './LearningPage.module.css'
@@ -22,6 +23,7 @@ export default function LearningPage() {
   const { data: config } = useGetConfigQuery()
   const { data: courses = [], isLoading: coursesLoading } = useGetCoursesQuery()
   const { data: suggestions, isLoading: suggestionsLoading } = useGetSuggestionsQuery()
+  const { data: enrollments = [], isLoading: enrollmentsLoading } = useGetEnrollmentsQuery()
   const format = useFormat()
   const [level, setLevel] = useState('all')
 
@@ -38,6 +40,18 @@ export default function LearningPage() {
         <StatCard label={t('stats.badges')} value={completed} caption={t('stats.badgesCaption')} icon={Award} loading={coursesLoading} />
         <StatCard label={t('stats.skills')} value={suggestions?.gapSkills.length ?? 0} caption={t('stats.skillsCaption')} icon={Compass} loading={suggestionsLoading} />
       </div>
+
+      {(enrollmentsLoading || enrollments.length > 0) && (
+        <section className={styles.section} aria-labelledby="my-courses-heading" data-my-courses>
+          <h2 className={styles.sectionTitle} id="my-courses-heading">
+            {t('myCourses.title')}
+          </h2>
+          <p className={styles.sectionLead}>{t('myCourses.lead')}</p>
+          <div className={styles.myCourses}>
+            <MyCourses items={enrollments} loading={enrollmentsLoading} />
+          </div>
+        </section>
+      )}
 
       <section className={styles.section} aria-labelledby="suggested-heading" data-suggestions>
         <div className={styles.sectionHeader}>
