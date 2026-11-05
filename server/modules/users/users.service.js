@@ -49,6 +49,8 @@ export async function meDto(user) {
     Object.assign(dto, await candidateSummary(user))
   }
   if (user.role === 'recruiter') {
+    // §3.22: Free or Recruiter Plus, with its entitlement keys.
+    Object.assign(dto, await planState(user._id))
     dto.jobTitle = user.jobTitle ?? null
     dto.phone = { e164: user.phone?.e164 ?? null, verified: Boolean(user.phone?.verifiedAt) }
     // The shell subtitle and logo (M-195); null until onboarding step 2.

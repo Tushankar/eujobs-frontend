@@ -15,7 +15,8 @@ const skill = { _id: false, name: String, key: String }
 const jobSchema = new Schema(
   {
     companyId: { type: ObjectId, ref: 'Company', required: true },
-    createdBy: { type: ObjectId, ref: 'User', required: true },
+    // null once the recruiter deleted their account (M-189: author anonymised).
+    createdBy: { type: ObjectId, ref: 'User' },
     title: String,
     employmentType: { type: String, enum: ENUMS.employmentType },
     brief: String,

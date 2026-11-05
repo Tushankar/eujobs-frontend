@@ -33,8 +33,7 @@
 }
 
 .row:not(.locked) .circle {
-  background: var(--accent);
-  color: var(--primary);
+  color: var(--foreground);
 }
 
 .row:not(.locked) .circle.done {

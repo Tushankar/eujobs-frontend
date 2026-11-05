@@ -11,10 +11,13 @@ const aiCacheSchema = new Schema(
     language: { type: String, enum: ENUMS.language, required: true },
     output: Schema.Types.Mixed,
     model: String,
+    // The candidate the text is about (null when it is about a job, company or course), so erasure finds it (M-188).
+    subjectId: { type: Schema.Types.ObjectId, default: null },
   },
   { timestamps: true },
 )
 aiCacheSchema.index({ kind: 1, key: 1, language: 1 }, { unique: true })
+aiCacheSchema.index({ subjectId: 1 })
 
 /* OD13: counted generations per user and UTC day. */
 const aiUsageSchema = new Schema(

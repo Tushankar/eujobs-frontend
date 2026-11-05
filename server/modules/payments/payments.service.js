@@ -1,10 +1,14 @@
 import { config } from '../../config/env.js'
 import { actorFor, recordAudit, SYSTEM_ACTOR } from '../../lib/audit.js'
 import { AppError, fieldError } from '../../lib/errors.js'
+import { interpolate, t } from '../../lib/i18n.js'
 import { sendEmail } from '../../lib/mailer.js'
 import { callStripe, fromUnix, stripe } from '../../lib/stripe.js'
+import { Company } from '../companies/companies.model.js'
+import { pauseExtraJobs } from '../jobs/jobs.service.js'
 import { Course, Enrollment } from '../learning/learning.model.js'
 import { enroll } from '../learning/learning.service.js'
+import { Country } from '../meta/meta.model.js'
 import { userCurrency } from '../meta/meta.service.js'
 import { notify, notifyAdmins } from '../notifications/notifications.service.js'
 import { User } from '../users/users.model.js'
@@ -21,7 +25,10 @@ export function isPaid(subscription) {
   return ['active', 'trialing'].includes(subscription.status) || (subscription.status === 'past_due' && subscription.retrying)
 }
 
-/** `me.plan` and `me.entitlements` (§3.3). Only candidates have a plan (M-117). */
+/** The paid plan of each role (§3.3, §3.22; M-117 superseded by Phase 11c). */
+export const PAID_PLAN = { candidate: 'plus', recruiter: 'recruiter_plus' }
+
+/** `me.plan` and `me.entitlements` (§3.3, §3.22), for candidates and recruiters. */
 export async function planState(userId) {
   const subscription = await Subscription.findOne({ userId })
   if (!isPaid(subscription)) return { plan: 'free', entitlements: [] }
@@ -37,12 +44,19 @@ export async function nextReference() {
 
 const formatAmount = (language, amountMinor, currency) => new Intl.NumberFormat(language, { style: 'currency', currency }).format(amountMinor / 100)
 
+/** A recruiter's plan is charged in the currency of the company's country (P11c-Q2; Remote = EUR). */
+export async function companyCurrency(user) {
+  const company = await Company.findById(user.companyId, 'location')
+  const code = company?.location?.countryCode
+  return (code && (await Country.findOne({ code }, 'currency'))?.currency) ?? 'EUR'
+}
+
 /** The item, its name in the user's language and its price in the user's currency (M-124, M-130; Remote = EUR). */
 async function priceItem(user, kind, itemId) {
-  const currency = (await userCurrency(user)) ?? 'EUR'
+  const currency = kind === 'subscription' && user.role === 'recruiter' ? await companyCurrency(user) : ((await userCurrency(user)) ?? 'EUR')
   if (kind === 'subscription') {
-    if (user.role !== 'candidate' || itemId !== 'plus') throw fieldError({ itemId: 'not_allowed' })
-    const plan = await Plan.findOne({ key: 'plus' })
+    if (itemId !== PAID_PLAN[user.role]) throw fieldError({ itemId: 'not_allowed' })
+    const plan = await Plan.findOne({ key: itemId })
     const price = plan.prices.find((entry) => entry.currency === currency)
     return { kind, itemId, itemName: plan.name[user.language], amountMinor: price.amountMinor, currency, interval: plan.interval, stripePriceId: price.stripePriceId }
   }
@@ -122,7 +136,7 @@ export async function checkoutSessionStatus(user, id) {
   return { id: session.id, kind, status: session.status, paymentStatus: session.payment_status, fulfilled }
 }
 
-/** M-121: the Stripe Customer Portal (P6 configuration), for candidates who have subscribed. */
+/** M-121: the Stripe Customer Portal (P6 configuration), for candidates and recruiters who have subscribed. */
 export async function createPortalSession(user) {
   const subscription = await Subscription.findOne({ userId: user._id })
   if (!subscription) throw new AppError('FORBIDDEN')
@@ -131,14 +145,14 @@ export async function createPortalSession(user) {
     s.billingPortal.sessions.create({
       customer: subscription.stripeCustomerId,
       configuration: value.portalConfigurationId,
-      return_url: `${config.clientOrigin}/candidate/settings/billing`,
+      return_url: billingLink(user),
       locale: user.language,
     }),
   )
   return { url: session.url }
 }
 
-/** Candidate Billing (§3.10): the subscription in its own currency (C14), or null. */
+/** Billing (§3.10, §3.22): the subscription in its own currency (C14), or null. */
 export async function subscriptionDto(userId) {
   const subscription = await Subscription.findOne({ userId })
   if (!subscription) return null
@@ -168,10 +182,12 @@ export async function listOwnPayments(userId) {
 
 /* ---------- Webhook (§2.10) ---------- */
 
-/** The candidate a Stripe object belongs to in this database, or null (another database shares the sandbox). */
+/** The user a Stripe object belongs to in this database, or null (another database shares the sandbox). */
 async function ownerOf(metadata, customerId) {
   const byId = /^[a-f\d]{24}$/i.test(metadata?.userId ?? '') ? await User.findById(metadata.userId) : null
-  return byId ?? (customerId ? await User.findOne({ stripeCustomerId: customerId }) : null)
+  const user = byId ?? (customerId ? await User.findOne({ stripeCustomerId: customerId }) : null)
+  // An account being erased (DELETE /me) takes no more Stripe events: its cancellation sends no plan_ended.
+  return user?.erasedAt ? null : user
 }
 
 /** Card or Link details of a charge (M-122). */
@@ -183,18 +199,19 @@ const methodOf = (charge) => {
 /**
  * Mirrors one Stripe subscription (fetched fresh, so event order and the account's event API version do not matter).
  * `retrying` = past due with a further attempt scheduled on the latest invoice (U38, M-120). Paid → Free sends
- * `plan_ended`, whatever the final retry action.
+ * `plan_ended`, whatever the final retry action; a recruiter's extra jobs are paused first (§3.22).
  */
 async function syncSubscription(stripeSubscriptionId) {
   const subscription = await stripe().subscriptions.retrieve(stripeSubscriptionId, { expand: ['latest_invoice'] })
   const user = await ownerOf(subscription.metadata, subscription.customer)
-  if (user?.role !== 'candidate') return
+  if (!PAID_PLAN[user?.role]) return
   const before = await Subscription.findOne({ userId: user._id })
   // Late events of an older subscription never overwrite a newer one.
   if (before && before.stripeSubscriptionId !== subscription.id && before.startedAt > fromUnix(subscription.start_date)) return
   const item = subscription.items.data[0]
   const invoice = subscription.latest_invoice
   const next = {
+    planKey: PAID_PLAN[user.role],
     status: subscription.status,
     retrying: subscription.status === 'past_due' && invoice?.status === 'open' && invoice.next_payment_attempt !== null,
     currency: subscription.currency.toUpperCase(),
@@ -208,29 +225,47 @@ async function syncSubscription(stripeSubscriptionId) {
     startedAt: fromUnix(subscription.start_date),
   }
   const after = await Subscription.findOneAndUpdate({ userId: user._id }, { $set: next }, { upsert: true, returnDocument: 'after' })
-  if (isPaid(before) && !isPaid(after)) {
-    await notify(user, 'plan_ended', { target: BILLING })
-    const plan = await Plan.findOne({ key: after.planKey }, 'name')
-    await sendEmail({
-      type: 'plan_ended',
-      to: user.email,
-      userId: user._id,
-      language: user.language,
-      params: { name: user.fullName, plan: plan.name[user.language], link: `${config.clientOrigin}/candidate/settings/billing` },
-    })
-  }
+  if (isPaid(before) && !isPaid(after)) await planEnded(user, after.planKey)
 }
 
 const BILLING = { kind: 'page', id: 'billing' }
+const billingLink = (user) => `${config.clientOrigin}/${user.role}/settings/billing`
 
-/** A failed renewal (P11b-Q1): the candidate opens Billing; admins with `finance.view` open the payment and get its email. */
-async function notifyRenewalFailed(user, payment, amount) {
-  await notify(user, 'renewal_failed', { params: amount, target: BILLING })
+/**
+ * Paid → Free (M-120, §3.22). A candidate opens Billing. A recruiter keeps only the most recently published job live
+ * (P11c-Q6); the notification and email name it and the number paused, and open Jobs (P11c-Q18).
+ */
+async function planEnded(user, planKey) {
+  const plan = await Plan.findOne({ key: planKey }, 'name')
+  const params = { name: user.fullName, plan: plan.name[user.language] }
+  if (user.role === 'candidate') {
+    await notify(user, 'plan_ended', { params: { planKey }, target: BILLING })
+    await sendEmail({ type: 'plan_ended', to: user.email, userId: user._id, language: user.language, params: { ...params, link: billingLink(user) } })
+    return
+  }
+  const company = await Company.findById(user.companyId, 'displayName')
+  const { kept, paused } = company ? await pauseExtraJobs(company) : { kept: null, paused: 0 }
+  await notify(user, 'plan_ended', { params: { planKey, job: kept?.title ?? null, paused }, target: { kind: 'page', id: 'jobs' } })
+  // The "kept … paused" line is built from the dictionary (plural by count), or left out when nothing was paused.
+  const line = paused ? t(user.language, `email.recruiter_plan_ended.paused_${new Intl.PluralRules(user.language).select(paused) === 'one' ? 'one' : 'other'}`) : ''
+  await sendEmail({
+    type: 'recruiter_plan_ended',
+    to: user.email,
+    userId: user._id,
+    language: user.language,
+    params: { ...params, paused: interpolate(line, { job: kept?.title, count: paused }), link: `${config.clientOrigin}/recruiter/jobs` },
+  })
+}
+
+/** A failed renewal (P11b-Q1, P11c-Q7): the payer opens Billing; admins with `finance.view` open the payment and get its email. */
+async function notifyRenewalFailed(user, payment, amount, plan) {
+  await notify(user, 'renewal_failed', { params: { planKey: plan.key, ...amount }, target: BILLING })
   await notifyAdmins('admin_renewal_failed', {
-    params: { payer: user.fullName, reference: payment.reference, ...amount },
+    params: { payer: user.fullName, reference: payment.reference, planKey: plan.key, ...amount },
     target: { kind: 'payment', id: payment._id },
     emailParams: (language) => ({
       payer: user.fullName,
+      plan: plan.name[language],
       reference: payment.reference,
       amount: formatAmount(language, amount.amountMinor, amount.currency),
       link: `${config.clientOrigin}/admin/payments/${payment._id}`,
@@ -252,7 +287,7 @@ async function onInvoice(object) {
   if (!details?.subscription) return
   const subscriptionId = typeof details.subscription === 'string' ? details.subscription : details.subscription.id
   const user = await ownerOf(details.metadata, invoice.customer)
-  if (user?.role !== 'candidate') return
+  if (!PAID_PLAN[user?.role]) return
 
   const paid = invoice.status === 'paid'
   const failedRenewal = !paid && invoice.attempted && invoice.billing_reason === 'subscription_cycle'
@@ -261,7 +296,7 @@ async function onInvoice(object) {
     const intentId = invoicePayment?.payment?.payment_intent
     const intent = intentId ? await stripe().paymentIntents.retrieve(typeof intentId === 'string' ? intentId : intentId.id, { expand: ['latest_charge'] }) : null
     const charge = intent?.latest_charge
-    const plan = await Plan.findOne({ key: 'plus' }, 'name')
+    const plan = await Plan.findOne({ key: PAID_PLAN[user.role] }, 'key name')
     const line = invoice.lines.data[0]
     const fields = {
       status: paid ? 'paid' : 'failed',
@@ -277,10 +312,10 @@ async function onInvoice(object) {
       ...fields,
       reference: await nextReference(),
       userId: user._id,
-      payerRole: 'candidate',
+      payerRole: user.role,
       payerName: user.fullName,
       kind: 'subscription',
-      itemId: 'plus',
+      itemId: plan.key,
       itemName: plan.name[user.language],
       amountMinor: paid ? invoice.amount_paid : invoice.amount_due,
       currency: invoice.currency.toUpperCase(),
@@ -292,12 +327,12 @@ async function onInvoice(object) {
       throw error
     })
     if (created) {
-      // The first invoice is the candidate's own purchase; renewals and their failures are system events.
+      // The first invoice is the payer's own purchase; renewals and their failures are system events.
       const actor = paid && invoice.billing_reason === 'subscription_create' ? actorFor(user) : SYSTEM_ACTOR
       await auditPayment(created, paid ? 'payment_recorded' : 'renewal_failed', actor)
       const amount = { amountMinor: created.amountMinor, currency: created.currency }
       if (paid) await notify(user, 'payment_paid', { params: { item: created.itemName, ...amount }, target: BILLING })
-      else await notifyRenewalFailed(user, created, amount)
+      else await notifyRenewalFailed(user, created, amount, plan)
     }
     if (!created) {
       await Payment.updateOne({ 'stripe.invoiceId': invoice.id }, { $set: fields })
@@ -311,7 +346,7 @@ async function onInvoice(object) {
           name: user.fullName,
           plan: plan.name[user.language],
           amount: formatAmount(user.language, invoice.amount_due, invoice.currency.toUpperCase()),
-          link: `${config.clientOrigin}/candidate/settings/billing`,
+          link: billingLink(user),
         },
       })
     }

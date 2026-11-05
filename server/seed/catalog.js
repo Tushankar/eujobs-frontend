@@ -8,7 +8,7 @@ import { AppConfig, Plan } from '../modules/payments/payments.model.js'
 import { COUNTRIES, PLANS, SYSTEM_ROLES } from './data/catalog.js'
 import { FAQS } from './data/faqs.js'
 import { LEGAL_DOCUMENTS, LEGAL_VERSION } from './data/legal.js'
-import { ensureStripeCatalog } from './stripe.js'
+import { ensurePlanPrices, ensurePortalConfiguration } from './stripe.js'
 
 /*
  * seed:catalog (U41): an idempotent upsert of the catalogue. Countries, plans, permissions, FAQs and
@@ -23,11 +23,16 @@ async function upsertExactly(Model, key, rows) {
 export async function seedCatalog() {
   await ensureDefaultPolicy()
   await upsertExactly(Country, 'code', COUNTRIES)
-  // U40, P6: the Stripe Product, Prices and Portal configuration; their ids live on the plan and in AppConfig('stripe').
-  const { productId, priceIds, portalConfigurationId } = await ensureStripeCatalog(PLANS.find((plan) => plan.key === 'plus').prices)
-  const plans = PLANS.map((plan) => ({ ...plan, prices: plan.prices.map((price) => ({ ...price, stripePriceId: priceIds[price.currency] })) }))
+  // U40, P6, §3.22: a Stripe Product and Prices per paid plan, one Portal configuration; ids live on the plan and in AppConfig('stripe').
+  const productIds = {}
+  const plans = []
+  for (const plan of PLANS) {
+    const { productId, priceIds } = plan.prices.length ? await ensurePlanPrices(plan) : { priceIds: {} }
+    if (productId) productIds[plan.key] = productId
+    plans.push({ ...plan, prices: plan.prices.map((price) => ({ ...price, stripePriceId: priceIds[price.currency] })) })
+  }
   await upsertExactly(Plan, 'key', plans)
-  await AppConfig.updateOne({ key: 'stripe' }, { $set: { value: { productId, portalConfigurationId } } }, { upsert: true })
+  await AppConfig.updateOne({ key: 'stripe' }, { $set: { value: { productIds, portalConfigurationId: await ensurePortalConfiguration() } } }, { upsert: true })
   await upsertExactly(Permission, 'id', PERMISSIONS.map((permission, index) => ({ ...permission, order: index + 1 })))
   for (const role of SYSTEM_ROLES) {
     const nameLower = role.name.toLowerCase()

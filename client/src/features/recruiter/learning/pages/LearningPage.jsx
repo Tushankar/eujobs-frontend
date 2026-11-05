@@ -1,6 +1,6 @@
 import { useMemo, useState } from 'react'
 import { useTranslation } from 'react-i18next'
-import { Award, CircleHelp, CirclePlay, Layers, Search, Sparkles } from 'lucide-react'
+import { Award, CircleHelp, CirclePlay, Layers, Search } from 'lucide-react'
 import { Icon, SelectField, TextField } from '@/components/ui'
 import EmptyState from '@/components/common/EmptyState.jsx'
 import PageTitle from '@/components/common/PageTitle.jsx'
@@ -51,7 +51,6 @@ export default function LearningPage() {
         <div className={styles.suggestionsHead}>
           <div>
             <p className={styles.eyebrow}>
-              <Icon as={Sparkles} size={13} />
               {t('suggestions.eyebrow')}
             </p>
             <h2 className={styles.suggestionsTitle} id="suggested">

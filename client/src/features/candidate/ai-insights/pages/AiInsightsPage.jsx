@@ -83,7 +83,7 @@ export default function AiInsightsPage() {
         </Panel>
 
         <div className={styles.side}>
-          <Panel selected padding={28}>
+          <Panel padding={28}>
             <img src={sparkle} alt="" width={24} height={24} />
             <h3 className={styles.evidenceTitle}>{t('overview.evidenceTitle')}</h3>
             <Narrative section="overview">{(narrative) => <p className={styles.evidenceText}>{narrative.text}</p>}</Narrative>

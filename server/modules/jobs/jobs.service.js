@@ -1,6 +1,6 @@
 import { LIMITS } from '../../config/limits.js'
 import { scheduleTask } from '../../jobs/scheduler.js'
-import { actorFor, recordAudit } from '../../lib/audit.js'
+import { actorFor, recordAudit, SYSTEM_ACTOR } from '../../lib/audit.js'
 import { AppError, fieldError } from '../../lib/errors.js'
 import { paginate } from '../../lib/pages.js'
 import { searchText, skillEntries } from '../../lib/skills.js'
@@ -9,6 +9,7 @@ import { Company } from '../companies/companies.model.js'
 import { logoUrlsById } from '../companies/companies.service.js'
 import { Country } from '../meta/meta.model.js'
 import { ModerationCase } from '../moderation/moderation.model.js'
+import { planState } from '../payments/payments.service.js'
 import { refreshRelevantCounts, scheduleRecompute } from '../matching/matching.service.js'
 import { resolvePlace } from '../places/places.service.js'
 import { Job } from './jobs.model.js'
@@ -252,6 +253,10 @@ export const setStatus = stepErrors(async (company, id, status, user) => {
   const firstPublish = status === 'published' && !job.firstPublishedAt
   if (status === 'published') {
     if (job.restricted?.at) throw new AppError('LOCKED', { params: { reason: 'restricted' } })
+    // §3.22, P11c-Q3, Q5: without Recruiter Plus a company keeps 1 published job.
+    if ((await Job.exists({ companyId: company._id, status: 'published', _id: { $ne: job._id } })) && !(await planState(user._id)).entitlements.includes('jobs_unlimited')) {
+      throw new AppError('PLAN_REQUIRED', { params: { entitlement: 'jobs_unlimited' } })
+    }
     assertPublishable(job)
     job.publishedAt = now
     // M-097: only the first publish triggers job alerts.
@@ -273,6 +278,36 @@ export const setStatus = stepErrors(async (company, id, status, user) => {
   await scheduleRecompute('job', job._id)
   return job
 })
+
+/**
+ * §3.22, P11c-Q6: without Recruiter Plus only the most recently published job stays live; the others are paused (a
+ * system change) and can be republished after subscribing again. Returns the job kept and the number paused.
+ */
+export async function pauseExtraJobs(company) {
+  const [kept, ...extra] = await Job.find({ companyId: company._id, status: 'published' }).sort({ publishedAt: -1, _id: -1 })
+  for (const job of extra) {
+    job.status = 'paused'
+    await job.save()
+    await recordAudit({
+      type: 'jobs.status_changed',
+      category: 'jobs',
+      actor: SYSTEM_ACTOR,
+      target: { type: 'job', id: job._id },
+      params: { title: job.title, company: company.displayName, from: 'published', to: 'paused' },
+    })
+    await scheduleRecompute('job', job._id)
+  }
+  return { kept: kept ?? null, paused: extra.length }
+}
+
+/** P11c-Q12: at start, recruiters without Recruiter Plus who have more than 1 published job get the plan-end rule. */
+export async function enforceFreeJobLimit() {
+  const over = await Job.aggregate([{ $match: { status: 'published' } }, { $group: { _id: '$companyId', count: { $sum: 1 } } }, { $match: { count: { $gt: 1 } } }])
+  for (const { _id } of over) {
+    const company = await Company.findById(_id, 'ownerUserId displayName')
+    if (company && !(await planState(company.ownerUserId)).entitlements.includes('jobs_unlimited')) await pauseExtraJobs(company)
+  }
+}
 
 /** M-038: only drafts can be deleted; published jobs are closed instead. */
 export async function deleteJob(company, id) {

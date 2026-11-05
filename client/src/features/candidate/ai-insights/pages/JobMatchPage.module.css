@@ -200,14 +200,14 @@
 
 .context {
   border-color: var(--border);
-  background: var(--accent);
+  background: var(--card);
 }
 
 .contextText {
   padding-top: 20px;
   font-size: 12px;
   line-height: 28px;
-  color: var(--primary-hover);
+  color: var(--muted-foreground);
 }
 
 @media (max-width: 1023px) {

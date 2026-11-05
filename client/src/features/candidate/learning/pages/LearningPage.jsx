@@ -1,6 +1,6 @@
 import { useState } from 'react'
 import { useTranslation } from 'react-i18next'
-import { Award, CirclePlay, GraduationCap, Sparkles } from 'lucide-react'
+import { Award, CirclePlay, Compass, GraduationCap } from 'lucide-react'
 import EmptyState from '@/components/common/EmptyState.jsx'
 import PageTitle from '@/components/common/PageTitle.jsx'
 import StatCard from '@/components/common/StatCard.jsx'
@@ -35,7 +35,7 @@ export default function LearningPage() {
       <div className={styles.stats}>
         <StatCard label={t('stats.inProgress')} value={inProgress} caption={t('stats.inProgressCaption')} icon={CirclePlay} />
         <StatCard label={t('stats.badges')} value={completed} caption={t('stats.badgesCaption')} icon={Award} />
-        <StatCard label={t('stats.skills')} value={suggestions?.gapSkills.length ?? 0} caption={t('stats.skillsCaption')} icon={Sparkles} />
+        <StatCard label={t('stats.skills')} value={suggestions?.gapSkills.length ?? 0} caption={t('stats.skillsCaption')} icon={Compass} />
       </div>
 
       <section className={styles.section} aria-labelledby="suggested-heading" data-suggestions>

@@ -20,6 +20,7 @@ import notificationRoutes from '../modules/notifications/notifications.routes.js
 import metaRoutes from '../modules/meta/meta.routes.js'
 import * as paymentRoutes from '../modules/payments/payments.routes.js'
 import placesRoutes from '../modules/places/places.routes.js'
+import privacyRoutes from '../modules/privacy/privacy.routes.js'
 import usersRoutes from '../modules/users/users.routes.js'
 import * as verificationRoutes from '../modules/verification/verification.routes.js'
 
@@ -46,6 +47,7 @@ router.get('/health', (req, res) => {
 
 router.use('/auth', authRoutes)
 router.use('/me/payments', paymentRoutes.myPaymentsRouter)
+router.use('/me', privacyRoutes)
 router.use('/me', usersRoutes)
 router.use(metaRoutes)
 router.use('/places', placesRoutes)
@@ -66,6 +68,7 @@ router.use('/jobs', jobRoutes.candidateRouter)
 router.use('/translate', aiRoutes.translateRouter)
 router.use('/recruiter/onboarding', companyRoutes.onboardingRouter)
 router.use('/recruiter/company', companyRoutes.companyRouter)
+router.use('/recruiter/subscription', paymentRoutes.subscriptionRouter)
 router.use('/recruiter/jobs', jobRoutes.recruiterRouter)
 router.use('/recruiter/candidates', aiRoutes.recruiterRouter)
 router.use('/recruiter/candidates', discoveryRoutes.candidatesRouter)

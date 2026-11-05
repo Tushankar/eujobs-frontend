@@ -31,11 +31,11 @@ export async function recruiterMatch(user, company, candidateId, jobId) {
   if (!job) throw new AppError('NOT_FOUND')
   const { facts } = await candidateSubject(candidate._id)
   const input = { candidate: facts ?? candidateFacts(profile), job: await jobFacts(job), evidence: matchEvidence(profile, job) }
-  return write(PROMPTS.recruiterMatch, { user, input })
+  return write(PROMPTS.recruiterMatch, { user, subjectId: candidate._id, input })
 }
 
 /** POST /candidate/profile/ai-summary (M-062): from the profile and the live CV, copyable. */
 export async function profileSummary(user) {
   const { facts } = await candidateSubject(user._id)
-  return write(PROMPTS.profileSummary, { user, input: { candidate: facts } })
+  return write(PROMPTS.profileSummary, { user, subjectId: user._id, input: { candidate: facts } })
 }

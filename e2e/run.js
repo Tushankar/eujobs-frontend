@@ -1,5 +1,6 @@
 import { mkdirSync, readdirSync, writeFileSync } from 'node:fs'
 import { join, relative } from 'node:path'
+import { acquireTestLock } from '../server/test/lock.js'
 import { makeFixtures } from './fixtures/make.js'
 import { launchChrome, openPage, screenshot } from './lib/browser.js'
 import { ARTIFACTS_DIR, ROOT, seedCredentials, WEB_URL } from './lib/env.js'
@@ -28,6 +29,8 @@ if (!files.length) {
   console.error('Usage: node e2e/run.js <phase-N | sweep | scenario-file-name[,more]>')
   process.exit(2)
 }
+// One run at a time on eujobs_test and ports 5100/5174, across every session on this machine.
+acquireTestLock(`node e2e/run.js ${target}`)
 const scenarios = await Promise.all(files.map(async (file) => (await import(new URL(file, SCENARIOS_DIR))).default))
 
 const runDir = join(ARTIFACTS_DIR, `${new Date().toISOString().replace(/[:.]/g, '-')}-${target}`)

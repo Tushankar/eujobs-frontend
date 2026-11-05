@@ -22,7 +22,7 @@ export default function AiPageShell({ eyebrow, title, description, children }) {
   return (
     <>
       <PageTitle
-        eyebrow={`· ${eyebrow}`}
+        eyebrow={eyebrow}
         title={title}
         description={description}
         actions={

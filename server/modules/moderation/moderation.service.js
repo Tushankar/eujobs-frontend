@@ -72,7 +72,7 @@ export async function report(user, company, body) {
   const target = await reportTarget(user, company, body)
   const entry = { reporterId: user._id, reason: body.reason, details: body.details || undefined, at: new Date() }
   const open = await ModerationCase.findOne({ targetType: body.targetType, targetId: body.targetId, status: 'open' })
-  if (open?.reports.some((item) => item.reporterId.equals(user._id))) throw new AppError('CONFLICT', { params: { reason: 'already_reported' } })
+  if (open?.reports.some((item) => item.reporterId?.equals(user._id))) throw new AppError('CONFLICT', { params: { reason: 'already_reported' } })
   let item = open
   if (open) {
     open.reports.push(entry)

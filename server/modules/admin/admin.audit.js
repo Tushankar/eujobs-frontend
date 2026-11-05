@@ -39,7 +39,8 @@ export function exportRows(events, language) {
       event.at.toISOString(),
       t(language, `labels.auditCategory.${event.category}`),
       t(language, `labels.actorType.${event.actor.type}`),
-      event.actor.name ?? '',
+      // A user actor without a name deleted their account (OD15).
+      event.actor.name ?? (event.actor.type === 'user' ? t(language, 'labels.deletedUser') : ''),
       describeAudit(event, language),
     ]),
   ]

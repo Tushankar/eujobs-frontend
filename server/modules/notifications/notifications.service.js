@@ -6,7 +6,7 @@ import { accessibleCandidate } from '../discovery/discovery.service.js'
 import { Job } from '../jobs/jobs.model.js'
 import { jobDetails } from '../jobs/jobs.search.js'
 import { Enrollment } from '../learning/learning.model.js'
-import { Conversation } from '../messages/messages.model.js'
+import { Conversation, Message } from '../messages/messages.model.js'
 import { ModerationCase } from '../moderation/moderation.model.js'
 import { Payment } from '../payments/payments.model.js'
 import { User } from '../users/users.model.js'
@@ -50,7 +50,8 @@ const own = (user) => (user.role === 'candidate' ? { candidateId: user._id } : {
 const AVAILABLE = {
   page: async () => true,
   application: (user, id) => Application.exists({ _id: id, ...own(user) }),
-  conversation: (user, id) => Conversation.exists({ _id: id, ...own(user) }),
+  // A thread emptied by the candidate's erasure (P12-Q2) is no longer available.
+  conversation: async (user, id) => (await Conversation.exists({ _id: id, ...own(user) })) && Message.exists({ conversationId: id }),
   job: (user, id) => (user.role === 'candidate' ? jobDetails(user, id) : Job.exists({ _id: id, companyId: user.companyId })),
   course: (user, id) => Enrollment.exists({ userId: user._id, courseId: id }),
   candidate: (user, id) => accessibleCandidate(id, { _id: user.companyId }),

@@ -5,7 +5,10 @@ import { requireEntitlement } from '../../middleware/entitlements.js'
 import * as schemas from './messages.schemas.js'
 import * as messages from './messages.service.js'
 
-/* /conversations for candidates and approved recruiters (§5). Sending needs `message_send` for candidates (M-084, M-118). */
+/*
+ * /conversations for candidates and approved recruiters (§5). Sending needs `message_send` for candidates (M-084, M-118);
+ * a recruiter needs `outreach` (Recruiter Plus) only to start one and replies on Free (§3.22, P11c-Q14).
+ */
 const router = Router()
 const idParams = validate({ params: schemas.idParams })
 
@@ -15,7 +18,7 @@ router.get('/', async (req, res) => {
   res.json(await messages.listConversations(req.user, req.company))
 })
 
-router.post('/', requireEntitlement('message_send'), validate({ body: schemas.startBody }), async (req, res) => {
+router.post('/', requireEntitlement('message_send'), requireEntitlement('outreach', ['recruiter']), validate({ body: schemas.startBody }), async (req, res) => {
   res.status(201).json(await messages.start(req.user, req.company, req.body))
 })
 

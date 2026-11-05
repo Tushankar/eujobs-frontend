@@ -23,10 +23,8 @@
 .tile {
   display: inline-flex;
   flex-shrink: 0;
-  padding: 8px;
-  border-radius: var(--radius-xl);
-  background: var(--accent);
-  color: var(--primary);
+  padding: 2px 0;
+  color: var(--muted-foreground);
 }
 
 .badges {

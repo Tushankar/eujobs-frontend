@@ -20,11 +20,15 @@ export const COUNTRIES = [
 
 // OD1 plan prices in major units; stored as integer minor units (U24).
 export const PLUS_PRICES = { GBP: 9, EUR: 10, PLN: 45, SEK: 119, DKK: 79, CZK: 259, HUF: 3990, RON: 55 }
+// P11c-Q2: Recruiter Plus uses the approved £49 row of §3.10.
+export const RECRUITER_PLUS_PRICES = { GBP: 49, EUR: 57, PLN: 245, SEK: 629, DKK: 429, CZK: 1399, HUF: 21990, RON: 289 }
+const minor = (prices) => Object.entries(prices).map(([currency, amount]) => ({ currency, amountMinor: amount * 100 }))
 
-// M-115, M-116, §3.3: what each plan unlocks; Free covers everything that is not gated.
+// M-115, M-116, §3.3: what each plan unlocks; Free covers everything that is not gated. §3.22: Recruiter Plus (P11c-Q1 … Q4).
 export const PLANS = [
   {
     key: 'free',
+    role: 'candidate',
     name: { en: 'Free', es: 'Gratis', fr: 'Gratuit' },
     features: [
       {
@@ -50,6 +54,7 @@ export const PLANS = [
   },
   {
     key: 'plus',
+    role: 'candidate',
     name: { en: 'Plus', es: 'Plus', fr: 'Plus' },
     features: [
       { en: 'Apply to jobs', es: 'Postúlate a ofertas de empleo', fr: 'Postulez aux offres d’emploi' },
@@ -71,8 +76,31 @@ export const PLANS = [
       },
     ],
     interval: 'month',
-    prices: Object.entries(PLUS_PRICES).map(([currency, amount]) => ({ currency, amountMinor: amount * 100 })),
+    prices: minor(PLUS_PRICES),
     entitlements: ['apply', 'message_send', 'job_alerts', 'ai'],
+  },
+  {
+    key: 'recruiter_plus',
+    role: 'recruiter',
+    // The name stays the same in every language (P11c-Q1).
+    name: { en: 'Recruiter Plus', es: 'Recruiter Plus', fr: 'Recruiter Plus' },
+    features: [
+      { en: 'Unlimited active jobs', es: 'Ofertas activas ilimitadas', fr: 'Offres actives illimitées' },
+      {
+        en: 'Find candidates: search, profiles, shortlist, notes and Compare',
+        es: 'Buscar candidatos: búsqueda, perfiles, preseleccionados, notas y comparación',
+        fr: 'Trouver des candidats : recherche, profils, short-list, notes et comparaison',
+      },
+      { en: 'Start conversations and request CVs', es: 'Inicia conversaciones y solicita CV', fr: 'Démarrez des conversations et demandez des CV' },
+      {
+        en: 'AI job summaries, match insights and translations',
+        es: 'Resúmenes de ofertas con IA, análisis de compatibilidad y traducciones',
+        fr: 'Résumés d’offres par IA, analyses de compatibilité et traductions',
+      },
+    ],
+    interval: 'month',
+    prices: minor(RECRUITER_PLUS_PRICES),
+    entitlements: ['jobs_unlimited', 'discovery', 'outreach', 'ai'],
   },
 ]
 

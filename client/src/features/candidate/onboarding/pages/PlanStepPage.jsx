@@ -1,7 +1,7 @@
 import { useState } from 'react'
 import { useTranslation } from 'react-i18next'
 import { Link, useNavigate } from 'react-router-dom'
-import { ArrowLeft, Check, Sparkles } from 'lucide-react'
+import { ArrowLeft, Check } from 'lucide-react'
 import { Button, Icon, Panel } from '@/components/ui'
 import PageTitle from '@/components/common/PageTitle.jsx'
 import { PLUS_ITEM, usePlan } from '@/features/candidate/billing/usePlan.js'
@@ -73,7 +73,7 @@ export default function PlanStepPage() {
                       {t('onboarding:plan.continueFree')}
                     </Button>
                   ) : (
-                    <Button fullWidth onClick={() => setCheckingOut(true)} leftIcon={<Icon as={Sparkles} size={14} />}>
+                    <Button fullWidth onClick={() => setCheckingOut(true)}>
                       {t('onboarding:plan.startPlus')}
                     </Button>
                   )}

@@ -99,18 +99,19 @@
   gap: 16px;
   margin-top: 20px;
   padding: 20px;
-  border: 1px solid rgba(0, 132, 255, 0.2);
+  border: 1px solid var(--border);
   border-radius: var(--radius-xl);
-  background: var(--accent);
+  background: var(--card);
 }
 
 .bannerIcon {
   display: inline-flex;
   flex-shrink: 0;
   padding: 10.5px;
+  border: 1px solid var(--border);
   border-radius: var(--radius-full);
   background: var(--card);
-  color: var(--primary);
+  color: var(--foreground);
 }
 
 /* A real basis, so on a phone the text takes its own row instead of being squeezed beside the action. */
@@ -202,13 +203,13 @@
 
 .badgeNote {
   padding: 24px;
-  border: 1px solid rgba(0, 132, 255, 0.2);
+  border: 1px solid var(--border);
   border-radius: var(--radius-xl);
-  background: var(--accent);
+  background: var(--card);
 }
 
 .badgeNoteIcon {
-  color: var(--primary-hover);
+  color: var(--muted-foreground);
 }
 
 .badgeNoteTitle {

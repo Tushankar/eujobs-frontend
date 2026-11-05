@@ -42,6 +42,8 @@ const userSchema = new Schema(
     // Stripe customer, created at the first checkout (§2.10)
     stripeCustomerId: String,
     lastLoginAt: Date,
+    // Set while DELETE /me runs: late Stripe webhooks for this account are ignored (privacy.erase.js).
+    erasedAt: Date,
   },
   { timestamps: true },
 )

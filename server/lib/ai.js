@@ -125,9 +125,10 @@ const release = (userId) => AiUsage.updateOne({ userId, day: utcDay() }, { $inc:
 /**
  * A structured answer from OpenAI in `language` (S, M-057). `cacheKey` (inputs plus the entity version, hashed) makes
  * the answer reusable per language; null means not cached. A miss counts toward the user's daily cap unless the user
- * is an admin; `regenerate` (admin Regenerate) replaces the cached answer without counting.
+ * is an admin; `regenerate` (admin Regenerate) replaces the cached answer without counting. `subjectId` is the candidate the
+ * answer is about, so erasure can delete it (M-188).
  */
-export async function generate({ kind, user, language, cacheKey = null, model = 'fast', instructions, input, schema, regenerate = false }) {
+export async function generate({ kind, user, language, cacheKey = null, subjectId = null, model = 'fast', instructions, input, schema, regenerate = false }) {
   const key = cacheKey && hashOf([modelName(model), cacheKey])
   if (key && !regenerate) {
     const hit = await AiCache.findOne({ kind, key, language })
@@ -151,6 +152,17 @@ export async function generate({ kind, user, language, cacheKey = null, model = 
     if (counted) await release(user._id)
     throw error instanceof AppError ? error : new AppError('AI_UNAVAILABLE')
   }
-  if (key) await AiCache.updateOne({ kind, key, language }, { output, model: modelName(model) }, { upsert: true })
+  if (key) await AiCache.updateOne({ kind, key, language }, { output, model: modelName(model), subjectId }, { upsert: true })
   return output
+}
+
+/**
+ * Once, at startup: cache rows written before `subjectId` existed cannot be found by an erasure (M-188), so the
+ * rows of kinds that can be about a candidate are dropped (they are made again on the next open); the others get
+ * `subjectId: null`.
+ */
+export async function migrateAiCacheSubjects() {
+  const missing = { subjectId: { $exists: false } }
+  await AiCache.deleteMany({ ...missing, kind: { $in: ['match_explanation', 'insights', 'profile_summary', 'cv_snapshot', 'translation'] } })
+  await AiCache.updateMany(missing, { $set: { subjectId: null } })
 }

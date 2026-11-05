@@ -103,9 +103,9 @@
 .insight {
   margin-top: 16px;
   padding: 16px;
-  border: 1px solid rgba(0, 132, 255, 0.2);
+  border: 1px solid var(--border);
   border-radius: var(--radius-xl);
-  background: var(--accent);
+  background: var(--card);
 }
 
 .insightButton {
@@ -116,7 +116,7 @@
   padding: 0;
   border: 0;
   background: transparent;
-  color: var(--primary);
+  color: var(--foreground);
 }
 
 .insightTitle {
@@ -137,7 +137,7 @@
   padding-top: 8px;
   font-size: 11px;
   line-height: 20px;
-  color: var(--primary-hover);
+  color: var(--muted-foreground);
 }
 
 .insightDetail {

@@ -5,9 +5,9 @@
   justify-content: center;
   min-height: 256px;
   padding: 32px;
-  border: 1.5px dashed rgba(0, 132, 255, 0.2);
+  border: 1.5px dashed var(--border);
   border-radius: var(--radius-xl);
-  background: var(--accent);
+  background: var(--card);
   text-align: center;
   cursor: pointer;
   transition:
@@ -17,8 +17,8 @@
 
 .zone:hover,
 .dragging {
-  border-color: rgba(0, 132, 255, 0.5);
-  background: #e2f0ff;
+  border-color: var(--muted-foreground);
+  background: var(--muted);
 }
 
 .zone:focus-within {
@@ -30,10 +30,10 @@
   display: inline-flex;
   margin-bottom: 20px;
   padding: 16px;
-  border-radius: 16px;
+  border: 1px solid var(--border);
+  border-radius: var(--radius-full);
   background: var(--card);
-  box-shadow: var(--shadow-segment);
-  color: var(--primary);
+  color: var(--foreground);
 }
 
 .title {

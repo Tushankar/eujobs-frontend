@@ -3,6 +3,7 @@ import { z } from 'zod'
 import { objectId, validate } from '../../lib/validate.js'
 import { requireApprovedRecruiter, requireAuth, requireRole } from '../../middleware/auth.js'
 import { requirePermission } from '../../middleware/permissions.js'
+import { requireDiscovery } from '../discovery/discovery.routes.js'
 import { relevantTalent } from '../discovery/discovery.service.js'
 import { caseBody } from '../moderation/moderation.schemas.js'
 import { openJobCase } from '../moderation/moderation.service.js'
@@ -47,7 +48,8 @@ recruiterRouter.delete('/:id', jobParams, async (req, res) => {
   res.status(204).end()
 })
 
-recruiterRouter.get('/:id/relevant-talent', jobParams, async (req, res) => {
+// §3.22, P11c-Q15: the list needs Recruiter Plus; the count on the job stays.
+recruiterRouter.get('/:id/relevant-talent', jobParams, requireDiscovery, async (req, res) => {
   res.json(await relevantTalent(req.user, req.company, req.params.id))
 })
 

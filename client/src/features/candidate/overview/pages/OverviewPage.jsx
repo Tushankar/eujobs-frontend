@@ -1,7 +1,7 @@
 import { useState } from 'react'
 import { useTranslation } from 'react-i18next'
 import { Link } from 'react-router-dom'
-import { ArrowRight, ArrowUpRight, Bookmark, BriefcaseBusiness, Eye, Search, ShieldCheck, SlidersHorizontal, Sparkle, Sun } from 'lucide-react'
+import { ArrowRight, ArrowUpRight, Bookmark, BriefcaseBusiness, Eye, Search, ShieldCheck, SlidersHorizontal, Sun } from 'lucide-react'
 import { useGetMeQuery } from '@/app/api.js'
 import { Button, Icon } from '@/components/ui'
 import EmptyState from '@/components/common/EmptyState.jsx'
@@ -57,7 +57,6 @@ export default function OverviewPage() {
     <div>
       <div className={styles.dateRow}>
         <p className={styles.date}>
-          <Icon as={Sparkle} size={11} className={styles.dateStar} fill="currentColor" />
           {format.date(now, { weekday: 'long', day: 'numeric', month: 'long', year: 'numeric' })}
         </p>
       </div>

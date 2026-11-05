@@ -18,9 +18,10 @@
   justify-content: center;
   width: 40px;
   height: 40px;
+  border: 1px solid var(--border);
   border-radius: var(--radius-full);
-  background: var(--accent);
-  color: var(--primary-hover);
+  background: var(--card);
+  color: var(--foreground);
 }
 
 .title {

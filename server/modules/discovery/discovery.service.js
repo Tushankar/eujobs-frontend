@@ -147,15 +147,40 @@ function sortCards(cards, sort, language, scores = new Map()) {
   return cards.sort(sorters[sort])
 }
 
-/** GET /recruiter/candidates: the picker country's population (M-054, M-055), filtered and sorted. */
-export async function listCandidates(user, company, query) {
+/** Whether a Find candidates query uses search, a filter, a sort or a job (§3.22: Recruiter Plus only). */
+const isSearch = ({ q, sort, ...filters }) => Boolean(q) || sort !== 'recommended' || Object.values(filters).some((value) => value !== undefined)
+
+/** Every candidate who applied to the company (any status), whose profile still opens (P4-D11). */
+async function applicantEntries(company) {
+  const ids = await Application.distinct('candidateId', { companyId: company._id })
+  const [users, profiles] = await Promise.all([
+    User.find({ _id: { $in: ids }, role: 'candidate', status: 'active' }),
+    CandidateProfile.find({ userId: { $in: ids }, 'restricted.at': null }),
+  ])
+  const profileOf = new Map(profiles.map((profile) => [String(profile.userId), profile]))
+  return users.filter((candidate) => profileOf.has(String(candidate._id))).map((candidate) => ({ user: candidate, profile: profileOf.get(String(candidate._id)) }))
+}
+
+/**
+ * GET /recruiter/candidates: the picker country's population (M-054, M-055), filtered and sorted. Without the
+ * `discovery` entitlement (P11c-Q10) only the plain list answers, with the company's applicants; without `ai` the
+ * order skips the AI score (P11c-Q16).
+ */
+export async function listCandidates(user, company, query, entitlements) {
+  if (!entitlements.includes('discovery')) {
+    if (isSearch(query)) throw new AppError('PLAN_REQUIRED', { params: { entitlement: 'discovery' } })
+    const entries = await applicantEntries(company)
+    const job = await matchJob(company)
+    const items = sortCards(entries.map(await cardContext(user, company, entries, job)), 'recommended', user.language)
+    return { items, total: items.length, page: 1, pageSize: items.length, matchJob: job ? { id: String(job._id), title: job.title } : null }
+  }
   const country = viewOf(user)
   const job = await matchJob(company, query.jobId)
   const entries = (await marketCandidates(country)).filter(keep(query, country))
   const card = await cardContext(user, company, entries, job)
   let items = entries.map(card)
   if (query.verified) items = items.filter((item) => item.verification.verified)
-  items = sortCards(items, query.sort, user.language, job ? await resultsBy({ jobId: job._id }) : undefined)
+  items = sortCards(items, query.sort, user.language, job && entitlements.includes('ai') ? await resultsBy({ jobId: job._id }) : undefined)
   return { items, total: items.length, page: 1, pageSize: items.length, matchJob: job ? { id: String(job._id), title: job.title } : null }
 }
 

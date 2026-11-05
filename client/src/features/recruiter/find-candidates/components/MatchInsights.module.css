@@ -2,10 +2,10 @@
   display: flex;
   flex-direction: column;
   padding: 16px;
-  border: 1px solid rgba(0, 132, 255, 0.2);
+  border: 1px solid var(--border);
   border-radius: var(--radius-xl);
-  background: var(--accent);
-  color: var(--primary-hover);
+  background: var(--card);
+  color: var(--muted-foreground);
 }
 
 .toggle {
@@ -17,7 +17,7 @@
   padding: 0;
   border: 0;
   background: transparent;
-  color: var(--primary);
+  color: var(--foreground);
   text-align: left;
 }
 
@@ -41,15 +41,14 @@
   flex-direction: column;
   margin-top: 16px;
   padding-top: 16px;
-  border-top: 1px solid rgba(0, 132, 255, 0.2);
+  border-top: 1px solid var(--border);
 }
 
 .label {
-  font-size: 10px;
+  font-size: 12px;
   font-weight: 600;
-  line-height: 15px;
-  letter-spacing: 0.5px;
-  text-transform: uppercase;
+  line-height: 16px;
+  color: var(--foreground);
 }
 
 .chips {
@@ -65,12 +64,17 @@
   align-items: center;
   gap: 6px;
   padding: 4px 8px;
-  border-radius: var(--radius-md);
-  background: var(--selection);
-  font-size: 10px;
+  border: 1px solid var(--border);
+  border-radius: var(--radius-full);
+  background: var(--card);
+  font-size: 11px;
   font-weight: 500;
   line-height: 15px;
-  color: var(--primary);
+  color: var(--foreground);
+}
+
+.chip svg {
+  color: var(--success-fg);
 }
 
 .experience {
@@ -79,22 +83,23 @@
   padding-top: 16px;
   font-size: 12px;
   line-height: 20px;
+  color: var(--foreground);
 }
 
 .experience svg {
   flex-shrink: 0;
   margin-top: 4px;
-  color: var(--primary);
+  color: var(--success-fg);
 }
 
 .gap {
   margin-top: 16px;
   padding: 10px 12px;
   border-radius: var(--radius-md);
-  background: var(--card);
+  background: var(--muted);
   font-size: 11px;
   line-height: 20px;
-  color: #8b7859;
+  color: var(--muted-foreground);
 }
 
 .gapTitle {

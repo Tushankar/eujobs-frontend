@@ -165,7 +165,7 @@ export default function WhyRecommendedPage() {
               </Button>
             </Panel>
             <Panel className={styles.context} padding={24}>
-              <PillBadge tone="primary" className={styles.frosted}>
+              <PillBadge tone="neutral">
                 {t('why.contextBadge')}
               </PillBadge>
               <p className={styles.contextText}>{t('why.contextText')}</p>

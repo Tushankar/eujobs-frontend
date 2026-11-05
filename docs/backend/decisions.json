@@ -3056,7 +3056,8 @@
           "decisionNote": "The decided plan (Stripe monthly, GBP 9 today) lists candidate unlocks; recruiter pricing is not mentioned.",
           "sources": [
             "SHR-Q24"
-          ]
+          ],
+          "supersededBy": "Phase 11c (P11c-Q1 … Q19, docs/BACKEND_PLAN.md §3.22, 2026-11-05): approved recruiters have Free and a paid Recruiter Plus plan"
         },
         {
           "id": "M-118",
@@ -3775,7 +3776,7 @@
           ],
           "recommended": "a",
           "status": "open",
-          "decisionNote": "Decision: user content translatable on demand; AI translation is a paid feature for candidates (recruiter access per M-117). REC-RQ-48 and CAN-Q74 agree.",
+          "decisionNote": "Decision: user content translatable on demand; AI translation is a paid feature for candidates (recruiter access per M-117, superseded by Phase 11c: recruiters need Recruiter Plus). REC-RQ-48 and CAN-Q74 agree.",
           "sources": [
             "REC-RQ-48",
             "CAN-Q74"

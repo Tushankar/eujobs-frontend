@@ -27,6 +27,9 @@ export function describeAudit(event, language) {
   if (params.targetType) params.targetType = t(language, `labels.reportTargetType.${params.targetType}`)
   // A report reason is a key (M-164); a decision reason is the admin's own text.
   if (ENUMS.reportReason.includes(params.reason)) params.reason = t(language, `labels.reportReason.${params.reason}`)
+  // OD15, P12-Q3: a name removed by an erasure reads "Deleted user".
+  for (const key of ['name', 'candidate', 'payer']) if (params[key] === null) params[key] = t(language, 'labels.deletedUser')
+  if (params.accountRole) params.accountRole = t(language, `labels.payerRole.${params.accountRole}`)
   if (params.amountMinor !== undefined) {
     params.amount = new Intl.NumberFormat(ADMIN_LOCALE[language], { style: 'currency', currency: params.currency }).format(params.amountMinor / 100)
   }

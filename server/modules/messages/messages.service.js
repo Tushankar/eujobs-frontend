@@ -62,6 +62,8 @@ async function conversationDtos(user, conversations) {
     lastMessageAt: conversation.lastMessageAt ?? null,
     lastMessagePreview: conversation.lastMessagePreview ?? '',
     unread: conversation.unread[user.role],
+    // The other side deleted their account (P12-Q2, M-189): no more replies.
+    closed: Boolean(conversation.closedAt),
   }))
 }
 
@@ -90,6 +92,7 @@ export async function getMessages(user, company, id) {
 
 /** Adds a message: the other side's unread count, its delayed email (U13) and, for a candidate's answer, a `message_reply` event. */
 async function addMessage(conversation, user, body) {
+  if (conversation.closedAt) throw new AppError('CONFLICT', { params: { reason: 'conversation_closed' } })
   const side = user.role
   const previous = await Message.findOne({ conversationId: conversation._id }, 'senderRole').sort({ createdAt: -1 })
   const message = await Message.create({ conversationId: conversation._id, senderId: user._id, senderRole: side, body })

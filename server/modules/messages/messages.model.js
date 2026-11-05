@@ -20,6 +20,8 @@ const conversationSchema = new Schema(
     lastMessagePreview: String,
     unread: perSide(Number, 0),
     lastEmailAt: perSide(Date),
+    // The other side deleted their account (P12-Q2, M-189): the thread stays listed, replies are refused.
+    closedAt: Date,
   },
   { timestamps: true },
 )

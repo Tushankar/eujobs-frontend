@@ -104,12 +104,13 @@
   justify-content: center;
   width: 32px;
   height: 32px;
-  border-radius: var(--radius-xl);
-  background: var(--accent);
+  border: 1px solid var(--border);
+  border-radius: var(--radius-full);
+  background: var(--card);
   font-size: 12px;
   font-weight: 700;
   line-height: 16px;
-  color: var(--primary);
+  color: var(--foreground);
 }
 
 .lessons {
@@ -213,14 +214,14 @@
 
 .accountability {
   padding: 24px;
-  border: 1px solid rgba(0, 132, 255, 0.2);
+  border: 1px solid var(--border);
   border-radius: var(--radius-xl);
-  background: var(--accent);
+  background: var(--card);
 }
 
 .accountability svg {
   display: block;
-  color: var(--primary);
+  color: var(--muted-foreground);
 }
 
 .accountability h2 {

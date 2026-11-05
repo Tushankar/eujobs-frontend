@@ -17,7 +17,7 @@ function requireBuyer(req, res, next) {
   throw new AppError('FORBIDDEN')
 }
 
-/* /payments: quote, Checkout sessions (plan: candidates; courses: candidates and approved recruiters), Portal. */
+/* /payments: quote, Checkout sessions (each role's plan, §3.22; courses), Portal. */
 export const paymentsRouter = Router()
 paymentsRouter.use(requireAuth, requireBuyer)
 
@@ -33,7 +33,7 @@ paymentsRouter.get('/checkout-sessions/:id', validate({ params: schemas.sessionP
   res.json(await payments.checkoutSessionStatus(req.user, req.params.id))
 })
 
-paymentsRouter.post('/portal-session', requireRole('candidate'), async (req, res) => {
+paymentsRouter.post('/portal-session', async (req, res) => {
   res.json(await payments.createPortalSession(req.user))
 })
 
@@ -44,9 +44,9 @@ myPaymentsRouter.get('/', requireAuth, requireBuyer, async (req, res) => {
   res.json({ items, total: items.length, page: 1, pageSize: items.length })
 })
 
-/* GET /candidate/subscription: the Billing card (status, period, currency; C14). */
+/* GET /candidate/subscription and /recruiter/subscription: the Billing card (status, period, currency; C14, §3.22). */
 export const subscriptionRouter = Router()
-subscriptionRouter.get('/', requireAuth, requireRole('candidate'), async (req, res) => {
+subscriptionRouter.get('/', requireAuth, requireBuyer, async (req, res) => {
   res.json({ subscription: await payments.subscriptionDto(req.user._id) })
 })
 

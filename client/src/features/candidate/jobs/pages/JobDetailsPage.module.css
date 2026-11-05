@@ -133,9 +133,9 @@
 .insights {
   margin-top: 20px;
   padding: 16px;
-  border: 1px solid rgba(0, 132, 255, 0.2);
+  border: 1px solid var(--border);
   border-radius: var(--radius-xl);
-  background: var(--accent);
+  background: var(--card);
 }
 
 
@@ -154,16 +154,14 @@
 .insightsBody {
   margin-top: 16px;
   padding-top: 16px;
-  border-top: 1px solid rgba(0, 132, 255, 0.2);
+  border-top: 1px solid var(--border);
 }
 
 .eyebrow {
-  font-size: 10px;
+  font-size: 12px;
   font-weight: 600;
-  line-height: 15px;
-  letter-spacing: 0.5px;
-  text-transform: uppercase;
-  color: var(--primary-hover);
+  line-height: 16px;
+  color: var(--foreground);
 }
 
 .evidence {
@@ -178,12 +176,17 @@
   align-items: center;
   gap: 6px;
   padding: 4px 8px;
-  border-radius: var(--radius-md);
-  background: var(--selection);
-  font-size: 10px;
+  border: 1px solid var(--border);
+  border-radius: var(--radius-full);
+  background: var(--card);
+  font-size: 11px;
   font-weight: 500;
   line-height: 15px;
-  color: var(--primary);
+  color: var(--foreground);
+}
+
+.evidenceChip svg {
+  color: var(--success-fg);
 }
 
 .experience {
@@ -193,22 +196,23 @@
   padding-top: 16px;
   font-size: 12px;
   line-height: 20px;
-  color: var(--primary-hover);
+  color: var(--foreground);
 }
 
 .experience svg {
   flex-shrink: 0;
   margin-top: 4px;
+  color: var(--success-fg);
 }
 
 .gap {
   margin-top: 16px;
   padding: 10px 12px;
   border-radius: var(--radius-md);
-  background: var(--card);
+  background: var(--muted);
   font-size: 11px;
   line-height: 20px;
-  color: #8b7859;
+  color: var(--muted-foreground);
 }
 
 .gapTitle {
@@ -217,9 +221,9 @@
 
 .disclaimer {
   padding-top: 16px;
-  font-size: 10px;
+  font-size: 11px;
   line-height: 16px;
-  color: var(--primary-hover);
+  color: var(--muted-foreground);
 }
 
 .section {

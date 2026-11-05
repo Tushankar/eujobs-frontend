@@ -460,7 +460,8 @@
       "offensive": "offensive",
       "misleading": "misleading",
       "other": "other"
-    }
+    },
+    "deletedUser": "Deleted user"
   },
   "certificate": {
     "tagline": "AI Job Portal",
@@ -528,7 +529,22 @@
     "overview": [
       "Metric",
       "All time"
-    ]
+    ],
+    "export": {
+      "field": "Field",
+      "value": "Value",
+      "name": "Name",
+      "email": "Email",
+      "company": "Company",
+      "jobs": "Jobs",
+      "notes": "Candidate notes",
+      "conversations": "Conversations",
+      "messages": "Messages",
+      "payments": "Payments",
+      "paid": "Paid",
+      "notifications": "Notifications",
+      "exportedAt": "Exported at (UTC)"
+    }
   },
   "audit": {
     "moderation": {
@@ -573,7 +589,8 @@
       "user_access_saved": "Access saved for {{name}}",
       "user_access_revoked": "Access revoked for {{name}}",
       "admin_invited": "Admin invited: {{name}} ({{email}}) as {{role}}",
-      "invite_accepted": "Invitation accepted: {{name}}"
+      "invite_accepted": "Invitation accepted: {{name}}",
+      "account_deleted": "Account deleted by its owner ({{accountRole}})"
     },
     "reports": {
       "candidates_exported": "Candidates exported ({{count}} rows)",

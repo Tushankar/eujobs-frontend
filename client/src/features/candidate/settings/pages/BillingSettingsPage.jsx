@@ -1,6 +1,6 @@
 import { useTranslation } from 'react-i18next'
 import { useDispatch } from 'react-redux'
-import { CreditCard, ExternalLink, Sparkles } from 'lucide-react'
+import { CreditCard, ExternalLink } from 'lucide-react'
 import { openUpgrade } from '@/app/upgrade.js'
 import { Button, Icon } from '@/components/ui'
 import EmptyState from '@/components/common/EmptyState.jsx'
@@ -83,7 +83,7 @@ export default function BillingSettingsPage() {
               </Button>
             )}
             {!paid && plus && (
-              <Button leftIcon={<Icon as={Sparkles} size={14} />} onClick={() => dispatch(openUpgrade())}>
+              <Button onClick={() => dispatch(openUpgrade())}>
                 {t('upgradeTo', { plan: plus.name })}
               </Button>
             )}

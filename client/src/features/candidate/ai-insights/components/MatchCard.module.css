@@ -27,9 +27,9 @@
 .insight {
   margin-top: 16px;
   padding: 16px;
-  border: 1px solid #e8e6f3;
+  border: 1px solid var(--border);
   border-radius: var(--radius-xl);
-  background: var(--accent);
+  background: var(--muted);
 }
 
 .toggle {

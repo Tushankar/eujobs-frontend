@@ -1,7 +1,7 @@
 import { useState } from 'react'
 import { useTranslation } from 'react-i18next'
 import { Link, Outlet, useMatches } from 'react-router-dom'
-import { Check, Sparkles } from 'lucide-react'
+import { Check } from 'lucide-react'
 import { Button, Icon, Panel } from '@/components/ui'
 import PageTitle from '@/components/common/PageTitle.jsx'
 import CheckoutDialog from '@/features/payments/components/CheckoutDialog.jsx'
@@ -43,7 +43,7 @@ export function PlanGate({ entitlement }) {
           ))}
         </ul>
         <div className={styles.actions}>
-          <Button onClick={() => setCheckingOut(true)} leftIcon={<Icon as={Sparkles} size={14} />}>
+          <Button onClick={() => setCheckingOut(true)}>
             {t('upgradeTo', { plan: plus?.name ?? '' })}
           </Button>
           <Button as={Link} to="/candidate/settings/billing" variant="secondary">

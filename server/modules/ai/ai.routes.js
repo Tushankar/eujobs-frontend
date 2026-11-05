@@ -9,15 +9,16 @@ import * as summaries from './ai.summaries.js'
 import { translate } from './ai.translate.js'
 
 /*
- * AI routes (§5, §3.18). Candidates need the `ai` entitlement (402 PLAN_REQUIRED otherwise, M-118); approved recruiters
- * use the AI for free (M-117); admins need the route's permission. Generations count toward the daily cap (OD13).
+ * AI routes (§5, §3.18). Candidates need the `ai` entitlement of Plus and approved recruiters that of Recruiter Plus (402
+ * PLAN_REQUIRED otherwise, M-118, §3.22; M-117 superseded); admins need the route's permission. Generations count toward the daily cap (OD13).
  */
 const ai = requireEntitlement('ai')
-/** A Plus candidate or an approved recruiter (C+ai, R✓). */
+/** A Plus candidate or an approved Recruiter Plus recruiter (C+ai, R✓+ai). */
 const reader = [
   requireAuth,
   requireRole('candidate', 'recruiter'),
-  (req, res, next) => (req.user.role === 'recruiter' ? requireApprovedRecruiter(req, res, next) : ai(req, res, next)),
+  (req, res, next) => (req.user.role === 'recruiter' ? requireApprovedRecruiter(req, res, next) : next()),
+  requireEntitlement('ai', ['candidate', 'recruiter']),
 ]
 const jobParams = validate({ params: schemas.jobParams })
 const jobQuery = validate({ query: schemas.jobQuery })
@@ -92,7 +93,7 @@ jobSummaryRouter.post('/:id/ai-summary', ...reader, jobParams, async (req, res) 
 
 /* GET /recruiter/candidates/:id/match (M-057): the narrative of Match insights; never a score (C6). */
 export const recruiterRouter = Router()
-recruiterRouter.get('/:id/match', requireAuth, requireApprovedRecruiter, jobParams, validate({ query: schemas.feedbackParams }), async (req, res) => {
+recruiterRouter.get('/:id/match', requireAuth, requireApprovedRecruiter, requireEntitlement('ai', ['recruiter']), jobParams, validate({ query: schemas.feedbackParams }), async (req, res) => {
   res.json(await summaries.recruiterMatch(req.user, req.company, req.params.id, req.query.jobId))
 })
 

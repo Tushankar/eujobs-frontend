@@ -6,7 +6,7 @@ import { Job } from '../jobs/jobs.model.js'
 import { jobDetails } from '../jobs/jobs.search.js'
 import { Course } from '../learning/learning.model.js'
 import { getCourse, getLesson } from '../learning/learning.service.js'
-import { Message } from '../messages/messages.model.js'
+import { Conversation, Message } from '../messages/messages.model.js'
 import { getMessages } from '../messages/messages.service.js'
 import { CandidateProfile } from '../candidates/candidates.model.js'
 import { write } from './ai.facts.js'
@@ -66,11 +66,17 @@ const SOURCES = {
   },
 }
 
+/** The candidate a translated text is about (a profile text, or any message of their thread), for erasure (M-188). */
+const SUBJECTS = {
+  candidate: ({ id }) => id,
+  message: async ({ id }) => (await Conversation.findById((await Message.findById(id, 'conversationId')).conversationId, 'candidateId'))?.candidateId,
+}
+
 /** POST /translate: `{ texts }` in the reader's language, one per source text (responsibilities are several). */
 export async function translate(user, company, body) {
   const texts = await SOURCES[body.entity](user, body, company)
   if (!texts.some((text) => text.trim())) return { texts }
-  const { texts: translated } = await write(PROMPTS.translate, { user, input: { language: user.language, texts } })
+  const { texts: translated } = await write(PROMPTS.translate, { user, subjectId: (await SUBJECTS[body.entity]?.(body)) ?? null, input: { language: user.language, texts } })
   if (body.entity === 'course' && body.field === 'lesson') return { texts: translated.map((markdown) => renderMarkdown(markdown)) }
   return { texts: translated }
 }

@@ -1,10 +1,9 @@
 import { useEffect, useState } from 'react'
 import { useTranslation } from 'react-i18next'
 import { Link, useLocation, useNavigate, useParams } from 'react-router-dom'
-import { ArrowLeft, ArrowRight, Settings2, X } from 'lucide-react'
+import { ArrowLeft, ArrowRight, Lightbulb, Settings2, X } from 'lucide-react'
 import PageTitle from '@/components/common/PageTitle.jsx'
 import { Button, Icon, IconButton } from '@/components/ui'
-import aiSparkle from '@/assets/icons/ai-sparkle-blue.svg'
 import { useJobText } from '@/lib/jobText.js'
 import { useGetRecruiterJobQuery } from '../api.js'
 import JobApplicantsList from '../components/JobApplicantsList.jsx'
@@ -92,7 +91,7 @@ export default function JobDetailsPage() {
           </section>
 
           <aside className={`${styles.tip} sticky-side`}>
-            <img src={aiSparkle} alt="" width={14} height={14} />
+            <Icon as={Lightbulb} size={16} />
             <p>{t('jobs:details.tip')}</p>
           </aside>
         </div>

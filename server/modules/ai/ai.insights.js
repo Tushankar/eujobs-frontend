@@ -99,11 +99,11 @@ export async function narrative(user, { section, jobId }) {
   if (section === 'overview') {
     const [strength] = (await overview(user)).skillDemand
     if (!strength) return { text: '' }
-    return write(PROMPTS.insightsOverview, { user, input: { candidate: facts, strength: strength.skill, rolesListingIt: strength.jobCount } })
+    return write(PROMPTS.insightsOverview, { user, subjectId: user._id, input: { candidate: facts, strength: strength.skill, rolesListingIt: strength.jobCount } })
   }
   if (section === 'improve') {
     const { completeness } = await candidateSummary(user)
-    return write(PROMPTS.improveProfile, { user, input: { candidate: facts, checklist: completeness.items.map(({ key, done }) => ({ area: key, done })) } })
+    return write(PROMPTS.improveProfile, { user, subjectId: user._id, input: { candidate: facts, checklist: completeness.items.map(({ key, done }) => ({ area: key, done })) } })
   }
   const chosen = await chosenJob(user, jobId)
   if (!chosen) throw new AppError('NOT_FOUND')
@@ -111,9 +111,9 @@ export async function narrative(user, { section, jobId }) {
   const input = { candidate: facts, job: await jobFacts(chosen.job), evidence }
   if (section === 'skill_gap') {
     if (!evidence.missingSkills.length) return { guidance: [] }
-    return write(PROMPTS.skillGap, { user, input: { ...input, missingSkills: evidence.missingSkills } })
+    return write(PROMPTS.skillGap, { user, subjectId: user._id, input: { ...input, missingSkills: evidence.missingSkills } })
   }
-  return write(section === 'why' ? PROMPTS.whyRecommended : PROMPTS.candidateMatch, { user, input })
+  return write(section === 'why' ? PROMPTS.whyRecommended : PROMPTS.candidateMatch, { user, subjectId: user._id, input })
 }
 
 /* ---------- actions ---------- */

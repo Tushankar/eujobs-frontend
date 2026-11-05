@@ -11,7 +11,8 @@ const { ObjectId } = Schema.Types
  */
 const reportSchema = new Schema(
   {
-    reporterId: { type: ObjectId, ref: 'User', required: true },
+    // null once the reporter deleted their account (OD15: shown as "Deleted user").
+    reporterId: { type: ObjectId, ref: 'User' },
     reason: { type: String, enum: ENUMS.reportReason, required: true },
     details: String,
     at: { type: Date, required: true },

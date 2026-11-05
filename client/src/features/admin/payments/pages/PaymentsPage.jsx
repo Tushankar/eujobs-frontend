@@ -107,10 +107,16 @@ export default function PaymentsPage() {
   const countries = useCountryOptions().filter((country) => !country.isRemote)
   const { params, setFilter, search, setSearch, clearFilters } = useUrlFilters()
   // P11b-Q9: /admin/payments/:paymentId opens that payment's details; the list keeps its filters.
-  const selected = useParams().paymentId ?? null
+  // (the layout remounts a page when its path changes, so View keeps local state; closing a linked payment returns to
+  // the list's URL)
+  const { paymentId } = useParams()
   const navigate = useNavigate()
   const location = useLocation()
-  const setSelected = (id) => navigate({ pathname: id ? `/admin/payments/${id}` : '/admin/payments', search: location.search })
+  const [selected, setSelected] = useState(paymentId ?? null)
+  const closeDetails = () => {
+    setSelected(null)
+    if (paymentId) navigate({ pathname: '/admin/payments', search: location.search }, { replace: true })
+  }
   const [exporting, setExporting] = useState(false)
   const [exportError, setExportError] = useState('')
   const filters = Object.fromEntries(['q', ...Object.keys(FILTERS), 'country'].map((name) => [name, params.get(name) ?? '']))
@@ -210,7 +216,7 @@ export default function PaymentsPage() {
         )}
       </div>
 
-      {selected && <PaymentDetails id={selected} onClose={() => setSelected(null)} />}
+      {selected && <PaymentDetails id={selected} onClose={closeDetails} />}
     </>
   )
 }

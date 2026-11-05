@@ -1,8 +1,9 @@
-import { bodyText, clickText, signInWithForm } from '../lib/flows.js'
+import { bodyText, clickText, pageApi, signInWithForm } from '../lib/flows.js'
 
 /**
  * P2-12 (M-195, M-197, M-138; the bell per P11b-Q2): identity from /me (name, email, plan or role subtitle, photo or
- * initials), no workspace switch, the bell as a dropdown button without a count, the footer, and a
+ * initials), no workspace switch, the bell as a dropdown button whose count is the account's unread notifications (Emma's
+ * seeded unread messages, P11b-Q13), the footer, and a
  * scrolling country list at 375 px.
  */
 export default {
@@ -32,9 +33,11 @@ export default {
     await ctx.screenshot(page, '1-candidate-menu')
 
     ctx.check(!(await page.$('[aria-label="Switch workspace"]')), 'no workspace switch')
-    // P11b-Q2 (supersedes M-093, OD6): the bell opens the notifications dropdown; no count while nothing is unread.
-    const bell = await page.$eval('header [data-bell]', (button) => ({ tag: button.tagName, popup: button.getAttribute('aria-haspopup'), count: Boolean(button.querySelector('[data-bell-count]')) }))
-    ctx.check(bell.tag === 'BUTTON' && bell.popup === 'true' && !bell.count, `bell ${JSON.stringify(bell)}: a dropdown button, no count`)
+    // P11b-Q2 (supersedes M-093, OD6): the bell opens the notifications dropdown and shows the unread count.
+    const { unread } = (await pageApi(page, '/me/counters')).body.notifications
+    await page.waitForFunction((wanted) => Number(document.querySelector('header [data-bell] [data-bell-count]')?.textContent ?? 0) === wanted, { timeout: 20_000 }, unread)
+    const bell = await page.$eval('header [data-bell]', (button) => ({ tag: button.tagName, popup: button.getAttribute('aria-haspopup') }))
+    ctx.check(bell.tag === 'BUTTON' && bell.popup === 'true', `bell ${JSON.stringify(bell)}: a dropdown button showing ${unread} unread`)
     const footer = await page.$eval('footer', (element) => ({
       text: element.innerText,
       links: [...element.querySelectorAll('a')].map((link) => link.getAttribute('href')),

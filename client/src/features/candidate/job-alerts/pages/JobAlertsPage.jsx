@@ -1,7 +1,7 @@
 import { useState } from 'react'
 import { useTranslation } from 'react-i18next'
 import { useDispatch } from 'react-redux'
-import { Bell, BellOff, Plus, Sparkles, Trash2 } from 'lucide-react'
+import { Bell, BellOff, Plus, Trash2 } from 'lucide-react'
 import { openUpgrade } from '@/app/upgrade.js'
 import { cx } from '@/utils/cx.js'
 import { Button, Icon, IconButton, Panel } from '@/components/ui'
@@ -50,7 +50,7 @@ export default function JobAlertsPage() {
             <h2 className={styles.pausedTitle}>{t('jobAlerts:planPaused.title')}</h2>
             <p className={styles.pausedText}>{t('jobAlerts:planPaused.text')}</p>
           </div>
-          <Button leftIcon={<Icon as={Sparkles} size={14} />} onClick={() => dispatch(openUpgrade('job_alerts'))}>
+          <Button onClick={() => dispatch(openUpgrade('job_alerts'))}>
             {t('jobAlerts:planPaused.upgrade')}
           </Button>
         </Panel>

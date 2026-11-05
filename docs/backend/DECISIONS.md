@@ -1342,6 +1342,8 @@ Are recruiter AI features (job summaries, match insights) free for approved recr
 
 **Decision:** Free for approved recruiters. Only candidates have a plan.
 
+> **Superseded 2026-11-05 (Phase 11c, owner answers P11c-Q1 … Q19 in docs/BACKEND_PLAN.md, §3.22):** approved recruiters have a Free plan and a paid **Recruiter Plus** plan (£49 a month). Recruiter AI tools, Find candidates, starting conversations, CV requests and more than 1 active job need Recruiter Plus.
+
 *Context:* The decided plan (Stripe monthly, GBP 9 today) lists candidate unlocks; recruiter pricing is not mentioned.
 
 *Rejected:* Recruiter paid plan.
@@ -1646,7 +1648,7 @@ User content is translatable on demand (decided). Which texts get a 'Translate' 
 
 **Decision:** Selected texts, cached. Job brief and responsibilities, company About, candidate about, work-history descriptions, messages; not skills or names; cached per entity + field + language + hash.
 
-*Context:* Decision: user content translatable on demand; AI translation is a paid feature for candidates (recruiter access per M-117). REC-RQ-48 and CAN-Q74 agree.
+*Context:* Decision: user content translatable on demand; AI translation is a paid feature for candidates (recruiter access per M-117, superseded by Phase 11c: recruiters need Recruiter Plus). REC-RQ-48 and CAN-Q74 agree.
 
 *Rejected:* Automatic everywhere.
 

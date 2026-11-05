@@ -15,10 +15,8 @@
 .tile {
   display: inline-flex;
   flex-shrink: 0;
-  padding: 12px;
-  border-radius: var(--radius-xl);
-  background: var(--accent);
-  color: var(--primary-hover);
+  padding: 2px 0;
+  color: var(--muted-foreground);
 }
 
 .body {
@@ -87,7 +85,7 @@
   margin-top: 10px;
   padding: 12px;
   border-radius: var(--radius-md);
-  background: var(--accent);
+  background: var(--muted);
 }
 
 .aiTitle {

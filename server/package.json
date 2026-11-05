@@ -9,7 +9,7 @@
   "scripts": {
     "dev": "node --watch --env-file=.env server.js",
     "start": "node --env-file=.env server.js",
-    "test": "node --env-file=.env --import ./test/setup.js --test --test-concurrency=1 \"test/**/*.test.js\"",
+    "test": "node test/run.js",
     "seed:catalog": "node --env-file=.env seed/catalog.js",
     "seed:demo": "node --env-file=.env seed/demo.js",
     "mail:test": "node --env-file=.env scripts/mailTest.js",

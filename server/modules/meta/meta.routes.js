@@ -4,6 +4,7 @@ import { LIMITS } from '../../config/limits.js'
 import { validate } from '../../lib/validate.js'
 import { optionalAuth, requireAuth } from '../../middleware/auth.js'
 import * as schemas from './meta.schemas.js'
+import { companyCurrency } from '../payments/payments.service.js'
 import * as meta from './meta.service.js'
 
 /* Public catalogue reads (§5 "Meta and public"); mounted at the API root. */
@@ -23,10 +24,14 @@ router.get('/meta/languages', (req, res) => {
   res.json(list(meta.listLanguageCodes()))
 })
 
-/** M-116: prices in the requested currency, else the signed-in user's, else EUR (Remote's currency). */
+/**
+ * M-116, §3.22: the signed-in recruiter's plans (in the company country's currency) or the candidate plans (in the
+ * requested currency, else the user's, else EUR, Remote's currency).
+ */
 router.get('/plans', optionalAuth, validate({ query: schemas.plansQuery }), async (req, res) => {
-  const currency = req.query.currency ?? (await meta.userCurrency(req.user)) ?? 'EUR'
-  res.json(list(await meta.listPlans(currency, req.query.language ?? req.user?.language ?? 'en')))
+  const recruiter = req.user?.role === 'recruiter'
+  const currency = req.query.currency ?? (recruiter ? await companyCurrency(req.user) : await meta.userCurrency(req.user)) ?? 'EUR'
+  res.json(list(await meta.listPlans(currency, req.query.language ?? req.user?.language ?? 'en', recruiter ? 'recruiter' : 'candidate')))
 })
 
 router.get('/legal/:doc', validate({ params: schemas.legalParams, query: schemas.legalQuery }), async (req, res) => {

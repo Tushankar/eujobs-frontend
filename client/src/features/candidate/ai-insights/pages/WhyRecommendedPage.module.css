@@ -59,12 +59,12 @@
   justify-content: center;
   width: 32px;
   height: 32px;
-  border-radius: var(--radius-xl);
-  background: var(--accent);
+  border-radius: var(--radius-full);
+  background: var(--muted);
   font-size: 12px;
   font-weight: 600;
   line-height: 16px;
-  color: var(--primary);
+  color: var(--foreground);
 }
 
 .reasonTitle {
@@ -204,23 +204,19 @@
 .sourceIcon {
   display: inline-flex;
   padding-top: 4px;
-  color: var(--primary);
+  color: var(--muted-foreground);
 }
 
 .context {
   border-color: var(--border);
-  background: var(--accent);
-}
-
-.side .frosted {
-  background: rgba(255, 255, 255, 0.8);
+  background: var(--card);
 }
 
 .contextText {
   padding-top: 16px;
   font-size: 14px;
   line-height: 28px;
-  color: var(--primary-hover);
+  color: var(--foreground);
 }
 
 .context .link {

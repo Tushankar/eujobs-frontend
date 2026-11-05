@@ -14,9 +14,10 @@
   align-self: flex-start;
   flex-shrink: 0;
   padding: 16px;
-  border-radius: 16px;
-  background: var(--accent);
-  color: var(--accent-foreground);
+  border: 1px solid var(--border);
+  border-radius: var(--radius-full);
+  background: var(--card);
+  color: var(--foreground);
 }
 
 .file {
@@ -35,10 +36,8 @@
 .fileIcon {
   display: inline-flex;
   flex-shrink: 0;
-  padding: 12px;
-  border-radius: var(--radius-xl);
-  background: var(--accent);
-  color: var(--accent-foreground);
+  padding: 2px 0;
+  color: var(--muted-foreground);
 }
 
 .fileText {

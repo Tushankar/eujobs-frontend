@@ -2,7 +2,7 @@ import { useState } from 'react'
 import { useTranslation } from 'react-i18next'
 import { useDispatch } from 'react-redux'
 import { Link } from 'react-router-dom'
-import { ChevronRight, Lock, Sparkles } from 'lucide-react'
+import { ChevronRight, Lock } from 'lucide-react'
 import { useGetConfigQuery, useGetMeQuery } from '@/app/api.js'
 import { openUpgrade } from '@/app/upgrade.js'
 import { Button, Checkbox, Icon, Modal, SelectField, TextareaField } from '@/components/ui'
@@ -56,7 +56,6 @@ function ApplyGate({ completeness, missing, planRequired, onClose }) {
           </Button>
           {planRequired && (
             <Button
-              leftIcon={<Icon as={Sparkles} size={14} />}
               onClick={() => {
                 onClose()
                 dispatch(openUpgrade('apply'))
@@ -109,7 +108,7 @@ function ApplyGate({ completeness, missing, planRequired, onClose }) {
             </div>
             <div className={styles.plan}>
               <span className={styles.planIcon}>
-                <Icon as={Sparkles} size={18} />
+                <Icon as={Lock} size={18} />
               </span>
               <div>
                 <p className={styles.planText}>{t('applications:gate.planText')}</p>

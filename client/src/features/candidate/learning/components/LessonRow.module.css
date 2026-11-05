@@ -33,8 +33,7 @@
 }
 
 .open {
-  background: var(--accent);
-  color: var(--primary-hover);
+  color: var(--foreground);
 }
 
 .circle.done {

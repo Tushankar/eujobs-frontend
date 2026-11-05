@@ -4,10 +4,11 @@ import { ENUMS } from '../../config/enums.js'
 const { Schema } = mongoose
 const localized = { en: String, es: String, fr: String }
 
-/* Plan catalogue (M-115, M-116, OD1): edited through seed:catalog. Stripe price ids arrive in Phase 5. */
+/* Plan catalogue (M-115, M-116, OD1, §3.22): edited through seed:catalog; each plan belongs to one role. */
 const planSchema = new Schema(
   {
     key: { type: String, enum: ENUMS.planKey, required: true, unique: true },
+    role: { type: String, enum: ['candidate', 'recruiter'], required: true },
     name: localized,
     features: [{ _id: false, ...localized }],
     interval: { type: String, enum: ['month'], default: 'month' },
@@ -17,7 +18,7 @@ const planSchema = new Schema(
   { timestamps: true },
 )
 
-/* Server-side settings, e.g. AppConfig('stripe') = { productId, portalConfigurationId } (U40, P6). */
+/* Server-side settings, e.g. AppConfig('stripe') = { productIds: { plus, recruiter_plus }, portalConfigurationId } (U40, P6). */
 const appConfigSchema = new Schema(
   {
     key: { type: String, required: true, unique: true },
@@ -30,7 +31,7 @@ export const Plan = mongoose.model('Plan', planSchema)
 export const AppConfig = mongoose.model('AppConfig', appConfigSchema)
 
 /*
- * The candidate's Stripe subscription, mirrored from the webhooks (U38, M-119 … M-121). One row per user,
+ * A candidate's or recruiter's Stripe subscription (§3.22), mirrored from the webhooks (U38, M-119 … M-121). One row per user,
  * replaced when the user subscribes again. `retrying` comes from the last failed invoice (§2.10).
  */
 const subscriptionSchema = new Schema(

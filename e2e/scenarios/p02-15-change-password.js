@@ -3,7 +3,10 @@ import { api, db } from '../lib/testApi.js'
 
 const NEW_PASSWORD = 'Velvet-Orchard-36'
 
-/** P2-15 (M-010, M-199): a wrong current password is refused; the new one works at the next sign-in; admin Settings saves name and language. */
+/**
+ * P2-15 (M-010, M-199): a wrong current password is refused; the new one works at the next sign-in; admin Settings
+ * saves name and language and, since Phase 11b (P11b-Q3, supersedes OD6), shows the admin's email switches.
+ */
 export default {
   name: 'P2-15 Change password',
   viewports: ['D'],
@@ -49,7 +52,7 @@ export default {
       await admin.page.select('select[name="language"]', 'es')
       await admin.page.waitForFunction(() => document.querySelector('h1')?.textContent === 'Configuración')
       await ctx.screenshot(admin.page, '3-admin-settings-spanish')
-      ctx.check(!(await bodyText(admin.page)).match(/notificaciones por correo|email updates/i), 'no email preferences for admins')
+      ctx.check((await bodyText(admin.page)).includes('Notificaciones por correo'), 'the admin email switches, in Spanish')
       ctx.assertClean(admin.issues, 'admin settings')
     } finally {
       const signedIn = await api('/auth/login', { method: 'POST', body: { email: emma, password: NEW_PASSWORD, portal: 'candidate' } })

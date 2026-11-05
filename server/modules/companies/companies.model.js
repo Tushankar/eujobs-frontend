@@ -27,6 +27,8 @@ const companySchema = new Schema(
     verifiedAt: Date,
     submittedAt: Date,
     reviewHistory: [{ _id: false, decision: { type: String, enum: ENUMS.accountDecision }, reason: String, by: ObjectId, at: Date }],
+    // M-189: the recruiter deleted their account; the display name and logo stay for past applications and threads.
+    deletedAt: Date,
   },
   { timestamps: true },
 )

@@ -16,16 +16,18 @@ const PORTAL_FEATURES = {
   subscription_update: { enabled: false },
 }
 
-export const plusLookupKey = (currency) => `plus_monthly_${currency.toLowerCase()}`
+// e.g. plus_monthly_gbp, recruiter_plus_monthly_eur.
+const lookupKeyOf = (planKey, currency) => `${planKey}_monthly_${currency.toLowerCase()}`
 
-async function findProduct() {
+async function findProduct(planKey) {
   for await (const product of stripe().products.list({ active: true, limit: 100 })) {
-    if (product.metadata.app === APP.app && product.metadata.plan === 'plus') return product.id
+    if (product.metadata.app === APP.app && product.metadata.plan === planKey) return product.id
   }
   return null
 }
 
-async function ensurePortalConfiguration() {
+/** P6: one Portal configuration for both plans (§3.22). */
+export async function ensurePortalConfiguration() {
   for await (const configuration of stripe().billingPortal.configurations.list({ limit: 100 })) {
     if (configuration.metadata?.app === APP.app) {
       await stripe().billingPortal.configurations.update(configuration.id, { active: true, features: PORTAL_FEATURES })
@@ -36,16 +38,16 @@ async function ensurePortalConfiguration() {
 }
 
 /**
- * The Plus Product, one monthly Price per currency (OD1 `prices` in minor units) and the Portal configuration.
+ * A paid plan's Product (Plus, Recruiter Plus) and one monthly Price per currency (`prices` in minor units).
  * A changed amount gets a new Price that takes over the lookup key (Prices are immutable).
  */
-export async function ensureStripeCatalog(prices) {
-  const { data: existing } = await stripe().prices.list({ lookup_keys: prices.map((price) => plusLookupKey(price.currency)), active: true, limit: 10 })
+export async function ensurePlanPrices({ key, name, prices }) {
+  const { data: existing } = await stripe().prices.list({ lookup_keys: prices.map((price) => lookupKeyOf(key, price.currency)), active: true, limit: 10 })
   const productId =
-    existing[0]?.product ?? (await findProduct()) ?? (await stripe().products.create({ name: 'Plus', metadata: { ...APP, plan: 'plus' } })).id
+    existing[0]?.product ?? (await findProduct(key)) ?? (await stripe().products.create({ name: name.en, metadata: { ...APP, plan: key } })).id
   const priceIds = {}
   for (const { currency, amountMinor } of prices) {
-    const lookupKey = plusLookupKey(currency)
+    const lookupKey = lookupKeyOf(key, currency)
     const found = existing.find((price) => price.lookup_key === lookupKey)
     const current = found && found.product === productId && found.unit_amount === amountMinor && found.recurring?.interval === 'month'
     priceIds[currency] = current
@@ -62,7 +64,7 @@ export async function ensureStripeCatalog(prices) {
           })
         ).id
   }
-  return { productId, priceIds, portalConfigurationId: await ensurePortalConfiguration() }
+  return { productId, priceIds }
 }
 
 /**

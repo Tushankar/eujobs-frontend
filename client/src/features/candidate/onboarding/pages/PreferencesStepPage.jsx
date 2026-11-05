@@ -1,7 +1,7 @@
 import { useState } from 'react'
 import { useTranslation } from 'react-i18next'
 import { Link, useNavigate } from 'react-router-dom'
-import { ArrowLeft, Sparkles } from 'lucide-react'
+import { ArrowLeft, ArrowRight } from 'lucide-react'
 import { errorCode, useGetConfigQuery, useGetCountriesQuery } from '@/app/api.js'
 import { Button, Icon, SelectField, TextField } from '@/components/ui'
 import CityField from '@/components/common/CityField.jsx'
@@ -119,7 +119,7 @@ function PreferencesForm({ profile }) {
           />
         </div>
         {failure && <p role="alert">{errorText.code(failure)}</p>}
-        <Button type="submit" fullWidth loading={isLoading} rightIcon={<Icon as={Sparkles} size={14} />}>
+        <Button type="submit" fullWidth loading={isLoading} rightIcon={<Icon as={ArrowRight} size={14} />}>
           {t('onboarding:preferences.submit')}
         </Button>
       </form>

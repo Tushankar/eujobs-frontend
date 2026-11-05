@@ -36,7 +36,7 @@ async function readableVersion(user, id) {
 /** POST /candidate/cv/versions/:id/snapshot: cached per CV text, so asking again costs nothing. */
 export async function proposeSnapshot(user, id) {
   const version = await readableVersion(user, id)
-  const proposal = cleanSnapshot(await write(PROMPTS.cvSnapshot, { user, model: 'main', input: { cvText: version.extractedText } }))
+  const proposal = cleanSnapshot(await write(PROMPTS.cvSnapshot, { user, subjectId: user._id, model: 'main', input: { cvText: version.extractedText } }))
   version.pendingSnapshot = { ...proposal, createdAt: new Date() }
   await version.save()
 }

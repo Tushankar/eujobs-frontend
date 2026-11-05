@@ -35,9 +35,15 @@ export default function ApplicationsPage() {
   const { data } = useGetApplicationsQuery()
   const [withdraw] = useWithdrawMutation()
   const [filter, setFilter] = useState('all')
+  // P11b-Q9: a notification's link opens the dialog; the layout remounts a page when its path changes, so in-page opens
+  // keep local state and only closing a linked dialog goes back to the list's URL.
   const navigate = useNavigate()
-  const activityId = useParams().applicationId ?? null
-  const setActivityId = (id) => navigate(id ? `/candidate/applications/${id}` : '/candidate/applications')
+  const { applicationId } = useParams()
+  const [activityId, setActivityId] = useState(applicationId ?? null)
+  const closeActivity = () => {
+    setActivityId(null)
+    if (applicationId) navigate('/candidate/applications', { replace: true })
+  }
   const [withdrawing, setWithdrawing] = useState(null)
   const [reapplying, setReapplying] = useState(null)
   const [messaging, setMessaging] = useState(null)
@@ -95,7 +101,7 @@ export default function ApplicationsPage() {
     <div>
       <PageTitle className={styles.pageTitle} title={t('applications:list.title')} description={t('applications:list.description')} />
 
-      {data && activityId && !activity && <NoticeBanner>{t('notifications:unavailable')}</NoticeBanner>}
+      {data && applicationId && !applications.some((application) => application.id === applicationId) && <NoticeBanner>{t('notifications:unavailable')}</NoticeBanner>}
 
       <FilterChips className={styles.chips} label={t('applications:list.filtersLabel')} options={filters} value={filter} onChange={setFilter} />
 
@@ -119,7 +125,7 @@ export default function ApplicationsPage() {
       <ApplicationActivityModal
         application={activity}
         canReapply={activity ? canReapply(activity) : false}
-        onClose={() => setActivityId(null)}
+        onClose={closeActivity}
         onWithdraw={(application) => {
           setActivityId(null)
           setWithdrawing(application)

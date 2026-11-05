@@ -21,14 +21,11 @@
 .tile {
   display: inline-flex;
   flex-shrink: 0;
-  padding: 12px;
-  border-radius: var(--radius-xl);
-  background: var(--accent);
-  color: var(--primary);
+  padding: 2px 0;
+  color: var(--muted-foreground);
 }
 
 .tilePaused {
-  background: var(--secondary);
   color: var(--text-faint);
 }
 

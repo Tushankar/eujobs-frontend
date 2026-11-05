@@ -313,6 +313,43 @@ M-164 lets users report jobs, profiles, companies and messages. M-167 defines "R
 | P11b-Q13 seed (owner) | `seed:demo` creates one notification per seeded event that is still waiting, dated like the event: Sarah's unread messages from Emma and Oliver, the two open moderation cases and James Chen's pending account review for admins with `moderation.manage`. | 2026-11-04 |
 | P11b-Q14 rejected or suspended recruiters (owner) | Their notification is stored (it opens the review page) and shows in the bell once the account is active again; the always-on email and the review page's reason tell them now. No bell on the onboarding layout. | 2026-11-04 |
 | P11b-Q15 job-alert timing (owner) | One in-app notification per matching job at the job's first publish, whatever the alert's frequency; the email keeps its frequency. | 2026-11-04 |
+| P11b-C1 builder call: status changes not told | A rejection saved without "notify the candidate" creates no in-app notification either: the in-app status notification follows the email task's "told" rule (`lastEmailedStatus`, U33), and the email category switch does not affect it. | 2026-11-04 |
+| P11b-C2 builder call: which reports notify | Only user reports (`POST /reports`) notify admins; a case an admin opens from Jobs ("Open case") does not, since an admin made it. A later report on an open case updates its unread notification (count + 1) and sends another email. | 2026-11-04 |
+| P11b-C3 builder call: recipients | Company events go to the company's active recruiter (as the existing emails); `cv_request_decided` goes to the recruiter who asked (the company's recruiter if that account is gone); `admin_joined` leaves out the new admin. Job alerts notify only candidates whose plan has `job_alerts` (M-119). | 2026-11-04 |
+| P11b-C4 builder call: certificate target | `certificate_issued` opens the course page, which shows the certificate and its download (the email's main link), not the public verification page. | 2026-11-04 |
+| P11b-C5 builder call: sidebar sections | Types count on these items: candidate Applications, Messages (not shown, Q10), CV & versions, Verification, Job alerts, Learning, My profile; recruiter Overview, Jobs, Find candidates, Applications, Messages (not shown), Learning; admin Moderation, Payments, Access management. Billing types (payment paid, renewal failed, plan ended) count only in the bell, since Billing is not a sidebar item. | 2026-11-04 |
+| P11b-C6 builder call: item URLs | The workspace layout remounts a page when its path changes, so `/candidate/applications/:id` and `/admin/payments/:id` only seed the dialog; opening another row keeps local state, and closing a linked dialog returns to the list URL (P6-06 found that a URL-driven dialog lost the withdraw confirmation). `/recruiter/applications/:id` reads the row from the new `GET /recruiter/applications/:id` and sets the job (and Withdrawn/Not selected) filter in the query string. | 2026-11-04 |
+| P11b-C7 builder call: read rules | Opening a notification marks it read even when its item is gone. Opening an item marks its notifications read once, when it opens and the counters are known; one that arrives while the page stays open stays unread (P11b-02 found the earlier "whenever unread" rule marking a new withdrawal read). Pages that do this: application dialog/row, job details (both roles), course page (both roles), candidate profile (recruiter), CV & versions, Verification, Billing (both roles), My profile, recruiter Overview, the admin account, verification and content dialogs, the payment dialog, the admin access page; reading a thread does it on the server. | 2026-11-04 |
+| P11b-C8 builder call: counters and roles | `/me/counters` now answers admins (`{ notifications }`); recruiters still need an approved account for it. The bell lists `LIMITS.notifications.latest` (10) from `/meta/config`; the page 20 a page. | 2026-11-04 |
+| P11b-C9 builder call: client details | New `notifications` namespace and enum labels `emailCategory`, `notificationType` and the five `emailType` admin keys in en/es/fr (check-i18n passes; `foundation.test.js` counts updated). Removed orphaned keys `shell:notifications`, `account:notifications.email/.candidate/.recruiter`. The Data & account demo CSV's "Email alerts" reads On when any switch is on (Phase 12 rewrites that export). `DataTable` gained `getRowProps`. On phones the dropdown spans the header (the header's backdrop filter makes it the popover's containing block; the Dropdown's min-width is reset). | 2026-11-04 |
+| P11b-C10 builder call: tests | Every API test file now clears `notifications` before each test (`useTestDb`). e2e scenarios are `p11b-01` … `p11b-05` (run by name; `phase-11` selects `p11-` only) with `e2e/lib/notifications.js`. A verification reviewer needs `documents.view` as well as `moderation.manage` to open the evidence (P10 rule), so the e2e moderator roles hold both. P2-12, P2-15, P2-16 and P6-10 were updated for OD6's reversal. | 2026-11-04 |
+| P12-Q0 test lock (owner, Phase 12 step 0) | Parallel sessions must not break each other's tests: `npm test` and `node e2e/run.js` take a lock before they start (a file under `C:/eujobs-data` with the session, the process id and the start time); a second run waits or exits naming the holder; a lock left by a dead process is cleared. Keep the single `eujobs_test` database (the Atlas cluster is shared); ask before proposing separate databases. Documented in the README and the memory file. | 2026-11-05 |
+| P12-Q1 full regression (owner) | `node e2e/run.js all`: one command and one results table; `eujobs_test` is reseeded at the start of each phase group (the state each phase was verified on); the API, Vite and stripe listen stay up for the whole run. | 2026-11-05 |
+| P12-Q2 erased candidate's threads (owner) | The conversation stays in the recruiter's inbox as "Deleted user"; all its messages are deleted and replies are disabled. | 2026-11-05 |
+| P12-Q3 names in others' records (owner) | Erasure replaces the person's name with "Deleted user" in other users' notifications about their items (the rows stay; opening says "This item is no longer available."), and likewise in audit entries and moderation reports. | 2026-11-05 |
+| P12-Q4 recruiter export files (owner) | The recruiter's ZIP also holds their own KYC documents (until retention deletes them) and the company logo. | 2026-11-05 |
+| P12-Q5 recruiter deletion: views and CV requests (owner) | The company's profile views and CV requests (pending or decided) are deleted with its notes, shortlist and activity (OQ-6k). | 2026-11-05 |
+| P12-Q6 remaining client `data/` files (owner) | The static audit flags every client `data/` file except three UI-config files named in the script with the reason: `auth/data/onboarding.js` (onboarding step routes), `auth/data/workspaceChoices.js` (portal tiles), `help/data/help.js` (Help link destinations). | 2026-11-05 |
+| P12-Q7 audit entry for erasure (owner) | One audit entry per erasure or recruiter deletion ("A candidate/recruiter deleted their account"), actor "Deleted user", with no name or email. | 2026-11-05 |
+| P11c-Q1 recruiter plan name (owner; supersedes M-117) | "Recruiter Plus" in en, es and fr (not translated). It is shown on recruiter Billing, the upgrade dialog, admin Payments and the admin recruiter detail page. | 2026-11-05 |
+| P11c-Q2 price (owner) | £49 a month, the approved £49 row: GBP 49 · EUR 57 · PLN 245 · SEK 629 · DKK 429 · CZK 1,399 · HUF 21,990 · RON 289. Charged monthly in the company country's currency, through Stripe Checkout, the Customer Portal and the webhooks exactly like candidate Plus, reusing that code. `seed:catalog` creates the plan record and the Stripe prices. | 2026-11-05 |
+| P11c-Q3 Free recruiter (owner) | A free approved recruiter can keep 1 job active (published), see and manage the applicants to their jobs (stages, reject, notes on applicants), and reply in conversations a candidate started (widened by P11c-Q14). | 2026-11-05 |
+| P11c-Q4 Recruiter Plus only (owner) | Unlimited active jobs; Find candidates (search, profiles, shortlist, notes, Compare candidates on Find candidates and Shortlists); starting new conversations and CV requests; AI tools (job AI summaries, AI match ranking of applicants and candidates, Translate). | 2026-11-05 |
+| P11c-Q5 locks (owner) | As for candidate Plus: the server refuses with the entitlement error (402 `PLAN_REQUIRED { entitlement }`); on screen each locked button (Compare included) keeps its label, shows a lock and opens the upgrade dialog without sending the request. Publishing a 2nd job on Free shows the upgrade dialog. | 2026-11-05 |
+| P11c-Q6 plan end (owner) | When the plan ends (cancelled, or the final payment failure) with more than 1 active job, the most recently published job stays live and the others are paused (not deleted); they can be republished after subscribing again. Applications and conversations stay visible. | 2026-11-05 |
+| P11c-Q7 emails and notifications (owner) | Recruiters also get payment paid, renewal failed and plan ended: in-app, plus the always-on decision emails (renewal failed, plan ended) in en/es/fr, following §3.21 and P11b-Q11 with no duplicates. | 2026-11-05 |
+| P11c-Q8 admin (owner) | Admin Payments, its cards (active subscribers, MRR per currency, failed renewals), the Overview and the recruiter detail page include recruiter subscriptions, split by role where the page shows plan data. | 2026-11-05 |
+| P11c-Q9 parallel session (owner) | The Phase 12 session was stopped for 11c. Its uncommitted Phase 12 edits stay in the working tree; 11c is built on top of them. | 2026-11-05 |
+| P11c-Q10 Find candidates on Free (owner) | Find candidates lists only the people who applied to the company's jobs (their profiles stay open). Search, filters, sort, Shortlist and Compare keep their labels, show a lock and open the upgrade dialog. Shortlists shows the upgrade gate. | 2026-11-05 |
+| P11c-Q11 seed (owner) | Sarah (Acme Studio, London) is on Recruiter Plus, as Emma is on Plus: a real Stripe test subscription in GBP, her first invoice stored as a seed payment row; her 3 jobs stay live. The other 9 seeded recruiters are Free with their 1 job. | 2026-11-05 |
+| P11c-Q12 recruiters over the limit at release (owner) | A one-time step at server start applies the P11c-Q6 rule to every recruiter without Recruiter Plus who has more than 1 published job: the most recently published stays live, the others are paused. | 2026-11-05 |
+| P11c-Q13 proration (owner) | None. Cancelling takes effect at the end of the paid month with no partial refund (as M-121); resubscribing starts a new full month on that day; there is no plan switching (P6). | 2026-11-05 |
+| P11c-Q14 existing conversations (owner) | A Free recruiter can reply in every existing conversation, whoever started it; only starting a new conversation needs Recruiter Plus. | 2026-11-05 |
+| P11c-Q15 talent lists on Free (owner) | Counts stay (Overview "Recommended candidates", the Jobs table's relevant count). The lists that show people beyond the applicants (Overview "Talent worth meeting", a job's "Relevant talent") are replaced by a short upgrade prompt with a locked "See candidates" button; the Jobs table's "N relevant" link becomes a locked button. | 2026-11-05 |
+| P11c-Q16 AI ranking (owner) | Lock what exists, build nothing new: Recruiter Plus = the Match insights narrative (applicants and others), the AI-score order of Recommended and the relevant-talent lists, job AI summaries and Translate. Applicant lists stay sorted by date applied. | 2026-11-05 |
+| P11c-Q17 admin Recruiters list (owner) | A Plan column and a Plan filter on admin Users → Recruiters, as on Candidates (M-123), plus the subscription on the recruiter detail page. | 2026-11-05 |
+| P11c-Q18 plan-end text (owner) | The recruiter's plan_ended email and notification name the paused jobs: "{job} stays live; {n} other jobs were paused. Subscribe again to republish them." (shorter when nothing was paused); en/es/fr; the link opens Jobs. | 2026-11-05 |
+| P11c-Q19 entry points (owner) | Recruiter Billing gets the plan card (Free upsell with the price; or status, renewal date and Manage subscription). Every lock opens the upgrade dialog. The profile menu shows "Free" or "Recruiter Plus" under the name. No onboarding plan step for recruiters. | 2026-11-05 |
 
 _(Answers to any new question asked during the build are appended to this table.)_
 
@@ -848,7 +885,7 @@ Every recruiter workspace endpoint returns `RECRUITER_NOT_APPROVED` unless the s
 
 ### 3.3 Plan, entitlements and lapse
 
-- **Plans.** Free, and **Plus** (M-115) at £9 a month with the OD1 prices per currency (§3.10). The plan record lives in the database and is edited through the seed, with name and features per language, prices, interval, Stripe price ids and entitlements (M-116). Only candidates have a plan; recruiter AI is free for approved recruiters (M-117).
+- **Plans.** Free, and **Plus** (M-115) at £9 a month with the OD1 prices per currency (§3.10). The plan record lives in the database and is edited through the seed, with name and features per language, prices, interval, Stripe price ids and entitlements (M-116). ~~Only candidates have a plan; recruiter AI is free for approved recruiters (M-117).~~ Superseded by Phase 11c (P11c-Q1 … Q19): approved recruiters have Free and **Recruiter Plus** (§3.22).
 - **Entitlement keys:** `apply`, `message_send` (start and reply), `job_alerts`, `ai` (score and explanations, AI summaries, insights pages, CV snapshot, assisted draft, profile summary, translation) (S, M-118).
 - **Paid** when the Stripe status is `active` or `trialing`, or `past_due` while Stripe still retries (the last failed invoice has a next payment attempt). **Free** for `unpaid`, `canceled`, `incomplete`, `incomplete_expired`, or `past_due` with no further attempt (U38, refined by M-120 "keep access while Stripe retries"). This works whatever final retry action the Dashboard uses, so no Dashboard setting is a prerequisite (§2.10).
 - **Cancel and failure (M-120, M-121).** Cancellation takes effect at period end through the Stripe Customer Portal. During a failed renewal, access stays while Stripe retries (`past_due`) and locks when Stripe marks the subscription unpaid or canceled.
@@ -1214,8 +1251,8 @@ All emails are in the recipient's language (S). Classes are defined in §2.8.
 | `content_restricted` | job or profile owner | Restrict | decision | M-092, M-167 |
 | `content_restriction_lifted` | job or profile owner | Dismiss of a restricted case | decision | M-167, P10-Q12 |
 | `certificate_issued` | learner | quiz passed | decision | M-092, M-105 |
-| `renewal_failed` | candidate | `invoice.payment_failed` on a renewal | decision | M-092, M-120 |
-| `plan_ended` | candidate | subscription canceled or unpaid | decision | M-092, M-120 |
+| `renewal_failed` | candidate, recruiter (P11c-Q7) | `invoice.payment_failed` on a renewal | decision | M-092, M-120 |
+| `plan_ended` | candidate, recruiter (P11c-Q7, Q18: names the paused jobs) | subscription canceled or unpaid | decision | M-092, M-120 |
 | `alert_instant` | candidate | first publish of a matching job | non-critical | M-096, M-097 |
 | `alert_daily` / `alert_weekly` | candidate | 08:00 / Monday 08:00 in the user's time zone | non-critical | U12 |
 | `application_status` | candidate | mapped status changed, 10 min after the last move | non-critical | M-091, U13 |
@@ -1230,14 +1267,14 @@ No other emails exist. ~~Admins receive only invite and reset emails (OD6).~~ Su
 
 | Feature | Who | Gate | Model | Cached per | Source |
 |---|---|---|---|---|---|
-| Match score + label | Plus candidates see it; admins see %; recruiters see ranking only | `ai` for display | embeddings | job + candidate + policy version | M-047 … M-053, U5–U7, C6 |
-| Match explanation / insight narrative | Plus candidate; recruiter (narrative + evidence, no score) | `ai` / approved recruiter | FAST | candidate + job + language + profile hash | M-057 |
-| Job AI summary (on each card and row; no page-level button) | Plus candidate, recruiter, admin (with Regenerate) | `ai` / approved / `jobs.view` | FAST | job version + language | M-058, M-059 |
+| Match score + label | Plus candidates see it; admins see %; recruiters see ranking only | `ai` for display (recruiter ranking: Recruiter Plus `ai`, P11c-Q16) | embeddings | job + candidate + policy version | M-047 … M-053, U5–U7, C6 |
+| Match explanation / insight narrative | Plus candidate; recruiter (narrative + evidence, no score) | `ai` (both roles; recruiters through Recruiter Plus, P11c-Q4) | FAST | candidate + job + language + profile hash | M-057 |
+| Job AI summary (on each card and row; no page-level button) | Plus candidate, Recruiter Plus, admin (with Regenerate) | `ai` (both roles) / `jobs.view` | FAST | job version + language | M-058, M-059 |
 | AI insights pages (overview, skill gap, improve profile, job match, why recommended) | Plus candidate | `ai` | FAST + code evidence | as above | M-057, M-063 … M-067 |
 | CV snapshot proposal | Plus candidate | `ai` | MODEL | CV version | M-027, U18 |
 | CV assisted draft | Plus candidate | `ai` | MODEL | stored as a pending draft | M-061 |
 | Profile AI summary (recruiter-ready, copyable) | Plus candidate | `ai` | FAST | profile hash + live CV + language | M-062 |
-| Translate | Plus candidate; recruiter | `ai` / approved | FAST | entity + field + language + hash | M-144, M-088, M-113 |
+| Translate | Plus candidate; Recruiter Plus | `ai` (both roles) | FAST | entity + field + language + hash | M-144, M-088, M-113 |
 | Policy suggestion | admin | `ai.manage` | MODEL | not cached | M-048, U4 |
 | Report brief: transcription + executive summary | admin | `reports.export` | TRANSCRIBE + MODEL | per report | M-181, OD7 |
 | Embeddings | system | matching consent | EMBEDDING | source hash | U6 |
@@ -1323,6 +1360,22 @@ Owner answers P11b-Q1 … Q15.
 - **Email switches (Q3, Q12).** `users.emailOff` lists the switched-off categories (all on by default): candidate Applications, Messages, CV requests, Job alerts; recruiter New applications, Messages; admin Account reviews, Verification, Content reports, Failed renewals, Admin joined. The former single toggle was copied into every category at startup. Critical and decision emails have no switch (certificate issued and content restricted/lifted stay decision emails). In-app notifications always show.
 - **Admin emails (Q4, Q7).** The five admin types email at once, in each admin's language, as non-critical mail (their switch, the daily cap, never to reserved domains). No other new emails.
 - **Retention (Q5).** A TTL index deletes a notification 90 days after its latest event.
+
+### 3.22 Recruiter plan (Phase 11c; supersedes M-117)
+
+Owner answers P11c-Q1 … Q19.
+
+- **Plan (Q1, Q2).** Plan record `recruiter_plus` (`role: recruiter`), named "Recruiter Plus" in every language, £49 a month with the £49 row of §3.10, created with its own Stripe Product and 8 Prices by `seed:catalog`. Charged in the currency of the company's country (Remote = EUR). Checkout, the Portal (same configuration: cancel at period end, no plan switching, no proration, Q13), the webhooks, the `LWM-` rows and the entitlement rule (U38) are the candidate code, keyed by role. `me.plan` / `me.entitlements` now come for recruiters too (`free` without a paid subscription).
+- **Entitlements (Q3, Q4).** `recruiter_plus` holds `jobs_unlimited`, `discovery`, `outreach`, `ai`. A Free approved recruiter keeps: 1 published job, applicants and the pipeline (stages, reject, notes on applicants, their profiles, CVs and activity), replying in every existing conversation (Q14), the Overview counts, courses, Billing.
+- **Server locks (Q5).** 402 `PLAN_REQUIRED { entitlement }`:
+  - `jobs_unlimited`: publishing (create, edit or status change to `published`) while another job of the company is published;
+  - `discovery`: Find candidates with any search, filter, sort other than the default or `jobId` (the plain list answers the company's applicants only, Q10); a profile, CV, activity or note of a candidate who never applied to the company; the shortlist (list, add, remove); Overview talent; a job's relevant talent;
+  - `outreach`: starting a conversation; CV requests;
+  - `ai`: job AI summaries, the match narrative, Translate. The AI-score order of Recommended is used only with `ai`; Free gets the skill-overlap order (Q16).
+- **Screens (Q5, Q10, Q15, Q19).** Each locked button keeps its label, shows a lock and opens the upgrade dialog (the Recruiter Plus confirm step) without sending the request: Find candidates search, filters, sort, Shortlist, Compare; profile Shortlist, Message (only when no conversation exists), CV request, Match insights, Translate; the job AI summary; Publish when a job is already live; the Jobs table's "N relevant" link; the talent lists' "See candidates". Shortlists shows the upgrade gate and its sidebar item a plan chip. Recruiter Billing has the plan card; the profile menu shows the plan.
+- **Plan end (Q6, Q12, Q18).** When the subscription turns Free, every published job except the most recently published is paused; they are republished by hand after subscribing again. Applications, conversations, notes and the shortlist are kept. The same rule runs once at server start for every recruiter without Recruiter Plus who has more than 1 published job. The recruiter's `plan_ended` email and notification name the job that stays live and the number paused, and open Jobs.
+- **Emails and notifications (Q7).** Recruiters get `payment_paid` (Recruiter Plus invoices and course purchases, one per payment), `renewal_failed` and `plan_ended` (in-app → Billing / Jobs, plus the always-on decision emails in en/es/fr). Admins with `finance.view` get `admin_renewal_failed` for recruiter renewals too. P11b-Q11's "no recruiter payment failed" is replaced by this.
+- **Admin (Q8, Q17).** Payments rows, details and filters cover recruiter subscriptions; the cards split active subscribers and MRR per currency by role and count failed renewals of both; the Overview subscriber figures split by role; Users → Recruiters has a Plan column and filter; the recruiter detail page shows the subscription.
 
 ---
 
@@ -2410,7 +2463,7 @@ The course-purchase path is built here but verified in Phase 8. AI pages are gat
 
 **Scope.** Embeddings, policy versions, scores, relevance and recommendations, which replace the Phase 4 interim rules. Every OpenAI feature. The admin AI & matching page.
 
-**Decisions.** M-047 … M-068, M-088 (translate), M-113 (translate), M-117, M-144, U3 … U7, OD13, C6, C11, C23, OQ-6g; ordering item 9.
+**Decisions.** M-047 … M-068, M-088 (translate), M-113 (translate), M-117 (superseded by Phase 11c: recruiter AI needs Recruiter Plus), M-144, U3 … U7, OD13, C6, C11, C23, OQ-6g; ordering item 9.
 
 **Prep.** P13: check the storage headroom for about 12 KB per embedding.
 
@@ -2760,6 +2813,55 @@ The course-purchase path is built here but verified in Phase 8. AI pages are gat
 | P11b-05 | No longer available | D, M | A notification of a deleted item says "This item is no longer available." and is marked read; direct links to a missing application (candidate, recruiter) and payment say the same; no 403 page, no crash. |
 
 **API tests.** `notifications.test.js` (every event to the right users only, admins without the permission get nothing, grouping, the 10-minute status rule, reading, counts, mark all read, seen, visibility, unavailable items, the deep links, the switches and the always-on emails, the old toggle's copy) and the payment notifications in `payments.test.js`.
+
+#### Phase 11b handoff (2026-11-04, built, awaiting owner review)
+
+**Built.** Everything in §3.21 and the Phase 11b tasks: `modules/notifications`, hooks at every event, per-category email switches for all roles with the startup copy of the old toggle, the five admin emails (en/es/fr, `mail:test` samples), `/me/counters` for admins, `GET /recruiter/applications/:id`, seeded notifications (Q13); the bell dropdown, the Notifications page per role, sidebar counts, the switches in the three Settings pages, item URLs and "seen" on item pages. Calls the plan did not specify: P11b-C1 … C10 in the Owner answers table.
+
+**Results** (2026-11-04; before every run ports 5100/5174 were checked):
+
+| Command | Result |
+|---|---|
+| `cd server && npm test` (18:51–19:10, nothing else on `eujobs_test`) | 376 tests, 376 pass, 0 fail, 0 todo |
+| New test files | `notifications.test.js` (19 tests) and the payment notifications test in `payments.test.js` ran inside the full run above |
+| `npm run lint` server, client; `npx oxlint .` e2e | clean |
+| `cd client && npm run build` (check-i18n first) | clean; "es, fr match en" |
+| P11b-01 … P11b-05 (D, M) | 10/10 pass (final run 19:10–19:20; P11b-01 and P11b-05 again after the C6 change, 20:03) |
+| Updated: P2-12 (D, M), P2-15, P2-16, P6-10 | pass |
+| Screens changed: P6-03 (D, M), P6-04, P6-05 (D, M), P6-06, P6-07 (D, M), P10-09 (D, M), P10-10 (D, M), P7-01 (D, M), P7-02, P11-04, P5-01 (D, M), P8-04, P11-03 (M) | pass (P6-06 failed once and led to C6; P2-12 M and P2-15 failed on OD6 assertions, updated) |
+| `node e2e/run.js sweep` (en) | D and M pass |
+| P11-01 (es and fr sweep, every role) | D and M pass: public 13, onboarding 5, candidate 28, recruiter 30, admin 30 routes per language |
+| `npm run mail:test` to +alex | `admin_account_review`, `admin_verification_submitted`, `admin_content_report`, `admin_renewal_failed`, `admin_joined`: sent |
+
+**Overlaps (P11-Q5).** The Phase 11 session (ai-job-24) ran the full server suite 17:06–17:23 over half-finished 11b edits (its 21 failures came from them) and wrote the Phase 11 results into this file meanwhile; it also disturbed one notifications test run (17:23, not counted). ai-job-e7 ran p04 scenarios (~18:22–18:35) and a sweep (~18:43) on `eujobs_test`, which signed one P11b-02 run's recruiter out (not counted); it then paused its runs until 20:11. The owner committed Phase 11 (`9b8fba8`, 16:58) before the 11b edits.
+
+**Open.**
+- The five admin emails sent live to +alex: owner to confirm.
+- A few headless Chrome processes from an e2e run that crashed on a scenario typo (18:16) were left running; they hold no ports.
+
+### Phase 11c: Recruiter Plus (paid recruiter plan)
+
+**Scope.** A paid recruiter plan with the locks, the job limit, the plan-end pause, the recruiter payment emails and notifications, and the admin totals (§3.22). Supersedes M-117.
+
+**Decisions.** P11c-Q1 … Q19 (owner, 2026-11-05), M-115 … M-130 (reused for recruiters), U38, P11b-Q11 (recruiter part replaced), §3.21.
+
+**Tasks**
+
+1. Server: plan record `recruiter_plus` with `role`, the Stripe Product and Prices in `seed:catalog`; Checkout, Portal, `/recruiter/subscription` and the webhooks by role (company-country currency); `me.plan`/`me.entitlements` for recruiters; `requireEntitlement` for both roles; the locks of §3.22; the 1-published-job rule; the plan-end pause and the one-time start-up step; recruiter `payment_paid` / `renewal_failed` / `plan_ended` (notifications and emails in en/es/fr, `mail:test` samples); admin Payments cards, list, details, Overview and Users → Recruiters by role.
+2. Client: the upgrade dialog in the recruiter shell (Recruiter Plus item), `lacksEntitlement` for recruiters, every lock of §3.22, the Shortlists gate and chip, Billing's plan card shared with candidates, the profile-menu plan, the admin screens; en/es/fr keys.
+3. `seed:demo`: Sarah on Recruiter Plus (real GBP subscription, her first invoice as a seed row, Q11).
+4. e2e: `p11c-*` scenarios and `e2e/lib` helpers; rerun the recruiter scenarios of changed screens and the sweep in en, es and fr.
+
+**Browser verification**
+
+| # | Scenario | Viewports | Expected |
+|---|---|---|---|
+| P11c-01 | Free locks | D, M | A Free approved recruiter with one live job: Find candidates lists only applicants; search, filters, sort, Shortlist, Compare, profile Message, CV request, Match insights, Translate, the job AI summary, "See candidates" and Publish of a 2nd job each show a lock and open the upgrade dialog with "Recruiter Plus", and no request is sent. Shortlists shows the gate. Applicant stages, reject and notes work; a reply in an existing thread sends. |
+| P11c-02 | Subscribe | D, M | The recruiter (company in a non-GBP country) subscribes with 4242: Checkout shows the company currency and the £49-row amount; the webhook arrives; the locks lift; Billing shows Recruiter Plus with the renewal date; admin Payments lists the row and the cards count the recruiter. |
+| P11c-03 | Plan end | D | Portal cancel, then the test clock passes the period end: the plan ends, only the most recently published job stays live, the others are paused; the plan_ended notification names them; Applications and Messages stay. |
+| P11c-04 | es and fr | D, M | The Free locks and the upgrade dialog in es and fr, with no English left and a clean layout. |
+
+**API tests.** Every recruiter lock Free vs Plus (Compare: the data it reads), the job limit (create, edit, status), the plan-end pause and the start-up step, the webhook handlers for recruiter subscriptions (first invoice, renewal, failed renewal, cancel), the admin totals by role.
 
 ### Phase 12: GDPR export and erasure, retention, full regression
 
