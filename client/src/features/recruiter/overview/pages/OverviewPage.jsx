@@ -42,7 +42,7 @@ export default function OverviewPage() {
   // P11c-Q15: the talent list needs Recruiter Plus; its count (Recommended candidates) stays.
   const talentLocked = lacksEntitlement(me, 'discovery', ['recruiter'])
   const { data: talent } = useGetTalentQuery(undefined, { skip: !me || talentLocked })
-  const { data: jobs } = useGetRecruiterJobsQuery()
+  const { data: jobs, isLoading: jobsLoading } = useGetRecruiterJobsQuery()
   const toggleShortlist = useShortlistToggle()
   // Read once per visit, so the greeting does not change while the page is open.
   const [dayPart] = useState(() => partOfDay(new Date().getHours()))
@@ -117,8 +117,9 @@ export default function OverviewPage() {
         )}
       </div>
       <div className={styles.roles}>
-        {!jobs ? null : openRoles.length > 0 ? (
-          <JobsTable jobs={openRoles.slice(0, ROLES_SHOWN)} caption={t('discovery:overview.openRoles')} />
+        {jobsLoading || openRoles.length > 0 ? (
+          <JobsTable jobs={openRoles.slice(0, ROLES_SHOWN)} caption={t('discovery:overview.openRoles')} loading={jobsLoading} />
+        ) : !jobs ? null : (
         ) : (
           <EmptyState icon={BriefcaseBusiness} title={t('discovery:overview.noRoles')} description={t('discovery:overview.noRolesText')} action={createButton} />
         )}

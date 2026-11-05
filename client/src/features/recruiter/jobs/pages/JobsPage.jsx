@@ -88,7 +88,6 @@ export default function JobsPage() {
         {isLoading || visible.length > 0 ? (
           <JobsTable jobs={visible} sort={sort} onSort={toggleSort} caption={t('jobs:page.caption')} loading={isLoading} />
         ) : !data ? null : (
-        ) : (
           <EmptyState
             icon={BriefcaseBusiness}
             title={t(filtering ? 'jobs:page.emptyFiltered' : 'jobs:page.empty')}
