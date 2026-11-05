@@ -3,7 +3,11 @@ import { Lock } from 'lucide-react'
 import { Icon } from '@/components/ui'
 import { usePreferences } from '@/lib/preferences.js'
 
-/** M-118, §3.22: the lock chip on a page the user's plan does not include (sidebar and search), naming the role's plan. */
+/**
+ * M-118, §3.22: the lock chip on a page the user's plan does not include (sidebar and search). It names the role's
+ * plan; "Recruiter Plus" is too wide for the sidebar, so a recruiter's chip shows only the lock (the name stays in its
+ * tooltip and for screen readers).
+ */
 export default function PlanChip({ className }) {
   const { t } = useTranslation()
   const { me } = usePreferences()
@@ -12,7 +16,7 @@ export default function PlanChip({ className }) {
   return (
     <span className={className} data-plan-chip title={label}>
       <Icon as={Lock} size={9} aria-hidden="true" />
-      <span aria-hidden="true">{plan}</span>
+      {me?.role !== 'recruiter' && <span aria-hidden="true">{plan}</span>}
       <span className="sr-only">{label}</span>
     </span>
   )

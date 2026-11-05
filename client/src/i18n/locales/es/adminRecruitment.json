@@ -30,11 +30,7 @@
   "movement": {
     "title": "Movimiento de candidatos",
     "description": "La etapa actual, la preselección y el contacto de cada candidatura.",
-    "candidate": "Candidato",
     "job": "{{job}} · {{company}}",
-    "stage": "Etapa actual",
-    "shortlist": "Preselección",
-    "outreach": "Contacto",
     "shortlisted": "Preseleccionado",
     "notShortlisted": "No preseleccionado",
     "outreachSent": "Contacto enviado",

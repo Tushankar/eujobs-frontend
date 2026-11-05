@@ -22,7 +22,7 @@ export default function JobsPage() {
   const { language } = usePreferences()
   const jobText = useJobText()
   const { data: config } = useGetConfigQuery()
-  const { data } = useGetRecruiterJobsQuery()
+  const { data, isLoading } = useGetRecruiterJobsQuery()
   const [tab, setTab] = useState('all')
   const [query, setQuery] = useState('')
   const [sort, setSort] = useState(null)
@@ -85,8 +85,9 @@ export default function JobsPage() {
       </div>
 
       <div className={styles.table}>
-        {!data ? null : visible.length > 0 ? (
-          <JobsTable jobs={visible} sort={sort} onSort={toggleSort} caption={t('jobs:page.caption')} />
+        {isLoading || visible.length > 0 ? (
+          <JobsTable jobs={visible} sort={sort} onSort={toggleSort} caption={t('jobs:page.caption')} loading={isLoading} />
+        ) : !data ? null : (
         ) : (
           <EmptyState
             icon={BriefcaseBusiness}

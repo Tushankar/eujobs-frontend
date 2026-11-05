@@ -16,6 +16,9 @@
     "needs": "{{feature}} is part of the Plus plan. Plus adds applying, messaging recruiters, job alerts and the AI features."
   },
   "gate": {
+    "currentPlan": "Your current plan",
+    "everything": "Everything in {{plan}}, plus:",
+    "notIncluded": "not included",
     "ai": {
       "title": "Unlock your AI insights",
       "lead": "Profile insights, skill-gap guidance and match explanations are part of Plus."
@@ -69,9 +72,7 @@
     "reference": "Reference",
     "payer": "Payer",
     "item": "Item",
-    "type": "Type",
     "amount": "Amount",
-    "method": "Method",
     "status": "Status",
     "date": "Date",
     "receipt": "Receipt",

@@ -53,6 +53,8 @@ export default {
     await ctx.screenshot(page, '1-upgrade')
     const checkout = await continueToStripe(page, '57.00')
     ctx.check(checkout.text.includes('Recruiter Plus'), 'Checkout names Recruiter Plus')
+    await page.waitForSelector('#cardNumber', { visible: true })
+    await new Promise((resolve) => setTimeout(resolve, 1500))
     await ctx.screenshot(page, '2-checkout')
     await payOnCheckout(page)
     await page.waitForFunction(() => location.pathname === '/recruiter/jobs', { timeout: 90_000 })
@@ -135,6 +137,9 @@ export default {
     await ctx.screenshot(page, '7-plan-ended')
     const opened = await clickNotification(page, 'plan_ended', '/recruiter/jobs')
     ctx.check(opened.available, 'the notification opens Jobs')
+    await page.waitForSelector('main tbody tr')
+    // The page's entrance animation leaves fresh blocks transparent for a moment.
+    await new Promise((resolve) => setTimeout(resolve, 600))
     await ctx.screenshot(page, '8-jobs-paused')
     ctx.assertClean(handle.issues, 'recruiter plus')
   },

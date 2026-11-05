@@ -64,7 +64,10 @@ describe('plan, /me and prices (P11c-Q1, Q2)', () => {
       const plans = (await api().get(`${v1}/plans`).set(auth(user))).body.items
       assert.deepEqual(
         plans.map((plan) => [plan.key, plan.price]),
-        [['recruiter_plus', { amountMinor: RECRUITER_PLUS_PRICES[currency] * 100, currency }]],
+        [
+          ['recruiter_free', { amountMinor: 0, currency }],
+          ['recruiter_plus', { amountMinor: RECRUITER_PLUS_PRICES[currency] * 100, currency }],
+        ],
       )
     }
   })
@@ -146,12 +149,12 @@ describe('recruiter locks, Free vs Recruiter Plus (P11c-Q4, Q5, Q10, Q14 … Q16
 
   it('Free: applicant profiles, CV, activity and notes open; anyone else answers 402 discovery', async () => {
     const { user, applicant, other } = await company(false)
-    for (const path of ['', '/cv', '/activity', '/note']) {
+    for (const path of ['', '/cv', '/activity', '/notes']) {
       assert.equal((await get(user, `/recruiter/candidates/${applicant._id}${path}`)).status, 200, path)
       planRequired(await get(user, `/recruiter/candidates/${other._id}${path}`), 'discovery')
     }
-    assert.equal((await send(user, 'put', `/recruiter/candidates/${applicant._id}/note`, { text: 'Strong portfolio' })).status, 200)
-    planRequired(await send(user, 'put', `/recruiter/candidates/${other._id}/note`, { text: 'No' }), 'discovery')
+    assert.equal((await send(user, 'post', `/recruiter/candidates/${applicant._id}/notes`, { text: 'Strong portfolio' })).status, 201)
+    planRequired(await send(user, 'post', `/recruiter/candidates/${other._id}/notes`, { text: 'No' }), 'discovery')
   })
 
   it('Free: the shortlist, the talent lists and CV requests answer 402; the Overview counts stay', async () => {

@@ -173,7 +173,7 @@ async function recruiterExport(user) {
     'account.json': account(user),
     'company.json': omit(company, ['_id', 'ownerUserId', '__v']),
     'jobs.json': jobs.map((job) => omit(job, ['_id', 'companyId', 'createdBy', '__v', 'relevantCount', 'relevantComputedAt', 'contentHash'])),
-    'notes.json': notes.map(({ candidateId, text, updatedAt }) => ({ candidate: candidates.get(String(candidateId))?.fullName ?? null, text, updatedAt })),
+    'notes.json': notes.map(({ candidateId, text, createdAt, editedAt }) => ({ candidate: candidates.get(String(candidateId))?.fullName ?? null, text, createdAt, editedAt: editedAt ?? null })),
     'conversations.json': threads,
     'payments.json': paid,
     'learning.json': learned,

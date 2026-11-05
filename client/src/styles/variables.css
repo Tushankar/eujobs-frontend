@@ -19,6 +19,7 @@
   --accent: #eaf4ff;
   --accent-foreground: #0066c4;
   --border: #e8eaf0;
+  --border-strong: #c9cdd6; /* form controls and quiet outlined buttons */
   --destructive: #bf4545;
   --ring: #0084ff;
   --selection: #cce6ff;

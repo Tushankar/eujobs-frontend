@@ -3,7 +3,7 @@ import { useTranslation } from 'react-i18next'
 import { Link, useParams, useSearchParams } from 'react-router-dom'
 import { ArrowUpRight, FileText, Search } from 'lucide-react'
 import { Avatar, Icon, SelectField, TextField } from '@/components/ui'
-import DataTable from '@/components/common/DataTable.jsx'
+import DataTable, { tableState } from '@/components/common/DataTable.jsx'
 import EmptyState from '@/components/common/EmptyState.jsx'
 import NoticeBanner from '@/components/common/NoticeBanner.jsx'
 import PageTitle from '@/components/common/PageTitle.jsx'
@@ -32,7 +32,9 @@ export default function ApplicationsPage() {
   const jobId = params.get('jobId') ?? ''
   const stageFilter = params.get('stage') ?? ''
   const status = STATUS_FILTERS.includes(stageFilter) ? stageFilter : undefined
-  const { data } = useGetCompanyApplicationsQuery({ ...(jobId && { jobId }), ...(status ? { status } : stageFilter && { stageId: stageFilter }) })
+  const result = useGetCompanyApplicationsQuery({ ...(jobId && { jobId }), ...(status ? { status } : stageFilter && { stageId: stageFilter }) })
+  const { data } = result
+  const table = tableState(result, data?.items ?? [])
   const { data: pipeline } = useGetPipelineQuery()
   const { data: jobs } = useGetRecruiterJobsQuery()
   const stages = pipeline?.items ?? []
@@ -77,6 +79,7 @@ export default function ApplicationsPage() {
     {
       key: 'candidate',
       header: t('applications:recruiter.candidate'),
+      skeleton: 'avatar',
       width: '26%',
       render: (row) => (
         <Link to={profilePath(row.candidate.id)} className={styles.candidate}>
@@ -93,6 +96,7 @@ export default function ApplicationsPage() {
     {
       key: 'stage',
       header: t('applications:recruiter.stage'),
+      skeleton: 'action',
       width: '22%',
       render: (row) => (
         <ApplicationStageSelect
@@ -136,18 +140,20 @@ export default function ApplicationsPage() {
       </div>
 
       <div className={styles.table}>
-        {!data ? null : nothingYet ? (
-          <EmptyState icon={FileText} title={t('applications:recruiter.noApplications')} description={t('applications:recruiter.noApplicationsText')} />
-        ) : rows.length === 0 ? (
-          <EmptyState icon={Search} title={t('applications:recruiter.empty')} description={t('applications:recruiter.emptyText')} />
-        ) : (
+        {table.loading || rows.length > 0 ? (
           <DataTable
+            loading={table.loading}
+            busy={table.busy}
             caption={t('applications:recruiter.caption')}
             columns={columns}
             rows={rows}
             getRowKey={(row) => row.id}
             getRowProps={(row) => ({ 'data-application-row': row.id, ...(row.id === focus?.id && { className: styles.focused, 'aria-current': 'true' }) })}
           />
+        ) : !data ? null : nothingYet ? (
+          <EmptyState icon={FileText} title={t('applications:recruiter.noApplications')} description={t('applications:recruiter.noApplicationsText')} />
+        ) : (
+          <EmptyState icon={Search} title={t('applications:recruiter.empty')} description={t('applications:recruiter.emptyText')} />
         )}
       </div>
     </div>

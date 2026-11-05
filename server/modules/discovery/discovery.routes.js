@@ -49,12 +49,23 @@ candidatesRouter.get('/:id/activity', ...candidate, async (req, res) => {
   res.json(await discoveryService.activity(req.company, req.params.id))
 })
 
-candidatesRouter.get('/:id/note', ...candidate, async (req, res) => {
-  res.json(await discoveryService.getNote(req.company, req.params.id))
+candidatesRouter.get('/:id/notes', ...candidate, async (req, res) => {
+  res.json(await discoveryService.listNotes(req.user, req.company, req.params.id))
 })
 
-candidatesRouter.put('/:id/note', ...candidate, validate({ body: schemas.noteBody }), async (req, res) => {
-  res.json(await discoveryService.saveNote(req.user, req.company, req.params.id, req.body.text))
+candidatesRouter.post('/:id/notes', ...candidate, validate({ body: schemas.noteBody }), async (req, res) => {
+  res.status(201).json(await discoveryService.addNote(req.user, req.company, req.params.id, req.body))
+})
+
+const ownNoteParams = [validate({ params: schemas.noteParams }), applicantOrDiscovery]
+
+candidatesRouter.patch('/:id/notes/:noteId', ...ownNoteParams, validate({ body: schemas.notePatchBody }), async (req, res) => {
+  res.json(await discoveryService.editNote(req.user, req.company, req.params.id, req.params.noteId, req.body.text))
+})
+
+candidatesRouter.delete('/:id/notes/:noteId', ...ownNoteParams, async (req, res) => {
+  await discoveryService.deleteNote(req.user, req.company, req.params.id, req.params.noteId)
+  res.status(204).end()
 })
 
 export const shortlistRouter = Router()

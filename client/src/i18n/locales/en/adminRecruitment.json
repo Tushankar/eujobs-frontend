@@ -30,11 +30,7 @@
   "movement": {
     "title": "Candidate movement",
     "description": "Every application’s current stage, shortlist and outreach state.",
-    "candidate": "Candidate",
     "job": "{{job}} · {{company}}",
-    "stage": "Current stage",
-    "shortlist": "Shortlist",
-    "outreach": "Outreach",
     "shortlisted": "Shortlisted",
     "notShortlisted": "Not shortlisted",
     "outreachSent": "Outreach sent",

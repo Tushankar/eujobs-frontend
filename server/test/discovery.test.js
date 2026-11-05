@@ -11,7 +11,7 @@ import { VerificationSubmission } from '../modules/verification/verification.mod
 import { seedCatalog } from '../seed/catalog.js'
 import { PLACES } from '../seed/data/places.js'
 import { textPdf } from './helpers/fixtures.js'
-import { api, attach, auth, mailTo, useTestDb, useTestUploads } from './helpers/index.js'
+import { api, attach, auth, createUser, mailTo, useTestDb, useTestUploads } from './helpers/index.js'
 import { approvedRecruiter, jobBody, listedCandidate } from './helpers/market.js'
 import { useFakePlaces } from './helpers/places.js'
 
@@ -119,17 +119,37 @@ describe('candidate profile, views, shortlist, notes and activity (M-079 … M-0
     assert.deepEqual(events.map((event) => event.type), ['shortlisted', 'unshortlisted'])
   })
 
-  it('stores one note per company with updatedBy, up to 5,000 characters (M-080)', async () => {
-    const { user } = await approvedRecruiter()
+  it('keeps a list of dated notes per company; only the author edits or deletes one (M-080)', async () => {
+    const { user, company } = await approvedRecruiter()
     const candidate = await listedCandidate()
-    const tooLong = await api().put(`/api/v1/recruiter/candidates/${candidate._id}/note`).set(auth(user)).send({ text: 'x'.repeat(5001) })
+    const notesUrl = `/api/v1/recruiter/candidates/${candidate._id}/notes`
+    const tooLong = await api().post(notesUrl).set(auth(user)).send({ text: 'x'.repeat(5001) })
     assert.deepEqual(tooLong.body.error.fields, { text: 'too_long' })
-    const saved = await api().put(`/api/v1/recruiter/candidates/${candidate._id}/note`).set(auth(user)).send({ text: 'Strong portfolio.' })
-    assert.deepEqual([saved.body.text, saved.body.updatedBy, Boolean(saved.body.updatedAt)], ['Strong portfolio.', user.fullName, true])
+    assert.deepEqual((await api().post(notesUrl).set(auth(user)).send({ text: '   ' })).body.error.fields, { text: 'required' })
+    const first = await api().post(notesUrl).set(auth(user)).send({ text: 'Strong portfolio.' })
+    assert.equal(first.status, 201)
+    assert.deepEqual([first.body.text, first.body.author.name, first.body.mine, first.body.editedAt, first.body.context], ['Strong portfolio.', user.fullName, true, null, null])
+    assert.ok(Date.parse(first.body.createdAt))
+    await api().post(notesUrl).set(auth(user)).send({ text: 'Call on Monday.' })
+    // A teammate's note: listed for everyone in the company, changed only by its author.
+    const teammate = await createUser({ role: 'recruiter' })
+    const theirs = await CandidateNote.create({ companyId: company._id, candidateId: candidate._id, authorId: teammate._id, text: 'Met at a meetup.' })
+    const list = (await api().get(notesUrl).set(auth(user))).body.items
+    assert.deepEqual(list.map((note) => [note.text, note.mine]), [['Met at a meetup.', false], ['Call on Monday.', true], ['Strong portfolio.', true]])
+    assert.equal((await api().patch(`${notesUrl}/${theirs._id}`).set(auth(user)).send({ text: 'Changed' })).status, 403)
+    assert.equal((await api().delete(`${notesUrl}/${theirs._id}`).set(auth(user))).status, 403)
+
+    const edited = await api().patch(`${notesUrl}/${first.body.id}`).set(auth(user)).send({ text: 'Strong portfolio; ask about systems.' })
+    assert.deepEqual([edited.body.text, Boolean(edited.body.editedAt), edited.body.createdAt], ['Strong portfolio; ask about systems.', true, first.body.createdAt])
+    assert.equal((await api().delete(`${notesUrl}/${first.body.id}`).set(auth(user))).status, 204)
+    assert.equal((await api().get(notesUrl).set(auth(user))).body.total, 2)
+
+    // Another company sees none of them and cannot reach them.
     const other = await approvedRecruiter()
-    assert.equal((await api().get(`/api/v1/recruiter/candidates/${candidate._id}/note`).set(auth(other.user))).body.text, '')
+    assert.equal((await api().get(notesUrl).set(auth(other.user))).body.total, 0)
+    assert.equal((await api().delete(`${notesUrl}/${theirs._id}`).set(auth(other.user))).status, 404)
     const activity = (await api().get(`/api/v1/recruiter/candidates/${candidate._id}/activity`).set(auth(user))).body.items
-    assert.deepEqual(activity.map((event) => [event.type, event.actor.name]), [['note_updated', user.fullName]])
+    assert.deepEqual(activity.map((event) => event.type), ['note_updated', 'note_added', 'note_added'])
   })
 })
 

@@ -53,11 +53,8 @@
     "publish": "Publicación"
   },
   "wizard": {
-    "newEyebrow": "Forma tu próximo equipo",
-    "newTitle": "Una buena contratación empieza con claridad.",
-    "editEyebrow": "Mejora tu puesto",
-    "editTitle": "Haz el resumen aún más claro.",
-    "description": "Convierte tu puesto en requisitos estructurados. Tú marcas la dirección.",
+    "newTitle": "Publicar una oferta",
+    "editTitle": "Editar oferta",
     "stepCount": "Paso {{current}} de {{total}}",
     "cancel": "Cancelar",
     "back": "Atrás",
@@ -67,7 +64,12 @@
     "saveChanges": "Guardar cambios",
     "newNote": "Tu borrador se guarda en tu lista de ofertas tras el primer paso y de nuevo en cada paso.",
     "draftNote": "Este borrador se guarda en cada paso. Lo encontrarás en Borrador, en tus ofertas.",
-    "liveNote": "Los cambios en un puesto publicado se guardan al terminar y los candidatos los ven al momento."
+    "liveNote": "Los cambios en un puesto publicado se guardan al terminar y los candidatos los ven al momento.",
+    "progress": "{{done}} de {{total}} secciones listas"
+  },
+  "preview": {
+    "title": "Vista previa",
+    "hint": "Así verán los candidatos esta oferta"
   },
   "fields": {
     "title": "Título del puesto",

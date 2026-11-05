@@ -7,7 +7,7 @@ import { CandidateProfile } from '../candidates/candidates.model.js'
 import { logoUrls } from '../companies/companies.service.js'
 import { Company } from '../companies/companies.model.js'
 import { CvVersion } from '../cv/cv.model.js'
-import { recordActivity } from '../discovery/discovery.service.js'
+import { noteCounts, recordActivity } from '../discovery/discovery.service.js'
 import { File } from '../files/files.model.js'
 import { Job } from '../jobs/jobs.model.js'
 import { isVisible, visibleFilter } from '../jobs/jobs.search.js'
@@ -177,14 +177,18 @@ const stageOf = (application, stages) => {
   return { id: null, name: last.stageName, category: last.category, tone: 'neutral' }
 }
 
-/** Table and board rows: the candidate as a card, the job, the stage (M-069, M-077). */
+/**
+ * Table and board rows: the candidate as a card, the job, the stage (M-069, M-077), the company's note count on the
+ * candidate and every dated stage step, for the Hiring pipeline's candidate panel.
+ */
 async function recruiterDtos(viewer, applications) {
   const candidateIds = applications.map((application) => application.candidateId)
-  const [users, profiles, jobs, stages] = await Promise.all([
+  const [users, profiles, jobs, stages, notes] = await Promise.all([
     User.find({ _id: { $in: candidateIds } }, 'fullName'),
     CandidateProfile.find({ userId: { $in: candidateIds } }),
     Job.find({ _id: { $in: applications.map((application) => application.jobId) } }),
     PipelineStage.find({ _id: { $in: applications.map((application) => application.stageId) } }),
+    applications.length ? noteCounts(applications[0].companyId, candidateIds) : new Map(),
   ])
   const photos = new Map((await File.find({ _id: { $in: profiles.map((profile) => profile.photo?.fileId).filter(Boolean) } })).map((file) => [String(file._id), file]))
   const userById = new Map(users.map((user) => [String(user._id), user]))
@@ -202,6 +206,8 @@ async function recruiterDtos(viewer, applications) {
       status: application.status,
       appliedAt: application.appliedAt,
       stage: stageOf(application, stageById),
+      history: application.history.map(({ status, stageName, at }) => ({ status, stageName, at })),
+      noteCount: notes.get(String(application.candidateId)) ?? 0,
       job: { id: String(job._id), title: job.title },
       candidate: {
         id: String(candidate._id),

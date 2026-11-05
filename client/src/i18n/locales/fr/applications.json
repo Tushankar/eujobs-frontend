@@ -124,6 +124,11 @@
     "summary_many": "{{count}} candidatures actives · {{stages}} étapes",
     "summary_other": "{{count}} candidatures actives · {{stages}} étapes",
     "label": "Tableau du processus de recrutement",
+    "views": {
+      "label": "Vue du processus",
+      "board": "Vue tableau",
+      "funnel": "Vue en entonnoir"
+    },
     "empty": "Un peu d’espace pour votre prochaine étape.",
     "emptyDrop": "Déposez un candidat ici.",
     "move": "Déplacer {{name}} vers une étape",
@@ -133,7 +138,35 @@
     "aligned_one": "{{count}} compétence correspondante",
     "aligned_many": "{{count}} compétences correspondantes",
     "aligned_other": "{{count}} compétences correspondantes",
-    "appliedFor": "{{job}} · a postulé le {{date}}"
+    "appliedFor": "{{job}} · a postulé le {{date}}",
+    "notes_one": "{{count}} note. Ouvrir le panneau du candidat",
+    "notes_many": "{{count}} notes. Ouvrir le panneau du candidat",
+    "notes_other": "{{count}} notes. Ouvrir le panneau du candidat"
+  },
+  "panel": {
+    "applied": "Candidature : {{date}}",
+    "profile": "Voir le profil complet",
+    "stage": "Étape",
+    "notes": "Notes",
+    "history": "Historique des étapes"
+  },
+  "funnel": {
+    "label": "Entonnoir de recrutement par étape",
+    "hint": "Cliquez sur une étape pour voir qui s’y trouve. Faites glisser un candidat sur une étape, ou utilisez son menu d’étape, pour le déplacer.",
+    "applicants_one": "candidat",
+    "applicants_many": "candidats",
+    "applicants_other": "candidats",
+    "hired": "recrutés",
+    "conversion": "conversion globale",
+    "now": "actuellement",
+    "reached": "{{count}} atteint",
+    "kept": "{{percent}} % retenus",
+    "stage": "{{stage}} : {{now}} actuellement, {{reached}} atteint. Voir qui est à cette étape.",
+    "inStage_one": "{{count}} candidat actuellement",
+    "inStage_many": "{{count}} candidats actuellement",
+    "inStage_other": "{{count}} candidats actuellement",
+    "since": "à cette étape depuis {{time}}",
+    "empty": "Personne n’est à cette étape pour le moment. Faites glisser un candidat ici ou déplacez-le avec son menu d’étape."
   },
   "stages": {
     "title": "Votre processus. Vos étapes.",

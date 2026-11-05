@@ -3,7 +3,7 @@ import { useTranslation } from 'react-i18next'
 import { Link, useLocation, useNavigate, useParams } from 'react-router-dom'
 import { BriefcaseBusiness, FolderOpen, RotateCcw } from 'lucide-react'
 import { can } from '@/app/permissions.js'
-import DataTable from '@/components/common/DataTable.jsx'
+import DataTable, { tableState } from '@/components/common/DataTable.jsx'
 import EmptyState from '@/components/common/EmptyState.jsx'
 import PageTitle from '@/components/common/PageTitle.jsx'
 import Pagination from '@/components/common/Pagination.jsx'
@@ -113,19 +113,21 @@ export default function JobsPage() {
   const { params, setFilter, search, setSearch, clearFilters } = useUrlFilters()
   const filters = Object.fromEntries(['q', 'status', 'country'].map((name) => [name, params.get(name) ?? '']))
   const request = { page: Number(params.get('page')) || 1, ...Object.fromEntries(Object.entries(filters).filter(([, value]) => value)) }
-  const { data, isSuccess } = useGetAdminJobsQuery(request, { refetchOnMountOrArgChange: true })
+  const result = useGetAdminJobsQuery(request, { refetchOnMountOrArgChange: true })
+  const { data, isSuccess } = result
   const [caseJob, setCaseJob] = useState(null)
   const jobs = data?.items ?? []
+  const table = tableState(result, jobs)
   const summaryJob = jobId ? jobs.find((job) => job.id === jobId) : undefined
   const moderates = can(me, 'moderation.manage')
   const filtered = Object.values(filters).some(Boolean)
 
   const columns = [
-    { key: 'title', header: t('columns.role'), width: 220, render: (job) => <span className={styles.title}>{job.title}</span> },
-    { key: 'company', header: t('columns.company'), width: 160, render: (job) => <CompanyCell name={job.company.displayName} id={job.company.id} logoUrl={job.company.logoUrl} /> },
+    { key: 'title', header: t('columns.role'), width: 220, skeleton: 'text', render: (job) => <span className={styles.title}>{job.title}</span> },
+    { key: 'company', header: t('columns.company'), width: 160, skeleton: 'logo', render: (job) => <CompanyCell name={job.company.displayName} id={job.company.id} logoUrl={job.company.logoUrl} /> },
     { key: 'country', header: t('columns.country'), width: 120, render: (job) => <span className={styles.muted}>{job.country ? format.country(job.country) : '—'}</span> },
     { key: 'salary', header: t('columns.salary'), width: 150, render: (job) => <span className={styles.muted}>{job.salary ? format.salary(job.salary) : '—'}</span> },
-    { key: 'status', header: t('columns.status'), width: 110, render: (job) => <JobStatusBadge status={job.status} restricted={Boolean(job.restricted)} /> },
+    { key: 'status', header: t('columns.status'), width: 110, skeleton: 'pill', render: (job) => <JobStatusBadge status={job.status} restricted={Boolean(job.restricted)} /> },
     {
       key: 'actions',
       width: 250,
@@ -181,10 +183,10 @@ export default function JobsPage() {
         />
       </div>
       <div className={styles.results}>
-        {jobs.length > 0 ? (
+        {table.loading || jobs.length > 0 ? (
           <>
-            <DataTable className={styles.table} caption={t('caption')} columns={columns} rows={jobs} getRowKey={(job) => job.id} />
-            <Pagination page={data.page} pageSize={data.pageSize} total={data.total} onChange={(next) => setFilter('page', String(next))} />
+            <DataTable className={styles.table} loading={table.loading} busy={table.busy} caption={t('caption')} columns={columns} rows={jobs} getRowKey={(job) => job.id} />
+            {data && <Pagination page={data.page} pageSize={data.pageSize} total={data.total} onChange={(next) => setFilter('page', String(next))} />}
           </>
         ) : (
           isSuccess && (

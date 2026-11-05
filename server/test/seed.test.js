@@ -32,11 +32,11 @@ useTestUploads()
 const counts = async () => Promise.all([Country, Plan, Permission, AdminRole, Faq, LegalDocument].map((Model) => Model.countDocuments()))
 
 describe('seed:catalog (U41)', () => {
-  it('is idempotent: 29 countries, 3 plans, 21 permissions, 3 roles, the FAQs and 3 legal texts × 3 languages', async () => {
+  it('is idempotent: 29 countries, 4 plans, 21 permissions, 3 roles, the FAQs and 3 legal texts × 3 languages', async () => {
     await seedCatalog()
     const published = (await LegalDocument.findOne({ doc: 'terms', language: 'en' })).publishedAt
     await seedCatalog()
-    assert.deepEqual(await counts(), [29, 3, 21, 3, FAQS.length, 9])
+    assert.deepEqual(await counts(), [29, 4, 21, 3, FAQS.length, 9])
     assert.deepEqual((await LegalDocument.findOne({ doc: 'terms', language: 'en' })).publishedAt, published)
     assert.equal(await LegalDocument.countDocuments({ isDraft: true, version: LEGAL_VERSION }), 9)
   })
@@ -204,7 +204,7 @@ describe('seed:demo (§3.20, OD9, P12)', () => {
     const sarah = await User.findOne({ email: demoAddress('sarah') })
     const emmaPlus = rows.find((row) => String(row.userId) === String(emma._id) && row.kind === 'subscription')
     assert.deepEqual([emmaPlus.kind, emmaPlus.itemId, emmaPlus.amountMinor, emmaPlus.currency], ['subscription', 'plus', 900, 'GBP'])
-    const sarahPlus = rows.find((row) => String(row.userId) === String(sarah._id))
+    const sarahPlus = rows.find((row) => String(row.userId) === String(sarah._id) && row.kind === 'subscription')
     assert.deepEqual([sarahPlus.payerRole, sarahPlus.itemId, sarahPlus.itemName, sarahPlus.amountMinor, sarahPlus.currency], ['recruiter', 'recruiter_plus', 'Recruiter Plus', 4900, 'GBP'])
     for (const row of [emmaPlus, sarahPlus]) assert.match(row.receiptUrl, /^https:\/\/invoice\.stripe\.com\//)
     assert.equal(rows.filter((row) => row.receiptUrl).length, 2)

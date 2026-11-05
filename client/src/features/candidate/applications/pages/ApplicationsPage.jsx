@@ -32,7 +32,7 @@ export default function ApplicationsPage() {
   const format = useFormat()
   const jobText = useJobText()
   const { data: config } = useGetConfigQuery()
-  const { data } = useGetApplicationsQuery()
+  const { data, isLoading } = useGetApplicationsQuery()
   const [withdraw] = useWithdrawMutation()
   const [filter, setFilter] = useState('all')
   // P11b-Q9: a notification's link opens the dialog; the layout remounts a page when its path changes, so in-page opens
@@ -61,6 +61,7 @@ export default function ApplicationsPage() {
     {
       key: 'opportunity',
       header: t('applications:list.opportunity'),
+      skeleton: 'logo',
       width: '34%',
       render: (row) => (
         <Link to={`/candidate/jobs/${row.job.id}`} className={styles.opportunity}>
@@ -76,6 +77,7 @@ export default function ApplicationsPage() {
     {
       key: 'status',
       header: t('applications:list.status'),
+      skeleton: 'pill',
       width: '16%',
       render: (row) => (
         <span data-status={row.status}>
@@ -106,7 +108,9 @@ export default function ApplicationsPage() {
       <FilterChips className={styles.chips} label={t('applications:list.filtersLabel')} options={filters} value={filter} onChange={setFilter} />
 
       <div className={styles.table}>
-        {!data ? null : rows.length === 0 ? (
+        {isLoading ? (
+          <DataTable loading caption={t('applications:list.caption')} columns={columns} rows={[]} getRowKey={(row) => row.id} />
+        ) : !data ? null : rows.length === 0 ? (
           <EmptyState
             icon={BriefcaseBusiness}
             title={t(filter === 'all' ? 'applications:list.empty' : 'applications:list.emptyFiltered')}

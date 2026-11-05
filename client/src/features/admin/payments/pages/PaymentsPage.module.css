@@ -5,6 +5,19 @@
   padding-top: 32px;
 }
 
+/* Each card's label, value and caption share rows with the other cards, so a wrapped label or a multi-line value
+   never pushes one card's value or caption out of line with its neighbours. */
+.stats > section {
+  display: grid;
+  grid-row: span 3;
+  grid-template-rows: subgrid;
+  row-gap: 0;
+}
+
+.stats > section > * {
+  align-self: start;
+}
+
 .filters {
   display: flex;
   flex-wrap: wrap;
@@ -12,15 +25,15 @@
   padding-top: 32px;
 }
 
+/* The search has its own row; the filters share the next one, each at least as wide as its longest option
+   ("Todos los pagadores" is never cut) and stretched so the row ends flush with the table. */
 .search {
-  flex: 0 1 320px;
+  flex: 1 1 100%;
   min-width: 0;
 }
 
-/* Sized by the longest option, so "Cualquier permiso de trabajo" or "Todos los pagadores" is never cut. */
 .select {
-  flex: 0 1 auto;
-  min-width: 176px;
+  flex: 1 1 auto;
   max-width: 100%;
 }
 
@@ -56,8 +69,8 @@
 .moneyLines {
   display: flex;
   flex-direction: column;
-  gap: 6px;
-  font-size: 22px;
+  gap: 4px;
+  font-size: 20px;
   line-height: 24px;
 }
 
@@ -86,26 +99,28 @@
     grid-template-columns: minmax(0, 1fr);
   }
 
-  .search,
   .select {
     flex-basis: 100%;
   }
 }
 
-/* P11c-Q8: the MRR card per role. */
+/* P11c-Q8: the MRR card per role, "Candidates  £18" per line, the amounts in one column. */
 .roleMoney {
-  display: grid;
-  gap: 10px;
+  display: inline-grid;
+  grid-template-columns: auto auto;
+  align-items: baseline;
+  gap: 4px 16px;
 }
 
 .roleGroup {
-  display: grid;
-  gap: 4px;
+  display: contents;
 }
 
 .roleLabel {
-  font-size: 11px;
-  font-weight: 600;
-  line-height: 16px;
+  font-family: var(--font-body);
+  font-size: 12px;
+  font-weight: 500;
+  line-height: 24px;
+  letter-spacing: 0;
   color: var(--muted-foreground);
 }

@@ -16,6 +16,9 @@
     "needs": "{{feature}} forma parte del plan Plus. Plus añade postularte a ofertas, escribir a reclutadores, las alertas de empleo y las funciones de IA."
   },
   "gate": {
+    "currentPlan": "Tu plan actual",
+    "everything": "Todo lo de {{plan}}, y además:",
+    "notIncluded": "no incluido",
     "ai": {
       "title": "Desbloquea tus análisis con IA",
       "lead": "Los análisis de tu perfil, las recomendaciones sobre habilidades que te faltan y las explicaciones de compatibilidad forman parte de Plus."
@@ -69,9 +72,7 @@
     "reference": "Referencia",
     "payer": "Pagador",
     "item": "Concepto",
-    "type": "Tipo",
     "amount": "Importe",
-    "method": "Método",
     "status": "Estado",
     "date": "Fecha",
     "receipt": "Recibo",

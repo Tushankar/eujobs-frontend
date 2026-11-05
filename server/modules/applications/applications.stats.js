@@ -29,6 +29,30 @@ export async function funnel(company) {
 }
 
 /**
+ * The Funnel view of the Hiring pipeline (owner decision 2026-11-05): per company stage in board order, `now` = the
+ * active applications in it (as the board) and `reached` = those that ever sat in it, withdrawn ones left out (M-178).
+ * For all jobs or one; `applicants` and `hired` head the view.
+ */
+export async function pipelineFunnel(company, { jobId } = {}) {
+  const [stages, applications] = await Promise.all([
+    PipelineStage.find({ companyId: company._id }).sort({ order: 1 }),
+    Application.find({ companyId: company._id, status: { $ne: 'withdrawn' }, ...(jobId && { jobId }) }, 'stageId status history.stageId'),
+  ])
+  const items = stages.map((stage) => {
+    const id = String(stage._id)
+    return {
+      id,
+      name: stage.name,
+      category: stage.category,
+      tone: stage.tone,
+      now: applications.filter((application) => application.status !== 'not_selected' && String(application.stageId) === id).length,
+      reached: applications.filter((application) => application.history.some((entry) => String(entry.stageId) === id)).length,
+    }
+  })
+  return { items, applicants: applications.length, hired: applications.filter((application) => application.status === 'hired').length }
+}
+
+/**
  * Applications received and shortlist additions per day of this or last week (Monday to Sunday) in `timeZone`.
  * Applications count by the day they were sent, whatever became of them since.
  */

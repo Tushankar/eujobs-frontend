@@ -30,11 +30,7 @@
   "movement": {
     "title": "Parcours des candidats",
     "description": "L’étape actuelle, la short-list et la prise de contact de chaque candidature.",
-    "candidate": "Candidat",
     "job": "{{job}} · {{company}}",
-    "stage": "Étape actuelle",
-    "shortlist": "Short-list",
-    "outreach": "Prise de contact",
     "shortlisted": "Ajouté à la short-list",
     "notShortlisted": "Hors short-list",
     "outreachSent": "Prise de contact envoyée",

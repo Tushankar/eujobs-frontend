@@ -53,11 +53,8 @@
     "publish": "Publication"
   },
   "wizard": {
-    "newEyebrow": "Constituez votre prochaine équipe",
-    "newTitle": "Un bon recrutement commence par la clarté.",
-    "editEyebrow": "Affinez votre poste",
-    "editTitle": "Rendez la présentation encore plus claire.",
-    "description": "Transformez votre poste en prérequis structurés. Vous fixez le cap.",
+    "newTitle": "Publier une offre",
+    "editTitle": "Modifier l’offre",
     "stepCount": "Étape {{current}} sur {{total}}",
     "cancel": "Annuler",
     "back": "Retour",
@@ -67,7 +64,12 @@
     "saveChanges": "Enregistrer les modifications",
     "newNote": "Votre brouillon est enregistré dans votre liste d’offres après la première étape, puis à chaque étape.",
     "draftNote": "Ce brouillon est enregistré à chaque étape. Retrouvez-le sous Brouillon dans vos offres.",
-    "liveNote": "Les modifications d’un poste en ligne sont enregistrées à la fin et visibles immédiatement par les candidats."
+    "liveNote": "Les modifications d’un poste en ligne sont enregistrées à la fin et visibles immédiatement par les candidats.",
+    "progress": "{{done}} sur {{total}} sections prêtes"
+  },
+  "preview": {
+    "title": "Aperçu",
+    "hint": "Ce que les candidats verront de cette offre"
   },
   "fields": {
     "title": "Intitulé du poste",

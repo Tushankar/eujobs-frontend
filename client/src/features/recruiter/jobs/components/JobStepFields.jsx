@@ -1,11 +1,12 @@
 import { useTranslation } from 'react-i18next'
 import { CircleAlert, CircleCheck } from 'lucide-react'
-import { useGetConfigQuery, useGetCountriesQuery } from '@/app/api.js'
+import { useGetConfigQuery } from '@/app/api.js'
 import { Checkbox, Icon, SelectField, TextareaField, TextField } from '@/components/ui'
 import CityField from '@/components/common/CityField.jsx'
 import { useJobText } from '@/lib/jobText.js'
 import { useGetQualityChecksQuery } from '../api.js'
 import { valuesToBody } from '../utils/jobForm.js'
+import { useJobPreview } from '../utils/useJobPreview.js'
 import { EligibleCountries, LanguageRequirements } from './ListFields.jsx'
 import JobPosting from './JobPosting.jsx'
 import SkillPicker from './SkillPicker.jsx'
@@ -38,16 +39,9 @@ export default function JobStepFields({ step, values, bind, errorOf, setValue, c
   const { t } = useTranslation()
   const jobText = useJobText()
   const { data: config } = useGetConfigQuery()
-  const { data: countries = [] } = useGetCountriesQuery()
+  const { preview, currency, remote } = useJobPreview(values)
   const enumOptions = (name) => (config?.enums[name] ?? []).map((key) => ({ value: key, label: t(`enums:${name}.${key}`) }))
   const J = config?.limits.job
-  const remote = values.workPreference === 'remote'
-  // M-131: the salary currency follows the job country; remote jobs use the Remote row's currency (EUR).
-  const countryCode = remote ? 'REMOTE' : values.place?.countryCode
-  const currency = countries.find((country) => country.code === countryCode)?.currency
-  const body = valuesToBody(values)
-  // What candidates will see: the API shape of the job, with the city and the currency it will get.
-  const preview = { ...body, location: remote ? null : values.place, country: countryCode, salary: currency && body.salary ? { ...body.salary, currency } : null }
 
   switch (step) {
     case 'basics':

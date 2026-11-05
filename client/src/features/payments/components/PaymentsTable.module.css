@@ -1,4 +1,10 @@
+.table {
+  --table-cell-padding-inline: 12px;
+}
+
 .reference {
+  display: block;
+  white-space: nowrap;
   font-size: 12px;
   font-weight: 600;
   letter-spacing: 0.02em;
@@ -14,7 +20,7 @@
 
 .muted {
   display: block;
-  font-size: 13px;
+  font-size: 12px;
   color: var(--muted-foreground);
 }
 
@@ -26,4 +32,31 @@
   font-weight: 600;
   color: var(--primary);
   white-space: nowrap;
+}
+
+/* The second line of a two-line cell, and the seeded badge under a reference. */
+.strong + .muted {
+  padding-top: 2px;
+}
+
+.reference + * {
+  margin-top: 4px;
+}
+
+.nowrap {
+  white-space: nowrap;
+}
+
+.actions {
+  display: inline-flex;
+  align-items: center;
+  justify-content: flex-end;
+  gap: 4px;
+  width: 100%;
+  white-space: nowrap;
+}
+
+/* A compact Details button, so the actions column leaves room for names. */
+.actions > button {
+  padding-inline: 10px;
 }

@@ -155,6 +155,7 @@ export const ENUMS = {
     'rejected',
     'shortlisted',
     'unshortlisted',
+    'note_added',
     'note_updated',
     'outreach',
     'message_reply',
@@ -163,7 +164,7 @@ export const ENUMS = {
     'cv_updated',
     'cv_download',
   ],
-  planKey: ['free', 'plus', 'recruiter_plus'],
+  planKey: ['free', 'plus', 'recruiter_free', 'recruiter_plus'],
   // Plus (candidates): apply, message_send, job_alerts, ai. Recruiter Plus (§3.22): jobs_unlimited, discovery, outreach, ai.
   entitlement: ['apply', 'message_send', 'job_alerts', 'ai', 'jobs_unlimited', 'discovery', 'outreach'],
   paymentKind: ['course', 'subscription'],

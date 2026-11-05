@@ -3,7 +3,7 @@ import { useTranslation } from 'react-i18next'
 import { Link } from 'react-router-dom'
 import { Download, FileText } from 'lucide-react'
 import { can } from '@/app/permissions.js'
-import DataTable from '@/components/common/DataTable.jsx'
+import DataTable, { tableState } from '@/components/common/DataTable.jsx'
 import EmptyState from '@/components/common/EmptyState.jsx'
 import PageTitle from '@/components/common/PageTitle.jsx'
 import Pagination from '@/components/common/Pagination.jsx'
@@ -34,7 +34,9 @@ export default function ApplicationsPage() {
   const { params, setFilter, search, setSearch, clearFilters } = useUrlFilters()
   const filters = Object.fromEntries(['q', 'status', 'country'].map((name) => [name, params.get(name) ?? '']))
   const query = { page: Number(params.get('page')) || 1, ...Object.fromEntries(Object.entries(filters).filter(([, value]) => value)) }
-  const { data, isSuccess } = useGetAdminApplicationsQuery(query, { refetchOnMountOrArgChange: true })
+  const result = useGetAdminApplicationsQuery(query, { refetchOnMountOrArgChange: true })
+  const { data, isSuccess } = result
+  const table = tableState(result, data?.items ?? [])
   const [exporting, setExporting] = useState(false)
   const [exportError, setExportError] = useState('')
   const filtered = Object.values(filters).some(Boolean)
@@ -55,6 +57,7 @@ export default function ApplicationsPage() {
     {
       key: 'candidate',
       header: t('columns.candidate'),
+      skeleton: 'text',
       render: (row) =>
         can(me, 'users.view') ? (
           <Link to={`/admin/candidates/${row.candidate.id}`} className={styles.strong}>
@@ -65,10 +68,10 @@ export default function ApplicationsPage() {
         ),
     },
     { key: 'role', header: t('columns.role'), render: (row) => <span className={styles.muted}>{row.job.title}</span> },
-    { key: 'company', header: t('columns.company'), render: (row) => <CompanyCell name={row.company} id={row.companyId} logoUrl={row.companyLogoUrl} /> },
+    { key: 'company', header: t('columns.company'), skeleton: 'logo', render: (row) => <CompanyCell name={row.company} id={row.companyId} logoUrl={row.companyLogoUrl} /> },
     { key: 'country', header: t('columns.country'), render: (row) => <span className={styles.muted}>{row.job.country ? format.country(row.job.country) : '—'}</span> },
     { key: 'applied', header: t('columns.applied'), render: (row) => <span className={styles.muted}>{format.date(row.appliedAt)}</span> },
-    { key: 'status', header: t('columns.status'), render: (row) => <PillBadge tone={TONES[row.status]}>{t(`enums:applicationStatus.${row.status}`)}</PillBadge> },
+    { key: 'status', header: t('columns.status'), skeleton: 'pill', render: (row) => <PillBadge tone={TONES[row.status]}>{t(`enums:applicationStatus.${row.status}`)}</PillBadge> },
   ]
 
   return (
@@ -109,10 +112,10 @@ export default function ApplicationsPage() {
         />
       </div>
       <div className={styles.results}>
-        {data?.items.length > 0 ? (
+        {table.loading || data?.items.length > 0 ? (
           <>
-            <DataTable className={styles.table} caption={t('caption')} columns={columns} rows={data.items} getRowKey={(row) => row.id} />
-            <Pagination page={data.page} pageSize={data.pageSize} total={data.total} onChange={(next) => setFilter('page', String(next))} />
+            <DataTable className={styles.table} loading={table.loading} busy={table.busy} caption={t('caption')} columns={columns} rows={data?.items ?? []} getRowKey={(row) => row.id} />
+            {data && <Pagination page={data.page} pageSize={data.pageSize} total={data.total} onChange={(next) => setFilter('page', String(next))} />}
           </>
         ) : (
           isSuccess && (

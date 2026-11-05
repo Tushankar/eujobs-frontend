@@ -24,7 +24,10 @@ export const discoveryQuery = z.object({
 })
 
 export const candidateParams = z.object({ id: objectId })
-export const noteBody = z.object({ text: z.string().trim().max(LIMITS.note.max) })
+const noteText = z.string().trim().min(1).max(LIMITS.note.max)
+export const noteBody = z.object({ text: noteText, applicationId: objectId.optional() })
+export const notePatchBody = z.object({ text: noteText })
+export const noteParams = z.object({ id: objectId, noteId: objectId })
 export const cvRequestBody = z.object({
   reason: z.enum(ENUMS.cvRequestReason),
   details: z.string().trim().max(LIMITS.cvRequestDetails.max).default(''),

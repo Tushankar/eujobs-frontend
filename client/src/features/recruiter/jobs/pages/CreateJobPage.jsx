@@ -14,15 +14,9 @@ const DRAFT_ACTIONS = [
 ]
 const LIVE_ACTIONS = [{ id: 'save', labelKey: 'jobs:wizard.saveChanges' }]
 
-function Heading({ editing }) {
+function Heading({ editing, companyName, note }) {
   const { t } = useTranslation()
-  return (
-    <PageTitle
-      eyebrow={t(editing ? 'jobs:wizard.editEyebrow' : 'jobs:wizard.newEyebrow')}
-      title={t(editing ? 'jobs:wizard.editTitle' : 'jobs:wizard.newTitle')}
-      description={t('jobs:wizard.description')}
-    />
-  )
+  return <PageTitle title={t(editing ? 'jobs:wizard.editTitle' : 'jobs:wizard.newTitle')} description={[companyName, note].filter(Boolean).join(' · ')} />
 }
 
 /** M-041, P4-D7: the first valid Continue creates the server draft, and the wizard carries on as that draft's edit page. */
@@ -39,11 +33,10 @@ function NewJob() {
 
   return (
     <>
-      <Heading />
+      <Heading companyName={me?.company?.displayName} note={t('jobs:wizard.newNote')} />
       <div className={styles.wizard}>
         <JobWizard
           initialValues={EMPTY_VALUES}
-          note={t('jobs:wizard.newNote')}
           companyName={me?.company?.displayName ?? ''}
           finishActions={DRAFT_ACTIONS}
           onContinue={createDraft}
@@ -84,7 +77,7 @@ function EditJob({ jobId }) {
 
   return (
     <>
-      <Heading editing={!draft} />
+      <Heading editing={!draft} companyName={job.company.displayName} note={t(draft ? 'jobs:wizard.draftNote' : 'jobs:wizard.liveNote')} />
       <div className={styles.wizard}>
         <JobWizard
           key={jobId}
@@ -92,7 +85,6 @@ function EditJob({ jobId }) {
           initialStep={step}
           reachable={JOB_STEPS.length - 1}
           initialErrors={initialErrors}
-          note={t(draft ? 'jobs:wizard.draftNote' : 'jobs:wizard.liveNote')}
           companyName={job.company.displayName}
           finishActions={draft ? DRAFT_ACTIONS.map((action) => ({ ...action, locked: action.status === 'published' && publishLocked(jobId) })) : LIVE_ACTIONS}
           onContinue={draft ? save : undefined}

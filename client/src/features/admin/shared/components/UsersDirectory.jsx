@@ -3,7 +3,7 @@ import { useTranslation } from 'react-i18next'
 import { Download, Users } from 'lucide-react'
 import { can } from '@/app/permissions.js'
 import { WORKSPACES, workspacePath } from '@/app/workspaces.js'
-import DataTable from '@/components/common/DataTable.jsx'
+import DataTable, { tableState } from '@/components/common/DataTable.jsx'
 import EmptyState from '@/components/common/EmptyState.jsx'
 import PageTitle from '@/components/common/PageTitle.jsx'
 import Pagination from '@/components/common/Pagination.jsx'
@@ -50,7 +50,9 @@ export default function UsersDirectory({ role }) {
   const filters = Object.fromEntries(['q', ...FILTERS[role]].map((name) => [name, params.get(name) ?? '']))
   const page = Number(params.get('page')) || 1
   const query = { role, page, ...Object.fromEntries(Object.entries(filters).filter(([, value]) => value)) }
-  const { data, isSuccess } = useGetAdminUsersQuery(query, { refetchOnMountOrArgChange: true })
+  const result = useGetAdminUsersQuery(query, { refetchOnMountOrArgChange: true })
+  const { data, isSuccess } = result
+  const table = tableState(result, data?.items ?? [])
   const listPath = workspacePath(WORKSPACES.admin, `${role}s`)
 
   async function exportCsv() {
@@ -77,6 +79,7 @@ export default function UsersDirectory({ role }) {
   const user = {
     key: 'user',
     header: t('columns.user'),
+    skeleton: 'avatar',
     render: (row) => (
       <div className={styles.user}>
         <Avatar name={row.fullName} src={row.photoUrl ?? undefined} size={32} />
@@ -104,7 +107,7 @@ export default function UsersDirectory({ role }) {
       .filter((entry) => entry.valid)
       .map((entry) => `${t(`enums:rtwRegion.${entry.region}`)} · ${t(`enums:rtwStatus.${entry.status}`)}`)
       .join(', ') || t('noRightToWork')
-  const plan = { key: 'plan', header: t('columns.plan'), render: (row) => <PillBadge tone={row.plan === 'free' ? 'neutral' : 'accent'}>{t(`enums:planKey.${row.plan}`)}</PillBadge> }
+  const plan = { key: 'plan', header: t('columns.plan'), skeleton: 'pill', render: (row) => <PillBadge tone={row.plan === 'free' ? 'neutral' : 'accent'}>{t(`enums:planKey.${row.plan}`)}</PillBadge> }
   const columns = [
     user,
     ...(role === 'recruiter' ? [{ key: 'company', header: t('columns.company'), render: (row) => muted(row.company?.displayName ?? t('noCountry')) }] : []),
@@ -133,6 +136,7 @@ export default function UsersDirectory({ role }) {
     {
       key: 'status',
       header: t('columns.status'),
+      skeleton: 'pill',
       render: (row) =>
         stack(
           role === 'candidate' ? (
@@ -204,10 +208,10 @@ export default function UsersDirectory({ role }) {
       </div>
 
       <div className={styles.results}>
-        {data?.items.length > 0 ? (
+        {table.loading || data?.items.length > 0 ? (
           <>
-            <DataTable className={styles.table} caption={t(`caption.${role}`)} columns={columns} rows={data.items} getRowKey={(row) => row.id} />
-            <Pagination page={data.page} pageSize={data.pageSize} total={data.total} onChange={(next) => setFilter('page', String(next))} />
+            <DataTable className={styles.table} loading={table.loading} busy={table.busy} caption={t(`caption.${role}`)} columns={columns} rows={data?.items ?? []} getRowKey={(row) => row.id} />
+            {data && <Pagination page={data.page} pageSize={data.pageSize} total={data.total} onChange={(next) => setFilter('page', String(next))} />}
           </>
         ) : (
           isSuccess && (

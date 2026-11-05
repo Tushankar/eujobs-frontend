@@ -50,6 +50,7 @@ const DialogContent = memo(
  * and the close button; traps Tab focus and restores focus to the opener.
  * `divided` switches to the header-rule layout (24px header with a bottom border, 24px body).
  * `dismissible={false}` makes a blocking dialog: no close button, Escape and the backdrop do nothing.
+ * `placement="right"` shows it as a full-height side panel (the Hiring pipeline's candidate panel).
  */
 export default function Modal({
   open,
@@ -61,6 +62,7 @@ export default function Modal({
   width = 480,
   divided = false,
   dismissible = true,
+  placement = 'center',
   className,
 }) {
   const dialogRef = useRef(null)
@@ -114,7 +116,7 @@ export default function Modal({
 
   return createPortal(
     <div
-      className={cx(styles.backdrop, closing && styles.closing)}
+      className={cx(styles.backdrop, placement === 'right' && styles.right, closing && styles.closing)}
       inert={closing}
       onMouseDown={(event) => dismissible && event.target === event.currentTarget && onClose()}
     >

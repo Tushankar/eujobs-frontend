@@ -113,10 +113,10 @@
 
 .listLegend {
   padding: 0;
-  font-size: 12px;
+  font-size: 13px;
   font-weight: 600;
-  line-height: 16px;
-  color: var(--text-label);
+  line-height: 18px;
+  color: var(--foreground);
 }
 
 .listRow {

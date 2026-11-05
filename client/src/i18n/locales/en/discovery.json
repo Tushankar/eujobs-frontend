@@ -216,7 +216,8 @@
       "rejected": "{{actor}} marked the application for {{jobTitle}} as not selected.",
       "shortlisted": "{{actor}} added the candidate to the shortlist.",
       "unshortlisted": "{{actor}} removed the candidate from the shortlist.",
-      "note_updated": "{{actor}} updated the private note.",
+      "note_added": "{{actor}} added a private note.",
+      "note_updated": "{{actor}} edited a private note.",
       "outreach": "{{actor}} started a conversation.",
       "message_reply": "{{actor}} replied to a message.",
       "cv_request": "{{actor}} sent a CV request ({{reason}}).",
@@ -228,13 +229,26 @@
   },
   "notesTab": {
     "title": "Your company's private notes",
-    "description": "Visible to your company only. Focus on relevant evidence and avoid sensitive personal information.",
-    "label": "Private notes about {{name}}",
+    "description": "Visible to your company only. Focus on relevant evidence and avoid sensitive personal information."
+  },
+  "notes": {
+    "label": "New note about {{name}}",
     "placeholder": "What stands out? What needs a closer look?",
-    "hint": "Up to {{max}} characters.",
-    "save": "Save notes",
-    "saved": "Notes saved.",
-    "updated": "Last updated by {{name}}, {{date}}"
+    "hint": "Up to {{max}} characters. Everyone in your company sees your notes.",
+    "add": "Add note",
+    "count_one": "{{count}} note",
+    "count_other": "{{count}} notes",
+    "empty": "No notes yet. Add the first one above.",
+    "edited": "edited {{date}}",
+    "actions": "Note actions",
+    "edit": "Edit",
+    "editLabel": "Edit note",
+    "save": "Save",
+    "cancel": "Cancel",
+    "delete": "Delete note",
+    "deleteTitle": "Delete this note?",
+    "deleteText": "The note is removed for everyone in your company. This cannot be undone.",
+    "formerMember": "Former team member"
   },
   "shortlists": {
     "title": "A shortlist with real potential.",

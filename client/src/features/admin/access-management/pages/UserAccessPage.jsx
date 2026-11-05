@@ -32,7 +32,7 @@ export default function UserAccessPage() {
   useMarkSeen('admin', userId)
   const { pathname, state } = useLocation()
   const navigate = useNavigate()
-  const { data: users = [], isSuccess } = useGetAccessUsersQuery()
+  const { data: users = [], isSuccess, isLoading } = useGetAccessUsersQuery()
   const { data: roles = [] } = useGetRolesQuery()
   const [query, setQuery] = useState(state?.query ?? '')
   const activeRoles = roles.filter((role) => role.status === 'active')
@@ -62,6 +62,7 @@ export default function UserAccessPage() {
       key: 'status',
       header: t('users.status'),
       width: 142,
+      skeleton: 'pill',
       render: (user) =>
         user.isOwner ? <PillBadge tone="info">{t('users.owner')}</PillBadge> : <PillBadge tone={STATUS_TONES[user.status]}>{t(`enums:userStatus.${user.status}`)}</PillBadge>,
     },
@@ -97,8 +98,8 @@ export default function UserAccessPage() {
       {state?.notice && <NoticeBanner>{state.notice}</NoticeBanner>}
 
       <div className={styles.results}>
-        {rows.length > 0 ? (
-          <DataTable className={styles.table} columns={columns} rows={rows} getRowKey={(user) => user.id} caption={t('users.caption')} />
+        {isLoading || rows.length > 0 ? (
+          <DataTable className={styles.table} loading={isLoading} columns={columns} rows={rows} getRowKey={(user) => user.id} caption={t('users.caption')} />
         ) : (
           isSuccess && <EmptyState icon={Search} title={t('users.noUsers')} description={t('users.noUsersText')} />
         )}

@@ -52,11 +52,8 @@
     "publish": "Publish"
   },
   "wizard": {
-    "newEyebrow": "Build your next team",
-    "newTitle": "Great hiring starts with clarity.",
-    "editEyebrow": "Refine your role",
-    "editTitle": "Make the brief even clearer.",
-    "description": "Turn your role into structured requirements. You set the direction.",
+    "newTitle": "Post a job",
+    "editTitle": "Edit job",
     "stepCount": "Step {{current}} of {{total}}",
     "cancel": "Cancel",
     "back": "Back",
@@ -66,7 +63,12 @@
     "saveChanges": "Save changes",
     "newNote": "Your draft is saved to your Jobs list after the first step, and again at every step.",
     "draftNote": "This draft is saved at every step. Find it under Draft in your jobs.",
-    "liveNote": "Changes to a live role are saved when you finish and show to candidates straight away."
+    "liveNote": "Changes to a live role are saved when you finish and show to candidates straight away.",
+    "progress": "{{done}} of {{total}} sections ready"
+  },
+  "preview": {
+    "title": "Preview",
+    "hint": "How candidates will see this job"
   },
   "fields": {
     "title": "Job title",

@@ -81,7 +81,7 @@ async function world() {
   const conversation = await Conversation.create({ companyId: company._id, candidateId: candidate._id, jobId: job._id, startedBy: 'recruiter', lastMessageAt: new Date(), lastMessagePreview: 'Thanks' })
   await Message.create({ conversationId: conversation._id, senderId: recruiter._id, senderRole: 'recruiter', body: 'Would you like to talk?' })
   await Message.create({ conversationId: conversation._id, senderId: candidate._id, senderRole: 'candidate', body: 'Thanks, gladly' })
-  await CandidateNote.create({ companyId: company._id, candidateId: candidate._id, text: NOTE, updatedBy: recruiter._id })
+  await CandidateNote.create({ companyId: company._id, candidateId: candidate._id, text: NOTE, authorId: recruiter._id })
   await ShortlistEntry.create({ companyId: company._id, candidateId: candidate._id, addedBy: recruiter._id })
   await RecruiterActivity.create({ companyId: company._id, candidateId: candidate._id, actorId: recruiter._id, type: 'shortlisted', params: {}, at: new Date() })
   await ProfileView.create({ candidateId: candidate._id, recruiterId: recruiter._id, companyId: company._id, day: '2026-11-01', at: new Date() })

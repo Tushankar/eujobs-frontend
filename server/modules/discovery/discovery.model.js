@@ -16,16 +16,27 @@ const shortlistEntrySchema = new Schema(
 shortlistEntrySchema.index({ companyId: 1, candidateId: 1 }, { unique: true })
 
 /* One private note per company and candidate (M-080). */
+/*
+ * M-080 (owner decision 2026-11-05): a company's private notes on a candidate, one document per note, seen by the whole
+ * company and changed only by their author. `context` keeps the stage and job the note was written in (from the Hiring
+ * pipeline), as they were then. `editedAt` marks a changed note.
+ */
 const candidateNoteSchema = new Schema(
   {
     companyId: { type: ObjectId, ref: 'Company', required: true },
     candidateId: { type: ObjectId, ref: 'User', required: true },
-    text: { type: String, default: '' },
-    updatedBy: { type: ObjectId, ref: 'User' },
+    authorId: { type: ObjectId, ref: 'User', required: true },
+    text: { type: String, required: true },
+    context: {
+      applicationId: { type: ObjectId, ref: 'Application' },
+      jobTitle: String,
+      stageName: String,
+    },
+    editedAt: Date,
   },
   { timestamps: true },
 )
-candidateNoteSchema.index({ companyId: 1, candidateId: 1 }, { unique: true })
+candidateNoteSchema.index({ companyId: 1, candidateId: 1, createdAt: -1 })
 
 /* The company-wide timeline per candidate (M-081): type + params, translated by the client. No actor = the candidate. */
 const recruiterActivitySchema = new Schema(

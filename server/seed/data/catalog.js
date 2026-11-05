@@ -80,6 +80,30 @@ export const PLANS = [
     entitlements: ['apply', 'message_send', 'job_alerts', 'ai'],
   },
   {
+    // What a recruiter keeps without Recruiter Plus (§3.22): listed beside it on the upgrade page; it unlocks nothing.
+    key: 'recruiter_free',
+    role: 'recruiter',
+    name: { en: 'Free', es: 'Gratis', fr: 'Gratuit' },
+    features: [
+      {
+        en: '1 active job at a time, unlimited drafts',
+        es: '1 oferta activa a la vez y borradores ilimitados',
+        fr: '1 offre active à la fois, brouillons illimités',
+      },
+      { en: 'Receive and review applications', es: 'Recibe y revisa candidaturas', fr: 'Recevez et examinez les candidatures' },
+      {
+        en: 'Hiring pipeline and replies to applicants',
+        es: 'Proceso de selección y respuestas a los candidatos',
+        fr: 'Suivi des recrutements et réponses aux candidats',
+      },
+      { en: 'Company page and verification', es: 'Página de empresa y verificación', fr: 'Page entreprise et vérification' },
+      { en: 'Recruiter learning', es: 'Formación para reclutadores', fr: 'Formation pour recruteurs' },
+    ],
+    interval: 'month',
+    prices: [],
+    entitlements: [],
+  },
+  {
     key: 'recruiter_plus',
     role: 'recruiter',
     // The name stays the same in every language (P11c-Q1).

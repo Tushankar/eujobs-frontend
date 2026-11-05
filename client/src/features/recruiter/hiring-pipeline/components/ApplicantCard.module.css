@@ -24,10 +24,15 @@
 }
 
 .name {
+  padding: 0;
+  border: 0;
+  background: none;
   font-size: 12px;
   font-weight: 600;
   line-height: 16px;
+  text-align: left;
   color: var(--foreground);
+  cursor: pointer;
 }
 
 .name:hover {
@@ -65,4 +70,32 @@
   font-size: 9px;
   line-height: 13.5px;
   color: #a0a5b1;
+}
+
+.badges {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: 6px;
+}
+
+/* The candidate's note count; opens the panel on its notes. */
+.notes {
+  display: inline-flex;
+  align-items: center;
+  gap: 4px;
+  padding: 2px 8px;
+  border: 1px solid var(--border-strong);
+  border-radius: var(--radius-full);
+  background: var(--card);
+  font-size: 11px;
+  font-weight: 600;
+  line-height: 16px;
+  color: var(--text-label);
+  cursor: pointer;
+}
+
+.notes:hover {
+  border-color: var(--foreground);
+  color: var(--foreground);
 }

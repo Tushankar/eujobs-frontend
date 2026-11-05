@@ -70,8 +70,8 @@ export default {
     // Notes on an applicant stay on Free.
     await page.goto(`${ctx.webUrl}/recruiter/find-candidates/${candidate.id}/notes`, { waitUntil: 'networkidle0' })
     await setTextarea(page, 'textarea[name="note"]', 'Strong portfolio; invite to a first call.')
-    await page.click('button[type="submit"]')
-    await waitForText(page, 'Notes saved.')
+    await page.click('form button[type="submit"]')
+    await page.waitForSelector('[data-note]')
 
     // Jobs: the relevant link, the AI summary and Publish of the draft while a job is live.
     await page.goto(`${ctx.webUrl}/recruiter/jobs`, { waitUntil: 'networkidle0' })

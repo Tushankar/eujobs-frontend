@@ -68,7 +68,7 @@ export const api = createApi({
     'CandidateOverview',
     'Discovery',
     'Shortlist',
-    'CandidateNote',
+    'CandidateNotes',
     'CandidateActivity',
     'CandidateCv',
     'CvRequests',

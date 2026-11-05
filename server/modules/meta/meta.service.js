@@ -52,13 +52,13 @@ export async function userCurrency(user) {
   return (await Country.findOne({ code: user.pickerCountry }, 'currency'))?.currency ?? null
 }
 
-/** M-116, §3.22: one role's plans (Free then Plus; Recruiter Plus), in one language, priced in `currency` (Free is 0; null where none). */
+/** M-116, §3.22: one role's plans (Free then Plus; Free then Recruiter Plus), in one language, priced in `currency` (Free is 0; null where none). */
 export async function listPlans(currency, language, role) {
   const plans = await Plan.find({ role })
   return plans
     .sort((a, b) => ENUMS.planKey.indexOf(a.key) - ENUMS.planKey.indexOf(b.key))
     .map((plan) => {
-      const price = plan.key === 'free' ? { currency, amountMinor: 0 } : plan.prices.find((entry) => entry.currency === currency)
+      const price = ['free', 'recruiter_free'].includes(plan.key) ? { currency, amountMinor: 0 } : plan.prices.find((entry) => entry.currency === currency)
       return {
         key: plan.key,
         name: plan.name[language],

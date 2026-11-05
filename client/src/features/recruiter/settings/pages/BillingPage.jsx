@@ -17,7 +17,7 @@ export default function BillingPage() {
   // P11b-Q10: opening this item marks its notifications read.
   useMarkSeen('page', 'billing')
   const { t } = useTranslation('billing')
-  const { data: payments = [] } = useGetMyPaymentsQuery()
+  const { data: payments = [], isLoading } = useGetMyPaymentsQuery()
 
   return (
     <SettingsLayout>
@@ -28,10 +28,10 @@ export default function BillingPage() {
       <SettingsCard title={t('page.historyTitle')}>
         <p className={styles.lead}>{t('recruiter.lead')}</p>
         <div className={styles.table}>
-          {payments.length === 0 ? (
-            <EmptyState icon={CreditCard} title={t('page.emptyTitle')} description={t('recruiter.emptyDescription')} />
+          {isLoading || payments.length > 0 ? (
+            <PaymentsTable payments={payments} loading={isLoading} />
           ) : (
-            <PaymentsTable payments={payments} />
+            <EmptyState icon={CreditCard} title={t('page.emptyTitle')} description={t('recruiter.emptyDescription')} />
           )}
         </div>
       </SettingsCard>

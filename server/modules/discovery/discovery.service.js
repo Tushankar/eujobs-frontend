@@ -1,11 +1,11 @@
 import { config } from '../../config/env.js'
 import { ENUMS } from '../../config/enums.js'
-import { AppError } from '../../lib/errors.js'
+import { AppError, fieldError } from '../../lib/errors.js'
 import { signedUrl } from '../../lib/files.js'
 import { t } from '../../lib/i18n.js'
 import { sendEmail } from '../../lib/mailer.js'
 import { matchesKeywords, searchText, skillKey, skillOverlap } from '../../lib/skills.js'
-import { ACTIVE_FILTER, Application } from '../applications/applications.model.js'
+import { ACTIVE_FILTER, Application, PipelineStage } from '../applications/applications.model.js'
 import { CandidateProfile } from '../candidates/candidates.model.js'
 import { CvAccessRequest, CvVersion } from '../cv/cv.model.js'
 import { File } from '../files/files.model.js'
@@ -266,20 +266,75 @@ export async function removeFromShortlist(user, company, candidateId) {
   if (deletedCount) await recordActivity({ companyId: company._id, candidateId, actorId: user._id, type: 'unshortlisted' })
 }
 
-const nameOf = async (userId) => (userId ? (await User.findById(userId, 'fullName'))?.fullName ?? null : null)
-
-export async function getNote(company, candidateId) {
-  await accessibleCandidate(candidateId, company)
-  const note = await CandidateNote.findOne({ companyId: company._id, candidateId })
-  return { text: note?.text ?? '', updatedAt: note?.updatedAt ?? null, updatedBy: await nameOf(note?.updatedBy) }
+/** One note as the client shows it; `mine` tells the viewer's own notes, the only ones they may change. */
+function noteDto(note, authors, viewer) {
+  const { stageName, jobTitle } = note.context ?? {}
+  return {
+    id: String(note._id),
+    text: note.text,
+    createdAt: note.createdAt,
+    editedAt: note.editedAt ?? null,
+    author: { id: String(note.authorId), name: authors.get(String(note.authorId)) ?? null },
+    context: stageName || jobTitle ? { stageName: stageName ?? null, jobTitle: jobTitle ?? null } : null,
+    mine: String(note.authorId) === String(viewer._id),
+  }
 }
 
-/** M-080: one note per company and candidate, at most 5,000 characters. */
-export async function saveNote(user, company, candidateId, text) {
+/** M-080: the company's notes on a candidate, newest first. */
+export async function listNotes(user, company, candidateId) {
   await accessibleCandidate(candidateId, company)
-  await CandidateNote.updateOne({ companyId: company._id, candidateId }, { text, updatedBy: user._id }, { upsert: true })
-  await recordActivity({ companyId: company._id, candidateId, actorId: user._id, type: 'note_updated' })
-  return getNote(company, candidateId)
+  const notes = await CandidateNote.find({ companyId: company._id, candidateId }).sort({ createdAt: -1 })
+  const authors = new Map((await User.find({ _id: { $in: notes.map((note) => note.authorId) } }, 'fullName')).map((author) => [String(author._id), author.fullName]))
+  const items = notes.map((note) => noteDto(note, authors, user))
+  return { items, total: items.length, page: 1, pageSize: items.length }
+}
+
+/**
+ * M-080: a new note, at most 5,000 characters. From the Hiring pipeline it names the application, whose job and stage
+ * at that moment stay with the note.
+ */
+export async function addNote(user, company, candidateId, { text, applicationId }) {
+  await accessibleCandidate(candidateId, company)
+  let context
+  if (applicationId) {
+    const application = await Application.findOne({ _id: applicationId, companyId: company._id, candidateId })
+    if (!application) throw fieldError({ applicationId: 'invalid' })
+    const [job, stage] = await Promise.all([Job.findById(application.jobId, 'title'), PipelineStage.findById(application.stageId, 'name')])
+    context = { applicationId: application._id, jobTitle: job?.title, stageName: stage?.name ?? application.history.at(-1)?.stageName }
+  }
+  const note = await CandidateNote.create({ companyId: company._id, candidateId, authorId: user._id, text, context })
+  await recordActivity({ companyId: company._id, candidateId, actorId: user._id, type: 'note_added' })
+  return noteDto(note, new Map([[String(user._id), user.fullName]]), user)
+}
+
+/** Only the author changes or deletes a note: anyone else in the company gets 403, another company 404. */
+async function ownNote(user, company, candidateId, noteId) {
+  const note = await CandidateNote.findOne({ _id: noteId, companyId: company._id, candidateId })
+  if (!note) throw new AppError('NOT_FOUND')
+  if (String(note.authorId) !== String(user._id)) throw new AppError('FORBIDDEN')
+  return note
+}
+
+export async function editNote(user, company, candidateId, noteId, text) {
+  const note = await ownNote(user, company, candidateId, noteId)
+  if (note.text !== text) {
+    note.text = text
+    note.editedAt = new Date()
+    await note.save()
+    await recordActivity({ companyId: company._id, candidateId, actorId: user._id, type: 'note_updated' })
+  }
+  return noteDto(note, new Map([[String(user._id), user.fullName]]), user)
+}
+
+export async function deleteNote(user, company, candidateId, noteId) {
+  const note = await ownNote(user, company, candidateId, noteId)
+  await note.deleteOne()
+}
+
+/** The number of notes per candidate, for the Hiring pipeline cards. */
+export async function noteCounts(companyId, candidateIds) {
+  const rows = await CandidateNote.aggregate([{ $match: { companyId, candidateId: { $in: candidateIds } } }, { $group: { _id: '$candidateId', count: { $sum: 1 } } }])
+  return new Map(rows.map((row) => [String(row._id), row.count]))
 }
 
 /** M-081: the company-wide timeline, newest first; an event without an actor is the candidate's own. */

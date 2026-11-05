@@ -25,3 +25,53 @@
   padding: 0 4px 32px;
   overflow-x: auto;
 }
+
+/* The Board / Funnel switch sits at the far end of the filter row. */
+.views {
+  margin-left: auto;
+}
+
+/* Funnel view: one card holding the headline numbers, the funnel and the selected stage's people. */
+.funnelCard {
+  margin: 20px 0 32px;
+  overflow: hidden;
+  border: 1px solid var(--border);
+  border-radius: var(--radius-xl);
+  background: var(--card);
+}
+
+.funnelStats {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 8px 32px;
+  padding: 20px 24px 0;
+  font-size: 13px;
+  line-height: 20px;
+  color: var(--muted-foreground);
+}
+
+.funnelStats strong {
+  margin-right: 4px;
+  font-family: var(--font-display);
+  font-size: 20px;
+  font-weight: 800;
+  color: var(--foreground);
+  font-variant-numeric: tabular-nums;
+}
+
+.funnelHint {
+  padding: 6px 24px 4px;
+  font-size: 12px;
+  line-height: 18px;
+  color: var(--muted-foreground);
+}
+
+@media (max-width: 767px) {
+  .funnelStats {
+    padding: 16px 16px 0;
+  }
+
+  .funnelHint {
+    padding: 6px 16px 8px;
+  }
+}

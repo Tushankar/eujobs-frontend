@@ -224,7 +224,8 @@
       "rejected": "{{actor}} marcó la candidatura a la oferta {{jobTitle}} como no seleccionada.",
       "shortlisted": "{{actor}} añadió al candidato a la preselección.",
       "unshortlisted": "{{actor}} quitó al candidato de la preselección.",
-      "note_updated": "{{actor}} actualizó la nota privada.",
+      "note_added": "{{actor}} añadió una nota privada.",
+      "note_updated": "{{actor}} editó una nota privada.",
       "outreach": "{{actor}} inició una conversación.",
       "message_reply": "{{actor}} respondió a un mensaje.",
       "cv_request": "{{actor}} envió una solicitud de CV ({{reason}}).",
@@ -236,13 +237,27 @@
   },
   "notesTab": {
     "title": "Notas privadas de tu empresa",
-    "description": "Solo visibles para tu empresa. Céntrate en los datos relevantes y evita la información personal sensible.",
-    "label": "Notas privadas sobre {{name}}",
+    "description": "Solo visibles para tu empresa. Céntrate en los datos relevantes y evita la información personal sensible."
+  },
+  "notes": {
+    "label": "Nueva nota sobre {{name}}",
     "placeholder": "¿Qué destaca? ¿Qué hay que revisar con más atención?",
-    "hint": "Hasta {{max}} caracteres.",
-    "save": "Guardar notas",
-    "saved": "Notas guardadas.",
-    "updated": "Última actualización de {{name}}, {{date}}"
+    "hint": "Hasta {{max}} caracteres. Todas las personas de tu empresa ven tus notas.",
+    "add": "Añadir nota",
+    "count_one": "{{count}} nota",
+    "count_many": "{{count}} notas",
+    "count_other": "{{count}} notas",
+    "empty": "Todavía no hay notas. Añade la primera arriba.",
+    "edited": "editada el {{date}}",
+    "actions": "Acciones de la nota",
+    "edit": "Editar",
+    "editLabel": "Editar nota",
+    "save": "Guardar",
+    "cancel": "Cancelar",
+    "delete": "Eliminar nota",
+    "deleteTitle": "¿Eliminar esta nota?",
+    "deleteText": "La nota se elimina para todas las personas de tu empresa. No se puede deshacer.",
+    "formerMember": "Antiguo miembro del equipo"
   },
   "shortlists": {
     "title": "Una preselección con verdadero potencial.",

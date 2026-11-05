@@ -47,11 +47,7 @@ export default function OversightSidebar({ roles, coverage }) {
                 meta={`${role.company} · ${where(role)}`}
                 company={{ name: role.company, id: role.companyId, logoUrl: role.companyLogoUrl }}
                 divided
-              >
-                <PillBadge tone="success" dot>
-                  {t('enums:jobStatus.published')}
-                </PillBadge>
-              </ListRow>
+              />
             ))}
           </ul>
         ) : (

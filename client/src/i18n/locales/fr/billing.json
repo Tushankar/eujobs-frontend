@@ -16,6 +16,9 @@
     "needs": "{{feature}} fait partie de l’offre Plus. Plus permet de postuler, d’écrire aux recruteurs, de recevoir des alertes emploi et d’utiliser les fonctions d’IA."
   },
   "gate": {
+    "currentPlan": "Votre offre actuelle",
+    "everything": "Tout ce qu’inclut {{plan}}, et en plus :",
+    "notIncluded": "non inclus",
     "ai": {
       "title": "Débloquez vos analyses par IA",
       "lead": "Les analyses de votre profil, les conseils sur les compétences manquantes et les explications de compatibilité font partie de Plus."
@@ -69,9 +72,7 @@
     "reference": "Référence",
     "payer": "Payeur",
     "item": "Article",
-    "type": "Type",
     "amount": "Montant",
-    "method": "Moyen de paiement",
     "status": "Statut",
     "date": "Date",
     "receipt": "Reçu",

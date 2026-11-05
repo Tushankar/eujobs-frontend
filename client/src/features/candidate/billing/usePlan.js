@@ -14,7 +14,7 @@ export const lacksEntitlement = (me, entitlement, roles = ['candidate']) => role
 /**
  * §3.3, §3.22 for the UI: plan and entitlements come from /me. Candidate plan cards are priced in the header
  * country's currency (M-130, P5-Q5); a recruiter's in the company country's, which the server picks (P11c-Q2).
- * `plus` is the role's paid plan.
+ * `plus` is the role's paid plan, `free` what the role keeps without it.
  */
 export function usePlan() {
   const { me } = usePreferences()
@@ -23,5 +23,7 @@ export function usePlan() {
   const currency = recruiter ? undefined : (countries?.find((country) => country.code === me?.pickerCountry)?.currency ?? 'EUR')
   const { data: plans = [] } = useGetPlansQuery(currency, { skip: !['candidate', 'recruiter'].includes(me?.role) || (!recruiter && !countries) })
   const item = planItem(me?.role)
-  return { isPlus: Boolean(me?.plan) && me.plan !== 'free', plans, plus: plans.find((plan) => plan.key === item.itemId), item }
+  const plus = plans.find((plan) => plan.key === item.itemId)
+  const free = plans.find((plan) => plan !== plus)
+  return { isPlus: Boolean(me?.plan) && me.plan !== 'free', plans, plus, free, item }
 }

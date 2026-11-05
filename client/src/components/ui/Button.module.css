@@ -4,11 +4,11 @@
   justify-content: center;
   gap: 8px;
   min-height: 40px;
-  padding: 10px 16px;
+  padding: 10px 20px;
   border: 1px solid transparent;
-  border-radius: var(--radius-xl);
+  border-radius: var(--radius-full);
   font-family: var(--font-body);
-  font-size: 12px;
+  font-size: 13px;
   font-weight: 600;
   line-height: 18px;
   text-align: center;
@@ -51,7 +51,7 @@
 
 .sm {
   min-height: 32px;
-  padding: 6px 12px;
+  padding: 6px 14px;
 }
 
 .fullWidth {
@@ -61,19 +61,11 @@
 .primary {
   background: var(--primary);
   color: var(--primary-foreground);
-  box-shadow: var(--shadow-button);
 }
 
+/* Flat: hover only deepens the colour (no glow or lift). */
 .primary:hover {
   background: var(--primary-hover);
-}
-
-/* Primary lifts a pixel on a soft blue glow; pressing it (below) drops it back. */
-@media (hover: hover) and (prefers-reduced-motion: no-preference) {
-  .primary:hover:not(:active) {
-    box-shadow: 0 8px 18px -8px rgba(0, 102, 196, 0.6);
-    transform: translateY(-1px);
-  }
 }
 
 .primary:active {
@@ -85,17 +77,20 @@
   color: var(--primary-foreground);
 }
 
+/* Quiet outlined pill: the companion of a primary action. */
 .secondary {
-  background: var(--secondary);
+  border-color: var(--border-strong);
+  background: var(--card);
   color: var(--foreground);
 }
 
 .secondary:hover {
-  background: #e3e6ee;
+  border-color: var(--foreground);
+  background: var(--muted);
 }
 
 .secondary:active {
-  background: #d9dde8;
+  background: var(--secondary);
 }
 
 .ghost {
@@ -119,6 +114,7 @@
 }
 
 .outline:hover {
+  border-color: var(--border-strong);
   background: var(--muted);
 }
 

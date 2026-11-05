@@ -14,7 +14,8 @@ const setTextarea = (page, selector, value) =>
 
 /**
  * P4-14 (M-079, M-080): the bookmark adds Sofia to the company shortlist; once she turns discovery off she is hidden
- * with "1 … no longer available". A note of 5,001 characters is refused; a saved note shows who and when.
+ * with "1 … no longer available". A note of 5,001 characters is refused; an added note is listed with its author and
+ * its date and time (owner decision 2026-11-05: a list of dated notes).
  */
 export default {
   name: 'P4-14 Shortlist and notes',
@@ -44,12 +45,15 @@ export default {
     const [emma] = await db('users', 'find', { filter: { email: ctx.seedCredentials.email('emma') } })
     await page.goto(`${ctx.webUrl}/recruiter/find-candidates/${emma._id.$oid}/notes`, { waitUntil: 'networkidle0' })
     await setTextarea(page, 'textarea[name="note"]', 'x'.repeat(5001))
-    await page.click('button[type="submit"]')
+    await page.click('form button[type="submit"]')
     await waitForText(page, 'Use at most 5000 characters.')
     await setTextarea(page, 'textarea[name="note"]', 'Strong portfolio; ask about design systems governance.')
-    await page.click('button[type="submit"]')
-    await waitForText(page, 'Notes saved.')
-    await waitForText(page, 'Last updated by Sarah Miller')
+    await page.click('form button[type="submit"]')
+    await page.waitForSelector('[data-note] time[datetime]')
+    const note = await page.$eval('[data-note]', (element) => element.innerText)
+    ctx.check(note.includes('Sarah Miller') && note.includes('Strong portfolio; ask about design systems governance.'), `the note shows its author and text (${note})`)
+    ctx.check(/\d{1,2}:\d{2}/.test(note), `the note shows its time (${note})`)
+    await waitForText(page, '1 note')
     await ctx.screenshot(page, '3-note')
     ctx.assertClean(handle.issues, 'shortlist and notes')
   },

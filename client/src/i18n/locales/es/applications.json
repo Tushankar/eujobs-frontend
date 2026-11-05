@@ -124,6 +124,11 @@
     "summary_many": "{{count}} candidaturas activas · {{stages}} etapas",
     "summary_other": "{{count}} candidaturas activas · {{stages}} etapas",
     "label": "Tablero del proceso de selección",
+    "views": {
+      "label": "Vista del proceso",
+      "board": "Vista de tablero",
+      "funnel": "Vista de embudo"
+    },
     "empty": "Un poco de espacio para tu próximo movimiento.",
     "emptyDrop": "Suelta aquí a un candidato.",
     "move": "Mover a {{name}} a una etapa",
@@ -133,7 +138,35 @@
     "aligned_one": "{{count}} habilidad coincidente",
     "aligned_many": "{{count}} habilidades coincidentes",
     "aligned_other": "{{count}} habilidades coincidentes",
-    "appliedFor": "{{job}} · se postuló el {{date}}"
+    "appliedFor": "{{job}} · se postuló el {{date}}",
+    "notes_one": "{{count}} nota. Abrir el panel del candidato",
+    "notes_many": "{{count}} notas. Abrir el panel del candidato",
+    "notes_other": "{{count}} notas. Abrir el panel del candidato"
+  },
+  "panel": {
+    "applied": "Postulación: {{date}}",
+    "profile": "Ver el perfil completo",
+    "stage": "Etapa",
+    "notes": "Notas",
+    "history": "Historial de etapas"
+  },
+  "funnel": {
+    "label": "Embudo de selección por etapa",
+    "hint": "Haz clic en una etapa para ver quién está ahí ahora. Arrastra a un candidato a una etapa, o usa su menú de etapa, para moverlo.",
+    "applicants_one": "candidato",
+    "applicants_many": "candidatos",
+    "applicants_other": "candidatos",
+    "hired": "contratados",
+    "conversion": "conversión total",
+    "now": "ahora",
+    "reached": "{{count}} llegaron",
+    "kept": "{{percent}} % continúan",
+    "stage": "{{stage}}: {{now}} ahora, {{reached}} llegaron. Ver quién está en esta etapa.",
+    "inStage_one": "{{count}} candidato ahora",
+    "inStage_many": "{{count}} candidatos ahora",
+    "inStage_other": "{{count}} candidatos ahora",
+    "since": "en esta etapa desde {{time}}",
+    "empty": "Ahora no hay nadie en esta etapa. Arrastra a un candidato aquí o muévelo con su menú de etapa."
   },
   "stages": {
     "title": "Tu proceso. Tus etapas.",

@@ -55,3 +55,11 @@
   line-height: 15px;
   color: #767d8c;
 }
+
+/* Same height as the value row and caption it stands in for. */
+.loading {
+  display: flex;
+  flex-direction: column;
+  gap: 18px;
+  padding-top: 18px;
+}

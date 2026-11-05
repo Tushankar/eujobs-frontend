@@ -20,6 +20,8 @@ export const recruiterApplicationsApi = api.injectEndpoints({
     removeStage: build.mutation({ query: (id) => ({ url: `/recruiter/pipeline/stages/${id}`, method: 'DELETE' }), invalidatesTags: ['Pipeline', 'RecruiterOverview'] }),
     reorderStages: build.mutation({ query: (ids) => ({ url: '/recruiter/pipeline/stages/order', method: 'PUT', body: { ids } }), invalidatesTags: ['Pipeline', 'RecruiterOverview'] }),
     getFunnel: build.query({ query: () => '/recruiter/overview/funnel', providesTags: ['RecruiterOverview'] }),
+    // The Hiring pipeline's Funnel view, by stage category; moves and stage edits refresh it.
+    getPipelineFunnel: build.query({ query: (params) => ({ url: '/recruiter/pipeline/funnel', params }), providesTags: ['Pipeline', 'CompanyApplications'] }),
     getMomentum: build.query({ query: (params) => ({ url: '/recruiter/overview/momentum', params }), providesTags: ['RecruiterOverview'] }),
   }),
 })
@@ -35,5 +37,6 @@ export const {
   useRemoveStageMutation,
   useReorderStagesMutation,
   useGetFunnelQuery,
+  useGetPipelineFunnelQuery,
   useGetMomentumQuery,
 } = recruiterApplicationsApi

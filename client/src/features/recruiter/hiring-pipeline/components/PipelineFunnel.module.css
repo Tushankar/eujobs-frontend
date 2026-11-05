@@ -1,0 +1,187 @@
+/* Many stages scroll sideways inside the card; the page never does. */
+.scroll {
+  overflow-x: auto;
+  padding: 0 12px;
+}
+
+/*
+ * The drawing sits behind a row of equal stage columns. Each column starts with a spacer as tall as the drawing
+ * (column width 160 : drawing height 220), so the labels land right under their shape at any width.
+ */
+.funnel {
+  position: relative;
+  min-width: calc(var(--stages) * 136px);
+  padding: 8px 0 4px;
+}
+
+.drawing {
+  position: absolute;
+  top: 8px;
+  left: 0;
+  width: 100%;
+  height: auto;
+  pointer-events: none;
+}
+
+.shape {
+  transition: opacity var(--transition);
+}
+
+.dropShape {
+  opacity: 0.55;
+}
+
+.ring {
+  fill: none;
+  stroke: var(--primary);
+  stroke-width: 3;
+}
+
+.stages {
+  position: relative;
+  display: grid;
+  grid-template-columns: repeat(var(--stages), minmax(0, 1fr));
+}
+
+.stage {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 2px;
+  width: 100%;
+  height: 100%;
+  padding: 0 6px 12px;
+  border: 0;
+  border-radius: var(--radius-xl);
+  background: transparent;
+  text-align: center;
+  color: var(--foreground);
+  cursor: pointer;
+  transition: background-color var(--transition);
+}
+
+.stage:hover,
+.drop {
+  background: rgba(32, 37, 52, 0.04);
+}
+
+.drop {
+  outline: 2px dashed var(--primary);
+  outline-offset: -2px;
+}
+
+.stage:focus-visible {
+  outline: 2px solid var(--ring);
+  outline-offset: -2px;
+}
+
+.space {
+  display: block;
+  width: 100%;
+  aspect-ratio: 160 / 220;
+  max-width: 100%;
+}
+
+.bar {
+  display: none;
+}
+
+.name {
+  padding-top: 6px;
+  font-size: 13px;
+  font-weight: 600;
+  line-height: 18px;
+  overflow-wrap: anywhere;
+}
+
+.now {
+  font-family: var(--font-display);
+  font-size: 22px;
+  font-weight: 800;
+  line-height: 28px;
+  font-variant-numeric: tabular-nums;
+}
+
+.now small {
+  font-family: var(--font-body);
+  font-size: 12px;
+  font-weight: 500;
+  color: var(--muted-foreground);
+}
+
+.reached {
+  font-size: 12px;
+  line-height: 16px;
+  color: var(--muted-foreground);
+  font-variant-numeric: tabular-nums;
+}
+
+.selected .name,
+.selected .now {
+  color: var(--primary);
+}
+
+/* Phone: one bar per stage, stacked; tap to list, move with the stage menu. */
+@media (max-width: 767px) {
+  .funnel {
+    min-width: 0;
+    padding: 0;
+  }
+
+  .drawing,
+  .space {
+    display: none;
+  }
+
+  .stages {
+    grid-template-columns: minmax(0, 1fr);
+    gap: 4px;
+  }
+
+  .stage {
+    display: grid;
+    grid-template-columns: minmax(0, 1fr) auto;
+    grid-template-areas:
+      'bar bar'
+      'name now'
+      'reached reached';
+    align-items: baseline;
+    gap: 4px 12px;
+    padding: 12px;
+    text-align: left;
+  }
+
+  .bar {
+    grid-area: bar;
+    display: block;
+    height: 8px;
+    border-radius: var(--radius-full);
+    background: var(--secondary);
+    overflow: hidden;
+  }
+
+  .bar span {
+    display: block;
+    height: 100%;
+    border-radius: inherit;
+  }
+
+  .name {
+    grid-area: name;
+    padding-top: 2px;
+  }
+
+  .now {
+    grid-area: now;
+    font-size: 18px;
+    line-height: 24px;
+  }
+
+  .reached {
+    grid-area: reached;
+  }
+
+  .selected {
+    background: var(--muted);
+  }
+}

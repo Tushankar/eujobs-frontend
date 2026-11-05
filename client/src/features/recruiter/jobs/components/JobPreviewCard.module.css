@@ -1,0 +1,110 @@
+.card {
+  border: 1px solid var(--border);
+  border-radius: var(--radius-xl);
+  background: var(--card);
+}
+
+.head {
+  padding: 16px 20px;
+  border-bottom: 1px solid var(--border);
+}
+
+.label {
+  font-size: 14px;
+  font-weight: 600;
+  line-height: 20px;
+  color: var(--foreground);
+}
+
+.hint {
+  padding-top: 2px;
+  font-size: 12px;
+  line-height: 18px;
+  color: var(--muted-foreground);
+}
+
+.job {
+  display: flex;
+  flex-direction: column;
+  gap: 14px;
+  padding: 20px;
+}
+
+.top {
+  display: flex;
+  align-items: flex-start;
+  gap: 12px;
+}
+
+.titles {
+  min-width: 0;
+}
+
+.jobTitle,
+.placeholder {
+  font-size: 15px;
+  font-weight: 600;
+  line-height: 20px;
+  overflow-wrap: anywhere;
+  color: var(--foreground);
+}
+
+.placeholder {
+  color: var(--text-faint);
+}
+
+.company {
+  padding-top: 2px;
+  font-size: 13px;
+  line-height: 18px;
+  color: var(--foreground);
+}
+
+.meta {
+  padding-top: 2px;
+  font-size: 12px;
+  line-height: 18px;
+  color: var(--muted-foreground);
+}
+
+.salary {
+  font-size: 13px;
+  font-weight: 500;
+  line-height: 18px;
+  color: var(--foreground);
+}
+
+.tags,
+.chips {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 6px;
+}
+
+.tags li,
+.chips li {
+  padding: 3px 10px;
+  border: 1px solid var(--border);
+  border-radius: var(--radius-full);
+  font-size: 12px;
+  line-height: 18px;
+  color: var(--text-label);
+}
+
+.skills {
+  padding-top: 14px;
+  border-top: 1px solid var(--border);
+}
+
+.skillsLabel {
+  padding-bottom: 8px;
+  font-size: 12px;
+  font-weight: 600;
+  line-height: 16px;
+  color: var(--foreground);
+}
+
+.chips .more {
+  border-style: dashed;
+  color: var(--muted-foreground);
+}

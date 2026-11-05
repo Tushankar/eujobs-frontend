@@ -224,7 +224,8 @@
       "rejected": "{{actor}} a marqué la candidature à l’offre {{jobTitle}} comme non retenue.",
       "shortlisted": "{{actor}} a ajouté le candidat à la short-list.",
       "unshortlisted": "{{actor}} a retiré le candidat de la short-list.",
-      "note_updated": "{{actor}} a mis à jour la note privée.",
+      "note_added": "{{actor}} a ajouté une note privée.",
+      "note_updated": "{{actor}} a modifié une note privée.",
       "outreach": "{{actor}} a démarré une conversation.",
       "message_reply": "{{actor}} a répondu à un message.",
       "cv_request": "{{actor}} a envoyé une demande de CV ({{reason}}).",
@@ -236,13 +237,27 @@
   },
   "notesTab": {
     "title": "Notes privées de votre entreprise",
-    "description": "Visibles uniquement par votre entreprise. Concentrez-vous sur les éléments pertinents et évitez les informations personnelles sensibles.",
-    "label": "Notes privées sur {{name}}",
+    "description": "Visibles uniquement par votre entreprise. Concentrez-vous sur les éléments pertinents et évitez les informations personnelles sensibles."
+  },
+  "notes": {
+    "label": "Nouvelle note sur {{name}}",
     "placeholder": "Qu’est-ce qui ressort ? Qu’est-ce qui mérite un examen plus attentif ?",
-    "hint": "Jusqu’à {{max}} caractères.",
-    "save": "Enregistrer les notes",
-    "saved": "Notes enregistrées.",
-    "updated": "Dernière mise à jour par {{name}}, {{date}}"
+    "hint": "Jusqu’à {{max}} caractères. Toute votre entreprise voit vos notes.",
+    "add": "Ajouter la note",
+    "count_one": "{{count}} note",
+    "count_many": "{{count}} notes",
+    "count_other": "{{count}} notes",
+    "empty": "Aucune note pour l’instant. Ajoutez la première ci-dessus.",
+    "edited": "modifiée le {{date}}",
+    "actions": "Actions sur la note",
+    "edit": "Modifier",
+    "editLabel": "Modifier la note",
+    "save": "Enregistrer",
+    "cancel": "Annuler",
+    "delete": "Supprimer la note",
+    "deleteTitle": "Supprimer cette note ?",
+    "deleteText": "La note est supprimée pour toute votre entreprise. Cette action est définitive.",
+    "formerMember": "Ancien membre de l’équipe"
   },
   "shortlists": {
     "title": "Une short-list au vrai potentiel.",

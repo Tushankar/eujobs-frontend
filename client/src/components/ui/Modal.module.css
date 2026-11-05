@@ -156,3 +156,41 @@
     padding-bottom: max(12px, env(safe-area-inset-bottom));
   }
 }
+
+/* Side panel (placement="right"): full height at the right edge, sliding in from it. */
+.right {
+  justify-content: flex-end;
+  align-items: stretch;
+  padding: 0;
+}
+
+.right .dialog {
+  max-height: none;
+  height: 100%;
+  border-width: 0 0 0 1px;
+  border-radius: 0;
+}
+
+@media (prefers-reduced-motion: no-preference) {
+  .right .dialog {
+    animation: sheet-in var(--duration-slow) var(--ease-out);
+  }
+
+  .right.closing .dialog {
+    animation: sheet-out 180ms var(--ease-out) forwards;
+  }
+}
+
+@keyframes sheet-in {
+  from {
+    transform: translateX(24px);
+    opacity: 0;
+  }
+}
+
+@keyframes sheet-out {
+  to {
+    transform: translateX(24px);
+    opacity: 0;
+  }
+}

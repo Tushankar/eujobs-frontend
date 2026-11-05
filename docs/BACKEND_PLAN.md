@@ -363,7 +363,7 @@ M-164 lets users report jobs, profiles, companies and messages. M-167 defines "R
 | P11c-C10 builder call: Sarah's bell | Sarah's first invoice goes through the webhook handler (as Emma's), so the seed gives her a "payment paid" notification as it gives Emma one. | 2026-11-05 |
 | P11c-C11 builder call: Billing | One `PlanCard` serves both Billing pages; recruiter Billing shows it above the payment history, whose lead now mentions Recruiter Plus invoices. | 2026-11-05 |
 | P11c-C12 builder call: test factories | The API test factory and the e2e `approvedRecruiter` put recruiters on Recruiter Plus unless `plus: false`, so earlier scenarios keep their behaviour. The e2e grant writes an active subscription row straight to `eujobs_test` (no Stripe, no payment row); P11c-02 buys the plan through the real Checkout. | 2026-11-05 |
-| P11c-C13 builder call: lock chip | The sidebar and search lock chip names the role's plan ("Recruiter Plus" on Shortlists). | 2026-11-05 |
+| P11c-C13 builder call: lock chip and Jobs columns | A recruiter's lock chip (Shortlists, sidebar and search) shows only the lock: "Recruiter Plus" broke the sidebar label mid-word ("Shortli/sts", P11c-01); the plan name stays in its tooltip and for screen readers. The Jobs table gives the actions column 23.3% (was 18.3%; Candidates 12.5%, Status 16%): the AI summary button was squeezed and its icon clipped at 1440 px, already so before 11c. | 2026-11-05 |
 | P11c-C14 builder call: Publish in the wizard | The wizard's last-step Publish is a locked button while another job is live on Free, so that click saves nothing; "Save draft" still saves. | 2026-11-05 |
 
 _(Answers to any new question asked during the build are appended to this table.)_
@@ -2888,9 +2888,32 @@ The course-purchase path is built here but verified in Phase 8. AI pages are gat
 
 **Calls the plan did not specify:** P11c-C1 … C14 in the Owner answers table.
 
-**Results:** RESULTS_TABLE
+**Results**
+(2026-11-05; ports 5100/5174 and the test lock were checked before every run)
 
-**Open.** OPEN_ITEMS
+| Command | Result |
+|---|---|
+| `cd server && npm test`, final full run (07:40–07:55) | 405 tests: 401 pass, 4 fail, 0 todo. The 4 failures are all in `privacy.test.js` (Phase 12, commit `dd62882`): the export filename quoting (×2), a notification parameter after erasure, and the retention sweep's notification deletion. The same 4 fail at `dd62882` itself, without any 11c code (checked in a temporary worktree of that commit), so they belong to the Phase 12 work. |
+| First full run (06:00–06:25) | 405 tests: 392 pass, 13 fail. 9 were 11c's and are fixed: test setups that now got Recruiter Plus from the factory (admin.lists), changed counts and shapes (foundation enum counts, seed catalogue 3 plans, seed payments 10 rows / 2 subscriptions, Payments stats by role, Overview health, `/me` plan for recruiters), and one real defect: the plural "paused jobs" lines sat inside the email template, where the email-render test found unrendered placeholders (moved to `labels.pausedJobs`). |
+| `recruiterPlan.test.js` (new) | 18/18 |
+| Changed test files after the fixes (users, seed, foundation, admin.lists, admin.metrics, meta, payments, recruiterPlan) | 108/108 (seed 10/10 after the Emma/Sarah row lookups) |
+| `npm run lint` server and client; `npx oxlint .` e2e | clean |
+| `cd client && npm run build` (check-i18n first) | clean; "es, fr match en" |
+| P11c-01 Free locks (D, M) | pass (twice) |
+| P11c-02 Subscribe in EUR, Portal cancel, plan end on a Test Clock (D, M) | pass (twice) |
+| P11c-03 es and fr (D, M) | pass |
+| `node e2e/run.js phase-4` | 24/24 |
+| Changed screens: P2-12 (D, M), P5-01 (D, M), P5-03, P5-07 (D, M), P5-08, P5-09 (D, M), P5-10, P7-01 (D, M), P7-05, P8-04, P8-09, P9-03 (D, M), P9-04, P9-08, P9-10, P10-04 (D, M), P10-05 (D, M), P10-09 (D, M), P11-02, P11b-02 (D, M) | all pass. P10-09 first failed on the old card values (one MRR list) and was updated to the cards by role. P10-05 M failed once with a 4 px overflow at 375 px that did not come back: a measurement of the Overview found nothing wider than the screen, and the rerun passed. P5-10 now expects the two seed customers (Emma, Sarah). |
+| `node e2e/run.js sweep` (en) | D and M pass |
+| P11-01 (es and fr sweep, every role) | D and M pass |
+| `npm run mail:test … +sarah en recruiter` | `recruiter_plan_ended`, `renewal_failed` (Recruiter Plus version), `admin_renewal_failed` (names the plan): sent |
+
+
+**Open.**
+- The owner confirms the three live emails sent to +sarah.
+- Phase 12: the 4 failing `privacy.test.js` tests (present at `dd62882`, before 11c).
+- Deploying 11c: run `seed:catalog` before the server restarts on the new code. Without the `recruiter_plus` plan record, recruiter plan lists and the upgrade quote fail, and the start-up step pauses the extra jobs of seeded recruiters who have no subscription yet. In the dev database `eujobs` this happened (2026-11-05): `seed:catalog` was run, and, by the owner's choice, dev Sarah got her Recruiter Plus the way the seed gives it and her 2 paused jobs were republished. The owner's recruiter tush@housbe.com was not changed (Free, no jobs).
+- Overlaps: the owner committed 11c mid-way (`790194c`, `8e0da01`); later 11c edits (lock chip, Jobs columns, P10-09, P11c-02 screenshots, seed test lookups, these docs) are uncommitted. Session `c53b7dc1` ran e2e at 08:03 (job wizard) after the counted runs and is editing the wizard files that carry the Publish lock (kept in its edits so far). No foreign run overlapped a counted run.
 
 ### Phase 12: GDPR export and erasure, retention, full regression
 

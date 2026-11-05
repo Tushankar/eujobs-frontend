@@ -123,6 +123,11 @@
     "summary_one": "{{count}} active application · {{stages}} stages",
     "summary_other": "{{count}} active applications · {{stages}} stages",
     "label": "Hiring pipeline board",
+    "views": {
+      "label": "Pipeline view",
+      "board": "Board view",
+      "funnel": "Funnel view"
+    },
     "empty": "A little space for your next move.",
     "emptyDrop": "Drop a candidate here.",
     "move": "Move {{name}} to stage",
@@ -130,7 +135,32 @@
     "years_other": "{{count}} years",
     "aligned_one": "{{count}} aligned skill",
     "aligned_other": "{{count}} aligned skills",
-    "appliedFor": "{{job}} · applied {{date}}"
+    "appliedFor": "{{job}} · applied {{date}}",
+    "notes_one": "{{count}} note. Open the candidate panel",
+    "notes_other": "{{count}} notes. Open the candidate panel"
+  },
+  "panel": {
+    "applied": "Applied {{date}}",
+    "profile": "View full profile",
+    "stage": "Stage",
+    "notes": "Notes",
+    "history": "Stage history"
+  },
+  "funnel": {
+    "label": "Hiring funnel by stage",
+    "hint": "Click a stage to see who is in it now. Drag a candidate onto a stage, or use their stage menu, to move them.",
+    "applicants_one": "applicant",
+    "applicants_other": "applicants",
+    "hired": "hired",
+    "conversion": "overall conversion",
+    "now": "now",
+    "reached": "{{count}} reached",
+    "kept": "{{percent}}% kept",
+    "stage": "{{stage}}: {{now}} now, {{reached}} reached. Show who is in this stage.",
+    "inStage_one": "{{count}} candidate now",
+    "inStage_other": "{{count}} candidates now",
+    "since": "in this stage since {{time}}",
+    "empty": "No one is in this stage right now. Drag a candidate here, or move one with their stage menu."
   },
   "stages": {
     "title": "Your process. Your stages.",

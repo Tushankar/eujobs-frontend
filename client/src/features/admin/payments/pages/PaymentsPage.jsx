@@ -3,6 +3,7 @@ import { useLocation, useNavigate, useParams } from 'react-router-dom'
 import { useTranslation } from 'react-i18next'
 import { CircleAlert, Download, Repeat, Search, TrendingUp, Wallet } from 'lucide-react'
 import { can } from '@/app/permissions.js'
+import { tableState } from '@/components/common/DataTable.jsx'
 import EmptyState from '@/components/common/EmptyState.jsx'
 import NoticeBanner from '@/components/common/NoticeBanner.jsx'
 import PageTitle from '@/components/common/PageTitle.jsx'
@@ -136,7 +137,9 @@ export default function PaymentsPage() {
   const [exportError, setExportError] = useState('')
   const filters = Object.fromEntries(['q', ...Object.keys(FILTERS), 'country'].map((name) => [name, params.get(name) ?? '']))
   const query = { page: Number(params.get('page')) || 1, ...Object.fromEntries(Object.entries(filters).filter(([, value]) => value)) }
-  const { data, isSuccess } = useGetAdminPaymentsQuery(query, { refetchOnMountOrArgChange: true })
+  const result = useGetAdminPaymentsQuery(query, { refetchOnMountOrArgChange: true })
+  const { data, isSuccess } = result
+  const table = tableState(result, data?.items ?? [])
   const { data: stats } = useGetPaymentStatsQuery(filters.country ? { country: filters.country } : {}, { refetchOnMountOrArgChange: true })
   const format = useFormat()
   const byRole = (counts) => t('stats.byRole', { candidates: format.number(counts.candidate), recruiters: format.number(counts.recruiter) })
@@ -213,10 +216,10 @@ export default function PaymentsPage() {
       </div>
 
       <div className={styles.results}>
-        {data?.items.length > 0 ? (
+        {table.loading || data?.items.length > 0 ? (
           <>
-            <PaymentsTable payments={data.items} showPayer showSource onView={(payment) => setSelected(payment.id)} />
-            <Pagination page={data.page} pageSize={data.pageSize} total={data.total} onChange={(next) => setFilter('page', String(next))} />
+            <PaymentsTable payments={data?.items ?? []} showPayer showSource onView={(payment) => setSelected(payment.id)} loading={table.loading} busy={table.busy} />
+            {data && <Pagination page={data.page} pageSize={data.pageSize} total={data.total} onChange={(next) => setFilter('page', String(next))} />}
           </>
         ) : (
           isSuccess && (

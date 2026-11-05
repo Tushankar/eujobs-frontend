@@ -53,16 +53,16 @@
 }
 
 .rowTitle {
-  font-size: 12px;
+  font-size: 13px;
   font-weight: 600;
-  line-height: 16px;
+  line-height: 18px;
   color: var(--foreground);
 }
 
 .rowMeta {
-  padding-top: 4px;
-  font-size: 10px;
-  line-height: 15px;
+  padding-top: 2px;
+  font-size: 12px;
+  line-height: 16px;
   color: var(--muted-foreground);
 }
 

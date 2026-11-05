@@ -2,6 +2,7 @@ import { useState } from 'react'
 import { useTranslation } from 'react-i18next'
 import { Link, useLocation, useNavigate } from 'react-router-dom'
 import { BookOpen, BriefcaseBusiness, CircleCheck, GraduationCap, Lock, Plus, Search, Users } from 'lucide-react'
+import { tableState } from '@/components/common/DataTable.jsx'
 import EmptyState from '@/components/common/EmptyState.jsx'
 import NoticeBanner from '@/components/common/NoticeBanner.jsx'
 import PageTitle from '@/components/common/PageTitle.jsx'
@@ -28,7 +29,8 @@ export default function CoursesPage() {
   const navigate = useNavigate()
   const audience = useLocation().pathname.endsWith('/recruiter') ? 'recruiter' : 'candidate'
   const { data: config } = useGetConfigQuery()
-  const { data } = useGetAdminCoursesQuery(audience)
+  const result = useGetAdminCoursesQuery(audience)
+  const { data } = result
   const [setStatus] = useSetCourseStatusMutation()
   const moneyLines = useMoneyLines()
   const [query, setQuery] = useState('')
@@ -36,6 +38,7 @@ export default function CoursesPage() {
   const [notice, setNotice] = useState('')
 
   const courses = data?.items ?? []
+  const table = tableState(result, courses)
   const needle = query.trim().toLocaleLowerCase()
   const visible = courses.filter((course) => (status === 'all' || course.status === status) && [course.title, course.category].some((text) => text.toLocaleLowerCase().includes(needle)))
   const tabs = [
@@ -82,10 +85,10 @@ export default function CoursesPage() {
       />
 
       <div className={styles.stats}>
-        <StatCard label={t('stats.total')} value={data?.stats.total ?? 0} caption={t('stats.totalCaption')} icon={BookOpen} />
-        <StatCard label={t('stats.published')} value={data?.stats.published ?? 0} caption={t(`stats.publishedCaption.${audience}`)} icon={CircleCheck} />
-        <StatCard label={t('stats.paid')} value={data?.stats.paid ?? 0} caption={t('stats.paidCaption')} icon={Lock} />
-        <StatCard label={t('stats.active')} value={data?.stats.activeLearners ?? 0} caption={t('stats.activeCaption')} icon={GraduationCap} />
+        <StatCard loading={table.loading} label={t('stats.total')} value={data?.stats.total ?? 0} caption={t('stats.totalCaption')} icon={BookOpen} />
+        <StatCard loading={table.loading} label={t('stats.published')} value={data?.stats.published ?? 0} caption={t(`stats.publishedCaption.${audience}`)} icon={CircleCheck} />
+        <StatCard loading={table.loading} label={t('stats.paid')} value={data?.stats.paid ?? 0} caption={t('stats.paidCaption')} icon={Lock} />
+        <StatCard loading={table.loading} label={t('stats.active')} value={data?.stats.activeLearners ?? 0} caption={t('stats.activeCaption')} icon={GraduationCap} />
       </div>
 
       <div className={styles.filters}>
@@ -96,8 +99,8 @@ export default function CoursesPage() {
       {notice && <NoticeBanner>{notice}</NoticeBanner>}
 
       <div className={cx(styles.results, audience === 'recruiter' && styles.recruiterResults)}>
-        {visible.length > 0 ? (
-          <CoursesTable courses={visible} accentActions={audience === 'recruiter'} onToggleStatus={handleToggleStatus} />
+        {table.loading || visible.length > 0 ? (
+          <CoursesTable courses={visible} accentActions={audience === 'recruiter'} onToggleStatus={handleToggleStatus} loading={table.loading} busy={table.busy} />
         ) : (
           <EmptyState icon={Search} title={t('empty.title')} description={t('empty.text')} />
         )}

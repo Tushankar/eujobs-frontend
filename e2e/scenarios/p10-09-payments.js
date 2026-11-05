@@ -80,7 +80,16 @@ export default {
     const expected = {
       Collected: cardLines(perCurrency(payments.filter((row) => row.status === 'paid'))).join(' '),
       'Active subscribers': String(active.length),
-      'Monthly recurring revenue': cardLines(perCurrency(active.map((row) => ({ currency: row.currency, amountMinor: row.amountMinor })))).join(' '),
+      // P11c-Q8: MRR per role (Plus = candidates, Recruiter Plus = recruiters), each per currency or "None".
+      'Monthly recurring revenue': [
+        ['Candidates', (row) => row.planKey !== 'recruiter_plus'],
+        ['Recruiters', (row) => row.planKey === 'recruiter_plus'],
+      ]
+        .map(([role, keep]) => {
+          const lines = cardLines(perCurrency(active.filter(keep).map((row) => ({ currency: row.currency, amountMinor: row.amountMinor }))))
+          return `${role} ${lines.length ? lines.join(' ') : 'None'}`
+        })
+        .join(' '),
       'Failed renewals': String(payments.filter((row) => row.status === 'failed' && row.kind === 'subscription').length),
     }
     for (const [label, value] of Object.entries(expected)) {
@@ -145,7 +154,7 @@ export default {
     await page.select('select[name="country"]', 'GB')
     await statsAnswer
     await waitForText(page, cardLines(gbStats.collected)[0])
-    ctx.check((await cardValue(page, 'Active subscribers')) === String(gbStats.activeSubscribers), 'Active subscribers for the United Kingdom')
+    ctx.check((await cardValue(page, 'Active subscribers')) === String(gbStats.activeSubscribers.total), 'Active subscribers for the United Kingdom')
     await handle.checkOverflow()
     await ctx.screenshot(page, '5-country')
 

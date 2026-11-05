@@ -17,9 +17,10 @@
   text-align: left;
 }
 
-/* Pages set --table-cell-padding for the row rhythm; the sides stay 16px (20px at the edges) so columns fit. */
+/* Pages set --table-cell-padding for the row rhythm; the sides stay 16px (20px at the edges) so columns fit, or
+   --table-cell-padding-inline for a table with many columns. */
 .th {
-  padding: 14px 16px 13px;
+  padding: 14px var(--table-cell-padding-inline, 16px) 13px;
   border-bottom: 1px solid var(--border);
   background: var(--table-header-bg, #fafbfc);
   font-size: 11px;
@@ -33,7 +34,7 @@
 .td {
   height: var(--table-row-height, 72px);
   padding: var(--table-cell-padding, 16px);
-  padding-inline: 16px;
+  padding-inline: var(--table-cell-padding-inline, 16px);
   border-bottom: 1px solid var(--border);
   vertical-align: middle;
   /* Words wrap at spaces; only a single word longer than the line (a URL) may break. */
@@ -133,4 +134,36 @@
   .td > * {
     justify-self: start;
   }
+}
+
+/* Loading: placeholder rows under the real header; a refetch dims the current rows until the new ones arrive. */
+.skeletonRow:hover {
+  background: transparent;
+}
+
+.skeletonLines {
+  display: flex;
+  flex: 1;
+  flex-direction: column;
+  gap: 8px;
+  min-width: 0;
+}
+
+.skeletonMedia {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+}
+
+.skeletonLogo {
+  border-radius: var(--radius-lg);
+}
+
+.table tbody {
+  transition: opacity var(--transition);
+}
+
+.table .busy {
+  opacity: 0.5;
+  pointer-events: none;
 }

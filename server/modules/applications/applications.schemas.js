@@ -30,6 +30,8 @@ export const recruiterListQuery = z.object({
   status: z.enum(['not_selected', 'withdrawn']).optional(),
 })
 
+export const funnelQuery = z.object({ jobId: objectId.optional() })
+
 // M-170: the browser's IANA time zone; chart endpoints take `tz`.
 export const momentumQuery = z.object({
   tz: z.string().refine((zone) => DateTime.local().setZone(zone).isValid).optional(),

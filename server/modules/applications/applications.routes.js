@@ -57,6 +57,10 @@ pipelineRouter.get('/', async (req, res) => {
   res.json(await pipeline.listStages(req.company))
 })
 
+pipelineRouter.get('/funnel', validate({ query: schemas.funnelQuery }), async (req, res) => {
+  res.json(await stats.pipelineFunnel(req.company, req.query))
+})
+
 pipelineRouter.post('/stages', validate({ body: schemas.stageBody }), async (req, res) => {
   res.status(201).json(await pipeline.addStage(req.user, req.company, req.body))
 })

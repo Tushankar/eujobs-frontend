@@ -1,39 +1,158 @@
-.card {
+.plans {
   display: grid;
-  gap: 16px;
-  max-width: 560px;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  gap: 20px;
+  max-width: 880px;
+  margin-top: 28px;
+}
+
+.plan {
+  display: flex;
+  flex-direction: column;
+  min-width: 0;
+  padding: 28px;
+  border: 1px solid var(--border);
+  border-radius: var(--radius-xl);
+  background: var(--card);
+}
+
+/* The paid plan: a firm dark edge instead of colour, so it leads without looking like an ad. */
+.featured {
+  border-color: var(--foreground);
+  box-shadow: inset 0 0 0 1px var(--foreground);
+}
+
+.planHead {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  justify-content: space-between;
+  gap: 8px 12px;
+}
+
+.planName {
+  font-family: var(--font-display);
+  font-size: 20px;
+  font-weight: 700;
+  line-height: 28px;
+  color: var(--foreground);
+}
+
+.current {
+  padding: 3px 10px;
+  border: 1px solid var(--border-strong);
+  border-radius: var(--radius-full);
+  font-size: 12px;
+  font-weight: 500;
+  line-height: 16px;
+  color: var(--text-label);
+}
+
+.badge {
+  display: inline-flex;
+  align-items: center;
+  gap: 5px;
+  padding: 3px 10px;
+  border-radius: var(--radius-full);
+  background: #f3c656;
+  font-size: 12px;
+  font-weight: 700;
+  line-height: 16px;
+  color: #3d2c00;
 }
 
 .price {
-  margin: 0;
+  padding-top: 16px;
   font-family: var(--font-display);
-  font-size: 28px;
+  font-size: 32px;
   font-weight: 800;
+  line-height: 40px;
+  letter-spacing: -0.5px;
+  color: var(--foreground);
 }
 
 .price span {
   font-family: var(--font-body);
   font-size: 14px;
   font-weight: 500;
+  letter-spacing: 0;
   color: var(--muted-foreground);
 }
 
+.lead {
+  margin-top: 20px;
+  padding-top: 20px;
+  border-top: 1px solid var(--border);
+  font-size: 13px;
+  font-weight: 600;
+  line-height: 18px;
+  color: var(--foreground);
+}
+
 .features {
-  margin: 0;
-  padding: 0;
-  list-style: none;
   display: grid;
-  gap: 8px;
+  gap: 12px;
+  margin: 0;
+  padding: 20px 0 0;
+  border-top: 1px solid var(--border);
+  margin-top: 20px;
+  list-style: none;
+}
+
+.lead + .features {
+  margin-top: 12px;
+  padding-top: 0;
+  border-top: 0;
+}
+
+.features li.missing {
+  color: var(--text-faint);
 }
 
 .features li {
   display: flex;
-  gap: 8px;
   align-items: flex-start;
+  gap: 10px;
+  font-size: 14px;
+  line-height: 20px;
+  color: var(--text-label);
 }
 
+.check {
+  flex-shrink: 0;
+  margin-top: 2px;
+  color: var(--muted-foreground);
+}
+
+.featured .check {
+  color: var(--success-fg);
+}
+
+.cross {
+  flex-shrink: 0;
+  margin-top: 2px;
+  color: var(--text-faint);
+}
+
+/* Pinned to the card's foot, so both columns' buttons line up. */
 .actions {
-  display: flex;
-  flex-wrap: wrap;
-  gap: 12px;
+  display: grid;
+  gap: 8px;
+  margin-top: auto;
+  padding-top: 28px;
+}
+
+@media (max-width: 767px) {
+  .plans {
+    grid-template-columns: minmax(0, 1fr);
+  }
+
+  /* The paid plan comes first on a phone. */
+  .featured {
+    order: -1;
+  }
+
+  .plan {
+    padding: 22px;
+  }
 }

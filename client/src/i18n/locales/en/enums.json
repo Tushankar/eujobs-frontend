@@ -94,7 +94,8 @@
     "rejected": "Not selected",
     "shortlisted": "Shortlisted",
     "unshortlisted": "Removed from the shortlist",
-    "note_updated": "Note updated",
+    "note_added": "Note added",
+    "note_updated": "Note edited",
     "outreach": "Message sent",
     "message_reply": "Replied",
     "cv_request": "CV requested",
@@ -102,7 +103,7 @@
     "cv_updated": "CV updated",
     "cv_download": "CV downloaded"
   },
-  "planKey": { "free": "Free", "plus": "Plus", "recruiter_plus": "Recruiter Plus" },
+  "planKey": { "free": "Free", "plus": "Plus", "recruiter_free": "Free", "recruiter_plus": "Recruiter Plus" },
   "entitlement": { "apply": "Applying to jobs", "message_send": "Messaging", "job_alerts": "Job alerts", "ai": "AI features", "jobs_unlimited": "More than 1 active job", "discovery": "Find candidates", "outreach": "Starting conversations and CV requests" },
   "paymentKind": { "course": "Course", "subscription": "Subscription" },
   "paymentStatus": { "paid": "Paid", "failed": "Failed", "refunded": "Refunded" },

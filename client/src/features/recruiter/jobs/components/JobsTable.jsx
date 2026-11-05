@@ -7,6 +7,7 @@ import { errorCode } from '@/app/api.js'
 import { openUpgrade } from '@/app/upgrade.js'
 import { cx } from '@/utils/cx.js'
 import ConfirmDialog from '@/components/common/ConfirmDialog.jsx'
+import { SkeletonCell } from '@/components/common/DataTable.jsx'
 import { Dropdown, Icon, IconButton } from '@/components/ui'
 import JobSummaryButton from '@/features/ai/components/JobSummaryButton.jsx'
 import PlanButton from '@/features/candidate/billing/components/PlanButton.jsx'
@@ -34,11 +35,12 @@ const STATUS_ACTIONS = {
 }
 
 const COLUMNS = [
-  { key: 'title', label: 'role', sortable: true },
-  { key: 'workPreference', label: 'workPreference' },
-  { key: 'relevantCount', label: 'candidates', sortable: true },
-  { key: 'status', label: 'status', sortable: true },
+  { key: 'title', label: 'role', sortable: true, skeleton: 'title' },
+  { key: 'workPreference', label: 'workPreference', skeleton: 'text' },
+  { key: 'relevantCount', label: 'candidates', sortable: true, skeleton: 'text' },
+  { key: 'status', label: 'status', sortable: true, skeleton: 'pill' },
 ]
+const SKELETON_ROWS = 4
 
 function ColumnLabel({ column, sort, onSort }) {
   const { t } = useTranslation()
@@ -112,7 +114,8 @@ function ManageMenu({ job, onStatus, onRequestClose, onRequestDelete, publishLoc
  * Role / Candidates / Status headers sortable. Publishing an incomplete draft opens the wizard at the first
  * invalid step (M-039).
  */
-export default function JobsTable({ jobs, sort, onSort, caption }) {
+/** `loading` shows the header over placeholder rows while the jobs load. */
+export default function JobsTable({ jobs, sort, onSort, caption, loading = false }) {
   const { t } = useTranslation()
   const navigate = useNavigate()
   const errorText = useErrorText()
@@ -147,14 +150,15 @@ export default function JobsTable({ jobs, sort, onSort, caption }) {
         </p>
       )}
       <div className={styles.scroll}>
-        <table className={styles.table}>
-          <caption className="sr-only">{caption}</caption>
+        <table className={styles.table} aria-busy={loading || undefined}>
+          <caption className="sr-only">{loading ? `${caption} â€” ${t('common:loading')}` : caption}</caption>
           <colgroup>
             <col style={{ width: '29.2%' }} />
             <col style={{ width: '19%' }} />
-            <col style={{ width: '15.5%' }} />
-            <col style={{ width: '18%' }} />
-            <col style={{ width: '18.3%' }} />
+            <col style={{ width: '12.5%' }} />
+            <col style={{ width: '16%' }} />
+            {/* The AI summary button and two icon buttons need about 240 px. */}
+            <col style={{ width: '23.3%' }} />
           </colgroup>
           <thead>
             <tr>
@@ -169,6 +173,19 @@ export default function JobsTable({ jobs, sort, onSort, caption }) {
             </tr>
           </thead>
           <tbody>
+            {loading &&
+              Array.from({ length: SKELETON_ROWS }, (_, row) => (
+                <tr key={row} className={styles.row} aria-hidden="true">
+                  {COLUMNS.map((column, index) => (
+                    <td key={column.key} className={styles.td} data-label={index > 0 ? t(`jobs:table.${column.label}`) : undefined}>
+                      <SkeletonCell kind={column.skeleton} row={row} />
+                    </td>
+                  ))}
+                  <td className={styles.td}>
+                    <SkeletonCell kind="action" row={row} />
+                  </td>
+                </tr>
+              ))}
             {jobs.map((job) => (
               <tr key={job.id} className={styles.row} data-recruiter-job={job.id}>
                 <td className={styles.td}>

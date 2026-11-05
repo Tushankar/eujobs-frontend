@@ -516,6 +516,36 @@ describe('counters, KPI, funnel and momentum (M-082, M-083, M-094, M-170, M-178)
     assert.deepEqual(funnel.items.map((stage) => [stage.name, stage.count]), [['Applied', 3], ['Screening', 1], ['Shortlisted', 0], ['Interview', 1], ['Offer', 0], ['Hired', 0]])
   })
 
+  it('gives the Hiring pipeline funnel per company stage: now, ever reached, for all jobs or one', async () => {
+    const { recruiter, company, job } = await market()
+    const second = await publish(company, recruiter, { title: 'UX Researcher' })
+    const [a, b, c, d] = await Promise.all([applicantCandidate(), applicantCandidate(), applicantCandidate(), applicantCandidate()])
+    const appA = await applied(a, job)
+    const appB = await applied(b, job)
+    const appD = await applied(d, job)
+    await applied(c, second)
+    await moveTo(recruiter, company, appA, 'Interview')
+    await moveTo(recruiter, company, appD, 'Screening')
+    await reject(recruiter, appD, false)
+    await api().post(`${v1}/candidate/applications/${appB.id}/withdraw`).set(auth(b))
+
+    const funnel = async (query = {}) => (await api().get(`${v1}/recruiter/pipeline/funnel`).query(query).set(auth(recruiter))).body
+    const all = await funnel()
+    // Not selected counts in what it reached, not in "now"; withdrawn is left out.
+    assert.deepEqual(all.items.map((stage) => [stage.name, stage.now, stage.reached]), [
+      ['Applied', 1, 3],
+      ['Screening', 0, 1],
+      ['Shortlisted', 0, 0],
+      ['Interview', 1, 1],
+      ['Offer', 0, 0],
+      ['Hired', 0, 0],
+    ])
+    assert.deepEqual([all.applicants, all.hired], [3, 0])
+    const one = await funnel({ jobId: String(second._id) })
+    assert.deepEqual(one.items.map((stage) => [stage.now, stage.reached]).slice(0, 2), [[1, 1], [0, 0]])
+    assert.equal((await api().get(`${v1}/recruiter/pipeline/funnel`).query({ jobId: 'nope' }).set(auth(recruiter))).status, 422)
+  })
+
   it('buckets the momentum by Monday weeks in the requested time zone', async () => {
     const { recruiter, company, job } = await market()
     const user = await applicantCandidate()

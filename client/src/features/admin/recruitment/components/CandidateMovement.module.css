@@ -2,6 +2,7 @@
   font-size: 12px;
   font-weight: 600;
   line-height: 16px;
+  white-space: nowrap;
   color: var(--primary);
 }
 
@@ -10,7 +11,7 @@
 }
 
 .body {
-  padding-top: 20px;
+  padding-top: 4px;
 }
 
 .filter {
@@ -18,7 +19,7 @@
   flex-wrap: wrap;
   align-items: center;
   gap: 8px;
-  padding-bottom: 12px;
+  padding: 8px 0;
   font-size: 12px;
   line-height: 16px;
   color: var(--muted-foreground);
@@ -28,32 +29,34 @@
   color: var(--foreground);
 }
 
-.table {
-  --table-row-height: 77px;
-  --table-header-bg: var(--muted);
+/* Rows separated by a hairline, as in the sidebar's Role activity card. */
+.row {
+  display: flex;
+  align-items: flex-start;
+  gap: 12px;
+  padding: 16px 0;
+  border-bottom: 1px solid var(--border);
 }
 
-.person {
-  display: flex;
-  align-items: center;
-  gap: 12px;
+.row:last-child {
+  padding-bottom: 0;
+  border-bottom: 0;
+}
+
+.text {
+  flex: 1;
+  min-width: 0;
 }
 
 .name {
-  font-size: 12px;
+  font-size: 13px;
   font-weight: 600;
-  line-height: 16px;
+  line-height: 18px;
   color: var(--foreground);
 }
 
-.title {
-  padding-top: 4px;
-  font-size: 10px;
-  line-height: 13.3px;
-  color: var(--muted-foreground);
-}
-
-.outreach {
+.meta {
+  padding-top: 2px;
   font-size: 12px;
   line-height: 16px;
   color: var(--muted-foreground);

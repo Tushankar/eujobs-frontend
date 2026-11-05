@@ -7,7 +7,7 @@ import EmptyState from '@/components/common/EmptyState.jsx'
 import NoticeBanner from '@/components/common/NoticeBanner.jsx'
 import PageTitle from '@/components/common/PageTitle.jsx'
 import PillBadge from '@/components/common/PillBadge.jsx'
-import { Button, Icon, Modal, TextareaField } from '@/components/ui'
+import { Button, Icon, Modal, Skeleton, TextareaField } from '@/components/ui'
 import { useGetConfigQuery } from '@/app/api.js'
 import { useErrorText, useFormState } from '@/lib/forms.js'
 import { useFormat } from '@/lib/preferences.js'
@@ -75,7 +75,7 @@ export default function CourseLearnersPage() {
   const format = useFormat()
   const errorText = useErrorText()
   const { courseId } = useParams()
-  const { data, error } = useGetCourseLearnersQuery(courseId)
+  const { data, error, isLoading } = useGetCourseLearnersQuery(courseId)
   const [revoking, setRevoking] = useState(null)
   const listPath = data?.course.audience === 'recruiter' ? '/admin/courses/recruiter' : '/admin/courses'
 
@@ -103,6 +103,7 @@ export default function CourseLearnersPage() {
     {
       key: 'certificate',
       header: t('learners.certificate'),
+      skeleton: 'pill',
       render: (row) =>
         row.certificate ? (
           <div className={styles.certificate} data-learner-certificate={row.certificate.code}>
@@ -127,6 +128,14 @@ export default function CourseLearnersPage() {
         {t('builder.back')}
       </Link>
       {error && <NoticeBanner>{errorText.code(error)}</NoticeBanner>}
+      {isLoading && (
+        <>
+          <PageTitle eyebrow={t('learners.eyebrow')} title={<Skeleton width={320} height={28} />} description={<Skeleton width={180} />} />
+          <div className={styles.results}>
+            <DataTable loading columns={columns} rows={[]} getRowKey={(row) => row.id} caption={t('learners.caption')} />
+          </div>
+        </>
+      )}
       {data && (
         <>
           <PageTitle eyebrow={t('learners.eyebrow')} title={data.course.title} description={t('learners.description', { count: data.total })} />

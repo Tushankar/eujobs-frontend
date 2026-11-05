@@ -37,14 +37,14 @@ export default {
 
     const cards = await page.$$eval('[data-stage]', (items) => items.map((item) => [item.dataset.stage, Number(item.lastElementChild.textContent)]))
     ctx.check(JSON.stringify(Object.fromEntries(cards)) === JSON.stringify(want.current), `stage counts ${JSON.stringify(Object.fromEntries(cards))} = ${JSON.stringify(want.current)}`)
-    const rows = await page.$$('main table tbody tr')
+    const rows = await page.$$('[data-movement-row]')
     ctx.check(rows.length === want.total, `one movement row per non-withdrawn application (${rows.length} of ${want.total})`)
     await ctx.screenshot(page, '1-data-view')
 
-    // A category filters the movement table.
+    // A category filters the movement rows.
     const busiest = CATEGORIES.reduce((best, category) => (want.current[category] > want.current[best] ? category : best), 'applied')
     await page.click(`[data-stage="${busiest}"]`)
-    await page.waitForFunction((count) => document.querySelectorAll('main table tbody tr').length === count, {}, want.current[busiest])
+    await page.waitForFunction((count) => document.querySelectorAll('[data-movement-row]').length === count, {}, want.current[busiest])
     ctx.check((await page.$eval('main', (main) => main.innerText)).includes(`Showing applications at the ${LABELS[busiest]} stage`), 'the filter is announced')
     await ctx.screenshot(page, '2-filtered')
 
@@ -59,7 +59,7 @@ export default {
     const radii = await page.$$eval('[data-funnel]', (items) => items.map((item) => Number(item.querySelector('ellipse').getAttribute('rx')).toFixed(2)))
     ctx.check(radii.join() === '81.20,87.90,66.55,51.95,39.95,32.00', `the funnel keeps its fixed shapes (${radii})`)
     await page.click('[data-funnel="applied"]')
-    await page.waitForFunction((count) => document.querySelectorAll('main table tbody tr').length === count, {}, want.current.applied)
+    await page.waitForFunction((count) => document.querySelectorAll('[data-movement-row]').length === count, {}, want.current.applied)
     await ctx.screenshot(page, '3-funnel')
     ctx.assertClean(handle.issues, 'recruitment')
   },

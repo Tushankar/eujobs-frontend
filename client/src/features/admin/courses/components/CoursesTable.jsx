@@ -15,7 +15,7 @@ const STATUS_TONE = { published: 'success', draft: 'warning', unpublished: 'neut
  * the server sends it (`finance.view`), Manage (the builder, M-101), Learners, and Publish (U24) or Unpublish (M-109).
  * `accentActions` paints both row actions in the primary blue (the Recruiter courses frame).
  */
-export default function CoursesTable({ courses, accentActions = false, onToggleStatus }) {
+export default function CoursesTable({ courses, accentActions = false, onToggleStatus, loading, busy }) {
   const { t } = useTranslation('courses')
   const format = useFormat()
   const moneyLines = useMoneyLines()
@@ -36,6 +36,7 @@ export default function CoursesTable({ courses, accentActions = false, onToggleS
     {
       key: 'access',
       header: t('table.access'),
+      skeleton: 'pill',
       width: 98,
       render: (course) => (
         <PillBadge tone={course.isFree ? 'neutral' : 'warning'}>
@@ -68,6 +69,7 @@ export default function CoursesTable({ courses, accentActions = false, onToggleS
     {
       key: 'status',
       header: t('table.status'),
+      skeleton: 'pill',
       width: 111,
       render: ({ status }) => (
         <PillBadge tone={STATUS_TONE[status]} dot>
@@ -100,5 +102,5 @@ export default function CoursesTable({ courses, accentActions = false, onToggleS
     },
   ]
 
-  return <DataTable className={cx(styles.table, accentActions && styles.accent)} columns={columns} rows={courses} getRowKey={(course) => course.id} caption={t('table.caption')} />
+  return <DataTable className={cx(styles.table, accentActions && styles.accent)} columns={columns} rows={courses} getRowKey={(course) => course.id} caption={t('table.caption')} loading={loading} busy={busy} />
 }
