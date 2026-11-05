@@ -190,7 +190,7 @@ export default function CourseDetailsPage() {
 
         <aside className={`${styles.aside} sticky-side`}>
           <section className={styles.price}>
-            <p className={styles.priceLabel}>{t('price.label')}</p>
+            <p className={styles.priceLabel}>{text.priceLabel(course)}</p>
             <p className={styles.priceValue} data-course-price>
               {text.price(course)}
             </p>

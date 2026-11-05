@@ -222,6 +222,21 @@ describe('lock, unpublish and the learner side (M-106, M-108, M-109, M-110, M-13
     assert.equal((await api().get(`${v1}/courses`).set(auth(pending))).status, 403)
   })
 
+  it('lists My courses with the course, progress, purchase and receipt (owner 2026-11-05)', async () => {
+    const user = await owner()
+    const { id } = await readyCourse(user)
+    const buyer = await createUser()
+    const payment = await Payment.create({ reference: 'LWM-T00009', userId: buyer._id, payerRole: 'candidate', payerName: 'B', kind: 'course', itemId: id, itemName: 'x', amountMinor: 2200, currency: 'EUR', status: 'paid', source: 'stripe', receiptUrl: 'https://pay.stripe.com/receipts/x', paidAt: new Date() })
+    await enroll({ userId: buyer._id, courseId: id, source: 'purchase', paymentId: payment._id })
+    const { items } = (await api().get(`${v1}/learning/enrollments`).set(auth(buyer))).body
+    assert.equal(items.length, 1)
+    const [item] = items
+    assert.deepEqual([item.courseId, item.source, item.lessonsDone, item.lessonsTotal > 0, Boolean(item.course.title)], [id, 'purchase', 0, true, true])
+    assert.deepEqual(item.payment && [item.payment.reference, item.payment.amountMinor, item.payment.currency, item.payment.receiptUrl], ['LWM-T00009', 2200, 'EUR', 'https://pay.stripe.com/receipts/x'])
+    assert.equal(item.certificate, null)
+    assert.deepEqual((await api().get(`${v1}/learning/enrollments`).set(auth(await createUser()))).body.items, [])
+  })
+
   it('counts enrolled, purchased and active learners on the admin list (M-110)', async () => {
     const user = await owner()
     const { id, lessons } = await readyCourse(user)

@@ -20,8 +20,22 @@ export function useCourseText() {
   const { t } = useTranslation('learning')
   const format = useFormat()
   return {
-    price: (course) => (course.isFree ? t('price.free') : course.price ? format.money(course.price.amountMinor, course.price.currency) : t('price.unavailable')),
-    access: (course) => t(course.isFree ? 'price.freeAccess' : 'price.oneTime'),
+    // A course the user owns shows "Purchased" (or "Enrolled") and its progress instead of the price (owner 2026-11-05).
+    priceLabel: (course) => t(course.enrollment ? 'price.yourAccess' : 'price.label'),
+    price: (course) =>
+      course.enrollment
+        ? t(course.enrollment.source === 'purchase' ? 'price.purchased' : 'price.enrolled')
+        : course.isFree
+          ? t('price.free')
+          : course.price
+            ? format.money(course.price.amountMinor, course.price.currency)
+            : t('price.unavailable'),
+    access: (course) =>
+      course.enrollment
+        ? course.enrollment.completedAt
+          ? t('price.completed')
+          : t('price.progress', { done: course.enrollment.lessonsDone, total: course.lessons })
+        : t(course.isFree ? 'price.freeAccess' : 'price.oneTime'),
     duration: (course) => format.duration(course.durationSec),
     level: (course) => t(`enums:courseLevel.${course.level}`),
     meta: (course) => [course.category, t(`enums:courseLevel.${course.level}`), format.duration(course.durationSec)].join(' · '),

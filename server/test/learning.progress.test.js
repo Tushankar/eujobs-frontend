@@ -231,6 +231,10 @@ describe('certificates (M-105, U17, C18, C24)', () => {
     await Application.create({ candidateId: user._id, jobId: job._id, companyId: company._id, stageId: stage._id, status: 'applied', consentAt: new Date(), appliedAt: new Date() })
     const profile = await api().get(`${v1}/recruiter/candidates/${user._id}`).set(auth(recruiter))
     assert.deepEqual(profile.body.courseCertificates.map((badge) => badge.code), [certificate.code])
+    // The candidate's courses show with their progress, never with payment details.
+    const [course] = profile.body.courses
+    assert.deepEqual([profile.body.courses.length, Boolean(course.completedAt), course.lessonsDone === course.lessonsTotal], [1, true, true])
+    assert.ok(!('payment' in course) && !('source' in course), 'no payment details for recruiters')
     const { user: other } = await approvedRecruiter()
     assert.equal((await api().get(`${v1}/recruiter/candidates/${user._id}`).set(auth(other))).status, 404)
   })

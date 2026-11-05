@@ -141,7 +141,7 @@ export default function LearningDetailsPage() {
 
         <aside className={`${styles.side} sticky-side`}>
           <Panel padding={24}>
-            <p className={styles.priceLabel}>{t('price.label')}</p>
+            <p className={styles.priceLabel}>{text.priceLabel(course)}</p>
             <p className={styles.price} data-course-price>
               {text.price(course)}
             </p>

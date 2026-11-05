@@ -43,7 +43,7 @@ export default function CourseCard({ course }) {
       <div className={styles.footer}>
         <div className={styles.priceRow}>
           <div>
-            <p className={styles.priceLabel}>{t('price.label')}</p>
+            <p className={styles.priceLabel}>{text.priceLabel(course)}</p>
             <p className={styles.price} data-course-price>
               {text.price(course)}
             </p>
