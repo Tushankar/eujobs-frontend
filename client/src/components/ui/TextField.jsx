@@ -1,5 +1,7 @@
 import { useId, useState } from 'react'
+import { Search } from 'lucide-react'
 import { cx } from '@/utils/cx.js'
+import Icon from './Icon.jsx'
 import styles from './Field.module.css'
 
 /**
@@ -43,15 +45,20 @@ export function Field({ id, label, hint, error, children, className }) {
   )
 }
 
-/** Single-line input. `leftIcon` / `rightSlot` render inside the bordered control. */
-export default function TextField({ label, hint, error, leftIcon, rightSlot, className, id, ...inputProps }) {
+/**
+ * Single-line input. `leftIcon` / `rightSlot` render inside the bordered control.
+ * variant="filter": the pill search of a list toolbar, with a search icon unless `leftIcon` is given.
+ */
+export default function TextField({ label, hint, error, leftIcon, rightSlot, variant, className, id, ...inputProps }) {
   const generatedId = useId()
   const fieldId = id ?? generatedId
+  const filter = variant === 'filter'
+  const leading = leftIcon ?? (filter && <Icon as={Search} size={16} />)
   return (
     <Field id={fieldId} label={label} hint={hint} error={error} className={className}>
       {({ describedBy, invalid }) => (
-        <div className={cx(styles.control, invalid && styles.invalid, inputProps.disabled && styles.disabled)}>
-          {leftIcon && <span className={styles.leading}>{leftIcon}</span>}
+        <div className={cx(styles.control, filter && styles.filter, invalid && styles.invalid, inputProps.disabled && styles.disabled)}>
+          {leading && <span className={styles.leading}>{leading}</span>}
           <input
             id={fieldId}
             className={styles.input}

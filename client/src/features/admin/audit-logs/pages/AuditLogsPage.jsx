@@ -77,7 +77,7 @@ export default function AuditLogsPage() {
       )}
 
       <div className={styles.toolbar}>
-        <TextField
+        <TextField variant="filter"
           className={styles.search}
           name="q"
           aria-label={t('search')}
@@ -89,7 +89,7 @@ export default function AuditLogsPage() {
             setOpenId(null)
           }}
         />
-        <SelectField
+        <SelectField variant="filter"
           className={styles.actor}
           name="actorType"
           aria-label={t('actorType')}

@@ -29,7 +29,7 @@ export default function AccessToolbar({ active, searchLabel, query, onQueryChang
         value={active}
         onChange={(next) => navigate(workspacePath(WORKSPACES.admin, PATHS[next]))}
       />
-      <TextField
+      <TextField variant="filter"
         className={styles.search}
         type="search"
         aria-label={searchLabel}

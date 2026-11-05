@@ -3,7 +3,7 @@
   flex-direction: column;
   align-items: center;
   padding: 48px 24px;
-  border: 1px dashed var(--border);
+  border: 1px solid var(--border);
   border-radius: var(--radius-xl);
   background: var(--card);
   text-align: center;

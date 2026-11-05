@@ -128,7 +128,7 @@ export default function ApplicationsPage() {
       {focusMissing && <NoticeBanner>{t('notifications:unavailable')}</NoticeBanner>}
 
       <div className={styles.filters}>
-        <TextField
+        <TextField variant="filter"
           className={styles.search}
           type="search"
           aria-label={t('applications:recruiter.search')}
@@ -136,8 +136,8 @@ export default function ApplicationsPage() {
           value={query}
           onChange={(event) => setQuery(event.target.value)}
         />
-        <SelectField className={styles.stageFilter} aria-label={t('applications:recruiter.jobFilter')} name="jobId" options={jobOptions} value={jobId} onChange={(event) => setFilter('jobId', event.target.value)} />
-        <SelectField className={styles.stageFilter} aria-label={t('applications:recruiter.stageFilter')} name="stage" options={stageOptions} value={stageFilter} onChange={(event) => setFilter('stage', event.target.value)} />
+        <SelectField variant="filter" className={styles.stageFilter} aria-label={t('applications:recruiter.jobFilter')} name="jobId" options={jobOptions} value={jobId} onChange={(event) => setFilter('jobId', event.target.value)} />
+        <SelectField variant="filter" className={styles.stageFilter} aria-label={t('applications:recruiter.stageFilter')} name="stage" options={stageOptions} value={stageFilter} onChange={(event) => setFilter('stage', event.target.value)} />
       </div>
 
       <div className={styles.table}>

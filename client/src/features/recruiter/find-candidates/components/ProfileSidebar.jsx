@@ -118,7 +118,7 @@ export function ProfileSidebarSkeleton() {
       <Panel as="div" padding={20} className={styles.evidence} aria-hidden="true">
         <div className={styles.skeletonField}>
           <p className={styles.skeletonLabel}>{t('discovery:profile.matchFor')}</p>
-          <Skeleton shape="block" height={46} />
+          <Skeleton shape="block" height={44} />
         </div>
         <div className={styles.skeletonInsights}>
           <Skeleton width="45%" />

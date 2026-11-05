@@ -91,8 +91,8 @@ export default function CoursesPage() {
       </div>
 
       <div className={styles.filters}>
-        <TextField className={styles.search} type="search" aria-label={t('filters.search')} placeholder={t('filters.search')} value={query} onChange={(event) => setQuery(event.target.value)} />
-        <SelectField className={styles.status} aria-label={t('filters.status')} value={status} onChange={(event) => setStatusFilter(event.target.value)} options={statusOptions} />
+        <TextField variant="filter" className={styles.search} type="search" aria-label={t('filters.search')} placeholder={t('filters.search')} value={query} onChange={(event) => setQuery(event.target.value)} />
+        <SelectField variant="filter" className={styles.status} aria-label={t('filters.status')} value={status} onChange={(event) => setStatusFilter(event.target.value)} options={statusOptions} />
       </div>
 
       {notice && <NoticeBanner>{notice}</NoticeBanner>}

@@ -8,7 +8,7 @@ export default function CountryFilter({ value, onChange }) {
   const { t } = useTranslation('adminOverview')
   const countries = useCountryOptions()
   return (
-    <SelectField
+    <SelectField variant="filter"
       name="country"
       className={styles.filter}
       aria-label={t('country.label')}

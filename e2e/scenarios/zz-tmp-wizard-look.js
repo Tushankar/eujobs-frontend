@@ -44,7 +44,9 @@ export default {
     const before = await columnTops(page, 0)
     const after = await columnTops(page, 400)
     await pause()
-    ctx.check(after[1] >= 72, `the form stays pinned under the header (column tops ${before} → ${after})`)
+    // No gap: after scrolling, the form is still in view or ends where the step list ends.
+    const bottoms = await page.evaluate(() => [...document.querySelector('form').parentElement.children].slice(0, 2).map((element) => Math.round(element.getBoundingClientRect().bottom)))
+    ctx.check(after[1] >= 72 || Math.abs(bottoms[0] - bottoms[1]) <= 2, `no gap beside the form (tops ${before} → ${after}, bottoms ${bottoms})`)
     await ctx.screenshot(page, '1-step1-scrolled-1138')
     await page.evaluate(() => window.scrollTo(0, 0))
     await page.setViewport({ width: 1440, height: 900 })

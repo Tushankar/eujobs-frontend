@@ -27,7 +27,8 @@ export default function PipelineFunnel({ stages, selectedId, onSelect, move }) {
             const selected = stage.id === selectedId
             const dropping = move.dropStageId === stage.id
             const previous = stages[index - 1]
-            const kept = previous ? Math.round((stage.reached / Math.max(previous.reached, 1)) * 100) : null
+            // The share kept from the stage before, only once someone reached that stage.
+            const kept = previous?.reached ? Math.round((stage.reached / previous.reached) * 100) : null
             const [iconX, iconY, iconSize] = shape.iconBox
             const centerX = shape.x + shape.w / 2
             const centerY = shape.y + shape.h / 2
@@ -65,10 +66,14 @@ export default function PipelineFunnel({ stages, selectedId, onSelect, move }) {
                 <text className={styles.count} x={shape.labelX} y={428} textAnchor="middle" dominantBaseline="central">
                   {stage.now}
                 </text>
-                <text className={styles.reached} x={shape.labelX} y={449} textAnchor="middle" dominantBaseline="central">
+                <text className={styles.reached} x={shape.labelX} y={448} textAnchor="middle" dominantBaseline="central">
                   {t('applications:funnel.reached', { count: stage.reached })}
-                  {kept !== null && ` · ${t('applications:funnel.kept', { percent: kept })}`}
                 </text>
+                {kept !== null && (
+                  <text className={styles.reached} x={shape.labelX} y={464} textAnchor="middle" dominantBaseline="central">
+                    {t('applications:funnel.kept', { percent: kept })}
+                  </text>
+                )}
               </g>
             )
           })}

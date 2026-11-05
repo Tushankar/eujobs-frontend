@@ -145,6 +145,10 @@ function ImproveSkeleton() {
               <div className={styles.cardTitle}>
                 <Skeleton width={width} height={16} />
               </div>
+              <div className={styles.cardSkeleton}>
+                <Skeleton />
+                <Skeleton width="70%" />
+              </div>
               <Skeleton shape="pill" width={96} height={40} />
             </Panel>
           </li>

@@ -94,8 +94,8 @@ export default function ApplicationsPage() {
         </p>
       )}
       <div className={styles.filters}>
-        <TextField className={styles.search} type="search" name="q" aria-label={t('search')} placeholder={t('search')} value={search} onChange={(event) => setSearch(event.target.value)} />
-        <SelectField
+        <TextField variant="filter" className={styles.search} type="search" name="q" aria-label={t('search')} placeholder={t('search')} value={search} onChange={(event) => setSearch(event.target.value)} />
+        <SelectField variant="filter"
           name="status"
           className={styles.select}
           aria-label={t('filters.status')}
@@ -103,7 +103,7 @@ export default function ApplicationsPage() {
           onChange={(event) => setFilter('status', event.target.value)}
           options={[{ value: '', label: t('filters.allStatuses') }, ...STATUSES.map((status) => ({ value: status, label: t(`enums:applicationStatus.${status}`) }))]}
         />
-        <SelectField
+        <SelectField variant="filter"
           name="country"
           className={styles.select}
           aria-label={t('filters.country')}

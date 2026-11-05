@@ -21,7 +21,7 @@
 }
 
 .filtersButton.filtersButton {
-  min-height: 46px;
+  min-height: 44px;
   border-color: var(--border);
   background: var(--card);
 }

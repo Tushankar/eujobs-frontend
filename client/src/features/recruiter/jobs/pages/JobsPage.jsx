@@ -1,7 +1,7 @@
 import { useState } from 'react'
 import { useTranslation } from 'react-i18next'
 import { Link } from 'react-router-dom'
-import { Plus, SearchX, Search } from 'lucide-react'
+import { Plus, SearchX } from 'lucide-react'
 import { useGetConfigQuery } from '@/app/api.js'
 import EmptyState from '@/components/common/EmptyState.jsx'
 import FilterChips from '@/components/common/FilterChips.jsx'
@@ -101,11 +101,10 @@ export default function JobsPage() {
               value={tab}
               onChange={setTab}
             />
-            <TextField
+            <TextField variant="filter"
               className={styles.search}
               aria-label={t('jobs:page.search')}
               type="search"
-              leftIcon={<Icon as={Search} size={16} />}
               placeholder={t('jobs:page.search')}
               value={query}
               onChange={(event) => setQuery(event.target.value)}

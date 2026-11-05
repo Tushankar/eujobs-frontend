@@ -20,7 +20,7 @@
 
 .filtersButton {
   flex-shrink: 0;
-  height: 46px;
+  height: 40px;
 }
 
 .count {
@@ -76,6 +76,11 @@
 }
 
 @media (max-width: 479px) {
+  /* The job title gets the whole line; Filters goes under it. */
+  .job {
+    flex-basis: 100%;
+  }
+
   .filters {
     grid-template-columns: minmax(0, 1fr);
   }

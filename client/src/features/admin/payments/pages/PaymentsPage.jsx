@@ -190,7 +190,7 @@ export default function PaymentsPage() {
       </div>
 
       <div className={styles.filters}>
-        <TextField
+        <TextField variant="filter"
           className={styles.search}
           type="search"
           name="q"
@@ -200,7 +200,7 @@ export default function PaymentsPage() {
           onChange={(event) => setSearch(event.target.value)}
         />
         {[...Object.keys(FILTERS), 'country'].map((name) => (
-          <SelectField
+          <SelectField variant="filter"
             key={name}
             name={name}
             className={styles.select}

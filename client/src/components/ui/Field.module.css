@@ -183,3 +183,40 @@ select.input {
   appearance: none;
   cursor: pointer;
 }
+
+/* Toolbar filters (variant="filter"): LinkedIn-style 40px pills. A dropdown with a filter applied fills with ink. */
+.filter {
+  min-height: 40px;
+  padding: 0 16px;
+  border-radius: var(--radius-full);
+}
+
+.filter .leading {
+  color: var(--muted-foreground);
+}
+
+.filter select.input {
+  font-weight: 600;
+}
+
+.filter .trailing {
+  margin: 0 -4px 0 0;
+  color: var(--foreground);
+}
+
+.applied,
+.applied:hover {
+  border-color: var(--foreground);
+  background: var(--foreground);
+}
+
+.applied .input,
+.applied .trailing {
+  color: var(--card);
+}
+
+/* The open list keeps normal colours. */
+.applied option {
+  background: var(--card);
+  color: var(--foreground);
+}

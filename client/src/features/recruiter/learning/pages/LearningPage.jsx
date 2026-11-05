@@ -82,7 +82,7 @@ export default function LearningPage() {
       </section>
 
       <div className={styles.filters}>
-        <TextField
+        <TextField variant="filter"
           className={styles.search}
           type="search"
           aria-label={t('library.searchLabel')}
@@ -91,7 +91,7 @@ export default function LearningPage() {
           value={query}
           onChange={(event) => setQuery(event.target.value)}
         />
-        <SelectField className={styles.stream} aria-label={t('library.streamLabel')} options={streamOptions} value={stream} onChange={(event) => setStream(event.target.value)} />
+        <SelectField variant="filter" className={styles.stream} aria-label={t('library.streamLabel')} options={streamOptions} value={stream} onChange={(event) => setStream(event.target.value)} />
       </div>
 
       <section className={styles.library} aria-labelledby="learning-library">

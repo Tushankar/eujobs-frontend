@@ -183,7 +183,7 @@ export default function UsersDirectory({ role }) {
       )}
 
       <div className={styles.toolbar}>
-        <TextField
+        <TextField variant="filter"
           type="search"
           name="q"
           aria-label={t('search')}
@@ -193,7 +193,7 @@ export default function UsersDirectory({ role }) {
           onChange={(event) => setSearch(event.target.value)}
         />
         {FILTERS[role].map((name) => (
-          <SelectField
+          <SelectField variant="filter"
             key={name}
             name={name}
             aria-label={t(`filters.${name}`)}

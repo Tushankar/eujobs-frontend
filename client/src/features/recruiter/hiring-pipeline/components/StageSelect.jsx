@@ -5,7 +5,7 @@ import styles from './StageSelect.module.css'
 
 /**
  * Compact native select for an applicant's stage (the keyboard-friendly alternative to dragging).
- * `options` = [{ id, name }]; variant = "table" (Applications row) | "card" (board card, full width).
+ * `options` = [{ id, name }]; variant = "table" (Applications row) | "card" (board card, full width) | "panel" (candidate panel).
  */
 export default function StageSelect({ options, value, onChange, label, variant = 'table', className }) {
   return (

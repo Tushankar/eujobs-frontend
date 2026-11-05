@@ -264,6 +264,9 @@ function WhySkeleton({ details }) {
         <Panel className={styles.context} padding={24}>
           <PillBadge tone="neutral">{t('why.contextBadge')}</PillBadge>
           <p className={styles.contextText}>{t('why.contextText')}</p>
+          <div className={styles.link}>
+            <Skeleton width={160} />
+          </div>
         </Panel>
       </aside>
     </div>

@@ -55,7 +55,7 @@ export default function DiscoveryToolbar({ locked, jobsLoading, query, onQueryCh
   return (
     <Panel padding={16}>
       <div className={styles.row}>
-        <TextField
+        <TextField variant="filter"
           className={styles.search}
           type="search"
           value={query}
@@ -65,9 +65,9 @@ export default function DiscoveryToolbar({ locked, jobsLoading, query, onQueryCh
           leftIcon={<Icon as={Search} size={16} strokeWidth={2} />}
         />
         {jobsLoading ? (
-          <Skeleton shape="block" height={46} className={`${styles.job} ${styles.skeletonJob}`} />
+          <Skeleton shape="block" height={44} className={`${styles.job} ${styles.skeletonJob}`} />
         ) : (
-          <SelectField
+          <SelectField variant="filter"
             className={styles.job}
             aria-label={t('discovery:toolbar.matchJob')}
             value={job?.id ?? ''}

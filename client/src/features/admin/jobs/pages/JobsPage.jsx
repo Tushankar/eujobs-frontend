@@ -165,8 +165,8 @@ export default function JobsPage() {
     <>
       <PageTitle title={t('title')} description={t('description')} />
       <div className={styles.toolbar}>
-        <TextField type="search" name="q" aria-label={t('search')} placeholder={t('search')} className={styles.search} value={search} onChange={(event) => setSearch(event.target.value)} />
-        <SelectField
+        <TextField variant="filter" type="search" name="q" aria-label={t('search')} placeholder={t('search')} className={styles.search} value={search} onChange={(event) => setSearch(event.target.value)} />
+        <SelectField variant="filter"
           name="status"
           className={styles.select}
           aria-label={t('filters.status')}
@@ -174,7 +174,7 @@ export default function JobsPage() {
           onChange={(event) => setFilter('status', event.target.value)}
           options={[{ value: '', label: t('filters.allStatuses') }, ...STATUSES.map((status) => ({ value: status, label: t(`enums:jobStatus.${status}`) }))]}
         />
-        <SelectField
+        <SelectField variant="filter"
           name="country"
           className={styles.select}
           aria-label={t('filters.country')}

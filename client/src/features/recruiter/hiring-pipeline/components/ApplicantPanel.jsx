@@ -45,7 +45,7 @@ export default function ApplicantPanel({ application, stages, onClose }) {
           <ApplicationStageSelect
             application={current}
             stages={stages}
-            variant="card"
+            variant="panel"
             candidateName={candidate.fullName}
             jobTitle={job.title}
             label={t('applications:board.move', { name: candidate.fullName })}

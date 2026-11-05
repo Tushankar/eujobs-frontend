@@ -281,6 +281,9 @@ function JobMatchSkeleton() {
           <div className={styles.sideActions}>
             <Skeleton shape="pill" width="100%" height={40} />
             <Skeleton shape="pill" width="100%" height={40} />
+            <div className={styles.centerLink}>
+              <Skeleton width={170} />
+            </div>
           </div>
         </Panel>
         <Panel className={styles.context} padding={24}>
