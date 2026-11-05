@@ -11,6 +11,7 @@ import { CvAccessRequest, CvVersion } from '../cv/cv.model.js'
 import { File } from '../files/files.model.js'
 import { Job } from '../jobs/jobs.model.js'
 import { badgesOf } from '../learning/learning.certificates.js'
+import { profileCourses } from '../learning/learning.service.js'
 import { relevantCandidates, resultsBy } from '../matching/matching.service.js'
 import { notify } from '../notifications/notifications.service.js'
 import { User } from '../users/users.model.js'
@@ -222,6 +223,8 @@ export async function candidateProfile(user, company, id, jobId) {
     canStartConversation: !entry.viaApplication || applications.some((application) => application.status !== 'withdrawn'),
     // C24: course certificates show wherever the profile is visible (they do not verify skills, M-026).
     courseCertificates: (await badgesOf([entry.user._id]))(entry.user._id),
+    // Owner 2026-11-05: the courses the candidate takes or finished here (progress only, no payment details).
+    courses: await profileCourses(entry.user._id),
     about: profile.about,
     links: { linkedin: profile.links?.linkedin ?? '', portfolio: profile.links?.portfolio ?? '' },
     workHistory: latest(profile.workHistory, 'current').map(({ _id, title, employer, start, end, current, description }) => ({ id: String(_id), title, employer, start, end: end ?? null, current: Boolean(current), description: description ?? '' })),

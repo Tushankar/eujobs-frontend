@@ -83,7 +83,7 @@ export default {
     await ownerPage.checkOverflow()
     await ctx.screenshot(ownerPage.page, '5-admin-payments')
     await clickText(ownerPage.page, 'Details', 'main table button')
-    await ownerPage.page.waitForSelector('[role="dialog"]')
+    await ownerPage.page.waitForFunction(() => document.querySelector('[role="dialog"]')?.innerText.includes('Deleted user'), { timeout: 15_000 })
     const details = await ownerPage.page.$eval('[role="dialog"]', (dialog) => dialog.innerText)
     ctx.check(details.includes('Deleted user') && !details.includes('enums:'), 'payment details: "Deleted user"')
     await ctx.screenshot(ownerPage.page, '6-payment-details')

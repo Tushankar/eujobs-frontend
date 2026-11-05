@@ -3,6 +3,7 @@ import { AppError } from '../../lib/errors.js'
 import { signedUrl } from '../../lib/files.js'
 import { File } from '../files/files.model.js'
 import { userCurrency } from '../meta/meta.service.js'
+import { Payment } from '../payments/payments.model.js'
 import { certificateDto } from './learning.certificates.js'
 import { Certificate, Course, Enrollment } from './learning.model.js'
 
@@ -168,10 +169,42 @@ export async function enrollFree(user, { courseId }) {
   return getCourse(user, courseId)
 }
 
-/** GET /learning/enrollments: own progress per course. */
+/** The user's enrollments, newest first, each with its course (enrollments of a deleted course are left out). */
+async function enrolledCourses(userId, courseFields) {
+  const enrollments = await Enrollment.find({ userId }).sort({ enrolledAt: -1 })
+  const courses = new Map((await Course.find({ _id: { $in: enrollments.map((enrollment) => enrollment.courseId) } }, courseFields)).map((course) => [String(course._id), course]))
+  return enrollments.filter((enrollment) => courses.has(String(enrollment.courseId))).map((enrollment) => ({ enrollment, course: courses.get(String(enrollment.courseId)) }))
+}
+
+/** GET /learning/enrollments: "My courses" (owner 2026-11-05): own progress per course, with its purchase and certificate. */
 export async function listEnrollments(user) {
-  const enrollments = await Enrollment.find({ userId: user._id }).sort({ enrolledAt: -1 })
-  const courses = new Map((await Course.find({ _id: { $in: enrollments.map((enrollment) => enrollment.courseId) } }, 'lessons')).map((course) => [String(course._id), course]))
-  const items = enrollments.map((enrollment) => ({ courseId: String(enrollment.courseId), lessonsTotal: courses.get(String(enrollment.courseId))?.lessons.length ?? 0, ...enrollmentDto(courses.get(String(enrollment.courseId)), enrollment) }))
+  const rows = await enrolledCourses(user._id)
+  const [covers, payments, certificates] = await Promise.all([
+    coverUrls(rows.map(({ course }) => course), user._id),
+    Payment.find({ _id: { $in: rows.map(({ enrollment }) => enrollment.paymentId).filter(Boolean) } }),
+    Certificate.find({ _id: { $in: rows.map(({ enrollment }) => enrollment.certificateId).filter(Boolean) } }),
+  ])
+  const paymentOf = new Map(payments.map((payment) => [String(payment._id), payment]))
+  const certificateOf = new Map(certificates.map((certificate) => [String(certificate._id), certificate]))
+  const items = rows.map(({ enrollment, course }) => {
+    const payment = paymentOf.get(String(enrollment.paymentId))
+    const certificate = certificateOf.get(String(enrollment.certificateId))
+    return {
+      courseId: String(course._id),
+      lessonsTotal: course.lessons.length,
+      ...enrollmentDto(course, enrollment),
+      course: { title: course.title, category: course.category, level: course.level, coverUrl: covers.get(String(course.coverFileId)) ?? null, durationSec: sum(course.lessons) },
+      payment: payment ? { reference: payment.reference, amountMinor: payment.amountMinor, currency: payment.currency, receiptUrl: payment.receiptUrl ?? null, paidAt: payment.paidAt } : null,
+      certificate: certificate ? { code: certificate.code, status: certificate.status } : null,
+    }
+  })
   return { items, total: items.length, page: 1, pageSize: items.length }
+}
+
+/** The courses a candidate takes or finished, for recruiters viewing the profile (owner 2026-11-05); no payment details. */
+export async function profileCourses(userId) {
+  return (await enrolledCourses(userId, 'title category level lessons')).map(({ enrollment, course }) => {
+    const { lessonsDone, completedAt, enrolledAt } = enrollmentDto(course, enrollment)
+    return { courseId: String(course._id), title: course.title, category: course.category, level: course.level, lessonsTotal: course.lessons.length, lessonsDone, completedAt, enrolledAt }
+  })
 }

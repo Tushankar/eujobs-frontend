@@ -126,14 +126,27 @@ export async function createCheckoutSession(user, { kind, itemId, from }) {
 
 /** M-125: the return page polls until the webhook has applied the purchase (`fulfilled`). */
 export async function checkoutSessionStatus(user, id) {
-  const session = await callStripe((s) => s.checkout.sessions.retrieve(id))
+  const session = await callStripe((s) => s.checkout.sessions.retrieve(id, { expand: ['line_items'] }))
   if (session.client_reference_id !== String(user._id)) throw new AppError('NOT_FOUND')
   const kind = session.metadata?.kind
   const fulfilled =
     kind === 'subscription'
       ? isPaid(await Subscription.findOne({ userId: user._id, stripeSubscriptionId: session.subscription }))
       : Boolean(await Payment.exists({ 'stripe.checkoutSessionId': session.id }))
-  return { id: session.id, kind, status: session.status, paymentStatus: session.payment_status, fulfilled }
+  // The order summary beside the progress (what was bought, for how much), straight from the Stripe session.
+  const [line] = session.line_items?.data ?? []
+  return {
+    id: session.id,
+    kind,
+    status: session.status,
+    paymentStatus: session.payment_status,
+    fulfilled,
+    itemName: line?.description ?? null,
+    amountMinor: session.amount_total,
+    currency: session.currency?.toUpperCase() ?? null,
+    interval: line?.price?.recurring?.interval ?? null,
+    createdAt: fromUnix(session.created),
+  }
 }
 
 /** M-121: the Stripe Customer Portal (P6 configuration), for candidates and recruiters who have subscribed. */

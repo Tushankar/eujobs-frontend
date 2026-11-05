@@ -1,3 +1,4 @@
+import { useSelector } from 'react-redux'
 import { usePageVisible } from '@/hooks/usePageVisible.js'
 import { api } from './api.js'
 
@@ -15,5 +16,7 @@ const countersApi = api.injectEndpoints({
 
 export function useCounters() {
   const visible = usePageVisible()
-  return countersApi.useGetCountersQuery(undefined, { pollingInterval: visible ? COUNTERS_POLL_MS : 0 }).data
+  // Signed out (sign-out, account deleted): no poll, so the cache reset does not refetch it without a session.
+  const signedIn = useSelector((state) => state.session.signedIn)
+  return countersApi.useGetCountersQuery(undefined, { pollingInterval: visible ? COUNTERS_POLL_MS : 0, skip: !signedIn }).data
 }

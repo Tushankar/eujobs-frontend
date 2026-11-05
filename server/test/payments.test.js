@@ -158,6 +158,8 @@ describe('Checkout and Portal sessions (U40, C13, M-121; real test-mode Stripe)'
     // The return page sees an open, unfulfilled session; another user gets 404.
     const status = (await api().get(`/api/v1/payments/checkout-sessions/${res.body.id}`).set(auth(user))).body
     assert.deepEqual([status.status, status.fulfilled], ['open', false])
+    assert.deepEqual([status.amountMinor, status.currency, status.interval], [4500, 'PLN', 'month'])
+    assert.ok(status.itemName && status.createdAt, 'the order summary names the item and the date')
     const other = await createUser()
     assert.equal((await api().get(`/api/v1/payments/checkout-sessions/${res.body.id}`).set(auth(other))).status, 404)
 
