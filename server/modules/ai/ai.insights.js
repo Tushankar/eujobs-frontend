@@ -1,6 +1,7 @@
 import { LIMITS } from '../../config/limits.js'
 import { AppError, fieldError } from '../../lib/errors.js'
-import { skillKey, skillOverlap } from '../../lib/skills.js'
+import { addStandardNames } from '../../lib/ai.js'
+import { skillKey, skillOverlap, skillSet } from '../../lib/skills.js'
 import { Application } from '../applications/applications.model.js'
 import { candidateSummary, loadProfile, saveProfile } from '../candidates/candidates.service.js'
 import { Job, SavedJob } from '../jobs/jobs.model.js'
@@ -45,7 +46,7 @@ export async function overview(user) {
   const profile = await loadProfile(user._id)
   const jobs = await Job.find({ ...(await visibleFilter()), ...viewFilter(user.pickerCountry ?? 'REMOTE') })
   const skillDemand = profile.skills
-    .map((skill) => ({ skill: skill.name, jobCount: jobs.filter((job) => [...job.requiredSkills, ...job.preferredSkills].some((item) => item.key === skill.key)).length }))
+    .map((skill) => ({ skill: skill.name, jobCount: jobs.filter((job) => skillSet([...job.requiredSkills, ...job.preferredSkills]).has(skill)).length }))
     .sort((a, b) => b.jobCount - a.jobCount)
   return {
     profile: { fullName: user.fullName, headline: profile.headline ?? '', location: profile.location?.placeId ? { city: profile.location.city, countryCode: profile.location.countryCode } : null },
@@ -158,6 +159,7 @@ export async function addPlanSkill(user, name) {
   const skill = checkedSkill(name)
   if (!profile.learningPlan.some((item) => item.key === skill.key)) {
     if (profile.learningPlan.length >= P.skills.max) throw fieldError({ skill: 'too_many' }, { max: P.skills.max })
+    await addStandardNames([skill])
     profile.learningPlan.push(skill)
     await profile.save()
   }

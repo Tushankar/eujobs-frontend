@@ -4,7 +4,7 @@ import { AppError, fieldError } from '../../lib/errors.js'
 import { signedUrl } from '../../lib/files.js'
 import { t } from '../../lib/i18n.js'
 import { sendEmail } from '../../lib/mailer.js'
-import { matchesKeywords, searchText, skillKey, skillOverlap } from '../../lib/skills.js'
+import { matchesKeywords, searchText, skillOverlap, skillSet } from '../../lib/skills.js'
 import { ACTIVE_FILTER, Application, PipelineStage } from '../applications/applications.model.js'
 import { CandidateProfile } from '../candidates/candidates.model.js'
 import { CvAccessRequest, CvVersion } from '../cv/cv.model.js'
@@ -128,7 +128,7 @@ function keep(query, country) {
     if (query.workPreference && profile.workPreference !== query.workPreference) return false
     if (query.availability && profile.availability !== query.availability) return false
     if (query.minYears != null && !(profile.yearsExperience >= query.minYears)) return false
-    if (query.skill && !profile.skills.some((skill) => skill.key === skillKey(query.skill))) return false
+    if (query.skill && !skillSet(profile.skills).has({ name: query.skill })) return false
     if (query.rightToWork && (country === 'REMOTE' || !hasRightToWorkIn(profile, country))) return false
     if (query.language && !profile.languages.some((language) => language.code === query.language && levelAtLeast(language.level, query.languageLevel ?? LEVELS[0])))
       return false

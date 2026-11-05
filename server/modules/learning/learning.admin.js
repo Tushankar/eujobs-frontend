@@ -1,4 +1,5 @@
 import { LIMITS } from '../../config/limits.js'
+import { addStandardNames } from '../../lib/ai.js'
 import { actorFor, recordAudit } from '../../lib/audit.js'
 import { AppError, fieldError } from '../../lib/errors.js'
 import { removeFiles, signedUrl, storeFile } from '../../lib/files.js'
@@ -275,7 +276,11 @@ export async function updateDetails(admin, id, body) {
   const course = await findCourse(id)
   const { skillTags, coverFileId, pipelineCategory, prices, ...fields } = body
   course.set(fields)
-  if (skillTags) course.skillTags = skillEntries(skillTags, 'skillTags')
+  if (skillTags) {
+    const tags = skillEntries(skillTags, 'skillTags')
+    await addStandardNames(tags)
+    course.skillTags = tags
+  }
   if (pipelineCategory !== undefined) course.pipelineCategory = course.audience === 'recruiter' ? (pipelineCategory ?? undefined) : undefined
   if (prices) {
     const currencies = await courseCurrencies()

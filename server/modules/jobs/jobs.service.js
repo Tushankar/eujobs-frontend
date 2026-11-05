@@ -1,5 +1,6 @@
 import { LIMITS } from '../../config/limits.js'
 import { scheduleTask } from '../../jobs/scheduler.js'
+import { addStandardNames } from '../../lib/ai.js'
 import { actorFor, recordAudit, SYSTEM_ACTOR } from '../../lib/audit.js'
 import { AppError, fieldError } from '../../lib/errors.js'
 import { paginate } from '../../lib/pages.js'
@@ -68,6 +69,7 @@ async function jobFields(user, input, existing) {
   const preferredSkills = skillEntries(input.preferredSkills, 'preferredSkills')
   const both = preferredSkills.find((skill) => requiredSkills.some((required) => required.key === skill.key))
   if (both) throw fieldError({ preferredSkills: 'in_both' }, { skill: both.name })
+  await addStandardNames([...requiredSkills, ...preferredSkills])
   const codes = input.requiredLanguages.map((language) => language.code)
   if (new Set(codes).size !== codes.length) throw fieldError({ requiredLanguages: 'duplicate' })
 

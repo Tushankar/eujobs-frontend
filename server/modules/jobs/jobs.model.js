@@ -8,9 +8,10 @@ const { ObjectId } = Schema.Types
 /*
  * One Job collection read by every role (M-205). On-site and hybrid jobs have a picked city whose country is
  * the job country; remote jobs have country REMOTE, no city and optional eligible countries (OD2, OQ-6i).
- * Skills keep the typed name; `key` is the lower-cased name used for overlap (M-034, M-052).
+ * Skills keep the typed name; `key` is the lower-cased name (duplicates) and `standard` OpenAI's standard name, which
+ * with the code form (lib/skills.js) is what overlap compares (M-034, M-052).
  */
-const skill = { _id: false, name: String, key: String }
+const skill = { _id: false, name: String, key: String, standard: String }
 
 const jobSchema = new Schema(
   {

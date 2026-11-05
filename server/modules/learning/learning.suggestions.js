@@ -1,4 +1,5 @@
 import { LIMITS } from '../../config/limits.js'
+import { skillId, skillSet } from '../../lib/skills.js'
 import { Application, PipelineStage } from '../applications/applications.model.js'
 import { CandidateProfile } from '../candidates/candidates.model.js'
 import { Job, SavedJob } from '../jobs/jobs.model.js'
@@ -32,10 +33,12 @@ async function gapSkills(user) {
   ])
   const ids = [...saved, ...applied].map((entry) => String(entry.jobId)).concat(forYou.items.slice(0, S.forYouJobs).map((job) => job.id))
   const jobs = await Job.find({ _id: { $in: [...new Set(ids)] } }, 'requiredSkills')
-  const have = new Set((profile?.skills ?? []).map((skill) => skill.key))
+  const have = skillSet(profile?.skills)
   const gaps = new Map()
-  for (const skill of jobs.flatMap((job) => job.requiredSkills).filter((skill) => !have.has(skill.key))) {
-    gaps.set(skill.key, { key: skill.key, name: gaps.get(skill.key)?.name ?? skill.name, jobs: (gaps.get(skill.key)?.jobs ?? 0) + 1 })
+  for (const skill of jobs.flatMap((job) => job.requiredSkills).filter((skill) => !have.has(skill))) {
+    const id = skillId(skill)
+    const gap = gaps.get(id) ?? { name: skill.name, standard: skill.standard, jobs: 0 }
+    gaps.set(id, { ...gap, jobs: gap.jobs + 1 })
   }
   return [...gaps.values()].sort((a, b) => b.jobs - a.jobs || a.name.localeCompare(b.name))
 }
@@ -43,15 +46,15 @@ async function gapSkills(user) {
 async function candidateSuggestions(user) {
   const [gaps, profile] = await Promise.all([gapSkills(user), CandidateProfile.findOne({ userId: user._id }, 'learningPlan')])
   const plan = profile?.learningPlan ?? []
-  const gapKeys = new Set([...gaps, ...plan].map((skill) => skill.key))
+  const wanted = skillSet([...gaps, ...plan])
   const ranked = (await availableCourses(user))
-    .map((course) => ({ course, matched: course.skillTags.filter((tag) => gapKeys.has(tag.key)).map((tag) => tag.name) }))
+    .map((course) => ({ course, matched: course.skillTags.filter((tag) => wanted.has(tag)).map((tag) => tag.name) }))
     .filter((entry) => entry.matched.length > 0)
     .sort((a, b) => b.matched.length - a.matched.length || a.course.title.localeCompare(b.course.title))
   const cards = await courseCards(user, ranked.map((entry) => entry.course))
   return {
     gapSkills: gaps.map((gap) => gap.name),
-    planSkills: plan.filter((skill) => !gaps.some((gap) => gap.key === skill.key)).map((skill) => skill.name),
+    planSkills: plan.filter((skill) => !skillSet(gaps).has(skill)).map((skill) => skill.name),
     items: cards.map((card, index) => ({ ...card, matchedSkills: ranked[index].matched })),
   }
 }

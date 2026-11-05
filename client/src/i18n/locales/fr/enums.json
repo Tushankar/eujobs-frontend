@@ -150,7 +150,8 @@
     "cv_snapshot": "Aperçu du CV",
     "cv_draft": "Brouillon de CV",
     "policy_suggestion": "Suggestion de règles",
-    "report_summary": "Résumé du rapport"
+    "report_summary": "Résumé du rapport",
+    "skill_name": "Nom de compétence"
   },
   "emailType": {
     "verify_email": "Confirmation de l’e-mail",

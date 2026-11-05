@@ -197,6 +197,7 @@ export const ENUMS = {
     'cv_draft',
     'policy_suggestion',
     'report_summary',
+    'skill_name',
   ],
   emailType: Object.keys(EMAIL_TYPES),
   emailCategory: [...new Set(Object.values(EMAIL_CATEGORY))],

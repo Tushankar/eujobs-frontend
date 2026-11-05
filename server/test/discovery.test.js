@@ -1,5 +1,8 @@
 import assert from 'node:assert/strict'
 import { before, describe, it } from 'node:test'
+import { addStandardNames } from '../lib/ai.js'
+import { skillCanon, skillOverlap } from '../lib/skills.js'
+import { AiCache } from '../modules/ai/ai.model.js'
 import { CandidateProfile } from '../modules/candidates/candidates.model.js'
 import { Company } from '../modules/companies/companies.model.js'
 import { CvAccessRequest, CvVersion } from '../modules/cv/cv.model.js'
@@ -10,12 +13,13 @@ import { User } from '../modules/users/users.model.js'
 import { VerificationSubmission } from '../modules/verification/verification.model.js'
 import { seedCatalog } from '../seed/catalog.js'
 import { PLACES } from '../seed/data/places.js'
+import { aiStub } from './helpers/ai.js'
 import { textPdf } from './helpers/fixtures.js'
 import { api, attach, auth, createUser, mailTo, useTestDb, useTestUploads } from './helpers/index.js'
 import { approvedRecruiter, jobBody, listedCandidate } from './helpers/market.js'
 import { useFakePlaces } from './helpers/places.js'
 
-useTestDb([User, Company, Job, CandidateProfile, ShortlistEntry, CandidateNote, RecruiterActivity, ProfileView, CvVersion, CvAccessRequest, File, FileAccessLog, VerificationSubmission])
+useTestDb([User, Company, Job, CandidateProfile, ShortlistEntry, CandidateNote, RecruiterActivity, ProfileView, CvVersion, CvAccessRequest, File, FileAccessLog, VerificationSubmission, AiCache])
 useTestUploads()
 useFakePlaces()
 before(() => seedCatalog())
@@ -83,6 +87,49 @@ describe('Find candidates (M-054, M-055, M-056, OD4, OQ-6a, OQ-6f)', () => {
     assert.deepEqual(ranked.items[0].overlap.missing, [])
     assert.equal('score' in ranked.items[0], false)
     assert.deepEqual((await find(user, '?sort=name')).items.map((item) => item.fullName), ['Ana Díaz', 'Ben Ode', 'Cleo Park'])
+  })
+})
+
+describe('skill matching across spellings (lib/skills.js)', () => {
+  it('treats spellings of one skill as the same skill and keeps distinct skills apart', () => {
+    const same = [['React js', 'React', 'ReactJS', 'React.js'], ['Node js', 'Node.js', 'NodeJS'], ['Express js', 'Express.js'], ['REST APIs', 'RESTful API', 'rest api'], ['Postgres', 'PostgreSQL'], ['JS', 'JavaScript'], ['Café', 'cafe'], ['Salesforce CRM', 'Salesforce'], ['Mediterranean Cooking', 'Mediterranean Cuisine'], ['Microsoft Power BI', 'Power BI']]
+    for (const names of same) assert.equal(new Set(names.map(skillCanon)).size, 1, names.join(' = '))
+    const apart = [['React', 'React Native'], ['Java', 'JavaScript'], ['C', 'C++', 'C#'], ['SQL', 'PostgreSQL'], ['Git', 'GitHub'], ['CRM', 'Software']]
+    for (const names of apart) assert.equal(new Set(names.map(skillCanon)).size, names.length, names.join(' ≠ '))
+  })
+
+  it("shows Find candidates' overlap with the job's names when the candidate spells skills differently", async () => {
+    const { user } = await approvedRecruiter()
+    await listedCandidate({ fullName: 'Ravi Shah', profile: { skills: ['React js', 'Node js', 'Express js', 'Mongodb'] } })
+    const job = (await api().post('/api/v1/recruiter/jobs').set(auth(user)).send(jobBody({ requiredSkills: ['React', 'Node.js', 'MongoDB', 'TypeScript'], preferredSkills: ['Express.js'] }))).body
+    await api().patch(`/api/v1/recruiter/jobs/${job.id}/status`).set(auth(user)).send({ status: 'published' })
+    const [ravi] = (await find(user)).items
+    assert.deepEqual(ravi.overlap, { matched: ['React', 'Node.js', 'MongoDB', 'Express.js'], missing: ['TypeScript'], count: 4 })
+    assert.deepEqual(names(await find(user, '?skill=ReactJS')), ['Ravi Shah'])
+  })
+
+  it("matches a misspelt skill through OpenAI's standard name, cached per name, and falls back to the code form", async () => {
+    aiStub.reset()
+    aiStub.reply = ({ input }) => ({ items: JSON.parse(input).filter((name) => name !== 'Figmaa').map((name) => ({ input: name, standard: name === 'postgrace sql' ? 'PostgreSQL' : name })) })
+    const skills = [{ name: 'postgrace sql' }, { name: 'Figmaa' }, { name: 'React js' }]
+    await addStandardNames(skills)
+    assert.deepEqual(skills.map((skill) => skill.standard), ['PostgreSQL', 'Figmaa', 'React js'], 'a name the model skipped keeps its own form')
+    const job = { requiredSkills: [{ name: 'PostgreSQL' }, { name: 'React' }], preferredSkills: [] }
+    assert.deepEqual(skillOverlap(skills, job).missing, [])
+
+    // Cached: the same names again ask OpenAI nothing; a failure leaves the skill on the code form.
+    const again = [{ name: 'postgrace sql' }]
+    await addStandardNames(again)
+    assert.equal(aiStub.calls.length, 1)
+    assert.equal(again[0].standard, 'PostgreSQL')
+    aiStub.reply = () => {
+      throw new Error('down')
+    }
+    const failed = [{ name: 'Node js' }]
+    await addStandardNames(failed)
+    assert.equal(failed[0].standard, undefined)
+    assert.deepEqual(skillOverlap(failed, { requiredSkills: [{ name: 'Node.js' }], preferredSkills: [] }).missing, [])
+    aiStub.reset()
   })
 })
 

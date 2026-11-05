@@ -32,13 +32,18 @@ export default {
     ctx.check(scores.every((score, index) => index === 0 || score <= scores[index - 1]), `Recommended follows the scores for "${job.title}" (${scores.join(', ')})`)
 
     // Match insights on the best candidate: skills evidence and years, computed in code (M-057).
-    // The first card opens its Match insights by default; open it when closed.
-    if ((await page.$eval('[data-candidate] button[aria-expanded]', (button) => button.getAttribute('aria-expanded'))) === 'false') await page.click('[data-candidate] button[aria-expanded]')
-    await page.waitForFunction(() => document.querySelector('[data-candidate]').innerText.toLowerCase().includes('skills evidence'), { timeout: 10_000 })
+    // A card's Match insights opens in a side panel, so the card grid keeps its height.
+    const cardHeights = () => page.$$eval('[data-candidate]', (cards) => cards.map((card) => card.getBoundingClientRect().height))
+    const heightsBefore = await cardHeights()
+    await page.click('[data-candidate] [data-match-open]')
+    await page.waitForFunction(() => document.querySelector('[role="dialog"]')?.innerText.toLowerCase().includes('skills evidence'), { timeout: 10_000 })
+    ctx.check(JSON.stringify(await cardHeights()) === JSON.stringify(heightsBefore), 'opening Match insights leaves the card heights unchanged')
     await handle.checkOverflow()
     await ctx.screenshot(page, '1-find-candidates')
-    const listText = await page.$eval('main', (main) => main.innerText)
-    ctx.check(!/\d\s?%/.test(listText), 'no percentage on Find candidates')
+    const listText = await page.evaluate(() => [document.querySelector('main'), document.querySelector('[role="dialog"]')].map((element) => element.innerText).join(' '))
+    ctx.check(!/\d\s?%/.test(listText), 'no percentage on Find candidates or its Match insights panel')
+    await page.keyboard.press('Escape')
+    await page.waitForFunction(() => !document.querySelector('[role="dialog"]'), { timeout: 5_000 })
 
     await page.goto(`${ctx.webUrl}/recruiter/find-candidates/${order[0]}`, { waitUntil: 'networkidle0' })
     await page.waitForSelector('main h1', { visible: true })

@@ -142,7 +142,8 @@ export const LIMITS = {
     cache: { autocompleteTtlMs: 10 * MINUTE, detailsTtlMs: 24 * HOUR, maxEntries: 1000 },
   },
   // OD13, U3: counted generations per user and UTC day. U6: embedding input ≈ 8,000 tokens at 4 characters a token.
-  ai: { dailyGenerations: 50, embeddingMaxChars: 32_000 },
+  // skillNamesTimeoutMs: the standard-name lookup on a skills save (lib/ai.js addStandardNames) gives up after this.
+  ai: { dailyGenerations: 50, embeddingMaxChars: 32_000, skillNamesTimeoutMs: 8_000 },
   // U5, M-047: the default policy; M-049 and A: admin §1.19: policy fields
   matching: {
     weights: { sim: 0.6, skill: 0.4 },

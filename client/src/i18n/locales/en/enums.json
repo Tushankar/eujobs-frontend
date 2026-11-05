@@ -150,7 +150,8 @@
     "cv_snapshot": "CV snapshot",
     "cv_draft": "CV draft",
     "policy_suggestion": "Policy suggestion",
-    "report_summary": "Report summary"
+    "report_summary": "Report summary",
+    "skill_name": "Skill name"
   },
   "emailType": {
     "verify_email": "Email confirmation",

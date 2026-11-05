@@ -150,7 +150,8 @@
     "cv_snapshot": "Extracto del CV",
     "cv_draft": "Borrador del CV",
     "policy_suggestion": "Sugerencia de política",
-    "report_summary": "Resumen del informe"
+    "report_summary": "Resumen del informe",
+    "skill_name": "Nombre de habilidad"
   },
   "emailType": {
     "verify_email": "Confirmación del correo",

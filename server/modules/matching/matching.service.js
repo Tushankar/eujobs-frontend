@@ -1,7 +1,7 @@
 import { dailyJobs, scheduleTask, taskHandlers } from '../../jobs/scheduler.js'
 import { cosine, embed, embeddingModel, hashOf, toBuffer, toVector } from '../../lib/ai.js'
 import { t } from '../../lib/i18n.js'
-import { skillOverlap } from '../../lib/skills.js'
+import { skillLabel, skillOverlap } from '../../lib/skills.js'
 import { CandidateProfile } from '../candidates/candidates.model.js'
 import { CvVersion } from '../cv/cv.model.js'
 import { marketCandidates } from '../discovery/discovery.population.js'
@@ -25,7 +25,7 @@ export function candidateText(profile, cvText) {
   return [
     profile.headline,
     profile.about,
-    profile.skills.map((skill) => skill.name).join(', '),
+    profile.skills.map(skillLabel).join(', '),
     ...profile.workHistory.map((entry) => [entry.title, entry.employer, entry.description].filter(Boolean).join(' · ')),
     ...profile.education.map((entry) => [entry.degree, entry.institution].filter(Boolean).join(' · ')),
     cvText,
@@ -39,7 +39,7 @@ export function jobText(job) {
     job.title,
     job.brief,
     ...job.responsibilities,
-    [...job.requiredSkills, ...job.preferredSkills].map((skill) => skill.name).join(', '),
+    [...job.requiredSkills, ...job.preferredSkills].map(skillLabel).join(', '),
     job.level && t('en', `labels.jobLevel.${job.level}`),
     job.requiredLanguages.map(({ code, minLevel }) => `${english.of(code)} ${minLevel}`).join(', '),
   ]

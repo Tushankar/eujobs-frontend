@@ -9,7 +9,7 @@ const { Schema } = mongoose
  * text lessons keep the Markdown and its sanitised HTML (M-102). Skill tags are { name, key } like job skills
  * (M-114). `lockedAt` is set by the first enrollment (M-108). Enrollment progress fields serve completion (U15).
  */
-const skillSchema = new Schema({ name: String, key: String }, { _id: false })
+const skillSchema = new Schema({ name: String, key: String, standard: String }, { _id: false })
 
 const lessonSchema = new Schema({
   title: { type: String, required: true },

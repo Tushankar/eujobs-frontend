@@ -6,6 +6,7 @@ import { LIMITS } from '../config/limits.js'
 import { AiCache, AiUsage } from '../modules/ai/ai.model.js'
 import { AppConfig } from '../modules/payments/payments.model.js'
 import { AppError } from './errors.js'
+import { searchText } from './skills.js'
 
 /*
  * The OpenAI service (§2.9). Models follow U4: `fast` (OPENAI_FAST_MODEL) and `main` (OPENAI_MODEL); embeddings use
@@ -84,6 +85,75 @@ export function cosine(a, b) {
     normB += b[i] * b[i]
   }
   return normA && normB ? dot / Math.sqrt(normA * normB) : 0
+}
+
+/* ---------- standard skill names (lib/skills.js) ---------- */
+
+const SKILL_NAMES_SCHEMA = {
+  type: 'object',
+  properties: {
+    items: {
+      type: 'array',
+      items: { type: 'object', properties: { input: { type: 'string' }, standard: { type: 'string' } }, required: ['input', 'standard'], additionalProperties: false },
+    },
+  },
+  required: ['items'],
+  additionalProperties: false,
+}
+
+const SKILL_NAMES_INSTRUCTIONS = `You normalise skill names typed by candidates and recruiters on a European job platform
+for every profession: healthcare, trades, hospitality, logistics, finance, sales, education, law, creative work,
+engineering and more. Inputs may be in any language, misspelt, abbreviated or oddly spaced.
+For each input, return the most widely used English standard name of the same skill, qualification, tool or method:
+"postgrace sql" -> "PostgreSQL", "react js" -> "React", "k8s" -> "Kubernetes", "ms excel" -> "Microsoft Excel",
+"Comptabilité" -> "Accounting", "Krankenpflege" -> "Nursing", "carretillero" -> "Forklift Operation",
+"cpr" -> "CPR", "haccp" -> "HACCP", "customer servise" -> "Customer Service", "ux reserch" -> "UX Research".
+Keep the meaning exact: never broaden, narrow or swap a skill for a related one ("React Native" stays "React Native",
+"Java" never becomes "JavaScript", "SQL" never becomes "PostgreSQL", "Pastry" never becomes "Cooking").
+If an input is not a recognisable skill or you are unsure, return it unchanged. Return one item per input, with
+"input" copied exactly.`
+
+/**
+ * Sets `standard` on each skill ({ name }): OpenAI's English standard name, so a typo, synonym or other language still
+ * matches (lib/skills.js) and embeds well. Cached per name; skills that already have one are skipped. When OpenAI
+ * fails the skills stay without `standard` and match on the code form, and the next save asks again. Never blocks a save for long, never counts toward a cap.
+ */
+export async function addStandardNames(skills) {
+  const pending = skills.filter((skill) => !skill.standard)
+  if (!pending.length) return
+  // The main model: every name is asked once and then cached, so accuracy matters more than cost here.
+  const model = modelName('main')
+  const keyOf = (name) => hashOf([model, searchText(name)])
+  const hits = new Map((await AiCache.find({ kind: 'skill_name', key: { $in: pending.map((skill) => keyOf(skill.name)) }, language: 'en' })).map((hit) => [hit.key, hit.output.standard]))
+  const misses = [...new Set(pending.filter((skill) => !hits.has(keyOf(skill.name))).map((skill) => skill.name))]
+  if (misses.length) {
+    try {
+      const response = await call((ai) =>
+        ai.responses.create(
+          {
+            model,
+            reasoning: { effort: 'low' },
+            instructions: SKILL_NAMES_INSTRUCTIONS,
+            input: JSON.stringify(misses),
+            text: { format: { type: 'json_schema', name: 'skill_names', schema: SKILL_NAMES_SCHEMA, strict: true } },
+          },
+          // OpenAI's gateway refuses a connection now and then (503); two quick retries ride over it.
+          { timeout: A.skillNamesTimeoutMs, maxRetries: 2 },
+        ),
+      )
+      // Only answers for the names asked about count; a name the model skipped keeps its own form.
+      const answers = new Map(JSON.parse(response.output_text).items.map((item) => [item.input, item.standard.trim().slice(0, 60)]))
+      const rows = misses.map((name) => ({ name, standard: answers.get(name) || name }))
+      await AiCache.bulkWrite(rows.map(({ name, standard }) => ({ updateOne: { filter: { kind: 'skill_name', key: keyOf(name), language: 'en' }, update: { output: { standard }, model }, upsert: true } })))
+      for (const { name, standard } of rows) hits.set(keyOf(name), standard)
+    } catch {
+      // AI_UNAVAILABLE is already logged; the code form still matches.
+    }
+  }
+  for (const skill of pending) {
+    const standard = hits.get(keyOf(skill.name))
+    if (standard) skill.standard = standard
+  }
 }
 
 /* ---------- transcription (M-181, M-182) ---------- */

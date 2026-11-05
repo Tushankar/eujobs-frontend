@@ -1,4 +1,5 @@
 import { LIMITS } from '../../config/limits.js'
+import { addStandardNames } from '../../lib/ai.js'
 import { AppError, fieldError } from '../../lib/errors.js'
 import { removeFiles, signedUrl, storeFile } from '../../lib/files.js'
 import { sanitizedUpload, squareWebp } from '../../lib/images.js'
@@ -30,6 +31,8 @@ async function completenessOf(user, profile) {
 
 /** Saves the profile with its stored completeness (§3.2: recomputed on every change) and rescores it (M-047). */
 export async function saveProfile(user, profile) {
+  // Standard names, so "React js" and a misspelt skill still match jobs (lib/skills.js).
+  await addStandardNames(profile.skills)
   const { complete, done, total, items } = await completenessOf(user, profile)
   profile.completeness = { complete, done, total, missing: items.filter((item) => !item.done).map((item) => item.key) }
   await profile.save()
