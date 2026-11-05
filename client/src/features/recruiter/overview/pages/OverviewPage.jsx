@@ -120,7 +120,6 @@ export default function OverviewPage() {
         {jobsLoading || openRoles.length > 0 ? (
           <JobsTable jobs={openRoles.slice(0, ROLES_SHOWN)} caption={t('discovery:overview.openRoles')} loading={jobsLoading} />
         ) : !jobs ? null : (
-        ) : (
           <EmptyState icon={BriefcaseBusiness} title={t('discovery:overview.noRoles')} description={t('discovery:overview.noRolesText')} action={createButton} />
         )}
       </div>
