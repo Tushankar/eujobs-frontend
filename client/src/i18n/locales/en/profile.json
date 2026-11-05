@@ -173,5 +173,10 @@
       "currentFile": "Current file: {{name}}",
       "removeFile": "Remove the file"
     }
+  },
+  "courses": {
+    "title": "Courses",
+    "empty": "Courses you buy or join on Local WorkMan show here with your progress. Recruiters who can see your profile see them too.",
+    "browse": "Browse courses"
   }
 }

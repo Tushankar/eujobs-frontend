@@ -18,7 +18,8 @@ import {
   useSetNoneMutation,
   useUploadPhotoMutation,
 } from '../api.js'
-import { useGetCertificatesQuery } from '@/features/learning/api.js'
+import { useGetCertificatesQuery, useGetEnrollmentsQuery } from '@/features/learning/api.js'
+import MyCourses from '@/features/learning/components/MyCourses.jsx'
 import CertificateDialog from '../components/CertificateDialog.jsx'
 import CompletenessChecklist from '../components/CompletenessChecklist.jsx'
 import EditProfileModal from '../components/EditProfileModal.jsx'
@@ -116,6 +117,26 @@ function CourseCertificates() {
         <Empty text={t('profile:courseCertificates.empty')}>
           <Link to="/candidate/learning" className={styles.emptyLink}>
             {t('profile:courseCertificates.browse')}
+            <Icon as={ArrowRight} size={12} />
+          </Link>
+        </Empty>
+      )}
+    </Section>
+  )
+}
+
+/** "Courses" (owner 2026-11-05): courses the candidate bought or joined, with progress; recruiters see them on the profile too. */
+function ProfileCourses() {
+  const { t } = useTranslation()
+  const { data: enrollments = [], isLoading } = useGetEnrollmentsQuery()
+  return (
+    <Section name="courses" title={t('profile:courses.title')}>
+      {isLoading || enrollments.length > 0 ? (
+        <MyCourses items={enrollments} loading={isLoading} />
+      ) : (
+        <Empty text={t('profile:courses.empty')}>
+          <Link to="/candidate/learning" className={styles.emptyLink}>
+            {t('profile:courses.browse')}
             <Icon as={ArrowRight} size={12} />
           </Link>
         </Empty>
@@ -453,6 +474,8 @@ function ProfileView({ profile }) {
               <Empty text={t('profile:certificates.empty')} />
             )}
           </Section>
+
+          <ProfileCourses />
 
           <CourseCertificates />
 

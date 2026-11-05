@@ -174,5 +174,10 @@
       "currentFile": "Archivo actual: {{name}}",
       "removeFile": "Quitar el archivo"
     }
+  },
+  "courses": {
+    "title": "Cursos",
+    "empty": "Los cursos que compres o a los que te unas en Local WorkMan aparecen aquí con tu progreso. Los reclutadores que pueden ver tu perfil también los ven.",
+    "browse": "Ver cursos"
   }
 }

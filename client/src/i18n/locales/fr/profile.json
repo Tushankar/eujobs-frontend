@@ -174,5 +174,10 @@
       "currentFile": "Fichier actuel : {{name}}",
       "removeFile": "Supprimer le fichier"
     }
+  },
+  "courses": {
+    "title": "Cours",
+    "empty": "Les cours que vous achetez ou rejoignez sur Local WorkMan apparaissent ici avec votre progression. Les recruteurs qui peuvent voir votre profil les voient aussi.",
+    "browse": "Voir les cours"
   }
 }

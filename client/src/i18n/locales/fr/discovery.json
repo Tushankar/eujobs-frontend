@@ -170,7 +170,9 @@
     "courseCertificates": "Certificats de formation",
     "noCourseCertificates": "Aucun certificat de formation obtenu sur Local WorkMan.",
     "checkCertificate": "Vérifier {{code}}",
-    "courseCertificatesNote": "Les certificats de formation confirment que la formation a été suivie et un contrôle des connaissances réussi. Ils ne vérifient pas les compétences professionnelles."
+    "courseCertificatesNote": "Les certificats de formation confirment que la formation a été suivie et un contrôle des connaissances réussi. Ils ne vérifient pas les compétences professionnelles.",
+    "courses": "Cours sur Local WorkMan",
+    "noCourses": "Aucun cours suivi pour l’instant."
   },
   "educationTab": {
     "title": "Diplômes",

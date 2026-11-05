@@ -54,6 +54,27 @@ export default function CandidateSkillsPage() {
         </ul>
       )}
 
+      {/* Owner 2026-11-05: the courses the candidate takes or finished here, with progress (no payment details). */}
+      <SectionTitle className={styles.section} title={t('discovery:skillsTab.courses')} />
+      {candidate.courses.length === 0 ? (
+        <p className={styles.note}>{t('discovery:skillsTab.noCourses')}</p>
+      ) : (
+        <ul className={styles.list} data-candidate-courses>
+          {candidate.courses.map((course) => (
+            <li key={course.courseId} className={styles.skill} data-candidate-course={course.courseId}>
+              <span className={styles.name}>
+                {course.title} · {course.category}
+              </span>
+              {course.completedAt ? (
+                <PillBadge tone="success">{t('learning:myCourses.completed', { date: format.date(course.completedAt) })}</PillBadge>
+              ) : (
+                <PillBadge>{t('learning:myCourses.progress', { done: course.lessonsDone, total: course.lessonsTotal })}</PillBadge>
+              )}
+            </li>
+          ))}
+        </ul>
+      )}
+
       <SectionTitle className={styles.section} title={t('discovery:skillsTab.courseCertificates')} />
       {candidate.courseCertificates.length === 0 ? (
         <p className={styles.note}>{t('discovery:skillsTab.noCourseCertificates')}</p>

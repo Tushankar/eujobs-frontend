@@ -7,6 +7,7 @@ const TABS = [
   { key: 'notifications', to: '/recruiter/settings/notifications' },
   { key: 'data', to: '/recruiter/settings/data-account' },
   { key: 'billing', to: '/recruiter/settings/billing' },
+  { key: 'courses', to: '/recruiter/settings/courses' },
 ]
 
 /** Shared frame of the settings pages: page title, tab navigation, then the page's card(s). */

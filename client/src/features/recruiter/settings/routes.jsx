@@ -8,4 +8,5 @@ export default [
   { path: 'settings/notifications', lazy: lazyPage(() => import('./pages/NotificationsPage.jsx')), handle },
   { path: 'settings/data-account', lazy: lazyPage(() => import('./pages/DataAccountPage.jsx')), handle },
   { path: 'settings/billing', lazy: lazyPage(() => import('./pages/BillingPage.jsx')), handle },
+  { path: 'settings/courses', lazy: lazyPage(() => import('./pages/MyCoursesPage.jsx')), handle },
 ]

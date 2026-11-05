@@ -4,7 +4,12 @@
     "free": "Free",
     "unavailable": "Not available in your currency",
     "oneTime": "One-time course access",
-    "freeAccess": "Free course access"
+    "freeAccess": "Free course access",
+    "yourAccess": "Your access",
+    "purchased": "Purchased",
+    "enrolled": "Enrolled",
+    "progress": "{{done}} of {{total}} lessons done",
+    "completed": "Completed"
   },
   "included": {
     "video_one": "{{count}} video lesson",
@@ -179,5 +184,24 @@
     "reason_other": "{{count}} active applications at {{stage}}",
     "noneRecruiter": "No suggestions right now: none of the remaining courses matches a pipeline stage with active applications.",
     "howRecruiter": "Suggestions follow the stages of your company’s active applications. No AI model is used."
+  },
+  "myCourses": {
+    "title": "My courses",
+    "lead": "Courses you bought or joined, with your progress.",
+    "settingsLead": "Courses you bought or joined, with your progress, the amount paid and the Stripe receipt.",
+    "purchasedOn": "Purchased {{date}}",
+    "enrolledOn": "Enrolled {{date}}",
+    "progress": "{{done}} of {{total}} lessons",
+    "progressLabel": "Progress in {{title}}",
+    "completed": "Completed {{date}}",
+    "certificate": "Certificate {{code}}",
+    "receipt": "Receipt",
+    "start": "Start",
+    "continue": "Continue",
+    "review": "Review",
+    "actionLabel": "{{action}}: {{title}}",
+    "emptyTitle": "No courses yet",
+    "emptyText": "Courses you buy or join in Learning appear here with your progress.",
+    "browse": "Browse courses"
   }
 }

@@ -170,7 +170,9 @@
     "courseCertificates": "Certificados de cursos",
     "noCourseCertificates": "No ha obtenido certificados de cursos en Local WorkMan.",
     "checkCertificate": "Comprobar {{code}}",
-    "courseCertificatesNote": "Los certificados de cursos confirman que se completó el curso y se aprobó una prueba de conocimientos. No verifican habilidades profesionales."
+    "courseCertificatesNote": "Los certificados de cursos confirman que se completó el curso y se aprobó una prueba de conocimientos. No verifican habilidades profesionales.",
+    "courses": "Cursos en Local WorkMan",
+    "noCourses": "Aún no ha hecho ningún curso."
   },
   "educationTab": {
     "title": "Formación",

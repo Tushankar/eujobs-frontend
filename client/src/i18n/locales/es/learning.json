@@ -4,7 +4,12 @@
     "free": "Gratis",
     "unavailable": "No disponible en tu moneda",
     "oneTime": "Acceso al curso con pago único",
-    "freeAccess": "Acceso gratuito al curso"
+    "freeAccess": "Acceso gratuito al curso",
+    "yourAccess": "Tu acceso",
+    "purchased": "Comprado",
+    "enrolled": "Inscrito",
+    "progress": "{{done}} de {{total}} lecciones hechas",
+    "completed": "Completado"
   },
   "included": {
     "video_one": "{{count}} lección en vídeo",
@@ -190,5 +195,24 @@
     "reason_other": "{{count}} candidaturas activas en la etapa {{stage}}",
     "noneRecruiter": "Ahora mismo no hay sugerencias: ninguno de los cursos restantes corresponde a una etapa del proceso con candidaturas activas.",
     "howRecruiter": "Las sugerencias siguen las etapas de las candidaturas activas de tu empresa. No se usa ningún modelo de IA."
+  },
+  "myCourses": {
+    "title": "Mis cursos",
+    "lead": "Los cursos que compraste o a los que te uniste, con tu progreso.",
+    "settingsLead": "Los cursos que compraste o a los que te uniste, con tu progreso, el importe pagado y el recibo de Stripe.",
+    "purchasedOn": "Comprado el {{date}}",
+    "enrolledOn": "Inscrito el {{date}}",
+    "progress": "{{done}} de {{total}} lecciones",
+    "progressLabel": "Progreso en {{title}}",
+    "completed": "Completado el {{date}}",
+    "certificate": "Certificado {{code}}",
+    "receipt": "Recibo",
+    "start": "Empezar",
+    "continue": "Continuar",
+    "review": "Repasar",
+    "actionLabel": "{{action}}: {{title}}",
+    "emptyTitle": "Aún no tienes cursos",
+    "emptyText": "Los cursos que compres o a los que te unas en Formación aparecen aquí con tu progreso.",
+    "browse": "Ver cursos"
   }
 }

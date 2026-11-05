@@ -4,7 +4,12 @@
     "free": "Gratuit",
     "unavailable": "Indisponible dans votre devise",
     "oneTime": "Accès à la formation, paiement unique",
-    "freeAccess": "Accès gratuit à la formation"
+    "freeAccess": "Accès gratuit à la formation",
+    "yourAccess": "Votre accès",
+    "purchased": "Acheté",
+    "enrolled": "Inscrit",
+    "progress": "{{done}} leçons sur {{total}} terminées",
+    "completed": "Terminé"
   },
   "included": {
     "video_one": "{{count}} leçon vidéo",
@@ -190,5 +195,24 @@
     "reason_other": "{{count}} candidatures actives à l’étape {{stage}}",
     "noneRecruiter": "Aucune suggestion pour l’instant : aucune des formations restantes ne correspond à une étape du processus avec des candidatures actives.",
     "howRecruiter": "Les suggestions suivent les étapes des candidatures actives de votre entreprise. Aucun modèle d’IA n’est utilisé."
+  },
+  "myCourses": {
+    "title": "Mes cours",
+    "lead": "Les cours que vous avez achetés ou rejoints, avec votre progression.",
+    "settingsLead": "Les cours que vous avez achetés ou rejoints, avec votre progression, le montant payé et le reçu Stripe.",
+    "purchasedOn": "Acheté le {{date}}",
+    "enrolledOn": "Inscrit le {{date}}",
+    "progress": "{{done}} leçons sur {{total}}",
+    "progressLabel": "Progression dans {{title}}",
+    "completed": "Terminé le {{date}}",
+    "certificate": "Certificat {{code}}",
+    "receipt": "Reçu",
+    "start": "Commencer",
+    "continue": "Continuer",
+    "review": "Revoir",
+    "actionLabel": "{{action}} : {{title}}",
+    "emptyTitle": "Aucun cours pour l’instant",
+    "emptyText": "Les cours que vous achetez ou rejoignez dans Formations apparaissent ici avec votre progression.",
+    "browse": "Voir les cours"
   }
 }

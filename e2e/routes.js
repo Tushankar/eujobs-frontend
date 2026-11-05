@@ -91,6 +91,7 @@ export const ROUTES = {
     '/recruiter/settings/notifications',
     '/recruiter/settings/data-account',
     '/recruiter/settings/billing',
+    '/recruiter/settings/courses',
     '/recruiter/checkout/return',
     '/recruiter/help',
     '/recruiter/notifications',
