@@ -2969,6 +2969,36 @@ The course-purchase path is built here but verified in Phase 8. AI pages are gat
 
 **API tests.** Export contents for both roles; the erasure cascade (one assertion per collection); the recruiter deletion cascade; the retention sweep; tombstones; Stripe calls (stubbed in API tests, real in the e2e).
 
+#### Phase 12 handoff (2026-11-05, tasks 1–8 built; task 9, the final full regression, waits for the owner's go)
+
+**Step 0 (owner, P12-Q0).** The test lock: `server/test/lock.js`, `C:/eujobs-data/eujobs_test.lock` (command, Claude session id, pid, start time); `npm test` is now `node test/run.js` (extra args forwarded), `e2e/run.js` takes the lock first, `test/setup.js` refuses a direct test file while another run holds it; a dead holder is cleared; a second run exits with code 3 naming the holder. Verified: a held lock stops `npm test`, a direct `node --test` and `e2e/run.js`; a dead-pid lock is cleared; a real run holds and releases it. During this phase it stopped runs from sessions c53b7dc1 and c86167f9 and from this one several times, as intended.
+
+**Built.**
+- Server `modules/privacy`: `GET /me/export` (ZIP, P12-C1, Q4; the recruiter's holds the plan, subscription status and every payment, Q8), `DELETE /me { currentPassword }` (candidate erasure, recruiter deletion; Stripe subscription, candidate Plus or Recruiter Plus, cancelled and the Customer deleted; P12-C2 … C5, Q2, Q3, Q5, Q7), the daily `retention-sweep` (P12-C7). `COVERAGE` lists every collection (P12-C3). New fields: `users.erasedAt`, `companies.deletedAt`, `conversations.closedAt`, `aicaches.subjectId` (+ the start-up step, P12-C6). `describeAudit` and the audit CSV render removed names as "Deleted user".
+- Client: one `DataControls` component on both Data & account pages (Export data, Delete my data / Delete account with the current password); "Deleted user" (`common:deletedUser`) in admin Payments (list and details, never `enums:role.null`), the audit log, moderation and notifications; closed threads (P12-C4); shell queries skip while signed out (P12-C10). Removed: Reset demo, `localData.js`, the recruiter reset code and `data/account.js`, `useSharedLocalStorage`, `downloadCsv.js`, `profileText.js` (only localData used it) and the mock files `cv/data/cvVersions.js`, `profile/data/profile.js`, `settings/data/settings.js`, `verification/data/verification.js`, `find-candidates/data/candidates.js`, `jobs/data/jobFields.js` (P11-C4's two orphans).
+- e2e: `audit-static.js` (P12-C8), `run.js all` (P12-C9, Q1), `lib/privacy.js`, `TEST_UPLOAD_ROOT` in `lib/env.js`, scenarios `p12-01` … `p12-07` (P12-C12).
+- README: how to run the server, client, seeds and tests; `seed:catalog` after every pull, before restarting the server (Q8); the test lock; no mock data in the client.
+
+**Results** (2026-11-05; every run through the lock)
+
+| Command | Result |
+|---|---|
+| `npm test -- test/privacy.test.js` | 11/11 (the 4 failures found in 11c are fixed: filename quoting ×2 and a `??` in an assertion were test mistakes; the retention test dated its files from real time instead of the 03:00 tick) |
+| `cd server && npm test` (full) | RESULT_FULL |
+| `npm run lint` server, client; `npx oxlint .` e2e | clean |
+| `cd client && npm run build` (check-i18n first) | clean; "es, fr match en" |
+| `node e2e/audit-static.js` | 0 findings (822 files, 20 seeded names); its first run found 2, fixed (P12-C8) |
+| P12-01 (D) | pass |
+| P12-02 (D, M) | pass, after two fixes: the 401s after the deletion (P12-C10) and a scenario wait for the loaded payment dialog |
+| P12-03 (D) | pass: Recruiter Plus canceled and the Customer deleted in real Stripe, KYC files gone from disk, payment kept as "Deleted user" |
+| P12-04 (D) | pass |
+| P12-05 (D, M) | runs in task 9 (the sweep in en, es and fr; P11-01 and the en sweep passed in 11c) |
+| P12-06 (D, M) | pass |
+| P12-07 | pass |
+| `npm audit` | client 0, e2e 0, server 3 moderate (one chain, not reachable; P12-C11) |
+
+**Open before task 9.** P10-05 at 375 px (the 4 px overflow seen once in 11c) is watched in the full run.
+
 ---
 
 ## 7. Prep checklist

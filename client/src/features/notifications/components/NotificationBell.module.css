@@ -23,13 +23,14 @@
   color: var(--foreground);
 }
 
+/* 16px overall (border included), starting just right of the glyph's centre so the bell stays visible; "99+" grows right. */
 .count {
   position: absolute;
-  top: 2px;
-  right: 1px;
+  top: 4px;
+  left: 19px;
   min-width: 16px;
   height: 16px;
-  padding: 0 4px;
+  padding: 0 3px;
   border: 2px solid var(--card);
   border-radius: var(--radius-full);
   background: var(--destructive);
@@ -38,7 +39,7 @@
   line-height: 12px;
   text-align: center;
   color: #fff;
-  box-sizing: content-box;
+  box-sizing: border-box;
 }
 
 .dropdown {

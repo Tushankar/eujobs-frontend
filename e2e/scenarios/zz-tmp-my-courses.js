@@ -79,7 +79,6 @@ export default {
     await sarah.page.waitForSelector(`[data-my-courses] [data-my-course="${recruiterCourse.id}"]`, { visible: true })
     await sarah.checkOverflow()
     await ctx.screenshot(sarah.page, '5-recruiter-learning')
-    await clickText(sarah.page, 'Settings', 'aside a')
     await sarah.page.goto(`${ctx.webUrl}/recruiter/settings/courses`, { waitUntil: 'networkidle0' })
     await sarah.page.waitForSelector(`[data-my-course="${recruiterCourse.id}"]`, { visible: true })
     const row = await text(sarah.page, `[data-my-course="${recruiterCourse.id}"]`)
