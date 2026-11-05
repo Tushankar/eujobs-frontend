@@ -53,8 +53,8 @@ export default function JobDetailsPage() {
       <PageTitle
         className={styles.title}
         eyebrow={!job ? <Skeleton width={64} /> : job.restricted ? t('jobs:table.restricted') : t(`enums:jobStatus.${job.status}`)}
-        title={job?.title ?? <Skeleton width={320} height={28} />}
-        description={meta ?? <Skeleton width={360} />}
+        title={job?.title ?? <Skeleton width="min(320px, 80vw)" height={28} />}
+        description={meta ?? <Skeleton width="min(360px, 80vw)" />}
         actions={
           <div className={styles.actions}>
             <Button as={Link} to={`/recruiter/jobs/${jobId}/edit`} variant="secondary" className={styles.edit} leftIcon={<Icon as={Settings2} size={14} />}>

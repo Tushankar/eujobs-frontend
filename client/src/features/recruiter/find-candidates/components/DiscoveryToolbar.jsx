@@ -65,7 +65,7 @@ export default function DiscoveryToolbar({ locked, jobsLoading, query, onQueryCh
           leftIcon={<Icon as={Search} size={16} strokeWidth={2} />}
         />
         {jobsLoading ? (
-          <Skeleton shape="block" height={44} className={`${styles.job} ${styles.skeletonJob}`} />
+          <Skeleton shape="pill" height={40} className={`${styles.job} ${styles.skeletonJob}`} />
         ) : (
           <SelectField variant="filter"
             className={styles.job}

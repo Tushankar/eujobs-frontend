@@ -22,7 +22,7 @@ function CourseSkeleton() {
   const { t } = useTranslation('learning')
   return (
     <>
-      <PageTitle eyebrow={<Skeleton width={140} />} title={<Skeleton width={360} height={28} />} description={<Skeleton width={420} />} actions={<Skeleton shape="pill" width={64} />} />
+      <PageTitle eyebrow={<Skeleton width={140} />} title={<Skeleton width="min(360px, 80vw)" height={28} />} description={<Skeleton width="min(420px, 80vw)" />} actions={<Skeleton shape="pill" width={64} />} />
       <SkeletonRegion className={styles.layout}>
         <div className={styles.main}>
           <Skeleton shape="block" height={320} className={styles.skeletonHero} />
