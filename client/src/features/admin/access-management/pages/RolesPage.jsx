@@ -14,7 +14,7 @@ import { usePreferences } from '@/lib/preferences.js'
 import { useArchiveRoleMutation, useDuplicateRoleMutation, useGetRolesQuery } from '../api.js'
 import AccessToolbar from '../components/AccessToolbar.jsx'
 import CreateRoleModal from '../components/CreateRoleModal.jsx'
-import RoleCard from '../components/RoleCard.jsx'
+import RoleCard, { RoleCardsSkeleton } from '../components/RoleCard.jsx'
 import styles from './RolesPage.module.css'
 
 const admin = (to) => workspacePath(WORKSPACES.admin, to)
@@ -30,7 +30,7 @@ export default function RolesPage() {
   const navigate = useNavigate()
   const { pathname, state } = useLocation()
   const { roleId } = useParams()
-  const { data: roles = [] } = useGetRolesQuery()
+  const { data: roles = [], isLoading } = useGetRolesQuery()
   const [duplicateRole] = useDuplicateRoleMutation()
   const [archiveRole] = useArchiveRoleMutation()
   const [query, setQuery] = useState('')
@@ -80,18 +80,21 @@ export default function RolesPage() {
       )}
 
       <div className={styles.stats}>
-        <StatCard label={t('stats.activeRoles')} value={active.length} caption={t('stats.activeRolesCaption')} icon={ShieldCheck} />
-        <StatCard label={t('stats.customRoles')} value={active.filter((role) => !role.system).length} caption={t('stats.customRolesCaption')} icon={Settings2} />
+        <StatCard label={t('stats.activeRoles')} value={active.length} caption={t('stats.activeRolesCaption')} icon={ShieldCheck} loading={isLoading} />
+        <StatCard label={t('stats.customRoles')} value={active.filter((role) => !role.system).length} caption={t('stats.customRolesCaption')} icon={Settings2} loading={isLoading} />
         <StatCard
           label={t('stats.assignedUsers')}
           value={roles.reduce((total, role) => total + role.assignedCount, 0)}
           caption={t('stats.assignedUsersCaption')}
           icon={Users}
+          loading={isLoading}
         />
       </div>
 
       <div className={styles.roles}>
-        {visibleRoles.length > 0 ? (
+        {isLoading ? (
+          <RoleCardsSkeleton className={styles.grid} />
+        ) : visibleRoles.length > 0 ? (
           <div className={styles.grid}>
             {visibleRoles.map((role) => (
               <RoleCard

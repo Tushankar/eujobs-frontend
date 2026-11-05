@@ -7,3 +7,14 @@
     padding: 20px !important;
   }
 }
+
+/* Loading: title and text lines at the tab's rhythm. */
+.skeleton {
+  display: flex;
+  flex-direction: column;
+  gap: 14px;
+}
+
+.skeleton .skeletonTitle {
+  margin-top: 18px;
+}

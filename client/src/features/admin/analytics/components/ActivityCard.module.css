@@ -110,6 +110,13 @@
 
 .chart {
   padding-top: 20px;
+  transition: opacity var(--transition);
+}
+
+/* The counts on screen belong to the previous country until the new ones arrive. */
+.busy {
+  opacity: 0.5;
+  pointer-events: none;
 }
 
 /* Figma's line view starts its legend and plot higher (the plot is 21px taller, ending on the same baseline). */

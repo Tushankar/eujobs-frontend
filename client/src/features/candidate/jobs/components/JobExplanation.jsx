@@ -1,4 +1,5 @@
 import { useTranslation } from 'react-i18next'
+import { Skeleton, SkeletonRegion } from '@/components/ui'
 import { useGetInsightNarrativeQuery } from '@/features/ai/api.js'
 import AiStatus from '@/features/ai/components/AiStatus.jsx'
 import styles from './JobExplanation.module.css'
@@ -23,18 +24,26 @@ export default function JobExplanation({ jobId }) {
     )
   return (
     <div className={styles.root} data-narrative="job_match">
-      <AiStatus isLoading={query.isFetching} error={query.error} onRetry={query.refetch}>
-        {query.data && (
-          <>
-            <p className={styles.badge}>{t('badge')}</p>
-            <p className={styles.summary} data-narrative-text>
-              {query.data.summary}
-            </p>
-            {list('strengths', query.data.strengths)}
-            {list('gaps', query.data.gaps)}
-          </>
-        )}
-      </AiStatus>
+      {query.isFetching ? (
+        <SkeletonRegion className={styles.skeleton}>
+          <Skeleton width={64} height={8} />
+          <Skeleton />
+          <Skeleton width="80%" />
+        </SkeletonRegion>
+      ) : (
+        <AiStatus error={query.error} onRetry={query.refetch}>
+          {query.data && (
+            <>
+              <p className={styles.badge}>{t('badge')}</p>
+              <p className={styles.summary} data-narrative-text>
+                {query.data.summary}
+              </p>
+              {list('strengths', query.data.strengths)}
+              {list('gaps', query.data.gaps)}
+            </>
+          )}
+        </AiStatus>
+      )}
     </div>
   )
 }

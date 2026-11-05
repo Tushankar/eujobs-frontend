@@ -6,7 +6,7 @@ import { can } from '@/app/permissions.js'
 import { WORKSPACES, workspacePath } from '@/app/workspaces.js'
 import EmptyState from '@/components/common/EmptyState.jsx'
 import PillBadge from '@/components/common/PillBadge.jsx'
-import { Avatar, Icon, Panel } from '@/components/ui'
+import { Avatar, Icon, Panel, Skeleton, SkeletonRegion } from '@/components/ui'
 import { useAuditText } from '@/features/admin/audit-logs/useAuditText.js'
 import { useGetAdminFileUrlQuery } from '@/features/admin/moderation/api.js'
 import { useFormat, usePreferences } from '@/lib/preferences.js'
@@ -42,8 +42,9 @@ function Facts({ title, badge, rows, children }) {
 /** A sensitive file through /admin/files (§2.6); the link is signed for this admin and lives 10–15 minutes. */
 function FileLink({ fileId, name }) {
   const { t } = useTranslation('adminUsers')
-  const { data } = useGetAdminFileUrlQuery(fileId)
+  const { data, isLoading } = useGetAdminFileUrlQuery(fileId)
   const label = name ?? t('detail.openFile')
+  if (isLoading) return <Skeleton shape="pill" width={120} height={28} />
   return data ? (
     <a className={styles.file} href={`${import.meta.env.VITE_API_URL ?? ''}${data.url}`} target="_blank" rel="noopener noreferrer" title={label}>
       <Icon as={FileText} size={14} />
@@ -306,6 +307,83 @@ function RecruiterSections({ user, part }) {
   )
 }
 
+/* Value widths (px) of placeholder fact rows. */
+const SKELETON_VALUES = [140, 96, 180, 120, 160]
+
+/** Placeholder fact rows: the real `labels` when given, else label bones. */
+function FactsSkeleton({ labels }) {
+  return (
+    <div className={styles.facts}>
+      {(labels ?? SKELETON_VALUES).map((label, index) => (
+        <div key={index} className={styles.fact}>
+          <span className={styles.skeletonLabel}>{labels ? label : <Skeleton width={88} />}</span>
+          <span>
+            <Skeleton width={SKELETON_VALUES[index % SKELETON_VALUES.length]} />
+          </span>
+        </div>
+      ))}
+    </div>
+  )
+}
+
+/** The page while the user loads: the header (photo, name, status, contact; a candidate's stats) and both columns. */
+function UserSkeleton({ candidate }) {
+  const { t } = useTranslation('adminUsers')
+  return (
+    <SkeletonRegion>
+      <Panel className={styles.hero} padding={24}>
+        <Skeleton shape="circle" width={72} height={72} />
+        <div className={styles.heroText}>
+          <div className={styles.heroName}>
+            <span className={styles.name}>
+              <Skeleton width={220} height={24} />
+            </span>
+            <Skeleton shape="pill" />
+          </div>
+          <p className={styles.subtitle}>
+            <Skeleton width={260} height={12} />
+          </p>
+          <p className={styles.meta}>
+            <Skeleton width={240} />
+          </p>
+        </div>
+        {candidate && (
+          <div className={styles.stats}>
+            {[t('detail.completeness'), t('columns.plan'), t('columns.verification')].map((label) => (
+              <div key={label} className={styles.stat}>
+                <p className={styles.skeletonStatLabel}>{label}</p>
+                <p className={styles.skeletonStatValue}>
+                  <Skeleton width={56} height={14} />
+                </p>
+              </div>
+            ))}
+          </div>
+        )}
+      </Panel>
+      <div className={styles.layout}>
+        <div className={styles.column}>
+          {[0, 1].map((index) => (
+            <Panel key={index} className={styles.section}>
+              <div className={styles.headingRow}>
+                <Skeleton width={120} height={16} />
+              </div>
+              <FactsSkeleton />
+            </Panel>
+          ))}
+        </div>
+        <div className={styles.column}>
+          <Panel className={styles.section}>
+            <div className={styles.headingRow}>
+              <h2 className={styles.heading}>{t('detail.account')}</h2>
+            </div>
+            <FactsSkeleton labels={[t('detail.emailVerified'), t('detail.phone'), t('detail.language'), t('detail.joined'), t('detail.lastLogin')]} />
+          </Panel>
+        </div>
+      </div>
+    </SkeletonRegion>
+  )
+}
+
 /**
  * /admin/candidates/:userId and /admin/recruiters/:userId (M-161): account, then the role's sections (profile,
  * verification, plan, applications, learning; or company, KYC files, review history, jobs), then the audit history.
@@ -315,7 +393,7 @@ export default function UserDetailPage({ role }) {
   const { t } = useTranslation(['adminUsers', 'enums'])
   const format = useFormat()
   const { userId } = useParams()
-  const { data: user, error } = useGetAdminUserQuery(userId)
+  const { data: user, error, isLoading } = useGetAdminUserQuery(userId)
   const listPath = workspacePath(WORKSPACES.admin, `${role}s`)
   const back = (
     <Link to={listPath} className={styles.back}>
@@ -331,6 +409,13 @@ export default function UserDetailPage({ role }) {
       </>
     )
   }
+  if (isLoading)
+    return (
+      <>
+        {back}
+        <UserSkeleton candidate={role === 'candidate'} />
+      </>
+    )
   if (!user) return back
 
   const phone = user.phone.e164 && t(user.phone.verified ? 'detail.phoneVerified' : 'detail.phoneUnverified', { phone: user.phone.e164 })

@@ -36,6 +36,11 @@
   background: var(--primary);
 }
 
+.track .skeletonFill {
+  display: block;
+  border-radius: 4px;
+}
+
 .count {
   flex: 0 0 20px;
   font-size: 12px;

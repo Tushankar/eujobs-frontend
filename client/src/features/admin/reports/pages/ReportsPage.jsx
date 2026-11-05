@@ -18,7 +18,7 @@ export default function ReportsPage() {
   const { t } = useTranslation('adminReports')
   const errorText = useErrorText()
   const { me } = usePreferences()
-  const { data } = useGetReportsQuery()
+  const { data, isLoading: reportsLoading } = useGetReportsQuery()
   const [createReport, { isLoading }] = useCreateReportMutation()
   const [failure, setFailure] = useState('')
   const [status, setStatus] = useState('')
@@ -54,7 +54,7 @@ export default function ReportsPage() {
       <div role="status">{status && <p className={styles.status}>{status}</p>}</div>
       <div className={styles.grid}>
         {canExport && <ReportForm busy={isLoading} failure={failure} onGenerate={handleGenerate} />}
-        <ExportHistory reports={data?.items ?? []} canDownload={canExport} downloading={downloading} onDownload={download} />
+        <ExportHistory reports={data?.items ?? []} canDownload={canExport} downloading={downloading} onDownload={download} loading={reportsLoading} />
       </div>
     </>
   )

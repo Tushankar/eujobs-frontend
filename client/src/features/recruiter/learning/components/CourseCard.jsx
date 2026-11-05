@@ -1,7 +1,7 @@
 import { useTranslation } from 'react-i18next'
 import { Link } from 'react-router-dom'
 import { ArrowRight, BookOpen } from 'lucide-react'
-import { Button, Icon } from '@/components/ui'
+import { Button, Icon, Skeleton } from '@/components/ui'
 import PillBadge from '@/components/common/PillBadge.jsx'
 import { useCourseText } from '@/features/learning/useCourseText.js'
 import styles from './CourseCard.module.css'
@@ -51,5 +51,50 @@ export default function CourseCard({ course }) {
         </div>
       </div>
     </article>
+  )
+}
+
+/** A library card's shape while the courses load: the cover, the course's lines and the price row. */
+export function CourseCardSkeleton() {
+  const { t } = useTranslation('learning')
+  return (
+    <div className={styles.card} aria-hidden="true">
+      <Skeleton shape="block" height={203} className={styles.skeletonPhoto} />
+      <div className={styles.body}>
+        <div className={styles.header}>
+          <Skeleton shape="circle" width={18} height={18} />
+          <Skeleton shape="pill" width={88} />
+        </div>
+        <p className={styles.title}>
+          <Skeleton width="85%" height={16} />
+          <br />
+          <Skeleton width="40%" height={16} />
+        </p>
+        <p className={styles.meta}>
+          <Skeleton width="60%" />
+        </p>
+        <div className={styles.summary}>
+          <Skeleton />
+          <br />
+          <Skeleton />
+          <br />
+          <Skeleton width="70%" />
+        </div>
+        <div className={styles.priceRow}>
+          <div>
+            <p className={styles.priceLabel}>{t('price.label')}</p>
+            <p className={styles.price}>
+              <Skeleton width={56} height={20} />
+            </p>
+          </div>
+          <p className={styles.access}>
+            <Skeleton width={72} />
+          </p>
+        </div>
+        <div className={styles.actions}>
+          <Skeleton shape="pill" height={40} width="100%" />
+        </div>
+      </div>
+    </div>
   )
 }

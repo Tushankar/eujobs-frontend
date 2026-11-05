@@ -69,6 +69,13 @@
   color: var(--muted-foreground);
 }
 
+.summarySkeleton {
+  display: flex;
+  flex-direction: column;
+  gap: 14px;
+  padding: 23px 0 7px;
+}
+
 .footer {
   margin-top: auto;
   padding-top: 15px;

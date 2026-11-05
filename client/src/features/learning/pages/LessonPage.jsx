@@ -2,7 +2,7 @@ import { useEffect, useRef, useState } from 'react'
 import { useTranslation } from 'react-i18next'
 import { Link, useParams } from 'react-router-dom'
 import { ArrowLeft, ArrowRight, CircleCheck, ExternalLink, FileText, LockKeyhole } from 'lucide-react'
-import { Button, Icon, Panel } from '@/components/ui'
+import { Button, Icon, Panel, Skeleton, SkeletonRegion } from '@/components/ui'
 import EmptyState from '@/components/common/EmptyState.jsx'
 import PageTitle from '@/components/common/PageTitle.jsx'
 import PillBadge from '@/components/common/PillBadge.jsx'
@@ -78,6 +78,26 @@ function LessonContent({ lesson, report }) {
   )
 }
 
+/** The lesson while it loads: its heading, the content panel and the previous / next steps, as placeholders. */
+function LessonSkeleton() {
+  return (
+    <SkeletonRegion>
+      <PageTitle eyebrow={<Skeleton width={220} />} title={<Skeleton width={320} height={28} />} description={<Skeleton width={160} />} />
+      <Panel padding={24} className={styles.panel}>
+        <div className={styles.text}>
+          {['100%', '100%', '92%', '100%', '96%', '64%'].map((width, line) => (
+            <Skeleton key={line} width={width} />
+          ))}
+        </div>
+      </Panel>
+      <div className={styles.steps}>
+        <Skeleton shape="pill" width={112} height={40} />
+        <Skeleton shape="pill" width={96} height={40} />
+      </div>
+    </SkeletonRegion>
+  )
+}
+
 /**
  * /…/learning/:courseId/lessons/:lessonId: one lesson, with the previous and next lessons (M-106: previews open
  * without buying). For enrolled learners, text and PDF lessons complete when shown (M-103) and videos report progress.
@@ -87,7 +107,7 @@ export default function LessonPage() {
   const format = useFormat()
   const { courseId, lessonId } = useParams()
   const base = useLearningPath()
-  const { data: lesson, error } = useGetLessonQuery({ courseId, lessonId })
+  const { data: lesson, error, isLoading } = useGetLessonQuery({ courseId, lessonId })
   const [recordProgress] = useRecordProgressMutation()
   // The last progress answer, kept per lesson so moving to the next lesson starts clean.
   const [answer, setAnswer] = useState(null)
@@ -127,6 +147,14 @@ export default function LessonPage() {
           description={t(locked ? 'lesson.lockedText' : 'lesson.missingText')}
           action={<Button as={Link} to={coursePath}>{t('lesson.toCourse')}</Button>}
         />
+      </>
+    )
+  }
+  if (isLoading) {
+    return (
+      <>
+        {back}
+        <LessonSkeleton />
       </>
     )
   }

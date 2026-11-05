@@ -1,7 +1,7 @@
 import { useCallback, useEffect, useRef, useState } from 'react'
 import { useTranslation } from 'react-i18next'
 import { useLocation } from 'react-router-dom'
-import { Button, Modal } from '@/components/ui'
+import { Button, Modal, Skeleton, SkeletonRegion } from '@/components/ui'
 import { useErrorText } from '@/lib/forms.js'
 import { useFormat } from '@/lib/preferences.js'
 import { useCreateCheckoutSessionMutation, useGetQuoteQuery } from '../api.js'
@@ -17,7 +17,7 @@ export default function CheckoutDialog({ item, from, description, onClose }) {
   const format = useFormat()
   const errorText = useErrorText()
   const { pathname, search } = useLocation()
-  const { data: quote, error: quoteError } = useGetQuoteQuery(item, { skip: !item })
+  const { data: quote, error: quoteError, isLoading } = useGetQuoteQuery(item, { skip: !item })
   const [createSession, { error: sessionError, reset }] = useCreateCheckoutSessionMutation()
   const [leaving, setLeaving] = useState(false)
   // Each time the dialog opens for an item it starts clean, even when the same item is reopened.
@@ -79,6 +79,19 @@ export default function CheckoutDialog({ item, from, description, onClose }) {
       }
     >
       <div className={styles.body}>
+        {isLoading && (
+          <SkeletonRegion className={styles.summary}>
+            <div>
+              <p className={styles.itemName}>
+                <Skeleton width={160} height={12} />
+              </p>
+              <p className={styles.caption}>
+                <Skeleton width={110} />
+              </p>
+            </div>
+            <Skeleton width={72} height={20} />
+          </SkeletonRegion>
+        )}
         {quote && (
           <div className={styles.summary} data-checkout-summary>
             <div>

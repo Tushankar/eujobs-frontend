@@ -1,7 +1,7 @@
 import { useState } from 'react'
 import { useTranslation } from 'react-i18next'
 import { ArrowRight, Award, BriefcaseBusiness, CircleCheck, CircleHelp, Earth, GraduationCap, Mail, ShieldCheck } from 'lucide-react'
-import { Button, Icon, Panel } from '@/components/ui'
+import { Button, Icon, Panel, Skeleton, SkeletonRegion } from '@/components/ui'
 import PageTitle from '@/components/common/PageTitle.jsx'
 import PillBadge from '@/components/common/PillBadge.jsx'
 import { useErrorText } from '@/lib/forms.js'
@@ -22,11 +22,12 @@ export default function VerificationPage() {
   // P11b-Q10: opening this item marks its notifications read.
   useMarkSeen('page', 'verification')
   const { t } = useTranslation()
-  const { data: state } = useGetVerificationQuery()
+  const { data: state, isLoading } = useGetVerificationQuery()
   // Each opening gets a new key, so the dialog starts empty.
   const [request, setRequest] = useState({ value: null, key: 0 })
   const open = (value) => setRequest((current) => ({ value, key: current.key + 1 }))
   const close = () => setRequest((current) => ({ ...current, value: null }))
+  if (isLoading) return <VerificationSkeleton />
   if (!state) return null
 
   const entries = {
@@ -226,5 +227,114 @@ function CertificateChecks({ certificates }) {
         </ul>
       )}
     </Panel>
+  )
+}
+
+/** A check row's shape while the checks load. */
+function CheckRowSkeleton({ width }) {
+  return (
+    <div className={styles.checkSkeleton}>
+      <Skeleton shape="block" width={18} height={18} />
+      <div className={styles.checkSkeletonText}>
+        <Skeleton width={width} height={12} />
+        <Skeleton width="70%" />
+      </div>
+      <Skeleton shape="pill" width={80} />
+    </div>
+  )
+}
+
+/** The page while the checks load: every heading and lead stays, the states and entries are placeholders. */
+function VerificationSkeleton() {
+  const { t } = useTranslation()
+  return (
+    <>
+      <PageTitle eyebrow={t('verification:eyebrow')} title={t('verification:title')} description={t('verification:description')} />
+      <div className={styles.layout}>
+        <SkeletonRegion className={styles.main}>
+          <Panel padding={24}>
+            <h2 className={styles.sectionTitle}>{t('verification:basic.title')}</h2>
+            <p className={styles.sectionLead}>{t('verification:basic.lead')}</p>
+            <div className={styles.contact}>
+              {[
+                { key: 'email', label: t('verification:basic.email'), icon: Mail },
+                { key: 'phone', label: t('verification:phone.label'), icon: ShieldCheck },
+              ].map(({ key, label, icon }) => (
+                <div key={key} className={cx(styles.contactRow, styles.emailRow)}>
+                  <span className={styles.tile}>
+                    <Icon as={icon} size={18} />
+                  </span>
+                  <div className={styles.contactBody}>
+                    <p className={styles.contactLabel}>{label}</p>
+                    <p className={styles.contactValue}>
+                      <Skeleton width={180} height={8} />
+                    </p>
+                  </div>
+                  <Skeleton shape="pill" width={72} />
+                </div>
+              ))}
+            </div>
+          </Panel>
+          <Panel padding={24}>
+            <h2 className={styles.sectionTitle}>{t('verification:checks.title')}</h2>
+            <p className={styles.sectionLead}>{t('verification:checks.lead')}</p>
+            <div className={styles.banner}>
+              <span className={styles.bannerIcon}>
+                <Icon as={CircleCheck} size={23} />
+              </span>
+              <div className={styles.bannerText}>
+                <p className={styles.bannerTitle}>{t('verification:checks.bannerTitle')}</p>
+                <p className={styles.bannerLead}>{t('verification:checks.bannerLead')}</p>
+              </div>
+              <Skeleton shape="pill" width={80} />
+            </div>
+            <div className={styles.checks}>
+              {[120, 150, 170].map((width) => (
+                <CheckRowSkeleton key={width} width={width} />
+              ))}
+            </div>
+          </Panel>
+          <Panel padding={24}>
+            <h2 className={styles.sectionTitle}>{t('verification:rightToWork.title')}</h2>
+            <p className={styles.sectionLead}>{t('verification:rightToWork.lead')}</p>
+            <div className={styles.checks}>
+              <CheckRowSkeleton width={160} />
+            </div>
+          </Panel>
+        </SkeletonRegion>
+
+        <aside className={`${styles.side} sticky-side`}>
+          <Panel padding={24}>
+            <h2 className={styles.sectionTitle}>{t('verification:summary.title')}</h2>
+            <dl className={styles.statusList}>
+              {['email', 'phone'].map((key) => (
+                <div key={key} className={styles.statusRow}>
+                  <dt>{t(`verification:summary.${key}`)}</dt>
+                  <dd>
+                    <Skeleton shape="pill" width={72} />
+                  </dd>
+                </div>
+              ))}
+            </dl>
+            <div className={styles.credentials}>
+              <h3 className={styles.credentialsTitle}>{t('verification:summary.checks')}</h3>
+              <div className={styles.credentialList}>
+                {[90, 110, 100].map((width) => (
+                  <div key={width} className={styles.credentialRow}>
+                    <Skeleton width={width} />
+                    <Skeleton width={56} />
+                  </div>
+                ))}
+              </div>
+            </div>
+          </Panel>
+          <section className={styles.badgeNote}>
+            <Icon as={CircleHelp} size={20} className={styles.badgeNoteIcon} />
+            <h2 className={styles.badgeNoteTitle}>{t('verification:badge.title')}</h2>
+            <p className={styles.badgeNoteText}>{t('verification:badge.text')}</p>
+          </section>
+        </aside>
+      </div>
+    </>
   )
 }

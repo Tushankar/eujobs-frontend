@@ -123,6 +123,14 @@
   color: var(--muted-foreground);
 }
 
+.cardSkeleton {
+  display: flex;
+  flex: 1;
+  flex-direction: column;
+  gap: 18px;
+  padding: 9px 0 29px;
+}
+
 .cardAction {
   align-self: flex-start;
 }

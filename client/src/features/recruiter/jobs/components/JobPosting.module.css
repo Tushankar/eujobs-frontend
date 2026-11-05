@@ -40,3 +40,15 @@
   line-height: 15px;
   color: var(--primary-hover);
 }
+
+/* Loading: placeholder lines at the posting's 28px line rhythm. */
+.skeletonLines {
+  display: flex;
+  flex-direction: column;
+  gap: 18px;
+  padding-top: 29px;
+}
+
+.skills .skeletonSkill {
+  border-radius: var(--radius-md);
+}

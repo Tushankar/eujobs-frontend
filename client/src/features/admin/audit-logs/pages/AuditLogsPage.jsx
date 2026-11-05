@@ -5,14 +5,16 @@ import { can } from '@/app/permissions.js'
 import EmptyState from '@/components/common/EmptyState.jsx'
 import FilterChips from '@/components/common/FilterChips.jsx'
 import PageTitle from '@/components/common/PageTitle.jsx'
+import { tableState } from '@/components/common/tableState.js'
 import Pagination from '@/components/common/Pagination.jsx'
 import { Button, Icon, SelectField, TextField } from '@/components/ui'
 import { downloadFromApi } from '@/lib/download.js'
 import { useErrorText } from '@/lib/forms.js'
 import { useUrlFilters } from '@/lib/useUrlFilters.js'
 import { usePreferences } from '@/lib/preferences.js'
+import { cx } from '@/utils/cx.js'
 import { useGetAuditEventsQuery } from '../api.js'
-import AuditEventRow from '../components/AuditEventRow.jsx'
+import AuditEventRow, { AuditEventsSkeleton } from '../components/AuditEventRow.jsx'
 import styles from './AuditLogsPage.module.css'
 
 const CATEGORIES = ['workspace', 'policy', 'moderation', 'reports', 'access', 'learning', 'payments', 'jobs']
@@ -33,7 +35,9 @@ export default function AuditLogsPage() {
   const [exportError, setExportError] = useState('')
   const filters = { q: params.get('q') ?? '', category: params.get('category') ?? '', actorType: params.get('actorType') ?? '' }
   const query = { page: Number(params.get('page')) || 1, ...Object.fromEntries(Object.entries(filters).filter(([, value]) => value)) }
-  const { data, isSuccess } = useGetAuditEventsQuery(query, { refetchOnMountOrArgChange: true })
+  const result = useGetAuditEventsQuery(query, { refetchOnMountOrArgChange: true })
+  const { data, isSuccess } = result
+  const list = tableState(result, data?.items ?? [])
 
   function changeFilter(name, value) {
     setFilter(name, value)
@@ -94,6 +98,7 @@ export default function AuditLogsPage() {
           options={[{ value: '', label: t('allActors') }, ...ACTOR_TYPES.map((type) => ({ value: type, label: t(`enums:actorType.${type}`) }))]}
         />
         <FilterChips
+          className={styles.categories}
           label={t('categories')}
           options={[{ id: 'all', label: t('allCategories') }, ...CATEGORIES.map((id) => ({ id, label: t(`enums:auditCategory.${id}`) }))]}
           value={filters.category || 'all'}
@@ -102,8 +107,10 @@ export default function AuditLogsPage() {
       </div>
 
       <section className={styles.card} aria-label={t('listLabel')}>
-        {data?.items.length > 0 ? (
-          <ul className={styles.list}>
+        {list.loading ? (
+          <AuditEventsSkeleton />
+        ) : data?.items.length > 0 ? (
+          <ul className={cx(styles.list, list.busy && styles.busy)} aria-busy={list.busy || undefined}>
             {data.items.map((event) => (
               <AuditEventRow key={event.id} event={event} open={openId === event.id} onToggle={() => setOpenId((current) => (current === event.id ? null : event.id))} />
             ))}

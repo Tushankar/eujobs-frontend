@@ -2,7 +2,7 @@ import { useState } from 'react'
 import { useTranslation } from 'react-i18next'
 import { Link } from 'react-router-dom'
 import { ArrowRight, ArrowUpRight, Bookmark, BookmarkCheck, Check, FileText } from 'lucide-react'
-import { Button, Icon, Panel } from '@/components/ui'
+import { Button, Icon, Panel, Skeleton, SkeletonRegion } from '@/components/ui'
 import PillBadge from '@/components/common/PillBadge.jsx'
 import { useGetInsightPageQuery } from '@/features/ai/api.js'
 import { useSaveToggle } from '@/features/candidate/jobs/api.js'
@@ -10,6 +10,7 @@ import MatchBadge from '@/features/candidate/jobs/components/MatchBadge.jsx'
 import { useGetProfileQuery } from '@/features/candidate/profile/api.js'
 import { useJobText } from '@/lib/jobText.js'
 import { useFormat } from '@/lib/preferences.js'
+import { cx } from '@/utils/cx.js'
 import AiPageShell from '../components/AiPageShell.jsx'
 import Narrative from '../components/Narrative.jsx'
 import RolePicker from '../components/RolePicker.jsx'
@@ -36,8 +37,10 @@ export default function JobMatchPage() {
   const { t } = useTranslation('aiInsights')
   const format = useFormat()
   const jobText = useJobText()
-  const { roles, jobId, choose } = useChosenJob()
-  const { data, refetch } = useGetInsightPageQuery({ page: 'job-match', jobId }, { skip: !jobId })
+  const { roles, jobId, choose, loading: rolesLoading } = useChosenJob()
+  const page = useGetInsightPageQuery({ page: 'job-match', jobId }, { skip: !jobId })
+  const { data, refetch } = page
+  const busy = page.isFetching && !page.currentData
   const { data: profile } = useGetProfileQuery()
   const toggleSave = useSaveToggle()
   const [sourceOpen, setSourceOpen] = useState(false)
@@ -97,10 +100,11 @@ export default function JobMatchPage() {
 
   return (
     <AiPageShell eyebrow={t('jobMatch.eyebrow')} title={t('jobMatch.title')} description={t('jobMatch.description')}>
-      <RolePicker roles={roles} jobId={jobId} onChange={choose} />
+      <RolePicker roles={roles} jobId={jobId} onChange={choose} loading={rolesLoading} />
 
+      {(rolesLoading || page.isLoading) && <JobMatchSkeleton />}
       {evidence && (
-        <div className={styles.layout}>
+        <div className={cx(styles.layout, busy && styles.busy)} aria-busy={busy || undefined}>
           <div className={styles.main}>
             <Panel padding={24} aria-labelledby="fit-title">
               <div className={styles.fitHead}>
@@ -207,5 +211,83 @@ export default function JobMatchPage() {
 
       <SourceEvidenceModal open={sourceOpen} onClose={() => setSourceOpen(false)} job={job} evidence={evidence} skills={profile?.skills ?? []} />
     </AiPageShell>
+  )
+}
+
+/** The side-by-side layout while the role's evidence loads: the real headings and labels, placeholders for the values. */
+function JobMatchSkeleton() {
+  const { t } = useTranslation('aiInsights')
+  return (
+    <div className={styles.layout}>
+      <SkeletonRegion className={styles.main}>
+        <Panel padding={24}>
+          <div className={styles.fitHead}>
+            <SectionHeading className={styles.fitTitle} title={t('jobMatch.fit')} description={t('jobMatch.fitLead')} />
+            <Skeleton shape="pill" width={110} />
+          </div>
+          <ul className={styles.tiles}>
+            {['skills', 'experience', 'work'].map((key) => (
+              <li key={key} className={styles.tile}>
+                <p className={styles.tileLabel}>{t(`jobMatch.${key}`)}</p>
+                <p className={styles.tileValue}>
+                  <Skeleton width={96} height={12} />
+                </p>
+                <Skeleton shape="pill" />
+              </li>
+            ))}
+          </ul>
+        </Panel>
+
+        <Panel padding={24}>
+          <h2 className={styles.title}>{t('jobMatch.evidence')}</h2>
+          <ul className={styles.rows}>
+            {[80, 64, 96, 72].map((width) => (
+              <li key={width} className={styles.row}>
+                <div className={styles.rowLabel}>
+                  <Skeleton width={width} />
+                  <Skeleton shape="pill" />
+                </div>
+                <dl className={styles.rowValue}>
+                  <dt>{t('jobMatch.yours')}</dt>
+                  <dd>
+                    <Skeleton width={width + 20} />
+                  </dd>
+                </dl>
+                <dl className={styles.rowValue}>
+                  <dt>{t('jobMatch.requirement')}</dt>
+                  <dd>
+                    <Skeleton width={width + 40} />
+                  </dd>
+                </dl>
+              </li>
+            ))}
+          </ul>
+        </Panel>
+
+        <Panel padding={24}>
+          <SectionHeading title={t('jobMatch.gaps')} description={t('jobMatch.gapsLead')} />
+          <div className={styles.gapSkeleton}>
+            <Skeleton />
+            <Skeleton width="92%" />
+            <Skeleton width="64%" />
+          </div>
+        </Panel>
+      </SkeletonRegion>
+
+      <aside className={`${styles.side} sticky-side`}>
+        <Panel padding={24}>
+          <h2 className={styles.title}>{t('jobMatch.nextTitle')}</h2>
+          <p className={styles.sideText}>{t('jobMatch.nextText')}</p>
+          <div className={styles.sideActions}>
+            <Skeleton shape="pill" width="100%" height={40} />
+            <Skeleton shape="pill" width="100%" height={40} />
+          </div>
+        </Panel>
+        <Panel className={styles.context} padding={24}>
+          <h2 className={styles.title}>{t('jobMatch.contextTitle')}</h2>
+          <p className={styles.contextText}>{t('jobMatch.contextText')}</p>
+        </Panel>
+      </aside>
+    </div>
   )
 }

@@ -2,7 +2,7 @@ import { useState } from 'react'
 import { useTranslation } from 'react-i18next'
 import { ChevronDown, TrendingUp } from 'lucide-react'
 import { cx } from '@/utils/cx.js'
-import { Icon } from '@/components/ui'
+import { Icon, Skeleton, SkeletonRegion } from '@/components/ui'
 import { useGetMomentumQuery } from '@/features/recruiter/applications/api.js'
 import { browserTimeZone } from '@/lib/forms.js'
 import { useFormat } from '@/lib/preferences.js'
@@ -11,6 +11,16 @@ import styles from './HiringMomentumCard.module.css'
 
 const PERIODS = ['this_week', 'last_week']
 const DAYS = 7
+// Placeholder bar heights (% of the plot) for the two series while the week loads.
+const SKELETON_BARS = [
+  [38, 18],
+  [62, 30],
+  [48, 24],
+  [74, 36],
+  [56, 22],
+  [28, 12],
+  [42, 20],
+]
 
 function ViewToggle({ view, onChange }) {
   const { t } = useTranslation()
@@ -73,7 +83,9 @@ export default function HiringMomentumCard() {
   const format = useFormat()
   const [view, setView] = useState('bars')
   const [period, setPeriod] = useState(PERIODS[0])
-  const { data } = useGetMomentumQuery({ tz: browserTimeZone(), period })
+  const { data, isLoading, isFetching, currentData } = useGetMomentumQuery({ tz: browserTimeZone(), period })
+  // Another period is loading: the previous week stays, dimmed.
+  const busy = isFetching && !currentData
   const days = data?.days ?? []
   const applications = days.map((day) => day.applications)
   const shortlisted = days.map((day) => day.shortlisted)
@@ -113,28 +125,52 @@ export default function HiringMomentumCard() {
         </li>
       </ul>
 
-      <div className={styles.chart} role="img" aria-label={summary} data-momentum={JSON.stringify(days)}>
-        <div className={cx(styles.plot, view === 'line' && styles.plotLine)}>
-          {days.map((day, index) => (
-            <div key={day.date} className={styles.column}>
-              {view === 'bars' && (
-                <>
-                  <span className={cx(styles.bar, styles.applicationBar)} style={{ height: percent(applications[index]) }} />
-                  <span className={cx(styles.bar, styles.shortlistBar)} style={{ height: percent(shortlisted[index]) }} />
-                </>
-              )}
+      {isLoading ? (
+        <SkeletonRegion>
+          <div className={styles.chart}>
+            <div className={styles.plot}>
+              {SKELETON_BARS.map(([applicationHeight, shortlistHeight], index) => (
+                <div key={index} className={styles.column}>
+                  <Skeleton height={`${applicationHeight}%`} className={styles.skeletonBar} />
+                  <Skeleton height={`${shortlistHeight}%`} className={styles.skeletonBar} />
+                </div>
+              ))}
             </div>
-          ))}
-          {view === 'line' && days.length > 0 && <LineChart applications={applications} shortlisted={shortlisted} scale={scale} />}
+          </div>
+          <div className={styles.labels}>
+            {SKELETON_BARS.map((_, index) => (
+              <span key={index} className={styles.label}>
+                <Skeleton width={20} height={8} />
+              </span>
+            ))}
+          </div>
+        </SkeletonRegion>
+      ) : (
+        <>
+        <div className={cx(styles.chart, busy && styles.busy)} role="img" aria-label={summary} aria-busy={busy || undefined} data-momentum={JSON.stringify(days)}>
+          <div className={cx(styles.plot, view === 'line' && styles.plotLine)}>
+            {days.map((day, index) => (
+              <div key={day.date} className={styles.column}>
+                {view === 'bars' && (
+                  <>
+                    <span className={cx(styles.bar, styles.applicationBar)} style={{ height: percent(applications[index]) }} />
+                    <span className={cx(styles.bar, styles.shortlistBar)} style={{ height: percent(shortlisted[index]) }} />
+                  </>
+                )}
+              </div>
+            ))}
+            {view === 'line' && days.length > 0 && <LineChart applications={applications} shortlisted={shortlisted} scale={scale} />}
+          </div>
         </div>
-      </div>
-      <div className={cx(styles.labels, view === 'line' && styles.labelsLine)} aria-hidden="true">
-        {days.map((day) => (
-          <span key={day.date} className={styles.label}>
-            {format.date(day.date, { weekday: 'short' })}
-          </span>
-        ))}
-      </div>
+        <div className={cx(styles.labels, view === 'line' && styles.labelsLine)} aria-hidden="true">
+          {days.map((day) => (
+            <span key={day.date} className={styles.label}>
+              {format.date(day.date, { weekday: 'short' })}
+            </span>
+          ))}
+        </div>
+        </>
+      )}
     </section>
   )
 }

@@ -151,6 +151,7 @@
     "history": "Historial de etapas"
   },
   "funnel": {
+    "title": "Vista de embudo",
     "label": "Embudo de selección por etapa",
     "hint": "Haz clic en una etapa para ver quién está ahí ahora. Arrastra a un candidato a una etapa, o usa su menú de etapa, para moverlo.",
     "applicants_one": "candidato",

@@ -32,6 +32,27 @@
   grid-column: span 5;
 }
 
+.skeletonField {
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+}
+
+/* The select's label, as the form field renders it. */
+.skeletonLabel {
+  font-size: 13px;
+  font-weight: 600;
+  line-height: 18px;
+  color: var(--foreground);
+}
+
+.skeletonText {
+  display: flex;
+  flex: 1;
+  flex-direction: column;
+  gap: 10px;
+}
+
 .emptyActions {
   display: flex;
   flex-wrap: wrap;

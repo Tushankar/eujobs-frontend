@@ -1,7 +1,7 @@
 import { useTranslation } from 'react-i18next'
 import { Link } from 'react-router-dom'
 import { ArrowRight } from 'lucide-react'
-import { Icon } from '@/components/ui'
+import { Icon, Skeleton } from '@/components/ui'
 import PillBadge from '@/components/common/PillBadge.jsx'
 import { useCourseText } from '@/features/learning/useCourseText.js'
 import styles from './SuggestionCard.module.css'
@@ -35,5 +35,28 @@ export default function SuggestionCard({ course, rank }) {
         </Link>
       </div>
     </article>
+  )
+}
+
+/** A suggestion card's shape while the suggestions load. */
+export function SuggestionCardSkeleton() {
+  return (
+    <div className={styles.card} aria-hidden="true">
+      <Skeleton shape="block" height={128} className={styles.skeletonMedia} />
+      <div className={styles.body}>
+        <p className={styles.eyebrow}>
+          <Skeleton width="45%" />
+        </p>
+        <p className={styles.title}>
+          <Skeleton width="85%" height={12} />
+        </p>
+        <p className={styles.reason}>
+          <Skeleton width="70%" />
+        </p>
+        <p className={styles.link}>
+          <Skeleton width={64} />
+        </p>
+      </div>
+    </div>
   )
 }

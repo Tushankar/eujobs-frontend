@@ -1,14 +1,14 @@
 import { useEffect, useState } from 'react'
 import { useTranslation } from 'react-i18next'
 import { BellOff, CheckCheck } from 'lucide-react'
-import { Button, Icon, Panel } from '@/components/ui'
+import { Button, Icon, Panel, SkeletonRegion } from '@/components/ui'
 import EmptyState from '@/components/common/EmptyState.jsx'
 import FilterChips from '@/components/common/FilterChips.jsx'
 import PageTitle from '@/components/common/PageTitle.jsx'
 import Pagination from '@/components/common/Pagination.jsx'
 import { useFormat } from '@/lib/preferences.js'
 import { useGetNotificationsQuery, useNotificationCounts, useReadAllNotificationsMutation } from '../api.js'
-import NotificationItem from '../components/NotificationItem.jsx'
+import NotificationItem, { NotificationItemSkeleton } from '../components/NotificationItem.jsx'
 import { useOpenNotification } from '../useOpenNotification.js'
 import styles from './NotificationsPage.module.css'
 
@@ -22,7 +22,7 @@ export default function NotificationsPage() {
   const [filter, setFilter] = useState('all')
   const [page, setPage] = useState(1)
   const { unread } = useNotificationCounts()
-  const { data, refetch } = useGetNotificationsQuery({ filter, page })
+  const { data, refetch, isLoading: listLoading } = useGetNotificationsQuery({ filter, page })
   const [readAll, { isLoading }] = useReadAllNotificationsMutation()
   const { openItem, isUnavailable } = useOpenNotification()
 
@@ -54,12 +54,20 @@ export default function NotificationsPage() {
         label={t('notifications:page.filters')}
         options={[
           { id: 'all', label: t('notifications:page.all') },
-          { id: 'unread', label: data ? `${t('notifications:page.unread')} (${format.number(data.unread)})` : t('notifications:page.unread') },
+          { id: 'unread', label: t('notifications:page.unread'), count: data ? format.number(data.unread) : undefined },
         ]}
         value={filter}
         onChange={changeFilter}
       />
-      {!data ? null : items.length === 0 ? (
+      {listLoading ? (
+        <Panel padding={0} className={styles.card}>
+          <SkeletonRegion>
+            {[0, 1, 2, 3, 4, 5].map((row) => (
+              <NotificationItemSkeleton key={row} />
+            ))}
+          </SkeletonRegion>
+        </Panel>
+      ) : !data ? null : items.length === 0 ? (
         <EmptyState
           size="lg"
           icon={BellOff}

@@ -75,3 +75,9 @@
 .link:hover {
   text-decoration: underline;
 }
+
+/* Loading: a placeholder bar in place of each stage's track. */
+.skeletonTrack {
+  flex: 1 1 0;
+  min-width: 0;
+}

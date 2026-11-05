@@ -212,3 +212,42 @@
   justify-content: space-between;
   gap: 4px 12px;
 }
+
+/* Another job or candidate: the stale cards dim until the new ones arrive. */
+.results {
+  transition: opacity var(--transition);
+}
+
+.busy {
+  opacity: 0.5;
+  pointer-events: none;
+}
+
+/* Loading */
+.skeletonLabel {
+  padding-bottom: 8px;
+  font-size: 13px;
+  font-weight: 600;
+  line-height: 18px;
+  color: var(--foreground);
+}
+
+.jobPicker .skeletonField {
+  border-radius: var(--radius-lg);
+}
+
+.skeletonLines {
+  display: flex;
+  flex-direction: column;
+  gap: 14px;
+  padding-top: 16px;
+}
+
+.skeletonRow {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  justify-content: space-between;
+  gap: 4px 12px;
+  min-height: 19px;
+}

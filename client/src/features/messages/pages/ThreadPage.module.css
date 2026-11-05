@@ -102,3 +102,32 @@
   font-size: 11px;
   color: var(--muted-foreground);
 }
+
+/* The loading thread (ThreadSkeleton). */
+.skeletonPerson {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  min-width: 0;
+}
+
+.skeletonLines {
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+  min-width: 0;
+}
+
+.skeletonLogo {
+  border-radius: var(--radius-lg);
+}
+
+.skeletonComposer {
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+}
+
+.skeletonSend {
+  align-self: flex-end;
+}

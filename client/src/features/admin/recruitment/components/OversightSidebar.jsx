@@ -3,7 +3,7 @@ import { Link } from 'react-router-dom'
 import { ArrowRight } from 'lucide-react'
 import PillBadge from '@/components/common/PillBadge.jsx'
 import SectionTitle from '@/components/common/SectionTitle.jsx'
-import { CompanyLogo, Icon, Panel } from '@/components/ui'
+import { CompanyLogo, Icon, Panel, Skeleton, SkeletonRegion } from '@/components/ui'
 import { WORKSPACES, workspacePath } from '@/app/workspaces.js'
 import { useFormat } from '@/lib/preferences.js'
 import styles from './OversightSidebar.module.css'
@@ -25,8 +25,41 @@ function ListRow({ title, meta, company, divided, children }) {
   )
 }
 
+/* Title and meta widths (px) of the placeholder rows (the server sends up to 5). */
+const SKELETON_ROWS = [
+  [150, 190],
+  [120, 160],
+  [170, 200],
+  [130, 150],
+  [110, 180],
+]
+
+/** A card's rows while they load: the logo, title and meta, and the status badge when `badge`. */
+function RowsSkeleton({ divided, badge }) {
+  return (
+    <SkeletonRegion>
+      <ul className={styles.list}>
+        {SKELETON_ROWS.map(([title, meta], index) => (
+          <li key={index} className={divided ? styles.dividedRow : styles.row}>
+            <Skeleton shape="block" width={32} height={32} />
+            <div className={styles.rowText}>
+              <p className={styles.rowTitle}>
+                <Skeleton width={title} height={12} />
+              </p>
+              <p className={styles.rowMeta}>
+                <Skeleton width={meta} />
+              </p>
+            </div>
+            {badge && <Skeleton shape="pill" />}
+          </li>
+        ))}
+      </ul>
+    </SkeletonRegion>
+  )
+}
+
 /** Right-hand column: the newest published roles, the newest applications and the "oversight, not hiring control" note. */
-export default function OversightSidebar({ roles, coverage }) {
+export default function OversightSidebar({ roles, coverage, loading }) {
   const { t } = useTranslation(['adminRecruitment', 'enums'])
   const format = useFormat()
   const where = (role) => [t(`enums:workPreference.${role.workPreference}`), role.city ? `${role.city}, ${format.country(role.country)}` : format.country(role.country)].join(' · ')
@@ -38,7 +71,9 @@ export default function OversightSidebar({ roles, coverage }) {
             {t('sidebar.manage')}
           </Link>
         </SectionTitle>
-        {roles.length ? (
+        {loading ? (
+          <RowsSkeleton divided />
+        ) : roles.length ? (
           <ul className={styles.list}>
             {roles.map((role) => (
               <ListRow
@@ -56,7 +91,9 @@ export default function OversightSidebar({ roles, coverage }) {
       </Panel>
       <Panel padding={24} aria-labelledby="application-coverage">
         <SectionTitle id="application-coverage" title={t('sidebar.coverage')} description={t('sidebar.coverageText')} />
-        {coverage.length ? (
+        {loading ? (
+          <RowsSkeleton badge />
+        ) : coverage.length ? (
           <ul className={styles.list}>
             {coverage.map((item) => (
               <ListRow

@@ -1,7 +1,7 @@
 import { useId } from 'react'
 import { useTranslation } from 'react-i18next'
 import { ChevronDown, Clock } from 'lucide-react'
-import { Icon } from '@/components/ui'
+import { Icon, Skeleton, SkeletonRegion } from '@/components/ui'
 import PillBadge from '@/components/common/PillBadge.jsx'
 import { useFormat } from '@/lib/preferences.js'
 import { cx } from '@/utils/cx.js'
@@ -9,6 +9,32 @@ import { useAuditText } from '../useAuditText.js'
 import styles from './AuditEventRow.module.css'
 
 const ACTOR_TONES = { admin: 'info', user: 'neutral', system: 'accent' }
+
+/* Sentence widths (px) of the placeholder events; the actor badge follows the sentence, as in a loaded row. */
+const SKELETON_LINES = [380, 300, 420, 340, 400, 280, 360, 440, 320, 390]
+
+/** The event list's shape while the first page loads: the clock, the sentence and the actor badge per row. */
+export function AuditEventsSkeleton() {
+  return (
+    <SkeletonRegion>
+      <ul>
+        {SKELETON_LINES.map((width, index) => (
+          <li key={index} className={styles.item}>
+            <div className={styles.row}>
+              <span className={styles.clock}>
+                <Skeleton shape="circle" width={16} height={16} />
+              </span>
+              <span className={styles.skeletonSummary}>
+                <Skeleton width={width} height={12} />
+              </span>
+              <Skeleton shape="pill" width={56} />
+            </div>
+          </li>
+        ))}
+      </ul>
+    </SkeletonRegion>
+  )
+}
 
 /** One audit event: a disclosure button (sentence · date, actor type) that expands to its category, actor, time and subject. */
 export default function AuditEventRow({ event, open, onToggle }) {

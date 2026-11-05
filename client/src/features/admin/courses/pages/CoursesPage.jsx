@@ -74,7 +74,6 @@ export default function CoursesPage() {
 
       <ViewToggle
         className={styles.tabs}
-        variant="wide"
         label={t('tabs.label')}
         items={tabs}
         value={audience}

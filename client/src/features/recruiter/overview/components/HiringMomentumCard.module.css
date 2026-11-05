@@ -227,3 +227,24 @@
     inset-inline: 4px;
   }
 }
+
+/* Loading: placeholder bars with the bars' square bottoms; another period dims the shown week. */
+.plot .skeletonBar {
+  width: 20px;
+  border-radius: 4px 4px 0 0;
+}
+
+.chart {
+  transition: opacity var(--transition);
+}
+
+.busy {
+  opacity: 0.5;
+  pointer-events: none;
+}
+
+@media (max-width: 639px) {
+  .plot .skeletonBar {
+    width: 10px;
+  }
+}

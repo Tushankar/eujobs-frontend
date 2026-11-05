@@ -55,7 +55,15 @@ export default function ApplicationsPage() {
   useMarkSeen('application', activity?.id)
   const activeJobs = new Set(applications.filter((application) => application.status !== 'withdrawn').map((application) => application.job.id))
   const canReapply = (application) => application.status === 'withdrawn' && application.job.accepting && !activeJobs.has(application.job.id)
-  const filters = [{ id: 'all', label: t('applications:list.all') }, ...(config?.enums.applicationStatus ?? []).map((status) => ({ id: status, label: t(`enums:applicationStatus.${status}`) }))]
+  const countOf = (status) => (data ? applications.filter((application) => status === 'all' || application.status === status).length : undefined)
+  // Seven statuses do not fit one line, so a status tab shows only once it has applications (or is the one selected).
+  const filters = ['all', ...(config?.enums.applicationStatus ?? [])]
+    .filter((status) => status === 'all' || status === filter || countOf(status) > 0)
+    .map((status) => ({
+      id: status,
+      label: status === 'all' ? t('applications:list.all') : t(`enums:applicationStatus.${status}`),
+      count: countOf(status),
+    }))
 
   const columns = [
     {

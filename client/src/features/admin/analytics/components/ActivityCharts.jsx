@@ -1,4 +1,5 @@
 import { useTranslation } from 'react-i18next'
+import { Skeleton, SkeletonRegion } from '@/components/ui'
 import { niceCeiling } from '@/features/admin/overview/chartScale.js'
 import styles from './ActivityCharts.module.css'
 
@@ -67,6 +68,40 @@ export function BarChart({ labels, registrations, applications }) {
         )
       })}
     </svg>
+  )
+}
+
+/* Bar heights (% of the plot) of the placeholder week: registrations, applications. */
+const SKELETON_BARS = [
+  [46, 30],
+  [62, 40],
+  [38, 24],
+  [74, 52],
+  [54, 36],
+  [30, 18],
+  [44, 28],
+]
+
+/** The bar chart's shape (same proportions as its SVG) while the counts load. */
+export function ChartSkeleton() {
+  return (
+    <SkeletonRegion className={styles.skeleton}>
+      <div className={styles.skeletonPlot}>
+        {SKELETON_BARS.map(([registrations, applications], index) => (
+          <div key={index} className={styles.skeletonColumn}>
+            <Skeleton shape="block" width={20} height={`${registrations}%`} className={styles.skeletonBar} />
+            <Skeleton shape="block" width={20} height={`${applications}%`} className={styles.skeletonBar} />
+          </div>
+        ))}
+      </div>
+      <div className={styles.skeletonLabels}>
+        {SKELETON_BARS.map((_, index) => (
+          <span key={index}>
+            <Skeleton width={24} height={8} />
+          </span>
+        ))}
+      </div>
+    </SkeletonRegion>
   )
 }
 

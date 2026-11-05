@@ -1,7 +1,7 @@
 import { useTranslation } from 'react-i18next'
 import { Link, useParams } from 'react-router-dom'
 import { ArrowLeft, BookOpen, Check, ShieldCheck } from 'lucide-react'
-import { Button, Icon } from '@/components/ui'
+import { Button, Icon, Skeleton, SkeletonRegion } from '@/components/ui'
 import EmptyState from '@/components/common/EmptyState.jsx'
 import PageTitle from '@/components/common/PageTitle.jsx'
 import PillBadge from '@/components/common/PillBadge.jsx'
@@ -11,11 +11,72 @@ import { useGetCourseQuery } from '@/features/learning/api.js'
 import CourseAction from '@/features/learning/components/CourseAction.jsx'
 import QuizCard from '@/features/learning/components/QuizCard.jsx'
 import { useCourseText } from '@/features/learning/useCourseText.js'
-import LessonRow from '../components/LessonRow.jsx'
+import LessonRow, { LessonRowSkeleton } from '../components/LessonRow.jsx'
 import styles from './CourseDetailsPage.module.css'
 import { useMarkSeen } from '@/features/notifications/api.js'
 
 const LIBRARY_PATH = '/recruiter/learning'
+
+/** The course while it loads: real section titles and labels, placeholders for the course's own content. */
+function CourseSkeleton() {
+  const { t } = useTranslation('learning')
+  return (
+    <>
+      <PageTitle eyebrow={<Skeleton width={140} />} title={<Skeleton width={360} height={28} />} description={<Skeleton width={420} />} actions={<Skeleton shape="pill" width={64} />} />
+      <SkeletonRegion className={styles.layout}>
+        <div className={styles.main}>
+          <Skeleton shape="block" height={320} className={styles.skeletonHero} />
+          <section className={styles.section}>
+            <SectionHeading title={t('details.outcomesTitleRecruiter')} description={t('details.outcomesLeadRecruiter')} />
+            <div className={styles.outcomes}>
+              {[0, 1, 2].map((index) => (
+                <div key={index} className={styles.outcome}>
+                  <span className={styles.number}>{String(index + 1).padStart(2, '0')}</span>
+                  <p>
+                    <Skeleton />
+                    <br />
+                    <Skeleton width="70%" />
+                  </p>
+                </div>
+              ))}
+            </div>
+          </section>
+          <section className={styles.section}>
+            <SectionHeading title={t('details.curriculumTitle')} description={<Skeleton width={160} />} />
+            <div className={styles.lessons}>
+              {[0, 1, 2, 3].map((index) => (
+                <LessonRowSkeleton key={index} />
+              ))}
+            </div>
+          </section>
+        </div>
+        <div className={styles.aside}>
+          <section className={styles.price}>
+            <p className={styles.priceLabel}>{t('price.label')}</p>
+            <p className={styles.priceValue}>
+              <Skeleton width={96} height={26} />
+            </p>
+            <p className={styles.access}>
+              <Skeleton width={140} />
+            </p>
+            <div className={styles.included}>
+              <Skeleton width="70%" />
+              <Skeleton width="60%" />
+              <Skeleton width="75%" />
+              <Skeleton width="65%" />
+            </div>
+            <Skeleton shape="pill" width="100%" height={40} />
+          </section>
+          <section className={styles.accountability}>
+            <Icon as={ShieldCheck} size={21} />
+            <h2>{t('details.accountabilityTitle')}</h2>
+            <p>{t('details.accountabilityText')}</p>
+          </section>
+        </div>
+      </SkeletonRegion>
+    </>
+  )
+}
 
 /** Recruiter learning, course view: hero, outcomes, curriculum states, details and the price or enrolment card. */
 export default function CourseDetailsPage() {
@@ -25,7 +86,7 @@ export default function CourseDetailsPage() {
   const { courseId } = useParams()
   // P11b-Q10: opening this item marks its notifications read.
   useMarkSeen('course', courseId)
-  const { data: course, isError } = useGetCourseQuery(courseId)
+  const { data: course, isError, isLoading } = useGetCourseQuery(courseId)
 
   const backLink = (
     <Link to={LIBRARY_PATH} className={styles.back}>
@@ -48,6 +109,14 @@ export default function CourseDetailsPage() {
             </Button>
           }
         />
+      </div>
+    )
+  }
+  if (isLoading) {
+    return (
+      <div>
+        {backLink}
+        <CourseSkeleton />
       </div>
     )
   }

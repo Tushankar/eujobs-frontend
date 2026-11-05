@@ -81,6 +81,29 @@
   color: var(--muted-foreground);
 }
 
+/* The placeholders follow the region's screen-reader text, so the first one is not :first-child. */
+.reasons > div.reason:first-of-type {
+  padding-top: 0;
+}
+
+.reasonSkeleton {
+  display: flex;
+  flex: 1;
+  flex-direction: column;
+  gap: 14px;
+  padding-top: 5px;
+}
+
+.layout {
+  transition: opacity var(--transition);
+}
+
+/* Another role: the previous role's evidence stays dimmed until the new one arrives. */
+.busy {
+  opacity: 0.5;
+  pointer-events: none;
+}
+
 .tagRow {
   padding-top: 3px;
 }

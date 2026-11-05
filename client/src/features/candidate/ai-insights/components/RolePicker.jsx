@@ -1,16 +1,34 @@
 import { useTranslation } from 'react-i18next'
 import { Link } from 'react-router-dom'
 import { BriefcaseBusiness, Search, SquarePen } from 'lucide-react'
-import { Button, CompanyLogo, Icon, Panel, SelectField } from '@/components/ui'
+import { Button, CompanyLogo, Icon, Panel, SelectField, Skeleton, SkeletonRegion } from '@/components/ui'
 import EmptyState from '@/components/common/EmptyState.jsx'
 import { useJobText } from '@/lib/jobText.js'
+import { cx } from '@/utils/cx.js'
 import styles from './RolePicker.module.css'
 
 /** M-063: the chosen role on the left, "Compare with a role" (top 10 + saved + applied) on the right. */
-export default function RolePicker({ roles, jobId, onChange }) {
+export default function RolePicker({ roles, jobId, onChange, loading }) {
   const { t } = useTranslation('aiInsights')
   const jobText = useJobText()
   const job = roles.find((role) => role.id === jobId)
+  if (loading) {
+    return (
+      <Panel className={styles.picker} padding={20}>
+        <SkeletonRegion className={styles.summary}>
+          <Skeleton shape="block" width={44} height={44} />
+          <div className={styles.skeletonText}>
+            <Skeleton width="60%" height={14} />
+            <Skeleton width="80%" />
+          </div>
+        </SkeletonRegion>
+        <div className={cx(styles.field, styles.skeletonField)}>
+          <span className={styles.skeletonLabel}>{t('picker.label')}</span>
+          <Skeleton shape="block" height={44} />
+        </div>
+      </Panel>
+    )
+  }
   if (!roles.length) {
     return (
       <EmptyState

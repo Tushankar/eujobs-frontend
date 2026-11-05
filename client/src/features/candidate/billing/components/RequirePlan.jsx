@@ -2,7 +2,7 @@ import { useState } from 'react'
 import { useTranslation } from 'react-i18next'
 import { Link, Outlet, useMatches } from 'react-router-dom'
 import { Check, Crown, X } from 'lucide-react'
-import { Button, Icon } from '@/components/ui'
+import { Button, Icon, Skeleton, SkeletonRegion } from '@/components/ui'
 import PageTitle from '@/components/common/PageTitle.jsx'
 import CheckoutDialog from '@/features/payments/components/CheckoutDialog.jsx'
 import { useFormat, usePreferences } from '@/lib/preferences.js'
@@ -59,12 +59,35 @@ function PlanColumn({ plan, badge, lead, featured, missing = [], children }) {
 export function PlanGate({ entitlement }) {
   const { t } = useTranslation('billing')
   const { me } = usePreferences()
-  const { plus, free, item } = usePlan()
+  const { plus, free, item, loading } = usePlan()
   const [checkingOut, setCheckingOut] = useState(false)
 
   return (
     <>
-      <PageTitle eyebrow={plus?.name} title={t(`gate.${entitlement}.title`)} description={t(`gate.${entitlement}.lead`)} />
+      <PageTitle eyebrow={loading ? <Skeleton width={48} height={8} /> : plus?.name} title={t(`gate.${entitlement}.title`)} description={t(`gate.${entitlement}.lead`)} />
+      {loading && (
+        <SkeletonRegion className={styles.plans}>
+          {[false, true].map((featured) => (
+            <div key={String(featured)} className={cx(styles.plan, featured && styles.featured)}>
+              <div className={styles.planHead}>
+                <Skeleton width={72} height={16} />
+                <Skeleton shape="pill" width={96} />
+              </div>
+              <p className={styles.price}>
+                <Skeleton width={110} height={26} />
+              </p>
+              <div className={styles.features}>
+                {[180, 150, 200, 170].map((width) => (
+                  <Skeleton key={width} width={width} />
+                ))}
+              </div>
+              <div className={styles.actions}>
+                <Skeleton shape="pill" width="100%" height={40} />
+              </div>
+            </div>
+          ))}
+        </SkeletonRegion>
+      )}
       <div className={styles.plans} data-plan-gate={entitlement}>
         {free && (
           <PlanColumn plan={free} missing={plus?.features} badge={<span className={styles.current}>{t('gate.currentPlan')}</span>}>

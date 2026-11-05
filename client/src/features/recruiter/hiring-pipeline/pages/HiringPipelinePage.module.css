@@ -1,19 +1,23 @@
 .summary {
   display: flex;
-  align-items: center;
+  align-items: stretch;
   flex-wrap: wrap;
-  gap: 12px;
-  padding-top: 32px;
+  gap: 0 16px;
+  margin-top: 28px;
+  box-shadow: inset 0 -1px 0 var(--border);
 }
 
 .jobFilter {
+  align-self: center;
   width: 240px;
   max-width: 100%;
+  padding: 6px 0;
 }
 
 .count {
-  font-size: 11px;
-  line-height: 16.5px;
+  align-self: center;
+  font-size: 13px;
+  line-height: 20px;
   color: var(--muted-foreground);
 }
 
@@ -74,4 +78,42 @@
   .funnelHint {
     padding: 6px 16px 8px;
   }
+}
+
+/* Loading: placeholder columns in the board's row, the funnel's narrowing stages; another job dims the board. */
+.skeletonBoard {
+  display: flex;
+  gap: 16px;
+}
+
+.skeletonFunnel {
+  display: flex;
+  justify-content: space-around;
+  gap: 12px;
+  padding: 72px 24px 20px;
+  overflow: hidden;
+}
+
+.skeletonStage {
+  display: flex;
+  flex-direction: column;
+  flex-shrink: 0;
+  align-items: center;
+  gap: 10px;
+}
+
+.skeletonShape {
+  display: flex;
+  align-items: center;
+  height: 270px;
+  margin-bottom: 8px;
+}
+
+.board {
+  transition: opacity var(--transition);
+}
+
+.busy {
+  opacity: 0.5;
+  pointer-events: none;
 }

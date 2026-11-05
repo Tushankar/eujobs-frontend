@@ -138,3 +138,13 @@
 .view:hover {
   color: var(--primary-hover);
 }
+
+/* Loading: the Match insights box (MatchInsights) with placeholder lines. */
+.skeletonInsights {
+  display: flex;
+  flex-direction: column;
+  gap: 14px;
+  padding: 16px;
+  border: 1px solid var(--border);
+  border-radius: var(--radius-xl);
+}

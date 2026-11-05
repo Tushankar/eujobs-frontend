@@ -1,15 +1,17 @@
 import { useMemo, useState } from 'react'
 import { useTranslation } from 'react-i18next'
 import { Award, CircleHelp, CirclePlay, Layers, Search } from 'lucide-react'
-import { Icon, SelectField, TextField } from '@/components/ui'
+import { Icon, SelectField, Skeleton, SkeletonRegion, TextField } from '@/components/ui'
 import EmptyState from '@/components/common/EmptyState.jsx'
 import PageTitle from '@/components/common/PageTitle.jsx'
 import StatCard from '@/components/common/StatCard.jsx'
 import SectionHeading from '@/features/recruiter/overview/components/SectionHeading.jsx'
 import { useGetCoursesQuery, useGetSuggestionsQuery } from '@/features/learning/api.js'
-import CourseCard from '../components/CourseCard.jsx'
-import SuggestionCard from '../components/SuggestionCard.jsx'
+import CourseCard, { CourseCardSkeleton } from '../components/CourseCard.jsx'
+import SuggestionCard, { SuggestionCardSkeleton } from '../components/SuggestionCard.jsx'
 import styles from './LearningPage.module.css'
+
+const SKELETON_CARDS = 3
 
 /**
  * Recruiter learning (§3.9, M-112): progress stats, "Suggested for you" (M-114, OQ-3: rule-based, from the company's
@@ -18,8 +20,8 @@ import styles from './LearningPage.module.css'
  */
 export default function LearningPage() {
   const { t } = useTranslation('learning')
-  const { data: catalogue = [] } = useGetCoursesQuery()
-  const { data: suggestions } = useGetSuggestionsQuery()
+  const { data: catalogue = [], isLoading } = useGetCoursesQuery()
+  const { data: suggestions, isLoading: suggestionsLoading } = useGetSuggestionsQuery()
   const [query, setQuery] = useState('')
   const [stream, setStream] = useState('all')
 
@@ -42,9 +44,9 @@ export default function LearningPage() {
       <PageTitle eyebrow={t('library.eyebrow')} title={t('library.title')} description={t('library.description')} />
 
       <div className={styles.stats}>
-        <StatCard label={t('stats.inProgress')} value={inProgress} caption={t('stats.inProgressCaptionRecruiter')} icon={CirclePlay} />
-        <StatCard label={t('stats.certificates')} value={certificates} caption={t('stats.certificatesCaption')} icon={Award} />
-        <StatCard label={t('stats.streams')} value={streams.length} caption={t('stats.streamsCaption')} icon={Layers} />
+        <StatCard label={t('stats.inProgress')} value={inProgress} caption={t('stats.inProgressCaptionRecruiter')} icon={CirclePlay} loading={isLoading} />
+        <StatCard label={t('stats.certificates')} value={certificates} caption={t('stats.certificatesCaption')} icon={Award} loading={isLoading} />
+        <StatCard label={t('stats.streams')} value={streams.length} caption={t('stats.streamsCaption')} icon={Layers} loading={isLoading} />
       </div>
 
       <section className={styles.suggestions} aria-labelledby="suggested" data-suggestions>
@@ -58,7 +60,13 @@ export default function LearningPage() {
             </h2>
           </div>
         </div>
-        {suggestions?.items.length > 0 ? (
+        {suggestionsLoading ? (
+          <SkeletonRegion className={styles.suggestionGrid}>
+            {Array.from({ length: SKELETON_CARDS }, (_, index) => (
+              <SuggestionCardSkeleton key={index} />
+            ))}
+          </SkeletonRegion>
+        ) : suggestions?.items.length > 0 ? (
           <div className={styles.suggestionGrid}>
             {suggestions.items.map((course, index) => (
               <SuggestionCard key={course.id} course={course} rank={index + 1} />
@@ -87,16 +95,24 @@ export default function LearningPage() {
       </div>
 
       <section className={styles.library} aria-labelledby="learning-library">
-        <SectionHeading id="learning-library" title={t('library.heading')} description={t('library.count', { count: catalogue.length })} />
-        <div className={styles.grid}>
-          {courses.length === 0 ? (
-            <div className={styles.empty}>
-              <EmptyState icon={Search} title={t('library.emptyTitle')} description={t('library.emptyText')} />
-            </div>
-          ) : (
-            courses.map((course) => <CourseCard key={course.id} course={course} />)
-          )}
-        </div>
+        <SectionHeading id="learning-library" title={t('library.heading')} description={isLoading ? <Skeleton width={72} /> : t('library.count', { count: catalogue.length })} />
+        {isLoading ? (
+          <SkeletonRegion className={styles.grid}>
+            {Array.from({ length: SKELETON_CARDS }, (_, index) => (
+              <CourseCardSkeleton key={index} />
+            ))}
+          </SkeletonRegion>
+        ) : (
+          <div className={styles.grid}>
+            {courses.length === 0 ? (
+              <div className={styles.empty}>
+                <EmptyState icon={Search} title={t('library.emptyTitle')} description={t('library.emptyText')} />
+              </div>
+            ) : (
+              courses.map((course) => <CourseCard key={course.id} course={course} />)
+            )}
+          </div>
+        )}
       </section>
 
       <p className={styles.notice}>{t('library.notice')}</p>

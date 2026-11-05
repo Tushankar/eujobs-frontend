@@ -76,3 +76,13 @@
   line-height: 18px;
   color: var(--muted-foreground);
 }
+
+/* New search, filters or sort loading: the current cards stay, dimmed. */
+.grid {
+  transition: opacity var(--transition);
+}
+
+.busy {
+  opacity: 0.5;
+  pointer-events: none;
+}

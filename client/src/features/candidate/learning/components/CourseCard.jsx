@@ -1,7 +1,7 @@
 import { useTranslation } from 'react-i18next'
 import { Link } from 'react-router-dom'
 import { ArrowRight, BookOpen } from 'lucide-react'
-import { Button, Icon } from '@/components/ui'
+import { Button, Icon, Skeleton } from '@/components/ui'
 import PillBadge from '@/components/common/PillBadge.jsx'
 import { cx } from '@/utils/cx.js'
 import { useFormat } from '@/lib/preferences.js'
@@ -63,5 +63,45 @@ export default function CourseCard({ course }) {
         </div>
       </div>
     </article>
+  )
+}
+
+/** A course card's shape while the catalogue loads. Wrap the cards in one SkeletonRegion. */
+export function CourseCardSkeleton() {
+  const { t } = useTranslation('learning')
+  return (
+    <div className={styles.card}>
+      <div className={cx(styles.header, styles.headerCompact)}>
+        <span className={styles.tile}>
+          <Icon as={BookOpen} size={20} />
+        </span>
+        <Skeleton shape="pill" width={110} />
+      </div>
+      <Skeleton shape="block" height={129} />
+      <div className={styles.title}>
+        <Skeleton width="70%" height={16} />
+      </div>
+      <p className={styles.meta}>
+        <Skeleton width={150} />
+      </p>
+      <div className={styles.summarySkeleton}>
+        <Skeleton />
+        <Skeleton />
+        <Skeleton width="60%" />
+      </div>
+      <div className={styles.footer}>
+        <div className={styles.priceRow}>
+          <div>
+            <p className={styles.priceLabel}>{t('price.label')}</p>
+            <p className={styles.price}>
+              <Skeleton width={72} height={22} />
+            </p>
+          </div>
+        </div>
+        <div className={styles.actions}>
+          <Skeleton shape="pill" width="100%" height={40} />
+        </div>
+      </div>
+    </div>
   )
 }

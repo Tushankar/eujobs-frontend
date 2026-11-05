@@ -54,3 +54,9 @@
     transition: none;
   }
 }
+
+/* FaqItemSkeleton: the question placeholder takes the row's width, at the question's line height. */
+.skeletonQuestion {
+  flex: 1;
+  min-width: 0;
+}

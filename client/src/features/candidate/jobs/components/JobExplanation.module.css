@@ -5,6 +5,13 @@
   padding-top: 8px;
 }
 
+.skeleton {
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+  padding: 3px 0;
+}
+
 .badge {
   font-size: 10px;
   font-weight: 600;

@@ -1,6 +1,6 @@
 import { useTranslation } from 'react-i18next'
 import { Check, Download, FileText, GitCompare, Sparkles, Trash2 } from 'lucide-react'
-import { Button, Icon } from '@/components/ui'
+import { Button, Icon, Skeleton } from '@/components/ui'
 import PillBadge from '@/components/common/PillBadge.jsx'
 import AiButton from '@/features/ai/components/AiButton.jsx'
 import { useFormat } from '@/lib/preferences.js'
@@ -101,5 +101,30 @@ export default function VersionRow({ version, comparing, busy, onSetLive, onDown
         )}
       </div>
     </article>
+  )
+}
+
+/** A version row's shape while the history loads. Wrap the rows in one SkeletonRegion. */
+export function VersionRowSkeleton() {
+  return (
+    <div className={styles.row}>
+      <span className={styles.tile}>
+        <Icon as={FileText} size={18} />
+      </span>
+      <div className={styles.body}>
+        <Skeleton width="45%" height={12} />
+        <div className={styles.status}>
+          <Skeleton shape="pill" width={56} />
+        </div>
+        <p className={styles.meta}>
+          <Skeleton width={160} height={8} />
+        </p>
+      </div>
+      <div className={styles.actions}>
+        <Skeleton shape="pill" width={124} height={40} />
+        <Skeleton shape="pill" width={176} height={40} />
+        <Skeleton shape="pill" width={192} height={40} />
+      </div>
+    </div>
   )
 }

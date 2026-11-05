@@ -6,7 +6,7 @@ import NoticeBanner from '@/components/common/NoticeBanner.jsx'
 import PageTitle from '@/components/common/PageTitle.jsx'
 import PillBadge from '@/components/common/PillBadge.jsx'
 import SegmentedTabs from '@/components/common/SegmentedTabs.jsx'
-import { Button, Icon, Panel, TextField } from '@/components/ui'
+import { Button, Icon, Panel, Skeleton, SkeletonRegion, TextField } from '@/components/ui'
 import { useErrorText, useFormState } from '@/lib/forms.js'
 import { useCreateCourseMutation, useGetAdminCourseQuery, useSetCourseStatusMutation } from '../api.js'
 import DetailsTab from '../components/DetailsTab.jsx'
@@ -14,6 +14,7 @@ import LessonsTab from '../components/LessonsTab.jsx'
 import PreviewTab from '../components/PreviewTab.jsx'
 import QuizTab from '../components/QuizTab.jsx'
 import { useProblemText } from '../problems.js'
+import builderStyles from '../components/builder.module.css'
 import styles from './CourseBuilderPage.module.css'
 
 const TABS = ['details', 'lessons', 'quiz', 'preview']
@@ -79,12 +80,58 @@ function Problems({ problems }) {
   )
 }
 
+/** The builder while the course loads: its heading, status and publish action, the tabs and the Details fields. */
+function BuilderSkeleton({ tab, onTabChange }) {
+  const { t } = useTranslation('courses')
+  // [field, wide, control height]; the second text area's label depends on the audience, so it stays a placeholder.
+  const fields = [
+    ['title', false, 44],
+    ['category', false, 44],
+    ['level', false, 44],
+    ['language', false, 44],
+    ['summary', true, 120],
+    [null, true, 120],
+  ]
+  return (
+    <>
+      <Link to="/admin/courses" className={styles.back}>
+        <Icon as={ArrowLeft} size={14} />
+        {t('builder.back')}
+      </Link>
+      <SkeletonRegion>
+        <PageTitle
+          eyebrow={<Skeleton width={96} />}
+          title={<Skeleton width={320} height={28} />}
+          description={t('builder.description')}
+          actions={
+            <div className={styles.headerActions}>
+              <Skeleton shape="pill" width={80} />
+              <Skeleton shape="pill" width={96} height={40} />
+            </div>
+          }
+        />
+        <SegmentedTabs className={styles.tabs} label={t('builder.tabsLabel')} tabs={TABS.map((id) => ({ id, label: t(`builder.tab.${id}`) }))} value={tab} onChange={onTabChange} />
+        <div className={styles.panel}>
+          <Panel padding={24} className={builderStyles.grid}>
+            {fields.map(([name, wide, height], index) => (
+              <div key={index} className={wide ? `${styles.skeletonField} ${builderStyles.wide}` : styles.skeletonField}>
+                <span className={styles.skeletonLabel}>{name ? t(`details.${name}`) : <Skeleton width={120} height={12} />}</span>
+                <Skeleton shape="block" height={height} className={styles.skeletonControl} />
+              </div>
+            ))}
+          </Panel>
+        </div>
+      </SkeletonRegion>
+    </>
+  )
+}
+
 /** /admin/courses/:courseId/edit: the full-page builder with tabs Details, Lessons, Quiz and Preview (M-101). */
 function Builder({ courseId }) {
   const { t } = useTranslation('courses')
   const errorText = useErrorText()
   const [searchParams] = useSearchParams()
-  const { data: course, error: loadError } = useGetAdminCourseQuery(courseId)
+  const { data: course, error: loadError, isLoading } = useGetAdminCourseQuery(courseId)
   const [setStatus, { isLoading: changing }] = useSetCourseStatusMutation()
   const [tab, setTab] = useState('details')
   // Arriving from the list after a refused publish shows the reasons at once.
@@ -92,6 +139,7 @@ function Builder({ courseId }) {
   const [failure, setFailure] = useState(null)
 
   if (loadError) return <NoticeBanner>{errorText.code(loadError)}</NoticeBanner>
+  if (isLoading) return <BuilderSkeleton tab={tab} onTabChange={setTab} />
   if (!course) return null
 
   async function changeStatus(status) {

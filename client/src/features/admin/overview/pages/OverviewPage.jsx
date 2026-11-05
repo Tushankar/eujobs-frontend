@@ -11,6 +11,7 @@ import { downloadFromApi } from '@/lib/download.js'
 import { useErrorText } from '@/lib/forms.js'
 import { usePreferences } from '@/lib/preferences.js'
 import { useUrlFilters } from '@/lib/useUrlFilters.js'
+import { cx } from '@/utils/cx.js'
 import { useGetOverviewQuery } from '../api.js'
 import CountryFilter from '../components/CountryFilter.jsx'
 import DemandedSkillsCard from '../components/DemandedSkillsCard.jsx'
@@ -29,7 +30,9 @@ export default function OverviewPage() {
   const { me } = usePreferences()
   const { params, setFilter } = useUrlFilters()
   const country = params.get('country') ?? ''
-  const { data } = useGetOverviewQuery(country ? { country } : {}, { refetchOnMountOrArgChange: true })
+  const { data, isLoading, isFetching, currentData } = useGetOverviewQuery(country ? { country } : {}, { refetchOnMountOrArgChange: true })
+  // A new country: the numbers on screen are the previous one's until the new ones arrive.
+  const busy = isFetching && !currentData && !isLoading
   const [exporting, setExporting] = useState(false)
   const [exportError, setExportError] = useState('')
   const kpis = data?.kpis
@@ -82,11 +85,11 @@ export default function OverviewPage() {
           {exportError}
         </p>
       )}
-      <div className={styles.stats}>
+      <div className={cx(styles.stats, busy && styles.busy)} aria-busy={busy || undefined}>
         {stats.map(({ key, to, ...stat }) => {
           const value = key === 'averageRoleMatch' ? (roleMatch?.value == null ? '—' : `${roleMatch.value}%`) : (kpis?.[key] ?? 0)
           const caption = key === 'averageRoleMatch' ? t('kpis.acrossRoles', { count: roleMatch?.roles ?? 0 }) : t('kpis.allTime')
-          const card = <StatCard {...stat} label={t(`kpis.${key}`)} value={value} caption={caption} />
+          const card = <StatCard {...stat} label={t(`kpis.${key}`)} value={value} caption={caption} loading={isLoading} />
           return can(me, adminNavItemFor(to.split('?')[0])?.permission) ? (
             <Link key={key} to={withCountry(to)} className={styles.statLink} data-kpi={key}>
               {card}
@@ -100,11 +103,11 @@ export default function OverviewPage() {
       </div>
       <div className={styles.activity}>
         <PlatformActivityCard country={country} />
-        <MarketplaceHealthCard health={data?.health} />
+        <MarketplaceHealthCard health={data?.health} loading={isLoading} />
       </div>
-      <div className={styles.insights}>
-        <DemandedSkillsCard skills={data?.skills ?? []} />
-        <RecentActivityCard events={data?.recent ?? []} showLink={can(me, 'audit.view')} />
+      <div className={cx(styles.insights, busy && styles.busy)} aria-busy={busy || undefined}>
+        <DemandedSkillsCard skills={data?.skills ?? []} loading={isLoading} />
+        <RecentActivityCard events={data?.recent ?? []} showLink={can(me, 'audit.view')} loading={isLoading} />
       </div>
     </>
   )

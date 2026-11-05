@@ -1,6 +1,6 @@
 import { useTranslation } from 'react-i18next'
 import { Link, Navigate, useParams } from 'react-router-dom'
-import { Panel } from '@/components/ui'
+import { Panel, Skeleton, SkeletonRegion } from '@/components/ui'
 import BrandLogo from '@/components/layout/BrandLogo.jsx'
 import Copyright from '@/components/layout/Copyright.jsx'
 import LanguagePicker from '@/components/layout/LanguagePicker.jsx'
@@ -20,7 +20,8 @@ export default function LegalPage() {
   const format = useFormat()
   const { doc } = useParams()
   const known = DOCS.includes(doc)
-  const { data, isError } = useGetLegalQuery({ doc, language: i18n.language }, { skip: !known })
+  // currentData: another document (tab or language) shows its placeholder, not the previous text, until it arrives.
+  const { currentData: data, isError } = useGetLegalQuery({ doc, language: i18n.language }, { skip: !known })
   useDocumentTitle(known && t(`legal:docs.${doc}`))
   if (!known) return <Navigate to="/legal/terms" replace />
 
@@ -44,7 +45,30 @@ export default function LegalPage() {
 
         <Panel padding={32} className={styles.panel}>
           {isError && <p role="alert">{t('legal:unavailable')}</p>}
-          {!data && !isError && <p role="status">{t('common:loading')}</p>}
+          {!data && !isError && (
+            <SkeletonRegion>
+              <h1 className={styles.title}>
+                <Skeleton width={320} height={28} />
+              </h1>
+              <p className={styles.meta}>
+                <Skeleton width={180} />
+              </p>
+              <div className={styles.body}>
+                {[3, 4, 2].map((lines, section) => (
+                  <div key={section}>
+                    <h2>
+                      <Skeleton width={200} height={14} />
+                    </h2>
+                    <p>
+                      {Array.from({ length: lines }, (_, line) => (
+                        <Skeleton key={line} width={line === lines - 1 ? '60%' : '100%'} />
+                      ))}
+                    </p>
+                  </div>
+                ))}
+              </div>
+            </SkeletonRegion>
+          )}
           {data && (
             <article lang={data.language}>
               {data.isDraft && <p className={styles.draft}>{t('legal:draft')}</p>}

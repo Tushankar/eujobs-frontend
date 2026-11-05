@@ -9,9 +9,25 @@
     "caption": "Vos postes",
     "emptyFiltered": "Aucun poste ne correspond à vos filtres",
     "emptyFilteredText": "Essayez un autre statut ou une autre recherche.",
-    "empty": "Aucune offre pour l’instant",
-    "emptyText": "Vous n’avez pas encore créé d’offre.",
-    "clearFilters": "Effacer les filtres"
+    "clearFilters": "Effacer les filtres",
+    "start": {
+      "title": "Publiez votre première offre",
+      "text": "Décrivez le poste une seule fois. Dès sa mise en ligne, nous faisons ressortir les candidats dont les compétences correspondent.",
+      "steps": [
+        {
+          "title": "Rédigez la présentation",
+          "text": "Intitulé, responsabilités et compétences qui comptent."
+        },
+        {
+          "title": "Passez les contrôles qualité",
+          "text": "Nous signalons les manques, comme une fourchette de salaire absente, avant la mise en ligne."
+        },
+        {
+          "title": "Découvrez les talents pertinents",
+          "text": "Les candidats dont les compétences correspondent apparaissent dès la publication."
+        }
+      ]
+    }
   },
   "table": {
     "role": "Poste",

@@ -83,3 +83,8 @@
 .link:hover {
   color: var(--primary-hover);
 }
+
+/* Loading: the cover's placeholder fills the card's top edge. */
+.card .skeletonMedia {
+  border-radius: 0;
+}

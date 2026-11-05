@@ -73,3 +73,29 @@
     grid-row: 2;
   }
 }
+
+.skeletonRow:hover {
+  background: transparent;
+}
+
+.skeletonRow + .skeletonRow {
+  border-top: 1px solid var(--border);
+}
+
+.skeletonPerson {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  min-width: 0;
+}
+
+.skeletonLines {
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+  min-width: 0;
+}
+
+.skeletonLogo {
+  border-radius: var(--radius-lg);
+}

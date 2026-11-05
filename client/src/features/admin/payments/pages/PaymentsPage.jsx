@@ -140,7 +140,7 @@ export default function PaymentsPage() {
   const result = useGetAdminPaymentsQuery(query, { refetchOnMountOrArgChange: true })
   const { data, isSuccess } = result
   const table = tableState(result, data?.items ?? [])
-  const { data: stats } = useGetPaymentStatsQuery(filters.country ? { country: filters.country } : {}, { refetchOnMountOrArgChange: true })
+  const { data: stats, isLoading: statsLoading } = useGetPaymentStatsQuery(filters.country ? { country: filters.country } : {}, { refetchOnMountOrArgChange: true })
   const format = useFormat()
   const byRole = (counts) => t('stats.byRole', { candidates: format.number(counts.candidate), recruiters: format.number(counts.recruiter) })
 
@@ -182,11 +182,11 @@ export default function PaymentsPage() {
       )}
 
       <div className={styles.stats}>
-        <StatCard label={t('stats.collected')} value={stats && <MoneyLines totals={stats.collected} />} caption={t('stats.collectedCaption')} icon={Wallet} />
+        <StatCard loading={statsLoading} label={t('stats.collected')} value={stats && <MoneyLines totals={stats.collected} />} caption={t('stats.collectedCaption')} icon={Wallet} />
         {/* P11c-Q8: the plan cards split by role. */}
-        <StatCard label={t('stats.activeSubscribers')} value={stats?.activeSubscribers.total ?? 0} caption={stats && byRole(stats.activeSubscribers)} icon={Repeat} />
-        <StatCard label={t('stats.mrr')} value={stats && <RoleMoney mrr={stats.mrr} />} caption={t('stats.mrrCaption')} icon={TrendingUp} />
-        <StatCard label={t('stats.failedRenewals')} value={stats?.failedRenewals.total ?? 0} caption={stats && byRole(stats.failedRenewals)} icon={CircleAlert} />
+        <StatCard loading={statsLoading} label={t('stats.activeSubscribers')} value={stats?.activeSubscribers.total ?? 0} caption={stats && byRole(stats.activeSubscribers)} icon={Repeat} />
+        <StatCard loading={statsLoading} label={t('stats.mrr')} value={stats && <RoleMoney mrr={stats.mrr} />} caption={t('stats.mrrCaption')} icon={TrendingUp} />
+        <StatCard loading={statsLoading} label={t('stats.failedRenewals')} value={stats?.failedRenewals.total ?? 0} caption={stats && byRole(stats.failedRenewals)} icon={CircleAlert} />
       </div>
 
       <div className={styles.filters}>

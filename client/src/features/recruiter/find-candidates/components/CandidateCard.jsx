@@ -4,7 +4,7 @@ import { useDispatch } from 'react-redux'
 import { ArrowUpRight, Bookmark, Earth, Lock, MapPin, ShieldCheck } from 'lucide-react'
 import { openUpgrade } from '@/app/upgrade.js'
 import PlanButton from '@/features/candidate/billing/components/PlanButton.jsx'
-import { Avatar, Checkbox, Icon, IconButton } from '@/components/ui'
+import { Avatar, Checkbox, Icon, IconButton, Skeleton } from '@/components/ui'
 import PillBadge from '@/components/common/PillBadge.jsx'
 import { usePreferences } from '@/lib/preferences.js'
 import { cx } from '@/utils/cx.js'
@@ -105,5 +105,51 @@ export default function CandidateCard({ candidate, hasJob, jobId, locked, onTogg
         </Link>
       </div>
     </article>
+  )
+}
+
+/** A CandidateCard's shape while the list loads: the same card with placeholders for its data. */
+export function CandidateCardSkeleton() {
+  return (
+    <div className={styles.card} aria-hidden="true">
+      <div className={styles.top}>
+        <Skeleton shape="circle" width={48} height={48} />
+      </div>
+      <p className={styles.name}>
+        <Skeleton width="55%" height={14} />
+      </p>
+      <p className={styles.headline}>
+        <Skeleton width="80%" />
+      </p>
+      <p className={styles.meta}>
+        <Skeleton width={44} />
+        <Skeleton width={52} />
+        <Skeleton width={68} />
+      </p>
+      <div className={styles.skills}>
+        <Skeleton shape="pill" width={64} />
+        <Skeleton shape="pill" width={52} />
+        <Skeleton shape="pill" width={72} />
+      </div>
+      <p className={styles.status}>
+        <Skeleton width={72} />
+        <span className={styles.ready}>
+          <Skeleton width={60} />
+        </span>
+      </p>
+      <p className={styles.facts}>
+        <Skeleton width="60%" />
+      </p>
+      <div className={styles.insights}>
+        <div className={styles.skeletonInsights}>
+          <Skeleton width="40%" />
+          <Skeleton width="85%" />
+        </div>
+      </div>
+      <div className={styles.footer}>
+        <Skeleton width={56} />
+        <Skeleton width={64} />
+      </div>
+    </div>
   )
 }

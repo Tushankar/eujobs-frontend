@@ -49,6 +49,11 @@
   transform: rotate(180deg);
 }
 
+.skeletonSummary {
+  min-width: 0;
+  line-height: 24px;
+}
+
 .detail {
   display: grid;
   grid-template-columns: repeat(3, minmax(0, 1fr));

@@ -1,13 +1,17 @@
+import { useRef } from 'react'
 import { useTranslation } from 'react-i18next'
+import { useActiveIndicator } from '@/hooks/useActiveIndicator.js'
 import { cx } from '@/utils/cx.js'
-import styles from './LevelTabs.module.css'
+import styles from '@/components/common/TabBar.module.css'
 
-/** Course level filter: "All levels" ('all') plus one button per level key. Controlled; the parent filters the grid. */
+/** Course level filter: "All levels" ('all') plus one tab per level key. Controlled; the parent filters the grid. */
 export default function LevelTabs({ levels, value, onChange }) {
   const { t } = useTranslation('learning')
+  const barRef = useRef(null)
+  useActiveIndicator(barRef, value)
   const options = [{ value: 'all', label: t('catalogue.allLevels') }, ...levels.map((level) => ({ value: level, label: t(`enums:courseLevel.${level}`) }))]
   return (
-    <div className={styles.tray} role="group" aria-label={t('catalogue.levelLabel')}>
+    <div className={styles.bar} role="group" aria-label={t('catalogue.levelLabel')} ref={barRef}>
       {options.map((option) => {
         const active = value === option.value
         return (

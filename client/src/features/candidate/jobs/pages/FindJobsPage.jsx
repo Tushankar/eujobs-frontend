@@ -2,13 +2,15 @@ import { useEffect, useState } from 'react'
 import { useSearchParams } from 'react-router-dom'
 import { useTranslation } from 'react-i18next'
 import { ChevronDown, SearchX, Search, SlidersHorizontal } from 'lucide-react'
-import { Button, Icon, TextField } from '@/components/ui'
+import { Button, Icon, Skeleton, SkeletonRegion, TextField } from '@/components/ui'
 import EmptyState from '@/components/common/EmptyState.jsx'
+import { tableState } from '@/components/common/tableState.js'
 import PageTitle from '@/components/common/PageTitle.jsx'
 import aiGlyphDark from '@/assets/icons/ai-glyph-blue-dark.svg'
 import { useFormat } from '@/lib/preferences.js'
+import { cx } from '@/utils/cx.js'
 import { useSaveToggle, useSearchJobsQuery } from '../api.js'
-import JobCard from '../components/JobCard.jsx'
+import JobCard, { JobCardSkeleton } from '../components/JobCard.jsx'
 import JobFiltersModal from '../components/JobFiltersModal.jsx'
 import { countActiveFilters, EMPTY_FILTERS, searchParams } from '../utils/jobSearch.js'
 import styles from './FindJobsPage.module.css'
@@ -34,8 +36,11 @@ export default function FindJobsPage() {
   const [visible, setVisible] = useState(PAGE_SIZE)
   const [filtersOpen, setFiltersOpen] = useState(false)
   const toggleSave = useSaveToggle()
-  const { data } = useSearchJobsQuery(searchParams({ query: debounced, filters, sort }))
+  const search = useSearchJobsQuery(searchParams({ query: debounced, filters, sort }))
+  const { data } = search
   const results = data?.items ?? []
+  // A new search or filter dims the cards on screen; placeholders only when there is nothing to show yet.
+  const { loading, busy } = tableState(search, results)
   const shown = results.slice(0, visible)
   const activeFilters = countActiveFilters(filters)
   const remote = data?.view.country === 'REMOTE'
@@ -84,14 +89,26 @@ export default function FindJobsPage() {
           <img src={aiGlyphDark} alt="" width={12} height={12} />
           {t('findJobs:page.hint')}
         </p>
-        {data && <p className={styles.hint}>{remote ? t('findJobs:page.viewRemote') : t('findJobs:page.viewCountry', { country: format.country(data.view.country) })}</p>}
+        {data ? (
+          <p className={styles.hint}>{remote ? t('findJobs:page.viewRemote') : t('findJobs:page.viewCountry', { country: format.country(data.view.country) })}</p>
+        ) : (
+          search.isLoading && (
+            <p className={styles.hint}>
+              <Skeleton width={180} />
+            </p>
+          )
+        )}
       </form>
 
       <div className={styles.resultsBar}>
-        <p className={styles.count} aria-live="polite">
-          <strong>{t('findJobs:page.count', { count: results.length })}</strong>
-          {t('findJobs:page.worth')}
-        </p>
+        {loading ? (
+          <Skeleton width={150} height={12} />
+        ) : (
+          <p className={styles.count} aria-live="polite">
+            <strong>{t('findJobs:page.count', { count: results.length })}</strong>
+            {t('findJobs:page.worth')}
+          </p>
+        )}
         <label className={styles.sort}>
           <span className="sr-only">{t('findJobs:page.sort')}</span>
           <select value={sort} onChange={(event) => change(setSort)(event.target.value)}>
@@ -105,7 +122,13 @@ export default function FindJobsPage() {
         </label>
       </div>
 
-      {data && results.length === 0 ? (
+      {loading ? (
+        <SkeletonRegion className={styles.list}>
+          <JobCardSkeleton />
+          <JobCardSkeleton />
+          <JobCardSkeleton />
+        </SkeletonRegion>
+      ) : data && results.length === 0 ? (
         <EmptyState
           icon={SearchX}
           title={t('findJobs:page.empty')}
@@ -118,7 +141,7 @@ export default function FindJobsPage() {
         />
       ) : (
         <>
-          <ul className={styles.list}>
+          <ul className={cx(styles.list, busy && styles.busy)} aria-busy={busy || undefined}>
             {shown.map((job) => (
               <li key={job.id}>
                 <JobCard job={job} onToggleSave={toggleSave} />

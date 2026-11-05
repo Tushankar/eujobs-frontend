@@ -92,3 +92,32 @@
 .actions > * {
   flex: 1 1 auto;
 }
+
+/* Loading */
+.top .skeletonIcon {
+  border-radius: var(--radius-xl);
+}
+
+/* Two description lines, one per 24px line. */
+.description > * {
+  display: block;
+  margin: 7px 0;
+}
+
+.skeletonLabel {
+  font-size: 10px;
+  line-height: 15px;
+  color: var(--muted-foreground);
+}
+
+.skeletonValue {
+  padding-top: 4px;
+  line-height: 20px;
+}
+
+/* "Manage admins" on its own row under the buttons. */
+.actions > .skeletonLink {
+  flex-basis: 100%;
+  line-height: 40px;
+  text-align: center;
+}

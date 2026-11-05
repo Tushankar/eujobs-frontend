@@ -65,3 +65,27 @@
   line-height: 16px;
   color: var(--muted-foreground);
 }
+
+/* Loading: the select with its label (Field) and the Match insights box (MatchInsights). */
+.skeletonField {
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+  padding-bottom: 16px;
+}
+
+.skeletonLabel {
+  font-size: 13px;
+  font-weight: 600;
+  line-height: 18px;
+  color: var(--foreground);
+}
+
+.skeletonInsights {
+  display: flex;
+  flex-direction: column;
+  gap: 14px;
+  padding: 16px;
+  border: 1px solid var(--border);
+  border-radius: var(--radius-xl);
+}

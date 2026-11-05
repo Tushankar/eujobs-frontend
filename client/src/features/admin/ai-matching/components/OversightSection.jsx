@@ -1,7 +1,7 @@
 import { useState } from 'react'
 import { useTranslation } from 'react-i18next'
 import { Check, Sparkles } from 'lucide-react'
-import { Avatar, Icon, Panel, SelectField } from '@/components/ui'
+import { Avatar, Icon, Panel, SelectField, Skeleton, SkeletonRegion } from '@/components/ui'
 import PillBadge from '@/components/common/PillBadge.jsx'
 import SectionTitle from '@/components/common/SectionTitle.jsx'
 import { useFormat } from '@/lib/preferences.js'
@@ -82,6 +82,55 @@ function Evidence({ name, evidence }) {
   )
 }
 
+/** The oversight section while it loads: the job picker, four candidate cards and the evidence panel. */
+function OversightSkeleton() {
+  const { t } = useTranslation('aiMatching')
+  return (
+    <section className={styles.section} aria-labelledby="oversight-title">
+      <SectionTitle id="oversight-title" title={t('oversight.title')} description={t('oversight.description')} />
+      <SkeletonRegion>
+        <div className={styles.jobPicker}>
+          <p className={styles.skeletonLabel}>{t('oversight.job')}</p>
+          <Skeleton shape="block" height={44} className={styles.skeletonField} />
+        </div>
+        <div className={styles.cards}>
+          {[96, 120, 88, 108].map((width) => (
+            <div key={width} className={styles.card}>
+              <span className={styles.person}>
+                <Skeleton shape="circle" width={36} height={36} />
+                <span className={styles.personText}>
+                  <span className={styles.name}>
+                    <Skeleton width={width} height={12} />
+                  </span>
+                  <span className={styles.role}>
+                    <Skeleton width={width + 24} height={8} />
+                  </span>
+                </span>
+              </span>
+              <span className={styles.percent}>
+                <Skeleton width={56} height={24} />
+              </span>
+              <Skeleton shape="pill" />
+              <span className={styles.caption}>{t('oversight.caption')}</span>
+            </div>
+          ))}
+        </div>
+        <Panel padding={16} selected className={styles.insight}>
+          <p className={styles.insightTitle}>
+            <Skeleton width={220} height={12} />
+          </p>
+          <div className={styles.skeletonLines}>
+            <Skeleton width="60%" />
+            <Skeleton width="80%" />
+            <Skeleton width="70%" />
+            <Skeleton width="50%" />
+          </div>
+        </Panel>
+      </SkeletonRegion>
+    </section>
+  )
+}
+
 /**
  * Oversight (M-068): pick a published job (default the newest); its top 4 candidates by match score with the
  * percentage (admins see %, C6), and the evidence for the selected one (default the first).
@@ -90,8 +139,11 @@ export default function OversightSection() {
   const { t } = useTranslation('aiMatching')
   const format = useFormat()
   const [selection, setSelection] = useState({})
-  const { data } = useGetOversightQuery(Object.fromEntries(Object.entries(selection).filter(([, value]) => value)))
+  const { data, isLoading, isFetching, currentData } = useGetOversightQuery(Object.fromEntries(Object.entries(selection).filter(([, value]) => value)))
+  if (isLoading) return <OversightSkeleton />
   if (!data) return null
+  // Another job or candidate: the cards and evidence on screen are the previous ones until the new ones arrive.
+  const busy = isFetching && !currentData
   const selected = data.candidates.find((candidate) => candidate.id === data.selected?.candidateId)
 
   return (
@@ -107,37 +159,39 @@ export default function OversightSection() {
             onChange={(event) => setSelection({ jobId: event.target.value })}
             options={data.jobs.map((job) => ({ value: job.id, label: job.company ? `${job.title} · ${job.company}` : job.title }))}
           />
-          {data.candidates.length ? (
-            <div className={styles.cards}>
-              {data.candidates.map((candidate) => (
-                <button
-                  type="button"
-                  key={candidate.id}
-                  className={cx(styles.card, candidate.id === selected?.id && styles.cardSelected)}
-                  aria-pressed={candidate.id === selected?.id}
-                  aria-label={t('oversight.select', { name: candidate.fullName })}
-                  data-candidate={candidate.id}
-                  onClick={() => setSelection({ jobId: data.job.id, candidateId: candidate.id })}
-                >
-                  <span className={styles.person}>
-                    <Avatar name={candidate.fullName} src={candidate.photoUrl ?? undefined} size={36} />
-                    <span className={styles.personText}>
-                      <span className={styles.name}>{candidate.fullName}</span>
-                      <span className={styles.role}>{candidate.headline}</span>
+          <div className={cx(styles.results, busy && styles.busy)} aria-busy={busy || undefined}>
+            {data.candidates.length ? (
+              <div className={styles.cards}>
+                {data.candidates.map((candidate) => (
+                  <button
+                    type="button"
+                    key={candidate.id}
+                    className={cx(styles.card, candidate.id === selected?.id && styles.cardSelected)}
+                    aria-pressed={candidate.id === selected?.id}
+                    aria-label={t('oversight.select', { name: candidate.fullName })}
+                    data-candidate={candidate.id}
+                    onClick={() => setSelection({ jobId: data.job.id, candidateId: candidate.id })}
+                  >
+                    <span className={styles.person}>
+                      <Avatar name={candidate.fullName} src={candidate.photoUrl ?? undefined} size={36} />
+                      <span className={styles.personText}>
+                        <span className={styles.name}>{candidate.fullName}</span>
+                        <span className={styles.role}>{candidate.headline}</span>
+                      </span>
                     </span>
-                  </span>
-                  <span className={styles.percent} aria-label={t('oversight.percentLabel', { score: format.number(candidate.score / 100, { style: 'percent' }) })}>
-                    {format.number(candidate.score / 100, { style: 'percent' })}
-                  </span>
-                  {candidate.label && <PillBadge tone={candidate.label === 'strong' ? 'success' : 'info'}>{t(`enums:matchLabel.${candidate.label}`)}</PillBadge>}
-                  <span className={styles.caption}>{t('oversight.caption')}</span>
-                </button>
-              ))}
-            </div>
-          ) : (
-            <p className={styles.empty}>{t('oversight.noCandidates')}</p>
-          )}
-          {selected && <Evidence name={selected.fullName} evidence={data.selected.evidence} />}
+                    <span className={styles.percent} aria-label={t('oversight.percentLabel', { score: format.number(candidate.score / 100, { style: 'percent' }) })}>
+                      {format.number(candidate.score / 100, { style: 'percent' })}
+                    </span>
+                    {candidate.label && <PillBadge tone={candidate.label === 'strong' ? 'success' : 'info'}>{t(`enums:matchLabel.${candidate.label}`)}</PillBadge>}
+                    <span className={styles.caption}>{t('oversight.caption')}</span>
+                  </button>
+                ))}
+              </div>
+            ) : (
+              <p className={styles.empty}>{t('oversight.noCandidates')}</p>
+            )}
+            {selected && <Evidence name={selected.fullName} evidence={data.selected.evidence} />}
+          </div>
         </>
       ) : (
         <p className={styles.empty}>{t('oversight.noJobs')}</p>

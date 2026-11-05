@@ -9,9 +9,25 @@
     "caption": "Your roles",
     "emptyFiltered": "No roles match your filters",
     "emptyFilteredText": "Try another status or a different search.",
-    "empty": "No jobs yet",
-    "emptyText": "You have not created a job yet.",
-    "clearFilters": "Clear filters"
+    "clearFilters": "Clear filters",
+    "start": {
+      "title": "Post your first job",
+      "text": "Describe the role once. When it goes live, we surface the candidates whose skills fit it.",
+      "steps": [
+        {
+          "title": "Write the brief",
+          "text": "Title, responsibilities and the skills that matter."
+        },
+        {
+          "title": "Pass the quality checks",
+          "text": "We flag gaps such as a missing salary range before the role goes live."
+        },
+        {
+          "title": "Review relevant talent",
+          "text": "Candidates whose skills match appear as soon as you publish."
+        }
+      ]
+    }
   },
   "table": {
     "role": "Role",

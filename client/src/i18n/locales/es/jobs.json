@@ -9,9 +9,25 @@
     "caption": "Tus puestos",
     "emptyFiltered": "Ningún puesto coincide con los filtros",
     "emptyFilteredText": "Prueba con otro estado o una búsqueda diferente.",
-    "empty": "Aún no hay ofertas",
-    "emptyText": "Todavía no has creado ninguna oferta.",
-    "clearFilters": "Borrar filtros"
+    "clearFilters": "Borrar filtros",
+    "start": {
+      "title": "Publica tu primera oferta",
+      "text": "Describe el puesto una vez. Cuando esté publicado, te mostramos a los candidatos cuyas habilidades encajan.",
+      "steps": [
+        {
+          "title": "Redacta el resumen",
+          "text": "Título, responsabilidades y las habilidades que importan."
+        },
+        {
+          "title": "Supera los controles de calidad",
+          "text": "Señalamos lagunas, como la falta de un rango salarial, antes de publicar el puesto."
+        },
+        {
+          "title": "Revisa el talento relevante",
+          "text": "Los candidatos con habilidades afines aparecen en cuanto publicas."
+        }
+      ]
+    }
   },
   "table": {
     "role": "Puesto",

@@ -2,7 +2,7 @@ import { useTranslation } from 'react-i18next'
 import { useDispatch } from 'react-redux'
 import { ExternalLink } from 'lucide-react'
 import { openUpgrade } from '@/app/upgrade.js'
-import { Button, Icon } from '@/components/ui'
+import { Button, Icon, Skeleton, SkeletonRegion } from '@/components/ui'
 import PillBadge from '@/components/common/PillBadge.jsx'
 import { useCreatePortalSessionMutation, useGetSubscriptionQuery } from '@/features/candidate/billing/api.js'
 import { usePlan } from '@/features/candidate/billing/usePlan.js'
@@ -29,7 +29,7 @@ export default function PlanCard() {
   const dispatch = useDispatch()
   const { me } = usePreferences()
   const { plus } = usePlan()
-  const { data: subscription } = useGetSubscriptionQuery(me.role)
+  const { data: subscription, isLoading } = useGetSubscriptionQuery(me.role)
   const [createPortal, { isLoading: opening, error: portalError }] = useCreatePortalSessionMutation()
   const state = planState(subscription)
   const paid = state !== 'free'
@@ -41,6 +41,23 @@ export default function PlanCard() {
     } catch {
       // The error is shown under the plan.
     }
+  }
+
+  // The plan row while the subscription loads, so Free and its upsell never flash for a paying user.
+  if (isLoading) {
+    return (
+      <SkeletonRegion className={styles.plan}>
+        <div>
+          <p className={styles.planName}>
+            <Skeleton width={120} height={16} />
+          </p>
+          <p className={styles.planMeta}>
+            <Skeleton width={240} />
+          </p>
+        </div>
+        <Skeleton shape="pill" width={150} height={40} />
+      </SkeletonRegion>
+    )
   }
 
   const price = paid

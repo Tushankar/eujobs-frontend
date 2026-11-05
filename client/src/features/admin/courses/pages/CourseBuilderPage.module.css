@@ -67,6 +67,25 @@
   margin-top: 16px;
 }
 
+/* Loading: a Details field's real label over a placeholder control. */
+.skeletonField {
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+  min-width: 0;
+}
+
+.skeletonLabel {
+  font-size: 13px;
+  font-weight: 600;
+  line-height: 18px;
+  color: var(--foreground);
+}
+
+.skeletonField .skeletonControl {
+  border-radius: var(--radius-lg);
+}
+
 .newPanel {
   max-width: 560px;
   margin-top: 24px;

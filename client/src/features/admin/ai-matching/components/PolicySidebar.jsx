@@ -1,6 +1,6 @@
 import { useTranslation } from 'react-i18next'
 import { ShieldCheck } from 'lucide-react'
-import { Icon, Panel } from '@/components/ui'
+import { Icon, Panel, Skeleton, SkeletonRegion } from '@/components/ui'
 import PillBadge from '@/components/common/PillBadge.jsx'
 import SectionTitle from '@/components/common/SectionTitle.jsx'
 import { useFormat } from '@/lib/preferences.js'
@@ -14,7 +14,25 @@ const STATUS_TONES = { active: 'success', draft: 'neutral', archived: 'warning' 
 function ServiceStatus() {
   const { t } = useTranslation('aiMatching')
   const format = useFormat()
-  const { data: status } = useGetAiStatusQuery()
+  const { data: status, isLoading } = useGetAiStatusQuery()
+  if (isLoading)
+    return (
+      <Panel padding={24}>
+        <SkeletonRegion>
+          <h3 className={styles.statusTitle}>{t('status.title')}</h3>
+          <Skeleton shape="pill" width={160} />
+          <p className={styles.statusText}>{t('status.models')}</p>
+          <div className={styles.models}>
+            {[0, 1, 2].map((index) => (
+              <div key={index} className={styles.modelRow}>
+                <Skeleton width={72} />
+                <Skeleton width={96} />
+              </div>
+            ))}
+          </div>
+        </SkeletonRegion>
+      </Panel>
+    )
   if (!status) return null
   return (
     <Panel padding={24} data-ai-status>
@@ -36,32 +54,50 @@ function ServiceStatus() {
   )
 }
 
-/** Right column: the policy library (select a policy), the guidance card and the AI service status. */
-export default function PolicySidebar({ policies, selectedId, onSelect }) {
+/** Right column: the policy library (select a policy), the guidance card and the AI service status. `loading` shows placeholder policies. */
+export default function PolicySidebar({ policies, selectedId, onSelect, loading }) {
   const { t } = useTranslation('aiMatching')
   const format = useFormat()
   return (
     <div className={styles.column}>
       <Panel padding={24}>
         <SectionTitle title={t('library.title')} description={t('library.description')} />
-        <ul className={styles.list}>
-          {policies.map((policy) => (
-            <li key={policy.id}>
-              <button
-                type="button"
-                className={cx(styles.policy, policy.id === selectedId && styles.selected)}
-                aria-pressed={policy.id === selectedId}
-                onClick={() => onSelect(policy.id)}
-              >
+        {loading ? (
+          <SkeletonRegion className={styles.list}>
+            {[120, 96].map((width) => (
+              <div key={width} className={styles.policy}>
                 <span className={styles.policyText}>
-                  <span className={styles.policyName}>{policy.name}</span>
-                  <span className={styles.policyMeta}>{t('library.updated', { date: format.date(policy.updatedAt) })}</span>
+                  <span className={styles.policyName}>
+                    <Skeleton width={width} height={12} />
+                  </span>
+                  <span className={styles.policyMeta}>
+                    <Skeleton width={88} height={8} />
+                  </span>
                 </span>
-                <PillBadge tone={STATUS_TONES[policy.status]}>{t(`enums:policyStatus.${policy.status}`)}</PillBadge>
-              </button>
-            </li>
-          ))}
-        </ul>
+                <Skeleton shape="pill" width={56} />
+              </div>
+            ))}
+          </SkeletonRegion>
+        ) : (
+          <ul className={styles.list}>
+            {policies.map((policy) => (
+              <li key={policy.id}>
+                <button
+                  type="button"
+                  className={cx(styles.policy, policy.id === selectedId && styles.selected)}
+                  aria-pressed={policy.id === selectedId}
+                  onClick={() => onSelect(policy.id)}
+                >
+                  <span className={styles.policyText}>
+                    <span className={styles.policyName}>{policy.name}</span>
+                    <span className={styles.policyMeta}>{t('library.updated', { date: format.date(policy.updatedAt) })}</span>
+                  </span>
+                  <PillBadge tone={STATUS_TONES[policy.status]}>{t(`enums:policyStatus.${policy.status}`)}</PillBadge>
+                </button>
+              </li>
+            ))}
+          </ul>
+        )}
       </Panel>
 
       <Panel padding={24} selected>

@@ -4,15 +4,23 @@ import { UserX } from 'lucide-react'
 import EmptyState from '@/components/common/EmptyState.jsx'
 import PillBadge from '@/components/common/PillBadge.jsx'
 import SectionTitle from '@/components/common/SectionTitle.jsx'
-import { Avatar, Button, Panel } from '@/components/ui'
+import { Avatar, Button, Panel, Skeleton, SkeletonRegion } from '@/components/ui'
 import { WORKSPACES, workspacePath } from '@/app/workspaces.js'
 import styles from './CandidateMovement.module.css'
+
+/* Name and job-line widths (px) of the placeholder rows. */
+const SKELETON_ROWS = [
+  [120, 220],
+  [96, 180],
+  [140, 240],
+  [108, 200],
+]
 
 /**
  * P10-Q13: one row per non-withdrawn application, newest first, optionally narrowed to one stage category. A card of
  * divided rows (the person, the job, shortlist and outreach state; the stage on the right) like the sidebar cards.
  */
-export default function CandidateMovement({ rows, stage, onClearStage }) {
+export default function CandidateMovement({ rows, stage, onClearStage, loading }) {
   const { t } = useTranslation(['adminRecruitment', 'enums'])
   const shown = stage ? rows.filter((row) => row.category === stage) : rows
   const stageLabel = stage && t(`enums:stageCategory.${stage}`)
@@ -32,7 +40,29 @@ export default function CandidateMovement({ rows, stage, onClearStage }) {
             </Button>
           </p>
         )}
-        {shown.length > 0 ? (
+        {loading ? (
+          <SkeletonRegion>
+            <ul className={styles.list}>
+              {SKELETON_ROWS.map(([name, job], index) => (
+                <li key={index} className={styles.row}>
+                  <Skeleton shape="circle" />
+                  <div className={styles.text}>
+                    <p className={styles.name}>
+                      <Skeleton width={name} height={12} />
+                    </p>
+                    <p className={styles.meta}>
+                      <Skeleton width={job} />
+                    </p>
+                    <p className={styles.meta}>
+                      <Skeleton width={160} />
+                    </p>
+                  </div>
+                  <Skeleton shape="pill" />
+                </li>
+              ))}
+            </ul>
+          </SkeletonRegion>
+        ) : shown.length > 0 ? (
           <ul className={styles.list} aria-label={t('movement.title')}>
             {shown.map((row) => (
               <li key={row.id} className={styles.row} data-movement-row>

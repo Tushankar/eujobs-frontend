@@ -8,7 +8,7 @@ import { lacksEntitlement } from '@/features/candidate/billing/usePlan.js'
 import EmptyState from '@/components/common/EmptyState.jsx'
 import PageTitle from '@/components/common/PageTitle.jsx'
 import StatCard from '@/components/common/StatCard.jsx'
-import { Button, Icon } from '@/components/ui'
+import { Button, Icon, SkeletonRegion } from '@/components/ui'
 import aiNavIcon from '@/assets/icons/ai-nav.svg'
 import { useGetRecruiterOverviewQuery, useGetTalentQuery, useShortlistToggle } from '@/features/recruiter/find-candidates/api.js'
 import { useGetRecruiterJobsQuery } from '../../jobs/api.js'
@@ -16,11 +16,12 @@ import JobsTable from '../../jobs/components/JobsTable.jsx'
 import HiringFunnelCard from '../components/HiringFunnelCard.jsx'
 import HiringMomentumCard from '../components/HiringMomentumCard.jsx'
 import SectionHeading from '../components/SectionHeading.jsx'
-import TalentCard from '../components/TalentCard.jsx'
+import TalentCard, { TalentCardSkeleton } from '../components/TalentCard.jsx'
 import styles from './OverviewPage.module.css'
 import { useMarkSeen } from '@/features/notifications/api.js'
 
 const ROLES_SHOWN = 5
+const TALENT_SKELETONS = 3
 
 /** M-202: the part of day from the browser's local time. */
 function partOfDay(hour) {
@@ -38,10 +39,10 @@ export default function OverviewPage() {
   useMarkSeen('page', 'overview')
   const { t } = useTranslation()
   const { data: me } = useGetMeQuery()
-  const { data: overview } = useGetRecruiterOverviewQuery()
+  const { data: overview, isLoading: overviewLoading } = useGetRecruiterOverviewQuery()
   // P11c-Q15: the talent list needs Recruiter Plus; its count (Recommended candidates) stays.
   const talentLocked = lacksEntitlement(me, 'discovery', ['recruiter'])
-  const { data: talent } = useGetTalentQuery(undefined, { skip: !me || talentLocked })
+  const { data: talent, isLoading: talentLoading } = useGetTalentQuery(undefined, { skip: !me || talentLocked })
   const { data: jobs, isLoading: jobsLoading } = useGetRecruiterJobsQuery()
   const toggleShortlist = useShortlistToggle()
   // Read once per visit, so the greeting does not change while the page is open.
@@ -73,7 +74,7 @@ export default function OverviewPage() {
       <div className={styles.stats}>
         {stats.map(({ key, to, value, ...stat }) => (
           <Link key={key} to={to} className={styles.statLink} data-stat={key}>
-            <StatCard label={t(`discovery:overview.stats.${key}`)} caption={t(`discovery:overview.stats.${key}Caption`)} value={value ?? 0} {...stat} />
+            <StatCard label={t(`discovery:overview.stats.${key}`)} caption={t(`discovery:overview.stats.${key}Caption`)} value={value ?? 0} loading={overviewLoading} {...stat} />
           </Link>
         ))}
       </div>
@@ -97,6 +98,12 @@ export default function OverviewPage() {
             {t('discovery:locked.seeCandidates')}
           </PlanButton>
         </div>
+      ) : talentLoading || !me ? (
+        <SkeletonRegion className={styles.talent}>
+          {Array.from({ length: TALENT_SKELETONS }, (_, index) => (
+            <TalentCardSkeleton key={index} />
+          ))}
+        </SkeletonRegion>
       ) : talent && talent.items.length === 0 ? (
         <p className={styles.talentEmpty}>{t('discovery:overview.talentEmpty')}</p>
       ) : (

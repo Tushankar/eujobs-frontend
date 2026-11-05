@@ -42,3 +42,7 @@
   flex-shrink: 0;
   margin-top: 4px;
 }
+
+.skeletonText {
+  flex: 1;
+}

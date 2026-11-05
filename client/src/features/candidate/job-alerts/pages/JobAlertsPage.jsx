@@ -4,7 +4,7 @@ import { useDispatch } from 'react-redux'
 import { Bell, BellOff, Plus, Trash2 } from 'lucide-react'
 import { openUpgrade } from '@/app/upgrade.js'
 import { cx } from '@/utils/cx.js'
-import { Button, Icon, IconButton, Panel } from '@/components/ui'
+import { Button, Icon, IconButton, Panel, Skeleton, SkeletonRegion } from '@/components/ui'
 import ConfirmDialog from '@/components/common/ConfirmDialog.jsx'
 import EmptyState from '@/components/common/EmptyState.jsx'
 import PageTitle from '@/components/common/PageTitle.jsx'
@@ -23,12 +23,13 @@ export default function JobAlertsPage() {
   const { t } = useTranslation()
   const format = useFormat()
   const dispatch = useDispatch()
-  const { data } = useGetJobAlertsQuery()
+  const { data, isLoading } = useGetJobAlertsQuery()
   const [updateAlert] = useUpdateJobAlertMutation()
   const [deleteAlert] = useDeleteJobAlertMutation()
   const [editing, setEditing] = useState(null) // null | 'new' | alert
   const [deleting, setDeleting] = useState(null)
 
+  if (isLoading) return <JobAlertsSkeleton />
   if (!data) return null
   const alerts = data.items
   const paused = data.planPaused
@@ -107,6 +108,35 @@ export default function JobAlertsPage() {
           setDeleting(null)
         }}
       />
+    </div>
+  )
+}
+
+/** The page while the alerts load: the real title, placeholders shaped like three alert cards. */
+function JobAlertsSkeleton() {
+  const { t } = useTranslation()
+  return (
+    <div>
+      <PageTitle title={t('jobAlerts:title')} description={t('jobAlerts:description')} />
+      <div className={styles.list}>
+        <SkeletonRegion className={styles.items}>
+          {[160, 120, 200].map((width) => (
+            <div key={width} className={styles.card}>
+              <span className={styles.tile}>
+                <Icon as={Bell} size={18} />
+              </span>
+              <div className={styles.text}>
+                <Skeleton width={width} height={12} />
+                <p className={styles.meta}>
+                  <Skeleton width={width + 80} height={8} />
+                </p>
+              </div>
+              <Skeleton shape="pill" width={76} height={40} />
+              <Skeleton shape="circle" width={36} height={36} />
+            </div>
+          ))}
+        </SkeletonRegion>
+      </div>
     </div>
   )
 }

@@ -1,12 +1,13 @@
 import { useTranslation } from 'react-i18next'
 import { Link, Outlet, useParams } from 'react-router-dom'
 import { ArrowLeft, UserX } from 'lucide-react'
-import { Button, Icon } from '@/components/ui'
+import { Button, Icon, SkeletonRegion } from '@/components/ui'
 import EmptyState from '@/components/common/EmptyState.jsx'
 import { useGetCandidateProfileQuery, useShortlistToggle } from '../api.js'
 import { useMatchJob } from '../hooks/useMatchJob.js'
-import ProfileSidebar from '../components/ProfileSidebar.jsx'
-import ProfileSummary from '../components/ProfileSummary.jsx'
+import { ProfileSectionSkeleton } from '../components/ProfileSection.jsx'
+import ProfileSidebar, { ProfileSidebarSkeleton } from '../components/ProfileSidebar.jsx'
+import ProfileSummary, { ProfileSummarySkeleton } from '../components/ProfileSummary.jsx'
 import ProfileTabs from '../components/ProfileTabs.jsx'
 import styles from './CandidateProfilePage.module.css'
 import { useMarkSeen } from '@/features/notifications/api.js'
@@ -22,9 +23,9 @@ export default function CandidateProfilePage() {
   const { candidateId } = useParams()
   // P11b-Q10: opening this item marks its notifications read.
   useMarkSeen('candidate', candidateId)
-  const { jobs, job, setJobId, ready } = useMatchJob()
+  const { jobs, job, setJobId, ready, loading: jobsLoading } = useMatchJob()
   const toggleShortlist = useShortlistToggle()
-  const { data: candidate, error } = useGetCandidateProfileQuery({ id: candidateId, jobId: job?.id }, { skip: !ready })
+  const { data: candidate, error, isLoading } = useGetCandidateProfileQuery({ id: candidateId, jobId: job?.id }, { skip: !ready })
 
   if (error) {
     return (
@@ -40,6 +41,23 @@ export default function CandidateProfilePage() {
             </Button>
           }
         />
+      </>
+    )
+  }
+  if (!candidate && (jobsLoading || isLoading)) {
+    return (
+      <>
+        <BackLink />
+        <SkeletonRegion className={styles.layout}>
+          <div className={styles.main}>
+            <ProfileSummarySkeleton />
+            <div className={styles.tabs}>
+              <ProfileTabs basePath={`${LIST_PATH}/${candidateId}`} />
+            </div>
+            <ProfileSectionSkeleton />
+          </div>
+          <ProfileSidebarSkeleton />
+        </SkeletonRegion>
       </>
     )
   }

@@ -1,6 +1,7 @@
 import { useTranslation } from 'react-i18next'
 import { useJobText } from '@/lib/jobText.js'
 import { useFormat } from '@/lib/preferences.js'
+import { Skeleton, SkeletonRegion } from '@/components/ui'
 import styles from './JobPosting.module.css'
 
 function SkillGroup({ title, skills }) {
@@ -53,5 +54,42 @@ export default function JobPosting({ job }) {
         </ul>
       )}
     </>
+  )
+}
+
+/** The posting's shape while the job loads: the brief, a list and the skills. */
+export function JobPostingSkeleton() {
+  return (
+    <SkeletonRegion>
+      <div className={styles.skeletonLines}>
+        <Skeleton />
+        <Skeleton />
+        <Skeleton width="65%" />
+      </div>
+      <p className={styles.heading}>
+        <Skeleton width={140} height={12} />
+      </p>
+      <div className={styles.skeletonLines}>
+        <Skeleton width="80%" />
+        <Skeleton width="70%" />
+        <Skeleton width="75%" />
+      </div>
+      <p className={styles.heading}>
+        <Skeleton width={110} height={12} />
+      </p>
+      <div className={styles.skills}>
+        <Skeleton shape="block" width={64} height={23} className={styles.skeletonSkill} />
+        <Skeleton shape="block" width={80} height={23} className={styles.skeletonSkill} />
+        <Skeleton shape="block" width={96} height={23} className={styles.skeletonSkill} />
+        <Skeleton shape="block" width={52} height={23} className={styles.skeletonSkill} />
+      </div>
+      <p className={styles.heading}>
+        <Skeleton width={120} height={12} />
+      </p>
+      <div className={styles.skills}>
+        <Skeleton shape="block" width={80} height={23} className={styles.skeletonSkill} />
+        <Skeleton shape="block" width={96} height={23} className={styles.skeletonSkill} />
+      </div>
+    </SkeletonRegion>
   )
 }

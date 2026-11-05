@@ -3,7 +3,7 @@ import { useTranslation } from 'react-i18next'
 import { Link } from 'react-router-dom'
 import { ArrowRight, Earth, FileText, Link2, MapPin, Plus, ShieldCheck, SquarePen, Trash2, Upload } from 'lucide-react'
 import { useGetConfigQuery } from '@/app/api.js'
-import { Avatar, Button, Checkbox, Icon, IconButton, Panel } from '@/components/ui'
+import { Avatar, Button, Checkbox, Icon, IconButton, Panel, Skeleton, SkeletonRegion } from '@/components/ui'
 import ConfirmDialog from '@/components/common/ConfirmDialog.jsx'
 import PageTitle from '@/components/common/PageTitle.jsx'
 import PillBadge from '@/components/common/PillBadge.jsx'
@@ -34,7 +34,8 @@ import { useMarkSeen } from '@/features/notifications/api.js'
 export default function ProfilePage() {
   // P11b-Q10: opening this item marks its notifications read.
   useMarkSeen('page', 'profile')
-  const { data: profile } = useGetProfileQuery()
+  const { data: profile, isLoading } = useGetProfileQuery()
+  if (isLoading) return <ProfileSkeleton />
   return profile ? <ProfileView profile={profile} /> : null
 }
 
@@ -87,10 +88,14 @@ function EntryRow({ title, meta, children, onEdit, onDelete, editLabel, deleteLa
 function CourseCertificates() {
   const { t } = useTranslation()
   const format = useFormat()
-  const { data: certificates = [] } = useGetCertificatesQuery()
+  const { data: certificates = [], isLoading } = useGetCertificatesQuery()
   return (
     <Section name="course-certificates" title={t('profile:courseCertificates.title')}>
-      {certificates.length > 0 ? (
+      {isLoading ? (
+        <SkeletonRegion className={styles.entries}>
+          <EntrySkeleton />
+        </SkeletonRegion>
+      ) : certificates.length > 0 ? (
         <ul className={styles.entries}>
           {certificates.map((certificate) => (
             <li key={certificate.id} className={styles.entry} data-course-certificate={certificate.code}>
@@ -533,6 +538,126 @@ function ProfileView({ profile }) {
       >
         <p className={styles.detail}>{deleting && t('profile:deleteDialog.body', { name: deleting.name })}</p>
       </ConfirmDialog>
+    </>
+  )
+}
+
+/** An entry card's shape (work history, education, certificates) while it loads. */
+function EntrySkeleton({ width = 220 }) {
+  return (
+    <div className={styles.entry}>
+      <div className={styles.entrySkeleton}>
+        <Skeleton width={width} height={12} />
+        <Skeleton width={120} height={8} />
+      </div>
+    </div>
+  )
+}
+
+/** The profile page while it loads: the real headings, placeholders for the identity, sections and side cards. */
+function ProfileSkeleton() {
+  const { t } = useTranslation()
+  return (
+    <>
+      <PageTitle
+        title={t('profile:title')}
+        description={t('profile:description')}
+        actions={
+          <div className={styles.actions}>
+            <Skeleton shape="pill" width={164} height={40} />
+            <Skeleton shape="pill" width={138} height={42} />
+          </div>
+        }
+      />
+      <div className={styles.layout}>
+        <Panel padding={32} className={styles.main}>
+          <SkeletonRegion>
+            <div className={styles.identity}>
+              <div className={styles.avatarRing}>
+                <Skeleton shape="circle" width={96} height={96} />
+              </div>
+              <div className={styles.who}>
+                <p className={styles.name}>
+                  <Skeleton width={200} height={20} />
+                </p>
+                <p className={styles.headline}>
+                  <Skeleton width={260} />
+                </p>
+                <p className={styles.location}>
+                  <Skeleton width={140} height={8} />
+                </p>
+              </div>
+              <Skeleton shape="pill" width={130} />
+            </div>
+            <div className={styles.photoActions}>
+              <Skeleton shape="pill" width={128} height={32} />
+            </div>
+            <section className={styles.section}>
+              <h2 className={styles.sectionTitle}>{t('profile:about.title')}</h2>
+              <div className={styles.aboutSkeleton}>
+                <Skeleton />
+                <Skeleton />
+                <Skeleton width="60%" />
+              </div>
+            </section>
+            <section className={styles.section}>
+              <h2 className={styles.sectionTitle}>{t('profile:strengths.title')}</h2>
+              <p className={styles.detail}>
+                <Skeleton width={200} />
+              </p>
+              <div className={styles.tags}>
+                {[64, 88, 56, 72, 80].map((width) => (
+                  <Skeleton key={width} shape="pill" width={width} />
+                ))}
+              </div>
+            </section>
+            {['workHistory', 'education'].map((section) => (
+              <section key={section} className={styles.section}>
+                <h2 className={styles.sectionTitle}>{t(`profile:${section}.title`)}</h2>
+                <div className={styles.entries}>
+                  <EntrySkeleton />
+                  <EntrySkeleton width={180} />
+                </div>
+              </section>
+            ))}
+          </SkeletonRegion>
+        </Panel>
+
+        <aside className={styles.side}>
+          <Panel padding={24}>
+            <div className={styles.checklistHead}>
+              <h2 className={styles.sectionTitle}>{t('completeness:title')}</h2>
+              <Skeleton width={36} height={14} />
+            </div>
+            <div className={styles.checklistSkeleton}>
+              <Skeleton width={90} height={8} />
+              <Skeleton shape="block" height={8} />
+              {[96, 104, 80, 92, 88, 100, 150, 70, 110, 150, 160].map((width, index) => (
+                <Skeleton key={index} width={width} />
+              ))}
+            </div>
+          </Panel>
+          <Panel padding={24}>
+            <h2 className={styles.sectionTitle}>{t('profile:resume.title')}</h2>
+            <div className={styles.resumeFile}>
+              <Icon as={FileText} size={22} className={styles.resumeIcon} />
+              <Skeleton width={140} />
+            </div>
+            <Button as={Link} to="/candidate/cv-versions" variant="outline" fullWidth leftIcon={<Icon as={Upload} size={14} />}>
+              {t('profile:resume.update')}
+            </Button>
+          </Panel>
+          <section className={styles.control}>
+            <Icon as={ShieldCheck} size={22} className={styles.controlIcon} />
+            <h2 className={styles.controlTitle}>{t('profile:control.title')}</h2>
+            <p className={styles.controlText}>{t('profile:control.text')}</p>
+            <Link to="/candidate/settings/privacy" className={styles.controlLink}>
+              {t('profile:control.link')}
+              <Icon as={ArrowRight} size={12} />
+            </Link>
+          </section>
+        </aside>
+      </div>
     </>
   )
 }

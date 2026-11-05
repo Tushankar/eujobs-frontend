@@ -42,6 +42,20 @@
   color: var(--foreground);
 }
 
+.skeletonText {
+  display: flex;
+  flex-direction: column;
+  gap: 18px;
+  padding: 25px 0 9px;
+}
+
+.tipSkeleton {
+  display: flex;
+  flex-direction: column;
+  gap: 14px;
+  padding: 15px 0 7px;
+}
+
 .tipText {
   padding-top: 8px;
   font-size: 12px;

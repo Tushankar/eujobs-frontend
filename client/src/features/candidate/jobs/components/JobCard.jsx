@@ -3,7 +3,7 @@ import { useTranslation } from 'react-i18next'
 import { Link } from 'react-router-dom'
 import { ArrowUpRight, Bookmark, BriefcaseBusiness, ChevronDown, Globe, MapPin } from 'lucide-react'
 import { cx } from '@/utils/cx.js'
-import { CompanyLogo, Icon, IconButton } from '@/components/ui'
+import { CompanyLogo, Icon, IconButton, Skeleton } from '@/components/ui'
 import StatusBadge from '@/components/common/StatusBadge.jsx'
 import aiGlyph from '@/assets/icons/ai-glyph-blue.svg'
 import JobSummaryButton from '@/features/ai/components/JobSummaryButton.jsx'
@@ -104,5 +104,42 @@ export default function JobCard({ job, onToggleSave }) {
         </div>
       )}
     </article>
+  )
+}
+
+/** The card's shape while jobs load: logo, company, title, meta, tags and footer. Wrap the cards in one SkeletonRegion. */
+export function JobCardSkeleton() {
+  return (
+    <div className={styles.card}>
+      <div className={styles.head}>
+        <Skeleton shape="block" width={44} height={44} />
+        <div className={styles.headText}>
+          <div className={styles.eyebrow}>
+            <Skeleton width={110} />
+          </div>
+          <div className={styles.title}>
+            <Skeleton width="55%" height={16} />
+          </div>
+        </div>
+        <Skeleton shape="circle" width={36} height={36} />
+      </div>
+      <div className={styles.meta}>
+        <Skeleton width={96} />
+        <Skeleton width={56} />
+        <Skeleton width={64} />
+      </div>
+      <div className={styles.tags}>
+        {[84, 56, 72, 64].map((width) => (
+          <Skeleton key={width} shape="block" width={width} height={23} />
+        ))}
+      </div>
+      <div className={styles.footer}>
+        <Skeleton width={120} />
+        <div className={styles.actions}>
+          <Skeleton width={72} />
+          <Skeleton shape="pill" width={76} height={32} />
+        </div>
+      </div>
+    </div>
   )
 }

@@ -1,7 +1,7 @@
 import { useTranslation } from 'react-i18next'
 import { Link } from 'react-router-dom'
 import { ArrowRight, X } from 'lucide-react'
-import { Icon, IconButton } from '@/components/ui'
+import { Icon, IconButton, Skeleton, SkeletonRegion } from '@/components/ui'
 import { useLocalStorage } from '@/hooks/useLocalStorage.js'
 import aiGlyph from '@/assets/icons/ai-glyph-blue.svg'
 import { useGetInsightsOverviewQuery } from '@/features/ai/api.js'
@@ -18,8 +18,32 @@ export default function InsightCard() {
   const { me } = usePreferences()
   const locked = lacksEntitlement(me, 'ai')
   const [dismissed, setDismissed] = useLocalStorage('lwm.candidate.overview.insightDismissed', false)
-  const { data } = useGetInsightsOverviewQuery(undefined, { skip: locked || dismissed })
+  const { data, isLoading } = useGetInsightsOverviewQuery(undefined, { skip: locked || dismissed })
   const [top] = data?.skillDemand ?? []
+  if (isLoading) {
+    return (
+      <section className={styles.insight}>
+        <div className={styles.insightHead}>
+          <span className={styles.insightLabel}>
+            <img src={aiGlyph} alt="" width={16} height={16} />
+            {t('teaser.label')}
+          </span>
+        </div>
+        <SkeletonRegion>
+          <p className={styles.insightTitle}>
+            <Skeleton width="85%" height={14} />
+          </p>
+          <p className={styles.insightText}>
+            <Skeleton />
+            <Skeleton width="70%" />
+          </p>
+          <p className={styles.insightLink}>
+            <Skeleton width={90} />
+          </p>
+        </SkeletonRegion>
+      </section>
+    )
+  }
   if (locked || dismissed || !top?.jobCount) return null
 
   return (

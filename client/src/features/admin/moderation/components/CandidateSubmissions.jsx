@@ -1,11 +1,57 @@
 import { useTranslation } from 'react-i18next'
 import { Link } from 'react-router-dom'
 import { ChevronRight, ShieldCheck } from 'lucide-react'
-import { Avatar, Icon } from '@/components/ui'
+import { Avatar, Icon, Skeleton, SkeletonRegion } from '@/components/ui'
 import PillBadge from '@/components/common/PillBadge.jsx'
 import { CATEGORY_ICONS, SUBMISSION_TONES } from '@/features/admin/shared/tones.js'
 import { useFormat } from '@/lib/preferences.js'
 import styles from './CandidateSubmissions.module.css'
+
+/* Submissions per placeholder candidate. */
+const SKELETON_GROUPS = [2, 1, 1]
+
+/** The verification queue while it loads: candidates (photo, name, email) over their submission rows. */
+export function SubmissionsSkeleton() {
+  return (
+    <SkeletonRegion>
+      <ul>
+        {SKELETON_GROUPS.map((count, group) => (
+          <li key={group} className={styles.card}>
+            <div className={styles.person}>
+              <Skeleton shape="circle" />
+              <div className={styles.who}>
+                <p className={styles.name}>
+                  <Skeleton width={140} height={14} />
+                </p>
+                <p className={styles.email}>
+                  <Skeleton width={180} />
+                </p>
+              </div>
+              <Skeleton width={72} />
+            </div>
+            <ul className={styles.items}>
+              {Array.from({ length: count }, (_, index) => (
+                <li key={index} className={styles.item}>
+                  <Skeleton shape="circle" width={16} height={16} />
+                  <div className={styles.text}>
+                    <p className={styles.what}>
+                      <Skeleton width={160} height={12} />
+                    </p>
+                    <p className={styles.when}>
+                      <Skeleton width={120} />
+                    </p>
+                  </div>
+                  <Skeleton shape="pill" />
+                  <Skeleton shape="pill" width={84} height={32} />
+                </li>
+              ))}
+            </ul>
+          </li>
+        ))}
+      </ul>
+    </SkeletonRegion>
+  )
+}
 
 /** One candidate in the verification queue: who they are, then each of their submissions on its own aligned row. */
 export default function CandidateSubmissions({ candidate, items, basePath }) {

@@ -1,6 +1,6 @@
 import { useTranslation } from 'react-i18next'
 import { Bookmark, ShieldCheck } from 'lucide-react'
-import { Icon, Panel, SelectField } from '@/components/ui'
+import { Icon, Panel, SelectField, Skeleton, SkeletonRegion } from '@/components/ui'
 import PlanButton from '@/features/candidate/billing/components/PlanButton.jsx'
 import { useGetPipelineQuery } from '@/features/recruiter/applications/api.js'
 import ApplicationStageSelect from '@/features/recruiter/applications/components/ApplicationStageSelect.jsx'
@@ -14,8 +14,24 @@ import styles from './ProfileSidebar.module.css'
 function CompanyApplications({ candidate }) {
   const { t } = useTranslation()
   const format = useFormat()
-  const { data: pipeline } = useGetPipelineQuery()
-  if (!candidate.applications.length || !pipeline) return null
+  const { data: pipeline, isLoading } = useGetPipelineQuery()
+  if (!candidate.applications.length) return null
+  if (isLoading) {
+    return (
+      <Panel padding={20} className={styles.applications}>
+        <h2 className={styles.applicationsTitle}>{t('applications:profile.title')}</h2>
+        <SkeletonRegion className={styles.applicationList}>
+          {candidate.applications.map((application) => (
+            <div key={application.id} className={styles.application}>
+              <p className={styles.applicationJob}>{t('applications:profile.row', { job: application.job.title, date: format.date(application.appliedAt) })}</p>
+              <Skeleton shape="block" height={32} />
+            </div>
+          ))}
+        </SkeletonRegion>
+      </Panel>
+    )
+  }
+  if (!pipeline) return null
   return (
     <Panel padding={20} className={styles.applications} data-profile-applications>
       <h2 className={styles.applicationsTitle}>{t('applications:profile.title')}</h2>
@@ -79,6 +95,37 @@ export default function ProfileSidebar({ candidate, jobs, job, onJobChange, onTo
         <MatchInsights candidate={candidate} jobId={job?.id ?? null} defaultOpen />
       </Panel>
 
+      <p className={styles.reminder}>
+        <Icon as={ShieldCheck} size={17} strokeWidth={2} />
+        {t('discovery:profile.reminder')}
+      </p>
+    </aside>
+  )
+}
+
+/** The sidebar's shape while the profile loads: the action buttons, the match job select and the evidence box. */
+export function ProfileSidebarSkeleton() {
+  const { t } = useTranslation()
+  return (
+    <aside className={`${styles.sidebar} sticky-side`}>
+      <Panel as="div" padding={20} aria-hidden="true">
+        <div className={styles.actions}>
+          <Skeleton shape="pill" width="100%" height={40} />
+          <Skeleton shape="pill" width="100%" height={40} />
+          <Skeleton shape="pill" width="100%" height={32} />
+        </div>
+      </Panel>
+      <Panel as="div" padding={20} className={styles.evidence} aria-hidden="true">
+        <div className={styles.skeletonField}>
+          <p className={styles.skeletonLabel}>{t('discovery:profile.matchFor')}</p>
+          <Skeleton shape="block" height={46} />
+        </div>
+        <div className={styles.skeletonInsights}>
+          <Skeleton width="45%" />
+          <Skeleton width="90%" />
+          <Skeleton width="70%" />
+        </div>
+      </Panel>
       <p className={styles.reminder}>
         <Icon as={ShieldCheck} size={17} strokeWidth={2} />
         {t('discovery:profile.reminder')}

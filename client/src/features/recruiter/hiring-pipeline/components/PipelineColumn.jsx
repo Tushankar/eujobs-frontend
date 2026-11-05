@@ -1,4 +1,5 @@
 import { useTranslation } from 'react-i18next'
+import { Skeleton } from '@/components/ui'
 import { cx } from '@/utils/cx.js'
 import styles from './PipelineColumn.module.css'
 
@@ -31,5 +32,21 @@ export default function PipelineColumn({ stage, count, isDropTarget, onDragOver,
         <div className={styles.cards}>{children}</div>
       )}
     </section>
+  )
+}
+
+/** A column's shape while the board loads: header placeholders over `children` (placeholder cards). */
+export function PipelineColumnSkeleton({ children }) {
+  return (
+    <div className={styles.column} aria-hidden="true">
+      <div className={styles.header}>
+        <Skeleton shape="circle" width={6} height={6} />
+        <span className={styles.name}>
+          <Skeleton width={72} />
+        </span>
+        <Skeleton width={24} height={19} />
+      </div>
+      <div className={styles.cards}>{children}</div>
+    </div>
   )
 }

@@ -84,3 +84,14 @@
     grid-column: auto;
   }
 }
+
+/* Loading: the job select's placeholder keeps the select's width. */
+.row .skeletonJob {
+  width: 240px;
+}
+
+@media (max-width: 1023px) {
+  .row .skeletonJob {
+    width: auto;
+  }
+}

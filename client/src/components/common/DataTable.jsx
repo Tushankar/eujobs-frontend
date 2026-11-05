@@ -4,8 +4,9 @@ import { cx } from '@/utils/cx.js'
 import styles from './DataTable.module.css'
 
 const SKELETON_ROWS = 6
-/* Line widths cycle per row so the placeholder rows read like real, uneven data. */
-const WIDTHS = ['72%', '54%', '64%', '46%', '80%', '58%']
+/* Line widths (px) cycle per row so the placeholder rows read like real, uneven data; fixed widths let the table's
+   automatic layout size the columns close to the loaded ones. */
+const WIDTHS = [96, 72, 88, 64, 108, 80]
 
 /**
  * One cell's placeholder, shaped like the content it stands for. `kind`: 'title' (a name over a meta line),
@@ -16,11 +17,11 @@ export function SkeletonCell({ kind, row }) {
   const width = WIDTHS[row % WIDTHS.length]
   if (kind === 'text') return <Skeleton width={width} />
   if (kind === 'pill') return <Skeleton shape="pill" />
-  if (kind === 'action') return <Skeleton shape="pill" width={84} height={32} />
+  if (kind === 'action') return <Skeleton shape="pill" width={72} height={32} />
   const lines = (
     <span className={styles.skeletonLines}>
-      <Skeleton width={width} height={12} />
-      <Skeleton width="40%" />
+      <Skeleton width={width + 32} height={12} />
+      <Skeleton width={width} />
     </span>
   )
   if (kind === 'title') return lines

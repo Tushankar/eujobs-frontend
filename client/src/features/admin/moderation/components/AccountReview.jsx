@@ -2,7 +2,7 @@ import { useState } from 'react'
 import { useTranslation } from 'react-i18next'
 import { Check, ChevronRight, CircleCheck, FileText, Pause, X } from 'lucide-react'
 import { errorCode, useGetConfigQuery } from '@/app/api.js'
-import { Avatar, Button, CompanyLogo, Icon, Modal, TextareaField } from '@/components/ui'
+import { Avatar, Button, CompanyLogo, Icon, Modal, Skeleton, SkeletonRegion, TextareaField } from '@/components/ui'
 import PillBadge from '@/components/common/PillBadge.jsx'
 import { serverFieldErrors, useErrorText } from '@/lib/forms.js'
 import { useFormat } from '@/lib/preferences.js'
@@ -18,6 +18,51 @@ import { useMarkSeen } from '@/features/notifications/api.js'
 
 const ICONS = { approved: Check, rejected: X, suspended: Pause }
 const DECISION_TONES = { approved: 'success', rejected: 'danger', suspended: 'danger' }
+
+/** The recruiter's details while they load: the person, the contact checks and the company record. */
+function ReviewSkeleton() {
+  const { t } = useTranslation()
+  const dialog = (key) => t(`moderation:accounts.dialog.${key}`)
+  const rows = (keys) =>
+    keys.map((key) => (
+      <div key={key}>
+        <span className={accountStyles.skeletonLabel}>{dialog(key)}</span>
+        <Skeleton width={140} height={12} />
+      </div>
+    ))
+  return (
+    <SkeletonRegion className={styles.details}>
+      <div className={styles.person}>
+        <Skeleton shape="circle" width={44} height={44} />
+        <div className={styles.personText}>
+          <p className={styles.personName}>
+            <Skeleton width={160} height={16} />
+          </p>
+          <p className={styles.personEmail}>
+            <Skeleton width={220} />
+          </p>
+        </div>
+        <Skeleton shape="pill" />
+      </div>
+      <div className={cx(accountStyles.card, accountStyles.facts, accountStyles.contact)}>{rows(['email', 'phone', 'submittedAt'])}</div>
+      <div className={accountStyles.card}>
+        <div className={accountStyles.companyHead}>
+          <Skeleton shape="block" width={40} height={40} />
+          <div className={styles.personText}>
+            <p className={accountStyles.companyName}>
+              <Skeleton width={140} height={14} />
+            </p>
+            <p className={styles.personEmail}>
+              <Skeleton width={120} />
+            </p>
+          </div>
+        </div>
+        <p className={accountStyles.cardLabel}>{dialog('company')}</p>
+        <div className={accountStyles.facts}>{rows(['legalName', 'businessEmail', 'industry', 'size'])}</div>
+      </div>
+    </SkeletonRegion>
+  )
+}
 
 /**
  * Review dialog of one recruiter (§3.12, M-165, OQ-2): the selected KYC file on the left (`documents.view`);
@@ -61,7 +106,7 @@ export default function AccountReview({ userId, onDecided, onClose }) {
   if (!account) {
     return (
       <Modal open onClose={onClose} title={dialog('title')} width={600}>
-        <p className={detailStyles.contextText}>{error ? errorText.code(error) : t('common:loading')}</p>
+        {error ? <p className={detailStyles.contextText}>{errorText.code(error)}</p> : <ReviewSkeleton />}
       </Modal>
     )
   }

@@ -62,6 +62,10 @@
   min-width: 0;
 }
 
+.item .skeletonIcon {
+  border-radius: var(--radius-xl);
+}
+
 .itemTitle {
   font-size: 14px;
   font-weight: 600;

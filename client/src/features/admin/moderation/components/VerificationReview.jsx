@@ -2,7 +2,7 @@ import { useState } from 'react'
 import { useTranslation } from 'react-i18next'
 import { Check, ScanSearch, X } from 'lucide-react'
 import { errorCode, useGetConfigQuery } from '@/app/api.js'
-import { Avatar, Button, Icon, Modal, TextareaField } from '@/components/ui'
+import { Avatar, Button, Icon, Modal, Skeleton, SkeletonRegion, TextareaField } from '@/components/ui'
 import PillBadge from '@/components/common/PillBadge.jsx'
 import { serverFieldErrors, useErrorText } from '@/lib/forms.js'
 import { useFormat } from '@/lib/preferences.js'
@@ -41,6 +41,47 @@ function Claim({ category, claim }) {
   }
 }
 
+/** The submission's details while they load: the person, the Check · Evidence · Submitted strip and the claim. */
+function ReviewSkeleton() {
+  const { t } = useTranslation()
+  const dialog = (key) => t(`moderation:verification.dialog.${key}`)
+  return (
+    <SkeletonRegion className={styles.details}>
+      <div className={styles.person}>
+        <Skeleton shape="circle" width={44} height={44} />
+        <div className={styles.personText}>
+          <p className={styles.personName}>
+            <Skeleton width={160} height={16} />
+          </p>
+          <p className={styles.personEmail}>
+            <Skeleton width={200} />
+          </p>
+        </div>
+        <Skeleton shape="pill" />
+      </div>
+      <div className={styles.summary}>
+        {['check', 'evidence', 'submitted'].map((key) => (
+          <div key={key}>
+            <p className={styles.skeletonLabel}>{dialog(key)}</p>
+            <p className={styles.skeletonValue}>
+              <Skeleton width={88} height={12} />
+            </p>
+          </div>
+        ))}
+      </div>
+      <div className={styles.match}>
+        <p className={styles.matchLabel}>
+          <Icon as={ScanSearch} size={14} />
+          {dialog('claim')}
+        </p>
+        <p className={styles.matchValue}>
+          <Skeleton width="70%" height={14} />
+        </p>
+      </div>
+    </SkeletonRegion>
+  )
+}
+
 /** Review dialog of one submission (M-166): details, then Approve or Reject with a reason (≤ 300). */
 export default function VerificationReview({ id, onDecided, onClose }) {
   // P11b-Q10: opening this item marks its notifications read.
@@ -74,8 +115,8 @@ export default function VerificationReview({ id, onDecided, onClose }) {
 
   if (!item) {
     return (
-      <Modal open onClose={onClose} title={dialog('title')} width={600}>
-        <p className={detailStyles.contextText}>{error ? errorText.code(error) : t('common:loading')}</p>
+      <Modal open onClose={onClose} title={dialog('title')} width={560}>
+        {error ? <p className={detailStyles.contextText}>{errorText.code(error)}</p> : <ReviewSkeleton />}
       </Modal>
     )
   }

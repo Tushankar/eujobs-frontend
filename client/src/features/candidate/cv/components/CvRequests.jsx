@@ -1,6 +1,6 @@
 import { useState } from 'react'
 import { useTranslation } from 'react-i18next'
-import { Button, Panel, SelectField } from '@/components/ui'
+import { Button, Panel, SelectField, Skeleton, SkeletonRegion } from '@/components/ui'
 import PillBadge from '@/components/common/PillBadge.jsx'
 import { useErrorText } from '@/lib/forms.js'
 import { useFormat } from '@/lib/preferences.js'
@@ -59,8 +59,9 @@ function PendingRequest({ request, versions }) {
 export default function CvRequests({ versions }) {
   const { t } = useTranslation()
   const format = useFormat()
-  const { data: requests } = useGetCvRequestsQuery()
-  const { data: downloads } = useGetCvDownloadsQuery()
+  const { data: requests, isLoading: requestsLoading } = useGetCvRequestsQuery()
+  const { data: downloads, isLoading: downloadsLoading } = useGetCvDownloadsQuery()
+  if (requestsLoading || downloadsLoading) return <CvRequestsSkeleton />
   if (!requests || !downloads) return null
 
   return (
@@ -112,6 +113,40 @@ export default function CvRequests({ versions }) {
             ))}
           </ul>
         )}
+      </Panel>
+    </div>
+  )
+}
+
+/** Both cards while they load: the real headings and leads, placeholders for the requests and the log. */
+function CvRequestsSkeleton() {
+  const { t } = useTranslation()
+  return (
+    <div className={styles.root}>
+      <Panel padding={28}>
+        <h2 className={styles.heading}>{t('cv:requests.title')}</h2>
+        <p className={styles.lead}>{t('cv:requests.lead')}</p>
+        <SkeletonRegion className={styles.list}>
+          {[0, 1].map((index) => (
+            <div key={index} className={styles.item}>
+              <Skeleton width="55%" height={12} />
+              <Skeleton width={120} height={8} />
+            </div>
+          ))}
+        </SkeletonRegion>
+      </Panel>
+
+      <Panel padding={28}>
+        <h2 className={styles.heading}>{t('cv:downloads.title')}</h2>
+        <p className={styles.lead}>{t('cv:downloads.lead')}</p>
+        <SkeletonRegion className={styles.list}>
+          {[0, 1, 2].map((index) => (
+            <div key={index} className={styles.logRow}>
+              <Skeleton width="50%" />
+              <Skeleton width={110} />
+            </div>
+          ))}
+        </SkeletonRegion>
       </Panel>
     </div>
   )

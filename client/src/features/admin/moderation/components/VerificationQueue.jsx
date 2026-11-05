@@ -6,8 +6,10 @@ import { errorCode } from '@/app/api.js'
 import EmptyState from '@/components/common/EmptyState.jsx'
 import SectionTitle from '@/components/common/SectionTitle.jsx'
 import SegmentedTabs from '@/components/common/SegmentedTabs.jsx'
+import { tableState } from '@/components/common/tableState.js'
+import { cx } from '@/utils/cx.js'
 import { useGetVerificationQueueQuery } from '../api.js'
-import CandidateSubmissions from './CandidateSubmissions.jsx'
+import CandidateSubmissions, { SubmissionsSkeleton } from './CandidateSubmissions.jsx'
 import VerificationReview from './VerificationReview.jsx'
 import pageStyles from '../pages/ModerationPage.module.css'
 
@@ -29,7 +31,9 @@ export default function VerificationQueue({ basePath, openId, onDecided }) {
   const { t } = useTranslation()
   const navigate = useNavigate()
   const [status, setStatus] = useState('in_review')
-  const { data: queue, error } = useGetVerificationQueueQuery(status)
+  const result = useGetVerificationQueueQuery(status)
+  const { data: queue, error } = result
+  const list = tableState(result, queue?.items ?? [])
   const denied = errorCode(error) === 'PERMISSION_DENIED'
 
   return (
@@ -47,12 +51,14 @@ export default function VerificationQueue({ basePath, openId, onDecided }) {
             />
           )}
         </div>
-        {denied ? (
+        {list.loading ? (
+          <SubmissionsSkeleton />
+        ) : denied ? (
           <EmptyState icon={Lock} title={t('errors:PERMISSION_DENIED')} description={t('moderation:verification.noPermission', error.data.error.params)} />
         ) : queue?.items.length === 0 ? (
           <EmptyState icon={ShieldCheck} title={t('moderation:verification.empty')} />
         ) : (
-          <ul className={pageStyles.list}>
+          <ul className={cx(pageStyles.list, list.busy && pageStyles.busy)} aria-busy={list.busy || undefined}>
             {byCandidate(queue?.items ?? []).map((group) => (
               <CandidateSubmissions key={group.key} candidate={group.candidate} items={group.items} basePath={basePath} />
             ))}

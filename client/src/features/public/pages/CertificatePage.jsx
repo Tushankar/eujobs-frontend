@@ -1,7 +1,7 @@
 import { useTranslation } from 'react-i18next'
 import { Link, useParams } from 'react-router-dom'
 import { BadgeCheck, CircleSlash, SearchX } from 'lucide-react'
-import { Icon, Panel } from '@/components/ui'
+import { Icon, Panel, Skeleton, SkeletonRegion } from '@/components/ui'
 import PillBadge from '@/components/common/PillBadge.jsx'
 import BrandLogo from '@/components/layout/BrandLogo.jsx'
 import Copyright from '@/components/layout/Copyright.jsx'
@@ -25,7 +25,7 @@ export default function CertificatePage() {
   const format = useFormat()
   const errorText = useErrorText()
   const { code } = useParams()
-  const { data, error } = useGetPublicCertificateQuery(code)
+  const { data, error, isLoading } = useGetPublicCertificateQuery(code)
   useDocumentTitle(t('title'))
   const notFound = errorCode(error) === 'NOT_FOUND' || errorCode(error) === 'VALIDATION_FAILED'
 
@@ -42,7 +42,27 @@ export default function CertificatePage() {
         <Panel padding={32} className={styles.panel} data-certificate-check={data?.status ?? (notFound ? 'not_found' : undefined)}>
           <p className={styles.eyebrow}>{t('title')}</p>
           <p className={styles.code}>{code.toUpperCase()}</p>
-          {!data && !error && <p role="status">{t('common:loading')}</p>}
+          {isLoading && (
+            <SkeletonRegion className={styles.result}>
+              <Skeleton shape="circle" width={28} height={28} />
+              <Skeleton shape="pill" />
+              <dl className={styles.facts}>
+                {[
+                  ['holder', 160],
+                  ['course', 220],
+                  ['issued', 120],
+                ].map(([key, width]) => (
+                  <div key={key}>
+                    <dt>{t(key)}</dt>
+                    <dd>
+                      <Skeleton width={width} height={12} />
+                    </dd>
+                  </div>
+                ))}
+              </dl>
+              <Skeleton width="70%" />
+            </SkeletonRegion>
+          )}
           {error && (
             <div className={styles.result}>
               <Icon as={SearchX} size={28} className={styles.icon} />

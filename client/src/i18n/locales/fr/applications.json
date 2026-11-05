@@ -151,6 +151,7 @@
     "history": "Historique des étapes"
   },
   "funnel": {
+    "title": "Vue en entonnoir",
     "label": "Entonnoir de recrutement par étape",
     "hint": "Cliquez sur une étape pour voir qui s’y trouve. Faites glisser un candidat sur une étape, ou utilisez son menu d’étape, pour le déplacer.",
     "applicants_one": "candidat",

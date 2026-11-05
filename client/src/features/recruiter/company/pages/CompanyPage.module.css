@@ -157,3 +157,24 @@
     line-height: 36px;
   }
 }
+
+/* Loading: each field's label (Field) over a placeholder for its control. */
+.skeletonField {
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+  min-width: 0;
+}
+
+.skeletonLabel {
+  font-size: 13px;
+  font-weight: 600;
+  line-height: 18px;
+  color: var(--foreground);
+}
+
+.skeletonHint {
+  font-size: 12px;
+  line-height: 16px;
+  color: var(--muted-foreground);
+}

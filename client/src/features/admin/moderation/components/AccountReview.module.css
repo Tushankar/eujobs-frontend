@@ -184,3 +184,8 @@
     gap: 2px;
   }
 }
+
+/* Loading: a facts row's label as text, outside the definition list. */
+.skeletonLabel {
+  color: var(--muted-foreground);
+}

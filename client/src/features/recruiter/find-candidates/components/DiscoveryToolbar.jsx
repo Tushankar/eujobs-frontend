@@ -2,7 +2,7 @@ import { useMemo, useState } from 'react'
 import { useTranslation } from 'react-i18next'
 import { Search, SlidersHorizontal } from 'lucide-react'
 import { useGetConfigQuery, useGetLanguageCodesQuery } from '@/app/api.js'
-import { Button, Checkbox, Icon, Panel, SelectField, TextField } from '@/components/ui'
+import { Button, Checkbox, Icon, Panel, SelectField, Skeleton, TextField } from '@/components/ui'
 import PlanButton from '@/features/candidate/billing/components/PlanButton.jsx'
 import CityField from '@/components/common/CityField.jsx'
 import { useFormat, usePreferences } from '@/lib/preferences.js'
@@ -14,10 +14,11 @@ const MIN_YEARS = [3, 5, 7, 9]
 /**
  * Search box, "match to a job" select and the Filters panel (M-056, OD4, OQ-6f): work mode, availability,
  * experience, listed skill, language with a minimum level, right to work in the picker country, verified only and
- * an optional city (G-1). State lives in the page; this only renders it. `locked` (no Recruiter Plus, §3.22) turns the
+ * an optional city (G-1). State lives in the page; this only renders it. While `jobsLoading` the job select is a
+ * placeholder. `locked` (no Recruiter Plus, §3.22) turns the
  * three controls into locked buttons that open the upgrade dialog.
  */
-export default function DiscoveryToolbar({ locked, query, onQueryChange, jobs, job, onJobChange, filters, onFiltersChange }) {
+export default function DiscoveryToolbar({ locked, jobsLoading, query, onQueryChange, jobs, job, onJobChange, filters, onFiltersChange }) {
   const { t } = useTranslation()
   const format = useFormat()
   const { language, country } = usePreferences()
@@ -63,14 +64,18 @@ export default function DiscoveryToolbar({ locked, query, onQueryChange, jobs, j
           aria-label={t('discovery:toolbar.search')}
           leftIcon={<Icon as={Search} size={16} strokeWidth={2} />}
         />
-        <SelectField
-          className={styles.job}
-          aria-label={t('discovery:toolbar.matchJob')}
-          value={job?.id ?? ''}
-          disabled={jobs.length === 0}
-          onChange={(event) => onJobChange(event.target.value)}
-          options={jobs.length > 0 ? jobs.map((item) => ({ value: item.id, label: item.title })) : [{ value: '', label: t('discovery:toolbar.noJobs') }]}
-        />
+        {jobsLoading ? (
+          <Skeleton shape="block" height={46} className={`${styles.job} ${styles.skeletonJob}`} />
+        ) : (
+          <SelectField
+            className={styles.job}
+            aria-label={t('discovery:toolbar.matchJob')}
+            value={job?.id ?? ''}
+            disabled={jobs.length === 0}
+            onChange={(event) => onJobChange(event.target.value)}
+            options={jobs.length > 0 ? jobs.map((item) => ({ value: item.id, label: item.title })) : [{ value: '', label: t('discovery:toolbar.noJobs') }]}
+          />
+        )}
         <Button
           variant="outline"
           className={styles.filtersButton}

@@ -2,7 +2,7 @@ import { useState } from 'react'
 import { useTranslation } from 'react-i18next'
 import { Link, useParams } from 'react-router-dom'
 import { ArrowLeft, LockKeyhole, RotateCcw } from 'lucide-react'
-import { Button, Icon, Panel } from '@/components/ui'
+import { Button, Icon, Panel, Skeleton, SkeletonRegion } from '@/components/ui'
 import EmptyState from '@/components/common/EmptyState.jsx'
 import NoticeBanner from '@/components/common/NoticeBanner.jsx'
 import PageTitle from '@/components/common/PageTitle.jsx'
@@ -13,6 +13,34 @@ import { useGetQuizQuery, useSubmitAttemptMutation } from '../api.js'
 import CertificateBlock from '../components/CertificateBlock.jsx'
 import { useLearningPath } from '../useCourseText.js'
 import styles from './QuizPage.module.css'
+
+/** The quiz while it loads: its heading and a few questions with their options, as placeholders. */
+function QuizSkeleton() {
+  const { t } = useTranslation('learning')
+  return (
+    <SkeletonRegion>
+      <PageTitle eyebrow={<Skeleton width={200} />} title={t('quiz.title')} description={<Skeleton width={260} />} />
+      <div className={styles.form}>
+        {[0, 1, 2].map((question) => (
+          <Panel key={question} padding={24} className={styles.question}>
+            <p className={styles.legend}>
+              <Skeleton width="60%" height={12} />
+            </p>
+            <p className={styles.muted}>
+              <Skeleton width={120} />
+            </p>
+            {['45%', '35%', '50%'].map((width) => (
+              <div key={width} className={styles.option}>
+                <Skeleton shape="circle" width={14} height={14} />
+                <Skeleton width={width} />
+              </div>
+            ))}
+          </Panel>
+        ))}
+      </div>
+    </SkeletonRegion>
+  )
+}
 
 /**
  * /…/learning/:courseId/quiz (M-104): unlocked once every lesson is complete; single and multiple choice with the
@@ -25,7 +53,7 @@ export default function QuizPage() {
   const errorText = useErrorText()
   const { courseId } = useParams()
   const base = useLearningPath()
-  const { data: quiz, error, refetch, isFetching } = useGetQuizQuery(courseId)
+  const { data: quiz, error, refetch, isFetching, isLoading: quizLoading } = useGetQuizQuery(courseId)
   const [submit, { data: result, isLoading, error: submitError, reset }] = useSubmitAttemptMutation()
   const [answers, setAnswers] = useState({})
   const coursePath = `${base}/${courseId}`
@@ -38,6 +66,14 @@ export default function QuizPage() {
     </Link>
   )
   if (error) return <>{back}<NoticeBanner>{errorText.code(error)}</NoticeBanner></>
+  if (quizLoading) {
+    return (
+      <>
+        {back}
+        <QuizSkeleton />
+      </>
+    )
+  }
   if (!quiz) return back
   if (!quiz.unlocked) {
     return (

@@ -6,6 +6,7 @@ import { useGetAnalyticsQuery } from '@/features/admin/overview/api.js'
 import CountryFilter from '@/features/admin/overview/components/CountryFilter.jsx'
 import { PERIODS } from '@/features/admin/overview/useActivity.js'
 import { useUrlFilters } from '@/lib/useUrlFilters.js'
+import { cx } from '@/utils/cx.js'
 import ActivityCard from '../components/ActivityCard.jsx'
 import { DemandedSkills, MatchingQuality } from '../components/InsightCards.jsx'
 import styles from './AnalyticsPage.module.css'
@@ -20,7 +21,9 @@ export default function AnalyticsPage() {
   const view = params.get('view') === 'line' ? 'line' : 'bar'
   const period = PERIODS.includes(params.get('period')) ? params.get('period') : PERIODS[0]
   const country = params.get('country') ?? ''
-  const { data } = useGetAnalyticsQuery(country ? { country } : {}, { refetchOnMountOrArgChange: true })
+  const { data, isLoading, isFetching, currentData } = useGetAnalyticsQuery(country ? { country } : {}, { refetchOnMountOrArgChange: true })
+  // A new country: the numbers on screen are the previous one's until the new ones arrive.
+  const busy = isFetching && !currentData && !isLoading
   const conversion = data?.shortlistConversion
   const stats = [
     {
@@ -36,16 +39,16 @@ export default function AnalyticsPage() {
   return (
     <>
       <PageTitle title={t('analytics.title')} description={t('analytics.description')} actions={<CountryFilter value={country} onChange={(value) => setFilter('country', value)} />} />
-      <div className={styles.stats}>
+      <div className={cx(styles.stats, busy && styles.busy)} aria-busy={busy || undefined}>
         {stats.map(({ key, ...stat }) => (
           <div key={key} data-kpi={key}>
-            <StatCard label={t(`analytics.${key}`)} {...stat} />
+            <StatCard label={t(`analytics.${key}`)} {...stat} loading={isLoading} />
           </div>
         ))}
       </div>
       <div className={styles.split}>
         <ActivityCard view={view} period={period} country={country} onViewChange={(next) => setFilter('view', next)} onPeriodChange={(next) => setFilter('period', next)} />
-        <DemandedSkills skills={data?.skills ?? []} />
+        <DemandedSkills skills={data?.skills ?? []} loading={isLoading} />
       </div>
       <div className={styles.quality}>
         <MatchingQuality />

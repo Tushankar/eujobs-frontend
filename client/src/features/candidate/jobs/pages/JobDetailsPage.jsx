@@ -2,7 +2,7 @@ import { useTranslation } from 'react-i18next'
 import { Link, useParams } from 'react-router-dom'
 import { ArrowLeft, Bookmark, Building2, BriefcaseBusiness, Check, Globe, MapPin, SearchX, Users } from 'lucide-react'
 import { cx } from '@/utils/cx.js'
-import { Button, CompanyLogo, Icon } from '@/components/ui'
+import { Button, CompanyLogo, Icon, Skeleton, SkeletonRegion } from '@/components/ui'
 import EmptyState from '@/components/common/EmptyState.jsx'
 import aiGlyph from '@/assets/icons/ai-glyph-blue.svg'
 import Translatable from '@/features/ai/components/Translatable.jsx'
@@ -117,7 +117,7 @@ export default function JobDetailsPage() {
   const { jobId } = useParams()
   // P11b-Q10: opening this item marks its notifications read.
   useMarkSeen('job', jobId)
-  const { data: job, error } = useGetJobQuery(jobId)
+  const { data: job, error, isLoading } = useGetJobQuery(jobId)
   const toggleSave = useSaveToggle()
 
   const back = (
@@ -143,7 +143,14 @@ export default function JobDetailsPage() {
       </div>
     )
   }
-  if (!job) return <div className={styles.page}>{back}</div>
+  if (!job) {
+    return (
+      <div className={styles.page}>
+        {back}
+        {isLoading && <JobDetailsSkeleton />}
+      </div>
+    )
+  }
 
   const { company } = job
   const eligible = jobText.eligible(job)
@@ -259,6 +266,80 @@ export default function JobDetailsPage() {
           </section>
         </aside>
       </div>
+    </div>
+  )
+}
+
+/** The job's layout while it loads: the real section and rail headings, placeholders for the job's own text. */
+function JobDetailsSkeleton() {
+  const { t } = useTranslation()
+  return (
+    <div className={styles.layout}>
+      <SkeletonRegion className={styles.article}>
+        <div className={styles.hero}>
+          <Skeleton shape="block" width={44} height={44} />
+          <div className={styles.heroText}>
+            <Skeleton width={140} height={12} />
+            <p className={styles.posted}>
+              <Skeleton width={180} height={8} />
+            </p>
+          </div>
+        </div>
+        <div className={styles.title}>
+          <Skeleton width="60%" height={24} />
+        </div>
+        <div className={styles.meta}>
+          <Skeleton width={110} />
+          <Skeleton width={64} />
+          <Skeleton width={72} />
+        </div>
+        <section className={styles.why}>
+          <h2 className={styles.h2Tight}>{t('findJobs:details.match')}</h2>
+          <div className={styles.insights}>
+            <Skeleton width={160} />
+            <div className={styles.insightsBody}>
+              <Skeleton width={120} />
+              <div className={styles.evidence}>
+                {[96, 64, 88].map((width) => (
+                  <Skeleton key={width} shape="pill" width={width} height={25} />
+                ))}
+              </div>
+              <p className={styles.experience}>
+                <Skeleton width="40%" />
+              </p>
+              <div className={styles.gap}>
+                <Skeleton width="50%" />
+              </div>
+            </div>
+          </div>
+        </section>
+        <section className={styles.section}>
+          <h2 className={styles.h2}>{t('findJobs:details.about')}</h2>
+          <div className={styles.aboutSkeleton}>
+            <Skeleton />
+            <Skeleton />
+            <Skeleton width="65%" />
+          </div>
+        </section>
+      </SkeletonRegion>
+
+      <aside className={`${styles.rail} sticky-side`}>
+        <section className={styles.card}>
+          <h2 className={styles.railTitle}>{t('findJobs:details.railTitle')}</h2>
+          <p className={styles.railText}>{t('findJobs:details.railText')}</p>
+          <div className={styles.railActions}>
+            <Skeleton shape="pill" width="100%" height={40} />
+            <Skeleton shape="pill" width="100%" height={40} />
+          </div>
+        </section>
+        <section className={styles.card}>
+          <Skeleton width="60%" height={12} />
+          <div className={styles.aboutSkeleton}>
+            <Skeleton />
+            <Skeleton width="80%" />
+          </div>
+        </section>
+      </aside>
     </div>
   )
 }

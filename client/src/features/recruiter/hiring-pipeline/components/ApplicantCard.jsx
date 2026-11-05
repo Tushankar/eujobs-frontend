@@ -1,6 +1,6 @@
 import { useTranslation } from 'react-i18next'
 import { Clock, MessageSquareText, Sparkles } from 'lucide-react'
-import { Avatar, Icon } from '@/components/ui'
+import { Avatar, Icon, Skeleton } from '@/components/ui'
 import PillBadge from '@/components/common/PillBadge.jsx'
 import ApplicationStageSelect from '@/features/recruiter/applications/components/ApplicationStageSelect.jsx'
 import { useFormat } from '@/lib/preferences.js'
@@ -70,5 +70,32 @@ export default function ApplicantCard({ application, stages, dragging, onDragSta
         </p>
       </div>
     </article>
+  )
+}
+
+/** A board card's shape while the board loads. */
+export function ApplicantCardSkeleton() {
+  return (
+    <div className={styles.card} aria-hidden="true">
+      <div className={styles.head}>
+        <Skeleton shape="circle" width={36} height={36} />
+        <Skeleton width={96} />
+      </div>
+      <p className={styles.role}>
+        <Skeleton width="80%" />
+      </p>
+      <p className={styles.meta}>
+        <Skeleton width="55%" />
+      </p>
+      <div className={styles.badges}>
+        <Skeleton shape="pill" width={96} height={20} />
+      </div>
+      <div className={styles.footer}>
+        <Skeleton shape="block" height={32} />
+        <p className={styles.activity}>
+          <Skeleton width="70%" height={8} />
+        </p>
+      </div>
+    </div>
   )
 }

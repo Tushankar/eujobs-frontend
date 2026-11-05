@@ -1,6 +1,6 @@
 import { useTranslation } from 'react-i18next'
 import { BadgeCheck, Earth, ExternalLink, MapPin } from 'lucide-react'
-import { Avatar, Icon } from '@/components/ui'
+import { Avatar, Icon, Skeleton } from '@/components/ui'
 import PillBadge from '@/components/common/PillBadge.jsx'
 import { useCandidateText } from '../utils/candidateText.js'
 import styles from './ProfileSummary.module.css'
@@ -72,5 +72,40 @@ export default function ProfileSummary({ candidate }) {
         </div>
       )}
     </section>
+  )
+}
+
+/** The summary card's shape while the profile loads. */
+export function ProfileSummarySkeleton() {
+  return (
+    <div className={styles.card} aria-hidden="true">
+      <div className={styles.identity}>
+        <Skeleton shape="circle" width={56} height={56} />
+        <div className={styles.text}>
+          <p className={styles.name}>
+            <Skeleton width={220} height={24} />
+          </p>
+          <p className={styles.role}>
+            <Skeleton width={160} />
+          </p>
+        </div>
+        <Skeleton shape="pill" width={128} className={styles.availability} />
+      </div>
+      <p className={styles.facts}>
+        <Skeleton width={120} />
+        <Skeleton width={96} />
+        <Skeleton width={64} />
+      </p>
+      <div className={styles.skills}>
+        <Skeleton shape="pill" width={72} />
+        <Skeleton shape="pill" width={88} />
+        <Skeleton shape="pill" width={64} />
+        <Skeleton shape="pill" width={80} />
+      </div>
+      <div className={styles.extras}>
+        <Skeleton shape="pill" width={112} />
+        <Skeleton shape="pill" width={120} />
+      </div>
+    </div>
   )
 }

@@ -139,6 +139,31 @@
   padding-top: 20px;
 }
 
+.checkSkeleton {
+  display: flex;
+  align-items: center;
+  gap: 16px;
+  padding: 20px 0;
+  border-bottom: 1px solid var(--border);
+}
+
+.checkSkeleton:first-child {
+  padding-top: 0;
+}
+
+.checkSkeleton:last-child {
+  padding-bottom: 0;
+  border-bottom: 0;
+}
+
+.checkSkeletonText {
+  display: flex;
+  flex: 1;
+  flex-direction: column;
+  gap: 10px;
+  min-width: 0;
+}
+
 .statusList {
   margin: 0;
   display: flex;

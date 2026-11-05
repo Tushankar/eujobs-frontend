@@ -107,6 +107,13 @@
 
 .chart {
   margin-top: 20px;
+  transition: opacity var(--transition);
+}
+
+/* The counts on screen belong to the previous country until the new ones arrive. */
+.busy {
+  opacity: 0.5;
+  pointer-events: none;
 }
 
 /* Figma's line view sits a little higher and its legend is indented 8px */
@@ -140,6 +147,10 @@
 
 .bar {
   width: 20px;
+  border-radius: 4px 4px 0 0;
+}
+
+.bars .skeletonBar {
   border-radius: 4px 4px 0 0;
 }
 

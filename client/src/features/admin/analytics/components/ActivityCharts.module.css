@@ -64,3 +64,45 @@
   stroke: #000;
   stroke-opacity: 0.5;
 }
+
+.skeleton {
+  display: flex;
+  flex-direction: column;
+  aspect-ratio: 502 / 202;
+}
+
+/* The plot ends on the SVG's baseline (176 of 202). */
+.skeletonPlot {
+  display: flex;
+  flex: 0 0 87%;
+  align-items: flex-end;
+  gap: 20px;
+  padding: 0 16px;
+  border-bottom: 1px solid var(--border);
+}
+
+.skeletonColumn {
+  display: flex;
+  flex: 1 1 0;
+  align-items: flex-end;
+  justify-content: center;
+  gap: 6px;
+  min-width: 0;
+  height: 100%;
+}
+
+.skeletonPlot .skeletonBar {
+  border-radius: 4px 4px 0 0;
+}
+
+.skeletonLabels {
+  display: flex;
+  gap: 20px;
+  padding: 10px 16px 0;
+}
+
+.skeletonLabels > span {
+  flex: 1 1 0;
+  text-align: center;
+  line-height: 0;
+}

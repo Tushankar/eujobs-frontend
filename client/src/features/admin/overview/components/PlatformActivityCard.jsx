@@ -2,7 +2,7 @@ import { useId, useState } from 'react'
 import { useTranslation } from 'react-i18next'
 import { ChevronDown, TrendingUp } from 'lucide-react'
 import SectionTitle from '@/components/common/SectionTitle.jsx'
-import { Icon, Panel } from '@/components/ui'
+import { Icon, Panel, Skeleton, SkeletonRegion } from '@/components/ui'
 import { niceCeiling } from '../chartScale.js'
 import { cx } from '@/utils/cx.js'
 import { PERIODS, useActivity } from '../useActivity.js'
@@ -122,12 +122,46 @@ function LineChart({ data }) {
   )
 }
 
+/* Bar heights (% of the plot) of the placeholder week: registrations, applications. */
+const SKELETON_BARS = [
+  [46, 30],
+  [62, 40],
+  [38, 24],
+  [74, 52],
+  [54, 36],
+  [30, 18],
+  [44, 28],
+]
+
+/** The bar chart's shape while the counts load. */
+function ChartSkeleton() {
+  return (
+    <SkeletonRegion className={styles.chart}>
+      <div className={styles.bars}>
+        {SKELETON_BARS.map(([registrations, applications], index) => (
+          <div key={index} className={styles.barColumn}>
+            <Skeleton shape="block" width={20} height={`${registrations}%`} className={styles.skeletonBar} />
+            <Skeleton shape="block" width={20} height={`${applications}%`} className={styles.skeletonBar} />
+          </div>
+        ))}
+      </div>
+      <div className={styles.barLabels}>
+        {SKELETON_BARS.map((_, index) => (
+          <span key={index} className={styles.barLabel}>
+            <Skeleton width={24} height={8} />
+          </span>
+        ))}
+      </div>
+    </SkeletonRegion>
+  )
+}
+
 /** "Platform activity" (M-170, M-171): real registrations and applications per day or week, as bars or a line. */
 export default function PlatformActivityCard({ country }) {
   const { t } = useTranslation(['adminOverview', 'enums'])
   const [view, setView] = useState('bars')
   const [period, setPeriod] = useState(PERIODS[0])
-  const data = useActivity('overview', period, country)
+  const { data, loading, busy } = useActivity('overview', period, country)
   const summary =
     data &&
     t('chart.summary', {
@@ -162,9 +196,13 @@ export default function PlatformActivityCard({ country }) {
           {t('chart.applications')}
         </li>
       </ul>
-      <div className={styles.chart} role="img" aria-label={summary ?? ''} data-activity-chart={data ? period : undefined}>
-        {data && (view === 'bars' ? <BarChart data={data} /> : <LineChart data={data} />)}
-      </div>
+      {loading ? (
+        <ChartSkeleton />
+      ) : (
+        <div className={cx(styles.chart, busy && styles.busy)} role="img" aria-label={summary ?? ''} aria-busy={busy || undefined} data-activity-chart={data ? period : undefined}>
+          {data && (view === 'bars' ? <BarChart data={data} /> : <LineChart data={data} />)}
+        </div>
+      )}
     </Panel>
   )
 }

@@ -82,3 +82,14 @@
   text-align: center;
   color: var(--muted-foreground);
 }
+
+/* Loading: a blank page with text lines, where the document will show. */
+.skeletonPage {
+  display: flex;
+  flex-direction: column;
+  gap: 14px;
+  width: min(80%, 480px);
+  padding: 32px;
+  border-radius: var(--radius-md);
+  background: var(--card);
+}

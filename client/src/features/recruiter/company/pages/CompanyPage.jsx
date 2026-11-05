@@ -3,7 +3,7 @@ import { useTranslation } from 'react-i18next'
 import { Link } from 'react-router-dom'
 import { ArrowRight, Check, CircleCheck, ShieldCheck, Upload } from 'lucide-react'
 import { useGetConfigQuery } from '@/app/api.js'
-import { Button, CompanyLogo, Icon, Panel, SelectField, TextareaField, TextField } from '@/components/ui'
+import { Button, CompanyLogo, Icon, Panel, SelectField, Skeleton, SkeletonRegion, TextareaField, TextField } from '@/components/ui'
 import CityField from '@/components/common/CityField.jsx'
 import PillBadge from '@/components/common/PillBadge.jsx'
 import { check, checkUpload, useErrorText, useFormState, useUploadText } from '@/lib/forms.js'
@@ -12,8 +12,78 @@ import styles from './CompanyPage.module.css'
 
 /** The Company page (M-146, M-147, M-150): public fields only; the legal name stays as verified in KYC. */
 export default function CompanyPage() {
-  const { data: company } = useGetCompanyQuery()
+  const { data: company, isLoading } = useGetCompanyQuery()
+  if (isLoading) return <CompanySkeleton />
   return company ? <CompanyForm company={company} /> : null
+}
+
+function PageHeading() {
+  const { t } = useTranslation()
+  return (
+    <div className={styles.pageTitle}>
+      <div>
+        <h1 className={styles.title}>{t('company:title')}</h1>
+        <p className={styles.lead}>{t('company:lead')}</p>
+      </div>
+      <Button as={Link} to="/recruiter/jobs/new" rightIcon={<Icon as={ArrowRight} size={13} />}>
+        {t('company:createRole')}
+      </Button>
+    </div>
+  )
+}
+
+/** The page while the company loads: the real heading and field labels, placeholders for the values. */
+function CompanySkeleton() {
+  const { t } = useTranslation()
+  const fields = ['displayName', 'industry', 'city', 'website', 'size']
+  const hints = { displayName: t('company:fields.displayNameHint'), city: t('common:city.hint') }
+  return (
+    <>
+      <PageHeading />
+      <Panel className={styles.panel} padding="clamp(20px, 4vw, 32px)">
+        <SkeletonRegion>
+          <div className={styles.identity}>
+            <Skeleton shape="block" width={64} height={64} />
+            <div className={styles.identityText}>
+              <p className={styles.companyName}>
+                <Skeleton width={200} height={18} />
+              </p>
+              <p className={styles.legal}>
+                <Skeleton width={240} />
+              </p>
+              <div className={styles.badgeRow}>
+                <Skeleton shape="pill" width={120} />
+              </div>
+            </div>
+            <div className={styles.logoActions}>
+              <Skeleton shape="pill" width={132} height={32} />
+              <p className={styles.logoHint}>
+                <Skeleton width={160} />
+              </p>
+            </div>
+          </div>
+          <div className={styles.form}>
+            <div className={styles.grid}>
+              {fields.map((name) => (
+                <div key={name} className={styles.skeletonField}>
+                  <p className={styles.skeletonLabel}>{t(`company:fields.${name}`)}</p>
+                  <Skeleton shape="block" height={44} />
+                  {hints[name] && <p className={styles.skeletonHint}>{hints[name]}</p>}
+                </div>
+              ))}
+            </div>
+            <div className={`${styles.description} ${styles.skeletonField}`}>
+              <p className={styles.skeletonLabel}>{t('company:fields.description')}</p>
+              <Skeleton shape="block" height={144} />
+            </div>
+            <div className={styles.actions}>
+              <Skeleton shape="pill" width={200} height={40} />
+            </div>
+          </div>
+        </SkeletonRegion>
+      </Panel>
+    </>
+  )
 }
 
 function CompanyForm({ company }) {
@@ -86,15 +156,7 @@ function CompanyForm({ company }) {
 
   return (
     <>
-      <div className={styles.pageTitle}>
-        <div>
-          <h1 className={styles.title}>{t('company:title')}</h1>
-          <p className={styles.lead}>{t('company:lead')}</p>
-        </div>
-        <Button as={Link} to="/recruiter/jobs/new" rightIcon={<Icon as={ArrowRight} size={13} />}>
-          {t('company:createRole')}
-        </Button>
-      </div>
+      <PageHeading />
 
       <Panel className={styles.panel} padding="clamp(20px, 4vw, 32px)">
         <div className={styles.identity}>

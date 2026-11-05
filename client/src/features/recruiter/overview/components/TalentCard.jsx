@@ -4,7 +4,7 @@ import { Link } from 'react-router-dom'
 import { ArrowUpRight, Bookmark, ChevronDown, Earth, MapPin, ShieldCheck } from 'lucide-react'
 import { cx } from '@/utils/cx.js'
 import PillBadge from '@/components/common/PillBadge.jsx'
-import { Avatar, Icon, IconButton } from '@/components/ui'
+import { Avatar, Icon, IconButton, Skeleton } from '@/components/ui'
 import aiSparkle from '@/assets/icons/ai-sparkle-blue.svg'
 import { useFormat } from '@/lib/preferences.js'
 import { useCandidateText } from '@/features/recruiter/find-candidates/utils/candidateText.js'
@@ -95,5 +95,51 @@ export default function TalentCard({ person, onToggleSaved }) {
         </Link>
       </div>
     </article>
+  )
+}
+
+/** A TalentCard's shape while the talent loads: the same card with placeholders for its data. */
+export function TalentCardSkeleton() {
+  const { t } = useTranslation()
+  return (
+    <div className={styles.card} aria-hidden="true">
+      <div className={styles.top}>
+        <Skeleton shape="circle" width={48} height={48} />
+      </div>
+      <p className={styles.name}>
+        <Skeleton width="55%" height={14} />
+      </p>
+      <p className={styles.headline}>
+        <Skeleton width="80%" />
+      </p>
+      <div className={styles.meta}>
+        <Skeleton width={44} />
+        <Skeleton width={52} />
+        <Skeleton width={68} />
+      </div>
+      <div className={styles.skills}>
+        <Skeleton shape="pill" width={64} />
+        <Skeleton shape="pill" width={52} />
+        <Skeleton shape="pill" width={72} />
+      </div>
+      <p className={styles.status}>
+        <Skeleton width={72} />
+        <span className={styles.ready}>
+          <Skeleton width={60} />
+        </span>
+      </p>
+      <div className={styles.insight}>
+        <span className={styles.insightTitle}>
+          <img src={aiSparkle} alt="" width={14} height={14} />
+          {t('discovery:match.title')}
+        </span>
+        <p className={styles.insightText}>
+          <Skeleton width="85%" />
+        </p>
+      </div>
+      <div className={styles.footer}>
+        <Skeleton width={64} />
+      </div>
+    </div>
   )
 }

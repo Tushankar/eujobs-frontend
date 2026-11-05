@@ -2,7 +2,7 @@ import { useState } from 'react'
 import { useTranslation } from 'react-i18next'
 import { Link } from 'react-router-dom'
 import { ArrowRight, BriefcaseBusiness, Check, ChevronDown, FileText, MessageSquare, ShieldCheck, Users } from 'lucide-react'
-import { Button, Icon, Panel } from '@/components/ui'
+import { Button, Icon, Panel, Skeleton, SkeletonRegion } from '@/components/ui'
 import PillBadge from '@/components/common/PillBadge.jsx'
 import sparkle from '@/assets/icons/ai-sparkle-blue.svg'
 import { useGetInsightPageQuery, useSaveExplanationFeedbackMutation } from '@/features/ai/api.js'
@@ -30,8 +30,10 @@ const FEEDBACK = [
 /** Why recommended (M-057, M-067): three AI-written reasons grounded on code tags, what was not assessed, and feedback. */
 export default function WhyRecommendedPage() {
   const { t } = useTranslation('aiInsights')
-  const { roles, jobId, choose } = useChosenJob()
-  const { data } = useGetInsightPageQuery({ page: 'why-recommended', jobId }, { skip: !jobId })
+  const { roles, jobId, choose, loading: rolesLoading } = useChosenJob()
+  const page = useGetInsightPageQuery({ page: 'why-recommended', jobId }, { skip: !jobId })
+  const { data } = page
+  const busy = page.isFetching && !page.currentData
   const { data: profile } = useGetProfileQuery()
   const [saveFeedback, saving] = useSaveExplanationFeedbackMutation()
   const [sourceOpen, setSourceOpen] = useState(false)
@@ -50,10 +52,11 @@ export default function WhyRecommendedPage() {
 
   return (
     <AiPageShell eyebrow={t('why.eyebrow')} title={t('why.title')} description={t('why.description')}>
-      <RolePicker roles={roles} jobId={jobId} onChange={choose} />
+      <RolePicker roles={roles} jobId={jobId} onChange={choose} loading={rolesLoading} />
 
+      {(rolesLoading || page.isLoading) && <WhySkeleton details={details} />}
       {evidence && (
-        <div className={styles.layout}>
+        <div className={cx(styles.layout, busy && styles.busy)} aria-busy={busy || undefined}>
           <div className={styles.main}>
             <Panel padding={24} aria-labelledby="why-title">
               <div className={styles.badges}>
@@ -180,5 +183,89 @@ export default function WhyRecommendedPage() {
 
       <SourceEvidenceModal open={sourceOpen} onClose={() => setSourceOpen(false)} job={data?.job} evidence={evidence} skills={profile?.skills ?? []} />
     </AiPageShell>
+  )
+}
+
+/** The page while the role's evidence loads: the static copy, placeholders for the three reasons and the feedback. */
+function WhySkeleton({ details }) {
+  const { t } = useTranslation('aiInsights')
+  return (
+    <div className={styles.layout}>
+      <div className={styles.main}>
+        <Panel padding={24}>
+          <div className={styles.badges}>
+            <PillBadge tone="primary">
+              <img src={sparkle} alt="" width={14} height={14} />
+              {t('why.badge')}
+            </PillBadge>
+          </div>
+          <SectionHeading className={styles.whyHeading} title={t('why.heading')} description={t('why.headingLead')} />
+          <SkeletonRegion className={styles.reasons}>
+            {[0, 1, 2].map((index) => (
+              <div key={index} className={styles.reason}>
+                <Skeleton shape="circle" width={32} height={32} />
+                <div className={styles.reasonSkeleton}>
+                  <Skeleton width="40%" height={12} />
+                  <Skeleton />
+                  <Skeleton width="80%" />
+                  <Skeleton shape="pill" width={120} />
+                </div>
+              </div>
+            ))}
+          </SkeletonRegion>
+        </Panel>
+
+        <Panel padding="0 24px">
+          <ul>
+            {details.map((detail, index) => (
+              <li key={detail.id} className={styles.detail}>
+                <p className={styles.trigger}>
+                  {detail.title}
+                  <Icon as={ChevronDown} size={16} strokeWidth={2} className={cx(styles.chevron, index === 0 && styles.chevronOpen)} />
+                </p>
+                {index === 0 && (
+                  <div className={styles.detailBody}>
+                    {detail.body.map((text, line) => (
+                      <p key={text} className={line ? styles.detailNote : styles.detailText}>
+                        {text}
+                      </p>
+                    ))}
+                  </div>
+                )}
+              </li>
+            ))}
+          </ul>
+        </Panel>
+
+        <Panel padding={24}>
+          <SectionHeading title={t('why.feedback')} description={t('why.feedbackLead')} />
+          <div className={styles.feedback}>
+            <Skeleton shape="pill" width={110} height={40} />
+            <Skeleton shape="pill" width={140} height={40} />
+          </div>
+        </Panel>
+      </div>
+
+      <aside className={`${styles.side} sticky-side`}>
+        <Panel padding={24}>
+          <h2 className={styles.title}>{t('why.sourceTitle')}</h2>
+          <ul className={styles.sources}>
+            {SOURCES.map((source) => (
+              <li key={source.key}>
+                <span className={styles.sourceIcon}>
+                  <Icon as={source.icon} size={15} strokeWidth={2} />
+                </span>
+                {t(`why.sources.${source.key}`)}
+              </li>
+            ))}
+          </ul>
+          <Skeleton shape="pill" width="100%" height={40} />
+        </Panel>
+        <Panel className={styles.context} padding={24}>
+          <PillBadge tone="neutral">{t('why.contextBadge')}</PillBadge>
+          <p className={styles.contextText}>{t('why.contextText')}</p>
+        </Panel>
+      </aside>
+    </div>
   )
 }

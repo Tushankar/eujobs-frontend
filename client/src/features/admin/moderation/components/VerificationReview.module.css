@@ -211,3 +211,15 @@
     grid-column: 1 / -1;
   }
 }
+
+/* Loading: the summary strip's cells as text, outside the definition list. */
+.skeletonLabel {
+  font-size: 11px;
+  line-height: 16px;
+  color: var(--muted-foreground);
+}
+
+.skeletonValue {
+  padding-top: 2px;
+  line-height: 18px;
+}

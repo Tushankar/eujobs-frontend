@@ -166,6 +166,23 @@
   color: var(--primary);
 }
 
+.gapSkeleton {
+  display: flex;
+  flex-direction: column;
+  gap: 18px;
+  padding: 29px 0 9px;
+}
+
+.layout {
+  transition: opacity var(--transition);
+}
+
+/* Another role: the previous role's evidence stays dimmed until the new one arrives. */
+.busy {
+  opacity: 0.5;
+  pointer-events: none;
+}
+
 .side {
   display: flex;
   flex-direction: column;

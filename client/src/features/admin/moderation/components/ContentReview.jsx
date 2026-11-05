@@ -3,7 +3,7 @@ import { useTranslation } from 'react-i18next'
 import { Check, EyeOff } from 'lucide-react'
 import { useGetConfigQuery } from '@/app/api.js'
 import PillBadge from '@/components/common/PillBadge.jsx'
-import { Avatar, Checkbox, CompanyLogo } from '@/components/ui'
+import { Avatar, Checkbox, CompanyLogo, Skeleton, SkeletonRegion } from '@/components/ui'
 import { useErrorText } from '@/lib/forms.js'
 import { useFormat } from '@/lib/preferences.js'
 import { cx } from '@/utils/cx.js'
@@ -66,6 +66,45 @@ function Target({ item }) {
   )
 }
 
+/** The case while it loads: its badges, the target's name, the reports and the target. */
+function ReviewSkeleton() {
+  const { t } = useTranslation('moderation')
+  return (
+    <SkeletonRegion>
+      <div className={styles.badges}>
+        <Skeleton shape="pill" width={64} />
+        <Skeleton shape="pill" width={56} />
+        <Skeleton shape="pill" width={64} />
+      </div>
+      <p className={styles.title}>
+        <Skeleton width={240} height={18} />
+      </p>
+      <p className={styles.subtitle}>
+        <Skeleton width={180} />
+      </p>
+      <div className={styles.context}>
+        <p className={styles.eyebrow}>{t('content.reports')}</p>
+        <div className={own.reports}>
+          <Skeleton width="80%" />
+          <Skeleton width="60%" />
+        </div>
+      </div>
+      <div className={styles.context}>
+        <p className={styles.eyebrow}>
+          <Skeleton width={64} height={8} />
+        </p>
+        <div className={own.reports}>
+          <Skeleton shape="circle" width={48} height={48} />
+          <Skeleton width="50%" />
+          <Skeleton width="40%" />
+          <Skeleton width="90%" />
+          <Skeleton width="70%" />
+        </div>
+      </div>
+    </SkeletonRegion>
+  )
+}
+
 /** Moderation › Content: one case with its reports, the target, the history and the decisions it allows (M-167). */
 export default function ContentReview({ id, onDecided, onClose }) {
   // P11b-Q10: opening this item marks its notifications read.
@@ -74,10 +113,15 @@ export default function ContentReview({ id, onDecided, onClose }) {
   const format = useFormat()
   const errorText = useErrorText()
   const { data: config } = useGetConfigQuery()
-  const { data: item } = useGetContentCaseQuery(id)
+  const { data: item, isLoading } = useGetContentCaseQuery(id)
   const [decide, decision] = useDecideContentCaseMutation()
   const [removePhoto, setRemovePhoto] = useState(false)
-  if (!item) return null
+  if (!item)
+    return isLoading ? (
+      <ReviewDialog title={t('content.reviewTitle')} actions={[]} onClose={onClose}>
+        <ReviewSkeleton />
+      </ReviewDialog>
+    ) : null
 
   const lifting = item.status === 'restricted'
   const kind = t(`enums:reportTargetType.${item.targetType}`)

@@ -27,6 +27,67 @@
   padding-top: 32px;
 }
 
+/* The funnel panel (FunnelChart) while the counts load: its title, then six narrowing stages with label and count. */
+.funnelSkeleton {
+  display: flex;
+  flex-direction: column;
+  min-width: 0;
+  margin: -5px 0 7px;
+  padding: 34px 50px 20px;
+  aspect-ratio: 1128 / 477;
+  overflow: hidden;
+  border-radius: var(--radius-xl);
+  background: var(--card);
+}
+
+.funnelTitle {
+  font-family: var(--font-display);
+  font-size: 18px;
+  font-weight: 700;
+  line-height: 27px;
+  letter-spacing: -0.25px;
+  color: var(--foreground);
+}
+
+.funnelStages {
+  display: flex;
+  flex: 1;
+  justify-content: space-around;
+  min-height: 0;
+}
+
+.funnelStage {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 8px;
+  min-width: 0;
+}
+
+.funnelShape {
+  display: flex;
+  flex: 1;
+  align-items: center;
+  min-height: 0;
+}
+
+.funnelStages .funnelEllipse {
+  max-height: 100%;
+  border-radius: 50%;
+}
+
+/* A new country: the stale numbers dim until the new ones arrive. */
+.stats,
+.pipelineBody,
+.layout {
+  transition: opacity var(--transition);
+}
+
+.busy {
+  opacity: 0.5;
+  pointer-events: none;
+}
+
 @media (max-width: 1023px) {
   .stats {
     grid-template-columns: repeat(2, minmax(0, 1fr));

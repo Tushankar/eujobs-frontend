@@ -139,12 +139,11 @@
   color: var(--destructive);
 }
 
-/* Narrow card: each role is a stacked card (title, then "label  value" lines, then the actions). */
+/* Narrow card: one divided row per role (owner pattern 2026-11-05): title and meta on the left with the
+   status pill on the right, then work preference · relevant candidates with the actions on the right. */
 @container (max-width: 820px) {
   .table,
-  .table tbody,
-  .table tr,
-  .td {
+  .table tbody {
     display: block;
     width: 100%;
   }
@@ -155,6 +154,13 @@
   }
 
   .row {
+    display: grid;
+    grid-template-columns: auto auto minmax(0, 1fr) auto;
+    grid-template-areas:
+      "role role role status"
+      "work candidates . actions";
+    align-items: center;
+    gap: 8px 0;
     padding: 16px 20px;
     border-bottom: 1px solid var(--border);
   }
@@ -164,37 +170,55 @@
   }
 
   .td,
-  .row:last-child .td {
-    display: grid;
-    grid-template-columns: minmax(96px, 34%) minmax(0, 1fr);
-    align-items: center;
-    gap: 12px;
+  .row:last-child .td,
+  .td:first-child {
     height: auto;
-    padding: 5px 0;
+    padding: 0;
     border-bottom: 0;
   }
 
-  .td::before {
-    content: attr(data-label);
+  .td:nth-child(1) {
+    grid-area: role;
+    min-width: 0;
+  }
+
+  .td:nth-child(2) {
+    grid-area: work;
+  }
+
+  .td:nth-child(3) {
+    grid-area: candidates;
+  }
+
+  /* "Remote · 3 relevant" */
+  .td:nth-child(3)::before {
+    content: "·";
+    padding: 0 8px;
     color: var(--muted-foreground);
   }
 
-  .td > * {
-    justify-self: start;
+  .td:nth-child(4) {
+    grid-area: status;
+    justify-self: end;
+    padding-left: 16px;
   }
 
-  .td:first-child,
-  .td:last-child {
-    display: block;
-    padding: 0 0 8px;
+  .td:nth-child(5) {
+    grid-area: actions;
+    padding-left: 16px;
+  }
+}
+
+/* Phone-width card: the actions take their own line. */
+@container (max-width: 520px) {
+  .row {
+    grid-template-areas:
+      "role role role status"
+      "work candidates . ."
+      "actions actions actions actions";
   }
 
-  .td:last-child {
-    padding: 8px 0 0;
-  }
-
-  .td:first-child::before,
-  .td:last-child::before {
-    content: none;
+  .td:nth-child(5) {
+    padding: 4px 0 0;
   }
 }

@@ -47,6 +47,17 @@
   padding-top: 32px;
 }
 
+/* A new country: the stale numbers dim until the new ones arrive. */
+.stats,
+.insights {
+  transition: opacity var(--transition);
+}
+
+.busy {
+  opacity: 0.5;
+  pointer-events: none;
+}
+
 @media (max-width: 1099px) {
   .stats {
     grid-template-columns: repeat(2, minmax(0, 1fr));

@@ -3,7 +3,7 @@ import { useTranslation } from 'react-i18next'
 import { Link } from 'react-router-dom'
 import { ArrowRight, ArrowUpRight, Bookmark, BriefcaseBusiness, Eye, Search, ShieldCheck, SlidersHorizontal, Sun } from 'lucide-react'
 import { useGetMeQuery } from '@/app/api.js'
-import { Button, Icon } from '@/components/ui'
+import { Button, Icon, SkeletonRegion } from '@/components/ui'
 import EmptyState from '@/components/common/EmptyState.jsx'
 import SegmentedTabs from '@/components/common/SegmentedTabs.jsx'
 import StatCard from '@/components/common/StatCard.jsx'
@@ -11,7 +11,7 @@ import aiGlyph from '@/assets/icons/ai-glyph-blue.svg'
 import aiNavGlyph from '@/assets/icons/ai-nav.svg'
 import { useFormat } from '@/lib/preferences.js'
 import { useGetCandidateOverviewQuery, useGetRecommendedJobsQuery, useGetSavedJobsQuery, useSaveToggle, useSearchJobsQuery } from '@/features/candidate/jobs/api.js'
-import JobCard from '@/features/candidate/jobs/components/JobCard.jsx'
+import JobCard, { JobCardSkeleton } from '@/features/candidate/jobs/components/JobCard.jsx'
 import { useCounters } from '@/app/counters.js'
 import ApplicationActivityCard from '../components/ApplicationActivityCard.jsx'
 import InsightCard from '../components/InsightCard.jsx'
@@ -43,14 +43,15 @@ export default function OverviewPage() {
   const [tab, setTab] = useState('for-you')
   const [now] = useState(() => new Date())
   const { data: me } = useGetMeQuery()
-  const { data: overview } = useGetCandidateOverviewQuery()
-  const { data: recommended } = useGetRecommendedJobsQuery(undefined, { skip: tab !== 'for-you' })
-  const { data: recent } = useSearchJobsQuery({ sort: 'newest' }, { skip: tab !== 'recent' })
-  const { data: saved } = useGetSavedJobsQuery(undefined, { skip: tab !== 'saved' })
+  const { data: overview, isLoading: overviewLoading } = useGetCandidateOverviewQuery()
+  const { data: recommended, isLoading: recommendedLoading } = useGetRecommendedJobsQuery(undefined, { skip: tab !== 'for-you' })
+  const { data: recent, isLoading: recentLoading } = useSearchJobsQuery({ sort: 'newest' }, { skip: tab !== 'recent' })
+  const { data: saved, isLoading: savedLoading } = useGetSavedJobsQuery(undefined, { skip: tab !== 'saved' })
   const toggleSave = useSaveToggle()
   const counters = useCounters()
   const lists = { 'for-you': recommended, recent, saved }
   const jobs = lists[tab]?.items.slice(0, SHOWN)
+  const jobsLoading = { 'for-you': recommendedLoading, recent: recentLoading, saved: savedLoading }[tab]
   const firstName = me?.fullName.split(/\s+/)[0] ?? ''
 
   return (
@@ -86,13 +87,14 @@ export default function OverviewPage() {
             delta={overview?.recommended.newThisWeek ? t('findJobs:overview.stats.recommendedDelta', { count: overview.recommended.newThisWeek }) : undefined}
             caption={t(overview?.recommended.byScore ? 'findJobs:overview.stats.recommendedCaptionScore' : 'findJobs:overview.stats.recommendedCaption')}
             iconSrc={aiNavGlyph}
+            loading={overviewLoading}
           />
         </Link>
         <Link to="/candidate/applications" className={styles.statLink}>
-          <StatCard label={t('findJobs:overview.stats.applications')} value={counters?.activeApplications ?? 0} caption={t('findJobs:overview.stats.applicationsCaption')} icon={BriefcaseBusiness} />
+          <StatCard label={t('findJobs:overview.stats.applications')} value={counters?.activeApplications ?? 0} caption={t('findJobs:overview.stats.applicationsCaption')} icon={BriefcaseBusiness} loading={!counters} />
         </Link>
         <Link to="/candidate/jobs" className={styles.statLink} data-stat="saved">
-          <StatCard label={t('findJobs:overview.stats.saved')} value={overview?.savedJobs ?? 0} caption={t('findJobs:overview.stats.savedCaption')} icon={Bookmark} />
+          <StatCard label={t('findJobs:overview.stats.saved')} value={overview?.savedJobs ?? 0} caption={t('findJobs:overview.stats.savedCaption')} icon={Bookmark} loading={overviewLoading} />
         </Link>
         <Link to="/candidate/profile" className={styles.statLink} data-stat="views">
           <StatCard
@@ -101,6 +103,7 @@ export default function OverviewPage() {
             delta={viewsDelta(overview?.profileViews, format)}
             caption={t('findJobs:overview.stats.viewsCaption')}
             icon={Eye}
+            loading={overviewLoading}
           />
         </Link>
       </div>
@@ -132,7 +135,13 @@ export default function OverviewPage() {
           </div>
 
           <div className={styles.list} role="tabpanel">
-            {jobs?.length === 0 ? (
+            {jobsLoading ? (
+              <SkeletonRegion className={styles.skeletonList}>
+                {Array.from({ length: SHOWN }, (_, index) => (
+                  <JobCardSkeleton key={index} />
+                ))}
+              </SkeletonRegion>
+            ) : jobs?.length === 0 ? (
               <EmptyState
                 icon={EMPTY_ICONS[tab]}
                 title={t(`findJobs:overview.empty.${tab}`)}

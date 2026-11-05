@@ -8,7 +8,7 @@ import { useFormat } from '@/lib/preferences.js'
 import { useGetContentCasesQuery } from '../api.js'
 import { CASE_TONES } from '../tones.js'
 import ContentReview from './ContentReview.jsx'
-import QueueRow from './QueueRow.jsx'
+import QueueRow, { QueueSkeleton } from './QueueRow.jsx'
 import pageStyles from '../pages/ModerationPage.module.css'
 
 /** Moderation › Content (M-164, M-167, P10-Q10): open cases first, then decided ones, and the review dialog. */
@@ -16,14 +16,16 @@ export default function ContentQueue({ basePath, openId, onDecided }) {
   const { t } = useTranslation(['moderation', 'enums'])
   const format = useFormat()
   const navigate = useNavigate()
-  const { data: cases } = useGetContentCasesQuery()
+  const { data: cases, isLoading } = useGetContentCasesQuery()
   return (
     <>
       <section className={pageStyles.queue} role="tabpanel" aria-label={t('content.title')}>
         <div className={pageStyles.header}>
           <SectionTitle title={t('content.title')} description={t('content.description')} />
         </div>
-        {cases?.items.length === 0 ? (
+        {isLoading ? (
+          <QueueSkeleton />
+        ) : cases?.items.length === 0 ? (
           <EmptyState icon={TriangleAlert} title={t('content.empty')} />
         ) : (
           <ul className={pageStyles.list}>

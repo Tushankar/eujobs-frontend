@@ -4,7 +4,7 @@ import { useDispatch } from 'react-redux'
 import { Link, useParams } from 'react-router-dom'
 import { ArrowLeft, Lock, MessageSquareOff, Sparkles } from 'lucide-react'
 import { openUpgrade } from '@/app/upgrade.js'
-import { Button, Icon, Panel } from '@/components/ui'
+import { Button, Icon, Panel, Skeleton, SkeletonRegion } from '@/components/ui'
 import EmptyState from '@/components/common/EmptyState.jsx'
 import Translatable from '@/features/ai/components/Translatable.jsx'
 import { lacksEntitlement } from '@/features/candidate/billing/usePlan.js'
@@ -16,6 +16,46 @@ import Counterpart from '../components/Counterpart.jsx'
 import MessageForm from '../components/MessageForm.jsx'
 import styles from './ThreadPage.module.css'
 
+// The loading thread's bubbles: whose side, width and lines.
+const BUBBLES = [
+  [false, 320, 2],
+  [true, 240, 1],
+  [false, 380, 1],
+  [true, 280, 2],
+]
+
+/** The thread while it loads: the counterpart, a few bubbles on both sides and the composer, as placeholders. */
+function ThreadSkeleton({ role }) {
+  return (
+    <SkeletonRegion>
+      <Panel padding={0} className={styles.thread}>
+        <header className={styles.header}>
+          <span className={styles.skeletonPerson}>
+            <Skeleton shape="circle" width={44} height={44} className={role === 'candidate' ? styles.skeletonLogo : undefined} />
+            <span className={styles.skeletonLines}>
+              <Skeleton width={160} height={12} />
+              <Skeleton width={220} />
+            </span>
+          </span>
+        </header>
+        <div className={styles.messages}>
+          {BUBBLES.map(([mine, width, lines], index) => (
+            <div key={index} className={cx(styles.message, mine && styles.mine)}>
+              <Skeleton shape="block" width={width} height={20 + lines * 21} />
+              <Skeleton width={96} height={8} />
+            </div>
+          ))}
+        </div>
+        <footer className={cx(styles.footer, styles.skeletonComposer)}>
+          <Skeleton width={64} height={12} />
+          <Skeleton shape="block" height={120} />
+          <Skeleton shape="pill" width={80} height={40} className={styles.skeletonSend} />
+        </footer>
+      </Panel>
+    </SkeletonRegion>
+  )
+}
+
 /**
  * One thread (§3.5): the messages oldest first, read marking while the page is open, and the composer. A candidate
  * without `message_send` reads only and sees the upgrade prompt in place of the composer (M-118).
@@ -26,7 +66,7 @@ export default function ThreadPage() {
   const dispatch = useDispatch()
   const { conversationId } = useParams()
   const { me } = usePreferences()
-  const { data, error } = useThread(conversationId)
+  const { data, error, isLoading } = useThread(conversationId)
   const [markRead] = useMarkReadMutation()
   const [send] = useSendMessageMutation()
   const end = useRef(null)
@@ -54,6 +94,14 @@ export default function ThreadPage() {
       <>
         {back}
         <EmptyState icon={MessageSquareOff} title={t('messages:thread.notFound')} description={t('messages:thread.notFoundText')} />
+      </>
+    )
+  }
+  if (isLoading) {
+    return (
+      <>
+        {back}
+        <ThreadSkeleton role={me.role} />
       </>
     )
   }

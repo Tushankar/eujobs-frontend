@@ -2,7 +2,7 @@ import { useState } from 'react'
 import { useTranslation } from 'react-i18next'
 import { useOutletContext } from 'react-router-dom'
 import { Clock, Download, Eye, FileText } from 'lucide-react'
-import { Button, Icon } from '@/components/ui'
+import { Button, Icon, Skeleton, SkeletonRegion } from '@/components/ui'
 import PillBadge from '@/components/common/PillBadge.jsx'
 import SectionTitle from '@/components/common/SectionTitle.jsx'
 import PlanButton from '@/features/candidate/billing/components/PlanButton.jsx'
@@ -45,6 +45,49 @@ function VersionFile({ version, title, meta, live = false }) {
   )
 }
 
+/** The Resume tab's shape while the CVs load: the heading, one file card and the request action. */
+function ResumeSkeleton() {
+  const { t } = useTranslation()
+  return (
+    <ProfileSection>
+      <SkeletonRegion className={styles.inner}>
+        <div className={styles.header}>
+          <span className={styles.bigIcon}>
+            <Icon as={FileText} size={25} strokeWidth={2} />
+          </span>
+          <div className={styles.skeletonTitle}>
+            <Skeleton width={200} height={18} />
+            <Skeleton width={320} />
+          </div>
+        </div>
+        <div className={styles.file}>
+          <div className={styles.fileRow}>
+            <span className={styles.fileIcon}>
+              <Icon as={FileText} size={20} strokeWidth={2} />
+            </span>
+            <div className={styles.fileText}>
+              <p className={styles.fileName}>
+                <Skeleton width={180} />
+              </p>
+              <p className={styles.fileMeta}>
+                <Skeleton width={140} />
+              </p>
+            </div>
+          </div>
+          <div className={styles.fileActions}>
+            <Skeleton shape="pill" width={92} height={40} />
+            <Skeleton shape="pill" width={120} height={40} />
+          </div>
+        </div>
+        <p className={styles.request}>{t('discovery:resumeTab.request')}</p>
+        <div className={styles.requestAction}>
+          <Skeleton shape="pill" width={200} height={40} />
+        </div>
+      </SkeletonRegion>
+    </ProfileSection>
+  )
+}
+
 /**
  * Resume tab (M-029, M-187, P4-D12, M-073, M-030): the live CV only when the candidate shares it, the CV sent with each
  * application to this company (or "removed" once the candidate deleted it), the versions shared through approved
@@ -54,9 +97,10 @@ export default function CandidateResumePage() {
   const { t } = useTranslation()
   const format = useFormat()
   const { candidate } = useOutletContext()
-  const { data: cv } = useGetCandidateCvQuery(candidate.id)
+  const { data: cv, isLoading } = useGetCandidateCvQuery(candidate.id)
   const [requestOpen, setRequestOpen] = useState(false)
   const [sent, setSent] = useState(false)
+  if (isLoading) return <ResumeSkeleton />
   if (!cv) return null
   const pending = cv.requests.some((request) => request.status === 'pending')
 

@@ -18,6 +18,10 @@
   flex: 0 0 176px;
 }
 
+.categories {
+  flex-basis: 100%;
+}
+
 .error {
   padding-bottom: 16px;
   font-size: 12px;
@@ -38,6 +42,13 @@
 
 .list {
   list-style: none;
+  transition: opacity var(--transition);
+}
+
+/* The rows on screen belong to the previous filters until the new ones arrive. */
+.busy {
+  opacity: 0.5;
+  pointer-events: none;
 }
 
 .card > nav {

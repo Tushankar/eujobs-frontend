@@ -4,13 +4,13 @@ import { Icon, Panel } from '@/components/ui'
 import SectionTitle from '@/components/common/SectionTitle.jsx'
 import { PERIODS, useActivity } from '@/features/admin/overview/useActivity.js'
 import { cx } from '@/utils/cx.js'
-import { BarChart, LineChart } from './ActivityCharts.jsx'
+import { BarChart, ChartSkeleton, LineChart } from './ActivityCharts.jsx'
 import styles from './ActivityCard.module.css'
 
 /** Platform activity card (M-170, M-171): bar / line switch, period select and the real counts for the period. */
 export default function ActivityCard({ view, period, country, onViewChange, onPeriodChange }) {
   const { t } = useTranslation(['adminOverview', 'enums'])
-  const activity = useActivity('analytics', period, country)
+  const { data: activity, loading, busy } = useActivity('analytics', period, country)
   const Chart = view === 'line' ? LineChart : BarChart
   return (
     <Panel padding={24} className={cx(styles.card, view === 'line' && styles.lineView)}>
@@ -61,8 +61,8 @@ export default function ActivityCard({ view, period, country, onViewChange, onPe
           {t('chart.applications')}
         </li>
       </ul>
-      <div className={styles.chart} data-activity-chart={activity ? period : undefined}>
-        {activity && <Chart {...activity} />}
+      <div className={cx(styles.chart, busy && styles.busy)} aria-busy={busy || undefined} data-activity-chart={activity ? period : undefined}>
+        {loading ? <ChartSkeleton /> : activity && <Chart {...activity} />}
       </div>
     </Panel>
   )

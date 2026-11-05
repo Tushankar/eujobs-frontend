@@ -8,7 +8,7 @@ import { useGetPoliciesQuery } from '../api.js'
 import CreatePolicyModal from '../components/CreatePolicyModal.jsx'
 import FeedbackSection from '../components/FeedbackSection.jsx'
 import OversightSection from '../components/OversightSection.jsx'
-import PolicyEditor from '../components/PolicyEditor.jsx'
+import PolicyEditor, { PolicyEditorSkeleton } from '../components/PolicyEditor.jsx'
 import PolicySidebar from '../components/PolicySidebar.jsx'
 import styles from './AiMatchingPage.module.css'
 
@@ -25,7 +25,7 @@ export default function AiMatchingPage() {
   const isCreating = useParams()['*'] === 'policies/new'
   // Leaving the create route remounts the page, so the new policy and the notice travel in the navigation state.
   const { state } = useLocation()
-  const { data, isError } = useGetPoliciesQuery()
+  const { data, isError, isLoading } = useGetPoliciesQuery()
   const [selectedId, setSelectedId] = useState(state?.selectedId ?? null)
   const notice = state?.notice ?? ''
   const policies = data?.items ?? []
@@ -53,6 +53,12 @@ export default function AiMatchingPage() {
       <div role="status">{notice && <p className={styles.notice}>{notice}</p>}</div>
       {isError && <p className={styles.notice}>{t('page.loadError')}</p>}
 
+      {isLoading && (
+        <div className={styles.grid}>
+          <PolicyEditorSkeleton />
+          <PolicySidebar policies={[]} loading />
+        </div>
+      )}
       {selected && (
         <div className={styles.grid}>
           <PolicyEditor key={selected.id} policy={selected} />

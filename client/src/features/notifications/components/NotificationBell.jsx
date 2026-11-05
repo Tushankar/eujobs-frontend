@@ -1,20 +1,20 @@
 import { useTranslation } from 'react-i18next'
 import { Link } from 'react-router-dom'
 import { Bell, BellOff } from 'lucide-react'
-import { Dropdown, Icon } from '@/components/ui'
+import { Dropdown, Icon, SkeletonRegion } from '@/components/ui'
 import EmptyState from '@/components/common/EmptyState.jsx'
 import { useGetConfigQuery } from '@/app/api.js'
 import { workspacePath } from '@/app/workspaces.js'
 import { useGetNotificationsQuery, useNotificationCounts, useReadAllNotificationsMutation } from '../api.js'
 import { useOpenNotification } from '../useOpenNotification.js'
-import NotificationItem from './NotificationItem.jsx'
+import NotificationItem, { NotificationItemSkeleton } from './NotificationItem.jsx'
 import styles from './NotificationBell.module.css'
 
 /** The open dropdown: the latest notifications (the server's limit), fetched fresh each time it opens. */
 function BellPanel({ workspace, close }) {
   const { t } = useTranslation()
   const latest = useGetConfigQuery().data?.limits.notifications.latest
-  const { data } = useGetNotificationsQuery({ pageSize: latest }, { skip: !latest, refetchOnMountOrArgChange: true })
+  const { data, isLoading } = useGetNotificationsQuery({ pageSize: latest }, { skip: !latest, refetchOnMountOrArgChange: true })
   const [readAll] = useReadAllNotificationsMutation()
   const { openItem, isUnavailable } = useOpenNotification(close)
   const items = data?.items ?? []
@@ -28,7 +28,13 @@ function BellPanel({ workspace, close }) {
           </button>
         )}
       </div>
-      {!data ? null : items.length === 0 ? (
+      {isLoading ? (
+        <SkeletonRegion className={styles.list}>
+          {[0, 1, 2, 3, 4].map((row) => (
+            <NotificationItemSkeleton key={row} compact />
+          ))}
+        </SkeletonRegion>
+      ) : !data ? null : items.length === 0 ? (
         <div className={styles.empty}>
           <EmptyState icon={BellOff} title={t('notifications:bell.empty')} description={t('notifications:bell.emptyText')} />
         </div>

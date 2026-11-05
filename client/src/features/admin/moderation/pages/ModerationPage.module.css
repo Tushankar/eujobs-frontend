@@ -29,12 +29,24 @@
   border-bottom: 1px solid var(--border);
 }
 
+/* With status tabs the header ends on them: their underline replaces the header hairline. */
+.header:has(.filter) {
+  padding-bottom: 0;
+}
+
 .list {
   list-style: none;
+  transition: opacity var(--transition);
+}
+
+/* The rows on screen belong to the previous status until the new ones arrive. */
+.busy {
+  opacity: 0.5;
+  pointer-events: none;
 }
 
 .filter {
-  margin-top: 16px;
+  margin: 16px 0 -1px;
 }
 
 @media (max-width: 1279px) {

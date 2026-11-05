@@ -1,7 +1,7 @@
 import { useState } from 'react'
 import { useTranslation } from 'react-i18next'
 import { useGetConfigQuery } from '@/app/api.js'
-import { Button, Panel, Switch, TextareaField, TextField } from '@/components/ui'
+import { Button, Panel, Skeleton, SkeletonRegion, Switch, TextareaField, TextField } from '@/components/ui'
 import PillBadge from '@/components/common/PillBadge.jsx'
 import SectionTitle from '@/components/common/SectionTitle.jsx'
 import { serverFieldErrors, useErrorText, useFormState } from '@/lib/forms.js'
@@ -50,6 +50,41 @@ function DetailsForm({ policy, onDone }) {
         </Button>
       </div>
     </form>
+  )
+}
+
+/** The editor while the policies load: the policy's name and description, the signal switches, actions and history. */
+export function PolicyEditorSkeleton() {
+  const { t } = useTranslation('aiMatching')
+  return (
+    <Panel padding={28}>
+      <SkeletonRegion>
+        <SectionTitle title={<Skeleton width={220} height={18} />} description={<Skeleton width={320} />}>
+          <Skeleton shape="pill" />
+        </SectionTitle>
+        <Skeleton shape="pill" width={190} height={40} className={styles.editLink} />
+        <div className={styles.signals}>
+          {[...SIGNALS, 'humanReview'].map((signal) => (
+            <div className={styles.row} key={signal}>
+              <div className={styles.copy}>
+                <p className={styles.label}>{t(`signals.${signal}.label`)}</p>
+                <p className={styles.description}>{t(`signals.${signal}.description`)}</p>
+              </div>
+              <Skeleton shape="pill" width={40} height={24} />
+            </div>
+          ))}
+        </div>
+        <div className={styles.actions}>
+          <Skeleton shape="pill" width={170} height={40} />
+        </div>
+        <p className={styles.note}>{t('editor.note')}</p>
+        <h3 className={styles.historyTitle}>{t('editor.history')}</h3>
+        <div className={styles.history}>
+          <Skeleton width={260} />
+          <Skeleton width={220} />
+        </div>
+      </SkeletonRegion>
+    </Panel>
   )
 }
 

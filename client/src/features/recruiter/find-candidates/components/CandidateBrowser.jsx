@@ -1,13 +1,15 @@
 import { useEffect, useState } from 'react'
 import { useTranslation } from 'react-i18next'
-import { Button } from '@/components/ui'
+import { Button, Skeleton, SkeletonRegion } from '@/components/ui'
+import { tableState } from '@/components/common/tableState.js'
 import PlanButton from '@/features/candidate/billing/components/PlanButton.jsx'
 import { lacksEntitlement } from '@/features/candidate/billing/usePlan.js'
 import { usePreferences } from '@/lib/preferences.js'
+import { cx } from '@/utils/cx.js'
 import { useShortlistToggle } from '../api.js'
 import { useMatchJob } from '../hooks/useMatchJob.js'
 import { EMPTY_FILTERS, filterParams } from '../utils/candidateText.js'
-import CandidateCard from './CandidateCard.jsx'
+import CandidateCard, { CandidateCardSkeleton } from './CandidateCard.jsx'
 import CompareModal from './CompareModal.jsx'
 import DiscoveryToolbar from './DiscoveryToolbar.jsx'
 import SortSelect from './SortSelect.jsx'
@@ -17,6 +19,7 @@ const MAX_COMPARED = 3
 const SORTS = ['recommended', 'experience', 'name']
 const DEBOUNCE_MS = 300
 const RECRUITER = ['recruiter']
+const SKELETON_CARDS = 6
 
 /**
  * The search, filters, sort, cards and compare of Find candidates and Shortlists (A: recruiter A15, A24).
@@ -34,11 +37,15 @@ export default function CandidateBrowser({ useList, notice, extra, empty }) {
   const [sort, setSort] = useState('recommended')
   const [comparedIds, setComparedIds] = useState([])
   const [compareOpen, setCompareOpen] = useState(false)
-  const { jobs, job, setJobId, ready } = useMatchJob()
+  const { jobs, job, setJobId, ready, loading: jobsLoading } = useMatchJob()
   const toggleShortlist = useShortlistToggle()
   const params = locked ? { query: '', filters: EMPTY_FILTERS, sort: 'recommended' } : { query: debounced, filters, sort, jobId: job?.id }
-  const { data } = useList(filterParams(params), { skip: !ready })
+  const list = useList(filterParams(params), { skip: !ready })
+  const { data } = list
   const items = data?.items ?? []
+  // `busy`: new search, filters or sort are loading; the current cards stay, dimmed. `loading`: nothing to show yet.
+  const { loading: listLoading, busy } = tableState(list, items)
+  const loading = jobsLoading || listLoading
   // On Free the server matches the cards to the newest live job.
   const matchJob = locked ? data?.matchJob : job
   const compared = comparedIds.map((id) => items.find((candidate) => candidate.id === id)).filter(Boolean)
@@ -60,12 +67,12 @@ export default function CandidateBrowser({ useList, notice, extra, empty }) {
   return (
     <>
       <div className={styles.toolbar}>
-        <DiscoveryToolbar locked={locked} query={query} onQueryChange={setQuery} jobs={jobs} job={job} onJobChange={setJobId} filters={filters} onFiltersChange={setFilters} />
+        <DiscoveryToolbar locked={locked} jobsLoading={jobsLoading} query={query} onQueryChange={setQuery} jobs={jobs} job={job} onJobChange={setJobId} filters={filters} onFiltersChange={setFilters} />
       </div>
 
       <div className={styles.resultsBar}>
         <p className={styles.count} aria-live="polite">
-          <strong>{t('discovery:find.count', { count: items.length })}</strong>
+          <strong>{loading ? <Skeleton width={88} height={12} /> : t('discovery:find.count', { count: items.length })}</strong>
           {t('discovery:find.evidence')}
         </p>
         {locked ? (
@@ -96,12 +103,18 @@ export default function CandidateBrowser({ useList, notice, extra, empty }) {
         </div>
       )}
 
-      {data && items.length === 0 ? (
+      {loading ? (
+        <SkeletonRegion className={styles.grid}>
+          {Array.from({ length: SKELETON_CARDS }, (_, index) => (
+            <CandidateCardSkeleton key={index} />
+          ))}
+        </SkeletonRegion>
+      ) : data && items.length === 0 ? (
         <div className={styles.grid}>
           <div className={styles.empty}>{empty({ filtering: Boolean(debounced.trim()) || Object.values(filters).some(Boolean), clear })}</div>
         </div>
       ) : (
-        <div className={styles.grid}>
+        <div className={cx(styles.grid, busy && styles.busy)} aria-busy={busy || undefined}>
           {items.map((candidate) => (
             <CandidateCard
               key={candidate.id}

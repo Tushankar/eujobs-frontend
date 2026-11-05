@@ -7,11 +7,13 @@ import EmptyState from '@/components/common/EmptyState.jsx'
 import PillBadge from '@/components/common/PillBadge.jsx'
 import SectionTitle from '@/components/common/SectionTitle.jsx'
 import SegmentedTabs from '@/components/common/SegmentedTabs.jsx'
+import { tableState } from '@/components/common/tableState.js'
 import { useFormat } from '@/lib/preferences.js'
+import { cx } from '@/utils/cx.js'
 import { useGetAccountQueueQuery } from '../api.js'
 import { ACCOUNT_STATUSES, ACCOUNT_TONES } from '../tones.js'
 import AccountReview from './AccountReview.jsx'
-import QueueRow from './QueueRow.jsx'
+import QueueRow, { QueueSkeleton } from './QueueRow.jsx'
 import pageStyles from '../pages/ModerationPage.module.css'
 
 /** Moderation › Account review (M-165, OQ-2, P4-Q2): recruiters by status, pending oldest first, and the review dialog. */
@@ -19,7 +21,9 @@ export default function AccountQueue({ basePath, openId, status, onStatusChange,
   const { t } = useTranslation()
   const format = useFormat()
   const navigate = useNavigate()
-  const { data: queue, error } = useGetAccountQueueQuery(status)
+  const result = useGetAccountQueueQuery(status)
+  const { data: queue, error } = result
+  const list = tableState(result, queue?.items ?? [])
   const denied = errorCode(error) === 'PERMISSION_DENIED'
 
   return (
@@ -37,12 +41,14 @@ export default function AccountQueue({ basePath, openId, status, onStatusChange,
             />
           )}
         </div>
-        {denied ? (
+        {list.loading ? (
+          <QueueSkeleton />
+        ) : denied ? (
           <EmptyState icon={Lock} title={t('errors:PERMISSION_DENIED')} description={t('moderation:verification.noPermission', error.data.error.params)} />
         ) : queue?.items.length === 0 ? (
           <EmptyState icon={Users} title={t('moderation:accounts.empty')} />
         ) : (
-          <ul className={pageStyles.list}>
+          <ul className={cx(pageStyles.list, list.busy && pageStyles.busy)} aria-busy={list.busy || undefined}>
             {queue?.items.map((item) => (
               <QueueRow
                 key={item.id}

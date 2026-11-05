@@ -1,7 +1,7 @@
 import { useTranslation } from 'react-i18next'
 import { Link, useParams } from 'react-router-dom'
 import { ArrowLeft, BookOpen, Check, CirclePlay, GraduationCap, ShieldCheck } from 'lucide-react'
-import { Button, Icon, Panel } from '@/components/ui'
+import { Button, Icon, Panel, Skeleton, SkeletonRegion } from '@/components/ui'
 import EmptyState from '@/components/common/EmptyState.jsx'
 import PageTitle from '@/components/common/PageTitle.jsx'
 import PillBadge from '@/components/common/PillBadge.jsx'
@@ -25,7 +25,7 @@ export default function LearningDetailsPage() {
   const { courseId } = useParams()
   // P11b-Q10: opening this item marks its notifications read.
   useMarkSeen('course', courseId)
-  const { data: course, isError } = useGetCourseQuery(courseId)
+  const { data: course, isError, isLoading } = useGetCourseQuery(courseId)
 
   const back = (
     <Link to={BASE} className={styles.back}>
@@ -47,7 +47,14 @@ export default function LearningDetailsPage() {
       />
     )
   }
-  if (!course) return back
+  if (!course) {
+    return (
+      <>
+        {back}
+        {isLoading && <CourseSkeleton />}
+      </>
+    )
+  }
 
   const preview = !course.enrollment && course.curriculum.find((lesson) => lesson.isPreview)
   const percent = text.progress(course)
@@ -165,6 +172,77 @@ export default function LearningDetailsPage() {
             </Panel>
           )}
 
+          <section className={styles.evidence}>
+            <Icon as={ShieldCheck} size={21} className={styles.evidenceIcon} />
+            <h2 className={styles.evidenceTitle}>{t('details.evidenceTitle')}</h2>
+            <p className={styles.evidenceText}>{t('details.evidenceText')}</p>
+          </section>
+        </aside>
+      </div>
+    </>
+  )
+}
+
+/** The course page while it loads: the real section headings, placeholders for the course's own text. */
+function CourseSkeleton() {
+  const { t } = useTranslation('learning')
+  return (
+    <>
+      <PageTitle eyebrow={<Skeleton width={140} height={8} />} title={<Skeleton width={420} height={24} />} description={<Skeleton width={420} />} />
+      <div className={styles.layout}>
+        <SkeletonRegion className={styles.main}>
+          <Panel padding={24}>
+            <h2 className={styles.sectionTitle}>{t('details.outcomesTitle')}</h2>
+            <p className={styles.sectionLead}>{t('details.outcomesLead')}</p>
+            <ol className={styles.outcomes}>
+              {[0, 1, 2].map((index) => (
+                <li key={index} className={styles.outcome}>
+                  <span className={styles.outcomeNumber}>{index + 1}</span>
+                  <div className={styles.outcomeSkeleton}>
+                    <Skeleton />
+                    <Skeleton />
+                    <Skeleton width="60%" />
+                  </div>
+                </li>
+              ))}
+            </ol>
+          </Panel>
+          <Panel padding={24}>
+            <h2 className={styles.sectionTitle}>{t('details.curriculumTitle')}</h2>
+            <p className={styles.sectionLead}>
+              <Skeleton width={140} height={8} />
+            </p>
+            <div className={styles.lessons}>
+              {[220, 200, 240].map((width) => (
+                <div key={width} className={styles.lessonSkeleton}>
+                  <Skeleton shape="circle" width={36} height={36} />
+                  <div className={styles.outcomeSkeleton}>
+                    <Skeleton width={width} height={12} />
+                    <Skeleton width={80} height={8} />
+                  </div>
+                  <Skeleton width={48} />
+                </div>
+              ))}
+            </div>
+          </Panel>
+        </SkeletonRegion>
+        <aside className={`${styles.side} sticky-side`}>
+          <Panel padding={24}>
+            <p className={styles.priceLabel}>{t('price.label')}</p>
+            <p className={styles.price}>
+              <Skeleton width={96} height={28} />
+            </p>
+            <p className={styles.access}>
+              <Skeleton width={140} height={8} />
+            </p>
+            <div className={styles.included}>
+              <Skeleton width="70%" />
+              <Skeleton width="60%" />
+              <Skeleton width="75%" />
+              <Skeleton width="65%" />
+            </div>
+            <Skeleton shape="pill" width="100%" height={40} />
+          </Panel>
           <section className={styles.evidence}>
             <Icon as={ShieldCheck} size={21} className={styles.evidenceIcon} />
             <h2 className={styles.evidenceTitle}>{t('details.evidenceTitle')}</h2>

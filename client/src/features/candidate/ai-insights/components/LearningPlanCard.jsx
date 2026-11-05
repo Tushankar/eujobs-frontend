@@ -1,18 +1,27 @@
 import { useTranslation } from 'react-i18next'
 import { Link } from 'react-router-dom'
 import { ArrowRight } from 'lucide-react'
-import { Icon, Panel } from '@/components/ui'
+import { Icon, Panel, Skeleton, SkeletonRegion } from '@/components/ui'
 import SectionHeading from './SectionHeading.jsx'
 import styles from './LearningPlanCard.module.css'
 
 /** P9-Q2: the skills the candidate plans to learn, kept on the server; a plan item never becomes a profile skill. */
-export default function LearningPlanCard({ plan, onRemove, exploreLabel, exploreTo }) {
+export default function LearningPlanCard({ plan, onRemove, exploreLabel, exploreTo, loading }) {
   const { t } = useTranslation('aiInsights')
   return (
-    <Panel padding={24} aria-labelledby="learning-plan-title" data-learning-plan>
+    <Panel padding={24} aria-labelledby="learning-plan-title" data-learning-plan={loading ? undefined : true}>
       <SectionHeading id="learning-plan-title" title={t('plan.title')} description={t('plan.lead')} />
       <div className={styles.box}>
-        {plan.length === 0 ? (
+        {loading ? (
+          <SkeletonRegion className={styles.list}>
+            {[120, 96].map((width) => (
+              <div key={width} className={styles.item}>
+                <Skeleton width={width} height={12} />
+                <Skeleton width={48} />
+              </div>
+            ))}
+          </SkeletonRegion>
+        ) : plan.length === 0 ? (
           <p className={styles.text}>{t('plan.empty')}</p>
         ) : (
           <>

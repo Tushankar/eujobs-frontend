@@ -5,9 +5,10 @@ import EmptyState from '@/components/common/EmptyState.jsx'
 import PageTitle from '@/components/common/PageTitle.jsx'
 import StatCard from '@/components/common/StatCard.jsx'
 import { useGetConfigQuery } from '@/app/api.js'
+import { Skeleton, SkeletonRegion } from '@/components/ui'
 import { useFormat } from '@/lib/preferences.js'
 import { useGetCoursesQuery, useGetSuggestionsQuery } from '@/features/learning/api.js'
-import CourseCard from '../components/CourseCard.jsx'
+import CourseCard, { CourseCardSkeleton } from '../components/CourseCard.jsx'
 import LevelTabs from '../components/LevelTabs.jsx'
 import styles from './LearningPage.module.css'
 
@@ -19,8 +20,8 @@ import styles from './LearningPage.module.css'
 export default function LearningPage() {
   const { t } = useTranslation('learning')
   const { data: config } = useGetConfigQuery()
-  const { data: courses = [] } = useGetCoursesQuery()
-  const { data: suggestions } = useGetSuggestionsQuery()
+  const { data: courses = [], isLoading: coursesLoading } = useGetCoursesQuery()
+  const { data: suggestions, isLoading: suggestionsLoading } = useGetSuggestionsQuery()
   const format = useFormat()
   const [level, setLevel] = useState('all')
 
@@ -33,9 +34,9 @@ export default function LearningPage() {
       <PageTitle eyebrow={t('catalogue.eyebrow')} title={t('catalogue.title')} description={t('catalogue.description')} />
 
       <div className={styles.stats}>
-        <StatCard label={t('stats.inProgress')} value={inProgress} caption={t('stats.inProgressCaption')} icon={CirclePlay} />
-        <StatCard label={t('stats.badges')} value={completed} caption={t('stats.badgesCaption')} icon={Award} />
-        <StatCard label={t('stats.skills')} value={suggestions?.gapSkills.length ?? 0} caption={t('stats.skillsCaption')} icon={Compass} />
+        <StatCard label={t('stats.inProgress')} value={inProgress} caption={t('stats.inProgressCaption')} icon={CirclePlay} loading={coursesLoading} />
+        <StatCard label={t('stats.badges')} value={completed} caption={t('stats.badgesCaption')} icon={Award} loading={coursesLoading} />
+        <StatCard label={t('stats.skills')} value={suggestions?.gapSkills.length ?? 0} caption={t('stats.skillsCaption')} icon={Compass} loading={suggestionsLoading} />
       </div>
 
       <section className={styles.section} aria-labelledby="suggested-heading" data-suggestions>
@@ -45,7 +46,13 @@ export default function LearningPage() {
               {t('suggestions.title')}
             </h2>
             <p className={styles.sectionLead}>
-              {suggestions?.gapSkills.length ? t('suggestions.lead', { skills: format.list(suggestions.gapSkills) }) : t('suggestions.noGaps')}
+              {suggestionsLoading ? (
+                <Skeleton width={260} height={8} />
+              ) : suggestions?.gapSkills.length ? (
+                t('suggestions.lead', { skills: format.list(suggestions.gapSkills) })
+              ) : (
+                t('suggestions.noGaps')
+              )}
             </p>
             {suggestions?.planSkills.length > 0 && (
               <p className={styles.sectionLead} data-plan-lead>
@@ -54,7 +61,13 @@ export default function LearningPage() {
             )}
           </div>
         </div>
-        {suggestions?.items.length > 0 ? (
+        {suggestionsLoading ? (
+          <SkeletonRegion className={styles.grid}>
+            <CourseCardSkeleton />
+            <CourseCardSkeleton />
+            <CourseCardSkeleton />
+          </SkeletonRegion>
+        ) : suggestions?.items.length > 0 ? (
           <div className={styles.grid}>
             {suggestions.items.map((course) => (
               <CourseCard key={course.id} course={course} />
@@ -73,7 +86,13 @@ export default function LearningPage() {
         <div className={styles.tabs}>
           <LevelTabs levels={config?.enums.courseLevel ?? []} value={level} onChange={setLevel} />
         </div>
-        {visible.length > 0 ? (
+        {coursesLoading ? (
+          <SkeletonRegion className={styles.grid}>
+            <CourseCardSkeleton />
+            <CourseCardSkeleton />
+            <CourseCardSkeleton />
+          </SkeletonRegion>
+        ) : visible.length > 0 ? (
           <div className={styles.grid}>
             {visible.map((course) => (
               <CourseCard key={course.id} course={course} />

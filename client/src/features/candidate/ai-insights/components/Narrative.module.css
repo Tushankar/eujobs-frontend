@@ -1,0 +1,7 @@
+/* The AI text while it is written: three lines at the 28px rhythm of the insights copy. */
+.skeleton {
+  display: flex;
+  flex-direction: column;
+  gap: 18px;
+  padding: 25px 0 9px;
+}

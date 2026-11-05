@@ -28,10 +28,10 @@ export default function ModerationPage() {
   const { t } = useTranslation()
   const [kind, openId] = (useParams()['*'] ?? '').split('/').filter(Boolean)
   const tabId = ['accounts', 'verification'].includes(kind) ? kind : 'content'
-  const { data: inReview } = useGetVerificationQueueQuery('in_review')
+  const { data: inReview, isLoading: inReviewLoading } = useGetVerificationQueueQuery('in_review')
   const [accountStatus, setAccountStatus] = useState('pending_review')
-  const { data: accounts } = useGetAccountQueueQuery(accountStatus)
-  const { data: summary } = useGetModerationSummaryQuery()
+  const { data: accounts, isLoading: accountsLoading } = useGetAccountQueueQuery(accountStatus)
+  const { data: summary, isLoading: summaryLoading } = useGetModerationSummaryQuery()
   const pendingAccounts = accounts?.counts.pending_review ?? 0
   const openContent = summary?.contentOpen ?? 0
   const [status, setStatus] = useState('')
@@ -40,22 +40,29 @@ export default function ModerationPage() {
     <>
       <PageTitle title={t('moderation:title')} description={t('moderation:description')} />
       <div className={styles.stats}>
-        <StatCard label={t('moderation:accounts.stat.label')} value={pendingAccounts} caption={t('moderation:accounts.stat.caption')} icon={Users} />
-        <StatCard label={t('moderation:content.stat.label')} value={openContent} caption={t('moderation:content.stat.caption')} icon={TriangleAlert} />
+        <StatCard label={t('moderation:accounts.stat.label')} value={pendingAccounts} caption={t('moderation:accounts.stat.caption')} icon={Users} loading={accountsLoading} />
+        <StatCard label={t('moderation:content.stat.label')} value={openContent} caption={t('moderation:content.stat.caption')} icon={TriangleAlert} loading={summaryLoading} />
         <StatCard
           label={t('moderation:verification.stat.label')}
           value={inReview?.total ?? 0}
           caption={t('moderation:verification.stat.caption')}
           icon={ShieldCheck}
+          loading={inReviewLoading}
         />
-        <StatCard label={t('moderation:content.decisions.label')} value={summary?.contentDecided ?? 0} caption={t('moderation:content.decisions.caption')} icon={CircleCheck} />
+        <StatCard
+          label={t('moderation:content.decisions.label')}
+          value={summary?.contentDecided ?? 0}
+          caption={t('moderation:content.decisions.caption')}
+          icon={CircleCheck}
+          loading={summaryLoading}
+        />
       </div>
       <QueueTabs
         value={tabId}
         tabs={[
-          { id: 'content', label: t('moderation:content.tab'), icon: TriangleAlert, count: openContent, to: TABS.content.path },
-          { id: 'accounts', label: t('moderation:accounts.tab'), icon: Users, count: pendingAccounts, to: TABS.accounts.path },
-          { id: 'verification', label: t('moderation:verification.tab'), icon: ShieldCheck, count: inReview?.total ?? 0, to: TABS.verification.path },
+          { id: 'content', label: t('moderation:content.tab'), icon: TriangleAlert, count: openContent, loading: summaryLoading, to: TABS.content.path },
+          { id: 'accounts', label: t('moderation:accounts.tab'), icon: Users, count: pendingAccounts, loading: accountsLoading, to: TABS.accounts.path },
+          { id: 'verification', label: t('moderation:verification.tab'), icon: ShieldCheck, count: inReview?.total ?? 0, loading: inReviewLoading, to: TABS.verification.path },
         ]}
       />
       <div role="status">{status && <p className={styles.status}>{status}</p>}</div>

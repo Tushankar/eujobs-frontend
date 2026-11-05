@@ -2,7 +2,7 @@ import { useState } from 'react'
 import { useTranslation } from 'react-i18next'
 import { Link } from 'react-router-dom'
 import { ChevronDown, ChevronRight, CircleCheck, CircleHelp, CircleMinus, Clock, FileText, ShieldCheck, TriangleAlert, UserPlus, Users } from 'lucide-react'
-import { Icon, Panel } from '@/components/ui'
+import { Icon, Panel, Skeleton, SkeletonRegion } from '@/components/ui'
 import PillBadge from '@/components/common/PillBadge.jsx'
 import { can } from '@/app/permissions.js'
 import { cx } from '@/utils/cx.js'
@@ -31,9 +31,33 @@ function RowLink({ to, icon, label, caption, count }) {
 function TodoCard({ me }) {
   const { t } = useTranslation()
   const skip = !can(me, 'moderation.manage')
-  const { data: accounts } = useGetAccountQueueQuery('pending_review', { skip })
-  const { data: summary } = useGetModerationSummaryQuery(undefined, { skip })
-  const { data: checks } = useGetVerificationQueueQuery('in_review', { skip })
+  const { data: accounts, isLoading: accountsLoading } = useGetAccountQueueQuery('pending_review', { skip })
+  const { data: summary, isLoading: summaryLoading } = useGetModerationSummaryQuery(undefined, { skip })
+  const { data: checks, isLoading: checksLoading } = useGetVerificationQueueQuery('in_review', { skip })
+  if (!skip && (accountsLoading || summaryLoading || checksLoading))
+    return (
+      <Panel padding={0} className={styles.card}>
+        <h2 className={styles.heading}>{t('account:admin.todo')}</h2>
+        <SkeletonRegion>
+          <ul className={styles.rows}>
+            {[120, 96].map((width) => (
+              <li key={width} className={styles.row}>
+                <Skeleton shape="circle" width={18} height={18} />
+                <span className={styles.text}>
+                  <span className={styles.label}>
+                    <Skeleton width={width} height={12} />
+                  </span>
+                  <span className={styles.caption}>
+                    <Skeleton width={width + 40} />
+                  </span>
+                </span>
+                <Skeleton shape="pill" width={24} height={20} />
+              </li>
+            ))}
+          </ul>
+        </SkeletonRegion>
+      </Panel>
+    )
   if (skip || !accounts || !summary || !checks) return null
   const rows = [
     { key: 'accounts', to: '/admin/moderation/accounts', icon: Users, count: accounts.counts.pending_review ?? 0 },

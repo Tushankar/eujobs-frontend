@@ -217,6 +217,22 @@
   color: var(--foreground);
 }
 
+/* Loading: a fact's or stat's real label beside its placeholder value. */
+.skeletonLabel {
+  color: var(--muted-foreground);
+}
+
+.skeletonStatLabel {
+  font-size: 11px;
+  line-height: 16px;
+  color: var(--muted-foreground);
+}
+
+.skeletonStatValue {
+  padding-top: 2px;
+  line-height: 20px;
+}
+
 .list {
   display: grid;
   margin: 0;

@@ -170,6 +170,41 @@
   margin-top: 32px;
 }
 
+.evidenceSkeleton {
+  display: flex;
+  flex-direction: column;
+  gap: 18px;
+  padding: 25px 0 9px;
+}
+
+.matchHead {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+}
+
+.matchText {
+  display: flex;
+  flex: 1;
+  flex-direction: column;
+  gap: 8px;
+}
+
+.matchBadge {
+  padding-top: 12px;
+}
+
+.matchInsight {
+  display: flex;
+  padding-top: 16px;
+}
+
+.matchLinks {
+  display: flex;
+  justify-content: space-between;
+  padding-top: 19px;
+}
+
 .matchGrid {
   display: grid;
   grid-template-columns: repeat(2, minmax(0, 1fr));

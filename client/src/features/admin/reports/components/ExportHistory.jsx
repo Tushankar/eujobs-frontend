@@ -1,18 +1,52 @@
 import { useTranslation } from 'react-i18next'
 import { FileText } from 'lucide-react'
-import { Button, Icon, Panel } from '@/components/ui'
+import { Button, Icon, Panel, Skeleton, SkeletonRegion } from '@/components/ui'
 import SectionTitle from '@/components/common/SectionTitle.jsx'
 import { useFormat } from '@/lib/preferences.js'
 import styles from './ExportHistory.module.css'
 
-/** Stored report snapshots, newest first (M-183); "Download again" serves the same file. */
-export default function ExportHistory({ reports, canDownload, downloading, onDownload }) {
+/* Title and meta widths (px) of the placeholder reports. */
+const SKELETON_ROWS = [
+  [220, 300],
+  [180, 260],
+  [240, 280],
+]
+
+/** Stored report snapshots, newest first (M-183); "Download again" serves the same file. `loading` shows placeholder rows. */
+export default function ExportHistory({ reports, canDownload, downloading, onDownload, loading }) {
   const { t } = useTranslation(['adminReports', 'enums'])
   const format = useFormat()
   return (
     <Panel padding={28}>
       <SectionTitle title={t('history.title')} />
-      {reports.length === 0 ? (
+      {loading ? (
+        <SkeletonRegion>
+          <ul className={styles.list}>
+            {SKELETON_ROWS.map(([title, meta], index) => (
+              <li key={index} className={styles.item}>
+                <Skeleton shape="block" width={40} height={40} className={styles.skeletonIcon} />
+                <div className={styles.itemText}>
+                  <p className={styles.itemTitle}>
+                    <Skeleton width={title} height={14} />
+                  </p>
+                  <p className={styles.itemMeta}>
+                    <Skeleton width={meta} />
+                  </p>
+                  <p className={styles.itemContext}>
+                    <span>
+                      <Skeleton width="90%" />
+                    </span>
+                    <span>
+                      <Skeleton width="70%" />
+                    </span>
+                  </p>
+                </div>
+                {canDownload && <Skeleton shape="pill" width={120} height={32} />}
+              </li>
+            ))}
+          </ul>
+        </SkeletonRegion>
+      ) : reports.length === 0 ? (
         <div className={styles.empty}>
           <span className={styles.emptyIcon}>
             <Icon as={FileText} size={25} strokeWidth={2} />

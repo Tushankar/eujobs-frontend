@@ -1,9 +1,47 @@
 import { Link } from 'react-router-dom'
 import { ArrowRight } from 'lucide-react'
-import { Button, Icon } from '@/components/ui'
+import { Button, Icon, Skeleton, SkeletonRegion } from '@/components/ui'
 import PillBadge from '@/components/common/PillBadge.jsx'
 import { cx } from '@/utils/cx.js'
 import styles from './QueueRow.module.css'
+
+/* Title and sub-line widths (px) of the placeholder rows. */
+const SKELETON_WIDTHS = [
+  [160, 280],
+  [128, 240],
+  [176, 300],
+]
+
+/** A queue's rows while it loads: tile, title with badge, two lines, the status and the review button. */
+export function QueueSkeleton() {
+  return (
+    <SkeletonRegion>
+      <ul>
+        {SKELETON_WIDTHS.map(([title, sub], index) => (
+          <li key={index} className={styles.row}>
+            <Skeleton shape="block" width={44} height={44} className={styles.skeletonTile} />
+            <div className={styles.body}>
+              <div className={styles.titleRow}>
+                <span className={styles.title}>
+                  <Skeleton width={title} height={14} />
+                </span>
+                <Skeleton shape="pill" width={64} />
+              </div>
+              <p className={styles.sub}>
+                <Skeleton width={sub} />
+              </p>
+              <p className={styles.meta}>
+                <Skeleton width={120} height={8} />
+              </p>
+            </div>
+            <Skeleton shape="pill" />
+            <Skeleton shape="pill" width={96} height={40} />
+          </li>
+        ))}
+      </ul>
+    </SkeletonRegion>
+  )
+}
 
 /**
  * One moderation queue item: icon tile, headline with optional badge, supporting lines, status badge and

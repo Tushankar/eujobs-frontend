@@ -2,11 +2,11 @@ import { useState } from 'react'
 import { useTranslation } from 'react-i18next'
 import { useOutletContext } from 'react-router-dom'
 import { Search } from 'lucide-react'
-import { Button, Icon, Panel, TextField } from '@/components/ui'
+import { Button, Icon, Panel, SkeletonRegion, TextField } from '@/components/ui'
 import { workspacePath } from '@/app/workspaces.js'
 import { foldText } from '@/lib/text.js'
 import { useGetFaqsQuery } from '../api.js'
-import FaqItem from '../components/FaqItem.jsx'
+import FaqItem, { FaqItemSkeleton } from '../components/FaqItem.jsx'
 import HelpLinkCard from '../components/HelpLinkCard.jsx'
 import { HELP_LINKS } from '../data/help.js'
 import styles from './HelpPage.module.css'
@@ -15,7 +15,7 @@ import styles from './HelpPage.module.css'
 export default function HelpPage() {
   const { t, i18n } = useTranslation()
   const { workspace } = useOutletContext()
-  const { data: allFaqs = [], isError } = useGetFaqsQuery(i18n.language)
+  const { data: allFaqs = [], isError, isLoading } = useGetFaqsQuery(i18n.language)
   const [query, setQuery] = useState('')
   // null = the default: the first question open.
   const [openIds, setOpenIds] = useState(null)
@@ -54,6 +54,16 @@ export default function HelpPage() {
 
       {isError && <p role="alert">{t('help:unavailable')}</p>}
 
+      {isLoading && (
+        <SkeletonRegion>
+          <Panel padding="0 24px" className={styles.faqs}>
+            {[0, 1, 2, 3, 4].map((row) => (
+              <FaqItemSkeleton key={row} open={row === 0} />
+            ))}
+          </Panel>
+        </SkeletonRegion>
+      )}
+
       {faqs.length > 0 && (
         <Panel padding="0 24px" className={styles.faqs}>
           {faqs.map((faq) => (
@@ -70,7 +80,7 @@ export default function HelpPage() {
         </div>
       )}
 
-      {!hasResults && (
+      {!hasResults && !isLoading && (
         <Panel padding="48px 24px" className={styles.empty}>
           <p className={styles.emptyTitle}>{t('help:empty.title', { query: query.trim() })}</p>
           <p className={styles.emptyText}>{t('help:empty.text')}</p>

@@ -2,7 +2,7 @@ import { useEffect, useState } from 'react'
 import { useTranslation } from 'react-i18next'
 import { ExternalLink, FileText } from 'lucide-react'
 import { errorCode } from '@/app/api.js'
-import { Icon } from '@/components/ui'
+import { Icon, Skeleton, SkeletonRegion } from '@/components/ui'
 import { useGetAdminFileUrlQuery } from '../api.js'
 import styles from './DocumentViewer.module.css'
 
@@ -49,8 +49,15 @@ export default function DocumentViewer({ file }) {
   }
 
   let content
-  if (!(image || pdf) || local.failed) content = <p className={styles.message}>{t('moderation:verification.dialog.noInline')}</p>
-  else if (!local.url) content = <p className={styles.message}>{t('common:loading')}</p>
+  if (!(image || pdf) || local.failed || error) content = <p className={styles.message}>{t('moderation:verification.dialog.noInline')}</p>
+  else if (!local.url)
+    content = (
+      <SkeletonRegion className={styles.skeletonPage}>
+        {[90, 75, 85, 60, 80, 70].map((width) => (
+          <Skeleton key={width} width={`${width}%`} />
+        ))}
+      </SkeletonRegion>
+    )
   else if (image) content = <img className={styles.image} src={local.url} alt={t('moderation:verification.dialog.previewAlt', { name: file.name })} />
   // PDF viewer: fit to width, page thumbnails closed (the whole pane shows the page).
   else content = <iframe className={styles.pdf} src={`${local.url}#navpanes=0&view=FitH`} title={t('moderation:verification.dialog.previewAlt', { name: file.name })} />

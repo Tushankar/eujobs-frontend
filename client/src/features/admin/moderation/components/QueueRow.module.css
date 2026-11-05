@@ -75,3 +75,7 @@
   line-height: 18px;
   color: var(--muted-foreground);
 }
+
+.row .skeletonTile {
+  border-radius: var(--radius-xl);
+}

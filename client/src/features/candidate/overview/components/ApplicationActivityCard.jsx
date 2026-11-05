@@ -1,7 +1,7 @@
 import { useTranslation } from 'react-i18next'
 import { Link } from 'react-router-dom'
 import { ArrowRight, ArrowUpRight } from 'lucide-react'
-import { CompanyLogo, Icon } from '@/components/ui'
+import { CompanyLogo, Icon, Skeleton, SkeletonRegion } from '@/components/ui'
 import StatusBadge from '@/components/common/StatusBadge.jsx'
 import { useGetApplicationsQuery } from '@/features/candidate/applications/api.js'
 import { canWithdraw, STATUS_TONES } from '@/features/candidate/applications/status.js'
@@ -12,7 +12,7 @@ const SHOWN = 3
 /** The latest three active applications, each linking to its job; the footer links to Applications. */
 export default function ApplicationActivityCard() {
   const { t } = useTranslation()
-  const { data } = useGetApplicationsQuery()
+  const { data, isLoading } = useGetApplicationsQuery()
   const recent = (data?.items ?? []).filter((application) => canWithdraw(application.status)).slice(0, SHOWN)
 
   return (
@@ -23,7 +23,22 @@ export default function ApplicationActivityCard() {
           <Icon as={ArrowUpRight} size={15} />
         </Link>
       </div>
-      {data && recent.length === 0 ? (
+      {isLoading ? (
+        <SkeletonRegion as="ul" className={styles.activityList}>
+          {Array.from({ length: SHOWN }, (_, index) => (
+            <li key={index} className={styles.activityRow}>
+              <Skeleton shape="block" width={36} height={36} />
+              <span className={styles.activityText}>
+                <Skeleton width={140} />
+                <span className={styles.activityCompany}>
+                  <Skeleton width={90} height={8} />
+                </span>
+                <Skeleton shape="pill" width={64} height={21} />
+              </span>
+            </li>
+          ))}
+        </SkeletonRegion>
+      ) : data && recent.length === 0 ? (
         <p className={styles.lead}>{t('applications:card.empty')}</p>
       ) : (
         <ul className={styles.activityList}>

@@ -2,12 +2,14 @@ import { useState } from 'react'
 import { useTranslation } from 'react-i18next'
 import { MoreHorizontal } from 'lucide-react'
 import { useGetConfigQuery } from '@/app/api.js'
-import { Avatar, Button, Dropdown, IconButton, TextareaField } from '@/components/ui'
+import { Avatar, Button, Dropdown, IconButton, Skeleton, SkeletonRegion, TextareaField } from '@/components/ui'
 import ConfirmDialog from '@/components/common/ConfirmDialog.jsx'
 import { serverFieldErrors, useErrorText } from '@/lib/forms.js'
 import { useFormat } from '@/lib/preferences.js'
 import { useAddCandidateNoteMutation, useDeleteCandidateNoteMutation, useEditCandidateNoteMutation, useGetCandidateNotesQuery } from '../api.js'
 import styles from './CandidateNotes.module.css'
+
+const SKELETON_NOTES = 3
 
 /** Client check before the server's: a note needs text and at most `max` characters. */
 function checkText(text, max) {
@@ -145,6 +147,30 @@ function Note({ note, candidateId, max }) {
   )
 }
 
+/** A note's shape while the notes load. */
+function NoteSkeleton() {
+  return (
+    <div className={styles.note} aria-hidden="true">
+      <Skeleton shape="circle" width={32} height={32} />
+      <div className={styles.body}>
+        <div className={styles.who}>
+          <p className={styles.author}>
+            <Skeleton width={120} />
+          </p>
+          <p className={styles.time}>
+            <Skeleton width={180} />
+          </p>
+        </div>
+        <p className={styles.text}>
+          <Skeleton width="90%" />
+          <br />
+          <Skeleton width="60%" />
+        </p>
+      </div>
+    </div>
+  )
+}
+
 /**
  * M-080 (owner decision 2026-11-05): the company's dated notes on a candidate, newest first, with a composer. Everyone
  * in the company reads them; only the author edits or deletes one. Used on the profile's Notes tab and in the Hiring
@@ -154,7 +180,7 @@ export default function CandidateNotes({ candidateId, candidateName, application
   const { t } = useTranslation()
   const errorText = useErrorText()
   const { data: config } = useGetConfigQuery()
-  const { data } = useGetCandidateNotesQuery(candidateId)
+  const { data, isLoading: notesLoading } = useGetCandidateNotesQuery(candidateId)
   const [addNote, { isLoading }] = useAddCandidateNoteMutation()
   const [draft, setDraft] = useState('')
   const [error, setError] = useState(null)
@@ -196,13 +222,21 @@ export default function CandidateNotes({ candidateId, candidateName, application
         </div>
       </form>
 
-      <p className={styles.count}>{t('discovery:notes.count', { count: notes.length })}</p>
+      <p className={styles.count}>{notesLoading ? <Skeleton width={64} height={12} /> : t('discovery:notes.count', { count: notes.length })}</p>
       {data && notes.length === 0 && <p className={styles.empty}>{t('discovery:notes.empty')}</p>}
-      <ul className={styles.list}>
-        {notes.map((note) => (
-          <Note key={note.id} note={note} candidateId={candidateId} max={max} />
-        ))}
-      </ul>
+      {notesLoading ? (
+        <SkeletonRegion className={styles.list}>
+          {Array.from({ length: SKELETON_NOTES }, (_, index) => (
+            <NoteSkeleton key={index} />
+          ))}
+        </SkeletonRegion>
+      ) : (
+        <ul className={styles.list}>
+          {notes.map((note) => (
+            <Note key={note.id} note={note} candidateId={candidateId} max={max} />
+          ))}
+        </ul>
+      )}
     </div>
   )
 }

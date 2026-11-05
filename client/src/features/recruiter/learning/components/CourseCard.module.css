@@ -102,3 +102,8 @@
   gap: 8px;
   padding-top: 20px;
 }
+
+/* Loading: the cover's placeholder fills the card's top edge. */
+.card .skeletonPhoto {
+  border-radius: 0;
+}

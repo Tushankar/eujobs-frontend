@@ -49,6 +49,15 @@
   margin-top: 24px;
 }
 
+.evidence {
+  transition: opacity var(--transition);
+}
+
+.busy {
+  opacity: 0.5;
+  pointer-events: none;
+}
+
 @media (max-width: 1023px) {
   .stats {
     grid-template-columns: repeat(2, minmax(0, 1fr));

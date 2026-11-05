@@ -254,3 +254,9 @@
     grid-template-columns: minmax(0, 1fr);
   }
 }
+
+/* Loading: the cover's placeholder keeps the hero's corners. */
+.main .skeletonHero {
+  display: block;
+  border-radius: var(--radius-xl);
+}

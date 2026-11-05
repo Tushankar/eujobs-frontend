@@ -19,11 +19,11 @@ export const lacksEntitlement = (me, entitlement, roles = ['candidate']) => role
 export function usePlan() {
   const { me } = usePreferences()
   const recruiter = me?.role === 'recruiter'
-  const { data: countries } = useGetCountriesQuery(undefined, { skip: recruiter })
+  const { data: countries, isLoading: countriesLoading } = useGetCountriesQuery(undefined, { skip: recruiter })
   const currency = recruiter ? undefined : (countries?.find((country) => country.code === me?.pickerCountry)?.currency ?? 'EUR')
-  const { data: plans = [] } = useGetPlansQuery(currency, { skip: !['candidate', 'recruiter'].includes(me?.role) || (!recruiter && !countries) })
+  const { data: plans = [], isLoading: plansLoading } = useGetPlansQuery(currency, { skip: !['candidate', 'recruiter'].includes(me?.role) || (!recruiter && !countries) })
   const item = planItem(me?.role)
   const plus = plans.find((plan) => plan.key === item.itemId)
   const free = plans.find((plan) => plan !== plus)
-  return { isPlus: Boolean(me?.plan) && me.plan !== 'free', plans, plus, free, item }
+  return { isPlus: Boolean(me?.plan) && me.plan !== 'free', plans, plus, free, item, loading: countriesLoading || plansLoading }
 }

@@ -2,7 +2,7 @@ import { useState } from 'react'
 import { useTranslation } from 'react-i18next'
 import { FileText, ShieldCheck } from 'lucide-react'
 import { useGetConfigQuery } from '@/app/api.js'
-import { Icon, Panel } from '@/components/ui'
+import { Icon, Panel, SkeletonRegion } from '@/components/ui'
 import ConfirmDialog from '@/components/common/ConfirmDialog.jsx'
 import EmptyState from '@/components/common/EmptyState.jsx'
 import PageTitle from '@/components/common/PageTitle.jsx'
@@ -25,7 +25,7 @@ import ComparePanel from '../components/ComparePanel.jsx'
 import CvRequests from '../components/CvRequests.jsx'
 import SnapshotDialog from '../components/SnapshotDialog.jsx'
 import UploadDropzone from '../components/UploadDropzone.jsx'
-import VersionRow from '../components/VersionRow.jsx'
+import VersionRow, { VersionRowSkeleton } from '../components/VersionRow.jsx'
 import styles from './CvVersionsPage.module.css'
 import { useMarkSeen } from '@/features/notifications/api.js'
 
@@ -44,7 +44,7 @@ export default function CvVersionsPage() {
   const { data: config } = useGetConfigQuery()
   const rule = config?.limits.uploads.cv
   const uploadText = useUploadText(rule)
-  const { data: cv } = useGetCvVersionsQuery()
+  const { data: cv, isLoading } = useGetCvVersionsQuery()
   const [uploadCv, { isLoading: uploading, originalArgs: uploadingFile }] = useUploadCvMutation()
   const [setLiveCv] = useSetLiveCvMutation()
   const [deleteCv] = useDeleteCvMutation()
@@ -164,7 +164,18 @@ export default function CvVersionsPage() {
           </div>
         </div>
         <div className={styles.historyBody}>
-          {cv && versions.length === 0 ? (
+          {isLoading ? (
+            <>
+              <SkeletonRegion className={styles.versions}>
+                <Panel padding={0}>
+                  <VersionRowSkeleton />
+                  <VersionRowSkeleton />
+                  <VersionRowSkeleton />
+                </Panel>
+              </SkeletonRegion>
+              <ComparePanel selected={[]} />
+            </>
+          ) : cv && versions.length === 0 ? (
             <EmptyState icon={FileText} title={t('cv:history.empty')} description={t('cv:history.emptyLead')} />
           ) : (
             <>

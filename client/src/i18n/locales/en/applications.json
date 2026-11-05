@@ -147,6 +147,7 @@
     "history": "Stage history"
   },
   "funnel": {
+    "title": "Funnel View",
     "label": "Hiring funnel by stage",
     "hint": "Click a stage to see who is in it now. Drag a candidate onto a stage, or use their stage menu, to move them.",
     "applicants_one": "applicant",

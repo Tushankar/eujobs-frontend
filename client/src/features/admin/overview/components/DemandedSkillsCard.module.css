@@ -57,3 +57,8 @@
   line-height: 16px;
   color: var(--muted-foreground);
 }
+
+.track .skeletonFill {
+  display: block;
+  border-radius: 4px;
+}

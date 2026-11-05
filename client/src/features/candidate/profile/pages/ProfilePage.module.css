@@ -261,6 +261,34 @@
   border-radius: var(--radius-xl);
 }
 
+.entrySkeleton {
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+  padding: 5px 0;
+}
+
+.aboutSkeleton {
+  display: flex;
+  flex-direction: column;
+  gap: 18px;
+  padding: 29px 0 9px;
+}
+
+.checklistHead {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 8px;
+}
+
+.checklistSkeleton {
+  display: flex;
+  flex-direction: column;
+  gap: 22px;
+  padding-top: 12px;
+}
+
 .entryText {
   min-width: 0;
 }

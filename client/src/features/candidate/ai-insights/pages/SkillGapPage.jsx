@@ -3,7 +3,7 @@ import { useTranslation } from 'react-i18next'
 import { Link } from 'react-router-dom'
 import { ArrowRight, BriefcaseBusiness, CheckCheck, FileText, Layers } from 'lucide-react'
 import StatCard from '@/components/common/StatCard.jsx'
-import { Button, Icon, Panel } from '@/components/ui'
+import { Button, Icon, Panel, SkeletonRegion } from '@/components/ui'
 import {
   useAddPlanSkillMutation,
   useAddProfileSkillMutation,
@@ -15,8 +15,9 @@ import {
 import AiStatus from '@/features/ai/components/AiStatus.jsx'
 import { useGetProfileQuery } from '@/features/candidate/profile/api.js'
 import { serverFieldErrors, useErrorText } from '@/lib/forms.js'
+import { cx } from '@/utils/cx.js'
 import AiPageShell from '../components/AiPageShell.jsx'
-import GapCard from '../components/GapCard.jsx'
+import GapCard, { GapCardSkeleton } from '../components/GapCard.jsx'
 import LearningPlanCard from '../components/LearningPlanCard.jsx'
 import ReviewSkillModal from '../components/ReviewSkillModal.jsx'
 import RolePicker from '../components/RolePicker.jsx'
@@ -29,8 +30,12 @@ import styles from './SkillGapPage.module.css'
 export default function SkillGapPage() {
   const { t } = useTranslation('aiInsights')
   const errorText = useErrorText()
-  const { roles, jobId, choose } = useChosenJob()
-  const { data } = useGetInsightPageQuery({ page: 'skill-gap', jobId }, { skip: !jobId })
+  const { roles, jobId, choose, loading: rolesLoading } = useChosenJob()
+  const page = useGetInsightPageQuery({ page: 'skill-gap', jobId }, { skip: !jobId })
+  const { data } = page
+  const loading = rolesLoading || page.isLoading
+  // Another role: the previous role's evidence stays dimmed until the new one arrives.
+  const busy = page.isFetching && !page.currentData
   const { data: profile } = useGetProfileQuery()
   const [addSkill, adding] = useAddProfileSkillMutation()
   const [removeSkill] = useRemoveProfileSkillMutation()
@@ -71,10 +76,25 @@ export default function SkillGapPage() {
 
   return (
     <AiPageShell eyebrow={t('gap.eyebrow')} title={t('gap.title')} description={t('gap.description')}>
-      <RolePicker roles={roles} jobId={jobId} onChange={choose} />
+      <RolePicker roles={roles} jobId={jobId} onChange={choose} loading={rolesLoading} />
+
+      {loading && (
+        <>
+          <div className={styles.stats}>
+            <StatCard icon={CheckCheck} label={t('gap.aligned')} loading />
+            <StatCard icon={Layers} label={t('gap.missing')} loading />
+            <StatCard icon={BriefcaseBusiness} label={t('gap.experience')} loading />
+          </div>
+          <SectionHeading className={styles.heading} title={t('gap.heading')} description={t('gap.headingLead')} />
+          <SkeletonRegion className={styles.gaps}>
+            <GapCardSkeleton />
+            <GapCardSkeleton />
+          </SkeletonRegion>
+        </>
+      )}
 
       {evidence && (
-        <>
+        <div className={cx(styles.evidence, busy && styles.busy)} aria-busy={busy || undefined}>
           <div className={styles.stats}>
             <StatCard
               icon={CheckCheck}
@@ -100,7 +120,7 @@ export default function SkillGapPage() {
           {gaps.length > 0 ? (
             <>
               <div data-narrative="skill_gap">
-                <AiStatus isLoading={narrative.isFetching} error={narrative.error} onRetry={narrative.refetch} />
+                <AiStatus error={narrative.error} onRetry={narrative.refetch} />
               </div>
               <div className={styles.gaps}>
                 {gaps.map((skill) => (
@@ -108,6 +128,7 @@ export default function SkillGapPage() {
                     key={skill}
                     skill={skill}
                     guidance={narrative.data?.guidance.find((item) => item.skill === skill)?.text}
+                    guidanceLoading={narrative.isFetching}
                     added={added.includes(skill)}
                     planned={plan.includes(skill)}
                     onReview={setReviewing}
@@ -126,11 +147,11 @@ export default function SkillGapPage() {
               </Link>
             </Panel>
           )}
-        </>
+        </div>
       )}
 
       <div className={styles.plan}>
-        <LearningPlanCard plan={plan} onRemove={(skill) => removePlan(skill)} exploreLabel={t('plan.explore')} exploreTo="/candidate/learning" />
+        <LearningPlanCard loading={loading} plan={plan} onRemove={(skill) => removePlan(skill)} exploreLabel={t('plan.explore')} exploreTo="/candidate/learning" />
       </div>
 
       <ReviewSkillModal skill={reviewing} error={reviewError} busy={adding.isLoading} onClose={() => setReviewing(null)} onConfirm={confirmSkill} />

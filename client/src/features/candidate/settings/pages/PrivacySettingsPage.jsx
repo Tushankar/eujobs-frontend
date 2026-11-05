@@ -1,7 +1,7 @@
 import { useState } from 'react'
 import { useTranslation } from 'react-i18next'
 import { ShieldCheck } from 'lucide-react'
-import { Icon } from '@/components/ui'
+import { Icon, SkeletonRegion } from '@/components/ui'
 import { useErrorText } from '@/lib/forms.js'
 import { useGetPrivacyQuery, useUpdatePrivacyMutation } from '../api.js'
 import SettingsCard from '../components/SettingsCard.jsx'
@@ -15,7 +15,7 @@ const FLAGS = ['discoverable', 'resumeVisible', 'matchingConsent']
 export default function PrivacySettingsPage() {
   const { t } = useTranslation()
   const errorText = useErrorText()
-  const { data: privacy } = useGetPrivacyQuery()
+  const { data: privacy, isLoading } = useGetPrivacyQuery()
   const [updatePrivacy] = useUpdatePrivacyMutation()
   const [failure, setFailure] = useState(null)
 
@@ -30,6 +30,15 @@ export default function PrivacySettingsPage() {
 
   return (
     <SettingsCard title={t('account:privacy.title')} description={t('account:privacy.description')}>
+      {isLoading && (
+        <SkeletonRegion>
+          <ul className={styles.list}>
+            {FLAGS.map((flag) => (
+              <ToggleRow key={flag} loading label={t(`account:privacy.${flag}.label`)} description={t(`account:privacy.${flag}.description`)} />
+            ))}
+          </ul>
+        </SkeletonRegion>
+      )}
       {privacy && (
         <ul className={styles.list}>
           {FLAGS.map((flag) => (

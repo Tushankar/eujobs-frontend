@@ -86,7 +86,7 @@ export default {
     await ctx.screenshot(page, '4-published')
 
     await page.goto(`${ctx.webUrl}/recruiter/jobs`, { waitUntil: 'networkidle0' })
-    const tabs = await page.$$eval('[aria-label="Filter jobs by status"] button', (buttons) => buttons.map((button) => button.textContent.trim()))
+    const tabs = await page.$$eval('[aria-label="Filter jobs by status"] button', (buttons) => buttons.map((button) => button.firstChild.textContent.trim()))
     ctx.check(tabs.join(',') === 'All jobs,Published,Paused,Draft,Closed', `the tab order (got ${tabs})`)
     await clickText(page, 'Published', '[aria-label="Filter jobs by status"] button')
     await waitForText(page, 'Senior Product Designer')

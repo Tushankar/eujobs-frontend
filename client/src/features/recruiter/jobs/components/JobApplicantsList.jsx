@@ -4,17 +4,20 @@ import { ArrowUpRight } from 'lucide-react'
 import { Avatar, Icon } from '@/components/ui'
 import PillBadge from '@/components/common/PillBadge.jsx'
 import { useGetCompanyApplicationsQuery } from '@/features/recruiter/applications/api.js'
+import { PeopleRowsSkeleton } from './JobTalentList.jsx'
 import styles from './JobTalentList.module.css'
 
 /** The job's active applications with their stage (Phase 6 task 3); the full list opens Applications filtered by the job. */
 export default function JobApplicantsList({ jobId }) {
   const { t } = useTranslation()
-  const { data } = useGetCompanyApplicationsQuery({ jobId })
+  const { data, isLoading } = useGetCompanyApplicationsQuery({ jobId })
   const applications = data?.items ?? []
   return (
     <section data-job-applicants>
       <h3 className={styles.heading}>{t('applications:jobApplicants.title')}</h3>
-      {data && applications.length === 0 ? (
+      {isLoading ? (
+        <PeopleRowsSkeleton pill />
+      ) : data && applications.length === 0 ? (
         <p className={styles.empty}>{t('applications:jobApplicants.empty')}</p>
       ) : (
         <ul className={styles.list}>

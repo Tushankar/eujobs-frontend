@@ -1,7 +1,7 @@
 import { useState } from 'react'
 import { useTranslation } from 'react-i18next'
 import { Link } from 'react-router-dom'
-import { BriefcaseBusiness, Plus } from 'lucide-react'
+import { Plus, SearchX, Search } from 'lucide-react'
 import { useGetConfigQuery } from '@/app/api.js'
 import EmptyState from '@/components/common/EmptyState.jsx'
 import FilterChips from '@/components/common/FilterChips.jsx'
@@ -45,7 +45,9 @@ export default function JobsPage() {
     }[sort.key]
     visible.sort((a, b) => direction * compare(a, b))
   }
-  const filtering = tab !== 'all' || needle !== ''
+  // A recruiter with no jobs at all gets the get-started card instead of filters that have nothing to filter.
+  const noJobs = Boolean(data) && jobs.length === 0
+  const countOf = (status) => (data ? jobs.filter((job) => status === 'all' || job.status === status).length : undefined)
 
   function toggleSort(key) {
     setSort((current) => ({ key, direction: current?.key === key && current.direction === 'asc' ? 'desc' : 'asc' }))
@@ -64,46 +66,72 @@ export default function JobsPage() {
 
   return (
     <>
-      <PageTitle title={t('jobs:page.title')} description={t('jobs:page.description')} actions={<div className={styles.actions}>{createButton}</div>} />
+      <PageTitle title={t('jobs:page.title')} description={t('jobs:page.description')} actions={!noJobs && <div className={styles.actions}>{createButton}</div>} />
 
-      <div className={styles.toolbar}>
-        <FilterChips
-          className={styles.chips}
-          label={t('jobs:page.filterLabel')}
-          options={[{ id: 'all', label: t('jobs:page.all') }, ...statusOrder.map((status) => ({ id: status, label: t(`enums:jobStatus.${status}`) }))]}
-          value={tab}
-          onChange={setTab}
-        />
-        <TextField
-          className={styles.search}
-          aria-label={t('jobs:page.search')}
-          type="search"
-          placeholder={t('jobs:page.search')}
-          value={query}
-          onChange={(event) => setQuery(event.target.value)}
-        />
-      </div>
+      {noJobs ? (
+        <section className={styles.start} aria-labelledby="jobs-start-title">
+          <div className={styles.startHead}>
+            <h2 id="jobs-start-title" className={styles.startTitle}>
+              {t('jobs:page.start.title')}
+            </h2>
+            <p className={styles.startText}>{t('jobs:page.start.text')}</p>
+          </div>
+          <ol className={styles.steps}>
+            {t('jobs:page.start.steps', { returnObjects: true }).map((step, index) => (
+              <li key={step.title} className={styles.step}>
+                <span className={styles.stepNumber}>{index + 1}</span>
+                <span className={styles.stepTitle}>{step.title}</span>
+                <span className={styles.stepText}>{step.text}</span>
+              </li>
+            ))}
+          </ol>
+          <div className={styles.startAction}>{createButton}</div>
+        </section>
+      ) : (
+        <>
+          <div className={styles.toolbar}>
+            <FilterChips
+              className={styles.tabs}
+              label={t('jobs:page.filterLabel')}
+              options={['all', ...statusOrder].map((status) => ({
+                id: status,
+                label: status === 'all' ? t('jobs:page.all') : t(`enums:jobStatus.${status}`),
+                count: countOf(status),
+              }))}
+              value={tab}
+              onChange={setTab}
+            />
+            <TextField
+              className={styles.search}
+              aria-label={t('jobs:page.search')}
+              type="search"
+              leftIcon={<Icon as={Search} size={16} />}
+              placeholder={t('jobs:page.search')}
+              value={query}
+              onChange={(event) => setQuery(event.target.value)}
+            />
+          </div>
 
-      <div className={styles.table}>
-        {isLoading || visible.length > 0 ? (
-          <JobsTable jobs={visible} sort={sort} onSort={toggleSort} caption={t('jobs:page.caption')} loading={isLoading} />
-        ) : !data ? null : (
-          <EmptyState
-            icon={BriefcaseBusiness}
-            title={t(filtering ? 'jobs:page.emptyFiltered' : 'jobs:page.empty')}
-            description={t(filtering ? 'jobs:page.emptyFilteredText' : 'jobs:page.emptyText')}
-            action={
-              filtering ? (
-                <Button variant="secondary" onClick={clearFilters}>
-                  {t('jobs:page.clearFilters')}
-                </Button>
-              ) : (
-                createButton
+          <div className={styles.table}>
+            {isLoading || visible.length > 0 ? (
+              <JobsTable jobs={visible} sort={sort} onSort={toggleSort} caption={t('jobs:page.caption')} loading={isLoading} />
+            ) : (
+              data && (
+                <EmptyState
+                  icon={SearchX}
+                  title={t('jobs:page.emptyFiltered')}
+                  description={t('jobs:page.emptyFilteredText')}
+                  action={
+                    <Button variant="outline" onClick={clearFilters}>
+                      {t('jobs:page.clearFilters')}
+                    </Button>
+                  }
+                />
               )
-            }
-          />
-        )}
-      </div>
+            )}
+          </div>
+        </>
+      )}
     </>
   )
 }
