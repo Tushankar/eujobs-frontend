@@ -1,6 +1,7 @@
 import { useTranslation } from 'react-i18next'
 import { Bookmark, ShieldCheck } from 'lucide-react'
-import { Button, Icon, Panel, SelectField } from '@/components/ui'
+import { Icon, Panel, SelectField } from '@/components/ui'
+import PlanButton from '@/features/candidate/billing/components/PlanButton.jsx'
 import { useGetPipelineQuery } from '@/features/recruiter/applications/api.js'
 import ApplicationStageSelect from '@/features/recruiter/applications/components/ApplicationStageSelect.jsx'
 import { MessageCandidateButton } from '@/features/messages/components/StartConversation.jsx'
@@ -47,9 +48,18 @@ export default function ProfileSidebar({ candidate, jobs, job, onJobChange, onTo
     <aside className={`${styles.sidebar} sticky-side`}>
       <Panel padding={20}>
         <div className={styles.actions}>
-          <Button variant="outline" fullWidth leftIcon={<Icon as={Bookmark} size={14} strokeWidth={2} />} aria-pressed={candidate.shortlisted} onClick={onToggleShortlist}>
+          {/* §3.22: the shortlist needs Recruiter Plus (`discovery`). */}
+          <PlanButton
+            entitlement="discovery"
+            roles={['recruiter']}
+            variant="outline"
+            fullWidth
+            leftIcon={<Icon as={Bookmark} size={14} strokeWidth={2} />}
+            aria-pressed={candidate.shortlisted}
+            onClick={onToggleShortlist}
+          >
             {t(candidate.shortlisted ? 'discovery:profile.removeShortlist' : 'discovery:profile.addShortlist')}
-          </Button>
+          </PlanButton>
           <MessageCandidateButton candidate={candidate} job={job} />
           <ReportButton targetType="candidate_profile" targetId={candidate.id} size="sm" fullWidth />
         </div>

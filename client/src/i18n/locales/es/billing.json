@@ -23,6 +23,10 @@
     "job_alerts": {
       "title": "Recibe alertas de empleo por correo",
       "lead": "Las alertas de empleo forman parte de Plus. Las alertas que ya creaste se conservan y se reanudan cuando te suscribes."
+    },
+    "discovery": {
+      "title": "Crea tu preselección",
+      "lead": "Las preselecciones, la búsqueda y la comparación de candidatos forman parte de Recruiter Plus. Los candidatos que ya preseleccionaste se conservan."
     }
   },
   "return": {
@@ -45,7 +49,7 @@
     "planDescription": "Plus añade postularte a ofertas, escribir a reclutadores, las alertas de empleo y las funciones de IA. Gestionas el plan, tu tarjeta y tus facturas en Stripe.",
     "renewsOn": "Se renueva el {{date}}",
     "endsOn": "Finaliza el {{date}}",
-    "retrying": "El último pago de renovación no se completó. Stripe lo volverá a intentar y mientras tanto mantienes Plus. Actualiza tu tarjeta para no perder el acceso.",
+    "retrying": "El último pago de renovación no se completó. Stripe lo volverá a intentar y mientras tanto mantienes {{plan}}. Actualiza tu tarjeta para no perder el acceso.",
     "upsell": "{{plan}} cuesta {{price}} al mes.",
     "manage": "Gestionar la suscripción",
     "historyTitle": "Historial de pagos",
@@ -54,8 +58,11 @@
     "emptyDescription": "Aquí aparecen los planes y cursos que pagues."
   },
   "recruiter": {
-    "lead": "Todos los pagos de cursos de este espacio de trabajo, con el recibo de Stripe de cada uno.",
-    "emptyDescription": "Aquí aparecen los cursos de pago que compres en Formación para reclutadores."
+    "lead": "Las facturas de Recruiter Plus y los pagos de cursos de este espacio de trabajo, con el recibo o la factura de Stripe de cada uno.",
+    "emptyDescription": "Aquí aparecen las facturas de Recruiter Plus y los cursos de pago que compres en Formación para reclutadores.",
+    "planDescription": "Recruiter Plus añade ofertas activas ilimitadas, Buscar candidatos, iniciar conversaciones y solicitar CV, y las herramientas de IA. Gestionas el plan, tu tarjeta y tus facturas en Stripe.",
+    "upgradeDescription": "Recruiter Plus añade ofertas activas ilimitadas, Buscar candidatos, iniciar conversaciones y solicitar CV, y las herramientas de IA.",
+    "upgradeNeeds": "{{feature}} forma parte de Recruiter Plus. Añade ofertas activas ilimitadas, Buscar candidatos, iniciar conversaciones y solicitar CV, y las herramientas de IA."
   },
   "table": {
     "caption": "Pagos",

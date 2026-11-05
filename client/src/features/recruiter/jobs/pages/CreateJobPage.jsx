@@ -2,7 +2,7 @@ import { useTranslation } from 'react-i18next'
 import { useNavigate, useParams, useSearchParams } from 'react-router-dom'
 import { useGetConfigQuery, useGetMeQuery } from '@/app/api.js'
 import PageTitle from '@/components/common/PageTitle.jsx'
-import { useCreateJobMutation, useGetRecruiterJobQuery, useSetJobStatusMutation, useUpdateJobMutation } from '../api.js'
+import { useCreateJobMutation, useGetRecruiterJobQuery, usePublishLock, useSetJobStatusMutation, useUpdateJobMutation } from '../api.js'
 import JobNotFound from '../components/JobNotFound.jsx'
 import JobWizard from '../components/JobWizard.jsx'
 import { EMPTY_VALUES, JOB_STEPS, jobToValues, validateAll, valuesToBody } from '../utils/jobForm.js'
@@ -64,6 +64,7 @@ function EditJob({ jobId }) {
   const { data: job, error } = useGetRecruiterJobQuery(jobId)
   const [updateJob] = useUpdateJobMutation()
   const [setJobStatus] = useSetJobStatusMutation()
+  const publishLocked = usePublishLock()
   if (error) return <JobNotFound />
   if (!job || !config) return null
 
@@ -93,7 +94,7 @@ function EditJob({ jobId }) {
           initialErrors={initialErrors}
           note={t(draft ? 'jobs:wizard.draftNote' : 'jobs:wizard.liveNote')}
           companyName={job.company.displayName}
-          finishActions={draft ? DRAFT_ACTIONS : LIVE_ACTIONS}
+          finishActions={draft ? DRAFT_ACTIONS.map((action) => ({ ...action, locked: action.status === 'published' && publishLocked(jobId) })) : LIVE_ACTIONS}
           onContinue={draft ? save : undefined}
           onCancel={() => navigate(`/recruiter/jobs/${jobId}`)}
           onFinish={finish}

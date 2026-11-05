@@ -2,18 +2,33 @@ import { useTranslation } from 'react-i18next'
 import { Link } from 'react-router-dom'
 import { ArrowUpRight } from 'lucide-react'
 import { Avatar, Icon } from '@/components/ui'
+import PlanButton from '@/features/candidate/billing/components/PlanButton.jsx'
+import { lacksEntitlement } from '@/features/candidate/billing/usePlan.js'
+import { usePreferences } from '@/lib/preferences.js'
 import { useGetRelevantTalentQuery } from '../api.js'
 import styles from './JobTalentList.module.css'
 
-/** "Discover relevant talent": the job's market sharing a required skill, by overlap (M-051 fallback, P4-D9). */
+/**
+ * "Discover relevant talent": the job's market sharing a required skill, by overlap (M-051 fallback, P4-D9). Without
+ * Recruiter Plus a short upgrade prompt replaces the list (P11c-Q15).
+ */
 export default function JobTalentList({ jobId }) {
   const { t } = useTranslation()
-  const { data } = useGetRelevantTalentQuery(jobId)
+  const { me } = usePreferences()
+  const locked = lacksEntitlement(me, 'discovery', ['recruiter'])
+  const { data } = useGetRelevantTalentQuery(jobId, { skip: !me || locked })
   const talent = data?.items ?? []
   return (
     <>
       <h3 className={styles.heading}>{t('jobs:details.talent')}</h3>
-      {data && talent.length === 0 ? (
+      {locked ? (
+        <div className={styles.locked}>
+          <p className={styles.empty}>{t('discovery:locked.talent')}</p>
+          <PlanButton variant="outline" size="sm" entitlement="discovery" roles={['recruiter']}>
+            {t('discovery:locked.seeCandidates')}
+          </PlanButton>
+        </div>
+      ) : data && talent.length === 0 ? (
         <p className={styles.empty}>{t('jobs:details.talentEmpty')}</p>
       ) : (
         <ul className={styles.list}>

@@ -71,3 +71,10 @@
   flex-shrink: 0;
   color: var(--primary);
 }
+
+/* P11c-Q15: the talent prompt without Recruiter Plus. */
+.locked {
+  display: grid;
+  justify-items: start;
+  gap: 10px;
+}

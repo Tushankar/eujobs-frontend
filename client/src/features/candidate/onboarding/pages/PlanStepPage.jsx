@@ -4,7 +4,7 @@ import { Link, useNavigate } from 'react-router-dom'
 import { ArrowLeft, Check } from 'lucide-react'
 import { Button, Icon, Panel } from '@/components/ui'
 import PageTitle from '@/components/common/PageTitle.jsx'
-import { PLUS_ITEM, usePlan } from '@/features/candidate/billing/usePlan.js'
+import { usePlan } from '@/features/candidate/billing/usePlan.js'
 import CheckoutDialog from '@/features/payments/components/CheckoutDialog.jsx'
 import { useErrorText } from '@/lib/forms.js'
 import { useFormat } from '@/lib/preferences.js'
@@ -21,7 +21,7 @@ export default function PlanStepPage() {
   const navigate = useNavigate()
   const format = useFormat()
   const errorText = useErrorText()
-  const { isPlus, plans, plus } = usePlan()
+  const { isPlus, plans, plus, item } = usePlan()
   const [completeOnboarding, { isLoading }] = useCompleteOnboardingMutation()
   const [checkingOut, setCheckingOut] = useState(false)
   const [failure, setFailure] = useState(null)
@@ -89,7 +89,7 @@ export default function PlanStepPage() {
           </Button>
         </div>
       </div>
-      <CheckoutDialog item={checkingOut ? PLUS_ITEM : null} onClose={() => setCheckingOut(false)} />
+      <CheckoutDialog item={checkingOut ? item : null} onClose={() => setCheckingOut(false)} />
     </>
   )
 }

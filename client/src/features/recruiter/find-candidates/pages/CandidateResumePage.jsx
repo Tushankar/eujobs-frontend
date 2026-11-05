@@ -5,6 +5,7 @@ import { Clock, Download, Eye, FileText } from 'lucide-react'
 import { Button, Icon } from '@/components/ui'
 import PillBadge from '@/components/common/PillBadge.jsx'
 import SectionTitle from '@/components/common/SectionTitle.jsx'
+import PlanButton from '@/features/candidate/billing/components/PlanButton.jsx'
 import { useFormat } from '@/lib/preferences.js'
 import { useGetCandidateCvQuery } from '../api.js'
 import EarlierVersionModal from '../components/EarlierVersionModal.jsx'
@@ -118,9 +119,17 @@ export default function CandidateResumePage() {
 
         <p className={styles.request}>{t('discovery:resumeTab.request')}</p>
         <div className={styles.requestAction}>
-          <Button variant="outline" disabled={pending} leftIcon={<Icon as={Clock} size={13} strokeWidth={2} />} onClick={() => setRequestOpen(true)}>
+          {/* §3.22: CV requests need Recruiter Plus (`outreach`). */}
+          <PlanButton
+            entitlement="outreach"
+            roles={['recruiter']}
+            variant="outline"
+            disabled={pending}
+            leftIcon={<Icon as={Clock} size={13} strokeWidth={2} />}
+            onClick={() => setRequestOpen(true)}
+          >
             {t('discovery:resumeTab.requestButton')}
-          </Button>
+          </PlanButton>
         </div>
         {(sent || pending) && (
           <p className={styles.status} role="status">

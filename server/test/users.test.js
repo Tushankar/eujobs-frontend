@@ -35,7 +35,8 @@ describe('GET /me', () => {
     const recruiterMe = (await api().get('/api/v1/me').set(auth(recruiter))).body
     assert.equal(recruiterMe.jobTitle, 'Talent lead')
     assert.deepEqual(recruiterMe.phone, { e164: '+442079460958', verified: false })
-    assert.equal(recruiterMe.plan, undefined)
+    // §3.22: recruiters have Free or Recruiter Plus.
+    assert.deepEqual([recruiterMe.plan, recruiterMe.entitlements], ['free', []])
 
     const admin = await createUser({ role: 'admin', isOwner: true })
     const adminMe = (await api().get('/api/v1/me').set(auth(admin))).body

@@ -24,7 +24,7 @@ export default function GlobalSearch({ workspace, open, onClose }) {
         label: t(`shell:nav.${item.key}`),
         to: workspacePath(workspace, item.to),
         icon: item.icon,
-        locked: Boolean(item.entitlement) && lacksEntitlement(me, item.entitlement),
+        locked: Boolean(item.entitlement) && lacksEntitlement(me, item.entitlement, [workspace.id]),
       })),
       { label: t('shell:sidebar.settings'), to: workspacePath(workspace, 'settings'), icon: Settings2 },
       { label: t('shell:sidebar.help'), to: workspacePath(workspace, 'help'), icon: CircleHelp },

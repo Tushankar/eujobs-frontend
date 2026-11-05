@@ -312,9 +312,7 @@
         "{{paused}}",
         "Your applications, conversations, notes and shortlist are kept."
       ],
-      "action": "Open jobs",
-      "paused_one": "{{job}} stays live; 1 other job was paused. Subscribe again to republish it.",
-      "paused_other": "{{job}} stays live; {{count}} other jobs were paused. Subscribe again to republish them."
+      "action": "Open jobs"
     }
   },
   "verification": {
@@ -475,7 +473,11 @@
       "misleading": "misleading",
       "other": "other"
     },
-    "deletedUser": "Deleted user"
+    "deletedUser": "Deleted user",
+    "pausedJobs": {
+      "one": "{{job}} stays live; 1 other job was paused. Subscribe again to republish it.",
+      "other": "{{job}} stays live; {{count}} other jobs were paused. Subscribe again to republish them."
+    }
   },
   "certificate": {
     "tagline": "AI Job Portal",

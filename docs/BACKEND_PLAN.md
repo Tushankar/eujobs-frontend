@@ -351,6 +351,20 @@ M-164 lets users report jobs, profiles, companies and messages. M-167 defines "R
 | P11c-Q18 plan-end text (owner) | The recruiter's plan_ended email and notification name the paused jobs: "{job} stays live; {n} other jobs were paused. Subscribe again to republish them." (shorter when nothing was paused); en/es/fr; the link opens Jobs. | 2026-11-05 |
 | P11c-Q19 entry points (owner) | Recruiter Billing gets the plan card (Free upsell with the price; or status, renewal date and Manage subscription). Every lock opens the upgrade dialog. The profile menu shows "Free" or "Recruiter Plus" under the name. No onboarding plan step for recruiters. | 2026-11-05 |
 | P11c-Q20 admin Overview (owner) | The Overview gets an "Active subscribers" counter in marketplace health: the total and "n candidates · m recruiters", the same count as the Payments card (and in the Overview CSV export). Recruiter payments also appear in Recent activity. | 2026-11-05 |
+| P11c-C1 builder call: entitlement keys | Recruiter Plus holds `jobs_unlimited`, `discovery`, `outreach` and `ai`. Keys belong to one role's plan, so the server's `requireEntitlement(key, roles)` and the client's `lacksEntitlement(me, key, roles)` name the roles a lock applies to (candidate keys by default); a recruiter never needs `message_send`. | 2026-11-05 |
+| P11c-C2 builder call: Compare | Compare has no endpoint: it shows the list data already loaded. Its server side is the data it reads (on Free the list answers only applicants; search, filters, sort, a job and the shortlist answer 402), and the Compare control is a locked button (Q5). | 2026-11-05 |
+| P11c-C3 builder call: plan records and Stripe | Plans carry `role`; `GET /plans` answers a signed-in recruiter's plans priced in the company country's currency, candidates' as before. Stripe lookup keys `recruiter_plus_monthly_<currency>` on a "Recruiter Plus" Product; `AppConfig('stripe')` now stores `productIds` per plan; one Portal configuration serves both plans. | 2026-11-05 |
+| P11c-C4 builder call: which job stays live | "Most recently published" = the latest `publishedAt` (the last time a job went live). The pauses are system changes, audited as `jobs.status_changed`, and recompute matching like a recruiter's pause. | 2026-11-05 |
+| P11c-C5 builder call: the start-up step | `enforceFreeJobLimit` runs at every server start instead of storing a "done" flag: after the first start it finds nothing, and it never touches a Recruiter Plus company. It sends no notification or email (Q12 names none). | 2026-11-05 |
+| P11c-C6 builder call: plan-end texts | The recruiter's email is a new decision type `recruiter_plan_ended` (its "{job} stays live; {n} other jobs were paused" line comes from `labels.pausedJobs`, plural, and is left out when nothing was paused). The notification keeps type `plan_ended` with `{ planKey, job, paused }` and opens `/recruiter/jobs` (new page target `jobs`; opening Jobs marks it read, P11b-C7). `renewal_failed` reuses the candidate email with the plan name and recruiter Billing. The admin renewal email and notification now name the plan (`{{plan}}`, it said "Plus"). | 2026-11-05 |
+| P11c-C7 builder call: Free cards | Free cards are matched to the company's newest live job (as P4-D10 without a job). The Match insights narrative is replaced by a locked "AI match insights" button; the code-computed evidence stays. | 2026-11-05 |
+| P11c-C8 builder call: profile menu | The recruiter subtitle keeps the company (M-195); the plan (Free or Recruiter Plus) is a second line under it (Q19). The sidebar footer keeps the company only. | 2026-11-05 |
+| P11c-C9 builder call: Payments cards | Active subscribers and Failed renewals show the total with "Candidates n · Recruiters m" as the caption; MRR shows two labelled groups (Candidates, Recruiters), each per currency (U34: at most 3 lines). The captions no longer say "Plus". | 2026-11-05 |
+| P11c-C10 builder call: Sarah's bell | Sarah's first invoice goes through the webhook handler (as Emma's), so the seed gives her a "payment paid" notification as it gives Emma one. | 2026-11-05 |
+| P11c-C11 builder call: Billing | One `PlanCard` serves both Billing pages; recruiter Billing shows it above the payment history, whose lead now mentions Recruiter Plus invoices. | 2026-11-05 |
+| P11c-C12 builder call: test factories | The API test factory and the e2e `approvedRecruiter` put recruiters on Recruiter Plus unless `plus: false`, so earlier scenarios keep their behaviour. The e2e grant writes an active subscription row straight to `eujobs_test` (no Stripe, no payment row); P11c-02 buys the plan through the real Checkout. | 2026-11-05 |
+| P11c-C13 builder call: lock chip | The sidebar and search lock chip names the role's plan ("Recruiter Plus" on Shortlists). | 2026-11-05 |
+| P11c-C14 builder call: Publish in the wizard | The wizard's last-step Publish is a locked button while another job is live on Free, so that click saves nothing; "Save draft" still saves. | 2026-11-05 |
 
 _(Answers to any new question asked during the build are appended to this table.)_
 
@@ -1320,7 +1334,7 @@ No other emails exist. ~~Admins receive only invite and reset emails (OD6).~~ Su
 | Owner admin | admin, `isOwner` | `SEED_ADMIN_EMAIL` |
 | Alex Morgan | candidate, Free, profile as in today's mock (so incomplete), owns one course | plus-alias `<local>+alex@<domain>` |
 | Emma Wilson | candidate, Plus: a real Stripe test subscription (`pm_card_visa`, OD8) | `+emma` |
-| Sarah Miller | recruiter at Acme Studio, approved | `+sarah` |
+| Sarah Miller | recruiter at Acme Studio, approved, Recruiter Plus: a real Stripe test subscription in GBP (P11c-Q11); the other 9 seeded recruiters are Free with 1 job | `+sarah` |
 | James Chen | recruiter applicant with company + KYC files, `pending_review` (OQ-4) | `+james` |
 | Every other seeded person | as in the mock data, made coherent | `@example.com`: never mailed, only logged (OD9) |
 
@@ -1349,7 +1363,7 @@ Owner answers P11b-Q1 … Q15.
   | Recruiter | `application_new`, `application_withdrawn` | `/recruiter/applications/:id` (filtered to its job, row highlighted, Q9) |
   | Recruiter | `cv_request_decided` (to the recruiter who asked) | the candidate's profile |
   | Recruiter | `content_restricted`, `content_lifted` (job) | the job |
-  | Recruiter | `payment_paid` (course purchases; no "payment failed", Q11), `certificate_issued` | Billing / the course page |
+  | Recruiter | `payment_paid` (course purchases and, since Phase 11c, Recruiter Plus invoices), `renewal_failed`, `plan_ended` (Phase 11c, §3.22: plan_ended opens Jobs), `certificate_issued` | Billing / Jobs / the course page |
   | Admin (`moderation.manage`) | `admin_account_review` (submitted or resubmitted), `admin_verification_submitted`, `admin_content_report` (user reports; one unread per case with the count) | the Account review, verification or case item |
   | Admin (`finance.view`) | `admin_renewal_failed` | `/admin/payments/:id` (the details dialog, Q9) |
   | Admin (`roles.view`) | `admin_joined` (not to the new admin) | the admin's access page |
@@ -2863,6 +2877,20 @@ The course-purchase path is built here but verified in Phase 8. AI pages are gat
 | P11c-04 | es and fr | D, M | The Free locks and the upgrade dialog in es and fr, with no English left and a clean layout. |
 
 **API tests.** Every recruiter lock Free vs Plus (Compare: the data it reads), the job limit (create, edit, status), the plan-end pause and the start-up step, the webhook handlers for recruiter subscriptions (first invoice, renewal, failed renewal, cancel), the admin totals by role.
+
+#### Phase 11c handoff (2026-11-05, built, awaiting owner review)
+
+**Built.**
+- Server: plan record `recruiter_plus` (plans now carry `role`), its own Stripe Product and 8 Prices (`recruiter_plus_monthly_<currency>`) from `seed:catalog`, one Portal configuration for both plans; Checkout, Portal (returns to the role's Billing), `/recruiter/subscription`, the webhooks and payment rows by role (`PAID_PLAN`), the recruiter price in the company country's currency; `me.plan` / `me.entitlements` for recruiters; `requireEntitlement(key, roles)`; the locks of §3.22 (discovery routes, relevant talent, conversations, CV requests, AI routes); the 1-published-job rule in `setStatus`; `pauseExtraJobs` at plan end and `enforceFreeJobLimit` at server start; recruiter `payment_paid`, `renewal_failed`, `plan_ended` (new email type `recruiter_plan_ended`, en/es/fr, `mail:test` samples with a `recruiter` role argument); admin Payments stats by role, Users → Recruiters Plan column, filter and CSV column, the recruiter detail plan, the Overview "Active subscribers" counter (P11c-Q20).
+- Client: `lacksEntitlement(me, key, roles)`, `planItem(role)`, `PlanButton` (AiButton wraps it), the upgrade dialog in the recruiter shell, `RequirePlan` per role (Shortlists gate and sidebar chip), every lock of §3.22, the shared Billing `PlanCard`, the profile-menu plan line, admin cards and lists; en/es/fr keys (check-i18n passes).
+- Seed: Sarah on Recruiter Plus (real GBP subscription, her first invoice as a seed row).
+- e2e: `lib/recruiterPlan.js`, scenarios `p11c-01` … `p11c-03`; `approvedRecruiter` (e2e and API factories) is on Recruiter Plus unless `plus: false`.
+
+**Calls the plan did not specify:** P11c-C1 … C14 in the Owner answers table.
+
+**Results:** RESULTS_TABLE
+
+**Open.** OPEN_ITEMS
 
 ### Phase 12: GDPR export and erasure, retention, full regression
 

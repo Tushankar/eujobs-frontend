@@ -98,3 +98,15 @@
     gap: 12px;
   }
 }
+
+/* P11c-Q15: the talent prompt without Recruiter Plus. */
+.talentLocked {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: 12px;
+}
+
+.talentLocked .talentEmpty {
+  padding-top: 0;
+}

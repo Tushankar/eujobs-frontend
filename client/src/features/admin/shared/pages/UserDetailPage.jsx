@@ -106,6 +106,24 @@ function Learning({ learning }) {
   )
 }
 
+/** The plan facts of a candidate (Plus) or recruiter (Recruiter Plus, P11c-Q8): plan, subscription status, period, renewal. */
+function PlanFacts({ plan }) {
+  const { t } = useTranslation(['adminUsers', 'enums', 'adminPayments'])
+  const format = useFormat()
+  const subscription = plan.subscription
+  return (
+    <Facts
+      title={t('detail.plan')}
+      rows={[
+        [t('columns.plan'), t(`enums:planKey.${plan.plan}`)],
+        [t('adminPayments:details.subscription'), subscription ? t(`adminPayments:subscriptionStatus.${subscription.status}`) : t('detail.noSubscription')],
+        [t('adminPayments:details.period'), subscription?.currentPeriodStart && `${format.date(subscription.currentPeriodStart)} – ${format.date(subscription.currentPeriodEnd)}`],
+        [t('adminPayments:details.renewal'), subscription?.cancelAtPeriodEnd && t('detail.cancelAtPeriodEnd')],
+      ]}
+    />
+  )
+}
+
 /** A candidate's sections: `part="main"` the growing ones (profile, verification, applications, learning), `part="side"` the short facts. */
 function CandidateSections({ user, part }) {
   const { t } = useTranslation(['adminUsers', 'enums', 'adminPayments'])
@@ -113,20 +131,11 @@ function CandidateSections({ user, part }) {
   const { me } = usePreferences()
   const documents = can(me, 'documents.view')
   const yesNo = (value) => (value ? t('detail.yes') : t('detail.no'))
-  const { profile, verification, plan } = user
-  const subscription = plan.subscription
+  const { profile, verification } = user
   if (part === 'side') {
     return (
       <>
-        <Facts
-          title={t('detail.plan')}
-          rows={[
-            [t('columns.plan'), t(`enums:planKey.${plan.plan}`)],
-            [t('adminPayments:details.subscription'), subscription ? t(`adminPayments:subscriptionStatus.${subscription.status}`) : t('detail.noSubscription')],
-            [t('adminPayments:details.period'), subscription?.currentPeriodStart && `${format.date(subscription.currentPeriodStart)} – ${format.date(subscription.currentPeriodEnd)}`],
-            [t('adminPayments:details.renewal'), subscription?.cancelAtPeriodEnd && t('detail.cancelAtPeriodEnd')],
-          ]}
-        />
+        <PlanFacts plan={user.plan} />
         <Facts
           title={t('detail.privacy')}
           rows={[
@@ -225,7 +234,7 @@ function CandidateSections({ user, part }) {
   )
 }
 
-/** A recruiter's sections: `part="main"` company, KYC files, review history, learning; `part="side"` the job counts. */
+/** A recruiter's sections: `part="main"` company, KYC files, review history, learning; `part="side"` the plan and the job counts. */
 function RecruiterSections({ user, part }) {
   const { t } = useTranslation(['adminUsers', 'enums'])
   const format = useFormat()
@@ -233,13 +242,16 @@ function RecruiterSections({ user, part }) {
   const { company } = user
   if (part === 'side') {
     return (
-      <Facts
-        title={t('detail.jobs')}
-        rows={[
-          [t('detail.jobs'), t('detail.jobsCounts', user.jobs)],
-          [t('detail.received'), t('detail.receivedCount', user.applications)],
-        ]}
-      />
+      <>
+        <PlanFacts plan={user.plan} />
+        <Facts
+          title={t('detail.jobs')}
+          rows={[
+            [t('detail.jobs'), t('detail.jobsCounts', user.jobs)],
+            [t('detail.received'), t('detail.receivedCount', user.applications)],
+          ]}
+        />
+      </>
     )
   }
   return (

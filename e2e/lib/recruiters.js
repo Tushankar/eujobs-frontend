@@ -2,7 +2,7 @@ import { PLACES } from '../../server/seed/data/places.js'
 import { fixture } from '../fixtures/make.js'
 import { uploadAs } from './candidates.js'
 import { seedCredentials } from './env.js'
-import { api, mailTo, TEST_PASSWORD, uniqueEmail } from './testApi.js'
+import { api, db, mailTo, TEST_PASSWORD, uniqueEmail } from './testApi.js'
 
 /* Recruiters for the Phase 4 checks, created through the API so each scenario starts from a known state. */
 
@@ -67,11 +67,25 @@ export async function decide(userId, decision, reason) {
 }
 
 /** A submitted recruiter approved by the Owner; returns { email, token, fullName, company, userId }. */
-export async function approvedRecruiter(label, options) {
+/**
+ * An approved recruiter. On Recruiter Plus unless `plus: false` (§3.22), as the scenarios written before Phase 11c
+ * expect; that plan is an active subscription row written straight to the test database (no Stripe, no rows in
+ * Payments). P11c-02 buys it through the real Checkout instead.
+ */
+export async function approvedRecruiter(label, { plus = true, ...options } = {}) {
   const recruiter = await submittedRecruiter(label, options)
   const me = check(await api('/me', { token: recruiter.token }), 'me')
   await decide(me.id, 'approved')
+  if (plus) await giveRecruiterPlus(me.id)
   return { ...recruiter, userId: me.id }
+}
+
+/** Recruiter Plus without Stripe: an active subscription row for `userId` (test setups only). */
+export async function giveRecruiterPlus(userId) {
+  const now = new Date()
+  await db('subscriptions', 'insertOne', {
+    doc: { userId: { $oid: userId }, planKey: 'recruiter_plus', status: 'active', retrying: false, currency: 'GBP', amountMinor: 4900, cancelAtPeriodEnd: false, source: 'stripe', startedAt: { $date: now.toISOString() }, createdAt: { $date: now.toISOString() }, updatedAt: { $date: now.toISOString() } },
+  })
 }
 
 /** A publishable job body (M-033); `city` or workPreference remote. */

@@ -23,6 +23,10 @@
     "job_alerts": {
       "title": "Get job alerts by email",
       "lead": "Job alerts are part of Plus. Alerts you already set up are kept and start again when you subscribe."
+    },
+    "discovery": {
+      "title": "Build your shortlist",
+      "lead": "Shortlists, search and Compare candidates are part of Recruiter Plus. Candidates you shortlisted before are kept."
     }
   },
   "return": {
@@ -45,7 +49,7 @@
     "planDescription": "Plus adds applying, messaging recruiters, job alerts and the AI features. You manage it, your card and your invoices on Stripe.",
     "renewsOn": "Renews on {{date}}",
     "endsOn": "Ends on {{date}}",
-    "retrying": "Your last renewal payment failed. Stripe will try again, and you keep Plus meanwhile. Update your card to avoid losing access.",
+    "retrying": "Your last renewal payment failed. Stripe will try again, and you keep {{plan}} meanwhile. Update your card to avoid losing access.",
     "upsell": "{{plan}} costs {{price}} per month.",
     "manage": "Manage subscription",
     "historyTitle": "Payment history",
@@ -54,8 +58,11 @@
     "emptyDescription": "Plans and courses you pay for appear here."
   },
   "recruiter": {
-    "lead": "Every course payment from this workspace, with the Stripe receipt for each.",
-    "emptyDescription": "Paid courses you buy in Recruiter learning appear here."
+    "lead": "Recruiter Plus invoices and course payments from this workspace, with the Stripe receipt or invoice for each.",
+    "emptyDescription": "Recruiter Plus invoices and the paid courses you buy in Recruiter learning appear here.",
+    "planDescription": "Recruiter Plus adds unlimited active jobs, Find candidates, starting conversations and CV requests, and the AI tools. You manage it, your card and your invoices on Stripe.",
+    "upgradeDescription": "Recruiter Plus adds unlimited active jobs, Find candidates, starting conversations and CV requests, and the AI tools.",
+    "upgradeNeeds": "{{feature}} is part of Recruiter Plus. It adds unlimited active jobs, Find candidates, starting conversations and CV requests, and the AI tools."
   },
   "table": {
     "caption": "Payments",

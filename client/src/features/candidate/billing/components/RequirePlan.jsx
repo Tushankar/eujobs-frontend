@@ -6,24 +6,26 @@ import { Button, Icon, Panel } from '@/components/ui'
 import PageTitle from '@/components/common/PageTitle.jsx'
 import CheckoutDialog from '@/features/payments/components/CheckoutDialog.jsx'
 import { useFormat, usePreferences } from '@/lib/preferences.js'
-import { lacksEntitlement, PLUS_ITEM, usePlan } from '../usePlan.js'
+import { lacksEntitlement, usePlan } from '../usePlan.js'
 import styles from './RequirePlan.module.css'
 
 /**
- * Route layout for paid pages (M-118, A: shared §8.3): the entitlement comes from the route's `handle.entitlement`.
+ * Route layout for paid pages of candidates and recruiters (M-118, A: shared §8.3, §3.22): the entitlement comes from the
+ * route's `handle.entitlement`.
  * With it the pages render; without it, the upgrade card. The server enforces the same rule (402 PLAN_REQUIRED).
  */
 export default function RequirePlan() {
   const { me } = usePreferences()
   const entitlement = useMatches().findLast((match) => match.handle?.entitlement)?.handle.entitlement
-  return lacksEntitlement(me, entitlement) ? <PlanGate entitlement={entitlement} /> : <Outlet />
+  return lacksEntitlement(me, entitlement, [me?.role]) ? <PlanGate entitlement={entitlement} /> : <Outlet />
 }
 
-/** The upgrade card of a locked page, with the Plus price in the header country's currency. */
+/** The upgrade card of a locked page, with the role's plan and its price (Plus: the header country's currency). */
 export function PlanGate({ entitlement }) {
   const { t } = useTranslation('billing')
   const format = useFormat()
-  const { plus } = usePlan()
+  const { me } = usePreferences()
+  const { plus, item } = usePlan()
   const [checkingOut, setCheckingOut] = useState(false)
 
   return (
@@ -46,12 +48,12 @@ export function PlanGate({ entitlement }) {
           <Button onClick={() => setCheckingOut(true)}>
             {t('upgradeTo', { plan: plus?.name ?? '' })}
           </Button>
-          <Button as={Link} to="/candidate/settings/billing" variant="secondary">
+          <Button as={Link} to={`/${me.role}/settings/billing`} variant="secondary">
             {t('manageBilling')}
           </Button>
         </div>
       </Panel>
-      <CheckoutDialog item={checkingOut ? PLUS_ITEM : null} onClose={() => setCheckingOut(false)} />
+      <CheckoutDialog item={checkingOut ? item : null} onClose={() => setCheckingOut(false)} />
     </>
   )
 }

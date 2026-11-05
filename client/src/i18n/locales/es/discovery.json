@@ -11,7 +11,8 @@
     "countryView": "Se muestran candidatos que viven en {{country}} o tienen permiso de trabajo allí.",
     "empty": "Ningún candidato coincide con esta búsqueda",
     "emptyText": "Prueba con otro nombre, puesto o habilidad, o borra los filtros.",
-    "clear": "Borrar búsqueda y filtros"
+    "clear": "Borrar búsqueda y filtros",
+    "applicantsOnly": "Con el plan gratuito ves a las personas que se postularon a tus ofertas. Recruiter Plus añade la búsqueda, los filtros y todos los candidatos de tu mercado."
   },
   "toolbar": {
     "search": "Buscar candidatos",
@@ -100,7 +101,8 @@
     "experience_other": "{{count}} años de experiencia indicados en el perfil. Verifica la experiencia específica del puesto durante la revisión.",
     "gapTitle": "Posible carencia",
     "missing": "Aún no hay datos sobre {{skills}}",
-    "disclaimer": "Basado en los datos del perfil y las preferencias indicadas, no es una decisión de contratación. Tú tienes el control."
+    "disclaimer": "Basado en los datos del perfil y las preferencias indicadas, no es una decisión de contratación. Tú tienes el control.",
+    "aiNarrative": "Análisis de compatibilidad con IA"
   },
   "profile": {
     "back": "Volver a descubrimiento de talento",
@@ -280,5 +282,9 @@
     "viewAll": "Ver todas las ofertas",
     "noRoles": "No hay puestos abiertos",
     "noRolesText": "Las ofertas publicadas aparecen aquí. Crea una oferta para empezar a conocer talento relevante."
+  },
+  "locked": {
+    "talent": "Recruiter Plus muestra los candidatos cuyas habilidades encajan con tus puestos.",
+    "seeCandidates": "Ver candidatos"
   }
 }

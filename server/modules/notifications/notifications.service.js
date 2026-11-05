@@ -26,6 +26,8 @@ const PAGE_PATHS = {
   profile: () => '/candidate/profile',
   billing: (role) => `/${role}/settings/billing`,
   overview: () => '/recruiter',
+  // §3.22: a recruiter's plan_ended opens Jobs (P11c-Q18).
+  jobs: () => '/recruiter/jobs',
   review: () => '/recruiter/onboarding/review',
 }
 

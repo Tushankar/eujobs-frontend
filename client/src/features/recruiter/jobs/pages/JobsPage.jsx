@@ -11,10 +11,13 @@ import { useJobText } from '@/lib/jobText.js'
 import { usePreferences } from '@/lib/preferences.js'
 import { useGetRecruiterJobsQuery } from '../api.js'
 import JobsTable from '../components/JobsTable.jsx'
+import { useMarkSeen } from '@/features/notifications/api.js'
 import styles from './JobsPage.module.css'
 
 /** The recruiter's jobs (M-040): tabs and status sort in the catalogue order published, paused, draft, closed. */
 export default function JobsPage() {
+  // P11c-Q18: a recruiter's plan_ended notification opens this page; opening it marks that notification read.
+  useMarkSeen('page', 'jobs')
   const { t } = useTranslation()
   const { language } = usePreferences()
   const jobText = useJobText()

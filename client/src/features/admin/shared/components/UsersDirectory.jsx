@@ -22,13 +22,14 @@ import styles from './UsersDirectory.module.css'
 
 const FILTERS = {
   candidate: ['status', 'country', 'verification', 'plan', 'rightToWork'],
-  recruiter: ['state', 'country'],
+  recruiter: ['state', 'country', 'plan'],
 }
 const OPTIONS = {
   status: ['active', 'unverified'],
   state: ['pending', 'approved', 'rejected', 'suspended'],
   verification: ['not_started', 'in_review', 'partial', 'verified'],
-  plan: ['free', 'plus'],
+  // The plan filter offers the role's plans (P11c-Q17).
+  plan: { candidate: ['free', 'plus'], recruiter: ['free', 'recruiter_plus'] },
   rightToWork: ['eu', 'uk', 'none'],
 }
 
@@ -103,6 +104,7 @@ export default function UsersDirectory({ role }) {
       .filter((entry) => entry.valid)
       .map((entry) => `${t(`enums:rtwRegion.${entry.region}`)} · ${t(`enums:rtwStatus.${entry.status}`)}`)
       .join(', ') || t('noRightToWork')
+  const plan = { key: 'plan', header: t('columns.plan'), render: (row) => <PillBadge tone={row.plan === 'free' ? 'neutral' : 'accent'}>{t(`enums:planKey.${row.plan}`)}</PillBadge> }
   const columns = [
     user,
     ...(role === 'recruiter' ? [{ key: 'company', header: t('columns.company'), render: (row) => muted(row.company?.displayName ?? t('noCountry')) }] : []),
@@ -120,9 +122,9 @@ export default function UsersDirectory({ role }) {
                 t('profileComplete', { percent: format.number(row.completeness / 100, { style: 'percent' }) }),
               ),
           },
-          { key: 'plan', header: t('columns.plan'), render: (row) => <PillBadge tone={row.plan === 'plus' ? 'accent' : 'neutral'}>{t(`enums:planKey.${row.plan}`)}</PillBadge> },
+          plan,
         ]
-      : []),
+      : [plan]),
     {
       key: 'learning',
       header: t('columns.learning'),
@@ -195,7 +197,7 @@ export default function UsersDirectory({ role }) {
             onChange={(event) => setFilter(name, event.target.value)}
             options={[
               { value: '', label: t(`filters.${allLabel[name]}`) },
-              ...(name === 'country' ? countries.map((country) => ({ value: country.code, label: country.name })) : OPTIONS[name].map((value) => ({ value, label: optionLabel(name, value) }))),
+              ...(name === 'country' ? countries.map((country) => ({ value: country.code, label: country.name })) : (name === 'plan' ? OPTIONS.plan[role] : OPTIONS[name]).map((value) => ({ value, label: optionLabel(name, value) }))),
             ]}
           />
         ))}

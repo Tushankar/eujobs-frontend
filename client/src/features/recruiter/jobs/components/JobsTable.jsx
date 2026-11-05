@@ -1,15 +1,20 @@
 import { useState } from 'react'
 import { useTranslation } from 'react-i18next'
+import { useDispatch } from 'react-redux'
 import { Link, useNavigate } from 'react-router-dom'
-import { ArrowDown, ArrowUp, Eye, Settings2 } from 'lucide-react'
+import { ArrowDown, ArrowUp, Eye, Lock, Settings2 } from 'lucide-react'
 import { errorCode } from '@/app/api.js'
+import { openUpgrade } from '@/app/upgrade.js'
 import { cx } from '@/utils/cx.js'
 import ConfirmDialog from '@/components/common/ConfirmDialog.jsx'
 import { Dropdown, Icon, IconButton } from '@/components/ui'
 import JobSummaryButton from '@/features/ai/components/JobSummaryButton.jsx'
+import PlanButton from '@/features/candidate/billing/components/PlanButton.jsx'
 import { useErrorText } from '@/lib/forms.js'
+import { lacksEntitlement } from '@/features/candidate/billing/usePlan.js'
 import { useJobText } from '@/lib/jobText.js'
-import { useDeleteJobMutation, useSetJobStatusMutation } from '../api.js'
+import { usePreferences } from '@/lib/preferences.js'
+import { useDeleteJobMutation, usePublishLock, useSetJobStatusMutation } from '../api.js'
 import { JOB_STEPS } from '../utils/jobForm.js'
 import JobStatusBadge from './JobStatusBadge.jsx'
 import styles from './JobsTable.module.css'
@@ -48,7 +53,7 @@ function ColumnLabel({ column, sort, onSort }) {
   )
 }
 
-function ManageMenu({ job, onStatus, onRequestClose, onRequestDelete }) {
+function ManageMenu({ job, onStatus, onRequestClose, onRequestDelete, publishLocked }) {
   const { t } = useTranslation()
   return (
     <Dropdown panelClassName={styles.menuPanel} trigger={(props) => <IconButton icon={Settings2} label={t('jobs:table.manage', { title: job.title })} {...props} />}>
@@ -75,6 +80,8 @@ function ManageMenu({ job, onStatus, onRequestClose, onRequestDelete }) {
                   else onStatus(job, to)
                 }}
               >
+                {/* §3.22: going live needs Recruiter Plus while another job is live; the item keeps its label. */}
+                {to === 'published' && publishLocked && <Icon as={Lock} size={12} />}
                 {t(`jobs:table.statusActions.${label}`)}
               </button>
             </li>
@@ -110,6 +117,10 @@ export default function JobsTable({ jobs, sort, onSort, caption }) {
   const navigate = useNavigate()
   const errorText = useErrorText()
   const jobText = useJobText()
+  const { me } = usePreferences()
+  const lacksDiscovery = lacksEntitlement(me, 'discovery', ['recruiter'])
+  const dispatch = useDispatch()
+  const publishLocked = usePublishLock()
   const [setJobStatus] = useSetJobStatusMutation()
   const [deleteJob] = useDeleteJobMutation()
   const [closing, setClosing] = useState(null)
@@ -118,6 +129,7 @@ export default function JobsTable({ jobs, sort, onSort, caption }) {
 
   async function changeStatus(job, status) {
     setFailure(null)
+    if (status === 'published' && publishLocked(job.id)) return dispatch(openUpgrade('jobs_unlimited'))
     try {
       await setJobStatus({ id: job.id, status }).unwrap()
     } catch (error) {
@@ -169,18 +181,25 @@ export default function JobsTable({ jobs, sort, onSort, caption }) {
                   {job.workPreference && <span>{t(`enums:workPreference.${job.workPreference}`)}</span>}
                 </td>
                 <td className={styles.td} data-label={t('jobs:table.candidates')}>
-                  <Link to={`/recruiter/find-candidates?jobId=${job.id}`} className={styles.relevant}>
-                    {t('jobs:table.relevant', { count: job.relevantCount })}
-                  </Link>
+                  {/* P11c-Q15: the count stays; opening the list needs Recruiter Plus. */}
+                  {lacksDiscovery ? (
+                    <PlanButton variant="ghost" size="sm" entitlement="discovery" roles={['recruiter']}>
+                      {t('jobs:table.relevant', { count: job.relevantCount })}
+                    </PlanButton>
+                  ) : (
+                    <Link to={`/recruiter/find-candidates?jobId=${job.id}`} className={styles.relevant}>
+                      {t('jobs:table.relevant', { count: job.relevantCount })}
+                    </Link>
+                  )}
                 </td>
                 <td className={styles.td} data-label={t('jobs:table.status')}>
                   <JobStatusBadge status={job.status} restricted={Boolean(job.restricted)} />
                 </td>
                 <td className={styles.td}>
                   <div className={styles.actions}>
-                    {/* M-059: the AI summary on each row; free for approved recruiters (M-117) */}
+                    {/* M-059: the AI summary on each row; Recruiter Plus (§3.22), a locked button otherwise */}
                     {job.status !== 'draft' && <JobSummaryButton job={job} />}
-                    <ManageMenu job={job} onStatus={changeStatus} onRequestClose={setClosing} onRequestDelete={setDeleting} />
+                    <ManageMenu job={job} onStatus={changeStatus} onRequestClose={setClosing} onRequestDelete={setDeleting} publishLocked={publishLocked(job.id)} />
                     <IconButton as={Link} to={`/recruiter/jobs/${job.id}`} icon={Eye} label={t('jobs:table.view', { title: job.title })} />
                   </div>
                 </td>

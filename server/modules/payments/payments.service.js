@@ -247,7 +247,7 @@ async function planEnded(user, planKey) {
   const { kept, paused } = company ? await pauseExtraJobs(company) : { kept: null, paused: 0 }
   await notify(user, 'plan_ended', { params: { planKey, job: kept?.title ?? null, paused }, target: { kind: 'page', id: 'jobs' } })
   // The "kept … paused" line is built from the dictionary (plural by count), or left out when nothing was paused.
-  const line = paused ? t(user.language, `email.recruiter_plan_ended.paused_${new Intl.PluralRules(user.language).select(paused) === 'one' ? 'one' : 'other'}`) : ''
+  const line = paused ? t(user.language, `labels.pausedJobs.${new Intl.PluralRules(user.language).select(paused) === 'one' ? 'one' : 'other'}`) : ''
   await sendEmail({
     type: 'recruiter_plan_ended',
     to: user.email,

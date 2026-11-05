@@ -41,7 +41,7 @@ function SectionBadge({ section }) {
 
 function NavItem({ workspace, item, me }) {
   const { t } = useTranslation()
-  const locked = item.entitlement && lacksEntitlement(me, item.entitlement)
+  const locked = item.entitlement && lacksEntitlement(me, item.entitlement, [workspace.id])
   return (
     <NavLink
       to={workspacePath(workspace, item.to)}

@@ -4,6 +4,7 @@ import { ArrowLeft, ArrowRight } from 'lucide-react'
 import { errorCode, useGetConfigQuery } from '@/app/api.js'
 import { cx } from '@/utils/cx.js'
 import { Button, Icon } from '@/components/ui'
+import PlanButton from '@/features/candidate/billing/components/PlanButton.jsx'
 import { serverFieldErrors, useErrorText } from '@/lib/forms.js'
 import { bodyErrorsToForm, JOB_STEPS, validateAll, validateStep } from '../utils/jobForm.js'
 import JobStepFields from './JobStepFields.jsx'
@@ -144,10 +145,19 @@ export default function JobWizard({ initialValues, initialStep = 0, reachable = 
           </Button>
           {isLast ? (
             <div className={styles.finish}>
+              {/* An action with `locked` (§3.22: Publish while another job is live on Free) opens the upgrade dialog instead. */}
               {finishActions.map((action, index) => (
-                <Button key={action.id} variant={index === finishActions.length - 1 ? 'primary' : 'secondary'} loading={busy} onClick={() => finish(action)}>
+                <PlanButton
+                  key={action.id}
+                  entitlement="jobs_unlimited"
+                  roles={['recruiter']}
+                  when={Boolean(action.locked)}
+                  variant={index === finishActions.length - 1 ? 'primary' : 'secondary'}
+                  loading={busy}
+                  onClick={() => finish(action)}
+                >
                   {t(action.labelKey)}
-                </Button>
+                </PlanButton>
               ))}
             </div>
           ) : (

@@ -3,6 +3,7 @@ import { useTranslation } from 'react-i18next'
 import { Search, SlidersHorizontal } from 'lucide-react'
 import { useGetConfigQuery, useGetLanguageCodesQuery } from '@/app/api.js'
 import { Button, Checkbox, Icon, Panel, SelectField, TextField } from '@/components/ui'
+import PlanButton from '@/features/candidate/billing/components/PlanButton.jsx'
 import CityField from '@/components/common/CityField.jsx'
 import { useFormat, usePreferences } from '@/lib/preferences.js'
 import { countActiveFilters, EMPTY_FILTERS } from '../utils/candidateText.js'
@@ -13,9 +14,10 @@ const MIN_YEARS = [3, 5, 7, 9]
 /**
  * Search box, "match to a job" select and the Filters panel (M-056, OD4, OQ-6f): work mode, availability,
  * experience, listed skill, language with a minimum level, right to work in the picker country, verified only and
- * an optional city (G-1). State lives in the page; this only renders it.
+ * an optional city (G-1). State lives in the page; this only renders it. `locked` (no Recruiter Plus, §3.22) turns the
+ * three controls into locked buttons that open the upgrade dialog.
  */
-export default function DiscoveryToolbar({ query, onQueryChange, jobs, job, onJobChange, filters, onFiltersChange }) {
+export default function DiscoveryToolbar({ locked, query, onQueryChange, jobs, job, onJobChange, filters, onFiltersChange }) {
   const { t } = useTranslation()
   const format = useFormat()
   const { language, country } = usePreferences()
@@ -29,6 +31,25 @@ export default function DiscoveryToolbar({ query, onQueryChange, jobs, job, onJo
     () => codes.map((code) => ({ value: code, label: format.languageName(code) })).sort((a, b) => a.label.localeCompare(b.label, language)),
     [codes, format, language],
   )
+
+  if (locked) {
+    const lock = { variant: 'outline', entitlement: 'discovery', roles: ['recruiter'] }
+    return (
+      <Panel padding={16}>
+        <div className={styles.row}>
+          <PlanButton {...lock} className={styles.search}>
+            {t('discovery:toolbar.search')}
+          </PlanButton>
+          <PlanButton {...lock} className={styles.job}>
+            {t('discovery:toolbar.matchJob')}
+          </PlanButton>
+          <PlanButton {...lock} className={styles.filtersButton}>
+            {t('discovery:toolbar.filters')}
+          </PlanButton>
+        </div>
+      </Panel>
+    )
+  }
 
   return (
     <Panel padding={16}>

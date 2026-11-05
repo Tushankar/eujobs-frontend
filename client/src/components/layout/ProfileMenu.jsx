@@ -59,6 +59,8 @@ export default function ProfileMenu({ workspace }) {
             <p className={styles.name}>{me.fullName}</p>
             <p className={styles.email}>{me.email}</p>
             <p className={styles.role}>{identitySubtitle(me, t)}</p>
+            {/* P11c-Q19: a recruiter's plan (Free or Recruiter Plus) under the company. */}
+            {me.role === 'recruiter' && <p className={styles.role} data-recruiter-plan>{t(`enums:planKey.${me.plan}`)}</p>}
           </div>
 
           <div className={styles.body}>

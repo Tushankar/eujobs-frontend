@@ -33,8 +33,8 @@
     },
     "job_alert": "Nouvelle offre pour votre alerte « {{alert}} » : {{job}} chez {{company}}",
     "payment_paid": "Paiement reçu : {{item}} · {{amount}}",
-    "renewal_failed": "Nous n’avons pas pu renouveler votre offre Plus ({{amount}}). Mettez à jour votre carte dans Facturation.",
-    "plan_ended": "Votre offre Plus a pris fin. Vous êtes maintenant sur l’offre Free.",
+    "renewal_failed": "Nous n’avons pas pu renouveler votre offre {{plan}} ({{amount}}). Mettez à jour votre carte dans Facturation.",
+    "plan_ended": "Votre offre {{plan}} a pris fin. Vous êtes maintenant sur l’offre Free.",
     "course_purchased": "Vous avez acheté « {{course}} ». Vous pouvez commencer.",
     "certificate_issued": "Certificat délivré pour « {{course}} »",
     "content_restricted": {
@@ -64,8 +64,11 @@
     "admin_content_report_one": "Signalement ({{target}}) : {{name}} · {{reason}}",
     "admin_content_report_many": "{{count}} signalements ({{target}}) : {{name}} · {{reason}}",
     "admin_content_report_other": "{{count}} signalements ({{target}}) : {{name}} · {{reason}}",
-    "admin_renewal_failed": "Échec du renouvellement Plus de {{payer}} · {{reference}} · {{amount}}",
-    "admin_joined": "{{name}} a rejoint l’espace d’administration"
+    "admin_renewal_failed": "Échec du renouvellement {{plan}} de {{payer}} · {{reference}} · {{amount}}",
+    "admin_joined": "{{name}} a rejoint l’espace d’administration",
+    "plan_ended_paused_one": "Votre offre {{plan}} a pris fin. {{job}} reste en ligne ; {{count}} autre offre d’emploi a été mise en pause.",
+    "plan_ended_paused_many": "Votre offre {{plan}} a pris fin. {{job}} reste en ligne ; {{count}} autres offres d’emploi ont été mises en pause.",
+    "plan_ended_paused_other": "Votre offre {{plan}} a pris fin. {{job}} reste en ligne ; {{count}} autres offres d’emploi ont été mises en pause."
   },
   "settings": {
     "title": "Notifications par e-mail",

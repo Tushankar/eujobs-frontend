@@ -133,7 +133,8 @@ describe('admin Payments (M-122, M-123, P10-Q5 … Q7)', () => {
   async function rows() {
     const london = await listedCandidate({ fullName: 'Lena London' })
     const berlin = await listedCandidate({ fullName: 'Bruno Berlin', city: 'berlin' })
-    const { user: recruiter } = await approvedRecruiter({ fullName: 'Rhea Recruiter', city: 'dublin' })
+    // Free (§3.22): this recruiter's own canceled subscription is created below.
+    const { user: recruiter } = await approvedRecruiter({ fullName: 'Rhea Recruiter', city: 'dublin', plus: false })
     await pay(london, { kind: 'subscription', itemName: 'Plus', amountMinor: 900 })
     await pay(london, { kind: 'subscription', itemName: 'Plus', amountMinor: 900, status: 'failed', failureReason: 'card_declined' })
     await pay(berlin, { amountMinor: 2200, currency: 'EUR' })

@@ -62,7 +62,8 @@ export const WORKSPACES = {
       { key: 'overview', to: '', icon: LayoutDashboard, end: true },
       { key: 'jobs', to: 'jobs', icon: BriefcaseBusiness },
       { key: 'findCandidates', to: 'find-candidates', icon: Search },
-      { key: 'shortlists', to: 'shortlists', icon: Bookmark },
+      // §3.22: Shortlists need Recruiter Plus (`discovery`); without it the item shows the plan chip and the page the gate.
+      { key: 'shortlists', to: 'shortlists', icon: Bookmark, entitlement: 'discovery' },
       { key: 'applications', to: 'applications', icon: FileText },
       { key: 'messages', to: 'messages', icon: MessageSquare, badge: { useText: useUnreadMessagesBadge } },
       { key: 'hiringPipeline', to: 'hiring-pipeline', icon: Layers },

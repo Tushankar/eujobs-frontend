@@ -4,8 +4,10 @@ import { Check, ChevronDown, ChevronUp } from 'lucide-react'
 import { Icon } from '@/components/ui'
 import aiMatchIcon from '@/assets/icons/find-candidates-ai-match.svg'
 import { useGetRecruiterMatchQuery } from '@/features/ai/api.js'
+import AiButton from '@/features/ai/components/AiButton.jsx'
 import AiStatus from '@/features/ai/components/AiStatus.jsx'
-import { useFormat } from '@/lib/preferences.js'
+import { lacksEntitlement } from '@/features/candidate/billing/usePlan.js'
+import { useFormat, usePreferences } from '@/lib/preferences.js'
 import styles from './MatchInsights.module.css'
 
 /** M-057: the OpenAI narrative of Match insights, requested when the panel opens; never a score (C6). */
@@ -42,12 +44,13 @@ function MatchNarrative({ candidateId, jobId }) {
 /**
  * Match evidence for the chosen job (M-052, M-057 code part): the job's skills the candidate lists, the required
  * ones not listed, years and work mode, computed on the server, and, once opened, the AI narrative around them in the
- * recruiter's language (free for approved recruiters, M-117). Never a score (C6).
+ * recruiter's language (Recruiter Plus, §3.22; without it a locked button). Never a score (C6).
  */
 export default function MatchInsights({ candidate, jobId, defaultOpen = false }) {
   const hasJob = Boolean(jobId)
   const { t } = useTranslation()
   const format = useFormat()
+  const { me } = usePreferences()
   const [open, setOpen] = useState(defaultOpen)
   const detailsId = useId()
   const overlap = candidate.overlap
@@ -95,7 +98,14 @@ export default function MatchInsights({ candidate, jobId, defaultOpen = false })
               <p>{t('discovery:match.missing', { skills: format.list(overlap.missing) })}</p>
             </div>
           )}
-          {hasJob && <MatchNarrative candidateId={candidate.id} jobId={jobId} />}
+          {hasJob &&
+            (lacksEntitlement(me, 'ai', ['recruiter']) ? (
+              <AiButton variant="outline" size="sm">
+                {t('discovery:match.aiNarrative')}
+              </AiButton>
+            ) : (
+              <MatchNarrative candidateId={candidate.id} jobId={jobId} />
+            ))}
           <p className={styles.disclaimer}>{t('discovery:match.disclaimer')}</p>
         </div>
       )}

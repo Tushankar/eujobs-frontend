@@ -8,9 +8,11 @@
     "activeSubscribers": "Active subscribers",
     "activeSubscribersCaption": "Paid Plus plans now · All time",
     "mrr": "Monthly recurring revenue",
-    "mrrCaption": "Active Plus plans, per currency",
+    "mrrCaption": "Active plans, per currency",
     "failedRenewals": "Failed renewals",
     "failedRenewalsCaption": "Plus renewals that did not go through · All time",
+    "byRole": "Candidates {{candidates}} · Recruiters {{recruiters}}",
+    "role": { "candidate": "Candidates", "recruiter": "Recruiters" },
     "none": "None",
     "more": "+{{count}} more"
   },

@@ -31,8 +31,8 @@
     },
     "job_alert": "New job for your alert “{{alert}}”: {{job}} at {{company}}",
     "payment_paid": "Payment received: {{item}} · {{amount}}",
-    "renewal_failed": "We could not renew your Plus plan ({{amount}}). Update your card in Billing.",
-    "plan_ended": "Your Plus plan has ended. You are on Free now.",
+    "renewal_failed": "We could not renew your {{plan}} plan ({{amount}}). Update your card in Billing.",
+    "plan_ended": "Your {{plan}} plan has ended. You are on Free now.",
     "course_purchased": "You bought “{{course}}”. You can start learning.",
     "certificate_issued": "Certificate issued for “{{course}}”",
     "content_restricted": {
@@ -61,8 +61,10 @@
     "admin_verification_submitted": "{{candidate}} submitted evidence for review: {{category}}",
     "admin_content_report_one": "{{target}} reported: {{name}} · {{reason}}",
     "admin_content_report_other": "{{target}} reported {{count}} times: {{name}} · {{reason}}",
-    "admin_renewal_failed": "Plus renewal failed for {{payer}} · {{reference}} · {{amount}}",
-    "admin_joined": "{{name}} joined the admin workspace"
+    "admin_renewal_failed": "{{plan}} renewal failed for {{payer}} · {{reference}} · {{amount}}",
+    "admin_joined": "{{name}} joined the admin workspace",
+    "plan_ended_paused_one": "Your {{plan}} plan has ended. {{job}} stays live; {{count}} other job was paused.",
+    "plan_ended_paused_other": "Your {{plan}} plan has ended. {{job}} stays live; {{count}} other jobs were paused."
   },
   "settings": {
     "title": "Email notifications",

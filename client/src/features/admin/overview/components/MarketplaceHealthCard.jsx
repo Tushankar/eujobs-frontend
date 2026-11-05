@@ -6,7 +6,7 @@ import { Icon, Panel } from '@/components/ui'
 import { useFormat } from '@/lib/preferences.js'
 import styles from './MarketplaceHealthCard.module.css'
 
-const KEYS = ['companies', 'coursePurchases', 'checksInReview', 'shortlists', 'outreach', 'pendingReviews']
+const KEYS = ['companies', 'coursePurchases', 'checksInReview', 'shortlists', 'outreach', 'pendingReviews', 'activeSubscribers']
 
 /** "Marketplace health" (§3.15, OQ-5): all-time counters with a link into the moderation queue. */
 export default function MarketplaceHealthCard({ health }) {
@@ -19,7 +19,13 @@ export default function MarketplaceHealthCard({ health }) {
         {KEYS.map((key) => (
           <div key={key} className={styles.row} data-health={key}>
             <dt className={styles.label}>{t(`health.${key}`)}</dt>
-            <dd className={styles.value}>{health ? format.number(health[key]) : ''}</dd>
+            {/* P11c-Q20: active subscribers come as { total, candidate, recruiter }, shown with the split by role. */}
+            <dd className={styles.value}>
+              {health && (key === 'activeSubscribers' ? format.number(health[key].total) : format.number(health[key]))}
+              {health && key === 'activeSubscribers' && (
+                <span className={styles.split}>{t('health.byRole', { candidates: format.number(health[key].candidate), recruiters: format.number(health[key].recruiter) })}</span>
+              )}
+            </dd>
           </div>
         ))}
       </dl>

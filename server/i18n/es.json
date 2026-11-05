@@ -312,9 +312,7 @@
         "{{paused}}",
         "Conservas tus candidaturas, conversaciones, notas y tu preselección."
       ],
-      "action": "Abrir ofertas",
-      "paused_one": "{{job}} sigue publicada; se ha pausado 1 oferta más. Vuelve a suscribirte para publicarla de nuevo.",
-      "paused_other": "{{job}} sigue publicada; se han pausado {{count}} ofertas más. Vuelve a suscribirte para publicarlas de nuevo."
+      "action": "Abrir ofertas"
     }
   },
   "verification": {
@@ -475,7 +473,11 @@
       "misleading": "engañoso",
       "other": "otro"
     },
-    "deletedUser": "Usuario eliminado"
+    "deletedUser": "Usuario eliminado",
+    "pausedJobs": {
+      "one": "{{job}} sigue publicada; se ha pausado 1 oferta más. Vuelve a suscribirte para publicarla de nuevo.",
+      "other": "{{job}} sigue publicada; se han pausado {{count}} ofertas más. Vuelve a suscribirte para publicarlas de nuevo."
+    }
   },
   "certificate": {
     "tagline": "AI Job Portal",

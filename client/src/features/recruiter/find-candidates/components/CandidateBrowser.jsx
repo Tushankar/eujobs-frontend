@@ -1,6 +1,9 @@
 import { useEffect, useState } from 'react'
 import { useTranslation } from 'react-i18next'
 import { Button } from '@/components/ui'
+import PlanButton from '@/features/candidate/billing/components/PlanButton.jsx'
+import { lacksEntitlement } from '@/features/candidate/billing/usePlan.js'
+import { usePreferences } from '@/lib/preferences.js'
 import { useShortlistToggle } from '../api.js'
 import { useMatchJob } from '../hooks/useMatchJob.js'
 import { EMPTY_FILTERS, filterParams } from '../utils/candidateText.js'
@@ -13,14 +16,18 @@ import styles from '../pages/FindCandidatesPage.module.css'
 const MAX_COMPARED = 3
 const SORTS = ['recommended', 'experience', 'name']
 const DEBOUNCE_MS = 300
+const RECRUITER = ['recruiter']
 
 /**
  * The search, filters, sort, cards and compare of Find candidates and Shortlists (A: recruiter A15, A24).
  * `useList(params)` is the page's RTK Query hook; `notice(data)` and `extra(candidate)` add page-specific lines;
- * `empty({ filtering, clear })` renders the empty state.
+ * `empty({ filtering, clear })` renders the empty state. Without Recruiter Plus (§3.22, P11c-Q10) the list holds the
+ * company's applicants and search, the job, filters, sort, Shortlist and Compare are locked buttons.
  */
 export default function CandidateBrowser({ useList, notice, extra, empty }) {
   const { t } = useTranslation()
+  const { me } = usePreferences()
+  const locked = lacksEntitlement(me, 'discovery', RECRUITER)
   const [query, setQuery] = useState('')
   const [debounced, setDebounced] = useState('')
   const [filters, setFilters] = useState(EMPTY_FILTERS)
@@ -29,8 +36,11 @@ export default function CandidateBrowser({ useList, notice, extra, empty }) {
   const [compareOpen, setCompareOpen] = useState(false)
   const { jobs, job, setJobId, ready } = useMatchJob()
   const toggleShortlist = useShortlistToggle()
-  const { data } = useList(filterParams({ query: debounced, filters, sort, jobId: job?.id }), { skip: !ready })
+  const params = locked ? { query: '', filters: EMPTY_FILTERS, sort: 'recommended' } : { query: debounced, filters, sort, jobId: job?.id }
+  const { data } = useList(filterParams(params), { skip: !ready })
   const items = data?.items ?? []
+  // On Free the server matches the cards to the newest live job.
+  const matchJob = locked ? data?.matchJob : job
   const compared = comparedIds.map((id) => items.find((candidate) => candidate.id === id)).filter(Boolean)
 
   useEffect(() => {
@@ -50,7 +60,7 @@ export default function CandidateBrowser({ useList, notice, extra, empty }) {
   return (
     <>
       <div className={styles.toolbar}>
-        <DiscoveryToolbar query={query} onQueryChange={setQuery} jobs={jobs} job={job} onJobChange={setJobId} filters={filters} onFiltersChange={setFilters} />
+        <DiscoveryToolbar locked={locked} query={query} onQueryChange={setQuery} jobs={jobs} job={job} onJobChange={setJobId} filters={filters} onFiltersChange={setFilters} />
       </div>
 
       <div className={styles.resultsBar}>
@@ -58,8 +68,15 @@ export default function CandidateBrowser({ useList, notice, extra, empty }) {
           <strong>{t('discovery:find.count', { count: items.length })}</strong>
           {t('discovery:find.evidence')}
         </p>
-        <SortSelect options={SORTS.map((value) => ({ value, label: t(`discovery:sort.${value}`) }))} value={sort} onChange={setSort} label={t('discovery:sort.label')} />
+        {locked ? (
+          <PlanButton variant="outline" size="sm" entitlement="discovery" roles={RECRUITER}>
+            {t('discovery:sort.recommended')}
+          </PlanButton>
+        ) : (
+          <SortSelect options={SORTS.map((value) => ({ value, label: t(`discovery:sort.${value}`) }))} value={sort} onChange={setSort} label={t('discovery:sort.label')} />
+        )}
       </div>
+      {locked && <p className={styles.view}>{t('discovery:find.applicantsOnly')}</p>}
       {data && notice?.(data)}
 
       {compared.length > 0 && (
@@ -89,8 +106,9 @@ export default function CandidateBrowser({ useList, notice, extra, empty }) {
             <CandidateCard
               key={candidate.id}
               candidate={candidate}
-              hasJob={Boolean(job)}
-              jobId={job?.id}
+              hasJob={Boolean(matchJob)}
+              jobId={matchJob?.id}
+              locked={locked}
               onToggleShortlist={() => toggleShortlist(candidate)}
               compared={comparedIds.includes(candidate.id)}
               compareDisabled={comparedIds.length >= MAX_COMPARED}

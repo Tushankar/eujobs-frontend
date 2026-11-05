@@ -33,8 +33,8 @@
     },
     "job_alert": "Nueva oferta para tu alerta “{{alert}}”: {{job}} en {{company}}",
     "payment_paid": "Pago recibido: {{item}} · {{amount}}",
-    "renewal_failed": "No pudimos renovar tu plan Plus ({{amount}}). Actualiza tu tarjeta en Facturación.",
-    "plan_ended": "Tu plan Plus ha terminado. Ahora tienes el plan Free.",
+    "renewal_failed": "No pudimos renovar tu plan {{plan}} ({{amount}}). Actualiza tu tarjeta en Facturación.",
+    "plan_ended": "Tu plan {{plan}} ha terminado. Ahora tienes el plan Free.",
     "course_purchased": "Compraste “{{course}}”. Ya puedes empezar a aprender.",
     "certificate_issued": "Certificado emitido para “{{course}}”",
     "content_restricted": {
@@ -64,8 +64,11 @@
     "admin_content_report_one": "Denuncia de {{target}}: {{name}} · {{reason}}",
     "admin_content_report_many": "{{count}} denuncias de {{target}}: {{name}} · {{reason}}",
     "admin_content_report_other": "{{count}} denuncias de {{target}}: {{name}} · {{reason}}",
-    "admin_renewal_failed": "Falló la renovación de Plus de {{payer}} · {{reference}} · {{amount}}",
-    "admin_joined": "{{name}} se unió al espacio de administración"
+    "admin_renewal_failed": "Falló la renovación de {{plan}} de {{payer}} · {{reference}} · {{amount}}",
+    "admin_joined": "{{name}} se unió al espacio de administración",
+    "plan_ended_paused_one": "Tu plan {{plan}} ha terminado. {{job}} sigue publicada; se ha pausado {{count}} oferta más.",
+    "plan_ended_paused_many": "Tu plan {{plan}} ha terminado. {{job}} sigue publicada; se han pausado {{count}} ofertas más.",
+    "plan_ended_paused_other": "Tu plan {{plan}} ha terminado. {{job}} sigue publicada; se han pausado {{count}} ofertas más."
   },
   "settings": {
     "title": "Notificaciones por correo",

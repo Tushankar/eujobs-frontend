@@ -1,4 +1,6 @@
 import { api } from '@/app/api.js'
+import { lacksEntitlement } from '@/features/candidate/billing/usePlan.js'
+import { usePreferences } from '@/lib/preferences.js'
 
 /*
  * Recruiter jobs (§3.7): list with status counts, wizard drafts, live edits, status changes, quality checks,
@@ -31,3 +33,14 @@ export const {
   useGetSkillSuggestionsQuery,
   useGetRelevantTalentQuery,
 } = recruiterJobsApi
+
+/**
+ * §3.22, P11c-Q3, Q5: without Recruiter Plus a company keeps 1 published job. Returns `(jobId) => true` when publishing
+ * that job needs the upgrade (another job is live), so the UI opens the upgrade dialog without sending the request.
+ */
+export function usePublishLock() {
+  const { me } = usePreferences()
+  const { data } = useGetRecruiterJobsQuery()
+  const lacks = lacksEntitlement(me, 'jobs_unlimited', ['recruiter'])
+  return (jobId) => lacks && (data?.items ?? []).some((job) => job.status === 'published' && job.id !== jobId)
+}

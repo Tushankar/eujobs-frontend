@@ -46,6 +46,8 @@
     "shortlists": "Actividad de preselección",
     "outreach": "Borradores de contacto revisados",
     "pendingReviews": "Revisiones de usuarios pendientes",
+    "activeSubscribers": "Suscriptores activos",
+    "byRole": "Candidatos {{candidates}} · Reclutadores {{recruiters}}",
     "moderation": "Revisar la cola de moderación"
   },
   "skills": {

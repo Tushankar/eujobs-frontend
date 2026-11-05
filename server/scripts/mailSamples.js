@@ -43,7 +43,7 @@ export function mailSample(type, language, origin, role = 'candidate') {
     plan_ended: { plan: 'Plus', link: `${origin}/candidate/settings/billing` },
     recruiter_plan_ended: {
       plan: 'Recruiter Plus',
-      paused: interpolate(t(language, 'email.recruiter_plan_ended.paused_other'), { job: 'Senior Product Designer', count: 2 }),
+      paused: interpolate(t(language, 'labels.pausedJobs.other'), { job: 'Senior Product Designer', count: 2 }),
       link: `${origin}/recruiter/jobs`,
     },
     application_status: { job: 'Senior Product Designer', company: 'Mail Test Ltd', link: `${origin}/candidate/applications` },

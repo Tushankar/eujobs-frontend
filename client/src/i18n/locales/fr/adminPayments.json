@@ -8,9 +8,11 @@
     "activeSubscribers": "Abonnés actifs",
     "activeSubscribersCaption": "Plans Plus payants en cours · Depuis le début",
     "mrr": "Revenu mensuel récurrent",
-    "mrrCaption": "Plans Plus actifs, par devise",
+    "mrrCaption": "Abonnements actifs, par devise",
     "failedRenewals": "Renouvellements échoués",
     "failedRenewalsCaption": "Renouvellements Plus qui n’ont pas abouti · Depuis le début",
+    "byRole": "Candidats {{candidates}} · Recruteurs {{recruiters}}",
+    "role": { "candidate": "Candidats", "recruiter": "Recruteurs" },
     "none": "Aucun",
     "more": "+{{count}} de plus"
   },

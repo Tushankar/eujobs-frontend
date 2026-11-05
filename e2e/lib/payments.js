@@ -87,11 +87,12 @@ export async function continueToStripe(page, amount) {
 }
 
 /**
- * A Stripe customer and Plus subscription for `user`, made through the API instead of Checkout (P5-03 … P5-08 setups):
- * linked the way Checkout links them, so the webhooks write the rows. `testClock` puts the customer on a test clock.
+ * A Stripe customer and Plus (or `plan` = recruiter_plus) subscription for `user`, made through the API instead of
+ * Checkout (P5-03 … P5-08 setups): linked the way Checkout links them, so the webhooks write the rows. `testClock` puts
+ * the customer on a test clock.
  */
-export async function subscribeThroughApi(user, { currency = 'GBP', testClock } = {}) {
-  const [price] = (await stripe.prices.list({ lookup_keys: [`plus_monthly_${currency.toLowerCase()}`] })).data
+export async function subscribeThroughApi(user, { currency = 'GBP', testClock, plan = 'plus' } = {}) {
+  const [price] = (await stripe.prices.list({ lookup_keys: [`${plan}_monthly_${currency.toLowerCase()}`] })).data
   const metadata = { db: TEST_DB, userId: user.id }
   const customer = await stripe.customers.create({
     email: user.email,
@@ -105,7 +106,7 @@ export async function subscribeThroughApi(user, { currency = 'GBP', testClock } 
   const subscription = await stripe.subscriptions.create({
     customer: customer.id,
     items: [{ price: price.id }],
-    metadata: { kind: 'subscription', itemId: 'plus', userId: user.id },
+    metadata: { kind: 'subscription', itemId: plan, userId: user.id },
   })
   return { customer, subscription }
 }

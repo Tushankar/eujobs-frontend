@@ -312,9 +312,7 @@
         "{{paused}}",
         "Vos candidatures, conversations, notes et votre short-list sont conservées."
       ],
-      "action": "Ouvrir les offres",
-      "paused_one": "{{job}} reste en ligne ; 1 autre offre d’emploi a été mise en pause. Abonnez-vous de nouveau pour la republier.",
-      "paused_other": "{{job}} reste en ligne ; {{count}} autres offres d’emploi ont été mises en pause. Abonnez-vous de nouveau pour les republier."
+      "action": "Ouvrir les offres"
     }
   },
   "verification": {
@@ -475,7 +473,11 @@
       "misleading": "trompeur",
       "other": "autre"
     },
-    "deletedUser": "Utilisateur supprimé"
+    "deletedUser": "Utilisateur supprimé",
+    "pausedJobs": {
+      "one": "{{job}} reste en ligne ; 1 autre offre d’emploi a été mise en pause. Abonnez-vous de nouveau pour la republier.",
+      "other": "{{job}} reste en ligne ; {{count}} autres offres d’emploi ont été mises en pause. Abonnez-vous de nouveau pour les republier."
+    }
   },
   "certificate": {
     "tagline": "AI Job Portal",

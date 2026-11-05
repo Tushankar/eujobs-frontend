@@ -62,7 +62,7 @@ export default function WorkspaceLayout({ workspaceId }) {
         </main>
       </div>
       <LegalAcceptDialog />
-      {workspaceId === 'candidate' && <UpgradeDialog />}
+      {['candidate', 'recruiter'].includes(workspaceId) && <UpgradeDialog />}
     </>
   )
 }

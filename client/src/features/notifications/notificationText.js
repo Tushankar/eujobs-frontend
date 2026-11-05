@@ -60,6 +60,8 @@ export function useNotificationText() {
       reason: params.reason && t(type === 'cv_request' ? `enums:cvRequestReason.${params.reason}` : `enums:reportReason.${params.reason}`),
       category: params.category && t(`enums:verificationCategory.${params.category}`),
       target: params.targetType && t(`enums:reportTargetType.${params.targetType}`),
+      // Plan notifications name the plan (Plus or Recruiter Plus, §3.22); rows from before 11c are Plus.
+      plan: t(`enums:planKey.${params.planKey ?? 'plus'}`),
     }
     switch (type) {
       case 'verification_decided':
@@ -69,6 +71,9 @@ export function useNotificationText() {
       case 'content_restricted':
       case 'content_lifted':
         return t(`notifications:types.${type}.${params.content}`, values)
+      case 'plan_ended':
+        // P11c-Q18: a recruiter's names the job kept live and the number paused.
+        return params.paused ? t('notifications:types.plan_ended_paused', { ...values, count: params.paused }) : t('notifications:types.plan_ended', values)
       case 'admin_account_review':
         return t(`notifications:types.${type}.${params.resubmitted ? 'resubmitted' : 'submitted'}`, values)
       default:

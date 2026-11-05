@@ -32,11 +32,11 @@ useTestUploads()
 const counts = async () => Promise.all([Country, Plan, Permission, AdminRole, Faq, LegalDocument].map((Model) => Model.countDocuments()))
 
 describe('seed:catalog (U41)', () => {
-  it('is idempotent: 29 countries, 2 plans, 21 permissions, 3 roles, the FAQs and 3 legal texts × 3 languages', async () => {
+  it('is idempotent: 29 countries, 3 plans, 21 permissions, 3 roles, the FAQs and 3 legal texts × 3 languages', async () => {
     await seedCatalog()
     const published = (await LegalDocument.findOne({ doc: 'terms', language: 'en' })).publishedAt
     await seedCatalog()
-    assert.deepEqual(await counts(), [29, 2, 21, 3, FAQS.length, 9])
+    assert.deepEqual(await counts(), [29, 3, 21, 3, FAQS.length, 9])
     assert.deepEqual((await LegalDocument.findOne({ doc: 'terms', language: 'en' })).publishedAt, published)
     assert.equal(await LegalDocument.countDocuments({ isDraft: true, version: LEGAL_VERSION }), 9)
   })
@@ -56,6 +56,14 @@ describe('seed:catalog (U41)', () => {
     assert.deepEqual(plus.entitlements, ['apply', 'message_send', 'job_alerts', 'ai'])
     assert.equal(plus.prices.find((price) => price.currency === 'HUF').amountMinor, 399000)
     assert.equal(plus.prices.length, 8)
+    // P11c-Q2: Recruiter Plus, the £49 row, with its own Stripe prices.
+    const recruiterPlus = await Plan.findOne({ key: 'recruiter_plus' }).lean()
+    assert.deepEqual([recruiterPlus.role, recruiterPlus.name.fr, recruiterPlus.entitlements], ['recruiter', 'Recruiter Plus', ['jobs_unlimited', 'discovery', 'outreach', 'ai']])
+    assert.deepEqual(
+      recruiterPlus.prices.map((price) => `${price.currency} ${price.amountMinor / 100}`),
+      ['GBP 49', 'EUR 57', 'PLN 245', 'SEK 629', 'DKK 429', 'CZK 1399', 'HUF 21990', 'RON 289'],
+    )
+    assert.ok(recruiterPlus.prices.every((price) => price.stripePriceId?.startsWith('price_') && !plus.prices.some((other) => other.stripePriceId === price.stripePriceId)))
     const manager = await AdminRole.findOne({ name: 'Manager' }).lean()
     assert.deepEqual(manager.permissions, ['users.view', 'roles.view', 'roles.assign', 'candidates.view', 'reports.view'])
   })
@@ -186,17 +194,25 @@ describe('seed:demo (§3.20, OD9, P12)', () => {
     assert.deepEqual([subscription.status, subscription.currency, subscription.amountMinor, subscription.source], ['active', 'GBP', 900, 'seed'])
 
     const rows = await Payment.find({}).sort({ paidAt: 1 })
-    // 3 mock course rows, 5 historical Plus months (every applicant but Emma), Emma's real first invoice.
-    assert.equal(rows.length, 9)
+    // 3 mock course rows, 5 historical Plus months (every applicant but Emma), Emma's and Sarah's real first invoices (P11c-Q11).
+    assert.equal(rows.length, 10)
     assert.deepEqual(
       rows.map((row) => row.reference),
       rows.map((_, index) => `LWM-${String(index + 1).padStart(6, '0')}`),
     )
     assert.ok(rows.every((row) => row.source === 'seed' && row.status === 'paid'))
-    const emmaPlus = rows.at(-1)
-    assert.deepEqual([String(emmaPlus.userId), emmaPlus.kind, emmaPlus.amountMinor, emmaPlus.currency], [String(emma._id), 'subscription', 900, 'GBP'])
-    assert.match(emmaPlus.receiptUrl, /^https:\/\/invoice\.stripe\.com\//)
-    assert.ok(rows.slice(0, -1).every((row) => !row.receiptUrl))
+    const sarah = await User.findOne({ email: demoAddress('sarah') })
+    const emmaPlus = rows.find((row) => String(row.userId) === String(emma._id) && row.kind === 'subscription')
+    assert.deepEqual([emmaPlus.kind, emmaPlus.itemId, emmaPlus.amountMinor, emmaPlus.currency], ['subscription', 'plus', 900, 'GBP'])
+    const sarahPlus = rows.find((row) => String(row.userId) === String(sarah._id))
+    assert.deepEqual([sarahPlus.payerRole, sarahPlus.itemId, sarahPlus.itemName, sarahPlus.amountMinor, sarahPlus.currency], ['recruiter', 'recruiter_plus', 'Recruiter Plus', 4900, 'GBP'])
+    for (const row of [emmaPlus, sarahPlus]) assert.match(row.receiptUrl, /^https:\/\/invoice\.stripe\.com\//)
+    assert.equal(rows.filter((row) => row.receiptUrl).length, 2)
+    const sarahSubscription = await Subscription.findOne({ userId: sarah._id })
+    assert.deepEqual(
+      [sarahSubscription.planKey, sarahSubscription.status, sarahSubscription.currency, sarahSubscription.amountMinor, sarahSubscription.source],
+      ['recruiter_plus', 'active', 'GBP', 4900, 'seed'],
+    )
     const historical = rows.filter((row) => row.kind === 'subscription' && !row.stripe?.invoiceId)
     assert.deepEqual(historical.map((row) => `${row.payerName}:${row.amountMinor} ${row.currency}`).sort(), [
       'Aisha Patel:11900 SEK',
@@ -205,13 +221,13 @@ describe('seed:demo (§3.20, OD9, P12)', () => {
       'Oliver Park:1000 EUR',
       'Sofia Martinez:900 GBP',
     ])
-    assert.equal(await Subscription.countDocuments({}), 1)
+    assert.equal(await Subscription.countDocuments({}), 2)
 
     await seedDemo()
     assert.equal((await stripe().customers.retrieve(firstCustomer)).deleted, true)
     const again = await User.findOne({ email: demoAddress('emma') })
     assert.notEqual(again.stripeCustomerId, firstCustomer)
-    assert.equal(await Payment.countDocuments({}), 9)
+    assert.equal(await Payment.countDocuments({}), 10)
   })
 
   it('seeds the six pipeline placements as applications with coherent histories, and none for Alex (Phase 6, P6-Q1)', async () => {

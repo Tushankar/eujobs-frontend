@@ -51,7 +51,7 @@ describe('entitlement rule (U38, M-120)', () => {
     assert.deepEqual([mePlus.plan, mePlus.entitlements], ['plus', ['apply', 'message_send', 'job_alerts', 'ai']])
   })
 
-  it('requireEntitlement answers 402 PLAN_REQUIRED for Free candidates only', async () => {
+  it('requireEntitlement answers 402 PLAN_REQUIRED for Free candidates; candidate keys skip other roles', async () => {
     const app = express().get('/gated', requireAuth, requireEntitlement('ai'), (req, res) => res.json({ ok: true }))
     app.use(errorHandler)
     const free = await createUser()
@@ -61,7 +61,7 @@ describe('entitlement rule (U38, M-120)', () => {
     const plus = await createUser()
     await Subscription.create({ userId: plus._id, status: 'active', currency: 'GBP' })
     assert.equal((await request(app).get('/gated').set(auth(plus))).status, 200)
-    // Recruiters have no plan (M-117).
+    // A candidate key (the default roles) does not apply to recruiters; recruiter locks name them (§3.22).
     const recruiter = await createUser({ role: 'recruiter' })
     assert.equal((await request(app).get('/gated').set(auth(recruiter))).status, 200)
   })

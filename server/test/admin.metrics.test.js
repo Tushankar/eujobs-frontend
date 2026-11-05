@@ -108,7 +108,8 @@ describe('Overview and Analytics (§3.15, OQ-5)', () => {
       courseBadges: 0,
       averageRoleMatch: { value: 65, roles: 3 },
     })
-    assert.deepEqual(health, { companies: 2, coursePurchases: 0, checksInReview: 0, shortlists: 1, outreach: 1, pendingReviews: 1 })
+    // P11c-Q20: the Payments card count, by role (the factory recruiters are on Recruiter Plus).
+    assert.deepEqual(health, { companies: 2, coursePurchases: 0, checksInReview: 0, shortlists: 1, outreach: 1, pendingReviews: 1, activeSubscribers: { total: 2, candidate: 0, recruiter: 2 } })
     assert.deepEqual(skills[0], { skill: 'Figma', roles: 3 })
     assert.ok(recent.length <= 5)
 

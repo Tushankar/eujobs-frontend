@@ -45,6 +45,21 @@ function MoneyLines({ totals }) {
   )
 }
 
+/** P11c-Q8: the MRR card's lines per role (Plus = candidates, Recruiter Plus = recruiters), each by currency. */
+function RoleMoney({ mrr }) {
+  const { t } = useTranslation('adminPayments')
+  return (
+    <span className={styles.roleMoney}>
+      {['candidate', 'recruiter'].map((role) => (
+        <span key={role} className={styles.roleGroup} data-mrr-role={role}>
+          <span className={styles.roleLabel}>{t(`stats.role.${role}`)}</span>
+          <MoneyLines totals={mrr[role]} />
+        </span>
+      ))}
+    </span>
+  )
+}
+
 /** M-123: the row with the subscription's status and period for a plan payment; a gone row says so (P11b-Q4). */
 function PaymentDetails({ id, onClose }) {
   const { t } = useTranslation(['adminPayments', 'enums'])
@@ -123,6 +138,8 @@ export default function PaymentsPage() {
   const query = { page: Number(params.get('page')) || 1, ...Object.fromEntries(Object.entries(filters).filter(([, value]) => value)) }
   const { data, isSuccess } = useGetAdminPaymentsQuery(query, { refetchOnMountOrArgChange: true })
   const { data: stats } = useGetPaymentStatsQuery(filters.country ? { country: filters.country } : {}, { refetchOnMountOrArgChange: true })
+  const format = useFormat()
+  const byRole = (counts) => t('stats.byRole', { candidates: format.number(counts.candidate), recruiters: format.number(counts.recruiter) })
 
   async function exportCsv() {
     setExporting(true)
@@ -163,9 +180,10 @@ export default function PaymentsPage() {
 
       <div className={styles.stats}>
         <StatCard label={t('stats.collected')} value={stats && <MoneyLines totals={stats.collected} />} caption={t('stats.collectedCaption')} icon={Wallet} />
-        <StatCard label={t('stats.activeSubscribers')} value={stats?.activeSubscribers ?? 0} caption={t('stats.activeSubscribersCaption')} icon={Repeat} />
-        <StatCard label={t('stats.mrr')} value={stats && <MoneyLines totals={stats.mrr} />} caption={t('stats.mrrCaption')} icon={TrendingUp} />
-        <StatCard label={t('stats.failedRenewals')} value={stats?.failedRenewals ?? 0} caption={t('stats.failedRenewalsCaption')} icon={CircleAlert} />
+        {/* P11c-Q8: the plan cards split by role. */}
+        <StatCard label={t('stats.activeSubscribers')} value={stats?.activeSubscribers.total ?? 0} caption={stats && byRole(stats.activeSubscribers)} icon={Repeat} />
+        <StatCard label={t('stats.mrr')} value={stats && <RoleMoney mrr={stats.mrr} />} caption={t('stats.mrrCaption')} icon={TrendingUp} />
+        <StatCard label={t('stats.failedRenewals')} value={stats?.failedRenewals.total ?? 0} caption={stats && byRole(stats.failedRenewals)} icon={CircleAlert} />
       </div>
 
       <div className={styles.filters}>

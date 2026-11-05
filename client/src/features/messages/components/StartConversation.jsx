@@ -3,6 +3,7 @@ import { useTranslation } from 'react-i18next'
 import { Link, useNavigate } from 'react-router-dom'
 import { MessageSquare } from 'lucide-react'
 import { Button, Icon, Modal } from '@/components/ui'
+import PlanButton from '@/features/candidate/billing/components/PlanButton.jsx'
 import { usePreferences } from '@/lib/preferences.js'
 import { messagesApi, useCompanyMessageStart, useStartConversationMutation } from '../api.js'
 import MessageForm from './MessageForm.jsx'
@@ -77,9 +78,10 @@ export function MessageCandidateButton({ candidate, job }) {
   if (!candidate.canStartConversation) return null
   return (
     <>
-      <Button variant="outline" fullWidth leftIcon={messageIcon} data-start-conversation onClick={() => setOpen(true)}>
+      {/* §3.22: starting a conversation needs Recruiter Plus (`outreach`); an existing thread opens above. */}
+      <PlanButton entitlement="outreach" roles={['recruiter']} variant="outline" fullWidth leftIcon={messageIcon} data-start-conversation onClick={() => setOpen(true)}>
         {t('messages:outreach.button')}
-      </Button>
+      </PlanButton>
       {open && (
         <StartConversationDialog
           body={{ candidateId: candidate.id, ...(job && { jobId: job.id }) }}

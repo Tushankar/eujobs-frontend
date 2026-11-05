@@ -11,7 +11,8 @@
     "countryView": "Candidats qui résident dans ce pays ou y ont le droit au travail : {{country}}.",
     "empty": "Aucun candidat ne correspond à cette recherche",
     "emptyText": "Essayez un autre nom, poste ou compétence, ou effacez les filtres.",
-    "clear": "Effacer la recherche et les filtres"
+    "clear": "Effacer la recherche et les filtres",
+    "applicantsOnly": "Avec l’offre gratuite, vous voyez les personnes qui ont postulé à vos offres d’emploi. Recruiter Plus ajoute la recherche, les filtres et tous les candidats de votre marché."
   },
   "toolbar": {
     "search": "Rechercher des candidats",
@@ -100,7 +101,8 @@
     "experience_other": "{{count}} ans d’expérience indiqués dans le profil. Vérifiez l’expérience propre au poste lors de l’examen.",
     "gapTitle": "Écart possible",
     "missing": "Aucun élément pour l’instant sur {{skills}}",
-    "disclaimer": "Fondé sur les éléments du profil et les préférences indiquées, pas une décision d’embauche. Vous gardez la main."
+    "disclaimer": "Fondé sur les éléments du profil et les préférences indiquées, pas une décision d’embauche. Vous gardez la main.",
+    "aiNarrative": "Analyse de compatibilité par IA"
   },
   "profile": {
     "back": "Retour à la découverte de talents",
@@ -280,5 +282,9 @@
     "viewAll": "Voir toutes les offres",
     "noRoles": "Aucun poste ouvert",
     "noRolesText": "Les offres publiées apparaissent ici. Créez une offre pour commencer à rencontrer des talents pertinents."
+  },
+  "locked": {
+    "talent": "Recruiter Plus affiche les candidats dont les compétences correspondent à vos postes.",
+    "seeCandidates": "Voir les candidats"
   }
 }

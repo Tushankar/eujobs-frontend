@@ -3,6 +3,8 @@ import { useTranslation } from 'react-i18next'
 import { Link } from 'react-router-dom'
 import { ArrowRight, BriefcaseBusiness, Bookmark, FileText, Plus } from 'lucide-react'
 import { useGetMeQuery } from '@/app/api.js'
+import PlanButton from '@/features/candidate/billing/components/PlanButton.jsx'
+import { lacksEntitlement } from '@/features/candidate/billing/usePlan.js'
 import EmptyState from '@/components/common/EmptyState.jsx'
 import PageTitle from '@/components/common/PageTitle.jsx'
 import StatCard from '@/components/common/StatCard.jsx'
@@ -37,7 +39,9 @@ export default function OverviewPage() {
   const { t } = useTranslation()
   const { data: me } = useGetMeQuery()
   const { data: overview } = useGetRecruiterOverviewQuery()
-  const { data: talent } = useGetTalentQuery()
+  // P11c-Q15: the talent list needs Recruiter Plus; its count (Recommended candidates) stays.
+  const talentLocked = lacksEntitlement(me, 'discovery', ['recruiter'])
+  const { data: talent } = useGetTalentQuery(undefined, { skip: !me || talentLocked })
   const { data: jobs } = useGetRecruiterJobsQuery()
   const toggleShortlist = useShortlistToggle()
   // Read once per visit, so the greeting does not change while the page is open.
@@ -86,7 +90,14 @@ export default function OverviewPage() {
           <Icon as={ArrowRight} size={12} />
         </Link>
       </div>
-      {talent && talent.items.length === 0 ? (
+      {talentLocked ? (
+        <div className={styles.talentLocked}>
+          <p className={styles.talentEmpty}>{t('discovery:locked.talent')}</p>
+          <PlanButton variant="outline" size="sm" entitlement="discovery" roles={['recruiter']}>
+            {t('discovery:locked.seeCandidates')}
+          </PlanButton>
+        </div>
+      ) : talent && talent.items.length === 0 ? (
         <p className={styles.talentEmpty}>{t('discovery:overview.talentEmpty')}</p>
       ) : (
         <div className={styles.talent}>

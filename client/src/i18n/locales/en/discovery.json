@@ -10,7 +10,8 @@
     "countryView": "Showing candidates who live in {{country}} or have the right to work there.",
     "empty": "No candidates match this search",
     "emptyText": "Try a different name, role or skill, or clear the filters.",
-    "clear": "Clear search and filters"
+    "clear": "Clear search and filters",
+    "applicantsOnly": "On Free you see the people who applied to your jobs. Recruiter Plus adds search, filters and every candidate in your market."
   },
   "toolbar": {
     "search": "Search candidates",
@@ -95,7 +96,8 @@
     "experience_other": "{{count}} years of experience reported in the profile. Verify role-specific experience during review.",
     "gapTitle": "Potential gap",
     "missing": "No evidence listed yet for {{skills}}",
-    "disclaimer": "Based on profile evidence and stated preferences, not a hiring decision. You remain in control."
+    "disclaimer": "Based on profile evidence and stated preferences, not a hiring decision. You remain in control.",
+    "aiNarrative": "AI match insights"
   },
   "profile": {
     "back": "Back to talent discovery",
@@ -271,5 +273,9 @@
     "viewAll": "View all jobs",
     "noRoles": "No open roles",
     "noRolesText": "Published jobs appear here. Create a job to start meeting relevant talent."
+  },
+  "locked": {
+    "talent": "Recruiter Plus shows the candidates whose listed skills match your roles.",
+    "seeCandidates": "See candidates"
   }
 }

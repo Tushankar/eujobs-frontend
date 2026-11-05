@@ -1,6 +1,9 @@
 import { useTranslation } from 'react-i18next'
 import { Link } from 'react-router-dom'
-import { ArrowUpRight, Bookmark, Earth, MapPin, ShieldCheck } from 'lucide-react'
+import { useDispatch } from 'react-redux'
+import { ArrowUpRight, Bookmark, Earth, Lock, MapPin, ShieldCheck } from 'lucide-react'
+import { openUpgrade } from '@/app/upgrade.js'
+import PlanButton from '@/features/candidate/billing/components/PlanButton.jsx'
 import { Avatar, Checkbox, Icon, IconButton } from '@/components/ui'
 import PillBadge from '@/components/common/PillBadge.jsx'
 import { usePreferences } from '@/lib/preferences.js'
@@ -13,7 +16,8 @@ import styles from './CandidateCard.module.css'
  * One Find candidates or Shortlists result (A: recruiter B2): photo, listed facts, availability, verification,
  * right to work in the picker country, languages, match evidence and actions. `extra` adds a line (shortlist date).
  */
-export default function CandidateCard({ candidate, hasJob, jobId, onToggleShortlist, compared, compareDisabled, onToggleCompare, extra }) {
+export default function CandidateCard({ candidate, hasJob, jobId, locked, onToggleShortlist, compared, compareDisabled, onToggleCompare, extra }) {
+  const dispatch = useDispatch()
   const { t } = useTranslation()
   const { country } = usePreferences()
   const text = useCandidateText()
@@ -26,13 +30,15 @@ export default function CandidateCard({ candidate, hasJob, jobId, onToggleShortl
         <Link to={profilePath} tabIndex={-1} aria-hidden="true">
           <Avatar name={candidate.fullName} src={candidate.photoUrl ?? undefined} size={48} />
         </Link>
+        {/* §3.22: without Recruiter Plus the shortlist button keeps its label and opens the upgrade dialog. */}
         <IconButton
-          icon={Bookmark}
+          icon={locked ? Lock : Bookmark}
           iconSize={17}
           label={t(candidate.shortlisted ? 'discovery:card.unshortlist' : 'discovery:card.shortlist', { name: candidate.fullName })}
           aria-pressed={candidate.shortlisted}
           className={cx(styles.bookmark, candidate.shortlisted && styles.bookmarkActive)}
-          onClick={onToggleShortlist}
+          onClick={locked ? () => dispatch(openUpgrade('discovery')) : onToggleShortlist}
+          data-plan-locked={locked ? 'discovery' : undefined}
         />
       </div>
 
@@ -78,6 +84,11 @@ export default function CandidateCard({ candidate, hasJob, jobId, onToggleShortl
       </div>
 
       <div className={styles.footer}>
+        {locked ? (
+          <PlanButton variant="ghost" size="sm" entitlement="discovery" roles={['recruiter']} aria-label={t('discovery:compare.toggle', { name: candidate.fullName })}>
+            {t('discovery:compare.label')}
+          </PlanButton>
+        ) : (
         <Checkbox
           className={styles.compare}
           checked={compared}
@@ -87,6 +98,7 @@ export default function CandidateCard({ candidate, hasJob, jobId, onToggleShortl
         >
           {t('discovery:compare.label')}
         </Checkbox>
+        )}
         <Link to={profilePath} className={styles.view}>
           {t('discovery:card.view')}
           <Icon as={ArrowUpRight} size={12} strokeWidth={2} />
