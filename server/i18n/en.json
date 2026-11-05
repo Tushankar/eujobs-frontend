@@ -290,7 +290,7 @@
       "heading": "Renewal payment failed",
       "body": [
         "Hi {{name}},",
-        "The {{amount}} Plus renewal of {{payer}} failed ({{reference}}). Stripe will try again over the next days."
+        "The {{amount}} {{plan}} renewal of {{payer}} failed ({{reference}}). Stripe will try again over the next days."
       ],
       "action": "Open the payment"
     },
@@ -302,6 +302,19 @@
         "{{admin}} accepted the invitation and set a password. They can now sign in to the admin workspace."
       ],
       "action": "Open their access"
+    },
+    "recruiter_plan_ended": {
+      "subject": "Your {{plan}} plan has ended",
+      "heading": "Plan ended",
+      "body": [
+        "Hi {{name}},",
+        "Your {{plan}} plan has ended. Find candidates, starting conversations, CV requests, the AI tools and more than 1 active job are locked again.",
+        "{{paused}}",
+        "Your applications, conversations, notes and shortlist are kept."
+      ],
+      "action": "Open jobs",
+      "paused_one": "{{job}} stays live; 1 other job was paused. Subscribe again to republish it.",
+      "paused_other": "{{job}} stays live; {{count}} other jobs were paused. Subscribe again to republish them."
     }
   },
   "verification": {
@@ -388,7 +401,8 @@
     },
     "plan": {
       "free": "Free",
-      "plus": "Plus"
+      "plus": "Plus",
+      "recruiter_plus": "Recruiter Plus"
     },
     "rtwRegion": {
       "eu": "EU",
@@ -494,6 +508,7 @@
       "Status",
       "Company",
       "Country",
+      "Plan",
       "Courses enrolled",
       "Certificates"
     ],
@@ -659,7 +674,8 @@
       "outreach": "Outreach drafts reviewed",
       "pendingReviews": "Pending user reviews",
       "shortlistConversion": "Shortlist conversion",
-      "recruiterAccounts": "Recruiter accounts"
+      "recruiterAccounts": "Recruiter accounts",
+      "activeSubscribers": "Active subscribers"
     },
     "csv": {
       "executiveSummary": "Executive summary",

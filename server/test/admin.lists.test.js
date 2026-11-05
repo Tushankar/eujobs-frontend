@@ -166,12 +166,18 @@ describe('admin Payments (M-122, M-123, P10-Q5 … Q7)', () => {
     const stats = (await get(admin, '/admin/payments/stats')).body
     assert.deepEqual(stats, {
       collected: [{ currency: 'GBP', amountMinor: 900 + 4900 + 1900 }, { currency: 'EUR', amountMinor: 2200 }],
-      activeSubscribers: 2,
-      mrr: [{ currency: 'EUR', amountMinor: 1000 }, { currency: 'GBP', amountMinor: 900 }],
-      failedRenewals: 1,
+      // P11c-Q8: the plan cards by role (these subscriptions are candidate Plus).
+      activeSubscribers: { total: 2, candidate: 2, recruiter: 0 },
+      mrr: { candidate: [{ currency: 'EUR', amountMinor: 1000 }, { currency: 'GBP', amountMinor: 900 }], recruiter: [] },
+      failedRenewals: { total: 1, candidate: 1, recruiter: 0 },
     })
     const germany = (await get(admin, '/admin/payments/stats?country=DE')).body
-    assert.deepEqual(germany, { collected: [{ currency: 'EUR', amountMinor: 2200 }], activeSubscribers: 1, mrr: [{ currency: 'EUR', amountMinor: 1000 }], failedRenewals: 0 })
+    assert.deepEqual(germany, {
+      collected: [{ currency: 'EUR', amountMinor: 2200 }],
+      activeSubscribers: { total: 1, candidate: 1, recruiter: 0 },
+      mrr: { candidate: [{ currency: 'EUR', amountMinor: 1000 }], recruiter: [] },
+      failedRenewals: { total: 0, candidate: 0, recruiter: 0 },
+    })
   })
 
   it('shows the subscription status and period in a plan payment’s details, and exports', async () => {

@@ -9,9 +9,10 @@ import { CANDIDATES } from './data/candidates.js'
 import { COURSE_PAYMENTS, HISTORICAL_PLUS_DAYS_AGO } from './data/payments.js'
 
 /*
- * Payments of seed:demo (OD8, OQ-4.2, P5-Q4): `source: seed` rows without receipt links, and Emma's real Stripe
- * test subscription (pm_card_visa) in her header country's currency, tagged seed and db. Her first invoice and her
- * subscription are written by the webhook handlers themselves, so a later webhook for them adds nothing.
+ * Payments of seed:demo (OD8, OQ-4.2, P5-Q4, P11c-Q11): `source: seed` rows without receipt links, Emma's real Stripe
+ * test Plus subscription (pm_card_visa) in her header country's currency and Sarah's Recruiter Plus in her company
+ * country's (GBP), tagged seed and db. Each first invoice and subscription is written by the webhook handlers
+ * themselves, so a later webhook for them adds nothing.
  */
 const DAY_MS = 24 * 60 * 60 * 1000
 const card = (method) => ({ type: 'card', ...method })
@@ -55,22 +56,29 @@ export async function seedPayments({ emailOf, now }) {
   }
 
   const emma = users.get(emailOf({ tag: 'emma' }))
-  const metadata = { db: config.dbName, userId: String(emma._id), seed: 'true' }
+  await subscribe(emma, 'plus', plusPrice(emma).stripePriceId)
+  const recruiterPlus = await Plan.findOne({ key: 'recruiter_plus' })
+  await subscribe(users.get(emailOf({ tag: 'sarah' })), 'recruiter_plus', recruiterPlus.prices.find((price) => price.currency === 'GBP').stripePriceId)
+}
+
+/** A real Stripe test subscription (pm_card_visa) whose first invoice and state the webhook handlers record. */
+async function subscribe(user, planKey, priceId) {
+  const metadata = { db: config.dbName, userId: String(user._id), seed: 'true' }
   const customer = await stripe().customers.create({
-    email: emma.email,
-    name: emma.fullName,
-    preferred_locales: [emma.language],
+    email: user.email,
+    name: user.fullName,
+    preferred_locales: [user.language],
     metadata,
     payment_method: 'pm_card_visa',
     invoice_settings: { default_payment_method: 'pm_card_visa' },
   })
-  await User.updateOne({ _id: emma._id }, { stripeCustomerId: customer.id })
+  await User.updateOne({ _id: user._id }, { stripeCustomerId: customer.id })
   const subscription = await stripe().subscriptions.create({
     customer: customer.id,
-    items: [{ price: plusPrice(emma).stripePriceId }],
-    metadata: { kind: 'subscription', itemId: 'plus', ...metadata },
+    items: [{ price: priceId }],
+    metadata: { kind: 'subscription', itemId: planKey, ...metadata },
   })
   await WEBHOOK_HANDLERS['invoice.paid']({ id: subscription.latest_invoice })
   await Payment.updateOne({ 'stripe.invoiceId': subscription.latest_invoice }, { source: 'seed' })
-  await Subscription.updateOne({ userId: emma._id }, { source: 'seed' })
+  await Subscription.updateOne({ userId: user._id }, { source: 'seed' })
 }

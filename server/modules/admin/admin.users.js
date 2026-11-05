@@ -96,8 +96,14 @@ async function candidateRows() {
 async function recruiterRows() {
   const users = await User.find({ role: 'recruiter' }).sort({ createdAt: -1 })
   const ids = users.map((user) => user._id)
-  const [companies, learning] = await Promise.all([Company.find({ ownerUserId: { $in: ids } }, 'ownerUserId displayName location'), learningCounts(ids)])
+  const [companies, learning, subscriptions] = await Promise.all([
+    Company.find({ ownerUserId: { $in: ids } }, 'ownerUserId displayName location'),
+    learningCounts(ids),
+    Subscription.find({ userId: { $in: ids } }),
+  ])
   const companyOf = new Map(companies.map((company) => [String(company.ownerUserId), company]))
+  // P11c-Q17: the Plan column and filter, as on Candidates (M-123).
+  const paid = new Set(subscriptions.filter(isPaid).map((subscription) => String(subscription.userId)))
   return users.map((user) => {
     const company = companyOf.get(String(user._id))
     return {
@@ -109,6 +115,7 @@ async function recruiterRows() {
       joinedAt: user.createdAt,
       company: company ? { id: String(company._id), displayName: company.displayName } : null,
       country: company?.location?.countryCode ?? null,
+      plan: paid.has(String(user._id)) ? 'recruiter_plus' : 'free',
       learning: learning(user._id),
     }
   })
@@ -174,6 +181,7 @@ export function exportRows(role, rows, language) {
       label(`recruiterState.${row.state}`),
       row.company?.displayName ?? '',
       row.country ?? '',
+      label(`plan.${row.plan}`),
       row.learning.enrolled,
       row.learning.certificates,
     ]),
@@ -289,6 +297,7 @@ async function candidateDetail(admin, user) {
 
 async function recruiterDetail(admin, user) {
   const record = await accountRecord(admin, user)
+  const subscription = await subscriptionDto(user._id)
   const companyId = user.companyId
   const [jobs, applications] = companyId
     ? await Promise.all([
@@ -304,6 +313,8 @@ async function recruiterDetail(admin, user) {
     company: record.company,
     documents: record.documents,
     reviewHistory: record.history,
+    // P11c-Q8: Recruiter Plus or Free, with the subscription (as on the candidate page).
+    plan: { plan: subscription?.paid ? subscription.planKey : 'free', subscription },
     jobs: Object.fromEntries(['published', 'paused', 'draft', 'closed'].map((status) => [status, jobs.find((row) => row._id === status)?.count ?? 0])),
     applications: { total: total(applications), withdrawn: applications.find((row) => row._id === 'withdrawn')?.count ?? 0 },
     learning: await learningOf(user._id),

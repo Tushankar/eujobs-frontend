@@ -290,7 +290,7 @@
       "heading": "Échec du paiement de renouvellement",
       "body": [
         "Bonjour {{name}},",
-        "Le renouvellement Plus de {{payer}} d’un montant de {{amount}} a échoué ({{reference}}). Stripe va réessayer dans les prochains jours."
+        "Le renouvellement {{plan}} de {{payer}} d’un montant de {{amount}} a échoué ({{reference}}). Stripe va réessayer dans les prochains jours."
       ],
       "action": "Ouvrir le paiement"
     },
@@ -302,6 +302,19 @@
         "{{admin}} a accepté l’invitation et créé un mot de passe. Cette personne peut maintenant se connecter à l’espace d’administration."
       ],
       "action": "Ouvrir ses accès"
+    },
+    "recruiter_plan_ended": {
+      "subject": "Votre offre {{plan}} est terminée",
+      "heading": "Offre terminée",
+      "body": [
+        "Bonjour {{name}},",
+        "Votre offre {{plan}} est terminée. La recherche de candidats, les nouvelles conversations, les demandes de CV, les outils d’IA et plus d’1 offre d’emploi active sont de nouveau verrouillés.",
+        "{{paused}}",
+        "Vos candidatures, conversations, notes et votre short-list sont conservées."
+      ],
+      "action": "Ouvrir les offres",
+      "paused_one": "{{job}} reste en ligne ; 1 autre offre d’emploi a été mise en pause. Abonnez-vous de nouveau pour la republier.",
+      "paused_other": "{{job}} reste en ligne ; {{count}} autres offres d’emploi ont été mises en pause. Abonnez-vous de nouveau pour les republier."
     }
   },
   "verification": {
@@ -388,7 +401,8 @@
     },
     "plan": {
       "free": "Free",
-      "plus": "Plus"
+      "plus": "Plus",
+      "recruiter_plus": "Recruiter Plus"
     },
     "rtwRegion": {
       "eu": "UE",
@@ -494,6 +508,7 @@
       "Statut",
       "Entreprise",
       "Pays",
+      "Formule",
       "Cours suivis",
       "Certificats"
     ],
@@ -659,7 +674,8 @@
       "outreach": "Brouillons de prise de contact relus",
       "pendingReviews": "Examens d’utilisateurs en attente",
       "shortlistConversion": "Conversion en short-list",
-      "recruiterAccounts": "Comptes recruteur"
+      "recruiterAccounts": "Comptes recruteur",
+      "activeSubscribers": "Abonnés actifs"
     },
     "csv": {
       "executiveSummary": "Synthèse",

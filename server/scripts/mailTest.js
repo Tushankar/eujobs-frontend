@@ -6,15 +6,16 @@ import { demoAddress } from '../seed/demo.js'
 import { mailSample } from './mailSamples.js'
 
 /*
- * npm run mail:test <type> <to> (development only, §2.13): sends one live email for the owner to
- * confirm. <to> may be "+tag", the plus-alias of SEED_ADMIN_EMAIL; the address is never printed.
+ * npm run mail:test <type> <to> [language] [role] (development only, §2.13): sends one live email for the owner to
+ * confirm. <to> may be "+tag", the plus-alias of SEED_ADMIN_EMAIL; the address is never printed. role = recruiter
+ * sends the Recruiter Plus version of the plan emails (§3.22).
  */
 
-const [type, target, language = 'en'] = process.argv.slice(2)
+const [type, target, language = 'en', role = 'candidate'] = process.argv.slice(2)
 if (config.isTest) throw new Error('mail:test runs in development only')
-const params = type && mailSample(type, language, config.clientOrigin)
+const params = type && mailSample(type, language, config.clientOrigin, role)
 if (!params || !target) {
-  throw new Error(`Usage: npm run mail:test <${ENUMS.emailType.filter((name) => mailSample(name, 'en', '')).join('|')}> <+tag|address> [en|es|fr]`)
+  throw new Error(`Usage: npm run mail:test <${ENUMS.emailType.filter((name) => mailSample(name, 'en', '')).join('|')}> <+tag|address> [en|es|fr] [candidate|recruiter]`)
 }
 
 const to = target.startsWith('+') ? demoAddress(target.slice(1)) : target

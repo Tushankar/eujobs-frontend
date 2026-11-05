@@ -15,7 +15,7 @@ import { PROMPTS } from './ai.prompts.js'
 /*
  * Translate on demand (M-144, M-088, M-113): the selected user texts, into the reader's language, cached per text and
  * language (the text itself is the key, so an edit makes a new entry). Skills and names are never translated.
- * Candidates need Plus (the route checks the `ai` entitlement); approved recruiters translate for free (M-117).
+ * Candidates need Plus and recruiters Recruiter Plus (the route checks the `ai` entitlement, §3.22).
  * Each entity checks that the reader may see it, as the screen that shows it does.
  */
 const SOURCES = {

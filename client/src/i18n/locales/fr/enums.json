@@ -102,8 +102,8 @@
     "cv_updated": "CV mis à jour",
     "cv_download": "CV téléchargé"
   },
-  "planKey": { "free": "Gratuit", "plus": "Plus" },
-  "entitlement": { "apply": "Postuler aux offres", "message_send": "Messagerie", "job_alerts": "Alertes emploi", "ai": "Fonctions d’IA" },
+  "planKey": { "free": "Gratuit", "plus": "Plus", "recruiter_plus": "Recruiter Plus" },
+  "entitlement": { "apply": "Postuler aux offres", "message_send": "Messagerie", "job_alerts": "Alertes emploi", "ai": "Fonctions d’IA", "jobs_unlimited": "Plus d’1 offre d’emploi active", "discovery": "Trouver des candidats", "outreach": "Démarrer des conversations et demander des CV" },
   "paymentKind": { "course": "Formation", "subscription": "Abonnement" },
   "paymentStatus": { "paid": "Payé", "failed": "Échoué", "refunded": "Remboursé" },
   "paymentSource": { "stripe": "Stripe", "seed": "Données d’exemple" },
@@ -167,6 +167,7 @@
     "certificate_issued": "Certificat délivré",
     "renewal_failed": "Échec du renouvellement",
     "plan_ended": "Fin du plan",
+    "recruiter_plan_ended": "Fin du plan recruteur",
     "alert_instant": "Alerte emploi immédiate",
     "alert_daily": "Alerte emploi quotidienne",
     "alert_weekly": "Alerte emploi hebdomadaire",

@@ -10,7 +10,7 @@ import { Job } from '../jobs/jobs.model.js'
 import { Certificate, Enrollment } from '../learning/learning.model.js'
 import { MatchResult } from '../matching/matching.model.js'
 import { Conversation } from '../messages/messages.model.js'
-import { filteredPayments } from '../payments/payments.admin.js'
+import { filteredPayments, paymentStats } from '../payments/payments.admin.js'
 import { User } from '../users/users.model.js'
 import { VerificationSubmission } from '../verification/verification.model.js'
 import { AuditEvent } from './admin.model.js'
@@ -86,7 +86,7 @@ const outreachFilter = (scope) => ({ startedBy: 'recruiter', ...(scope.companyId
 export async function overview({ country }) {
   const scope = await scopeOf(country)
   const [candidates, recruiters] = await Promise.all([filteredUsers({ role: 'candidate', country }), filteredUsers({ role: 'recruiter', country })])
-  const [published, applications, enrollments, badges, roleMatch, companies, purchases, checks, shortlists, outreach, skills, recent] = await Promise.all([
+  const [published, applications, enrollments, badges, roleMatch, companies, purchases, checks, shortlists, outreach, skills, recent, payments] = await Promise.all([
     Job.countDocuments({ status: 'published', ...scope.job }),
     Application.countDocuments({ ...NOT_WITHDRAWN, ...scope.application }),
     Enrollment.countDocuments(scope.user),
@@ -99,6 +99,7 @@ export async function overview({ country }) {
     Conversation.countDocuments(outreachFilter(scope)),
     demandedSkills({ status: 'published', ...scope.job }),
     AuditEvent.find().sort({ at: -1, _id: -1 }).limit(RECENT_EVENTS),
+    paymentStats({ country }),
   ])
   const active = (rows) => rows.filter((row) => row.status === 'active').length
   return {
@@ -119,6 +120,8 @@ export async function overview({ country }) {
       shortlists,
       outreach,
       pendingReviews: recruiters.filter((row) => row.status === 'pending_review').length,
+      // P11c-Q20: the Payments card's count, split by role.
+      activeSubscribers: payments.activeSubscribers,
     },
     skills,
     recent: recent.map(eventDto),
@@ -127,7 +130,8 @@ export async function overview({ country }) {
 
 /** The Overview's "Export report" (OQ-6d): every KPI and health counter, all time, in the admin's language. */
 export function overviewExportRows({ kpis, health }, language) {
-  const value = (key, number) => (key === 'averageRoleMatch' ? (number.value === null ? '' : `${number.value}%`) : number)
+  const value = (key, number) =>
+    key === 'averageRoleMatch' ? (number.value === null ? '' : `${number.value}%`) : key === 'activeSubscribers' ? number.total : number
   return [t(language, 'csv.overview'), ...Object.entries({ ...kpis, ...health }).map(([key, number]) => [t(language, `reports.metrics.${key}`), value(key, number)])]
 }
 

@@ -4,8 +4,11 @@ import { interpolate, t } from '../lib/i18n.js'
  * Sample parameters for every email type (npm run mail:test, and the P11-04 browser check that renders each email
  * in Spanish and French). `origin` is the client origin the links point to. Values a server task translates (the
  * check, the CV-request reason, statuses and counts) come in the recipient's language, as the tasks send them.
+ * `role` = recruiter gives the plan emails their Recruiter Plus version (§3.22).
  */
-export function mailSample(type, language, origin) {
+export function mailSample(type, language, origin, role = 'candidate') {
+  const recruiter = role === 'recruiter'
+  const money = (currency, amount) => new Intl.NumberFormat(language, { style: 'currency', currency }).format(amount)
   const SAMPLE_PARAMS = {
     verify_email: { link: `${origin}/verify-email?token=mail-test` },
     already_registered: { link: `${origin}/sign-in`, secondaryLink: `${origin}/forgot-password` },
@@ -28,7 +31,9 @@ export function mailSample(type, language, origin) {
       link: `${origin}/recruiter/jobs`,
     },
     cv_request: { company: 'Mail Test Ltd', details: 'We would like to see the CV you used for your 2023 role.', link: `${origin}/candidate/cv-versions` },
-    renewal_failed: { plan: 'Plus', amount: '£9', link: `${origin}/candidate/settings/billing` },
+    renewal_failed: recruiter
+      ? { plan: 'Recruiter Plus', amount: money('EUR', 57), link: `${origin}/recruiter/settings/billing` }
+      : { plan: 'Plus', amount: '£9', link: `${origin}/candidate/settings/billing` },
     certificate_issued: {
       course: 'Interaction design foundations',
       code: 'LWM-7K3P-Q9XD',
@@ -36,6 +41,11 @@ export function mailSample(type, language, origin) {
       secondaryLink: `${origin}/certificates/LWM-7K3P-Q9XD`,
     },
     plan_ended: { plan: 'Plus', link: `${origin}/candidate/settings/billing` },
+    recruiter_plan_ended: {
+      plan: 'Recruiter Plus',
+      paused: interpolate(t(language, 'email.recruiter_plan_ended.paused_other'), { job: 'Senior Product Designer', count: 2 }),
+      link: `${origin}/recruiter/jobs`,
+    },
     application_status: { job: 'Senior Product Designer', company: 'Mail Test Ltd', link: `${origin}/candidate/applications` },
     application_rejected: { job: 'Senior Product Designer', company: 'Mail Test Ltd', link: `${origin}/candidate/jobs` },
     new_applications: { job: 'Senior Product Designer', link: `${origin}/recruiter/applications` },
@@ -66,8 +76,9 @@ export function mailSample(type, language, origin) {
     },
     admin_renewal_failed: {
       payer: 'Mail Tester',
+      plan: recruiter ? 'Recruiter Plus' : 'Plus',
       reference: 'LWM-000099',
-      amount: new Intl.NumberFormat(language, { style: 'currency', currency: 'GBP' }).format(9),
+      amount: recruiter ? money('EUR', 57) : money('GBP', 9),
       link: `${origin}/admin/payments`,
     },
     admin_joined: { admin: 'Mail Tester', link: `${origin}/admin/access-management` },

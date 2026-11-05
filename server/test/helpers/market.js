@@ -11,7 +11,8 @@ import { createUser } from './index.js'
 
 /* Factories for the jobs and discovery tests: an approved recruiter with a company, and a listable candidate. */
 
-export async function approvedRecruiter({ city = 'london', ...fields } = {}) {
+/** An approved recruiter with a company; on Recruiter Plus unless `plus: false` (§3.22: Free tests opt out). */
+export async function approvedRecruiter({ city = 'london', plus = true, ...fields } = {}) {
   const user = await createUser({ role: 'recruiter', status: 'active', jobTitle: 'Talent lead', ...fields })
   const company = await Company.create({
     ownerUserId: user._id,
@@ -26,6 +27,7 @@ export async function approvedRecruiter({ city = 'london', ...fields } = {}) {
   await user.save()
   // Approval creates the default stages (§3.12); the factory skips the review, so it creates them too.
   await createDefaultStages(company, user.language)
+  if (plus) await Subscription.create({ userId: user._id, planKey: 'recruiter_plus', status: 'active' })
   return { user, company }
 }
 

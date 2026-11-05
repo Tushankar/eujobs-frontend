@@ -6,7 +6,7 @@ import { CandidateProfile } from '../candidates/candidates.model.js'
 import { Company } from '../companies/companies.model.js'
 import { User } from '../users/users.model.js'
 import { Payment, Subscription } from './payments.model.js'
-import { isPaid, paymentDto } from './payments.service.js'
+import { isPaid, PAID_PLAN, paymentDto } from './payments.service.js'
 import { searchText } from '../../lib/skills.js'
 
 /*
@@ -86,9 +86,15 @@ function perCurrency(entries) {
   return [...totals].map(([currency, amountMinor]) => ({ currency, amountMinor })).sort((a, b) => b.amountMinor - a.amountMinor)
 }
 
+const ROLES = Object.keys(PAID_PLAN)
+const roleOfPlan = Object.fromEntries(Object.entries(PAID_PLAN).map(([role, plan]) => [plan, role]))
+/** `{ total, candidate, recruiter }` counts of `items` by `roleOf` (P11c-Q8). */
+const countByRole = (items, roleOf) => ({ total: items.length, ...Object.fromEntries(ROLES.map((role) => [role, items.filter((item) => roleOf(item) === role).length])) })
+
 /**
  * P10-Q7: all-time cards that follow only the country filter. Collected = paid rows (refunds excluded); Active
  * subscribers = paid subscriptions (U38); MRR = their monthly amounts per currency; Failed renewals = failed rows.
+ * P11c-Q8: the plan cards are split by role (Plus = candidates, Recruiter Plus = recruiters).
  */
 export async function paymentStats({ country }) {
   const rows = await rowsFor({}, country)
@@ -97,9 +103,17 @@ export async function paymentStats({ country }) {
   const active = country ? subscriptions.filter((subscription) => countries.get(String(subscription.userId)) === country) : subscriptions
   return {
     collected: perCurrency(rows.filter((row) => row.status === 'paid')),
-    activeSubscribers: active.length,
-    mrr: perCurrency(active.map((subscription) => ({ currency: subscription.currency, amountMinor: subscription.amountMinor }))),
-    failedRenewals: rows.filter((row) => row.status === 'failed' && row.kind === 'subscription').length,
+    activeSubscribers: countByRole(active, (subscription) => roleOfPlan[subscription.planKey]),
+    mrr: Object.fromEntries(
+      ROLES.map((role) => [
+        role,
+        perCurrency(active.filter((subscription) => roleOfPlan[subscription.planKey] === role).map(({ currency, amountMinor }) => ({ currency, amountMinor }))),
+      ]),
+    ),
+    failedRenewals: countByRole(
+      rows.filter((row) => row.status === 'failed' && row.kind === 'subscription'),
+      (row) => row.payerRole,
+    ),
   }
 }
 
