@@ -179,7 +179,8 @@
     "languages": "Langues",
     "languageLevel": "{{language}} · {{level}} ou plus",
     "eligible": "Pays éligibles : {{countries}}",
-    "visa": "Parrainage de visa possible"
+    "visa": "Parrainage de visa possible",
+    "eligibility": "Éligibilité"
   },
   "details": {
     "back": "Retour aux offres",

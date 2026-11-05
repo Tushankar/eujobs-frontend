@@ -152,6 +152,10 @@
     flex-basis: calc(100% - 88px);
   }
 
+  .title {
+    white-space: normal;
+  }
+
   .payment {
     justify-items: start;
     margin-left: 88px;

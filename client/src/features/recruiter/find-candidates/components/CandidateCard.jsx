@@ -80,7 +80,7 @@ export default function CandidateCard({ candidate, hasJob, jobId, locked, onTogg
       {extra && <p className={styles.facts}>{extra}</p>}
 
       <div className={styles.insights}>
-        <MatchInsights candidate={candidate} jobId={hasJob ? jobId : null} />
+        <MatchInsights candidate={candidate} jobId={hasJob ? jobId : null} panel />
       </div>
 
       <div className={styles.footer}>

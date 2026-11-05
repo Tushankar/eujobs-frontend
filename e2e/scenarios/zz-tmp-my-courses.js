@@ -13,10 +13,13 @@ const text = (page, selector) => page.$eval(selector, (element) => element.inner
 async function buy(ctx, page, base, course) {
   await page.goto(`${ctx.webUrl}${base}/${course.id}`, { waitUntil: 'networkidle0' })
   await page.click('[data-course-action="buy"]')
+  await page.waitForSelector('[data-checkout-summary]', { visible: true })
+  await new Promise((resolve) => setTimeout(resolve, 400)) // the dialog's entrance
   await clickText(page, 'Continue to secure payment', '[role="dialog"] button')
   await checkoutPage(page, course.title)
   await payOnCheckout(page)
   await page.waitForFunction((path) => location.pathname === path, { timeout: 90_000 }, `${base}/${course.id}`)
+  await page.waitForSelector('main [data-course-price]', { visible: true })
 }
 
 export default {
@@ -37,7 +40,9 @@ export default {
     const { page } = own
     await openAs(ctx, own, candidate.email, '/candidate/learning')
     await buy(ctx, page, '/candidate/learning', paid)
+    await page.waitForSelector('main [data-course-price]', { visible: true })
     ctx.check((await text(page, 'main [data-course-price]')) === 'Purchased', 'the details page says Purchased instead of the price')
+    await ctx.screenshot(page, '0-details-purchased')
     await page.goto(`${ctx.webUrl}/candidate/learning`, { waitUntil: 'networkidle0' })
     await page.waitForSelector(`[data-my-courses] [data-my-course="${paid.id}"]`, { visible: true })
     const bought = await text(page, `[data-my-course="${paid.id}"]`)

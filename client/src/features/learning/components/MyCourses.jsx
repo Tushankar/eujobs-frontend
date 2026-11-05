@@ -60,7 +60,7 @@ export default function MyCourses({ items, loading, showPayment = false }) {
                 <span>{item.course.category}</span>
                 <span aria-hidden="true">·</span>
                 <span data-my-course-source={item.source}>
-                  {t(item.source === 'purchase' ? 'myCourses.purchasedOn' : 'myCourses.enrolledOn', { date: format.date(item.payment?.paidAt ?? item.enrolledAt) })}
+                  {t(item.source === 'purchase' || item.payment ? 'myCourses.purchasedOn' : 'myCourses.enrolledOn', { date: format.date(item.payment?.paidAt ?? item.enrolledAt) })}
                 </span>
               </p>
               <div className={styles.progress}>

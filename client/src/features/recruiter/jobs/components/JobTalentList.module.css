@@ -1,8 +1,11 @@
 .heading {
+  margin-top: 32px;
   padding-top: 28px;
-  font-size: 14px;
-  font-weight: 600;
-  line-height: 20px;
+  border-top: 1px solid var(--border);
+  font-family: var(--font-display);
+  font-size: 16px;
+  font-weight: 700;
+  line-height: 24px;
   color: var(--foreground);
 }
 
@@ -13,11 +16,21 @@
   padding-top: 16px;
 }
 
-.empty {
-  padding-top: 12px;
-  font-size: 12px;
+.empty,
+.locked {
+  margin-top: 14px;
+  padding: 16px 18px;
+  border: 1px solid var(--border);
+  border-radius: var(--radius-xl);
+  font-size: 13px;
   line-height: 20px;
   color: var(--muted-foreground);
+}
+
+.locked .empty {
+  margin: 0;
+  padding: 0;
+  border: 0;
 }
 
 .row {
@@ -54,22 +67,22 @@
 }
 
 .name {
-  font-size: 12px;
+  font-size: 14px;
   font-weight: 600;
-  line-height: 16px;
+  line-height: 20px;
   color: var(--foreground);
 }
 
 .headline {
-  padding-top: 4px;
-  font-size: 10px;
-  line-height: 15px;
+  padding-top: 2px;
+  font-size: 12px;
+  line-height: 18px;
   color: var(--muted-foreground);
 }
 
 .arrow {
   flex-shrink: 0;
-  color: var(--primary);
+  color: var(--muted-foreground);
 }
 
 /* P11c-Q15: the talent prompt without Recruiter Plus. */

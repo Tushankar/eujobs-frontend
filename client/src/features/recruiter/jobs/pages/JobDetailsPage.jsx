@@ -75,7 +75,7 @@ export default function JobDetailsPage() {
           <JobTalentList jobId={jobId} />
         </section>
 
-        <div className={styles.aside}>
+        <div className={`${styles.aside} sticky-side`}>
           <section className={styles.activity} aria-labelledby="activity-title">
             <h2 className={styles.cardTitle} id="activity-title">
               {t('jobs:details.activity')}
@@ -91,7 +91,7 @@ export default function JobDetailsPage() {
             </div>
           </section>
 
-          <aside className={`${styles.tip} sticky-side`}>
+          <aside className={styles.tip}>
             <Icon as={Lightbulb} size={16} />
             <p>{t('jobs:details.tip')}</p>
           </aside>

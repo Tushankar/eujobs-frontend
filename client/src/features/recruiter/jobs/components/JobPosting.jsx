@@ -1,7 +1,8 @@
 import { useTranslation } from 'react-i18next'
 import { useJobText } from '@/lib/jobText.js'
 import { useFormat } from '@/lib/preferences.js'
-import { Skeleton, SkeletonRegion } from '@/components/ui'
+import { Check } from 'lucide-react'
+import { Icon, Skeleton, SkeletonRegion } from '@/components/ui'
 import styles from './JobPosting.module.css'
 
 function SkillGroup({ title, skills }) {
@@ -48,10 +49,23 @@ export default function JobPosting({ job }) {
           .map((language) => t('jobs:posting.languageLevel', { language: format.languageName(language.code), level: t(`enums:languageLevel.${language.minLevel}`) }))}
       />
       {(eligible || job.visaSponsorship) && (
-        <ul className={styles.skills}>
-          {eligible && <li className={styles.skill}>{t('jobs:posting.eligible', { countries: eligible })}</li>}
-          {job.visaSponsorship && <li className={styles.skill}>{t('jobs:posting.visa')}</li>}
-        </ul>
+        <>
+          <h3 className={styles.heading}>{t('jobs:posting.eligibility')}</h3>
+          <ul className={styles.facts}>
+            {eligible && (
+              <li>
+                <Icon as={Check} size={16} className={styles.check} />
+                {t('jobs:posting.eligible', { countries: eligible })}
+              </li>
+            )}
+            {job.visaSponsorship && (
+              <li>
+                <Icon as={Check} size={16} className={styles.check} />
+                {t('jobs:posting.visa')}
+              </li>
+            )}
+          </ul>
+        </>
       )}
     </>
   )
@@ -78,17 +92,17 @@ export function JobPostingSkeleton() {
         <Skeleton width={110} height={12} />
       </p>
       <div className={styles.skills}>
-        <Skeleton shape="block" width={64} height={23} className={styles.skeletonSkill} />
-        <Skeleton shape="block" width={80} height={23} className={styles.skeletonSkill} />
-        <Skeleton shape="block" width={96} height={23} className={styles.skeletonSkill} />
-        <Skeleton shape="block" width={52} height={23} className={styles.skeletonSkill} />
+        <Skeleton shape="block" width={64} height={32} className={styles.skeletonSkill} />
+        <Skeleton shape="block" width={80} height={32} className={styles.skeletonSkill} />
+        <Skeleton shape="block" width={96} height={32} className={styles.skeletonSkill} />
+        <Skeleton shape="block" width={52} height={32} className={styles.skeletonSkill} />
       </div>
       <p className={styles.heading}>
         <Skeleton width={120} height={12} />
       </p>
       <div className={styles.skills}>
-        <Skeleton shape="block" width={80} height={23} className={styles.skeletonSkill} />
-        <Skeleton shape="block" width={96} height={23} className={styles.skeletonSkill} />
+        <Skeleton shape="block" width={80} height={32} className={styles.skeletonSkill} />
+        <Skeleton shape="block" width={96} height={32} className={styles.skeletonSkill} />
       </div>
     </SkeletonRegion>
   )

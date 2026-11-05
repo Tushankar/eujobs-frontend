@@ -135,3 +135,96 @@
   line-height: 20px;
   color: var(--foreground);
 }
+
+/* Card version: one clickable row that opens the side panel, so the card grid keeps an even height. */
+.opener {
+  width: 100%;
+  text-align: left;
+  cursor: pointer;
+  transition:
+    border-color var(--transition),
+    background-color var(--transition);
+}
+
+.opener:hover {
+  border-color: var(--border-strong);
+  background: var(--muted);
+}
+
+.opener .summary {
+  display: block;
+}
+
+/* Side panel: the same evidence at reading size, each block divided by a hairline. */
+.panelSummary {
+  padding-bottom: 20px;
+  border-bottom: 1px solid var(--border);
+  font-size: 13px;
+  line-height: 20px;
+  color: var(--muted-foreground);
+}
+
+.panel .details {
+  margin-top: 0;
+  padding-top: 20px;
+  border-top: 0;
+}
+
+.panel .label {
+  font-size: 14px;
+  line-height: 20px;
+}
+
+.panel .chips {
+  padding-top: 12px;
+}
+
+.panel .chip {
+  padding: 5px 12px;
+  border-color: var(--border-strong);
+  font-size: 13px;
+  line-height: 20px;
+}
+
+.panel .experience,
+.panel .narrativeText,
+.panel .narrativeList {
+  font-size: 14px;
+  line-height: 22px;
+}
+
+.panel .experience {
+  padding-top: 20px;
+}
+
+.panel .gap {
+  margin-top: 20px;
+  padding: 14px 16px;
+  font-size: 13px;
+  line-height: 20px;
+}
+
+.panel .gapTitle {
+  color: var(--foreground);
+}
+
+.panel .narrative {
+  gap: 8px;
+  margin-top: 20px;
+  padding-top: 20px;
+  border-top: 1px solid var(--border);
+}
+
+.panel .narrativeList {
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
+}
+
+.panel .disclaimer {
+  margin-top: 20px;
+  padding-top: 16px;
+  border-top: 1px solid var(--border);
+  font-size: 12px;
+  line-height: 18px;
+}

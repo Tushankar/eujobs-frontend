@@ -179,7 +179,8 @@
     "languages": "Idiomas",
     "languageLevel": "{{language}} · {{level}} o superior",
     "eligible": "Países admitidos: {{countries}}",
-    "visa": "Patrocinio de visado disponible"
+    "visa": "Patrocinio de visado disponible",
+    "eligibility": "Requisitos de elegibilidad"
   },
   "details": {
     "back": "Volver a ofertas",

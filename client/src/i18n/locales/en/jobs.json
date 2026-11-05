@@ -178,7 +178,8 @@
     "languages": "Languages",
     "languageLevel": "{{language}} · {{level}} or above",
     "eligible": "Eligible in {{countries}}",
-    "visa": "Visa sponsorship available"
+    "visa": "Visa sponsorship available",
+    "eligibility": "Eligibility"
   },
   "details": {
     "back": "Back to jobs",
