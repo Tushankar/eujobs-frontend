@@ -1,6 +1,6 @@
 import { useEffect } from 'react'
 import { useSearchParams } from 'react-router-dom'
-import { useSharedLocalStorage } from '@/hooks/useSharedLocalStorage.js'
+import { useLocalStorage } from '@/hooks/useLocalStorage.js'
 import { useGetRecruiterJobsQuery } from '@/features/recruiter/jobs/api.js'
 
 const MATCH_JOB_STORAGE_KEY = 'lwm.recruiter.match-job'
@@ -14,7 +14,7 @@ const MATCH_JOB_STORAGE_KEY = 'lwm.recruiter.match-job'
 export function useMatchJob() {
   const { data, isLoading } = useGetRecruiterJobsQuery()
   const [params] = useSearchParams()
-  const [jobId, setJobId] = useSharedLocalStorage(MATCH_JOB_STORAGE_KEY, '')
+  const [jobId, setJobId] = useLocalStorage(MATCH_JOB_STORAGE_KEY, '')
   const linked = params.get('jobId')
 
   useEffect(() => {

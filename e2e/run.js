@@ -8,14 +8,19 @@ import { seedTestDatabase, startStack, stopStack } from './lib/stack.js'
 import { resetTestState } from './lib/testApi.js'
 
 /*
- * node e2e/run.js <phase-N | sweep | scenario-file-name[,more]>
+ * node e2e/run.js <all | phase-N | sweep | scenario-file-name[,more]>
  * Seeds eujobs_test, starts the API and Vite, runs the scenarios in the local Chrome per viewport,
  * prints a PASS/FAIL table and exits non-zero on any failure (§2.13).
  */
 const SCENARIOS_DIR = new URL('./scenarios/', import.meta.url)
 
+/** The phase group of a scenario file (p05, p11b, …; the English sweep is its own group). */
+const groupOf = (file) => file.match(/^(p\d{2}[a-z]?)-/)?.[1] ?? file
+
 function selectScenarioFiles(target) {
   const files = readdirSync(SCENARIOS_DIR).filter((file) => file.endsWith('.js')).sort()
+  // P12-Q1: every scenario of every phase (temporary zz-* files are not part of it) and the sweep.
+  if (target === 'all') return files.filter((file) => /^p\d{2}[a-z]?-/.test(file) || file === 'sweep.js')
   const phase = target?.match(/^phase-(\d+)$/)?.[1]
   if (phase) return files.filter((file) => file.startsWith(`p${phase.padStart(2, '0')}-`))
   // One scenario file name, or several separated by commas.
@@ -26,7 +31,7 @@ function selectScenarioFiles(target) {
 const target = process.argv[2]
 const files = selectScenarioFiles(target)
 if (!files.length) {
-  console.error('Usage: node e2e/run.js <phase-N | sweep | scenario-file-name[,more]>')
+  console.error('Usage: node e2e/run.js <all | phase-N | sweep | scenario-file-name[,more]>')
   process.exit(2)
 }
 // One run at a time on eujobs_test and ports 5100/5174, across every session on this machine.
@@ -44,7 +49,12 @@ try {
   await startStack(runDir)
   browser = await launchChrome()
 
-  for (const scenario of scenarios) {
+  for (const [index, scenario] of scenarios.entries()) {
+    // P12-Q1: each phase group starts on a fresh seed, the state it was verified on; the stack stays up.
+    if (index > 0 && groupOf(files[index]) !== groupOf(files[index - 1])) {
+      console.log(`Reseeding eujobs_test before ${groupOf(files[index])}`)
+      seedTestDatabase()
+    }
     for (const viewport of scenario.viewports) {
       const contexts = []
       const shotsDir = join(runDir, scenario.name.replace(/[^a-z0-9-]+/gi, '_'), viewport)

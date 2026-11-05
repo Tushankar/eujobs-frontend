@@ -1,4 +1,5 @@
 .notice {
+  max-width: 720px;
   padding-top: 20px;
   font-size: 12px;
   line-height: 28px;
@@ -61,11 +62,23 @@
   padding-top: 16px;
   font-size: 12px;
   line-height: 18px;
-  color: var(--primary-hover);
+  color: var(--success-fg);
 }
 
 .status:empty {
   display: none;
+}
+
+.statusError {
+  font-size: 12px;
+  line-height: 18px;
+  color: var(--destructive);
+}
+
+.confirm {
+  display: flex;
+  flex-direction: column;
+  gap: 16px;
 }
 
 .confirmText {

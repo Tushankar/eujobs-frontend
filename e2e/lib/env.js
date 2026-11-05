@@ -38,6 +38,9 @@ export const stripeSecretKey = serverEnv.STRIPE_SECRET_KEY
 /** OpenAI key for the one-off voice-note fixture (P10-Q3); held in memory only, never printed. */
 export const openaiApiKey = serverEnv.OPENAI_API_KEY
 
+/** The test API's upload folder (UPLOAD_DIR/_test, §2.6): P12 checks files on disk. */
+export const TEST_UPLOAD_ROOT = join(serverEnv.UPLOAD_DIR, '_test')
+
 /** The API in test mode: test database, captured mail, /_test routes, no scheduler timer. */
 export const serverChildEnv = { ...process.env, NODE_ENV: 'test', PORT: String(API_PORT), CLIENT_ORIGIN: WEB_URL }
 export const viteChildEnv = { ...process.env, VITE_API_PROXY: API_URL }

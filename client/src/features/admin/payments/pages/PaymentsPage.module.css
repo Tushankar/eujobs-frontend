@@ -104,7 +104,7 @@
   }
 }
 
-/* P11c-Q8: the MRR card per role, "Candidates  £18" per line, the amounts in one column. */
+/* P11c-Q8: the MRR card per role, one line per role ("Candidates" and the amount), the amounts in one column. */
 .roleMoney {
   display: inline-grid;
   grid-template-columns: auto auto;

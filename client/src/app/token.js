@@ -1,6 +1,6 @@
 /*
- * The JWT (M-007), kept in localStorage under a key that does not start with `lwm.` (the legacy
- * Reset demo code wipes `lwm.` keys; A: shared §4.6). If storage is blocked it lives in memory.
+ * The JWT (M-007), kept in localStorage (one of the browser-storage sites §2.15 allows). If storage is blocked it
+ * lives in memory.
  */
 export const TOKEN_KEY = 'lwm-auth-token'
 

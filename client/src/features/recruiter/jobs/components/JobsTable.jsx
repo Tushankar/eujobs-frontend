@@ -151,7 +151,7 @@ export default function JobsTable({ jobs, sort, onSort, caption, loading = false
       )}
       <div className={styles.scroll}>
         <table className={styles.table} aria-busy={loading || undefined}>
-          <caption className="sr-only">{loading ? `${caption} â€” ${t('common:loading')}` : caption}</caption>
+          <caption className="sr-only">{loading ? `${caption} — ${t('common:loading')}` : caption}</caption>
           <colgroup>
             <col style={{ width: '29.2%' }} />
             <col style={{ width: '19%' }} />

@@ -1,9 +1,8 @@
 import { useCallback, useState } from 'react'
 
 /**
- * useState that persists to localStorage. The Figma footer states
- * "Changes saved on this device", so local persistence is the backing store
- * for every mock interaction. Falls back to in-memory state if storage is blocked.
+ * useState that persists to localStorage, only for the per-browser choices §2.15 allows (the dismissed overview
+ * insight, the recruiter's match job); data lives on the server. Falls back to in-memory state if storage is blocked.
  */
 export function useLocalStorage(key, initialValue) {
   const [value, setValue] = useState(() => {
