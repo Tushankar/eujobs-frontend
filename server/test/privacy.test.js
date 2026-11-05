@@ -118,11 +118,11 @@ async function world() {
 const exportOf = async (user) => {
   const res = await api().get('/api/v1/me/export').set(auth(user)).buffer(true).parse(binary)
   assert.equal(res.status, 200)
-  assert.match(res.headers['content-disposition'], /attachment; filename="local-workman-export-\d{4}-\d{2}-\d{2}\.zip"/)
+  assert.match(res.headers['content-disposition'], /^attachment; filename="?local-workman-export-\d{4}-\d{2}-\d{2}\.zip"?$/)
   return readZip(res.body)
 }
 const json = (zip, name) => JSON.parse(zip[name].toString('utf8'))
-const remove = (user, password = PASSWORD) => api().delete('/api/v1/me').set(auth(user)).send({ password })
+const remove = (user, password = PASSWORD) => api().delete('/api/v1/me').set(auth(user)).send({ currentPassword: password })
 
 describe('GET /me/export (M-190)', () => {
   test('candidate: every own record as JSON plus the CV, photo, evidence and certificate files; no recruiter notes', async () => {
@@ -153,18 +153,24 @@ describe('GET /me/export (M-190)', () => {
     const logo = await storeFile({ ownerId: recruiter._id, purpose: 'company_logo', buffer: await image('png'), ext: 'png', originalName: 'logo.png' })
     await Company.updateOne({ _id: company._id }, { logoFileId: logo._id })
     await Payment.create({ reference: 'LWM-P0002', userId: recruiter._id, payerRole: 'recruiter', payerName: 'Rita Recruiter', kind: 'course', itemName: 'Hiring well', amountMinor: 2900, currency: 'GBP', status: 'paid', paidAt: new Date() })
+    await Payment.create({ reference: 'LWM-P0005', userId: recruiter._id, payerRole: 'recruiter', payerName: 'Rita Recruiter', kind: 'subscription', itemId: 'recruiter_plus', itemName: 'Recruiter Plus', amountMinor: 4900, currency: 'GBP', status: 'paid', paidAt: new Date() })
     const zip = await exportOf(await User.findById(recruiter._id))
     assert.equal(json(zip, 'company.json').displayName, company.displayName)
     assert.equal(json(zip, 'jobs.json')[0].title, 'Senior Product Designer')
     assert.deepEqual(json(zip, 'notes.json').map((note) => [note.candidate, note.text]), [['Emma Erased', NOTE]])
     assert.equal(json(zip, 'conversations.json')[0].with, 'Emma Erased')
-    assert.equal(json(zip, 'payments.json')[0].reference, 'LWM-P0002')
+    // Phase 11c: the plan, its subscription status and every payment (the Recruiter Plus invoice and the course).
+    assert.deepEqual(
+      [json(zip, 'subscription.json').plan, json(zip, 'subscription.json').subscription.status],
+      ['recruiter_plus', 'active'],
+    )
+    assert.deepEqual(json(zip, 'payments.json').map((row) => [row.reference, row.kind, row.item]).sort(), [['LWM-P0002', 'course', 'Hiring well'], ['LWM-P0005', 'subscription', 'Recruiter Plus']])
     assert.equal(json(zip, 'notifications.json').length, 2)
     assert.ok(zip['files/kyc/identity.pdf'] && zip['files/logo.png'])
     const csv = zip['summary.csv'].toString('utf8')
     assert.ok(csv.startsWith('﻿Campo,Valor\r\n'), 'OQ-6d: BOM and Spanish headers')
     assert.match(csv, /Empleos: Publicada,1\r\n/)
-    assert.match(csv, /Pagado \(GBP\),29\.00\r\n/)
+    assert.match(csv, /Pagado \(GBP\),78\.00\r\n/)
   })
 
   test('admins have no export or self-deletion', async () => {
@@ -185,7 +191,7 @@ describe('DELETE /me: candidate erasure (M-188, OD15)', () => {
     const { candidate } = await world()
     const res = await remove(candidate, 'Not-The-Password-1')
     assert.equal(res.status, 422)
-    assert.deepEqual(res.body.error.fields, { password: 'invalid' })
+    assert.deepEqual(res.body.error.fields, { currentPassword: 'invalid' })
     assert.ok(await User.exists({ _id: candidate._id }))
     assert.equal(stripeCalls.length, 0)
   })
@@ -257,7 +263,7 @@ describe('DELETE /me: candidate erasure (M-188, OD15)', () => {
     assert.deepEqual([erased.actor.type, erased.actor.id, erased.actor.name, erased.params], ['user', null, null, { accountRole: 'candidate' }])
     assert.equal((await ModerationCase.findById(w.reported._id)).reports[0].reporterId, null)
     const recruiterNotes = await Notification.find({ userId: w.recruiter._id }).sort({ type: 1 })
-    assert.deepEqual(recruiterNotes.map((item) => [item.type, item.params.candidate ?? item.params.sender]), [['application_new', null], ['message', null]])
+    assert.deepEqual(recruiterNotes.map((item) => [item.type, item.params]), [['application_new', { candidate: null, job: w.job.title }], ['message', { sender: null }]])
     // Kept: the company, its job and the catalogue entries.
     assert.ok(await Company.exists({ _id: w.company._id }))
     assert.ok(await Job.exists({ _id: w.job._id, status: 'published' }))
@@ -297,10 +303,13 @@ describe('DELETE /me: recruiter deletion (M-189, OD15, OQ-6k, P12-Q5)', () => {
     await KycDocument.create({ companyId: company._id, userId: recruiter._id, type: 'identity', fileId: kyc._id, uploadedAt: new Date() })
     const logo = await storeFile({ ownerId: recruiter._id, purpose: 'company_logo', buffer: await image('png'), ext: 'png', originalName: 'logo.png' })
     await Company.updateOne({ _id: company._id }, { logoFileId: logo._id, businessEmail: 'rita@acme.example', businessAddress: '1 High St' })
+    await Subscription.updateOne({ userId: recruiter._id }, { stripeCustomerId: 'cus_rita', stripeSubscriptionId: 'sub_rita' })
+    const plan = await Payment.create({ reference: 'LWM-P0004', userId: recruiter._id, payerRole: 'recruiter', payerName: 'Rita Recruiter', kind: 'subscription', itemId: 'recruiter_plus', itemName: 'Recruiter Plus', amountMinor: 4900, currency: 'GBP', status: 'paid', paidAt: new Date() })
     const paid = await Payment.create({ reference: 'LWM-P0003', userId: recruiter._id, payerRole: 'recruiter', payerName: 'Rita Recruiter', kind: 'course', itemName: 'Hiring well', amountMinor: 2900, currency: 'GBP', status: 'paid', paidAt: new Date() })
 
     assert.equal((await remove(recruiter)).status, 204)
-    assert.deepEqual(stripeCalls.splice(0), [['del', 'cus_rita']])
+    assert.deepEqual(stripeCalls.splice(0), [['cancel', 'sub_rita'], ['del', 'cus_rita']])
+    assert.equal(await Subscription.countDocuments({ userId: recruiter._id }), 0)
     assert.equal(await User.exists({ _id: recruiter._id }), null)
     const job = await Job.findById(w.job._id)
     assert.deepEqual([job.status, job.createdBy], ['closed', null])
@@ -310,8 +319,7 @@ describe('DELETE /me: recruiter deletion (M-189, OD15, OQ-6k, P12-Q5)', () => {
     assert.equal(await onDisk(kyc), false)
     assert.equal(await onDisk(logo), true)
     assert.equal(await KycDocument.countDocuments({ companyId: company._id }), 0)
-    const payment = await Payment.findById(paid._id)
-    assert.deepEqual([payment.userId, payment.payerName, payment.payerRole], [null, null, 'recruiter'])
+    for (const row of await Payment.find({ _id: { $in: [paid._id, plan._id] } })) assert.deepEqual([row.userId, row.payerName, row.payerRole], [null, null, 'recruiter'])
     for (const Model of [CandidateNote, ShortlistEntry, RecruiterActivity, ProfileView, CvAccessRequest]) assert.equal(await Model.countDocuments({ companyId: company._id }), 0, Model.modelName)
     assert.equal(await FileAccessLog.countDocuments({ companyId: company._id }), 0)
     // The candidate keeps the application and the thread (with the company's messages), now closed for replies.
@@ -327,16 +335,17 @@ describe('DELETE /me: recruiter deletion (M-189, OD15, OQ-6k, P12-Q5)', () => {
 describe('retention-sweep (M-186, U32, C18, P11b-Q5)', () => {
   test('at 03:00 it deletes due evidence and KYC files and old notifications; decisions and certificate files stay', async () => {
     const candidate = await createUser()
-    const past = new Date(Date.now() - 60_000)
-    const evidence = await storeFile({ ownerId: candidate._id, purpose: 'evidence', buffer: await image('png'), ext: 'png', originalName: 'id.png', deleteAfter: past })
-    const notDue = await storeFile({ ownerId: candidate._id, purpose: 'evidence', buffer: await image('png'), ext: 'png', originalName: 'id2.png', deleteAfter: new Date(Date.now() + 86_400_000) })
-    const certificateFile = await storeFile({ ownerId: candidate._id, purpose: 'certificate_file', buffer: await textPdf(['Cert']), ext: 'pdf', originalName: 'cert.pdf', deleteAfter: past })
-    const submission = await VerificationSubmission.create({ userId: candidate._id, category: 'identity', evidenceType: 'passport', fileId: evidence._id, status: 'approved', reviewedAt: new Date(Date.now() - 31 * 86_400_000) })
-    const old = await notify(candidate, 'verification_decided', { params: { decision: 'approved', category: 'identity' }, target: { kind: 'page', id: 'verification' }, at: new Date(Date.now() - 91 * 86_400_000) })
-    const recent = await notify(candidate, 'verification_decided', { params: { decision: 'approved', category: 'identity' }, target: { kind: 'page', id: 'verification' }, at: new Date(Date.now() - 89 * 86_400_000) })
-
+    // Everything is dated from the 03:00 tick below, so the test does not depend on the time it runs.
     const threeAm = new Date()
     threeAm.setHours(3, 1, 0, 0)
+    const past = new Date(threeAm.getTime() - 60_000)
+    const evidence = await storeFile({ ownerId: candidate._id, purpose: 'evidence', buffer: await image('png'), ext: 'png', originalName: 'id.png', deleteAfter: past })
+    const notDue = await storeFile({ ownerId: candidate._id, purpose: 'evidence', buffer: await image('png'), ext: 'png', originalName: 'id2.png', deleteAfter: new Date(threeAm.getTime() + 86_400_000) })
+    const certificateFile = await storeFile({ ownerId: candidate._id, purpose: 'certificate_file', buffer: await textPdf(['Cert']), ext: 'pdf', originalName: 'cert.pdf', deleteAfter: past })
+    const submission = await VerificationSubmission.create({ userId: candidate._id, category: 'identity', evidenceType: 'passport', fileId: evidence._id, status: 'approved', reviewedAt: new Date(threeAm.getTime() - 31 * 86_400_000) })
+    const old = await notify(candidate, 'verification_decided', { params: { decision: 'approved', category: 'identity' }, target: { kind: 'page', id: 'verification' }, at: new Date(threeAm.getTime() - 91 * 86_400_000) })
+    const recent = await notify(candidate, 'verification_decided', { params: { decision: 'approved', category: 'identity' }, target: { kind: 'page', id: 'verification' }, at: new Date(threeAm.getTime() - 89 * 86_400_000) })
+
     // Only the sweep is due: the nightly relevance run already ran in this slot.
     await JobRun.deleteMany({})
     await JobRun.create({ name: 'relevance-nightly', lastRunAt: threeAm })

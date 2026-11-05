@@ -28,7 +28,7 @@ export default function PlanCard() {
   const errorText = useErrorText()
   const dispatch = useDispatch()
   const { me } = usePreferences()
-  const { plus } = usePlan()
+  const { plus, loading: planLoading } = usePlan()
   const { data: subscription, isLoading } = useGetSubscriptionQuery(me.role)
   const [createPortal, { isLoading: opening, error: portalError }] = useCreatePortalSessionMutation()
   const state = planState(subscription)
@@ -44,7 +44,7 @@ export default function PlanCard() {
   }
 
   // The plan row while the subscription loads, so Free and its upsell never flash for a paying user.
-  if (isLoading) {
+  if (isLoading || planLoading) {
     return (
       <SkeletonRegion className={styles.plan}>
         <div>

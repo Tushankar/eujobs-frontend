@@ -60,29 +60,28 @@
   },
   "data": {
     "title": "Entiende y controla tus datos",
-    "notice": "Este prototipo interactivo guarda en este navegador los datos del perfil revisados y la actividad del espacio de trabajo. Los archivos de currículum originales se procesan en local y no se guardan; el historial de versiones solo contiene nombres de archivo y extractos revisados del perfil. No existe ninguna cuenta real ni datos en un servidor.",
+    "notice": "Los datos de tu cuenta se guardan en los servidores de Local WorkMan. Descarga una copia cuando quieras o elimina tu cuenta y tus datos personales.",
     "export": {
-      "label": "Descargar tu perfil",
-      "description": "Un CSV portátil con tu información revisada.",
+      "label": "Descargar tus datos",
+      "description": "Un archivo ZIP con tus registros en JSON y los archivos que subiste.",
       "action": "Exportar datos",
-      "candidateDone": "Perfil exportado como candidate-profile.csv. El archivo se creó en tu navegador y no se envió a ningún sitio.",
-      "recruiterDone": "Perfil exportado como recruiter-profile.csv."
+      "done": "Tus datos se han descargado."
     },
     "delete": {
-      "label": "Borrar la información local del candidato",
-      "description": "Borra tu perfil, ofertas guardadas, candidaturas y alertas. Los registros de pago se conservan.",
-      "action": "Borrar mis datos",
-      "confirmTitle": "¿Borrar la información local del candidato?",
-      "confirmBody": "Se borrarán de este dispositivo tu perfil, las versiones del CV, el progreso de verificación, el progreso de formación, las ofertas guardadas, las candidaturas y las alertas, y tu plan volverá a Gratis. Tu configuración se conserva. Los registros de pago se conservan como registros contables; solo Restablecer demo los borra. Esta acción no se puede deshacer.",
-      "done": "La información local del candidato se ha borrado de este dispositivo."
+      "label": "Eliminar mis datos",
+      "description": "Elimina para siempre tu cuenta y tus datos personales. Los registros de pago se conservan para la contabilidad sin tu nombre.",
+      "action": "Eliminar mis datos",
+      "confirmTitle": "¿Eliminar tu cuenta y tus datos?",
+      "confirmBody": "Se eliminarán para siempre tu cuenta, tu perfil, las versiones del CV, las candidaturas, los mensajes, las alertas de empleo, el progreso de formación, los certificados y las pruebas de verificación. Un plan Plus se cancela de inmediato, sin reembolso. Los registros de pago se conservan sin tu nombre. Se cerrará tu sesión. Esta acción no se puede deshacer.",
+      "password": "Introduce tu contraseña actual para confirmar."
     },
-    "reset": {
-      "label": "Restablecer el espacio de demostración",
-      "description": "Recupera los datos de ejemplo en los tres espacios de trabajo.",
-      "action": "Restablecer demo",
-      "confirmTitle": "¿Restablecer el espacio de demostración?",
-      "confirmBody": "Se recuperan los datos de ejemplo en los espacios de candidato, reclutador y administración, y se borran los cambios guardados en este dispositivo. Esta acción no se puede deshacer.",
-      "done": "Espacio de demostración restablecido. Los datos de ejemplo vuelven a estar en los tres espacios de trabajo."
+    "deleteRecruiter": {
+      "label": "Eliminar la cuenta",
+      "description": "Cierra tus empleos y elimina para siempre tu cuenta y tus datos personales. Los registros de pago se conservan para la contabilidad sin tu nombre.",
+      "action": "Eliminar la cuenta",
+      "confirmTitle": "¿Eliminar tu cuenta de reclutador?",
+      "confirmBody": "Tus empleos se cierran y se eliminan tus documentos KYC, las notas sobre candidatos, la lista de preseleccionados y la actividad. Un plan Recruiter Plus se cancela de inmediato, sin reembolso. Los candidatos conservan sus candidaturas y conversaciones con el nombre visible de tu empresa. Los registros de pago se conservan sin tu nombre. Se cerrará tu sesión. Esta acción no se puede deshacer.",
+      "password": "Introduce tu contraseña actual para confirmar."
     }
   }
 }

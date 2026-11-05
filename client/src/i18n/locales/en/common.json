@@ -57,5 +57,6 @@
     "submit": "Send report",
     "already": "You have already reported this. An administrator will review it.",
     "limit": "You can send up to {{count}} reports a day. Try again tomorrow."
-  }
+  },
+  "deletedUser": "Deleted user"
 }

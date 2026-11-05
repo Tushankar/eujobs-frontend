@@ -63,7 +63,10 @@ export default function AuditEventRow({ event, open, onToggle }) {
           </div>
           <div>
             <dt>{t('detail.actor')}</dt>
-            <dd>{event.actor.name ? t('actor', { name: event.actor.name, type: actorType }) : actorType}</dd>
+            {/* A user actor without a name deleted their account (OD15). */}
+            <dd>
+              {event.actor.name || event.actor.type === 'user' ? t('actor', { name: event.actor.name ?? t('common:deletedUser'), type: actorType }) : actorType}
+            </dd>
           </div>
           <div>
             <dt>{t('detail.time')}</dt>

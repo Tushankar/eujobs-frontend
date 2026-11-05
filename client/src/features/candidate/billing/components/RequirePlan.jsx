@@ -76,8 +76,8 @@ export function PlanGate({ entitlement }) {
               <p className={styles.price}>
                 <Skeleton width={110} height={26} />
               </p>
-              <div className={styles.features}>
-                {[180, 150, 200, 170].map((width) => (
+              <div className={cx(styles.features, styles.featuresSkeleton)}>
+                {[180, 220, 160, 150, 200, 190, 230].map((width) => (
                   <Skeleton key={width} width={width} />
                 ))}
               </div>

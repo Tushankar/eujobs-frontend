@@ -74,7 +74,8 @@
       "user_access_saved": "Accès enregistré pour {{name}}",
       "user_access_revoked": "Accès révoqué pour {{name}}",
       "admin_invited": "Administrateur invité : {{name}} ({{email}}) en tant que {{role}}",
-      "invite_accepted": "Invitation acceptée : {{name}}"
+      "invite_accepted": "Invitation acceptée : {{name}}",
+      "account_deleted": "Compte supprimé par son titulaire ({{accountRole}})"
     },
     "reports": {
       "candidates_exported": "Candidats exportés ({{count}} lignes)",

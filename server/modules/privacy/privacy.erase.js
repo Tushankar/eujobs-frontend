@@ -93,7 +93,7 @@ export const COVERAGE = {
 }
 
 async function checkPassword(user, password) {
-  if (!(await bcrypt.compare(password, user.passwordHash ?? ''))) throw fieldError({ password: 'invalid' })
+  if (!(await bcrypt.compare(password, user.passwordHash ?? ''))) throw fieldError({ currentPassword: 'invalid' })
 }
 
 /** OD15: the subscription is cancelled at once (no refund), then the Customer is deleted. An already missing object is fine. */
@@ -222,8 +222,8 @@ async function deleteRecruiter(user) {
 }
 
 /** DELETE /me: the candidate's erasure or the recruiter's account deletion; the client then signs out. */
-export async function deleteAccount(user, { password }) {
-  await checkPassword(user, password)
+export async function deleteAccount(user, { currentPassword }) {
+  await checkPassword(user, currentPassword)
   // Late Stripe webhooks for this account are ignored from now on (payments.service ownerOf).
   await User.updateOne({ _id: user._id }, { $set: { erasedAt: new Date() } })
   try {

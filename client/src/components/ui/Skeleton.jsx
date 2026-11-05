@@ -11,7 +11,11 @@ export default function Skeleton({ shape = 'text', width, height, className }) {
   return <span aria-hidden="true" className={cx(styles.bone, styles[shape], className)} style={{ width, height }} />
 }
 
-/** A loading area: announces "Loading…" to screen readers and marks itself busy. `as` picks the element. */
+/**
+ * A loading area: announces "Loading…" to screen readers and marks itself busy. `as` picks the element.
+ * The announcement is its first child (a span), so wrap list rows in their own element (never `as="ul"`) and don't
+ * rely on `:first-child` among direct children.
+ */
 export function SkeletonRegion({ as: Tag = 'div', className, children }) {
   const { t } = useTranslation()
   return (

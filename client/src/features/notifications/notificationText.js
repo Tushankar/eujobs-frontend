@@ -53,6 +53,8 @@ export function useNotificationText() {
     const amount = params.amountMinor !== undefined ? format.money(params.amountMinor, params.currency) : undefined
     const values = {
       ...params,
+      // A name an erasure removed (P12-Q3) reads "Deleted user".
+      ...Object.fromEntries(['name', 'candidate', 'payer', 'sender'].filter((key) => params[key] === null).map((key) => [key, t('common:deletedUser')])),
       // Only grouped types have plural forms (P11b-Q6).
       ...(PLURAL_TYPES.includes(type) && { count }),
       amount,

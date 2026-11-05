@@ -71,7 +71,7 @@ function PaymentDetails({ id, onClose }) {
   const rows = payment
     ? [
         ['status', <PillBadge key="status" tone={STATUS_TONE[payment.status]}>{t(`enums:paymentStatus.${payment.status}`)}</PillBadge>],
-        ['payer', payment.payerName && `${payment.payerName} · ${t(`enums:role.${payment.payerRole}`)}`],
+        ['payer', [payment.payerName ?? t('common:deletedUser'), payment.payerRole && t(`enums:role.${payment.payerRole}`)].filter(Boolean).join(' · ')],
         ['payerCountry', payment.payerCountry && format.country(payment.payerCountry)],
         ['item', `${payment.itemName} · ${t(`enums:paymentKind.${payment.kind}`)}`],
         ['amount', format.money(payment.amountMinor, payment.currency)],

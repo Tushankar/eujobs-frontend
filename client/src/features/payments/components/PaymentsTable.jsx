@@ -45,8 +45,9 @@ export default function PaymentsTable({ payments, showPayer = false, showSource 
             skeleton: 'title',
             render: (payment) => (
               <>
-                <span className={cx(styles.strong, styles.nowrap)}>{payment.payerName}</span>
-                <span className={styles.muted}>{t(`enums:role.${payment.payerRole}`)}</span>
+                {/* OD15: an erased payer's row is kept without the name. */}
+                <span className={cx(styles.strong, styles.nowrap)}>{payment.payerName ?? t('common:deletedUser')}</span>
+                {payment.payerRole && <span className={styles.muted}>{t(`enums:role.${payment.payerRole}`)}</span>}
               </>
             ),
           },

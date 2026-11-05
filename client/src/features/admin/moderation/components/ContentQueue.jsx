@@ -34,7 +34,7 @@ export default function ContentQueue({ basePath, openId, onDecided }) {
                 key={item.id}
                 icon={TriangleAlert}
                 alert={item.status === 'open' && item.priority === 'high'}
-                title={item.targetName ?? ''}
+                title={item.targetName ?? t('common:deletedUser')}
                 badge={<PillBadge tone={item.priority === 'high' ? 'warning' : 'neutral'}>{t(`content.priority.${item.priority}`)}</PillBadge>}
                 lines={[
                   {

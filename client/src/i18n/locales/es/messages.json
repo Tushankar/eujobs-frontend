@@ -23,7 +23,8 @@
     "notFoundText": "Puede que se haya eliminado o que pertenezca a otra cuenta.",
     "locked": "Responder forma parte de Plus. Con el plan Free puedes leer todos los mensajes.",
     "upgrade": "Mejora tu plan para responder",
-    "send": "Enviar"
+    "send": "Enviar",
+    "closed": "Esta conversación está cerrada: la otra parte eliminó su cuenta."
   },
   "form": {
     "label": "Mensaje",

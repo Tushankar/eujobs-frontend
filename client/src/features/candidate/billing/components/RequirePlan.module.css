@@ -105,6 +105,11 @@
   border-top: 0;
 }
 
+.featuresSkeleton {
+  gap: 22px;
+  padding-top: 25px;
+}
+
 .features li.missing {
   color: var(--text-faint);
 }

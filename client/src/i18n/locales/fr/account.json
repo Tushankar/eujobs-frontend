@@ -60,29 +60,28 @@
   },
   "data": {
     "title": "Comprendre et maîtriser vos données",
-    "notice": "Ce prototype interactif enregistre dans ce navigateur les informations de profil vérifiées et l’activité de l’espace de travail. Les fichiers de CV d’origine sont traités localement et ne sont pas enregistrés ; l’historique des versions ne contient que des noms de fichiers et des aperçus de profil vérifiés. Il n’existe aucun compte réel ni aucune donnée sur un serveur.",
+    "notice": "Les données de votre compte sont enregistrées sur les serveurs de Local WorkMan. Téléchargez-en une copie quand vous le souhaitez, ou supprimez votre compte et vos données personnelles.",
     "export": {
-      "label": "Télécharger votre profil",
-      "description": "Un fichier CSV portable de vos informations vérifiées.",
+      "label": "Télécharger vos données",
+      "description": "Un fichier ZIP avec vos enregistrements au format JSON et les fichiers que vous avez déposés.",
       "action": "Exporter les données",
-      "candidateDone": "Profil exporté sous candidate-profile.csv. Le fichier a été créé dans votre navigateur et n’a été envoyé nulle part.",
-      "recruiterDone": "Profil exporté sous recruiter-profile.csv."
+      "done": "Vos données ont été téléchargées."
     },
     "delete": {
-      "label": "Supprimer les informations locales du candidat",
-      "description": "Supprime votre profil, vos offres enregistrées, vos candidatures et vos alertes. Les paiements sont conservés.",
+      "label": "Supprimer mes données",
+      "description": "Supprime définitivement votre compte et vos données personnelles. Les paiements sont conservés pour la comptabilité, sans votre nom.",
       "action": "Supprimer mes données",
-      "confirmTitle": "Supprimer les informations locales du candidat ?",
-      "confirmBody": "Votre profil, les versions de votre CV, l’avancement de la vérification et des formations, les offres enregistrées, les candidatures et les alertes seront supprimés de cet appareil, et votre plan repassera à Gratuit. Vos paramètres sont conservés. Les paiements sont conservés comme pièces comptables ; seule la réinitialisation de la démo les efface. Cette action est irréversible.",
-      "done": "Les informations locales du candidat ont été supprimées de cet appareil."
+      "confirmTitle": "Supprimer votre compte et vos données ?",
+      "confirmBody": "Votre compte, votre profil, les versions de votre CV, vos candidatures, vos messages, vos alertes emploi, l’avancement de vos formations, vos certificats et vos justificatifs de vérification seront définitivement supprimés. Un plan Plus est résilié immédiatement, sans remboursement. Les paiements sont conservés sans votre nom. Vous serez déconnecté. Cette action est irréversible.",
+      "password": "Saisissez votre mot de passe actuel pour confirmer."
     },
-    "reset": {
-      "label": "Réinitialiser l’espace de démonstration",
-      "description": "Restaure les données d’exemple dans les trois espaces de travail.",
-      "action": "Réinitialiser la démo",
-      "confirmTitle": "Réinitialiser l’espace de démonstration ?",
-      "confirmBody": "Les données d’exemple sont restaurées dans les espaces candidat, recruteur et administration, et les modifications enregistrées sur cet appareil sont effacées. Cette action est irréversible.",
-      "done": "Espace de démonstration réinitialisé. Les données d’exemple sont de retour dans les trois espaces de travail."
+    "deleteRecruiter": {
+      "label": "Supprimer le compte",
+      "description": "Ferme vos offres et supprime définitivement votre compte et vos données personnelles. Les paiements sont conservés pour la comptabilité, sans votre nom.",
+      "action": "Supprimer le compte",
+      "confirmTitle": "Supprimer votre compte recruteur ?",
+      "confirmBody": "Vos offres sont fermées, et vos documents KYC, vos notes sur les candidats, votre short-list et votre activité sont supprimés. Un plan Recruiter Plus est résilié immédiatement, sans remboursement. Les candidats conservent leurs candidatures et leurs conversations sous le nom public de votre entreprise. Les paiements sont conservés sans votre nom. Vous serez déconnecté. Cette action est irréversible.",
+      "password": "Saisissez votre mot de passe actuel pour confirmer."
     }
   }
 }

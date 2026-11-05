@@ -151,7 +151,7 @@ export default function ContentReview({ id, onDecided, onClose }) {
   async function handleDecide(action, reason) {
     try {
       await decide({ id, action: action.id, reason, removePhoto: action.id === 'restrict' && removePhoto }).unwrap()
-      onDecided(t(`content.decided.${action.id === 'restrict' ? 'restricted' : lifting ? 'lifted' : 'dismissed'}`, { name: item.targetName }))
+      onDecided(t(`content.decided.${action.id === 'restrict' ? 'restricted' : lifting ? 'lifted' : 'dismissed'}`, { name: item.targetName ?? t('common:deletedUser') }))
     } catch {
       // The dialog shows the failure.
     }
@@ -180,7 +180,7 @@ export default function ContentReview({ id, onDecided, onClose }) {
         <PillBadge tone={item.priority === 'high' ? 'warning' : 'neutral'}>{t(`content.priority.${item.priority}`)}</PillBadge>
         <PillBadge tone={CASE_TONES[item.status]}>{t(`enums:caseStatus.${item.status}`)}</PillBadge>
       </div>
-      <h3 className={styles.title}>{item.targetName}</h3>
+      <h3 className={styles.title}>{item.targetName ?? t('common:deletedUser')}</h3>
       <p className={styles.subtitle}>
         {item.openedBy === 'admin' ? t('content.openedFromJobs') : t('content.reportCount', { count: item.reportCount })} · {format.dateTime(item.reportedAt)}
       </p>
@@ -191,7 +191,7 @@ export default function ContentReview({ id, onDecided, onClose }) {
           {item.reports.map((report, index) => (
             <li key={index}>
               <p className={own.reportLine}>
-                <strong>{t(`enums:reportReason.${report.reason}`)}</strong> · {report.reporter ? `${report.reporter.name} (${t(`enums:role.${report.reporter.role}`)})` : t('content.unknownReporter')} ·{' '}
+                <strong>{t(`enums:reportReason.${report.reason}`)}</strong> · {report.reporter ? `${report.reporter.name} (${t(`enums:role.${report.reporter.role}`)})` : t('common:deletedUser')} ·{' '}
                 {format.dateTime(report.at)}
               </p>
               {report.details && <p className={own.details}>{report.details}</p>}

@@ -22,7 +22,8 @@
     "notFoundText": "It may have been removed, or it belongs to another account.",
     "locked": "Replying is part of Plus. On the Free plan you can read every message.",
     "upgrade": "Upgrade to reply",
-    "send": "Send"
+    "send": "Send",
+    "closed": "This conversation is closed: the other side deleted their account."
   },
   "form": {
     "label": "Message",

@@ -13,7 +13,8 @@ import styles from './NotificationBell.module.css'
 /** The open dropdown: the latest notifications (the server's limit), fetched fresh each time it opens. */
 function BellPanel({ workspace, close }) {
   const { t } = useTranslation()
-  const latest = useGetConfigQuery().data?.limits.notifications.latest
+  const config = useGetConfigQuery()
+  const latest = config.data?.limits.notifications.latest
   const { data, isLoading } = useGetNotificationsQuery({ pageSize: latest }, { skip: !latest, refetchOnMountOrArgChange: true })
   const [readAll] = useReadAllNotificationsMutation()
   const { openItem, isUnavailable } = useOpenNotification(close)
@@ -28,7 +29,8 @@ function BellPanel({ workspace, close }) {
           </button>
         )}
       </div>
-      {isLoading ? (
+      {/* The page size comes with the config, which may still be loading when the dropdown opens. */}
+      {config.isLoading || isLoading ? (
         <SkeletonRegion className={styles.list}>
           {[0, 1, 2, 3, 4].map((row) => (
             <NotificationItemSkeleton key={row} compact />

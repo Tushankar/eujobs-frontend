@@ -134,7 +134,13 @@ export default function ThreadPage() {
         </ol>
         <div ref={end} />
         <footer className={styles.footer}>
-          {lacksEntitlement(me, 'message_send') ? (
+          {data.conversation.closed ? (
+            // P12-Q2, M-189: the other side deleted their account; nobody can reply.
+            <div className={styles.locked} data-conversation-closed>
+              <Icon as={MessageSquareOff} size={16} />
+              <p>{t('messages:thread.closed')}</p>
+            </div>
+          ) : lacksEntitlement(me, 'message_send') ? (
             <div className={styles.locked} data-upgrade-prompt>
               <Icon as={Lock} size={16} />
               <p>{t('messages:thread.locked')}</p>

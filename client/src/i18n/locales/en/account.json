@@ -59,29 +59,28 @@
   },
   "data": {
     "title": "Understand and control your data",
-    "notice": "This interactive prototype stores reviewed profile fields and workspace activity in this browser. Original resume files are processed locally and are not saved; version history contains file names and reviewed profile snapshots only. No real account or server-side data exists.",
+    "notice": "Your account data is stored on Local WorkMan’s servers. Download a copy whenever you like, or delete your account and personal data.",
     "export": {
-      "label": "Download your profile",
-      "description": "A portable CSV of your reviewed information.",
+      "label": "Download your data",
+      "description": "A ZIP file with your records as JSON and the files you uploaded.",
       "action": "Export data",
-      "candidateDone": "Profile exported as candidate-profile.csv. The file was created in your browser and not sent anywhere.",
-      "recruiterDone": "Profile exported as recruiter-profile.csv."
+      "done": "Your data was downloaded."
     },
     "delete": {
-      "label": "Delete local candidate information",
-      "description": "Remove your profile, saved jobs, applications, and alerts. Payment records are kept.",
+      "label": "Delete my data",
+      "description": "Permanently delete your account and personal data. Payment records are kept for accounting with your name removed.",
       "action": "Delete my data",
-      "confirmTitle": "Delete local candidate information?",
-      "confirmBody": "This removes your profile, CV versions, verification progress, learning progress, saved jobs, applications, and alerts from this device, and your plan goes back to Free. Your settings are kept. Payment records are kept as finance records; only Reset demo clears them. This can’t be undone.",
-      "done": "Local candidate information was deleted from this device."
+      "confirmTitle": "Delete your account and data?",
+      "confirmBody": "This permanently deletes your account, profile, CV versions, applications, messages, job alerts, learning progress, certificates and verification evidence. A Plus plan is cancelled at once, without a refund. Payment records are kept with your name removed. You will be signed out. This can’t be undone.",
+      "password": "Enter your current password to confirm."
     },
-    "reset": {
-      "label": "Reset demo workspace",
-      "description": "Restore sample data across all three workspaces.",
-      "action": "Reset demo",
-      "confirmTitle": "Reset demo workspace?",
-      "confirmBody": "This restores the sample data in the candidate, recruiter, and admin workspaces and clears the changes saved on this device. This can’t be undone.",
-      "done": "Demo workspace reset. Sample data is back in all three workspaces."
+    "deleteRecruiter": {
+      "label": "Delete account",
+      "description": "Close your jobs and permanently delete your account and personal data. Payment records are kept for accounting with your name removed.",
+      "action": "Delete account",
+      "confirmTitle": "Delete your recruiter account?",
+      "confirmBody": "Your jobs are closed and your KYC documents, candidate notes, shortlist and activity are deleted. A Recruiter Plus plan is cancelled at once, without a refund. Candidates keep their applications and conversations under your company’s display name. Payment records are kept with your name removed. You will be signed out. This can’t be undone.",
+      "password": "Enter your current password to confirm."
     }
   }
 }

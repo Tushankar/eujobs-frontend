@@ -18,6 +18,7 @@ import { Conversation, Message } from '../messages/messages.model.js'
 import { Notification } from '../notifications/notifications.model.js'
 import { emailSwitches } from '../notifications/notifications.service.js'
 import { Payment, Subscription } from '../payments/payments.model.js'
+import { isPaid } from '../payments/payments.service.js'
 import { User } from '../users/users.model.js'
 import { VerificationSubmission } from '../verification/verification.model.js'
 
@@ -75,6 +76,15 @@ async function payments(user) {
   }))
 }
 
+/** The current plan (free without a paid subscription, U38) and the subscription as stored, for both roles (§3.3, §3.22). */
+async function subscription(user) {
+  const row = await Subscription.findOne({ userId: user._id }).lean()
+  return {
+    plan: isPaid(row) ? row.planKey : 'free',
+    subscription: row && { plan: row.planKey, status: row.status, currency: row.currency ?? null, amountMinor: row.amountMinor ?? null, currentPeriodStart: row.currentPeriodStart ?? null, currentPeriodEnd: row.currentPeriodEnd ?? null, cancelAtPeriodEnd: row.cancelAtPeriodEnd, startedAt: row.startedAt ?? null },
+  }
+}
+
 async function learning(user) {
   const [enrollments, attempts, certificates] = await Promise.all([
     Enrollment.find({ userId: user._id }).lean(),
@@ -103,7 +113,7 @@ const notifications = async (user) =>
   (await Notification.find({ userId: user._id }).sort({ at: -1 }).lean()).map(({ type, params, count, at, readAt }) => ({ type, params, count, at, readAt: readAt ?? null }))
 
 async function candidateExport(user) {
-  const [profile, cvVersions, requests, downloads, submissions, applications, saved, alerts, subscription, feedback] = await Promise.all([
+  const [profile, cvVersions, requests, downloads, submissions, applications, saved, alerts, feedback] = await Promise.all([
     CandidateProfile.findOne({ userId: user._id }).lean(),
     CvVersion.find({ userId: user._id }).sort({ number: 1 }).lean(),
     CvAccessRequest.find({ candidateId: user._id }).sort({ createdAt: -1 }).lean(),
@@ -112,7 +122,6 @@ async function candidateExport(user) {
     Application.find({ candidateId: user._id }).sort({ appliedAt: -1 }).lean(),
     SavedJob.find({ candidateId: user._id }).lean(),
     JobAlert.find({ candidateId: user._id }).lean(),
-    Subscription.findOne({ userId: user._id }).lean(),
     ExplanationFeedback.find({ candidateId: user._id }).lean(),
   ])
   const jobs = byId(await Job.find({ _id: { $in: [...applications, ...saved, ...feedback].map((item) => item.jobId) } }, 'title companyId').lean())
@@ -144,7 +153,7 @@ async function candidateExport(user) {
     'conversations.json': await conversations({ candidateId: user._id }, async (thread) => (await Company.findById(thread.companyId, 'displayName'))?.displayName ?? null),
     'saved-jobs.json': saved.map(({ jobId, createdAt }) => ({ job: jobOf(jobId)?.title ?? null, company: companyName(jobOf(jobId)?.companyId), savedAt: createdAt })),
     'job-alerts.json': alerts.map(({ name, keywords, location, country, language, frequency, active, createdAt }) => ({ name, keywords, location: location ?? null, country, language, frequency, active, createdAt })),
-    'subscription.json': subscription && { plan: subscription.planKey, status: subscription.status, currency: subscription.currency ?? null, amountMinor: subscription.amountMinor ?? null, currentPeriodStart: subscription.currentPeriodStart ?? null, currentPeriodEnd: subscription.currentPeriodEnd ?? null, cancelAtPeriodEnd: subscription.cancelAtPeriodEnd, startedAt: subscription.startedAt ?? null },
+    'subscription.json': await subscription(user),
     'payments.json': await payments(user),
     'learning.json': learned,
     'ai-feedback.json': feedback.map(({ jobId, value, updatedAt }) => ({ job: jobOf(jobId)?.title ?? null, value, at: updatedAt })),
@@ -175,6 +184,8 @@ async function recruiterExport(user) {
     'jobs.json': jobs.map((job) => omit(job, ['_id', 'companyId', 'createdBy', '__v', 'relevantCount', 'relevantComputedAt', 'contentHash'])),
     'notes.json': notes.map(({ candidateId, text, createdAt, editedAt }) => ({ candidate: candidates.get(String(candidateId))?.fullName ?? null, text, createdAt, editedAt: editedAt ?? null })),
     'conversations.json': threads,
+    // Phase 11c: the Recruiter Plus plan, its status and every payment (plan invoices and courses).
+    'subscription.json': await subscription(user),
     'payments.json': paid,
     'learning.json': learned,
     'notifications.json': await notifications(user),

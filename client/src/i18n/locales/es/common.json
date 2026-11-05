@@ -57,5 +57,6 @@
     "submit": "Enviar denuncia",
     "already": "Ya has denunciado esto. Un administrador lo revisará.",
     "limit": "Puedes enviar hasta {{count}} denuncias al día. Vuelve a intentarlo mañana."
-  }
+  },
+  "deletedUser": "Usuario eliminado"
 }

@@ -23,7 +23,8 @@
     "notFoundText": "Elle a peut-être été supprimée, ou elle appartient à un autre compte.",
     "locked": "Répondre fait partie de Plus. Avec l’offre Free, vous pouvez lire tous les messages.",
     "upgrade": "Passer à Plus pour répondre",
-    "send": "Envoyer"
+    "send": "Envoyer",
+    "closed": "Cette conversation est fermée : l’autre partie a supprimé son compte."
   },
   "form": {
     "label": "Message",
