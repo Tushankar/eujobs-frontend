@@ -1,0 +1,60 @@
+.root {
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+  padding-bottom: 16px;
+}
+
+.title {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: 6px;
+  font-size: 13px;
+  font-weight: 600;
+  line-height: 20px;
+  color: var(--foreground);
+}
+
+.title svg {
+  color: var(--muted-foreground);
+}
+
+.hint {
+  font-size: 12px;
+  font-weight: 400;
+  color: var(--muted-foreground);
+}
+
+.list {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 8px;
+}
+
+/* A reply as a quiet outlined pill; long replies wrap inside it. */
+.reply {
+  max-width: 100%;
+  padding: 7px 14px;
+  border: 1px solid var(--border-strong);
+  border-radius: 18px;
+  background: var(--card);
+  font-size: 13px;
+  line-height: 20px;
+  color: var(--foreground);
+  text-align: left;
+  cursor: pointer;
+  transition:
+    border-color var(--transition),
+    background-color var(--transition);
+}
+
+.reply:hover {
+  border-color: var(--foreground);
+  background: var(--muted);
+}
+
+.reply:focus-visible {
+  outline: 2px solid var(--primary);
+  outline-offset: 2px;
+}
