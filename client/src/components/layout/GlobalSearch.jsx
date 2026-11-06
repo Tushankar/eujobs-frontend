@@ -24,6 +24,7 @@ export default function GlobalSearch({ workspace, open, onClose }) {
         label: t(`shell:nav.${item.key}`),
         to: workspacePath(workspace, item.to),
         icon: item.icon,
+        iconSrc: item.iconSrc,
         locked: Boolean(item.entitlement) && lacksEntitlement(me, item.entitlement, [workspace.id]),
       })),
       { label: t('shell:sidebar.settings'), to: workspacePath(workspace, 'settings'), icon: Settings2 },
@@ -72,7 +73,13 @@ export default function GlobalSearch({ workspace, open, onClose }) {
           {results.map((item) => (
             <li key={item.to}>
               <button type="button" className={styles.result} onClick={() => go(item)}>
-                {item.icon ? <Icon as={item.icon} size={16} /> : <span className={styles.iconSpacer} />}
+                {item.icon ? (
+                  <Icon as={item.icon} size={17} />
+                ) : item.iconSrc ? (
+                  <img src={item.iconSrc} alt="" className={styles.customIcon} />
+                ) : (
+                  <span className={styles.iconSpacer} />
+                )}
                 {item.label}
                 {item.locked && <PlanChip className={styles.chip} />}
               </button>
