@@ -14,6 +14,7 @@ import { useGetCandidateOverviewQuery, useGetRecommendedJobsQuery, useGetSavedJo
 import JobCard, { JobCardSkeleton } from '@/features/candidate/jobs/components/JobCard.jsx'
 import { useCounters } from '@/app/counters.js'
 import ApplicationActivityCard from '../components/ApplicationActivityCard.jsx'
+import ForYouEmpty from '../components/ForYouEmpty.jsx'
 import InsightCard from '../components/InsightCard.jsx'
 import ProfileStrengthCard from '../components/ProfileStrengthCard.jsx'
 import VerificationCard from '../components/VerificationCard.jsx'
@@ -21,7 +22,7 @@ import styles from './OverviewPage.module.css'
 
 const TABS = ['for-you', 'recent', 'saved']
 const SHOWN = 3
-const EMPTY_ICONS = { 'for-you': Search, recent: Search, saved: Bookmark }
+const EMPTY_ICONS = { recent: Search, saved: Bookmark }
 
 const partOfDay = (hour) => (hour < 12 ? 'morning' : hour < 18 ? 'afternoon' : 'evening')
 
@@ -141,6 +142,8 @@ export default function OverviewPage() {
                   <JobCardSkeleton key={index} />
                 ))}
               </SkeletonRegion>
+            ) : jobs?.length === 0 && tab === 'for-you' ? (
+              <ForYouEmpty onToggleSave={toggleSave} />
             ) : jobs?.length === 0 ? (
               <EmptyState
                 icon={EMPTY_ICONS[tab]}

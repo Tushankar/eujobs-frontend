@@ -1,7 +1,8 @@
 import { useTranslation } from 'react-i18next'
 import { Check } from 'lucide-react'
 import { Icon, Skeleton, SkeletonRegion } from '@/components/ui'
-import { useFormat } from '@/lib/preferences.js'
+import { isPaidPlan } from '@/components/layout/PlanBadge.jsx'
+import { useFormat, usePreferences } from '@/lib/preferences.js'
 import { cx } from '@/utils/cx.js'
 import { useGetCvVersionsQuery } from '../../cv/api.js'
 import { useGetProfileQuery } from '../../profile/api.js'
@@ -11,11 +12,12 @@ const ROWS = ['cv', 'workMode', 'location', 'salary', 'plan']
 
 /**
  * The side card of every onboarding step: what the candidate has set so far (live CV, work mode, city, minimum
- * salary), from the saved profile and CV, or from `draft` while the preferences form is being filled in.
+ * salary, a paid plan), from the saved profile and CV, or from `draft` while the preferences form is being filled in.
  */
 export default function SetupSummary({ draft }) {
   const { t } = useTranslation()
   const format = useFormat()
+  const { me } = usePreferences()
   const { data: profile } = useGetProfileQuery()
   const { data: cv } = useGetCvVersionsQuery()
 
@@ -43,6 +45,8 @@ export default function SetupSummary({ draft }) {
     workMode: workPreference && t(`enums:workPreference.${workPreference}`),
     location: place && t('common:city.value', { city: place.city, country: format.country(place.countryCode) }),
     salary: salary && t('profile:nextStep.salary', { amount: format.salary({ min: salary.amount, currency: salary.currency }), period: t(`enums:salaryPeriod.${salary.period}`) }),
+    // A subscriber already has their plan; everyone else picks it on the last step.
+    plan: isPaidPlan(me) ? t(`enums:planKey.${me.plan}`) : undefined,
   }
   const empty = { cv: 'notSet', workMode: 'notSet', location: 'notSet', salary: 'optional', plan: 'planNext' }
 

@@ -127,3 +127,32 @@
   transform: translateX(2px);
   color: var(--primary);
 }
+
+/* "Show all" under a folded list (My profile). */
+.toggle {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  align-self: flex-start;
+  margin-top: 10px;
+  padding: 4px 0;
+  border: 0;
+  background: none;
+  font-family: inherit;
+  font-size: 13px;
+  font-weight: 600;
+  color: var(--primary);
+  cursor: pointer;
+}
+
+.toggle:hover {
+  text-decoration: underline;
+}
+
+.toggle svg {
+  transition: transform var(--transition);
+}
+
+.flipped {
+  transform: rotate(180deg);
+}

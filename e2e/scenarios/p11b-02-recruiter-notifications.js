@@ -66,7 +66,8 @@ export default {
     await page.waitForFunction(() => document.querySelectorAll('main [data-notification]:not([data-read])').length === 0)
 
     await page.goto(`${ctx.webUrl}/recruiter/settings/notifications`, { waitUntil: 'networkidle0' })
-    ctx.check(JSON.stringify(await switchState(page)) === '["true","true"]', 'two categories, both on')
+    // P11d-Q4: the third category is Interviews.
+    ctx.check(JSON.stringify(await switchState(page)) === '["true","true","true"]', 'three categories, all on')
     const saved = responseTo(page, '/api/v1/me/notifications', 'PATCH')
     await page.click('[data-email-switches] li:nth-child(1) [role="switch"]')
     await saved

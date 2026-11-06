@@ -1,6 +1,8 @@
 {
   "title": "Profile checklist",
   "progress": "{{done}} of {{total}} complete",
+  "showAll": "Show all {{total}}",
+  "showLess": "Show less",
   "complete": "Complete",
   "items": {
     "basics": "Profile basics",

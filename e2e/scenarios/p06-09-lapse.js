@@ -23,7 +23,8 @@ export default {
     const { page } = handle
     await signInWithForm(page, ctx.webUrl, '/sign-in', email, ctx.seedCredentials.password)
     await page.goto(`${ctx.webUrl}/candidate/applications`, { waitUntil: 'networkidle0' })
-    const active = (await pageApi(page, '/candidate/applications')).body.items.find((item) => item.status === 'under_review')
+    // P11d-Q30: the seeded booking moved Emma's application to Interview.
+    const active = (await pageApi(page, '/candidate/applications')).body.items.find((item) => item.status === 'interview')
     ctx.check(Boolean(active), 'the seeded application is still active after the lapse')
     await page.click(`[data-application="${active.id}"]`)
     await clickText(page, 'Withdraw application', '[role="dialog"] button')

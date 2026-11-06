@@ -1,6 +1,8 @@
 {
   "title": "Lista de tu perfil",
   "progress": "{{done}} de {{total}} completados",
+  "showAll": "Ver los {{total}}",
+  "showLess": "Ver menos",
   "complete": "Completo",
   "items": {
     "basics": "Datos básicos del perfil",

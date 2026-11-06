@@ -1,6 +1,8 @@
 {
   "title": "Liste de votre profil",
   "progress": "{{done}} sur {{total}} terminés",
+  "showAll": "Tout afficher ({{total}})",
+  "showLess": "Afficher moins",
   "complete": "Complet",
   "items": {
     "basics": "Informations de base",

@@ -1,6 +1,7 @@
+import { useState } from 'react'
 import { useTranslation } from 'react-i18next'
 import { Link } from 'react-router-dom'
-import { Check, ChevronRight } from 'lucide-react'
+import { Check, ChevronDown, ChevronRight } from 'lucide-react'
 import { Icon } from '@/components/ui'
 import PillBadge from '@/components/common/PillBadge.jsx'
 import { useFormat } from '@/lib/preferences.js'
@@ -10,12 +11,17 @@ import styles from './CompletenessChecklist.module.css'
 
 /**
  * The server's checklist (§3.2, M-015): "x of N", a meter and every item; open items link to where they are
- * done. `items` limits the list (the Overview shows only the next open items).
+ * done. `items` limits the list (the Overview shows only the next open items). `limit` folds it to the first
+ * `limit` open items with "Show all" (My profile, so the cards under it stay on screen); folded rows stay in the
+ * page, hidden.
  */
-export default function CompletenessChecklist({ completeness, items = completeness.items, heading, onOpen }) {
+export default function CompletenessChecklist({ completeness, items = completeness.items, heading, onOpen, limit }) {
   const { t } = useTranslation()
   const format = useFormat()
+  const [expanded, setExpanded] = useState(false)
   const { done, total, percent, complete } = completeness
+  const shown = new Set(limit && !expanded ? items.filter((item) => !item.done).slice(0, limit).map((item) => item.key) : items.map((item) => item.key))
+  const foldable = Boolean(limit) && !complete && (expanded || shown.size < items.length)
   return (
     <div className={styles.checklist}>
       <div className={styles.head}>
@@ -42,7 +48,7 @@ export default function CompletenessChecklist({ completeness, items = completene
       </div>
       <ul className={styles.items}>
         {items.map((item) => (
-          <li key={item.key} data-item={item.key} data-done={item.done}>
+          <li key={item.key} data-item={item.key} data-done={item.done} hidden={!shown.has(item.key)}>
             {item.done ? (
               <span className={cx(styles.item, styles.itemDone)}>
                 <span className={styles.doneIcon}>
@@ -76,6 +82,12 @@ export default function CompletenessChecklist({ completeness, items = completene
           </li>
         ))}
       </ul>
+      {foldable && (
+        <button type="button" className={styles.toggle} aria-expanded={expanded} onClick={() => setExpanded(!expanded)}>
+          {expanded ? t('completeness:showLess') : t('completeness:showAll', { total: items.length })}
+          <Icon as={ChevronDown} size={14} className={cx(expanded && styles.flipped)} />
+        </button>
+      )}
     </div>
   )
 }

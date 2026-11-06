@@ -28,13 +28,28 @@
     "regenerated": "Se ha redactado un nuevo resumen."
   },
   "profileSummary": {
-    "action": "Resumen con IA",
     "title": "Resumen con IA",
     "lead": "Un resumen listo para reclutadores, redactado por IA a partir de tu perfil y tu CV activo. Léelo antes de usarlo.",
     "copy": "Copiar resumen",
     "copied": "Resumen copiado en el portapapeles.",
     "copyFailed": "Este navegador bloquea la copia. Selecciona el texto y cópialo manualmente.",
-    "close": "Cerrar"
+    "close": "Cerrar",
+    "cardLead": "La IA escribe un resumen de ti listo para reclutadores, a partir de tu perfil y tu CV activo.",
+    "coversLabel": "Qué incluye el resumen",
+    "covers": {
+      "role": "Tu puesto",
+      "experience": "Experiencia",
+      "skills": "Habilidades clave",
+      "preferences": "Preferencias laborales"
+    },
+    "points": {
+      "facts": "De tres a cinco frases, solo con los datos que has añadido",
+      "language": "Escrito en tu idioma",
+      "reuse": "Cópialo en candidaturas, correos o en el Acerca de de LinkedIn"
+    },
+    "write": "Escribir mi resumen",
+    "view": "Abrir mi resumen",
+    "whatItDoes": "Qué hace"
   },
   "explanation": {
     "title": "Por qué esta oferta",

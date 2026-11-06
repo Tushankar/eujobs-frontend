@@ -62,6 +62,10 @@ export default {
     }
     await page.waitForFunction(() => document.querySelector('[data-funnel-stage="Interview"]')?.dataset.now === '1')
     ctx.check((await stageOf(page, first.id)) === 'Interview', 'the move reached the server')
+    // P11d-A6: a move into Interview with no interview under way opens the schedule dialog; skipping it keeps the move.
+    await page.waitForSelector('[role="dialog"] [data-slot-row]', { timeout: 10_000 })
+    await page.keyboard.press('Escape')
+    await page.waitForFunction(() => !document.querySelector('[role="dialog"] [data-slot-row]'), { timeout: 10_000 })
     await chooseStage(page, `[data-funnel-list] [data-stage-select="${second.id}"] select`, 'Screening')
     await page.waitForFunction(() => document.querySelector('[data-funnel-stage="Screening"]')?.dataset.now === '1')
     numbers = await funnelNumbers(page)

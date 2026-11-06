@@ -141,6 +141,7 @@
 }
 
 .actionsBare {
+  justify-content: flex-start;
   margin-top: 20px;
   padding: 0;
   border-top: 0;
@@ -170,11 +171,26 @@
     padding: 20px;
   }
 
+  /* Back and the main action share one row; the main action takes the rest of it. */
   .actions {
+    flex-wrap: nowrap;
+    gap: 8px;
     padding: 14px 20px;
+  }
+
+  .actions > :last-child:not(:first-child) {
+    flex: 1;
+    padding-inline: 14px;
   }
 
   .actionsBare {
     padding: 0;
+  }
+}
+
+/* Too narrow for the main action's arrow beside Back: the label keeps the room. */
+@media (max-width: 400px) {
+  .actions > :last-child:not(:first-child) svg {
+    display: none;
   }
 }

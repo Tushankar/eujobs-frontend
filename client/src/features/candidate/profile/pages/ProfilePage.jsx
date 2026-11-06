@@ -26,7 +26,7 @@ import EditProfileModal from '../components/EditProfileModal.jsx'
 import EntryDialog from '../components/EntryDialog.jsx'
 import LanguagesDialog from '../components/LanguagesDialog.jsx'
 import LinksDialog from '../components/LinksDialog.jsx'
-import ProfileSummaryButton from '../components/ProfileSummaryButton.jsx'
+import ProfileSummaryCard from '../components/ProfileSummaryCard.jsx'
 import RightToWorkDialog from '../components/RightToWorkDialog.jsx'
 import styles from './ProfilePage.module.css'
 import { useMarkSeen } from '@/features/notifications/api.js'
@@ -225,7 +225,6 @@ function ProfileView({ profile }) {
         description={t('profile:description')}
         actions={
           <div className={styles.actions}>
-            <ProfileSummaryButton />
             <Button data-tour="profile-edit" leftIcon={<Icon as={SquarePen} size={20} />} onClick={() => openDialog('core')}>
               {t('profile:edit')}
             </Button>
@@ -507,6 +506,7 @@ function ProfileView({ profile }) {
           <Panel padding={24}>
             <CompletenessChecklist
               completeness={profile.completeness}
+              limit={3}
               heading={<h2 className={styles.sectionTitle}>{t('completeness:title')}</h2>}
               onOpen={{
                 basics: () => openDialog('core'),
@@ -519,6 +519,8 @@ function ProfileView({ profile }) {
               }}
             />
           </Panel>
+
+          <ProfileSummaryCard />
 
           <Panel padding={24}>
             <h2 className={styles.sectionTitle}>{t('profile:resume.title')}</h2>
@@ -587,7 +589,6 @@ function ProfileSkeleton() {
         description={t('profile:description')}
         actions={
           <div className={styles.actions}>
-            <Skeleton shape="pill" width={164} height={40} />
             <Skeleton shape="pill" width={138} height={42} />
           </div>
         }
@@ -660,6 +661,7 @@ function ProfileSkeleton() {
               ))}
             </div>
           </Panel>
+          <ProfileSummaryCard />
           <Panel padding={24}>
             <h2 className={styles.sectionTitle}>{t('profile:resume.title')}</h2>
             <div className={styles.resumeFile}>

@@ -28,13 +28,28 @@
     "regenerated": "Une nouvelle synthèse a été rédigée."
   },
   "profileSummary": {
-    "action": "Synthèse IA",
     "title": "Synthèse IA",
     "lead": "Une synthèse prête pour les recruteurs, rédigée par l’IA à partir de votre profil et de votre CV actif. Relisez-la avant de l’utiliser.",
     "copy": "Copier la synthèse",
     "copied": "Synthèse copiée dans le presse-papiers.",
     "copyFailed": "La copie est bloquée dans ce navigateur. Sélectionnez le texte et copiez-le manuellement.",
-    "close": "Fermer"
+    "close": "Fermer",
+    "cardLead": "L’IA rédige un résumé de votre parcours prêt pour les recruteurs, à partir de votre profil et de votre CV actif.",
+    "coversLabel": "Ce que couvre le résumé",
+    "covers": {
+      "role": "Votre poste",
+      "experience": "Expérience",
+      "skills": "Compétences clés",
+      "preferences": "Préférences de travail"
+    },
+    "points": {
+      "facts": "Trois à cinq phrases, uniquement à partir des informations que vous avez ajoutées",
+      "language": "Rédigé dans votre langue",
+      "reuse": "À copier dans vos candidatures, vos e-mails ou votre section Infos LinkedIn"
+    },
+    "write": "Rédiger mon résumé",
+    "view": "Ouvrir mon résumé",
+    "whatItDoes": "Ce que ça fait"
   },
   "explanation": {
     "title": "Pourquoi cette offre",

@@ -76,7 +76,8 @@ export default {
     await ctx.screenshot(page, '4-page-unread-empty')
 
     await page.goto(`${ctx.webUrl}/candidate/settings/notifications`, { waitUntil: 'networkidle0' })
-    ctx.check(JSON.stringify(await switchState(page)) === '["true","true","true","true"]', 'four categories, all on')
+    // P11d-Q4: the fifth category is Interviews.
+    ctx.check(JSON.stringify(await switchState(page)) === '["true","true","true","true","true"]', 'five categories, all on')
     const saved = responseTo(page, '/api/v1/me/notifications', 'PATCH')
     await page.click('[data-email-switches] li:nth-child(2) [role="switch"]')
     await saved

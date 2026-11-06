@@ -1,6 +1,6 @@
 import { useState } from 'react'
 import { useTranslation } from 'react-i18next'
-import { Check, Copy, Sparkles } from 'lucide-react'
+import { Check, ChevronDown, Copy, Sparkles } from 'lucide-react'
 import aiSparkle from '@/assets/icons/ai-sparkle-blue-16.svg'
 import { Button, Icon, Modal, Panel } from '@/components/ui'
 import { useWriteProfileSummaryMutation } from '@/features/ai/api.js'
@@ -9,6 +9,7 @@ import AiStatus from '@/features/ai/components/AiStatus.jsx'
 import PlanChip from '@/features/candidate/billing/components/PlanChip.jsx'
 import { lacksEntitlement } from '@/features/candidate/billing/usePlan.js'
 import { usePreferences } from '@/lib/preferences.js'
+import { cx } from '@/utils/cx.js'
 import styles from './ProfileSummaryCard.module.css'
 
 const POINTS = ['facts', 'language', 'reuse']
@@ -23,6 +24,7 @@ export default function ProfileSummaryCard() {
   const { t } = useTranslation('ai')
   const { me } = usePreferences()
   const [open, setOpen] = useState(false)
+  const [details, setDetails] = useState(false)
   const [copyStatus, setCopyStatus] = useState('')
   const [write, state] = useWriteProfileSummaryMutation()
   const request = () => write().catch(() => {})
@@ -45,7 +47,7 @@ export default function ProfileSummaryCard() {
 
   return (
     <>
-      <Panel padding={24} className={styles.card} aria-labelledby="profile-summary-title">
+      <Panel padding={20} className={styles.card} aria-labelledby="profile-summary-title">
         <div className={styles.head}>
           <h2 id="profile-summary-title" className={styles.title}>
             <img src={aiSparkle} alt="" width={16} height={16} />
@@ -54,22 +56,29 @@ export default function ProfileSummaryCard() {
           {locked && <PlanChip />}
         </div>
         <p className={styles.lead}>{t('profileSummary.cardLead')}</p>
-        <ul className={styles.covers} aria-label={t('profileSummary.coversLabel')}>
-          {COVERS.map((key) => (
-            <li key={key}>{t(`profileSummary.covers.${key}`)}</li>
-          ))}
-        </ul>
-        <ul className={styles.points}>
-          {POINTS.map((key) => (
-            <li key={key}>
-              <Icon as={Check} size={15} strokeWidth={2.2} className={styles.check} />
-              <span>{t(`profileSummary.points.${key}`)}</span>
-            </li>
-          ))}
-        </ul>
         <AiButton fullWidth leftIcon={<Icon as={Sparkles} size={15} />} onClick={handleOpen} data-profile-summary-button>
           {t(state.data ? 'profileSummary.view' : 'profileSummary.write')}
         </AiButton>
+        {/* What it does, folded so the card stays short beside the checklist. */}
+        <button type="button" className={styles.more} aria-expanded={details} aria-controls="profile-summary-points" onClick={() => setDetails(!details)}>
+          {t('profileSummary.whatItDoes')}
+          <Icon as={ChevronDown} size={14} className={cx(details && styles.flipped)} />
+        </button>
+        <div id="profile-summary-points" className={styles.details} hidden={!details}>
+          <ul className={styles.covers} aria-label={t('profileSummary.coversLabel')}>
+            {COVERS.map((key) => (
+              <li key={key}>{t(`profileSummary.covers.${key}`)}</li>
+            ))}
+          </ul>
+          <ul className={styles.points}>
+            {POINTS.map((key) => (
+              <li key={key}>
+                <Icon as={Check} size={15} strokeWidth={2.2} className={styles.check} />
+                <span>{t(`profileSummary.points.${key}`)}</span>
+              </li>
+            ))}
+          </ul>
+        </div>
       </Panel>
       <Modal
         open={open}

@@ -84,6 +84,7 @@
 .list {
   margin: 0;
   padding-left: 18px;
+  list-style: disc outside;
   font-size: 14px;
   line-height: 21px;
   color: var(--foreground);

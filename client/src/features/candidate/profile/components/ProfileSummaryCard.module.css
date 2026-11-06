@@ -1,7 +1,7 @@
 .card {
   display: flex;
   flex-direction: column;
-  gap: 14px;
+  gap: 12px;
 }
 
 .head {
@@ -54,8 +54,7 @@
   display: grid;
   gap: 8px;
   margin: 0;
-  padding: 14px 0 2px;
-  border-top: 1px solid var(--border);
+  padding: 0;
   list-style: none;
 }
 
@@ -93,4 +92,44 @@
   font-size: 11px;
   line-height: 16px;
   color: var(--success-fg);
+}
+
+.more {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  align-self: flex-start;
+  margin-top: -4px;
+  padding: 2px 0;
+  border: 0;
+  background: none;
+  font-family: inherit;
+  font-size: 13px;
+  font-weight: 600;
+  color: var(--foreground);
+  cursor: pointer;
+}
+
+.more:hover {
+  text-decoration: underline;
+}
+
+.more svg {
+  transition: transform var(--transition);
+}
+
+.flipped {
+  transform: rotate(180deg);
+}
+
+.details {
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+  padding-top: 12px;
+  border-top: 1px solid var(--border);
+}
+
+.details[hidden] {
+  display: none;
 }
