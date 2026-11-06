@@ -1,0 +1,98 @@
+{
+  "welcome": {
+    "title": "Bienvenue, {{name}}",
+    "duration": "Environ une minute",
+    "start": "Commencer la visite",
+    "skip": "Plus tard"
+  },
+  "card": {
+    "progress": "Étape {{current}} sur {{total}}",
+    "onPage": "Sur cette page",
+    "back": "Retour",
+    "next": "Suivant",
+    "go": "M'y emmener",
+    "finish": "Terminer",
+    "skip": "Passer la visite"
+  },
+  "done": {
+    "title": "Tout est prêt",
+    "replay": "Vous pouvez relancer cette visite à tout moment depuis le menu du profil ou la page Aide.",
+    "explore": "Explorer par moi-même"
+  },
+  "plan": {
+    "free": "Vous êtes sur Free. Passez à la formule supérieure à tout moment dans Paramètres › Facturation.",
+    "upgrade": "Passer à {{plan}}",
+    "active": "Vous êtes sur {{plan}}. Tout ce qu’elle inclut est débloqué."
+  },
+  "replay": "Faire la visite guidée",
+  "candidate": {
+    "welcomeText": "Voici comment passer d'un nouveau compte à votre première candidature. Nous vous montrons quatre points de départ.",
+    "doneText": "Commencez par votre CV. L'IA s'en sert pour compléter votre profil et vous proposer les bonnes offres.",
+    "doneAction": "Importer mon CV",
+    "steps": {
+      "cv": {
+        "title": "Importez votre CV",
+        "summary": "L'IA le lit et complète votre profil.",
+        "text": "Commencez ici. Importez votre CV une fois et l'IA complète votre profil, pour que les recruteurs aient une vue complète.",
+        "pageTitle": "Déposez votre CV ici",
+        "pageText": "Chaque import devient une version, et vous choisissez celle que voient les recruteurs."
+      },
+      "profile": {
+        "title": "Complétez votre profil",
+        "summary": "Les profils complets apparaissent dans les recherches.",
+        "text": "Les recruteurs cherchent des profils, pas des fichiers. Ajoutez votre titre, vos compétences et votre expérience pour apparaître dans leurs résultats.",
+        "pageTitle": "Modifiez vos informations",
+        "pageText": "Commencez par le titre et les compétences. La liste de cette page indique ce qui manque encore."
+      },
+      "jobs": {
+        "title": "Trouvez des offres adaptées",
+        "summary": "Des postes classés selon votre profil.",
+        "text": "Les offres sont classées selon votre profil et votre CV : les meilleures correspondances d'abord.",
+        "pageTitle": "Recherchez et filtrez",
+        "pageText": "Recherchez par intitulé ou compétence, puis affinez par ville, mode de travail et salaire."
+      },
+      "applications": {
+        "title": "Suivez vos candidatures",
+        "summary": "Tous les statuts au même endroit.",
+        "text": "Toutes vos candidatures et leur statut au même endroit, de l'envoi à l'offre.",
+        "pageTitle": "Vos candidatures",
+        "pageText": "Dès que vous postulez, chaque poste apparaît ici avec son étape et les nouvelles du recruteur."
+      }
+    }
+  },
+  "recruiter": {
+    "welcomeText": "Voici comment passer d'un nouveau compte à votre premier recrutement. Nous vous montrons quatre points de départ.",
+    "doneText": "Publiez votre première offre. Les candidats adaptés et les candidatures suivront.",
+    "doneAction": "Publier une offre",
+    "steps": {
+      "company": {
+        "title": "Configurez la page de votre entreprise",
+        "summary": "Logo, description et lieu.",
+        "text": "Les candidats regardent qui recrute. Ajoutez votre logo, votre description et votre lieu pour inspirer confiance.",
+        "pageTitle": "La page de votre entreprise",
+        "pageText": "Les candidats la voient sur chaque offre publiée. Gardez-la complète et à jour."
+      },
+      "jobs": {
+        "title": "Publiez votre première offre",
+        "summary": "Compétences, salaire et lieu.",
+        "text": "Créez un poste avec ses compétences, son salaire et son lieu. Les candidats adaptés suivront.",
+        "pageTitle": "Créez une offre",
+        "pageText": "Commencez ici. Vous pouvez enregistrer un brouillon et le publier quand il est prêt."
+      },
+      "candidates": {
+        "title": "Trouvez des candidats",
+        "summary": "Recherchez des talents vérifiés.",
+        "text": "Recherchez des candidats vérifiés par compétence, ville et disponibilité, et invitez les bons à postuler.",
+        "pageTitle": "Recherchez des talents",
+        "pageText": "Utilisez la recherche et les filtres pour affiner la liste, puis ouvrez un profil pour voir le détail."
+      },
+      "pipeline": {
+        "title": "Pilotez votre processus de recrutement",
+        "summary": "Faites avancer les candidats étape par étape.",
+        "text": "Faites avancer les candidats dans vos étapes, de nouveau à recruté.",
+        "pageTitle": "Votre processus",
+        "pageText": "Filtrez par offre et passez de la vue tableau à la vue entonnoir."
+      }
+    }
+  }
+}

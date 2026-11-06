@@ -30,6 +30,7 @@ export default function UploadDropzone({ onFile, disabled = false }) {
 
   return (
     <label
+      data-tour="cv-upload"
       className={cx(styles.zone, dragging && styles.dragging)}
       onDragOver={(event) => {
         event.preventDefault()

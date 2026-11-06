@@ -31,6 +31,8 @@ const userSchema = new Schema(
       matchingConsent: { type: Boolean, default: true },
     },
     onboardingCompletedAt: Date,
+    // The first-login product tour (candidates, recruiters): set when it is finished or skipped.
+    tourFinishedAt: Date,
     // Recruiters (M-145)
     companyId: { type: Schema.Types.ObjectId, ref: 'Company' },
     adminAccess: {

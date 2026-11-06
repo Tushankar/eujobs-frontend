@@ -7,7 +7,7 @@ import styles from './GetStartedCard.module.css'
  */
 export default function GetStartedCard({ id, title, text, steps, action, className }) {
   return (
-    <section className={cx(styles.card, className)} aria-labelledby={id}>
+    <section className={cx(styles.card, className)} aria-labelledby={id} data-get-started>
       <div className={styles.head}>
         <h2 id={id} className={styles.title}>
           {title}

@@ -1,6 +1,7 @@
 import bcrypt from 'bcryptjs'
 import { fieldError } from '../../lib/errors.js'
 import { AdminRole } from '../admin/admin.model.js'
+import { Application } from '../applications/applications.model.js'
 import { candidateCounters } from '../applications/applications.stats.js'
 import { candidateSummary, fullNameChanged } from '../candidates/candidates.service.js'
 import { roleText } from '../admin/admin.access.js'
@@ -8,6 +9,8 @@ import { effectivePermissions, listPermissions } from '../admin/admin.service.js
 import { checkPassword, hashPassword } from '../auth/auth.service.js'
 import { Company } from '../companies/companies.model.js'
 import { logoUrls } from '../companies/companies.service.js'
+import { CvVersion } from '../cv/cv.model.js'
+import { Job } from '../jobs/jobs.model.js'
 import { reissueCertificates } from '../learning/learning.certificates.js'
 import { unreadCount } from '../messages/messages.service.js'
 import { currentLegalVersions, findEnabledCountry } from '../meta/meta.service.js'
@@ -42,6 +45,7 @@ export async function meDto(user) {
         Boolean(current.privacyVersion && current.privacyVersion !== legal.privacyVersion),
     },
   }
+  if (user.role === 'candidate' || user.role === 'recruiter') dto.tourPending = await tourPending(user)
   if (user.role === 'candidate') {
     dto.onboardingCompleted = Boolean(user.onboardingCompletedAt)
     // From the Stripe subscription (U38): plan key and entitlement keys (§3.3).
@@ -74,6 +78,22 @@ export async function meDto(user) {
   // P11b-Q3, Q12: the email switches of this role's categories.
   dto.emailSwitches = emailSwitches(user)
   return dto
+}
+
+/**
+ * The first-login product tour opens by itself for an account with no activity yet (no CV and no application; a
+ * recruiter's company with no job) until it is finished or skipped. It can always be replayed from the menu.
+ */
+async function tourPending(user) {
+  if (user.tourFinishedAt) return false
+  if (user.role === 'recruiter') return !user.companyId || !(await Job.exists({ companyId: user.companyId }))
+  return !(await CvVersion.exists({ userId: user._id })) && !(await Application.exists({ candidateId: user._id }))
+}
+
+/** POST /me/tour: the product tour was finished or skipped. */
+export async function finishTour(user) {
+  user.tourFinishedAt ??= new Date()
+  await user.save()
 }
 
 /** GET /me/counters (M-094, P11b-Q2): unread messages (candidates, recruiters), the candidate's active applications, unread notifications. */

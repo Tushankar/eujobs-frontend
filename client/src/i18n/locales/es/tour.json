@@ -1,0 +1,98 @@
+{
+  "welcome": {
+    "title": "Te damos la bienvenida, {{name}}",
+    "duration": "Dura un minuto aproximadamente",
+    "start": "Empezar el recorrido",
+    "skip": "Ahora no"
+  },
+  "card": {
+    "progress": "Paso {{current}} de {{total}}",
+    "onPage": "En esta página",
+    "back": "Atrás",
+    "next": "Siguiente",
+    "go": "Llévame allí",
+    "finish": "Terminar",
+    "skip": "Saltar el recorrido"
+  },
+  "done": {
+    "title": "Ya está todo listo",
+    "replay": "Puedes repetir este recorrido cuando quieras desde el menú de perfil o la página de Ayuda.",
+    "explore": "Explorar por mi cuenta"
+  },
+  "plan": {
+    "free": "Tienes el plan Free. Mejora cuando quieras desde Configuración › Facturación.",
+    "upgrade": "Mejorar a {{plan}}",
+    "active": "Tienes {{plan}}. Todo lo que incluye está desbloqueado."
+  },
+  "replay": "Hacer el recorrido del producto",
+  "candidate": {
+    "welcomeText": "Así pasas de una cuenta nueva a tu primera candidatura. Te mostramos cuatro lugares para empezar.",
+    "doneText": "Empieza por tu CV. La IA lo usa para completar tu perfil y recomendarte los empleos adecuados.",
+    "doneAction": "Subir mi CV",
+    "steps": {
+      "cv": {
+        "title": "Sube tu CV",
+        "summary": "La IA lo lee y completa tu perfil.",
+        "text": "Empieza aquí. Sube tu currículum una vez y la IA completa tu perfil para que los reclutadores vean el panorama completo.",
+        "pageTitle": "Suelta aquí tu currículum",
+        "pageText": "Cada subida es una versión, y tú decides cuál ven los reclutadores."
+      },
+      "profile": {
+        "title": "Completa tu perfil",
+        "summary": "Los perfiles completos aparecen en las búsquedas.",
+        "text": "Los reclutadores buscan perfiles, no archivos. Añade tu titular, habilidades y experiencia para aparecer en sus resultados.",
+        "pageTitle": "Edita tus datos",
+        "pageText": "Empieza por el titular y las habilidades. La lista de esta página muestra lo que aún falta."
+      },
+      "jobs": {
+        "title": "Encuentra empleos afines",
+        "summary": "Puestos ordenados según tu perfil.",
+        "text": "Los empleos se ordenan según tu perfil y tu CV, así que las mejores coincidencias salen primero.",
+        "pageTitle": "Busca y filtra",
+        "pageText": "Busca por puesto o habilidad y luego acota la lista por ciudad, modalidad y salario."
+      },
+      "applications": {
+        "title": "Sigue tus candidaturas",
+        "summary": "Todos los estados en un solo lugar.",
+        "text": "Todas tus candidaturas y su estado en un solo lugar, desde el envío hasta la oferta.",
+        "pageTitle": "Tus candidaturas",
+        "pageText": "Cuando te postules, cada puesto aparecerá aquí con su fase y las novedades del reclutador."
+      }
+    }
+  },
+  "recruiter": {
+    "welcomeText": "Así pasas de una cuenta nueva a tu primera contratación. Te mostramos cuatro lugares para empezar.",
+    "doneText": "Publica tu primer empleo. A partir de ahí llegan los candidatos afines y las candidaturas.",
+    "doneAction": "Publicar un empleo",
+    "steps": {
+      "company": {
+        "title": "Configura la página de tu empresa",
+        "summary": "Logotipo, descripción y ubicación.",
+        "text": "Los candidatos miran quién contrata. Añade tu logotipo, descripción y ubicación para generar confianza.",
+        "pageTitle": "La página de tu empresa",
+        "pageText": "Los candidatos la ven en cada empleo que publicas. Mantenla completa y actualizada."
+      },
+      "jobs": {
+        "title": "Publica tu primer empleo",
+        "summary": "Habilidades, salario y ubicación.",
+        "text": "Crea un puesto con sus habilidades, salario y ubicación. Después llegan los candidatos afines.",
+        "pageTitle": "Crea un empleo",
+        "pageText": "Empieza aquí. Puedes guardar un borrador y publicarlo cuando esté listo."
+      },
+      "candidates": {
+        "title": "Encuentra candidatos",
+        "summary": "Busca talento verificado.",
+        "text": "Busca candidatos verificados por habilidad, ciudad y disponibilidad, e invita a los adecuados a postularse.",
+        "pageTitle": "Busca talento",
+        "pageText": "Usa la búsqueda y los filtros para acotar la lista y abre un perfil para ver los detalles."
+      },
+      "pipeline": {
+        "title": "Gestiona tu proceso de selección",
+        "summary": "Mueve a los candidatos fase a fase.",
+        "text": "Mueve a los candidatos por tus fases, desde nuevo hasta contratado.",
+        "pageTitle": "Tu proceso",
+        "pageText": "Filtra por empleo y cambia entre la vista de tablero y la de embudo."
+      }
+    }
+  }
+}

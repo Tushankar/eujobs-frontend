@@ -57,7 +57,7 @@ function NavItem({ workspace, item, me }) {
             <img src={isActive && item.iconSrc === aiNavIcon ? aiNavIconActive : item.iconSrc} alt="" className={styles.customIcon} />
           )}
           <span className={styles.linkLabel}>{t(`shell:nav.${item.key}`)}</span>
-          {locked && <PlanChip className={cx(styles.badge, styles.badgeLock)} />}
+          {locked && <PlanChip />}
           {!locked && item.badge?.useText && <LiveBadge useText={item.badge.useText} className={styles.badge} name={item.key} />}
           {!locked && item.badge?.textKey && <span className={cx(styles.badge, item.badge.tone === 'ai' && styles.badgeAi)}>{t(`shell:${item.badge.textKey}`)}</span>}
           {/* P11b-Q10: unread notifications of this section; Messages keeps only its unread-messages badge. */}

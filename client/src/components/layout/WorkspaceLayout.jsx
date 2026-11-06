@@ -8,6 +8,7 @@ import { usePreferences } from '@/lib/preferences.js'
 import NoticeBanner from '@/components/common/NoticeBanner.jsx'
 import UpgradeDialog from '@/features/candidate/billing/components/UpgradeDialog.jsx'
 import LegalAcceptDialog from '@/features/public/components/LegalAcceptDialog.jsx'
+import ProductTour from '@/features/tour/ProductTour.jsx'
 import { cx } from '@/utils/cx.js'
 import Copyright from './Copyright.jsx'
 import Header from './Header.jsx'
@@ -62,7 +63,12 @@ export default function WorkspaceLayout({ workspaceId }) {
         </main>
       </div>
       <LegalAcceptDialog />
-      {['candidate', 'recruiter'].includes(workspaceId) && <UpgradeDialog />}
+      {['candidate', 'recruiter'].includes(workspaceId) && (
+        <>
+          <UpgradeDialog />
+          <ProductTour workspace={workspace} />
+        </>
+      )}
     </>
   )
 }

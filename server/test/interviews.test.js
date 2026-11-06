@@ -317,6 +317,8 @@ describe('The call (P11d-Q2, Q5, Q17, Q18, Q23, Q26, Q29)', () => {
   function connect(ticket) {
     const socket = new WebSocket(`${base}?ticket=${ticket}`)
     open.push(socket)
+    // A refused socket (the bad-ticket check) errors when it is terminated in after(); that is expected.
+    socket.on('error', () => {})
     socket.received = []
     socket.on('message', (raw) => socket.received.push(JSON.parse(raw)))
     return new Promise((resolve, reject) => {

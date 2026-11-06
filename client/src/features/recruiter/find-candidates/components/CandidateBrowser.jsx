@@ -66,7 +66,7 @@ export default function CandidateBrowser({ useList, notice, extra, empty }) {
 
   return (
     <>
-      <div className={styles.toolbar}>
+      <div className={styles.toolbar} data-tour="candidates-search">
         <DiscoveryToolbar locked={locked} jobsLoading={jobsLoading} query={query} onQueryChange={setQuery} jobs={jobs} job={job} onJobChange={setJobId} filters={filters} onFiltersChange={setFilters} />
       </div>
 

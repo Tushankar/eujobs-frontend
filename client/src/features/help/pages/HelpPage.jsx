@@ -1,7 +1,9 @@
 import { useState } from 'react'
 import { useTranslation } from 'react-i18next'
+import { useDispatch } from 'react-redux'
 import { useOutletContext } from 'react-router-dom'
-import { Search } from 'lucide-react'
+import { Compass, Search } from 'lucide-react'
+import { startTour } from '@/app/tour.js'
 import { Button, Icon, Panel, SkeletonRegion, TextField } from '@/components/ui'
 import { workspacePath } from '@/app/workspaces.js'
 import { foldText } from '@/lib/text.js'
@@ -15,6 +17,7 @@ import styles from './HelpPage.module.css'
 export default function HelpPage() {
   const { t, i18n } = useTranslation()
   const { workspace } = useOutletContext()
+  const dispatch = useDispatch()
   const { data: allFaqs = [], isError, isLoading } = useGetFaqsQuery(i18n.language)
   const [query, setQuery] = useState('')
   // null = the default: the first question open.
@@ -23,7 +26,9 @@ export default function HelpPage() {
   const needle = foldText(query.trim())
   const faqs = allFaqs.filter((faq) => !needle || foldText(`${faq.question} ${faq.answer}`).includes(needle))
   const links = HELP_LINKS.filter((link) => !needle || foldText(t(`help:links.${link.id}`)).includes(needle))
-  const hasResults = faqs.length + links.length > 0
+  // Candidates and recruiters can replay the product tour from here.
+  const showTour = workspace.id !== 'admin' && (!needle || foldText(t('tour:replay')).includes(needle))
+  const hasResults = faqs.length + links.length > 0 || showTour
   const open = openIds ?? (allFaqs[0] ? [allFaqs[0].id] : [])
 
   function toggle(id) {
@@ -72,11 +77,12 @@ export default function HelpPage() {
         </Panel>
       )}
 
-      {links.length > 0 && (
+      {(links.length > 0 || showTour) && (
         <div className={styles.links}>
           {links.map((link) => (
             <HelpLinkCard key={link.id} icon={link.icon} label={t(`help:links.${link.id}`)} to={workspacePath(workspace, link.to[workspace.id])} />
           ))}
+          {showTour && <HelpLinkCard icon={Compass} label={t('tour:replay')} onClick={() => dispatch(startTour())} />}
         </div>
       )}
 

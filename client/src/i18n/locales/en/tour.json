@@ -1,0 +1,98 @@
+{
+  "welcome": {
+    "title": "Welcome, {{name}}",
+    "duration": "Takes about a minute",
+    "start": "Start the tour",
+    "skip": "Skip for now"
+  },
+  "card": {
+    "progress": "Step {{current}} of {{total}}",
+    "onPage": "On this page",
+    "back": "Back",
+    "next": "Next",
+    "go": "Take me there",
+    "finish": "Finish",
+    "skip": "Skip tour"
+  },
+  "done": {
+    "title": "You're all set",
+    "replay": "You can replay this tour any time from the profile menu or the Help page.",
+    "explore": "Explore on my own"
+  },
+  "plan": {
+    "free": "You're on Free. Upgrade any time from Settings › Billing.",
+    "upgrade": "Upgrade to {{plan}}",
+    "active": "You're on {{plan}}. Everything it includes is unlocked."
+  },
+  "replay": "Take the product tour",
+  "candidate": {
+    "welcomeText": "Here's how to get from a new account to your first application. We'll show you four places to start.",
+    "doneText": "Start with your CV. AI uses it to fill in your profile and match you to the right jobs.",
+    "doneAction": "Upload my CV",
+    "steps": {
+      "cv": {
+        "title": "Upload your CV",
+        "summary": "AI reads it and fills in your profile.",
+        "text": "Start here. Upload your resume once and AI fills in your profile, so recruiters see the full picture.",
+        "pageTitle": "Drop your resume here",
+        "pageText": "Each upload becomes a version, and you decide which one recruiters see."
+      },
+      "profile": {
+        "title": "Complete your profile",
+        "summary": "Complete profiles show up in recruiter searches.",
+        "text": "Recruiters search profiles, not files. Add your headline, skills and experience to appear in their results.",
+        "pageTitle": "Edit your details",
+        "pageText": "Start with your headline and skills. The checklist on this page shows what is still missing."
+      },
+      "jobs": {
+        "title": "Find matched jobs",
+        "summary": "Roles ranked against your profile.",
+        "text": "Jobs are ranked against your profile and CV, so the best matches come first.",
+        "pageTitle": "Search and filter",
+        "pageText": "Search by title or skill, then narrow the list by city, work mode and salary."
+      },
+      "applications": {
+        "title": "Track your applications",
+        "summary": "Every status in one place.",
+        "text": "Every application and its status in one place, from submitted to offer.",
+        "pageTitle": "Your applications",
+        "pageText": "Once you apply, each role shows up here with its stage and the recruiter's updates."
+      }
+    }
+  },
+  "recruiter": {
+    "welcomeText": "Here's how to go from a new account to your first hire. We'll show you four places to start.",
+    "doneText": "Post your first job. Matched candidates and applications follow from there.",
+    "doneAction": "Post a job",
+    "steps": {
+      "company": {
+        "title": "Set up your company page",
+        "summary": "Logo, description and location.",
+        "text": "Candidates check who is hiring. Add your logo, description and location to build trust.",
+        "pageTitle": "Your company page",
+        "pageText": "Candidates see this on every job you post. Keep it complete and up to date."
+      },
+      "jobs": {
+        "title": "Post your first job",
+        "summary": "Skills, salary and location.",
+        "text": "Create a role with its skills, salary and location. Matched candidates follow.",
+        "pageTitle": "Create a job",
+        "pageText": "Start here. You can save a draft and publish it when it's ready."
+      },
+      "candidates": {
+        "title": "Find candidates",
+        "summary": "Search verified talent.",
+        "text": "Search verified candidates by skill, city and availability, and invite the right ones to apply.",
+        "pageTitle": "Search talent",
+        "pageText": "Use search and filters to narrow the list, then open a profile to see the details."
+      },
+      "pipeline": {
+        "title": "Run your hiring pipeline",
+        "summary": "Move applicants stage by stage.",
+        "text": "Move applicants through your stages, from new to hired.",
+        "pageTitle": "Your pipeline",
+        "pageText": "Filter by job, and switch between the board and funnel views."
+      }
+    }
+  }
+}

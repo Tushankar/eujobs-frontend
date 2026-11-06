@@ -106,6 +106,8 @@ export const api = createApi({
   endpoints: (build) => ({
     getMe: build.query({ query: () => '/me', providesTags: ['Me'] }),
     updateMe: build.mutation({ query: (body) => ({ url: '/me', method: 'PATCH', body }), ...writesMe }),
+    // The first-login product tour was finished or skipped (me.tourPending turns false).
+    finishTour: build.mutation({ query: () => ({ url: '/me/tour', method: 'POST' }), ...writesMe }),
     getConfig: build.query({ query: () => '/meta/config', providesTags: ['Config'] }),
     getCountries: build.query({ query: () => '/meta/countries', transformResponse: (response) => response.items, providesTags: ['Countries'] }),
     // ISO 639-1 codes (M-020) for profile and job language fields; names come from Intl.DisplayNames.
@@ -122,6 +124,7 @@ export const api = createApi({
 export const {
   useGetMeQuery,
   useUpdateMeMutation,
+  useFinishTourMutation,
   useGetConfigQuery,
   useGetCountriesQuery,
   useGetLanguageCodesQuery,

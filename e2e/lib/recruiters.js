@@ -72,11 +72,13 @@ export async function decide(userId, decision, reason) {
  * expect; that plan is an active subscription row written straight to the test database (no Stripe, no rows in
  * Payments). P11c-02 buys it through the real Checkout instead.
  */
-export async function approvedRecruiter(label, { plus = true, ...options } = {}) {
+export async function approvedRecruiter(label, { plus = true, tour = false, ...options } = {}) {
   const recruiter = await submittedRecruiter(label, options)
   const me = check(await api('/me', { token: recruiter.token }), 'me')
   await decide(me.id, 'approved')
   if (plus) await giveRecruiterPlus(me.id)
+  // The first-login product tour is marked done so it does not cover the Overview, unless `tour: true`.
+  if (!tour) check(await api('/me/tour', { method: 'POST', token: recruiter.token }), 'tour')
   return { ...recruiter, userId: me.id }
 }
 

@@ -1,0 +1,269 @@
+/* Above the header (30), the sidebar (40) and dialogs (100). */
+.layer {
+  position: fixed;
+  inset: 0;
+  z-index: 110;
+}
+
+.blocker {
+  position: absolute;
+  inset: 0;
+}
+
+/* No element to point at (a narrow window hides the sidebar): the whole page dims. */
+.dim {
+  background: var(--modal-backdrop);
+}
+
+/* The page dims around the highlighted element; a white hairline frames it. */
+.hole {
+  position: fixed;
+  border-radius: var(--radius-xl);
+  box-shadow:
+    0 0 0 2px #fff,
+    0 0 0 9999px var(--modal-backdrop);
+  pointer-events: none;
+}
+
+.card {
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: min(360px, calc(100vw - 32px));
+  padding: 18px 20px 16px;
+  border: 1px solid rgba(0, 0, 0, 0.08);
+  border-radius: var(--radius-xl);
+  background: var(--card);
+  box-shadow: 0 24px 48px -12px rgba(16, 24, 40, 0.28);
+  outline: 0;
+  visibility: hidden;
+}
+
+.cardPlaced {
+  visibility: visible;
+}
+
+@media (prefers-reduced-motion: no-preference) {
+  .hole,
+  .card {
+    transition:
+      top var(--duration-slow) var(--ease-out),
+      left var(--duration-slow) var(--ease-out),
+      width var(--duration-slow) var(--ease-out),
+      height var(--duration-slow) var(--ease-out);
+  }
+}
+
+.cardHead {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 8px;
+  margin: -6px -8px 0 0;
+}
+
+.progressText {
+  font-size: 12px;
+  font-weight: 600;
+  color: var(--muted-foreground);
+}
+
+.onPage {
+  font-weight: 500;
+}
+
+.segments {
+  display: flex;
+  gap: 4px;
+  margin: 8px 0 14px;
+}
+
+.segment {
+  flex: 1;
+  height: 3px;
+  border-radius: var(--radius-full);
+  background: var(--border);
+  transition: background-color var(--transition);
+}
+
+.segmentDone {
+  background: var(--primary);
+}
+
+.cardTitle {
+  font-family: var(--font-display);
+  font-size: 17px;
+  font-weight: 800;
+  line-height: 24px;
+  color: var(--foreground);
+}
+
+.cardText {
+  margin-top: 6px;
+  font-size: 13.5px;
+  line-height: 20px;
+  color: var(--muted-foreground);
+}
+
+.cardFooter {
+  display: flex;
+  justify-content: flex-end;
+  gap: 8px;
+  margin-top: 18px;
+}
+
+/* Welcome and closing dialogs */
+
+.modalFooter {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  justify-content: flex-end;
+  gap: 8px;
+  width: 100%;
+}
+
+.duration {
+  margin-right: auto;
+  font-size: 12px;
+  font-weight: 500;
+  color: var(--muted-foreground);
+}
+
+.plan {
+  display: flex;
+  flex-direction: column;
+  border: 1px solid var(--border);
+  border-radius: var(--radius-xl);
+}
+
+.planRow {
+  display: flex;
+  align-items: flex-start;
+  gap: 14px;
+  padding: 14px 16px;
+}
+
+.planRow + .planRow {
+  border-top: 1px solid var(--border);
+}
+
+.planNumber {
+  display: inline-flex;
+  flex-shrink: 0;
+  align-items: center;
+  justify-content: center;
+  width: 26px;
+  height: 26px;
+  border: 1.5px dashed var(--border-strong);
+  border-radius: var(--radius-full);
+  font-size: 12px;
+  font-weight: 700;
+  color: var(--foreground);
+}
+
+.planText {
+  display: flex;
+  flex-direction: column;
+  gap: 2px;
+  min-width: 0;
+}
+
+.planTitle {
+  font-family: var(--font-display);
+  font-size: 14px;
+  font-weight: 700;
+  line-height: 20px;
+  color: var(--foreground);
+}
+
+.planSummary {
+  font-size: 13px;
+  line-height: 18px;
+  color: var(--muted-foreground);
+}
+
+.replay {
+  font-size: 13px;
+  line-height: 20px;
+  color: var(--muted-foreground);
+}
+
+/* Welcome: the steps beside the plan card; stacked on narrow windows. */
+.welcome {
+  display: grid;
+  grid-template-columns: minmax(0, 1.15fr) minmax(0, 1fr);
+  gap: 20px;
+  align-items: start;
+}
+
+@media (max-width: 760px) {
+  .welcome {
+    grid-template-columns: minmax(0, 1fr);
+  }
+}
+
+.offer {
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+  padding: 18px 20px 20px;
+  border: 1px solid var(--border);
+  border-radius: var(--radius-xl);
+  background: var(--card);
+}
+
+.offerName {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  font-family: var(--font-display);
+  font-size: 14px;
+  font-weight: 800;
+  color: var(--foreground);
+}
+
+/* The paid badge's gold crown (PlanBadge.module.css). */
+.offerName svg {
+  color: #b8860b;
+  fill: #e8b931;
+}
+
+.offerPrice {
+  display: flex;
+  align-items: baseline;
+  gap: 6px;
+}
+
+.offerPrice strong {
+  font-family: var(--font-display);
+  font-size: 28px;
+  font-weight: 800;
+  line-height: 34px;
+  letter-spacing: -0.5px;
+  color: var(--foreground);
+}
+
+.offerPrice span {
+  font-size: 13px;
+  font-weight: 500;
+  color: var(--muted-foreground);
+}
+
+.offerFeatures {
+  padding-top: 12px;
+  border-top: 1px solid var(--border);
+}
+
+.offerAction {
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+  margin-top: 4px;
+}
+
+.offerNote {
+  font-size: 12px;
+  line-height: 18px;
+  color: var(--muted-foreground);
+}

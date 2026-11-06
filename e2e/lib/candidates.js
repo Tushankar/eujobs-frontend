@@ -6,14 +6,18 @@ import { api, TEST_PASSWORD, uniqueEmail, verifiedCandidate } from './testApi.js
 
 /* Candidates for the Phase 3 checks, created through the API so each scenario starts from a known state. */
 
-/** A verified candidate who finished onboarding (London, remote); returns { email, token, user }. */
-export async function onboardedCandidate(label, overrides = {}) {
+/**
+ * A verified candidate who finished onboarding (London, remote); returns { email, token, user }. The first-login
+ * product tour is marked done so it does not cover the Overview, unless `tour: true`.
+ */
+export async function onboardedCandidate(label, { tour = false, ...overrides } = {}) {
   const email = uniqueEmail(label.toLowerCase())
   await verifiedCandidate(email, TEST_PASSWORD, { fullName: `${label} ${Date.now() % 100000}`, ...overrides })
   const { body } = await api('/auth/login', { method: 'POST', body: { email, password: TEST_PASSWORD, portal: 'candidate' } })
   const preferences = await api('/candidate/onboarding/preferences', { method: 'PUT', token: body.token, body: { workPreference: 'remote', placeId: PLACES.london.placeId } })
   if (preferences.status !== 200) throw new Error(`onboarding preferences failed: ${preferences.status}`)
   const completed = await api('/candidate/onboarding/complete', { method: 'POST', token: body.token })
+  if (!tour) await api('/me/tour', { method: 'POST', token: body.token })
   return { email, token: body.token, user: completed.body }
 }
 

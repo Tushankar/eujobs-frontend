@@ -226,7 +226,7 @@ function ProfileView({ profile }) {
         actions={
           <div className={styles.actions}>
             <ProfileSummaryButton />
-            <Button leftIcon={<Icon as={SquarePen} size={20} />} onClick={() => openDialog('core')}>
+            <Button data-tour="profile-edit" leftIcon={<Icon as={SquarePen} size={20} />} onClick={() => openDialog('core')}>
               {t('profile:edit')}
             </Button>
           </div>

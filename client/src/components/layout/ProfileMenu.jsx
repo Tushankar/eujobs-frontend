@@ -1,7 +1,9 @@
 import { useState } from 'react'
 import { useTranslation } from 'react-i18next'
+import { useDispatch } from 'react-redux'
 import { Link } from 'react-router-dom'
-import { Check, ChevronDown, ChevronRight, Earth, MapPin, Users } from 'lucide-react'
+import { Check, ChevronDown, ChevronRight, Compass, Earth, MapPin, Users } from 'lucide-react'
+import { startTour } from '@/app/tour.js'
 import { cx } from '@/utils/cx.js'
 import { Avatar, Dropdown, Icon } from '@/components/ui'
 import { workspacePath } from '@/app/workspaces.js'
@@ -41,6 +43,7 @@ export default function ProfileMenu({ workspace }) {
   const { me, country, language, setCountry, setLanguage } = usePreferences()
   const format = useFormat()
   const countries = useCountryOptions()
+  const dispatch = useDispatch()
   const [open, setOpen] = useState(null)
   const toggle = (row) => setOpen((current) => (current === row ? null : row))
   if (!me) return null
@@ -73,6 +76,22 @@ export default function ProfileMenu({ workspace }) {
               <span className={styles.rowLabel}>{t('shell:profileMenu.profile')}</span>
               <Icon as={ChevronRight} size={14} />
             </Link>
+
+            {/* Candidates and recruiters can replay the first-login product tour. */}
+            {workspace.id !== 'admin' && (
+              <button
+                type="button"
+                className={styles.row}
+                onClick={() => {
+                  close()
+                  dispatch(startTour())
+                }}
+              >
+                <Icon as={Compass} size={16} />
+                <span className={styles.rowLabel}>{t('tour:replay')}</span>
+                <Icon as={ChevronRight} size={14} />
+              </button>
+            )}
 
             {workspace.showLocation && (
               <>

@@ -60,7 +60,7 @@ export default function JobsPage() {
   }
 
   const createButton = (
-    <Button as={Link} to="/recruiter/jobs/new" leftIcon={<Icon as={Plus} size={14} />}>
+    <Button as={Link} to="/recruiter/jobs/new" data-tour="job-create" leftIcon={<Icon as={Plus} size={14} />}>
       {t('jobs:page.create')}
     </Button>
   )

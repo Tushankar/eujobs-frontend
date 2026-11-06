@@ -100,15 +100,6 @@
   color: var(--text-nav);
 }
 
-/* M-118: the plan chip on a page the candidate's plan does not include. */
-.badgeLock {
-  display: inline-flex;
-  align-items: center;
-  gap: 3px;
-  font-weight: 600;
-  white-space: nowrap;
-}
-
 /* Figma active row: white badge, count in primary. */
 .active .badge {
   background: #fbfdff;

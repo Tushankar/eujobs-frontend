@@ -39,6 +39,12 @@ router.post('/legal/accept', requireVerifiedEmail, async (req, res) => {
   res.json(await users.meDto(req.user))
 })
 
+router.post('/tour', async (req, res) => {
+  if (!['candidate', 'recruiter'].includes(req.user.role)) return res.status(204).end()
+  await users.finishTour(req.user)
+  res.json(await users.meDto(req.user))
+})
+
 // P11b-Q3, Q12: one email switch per category, for every role; in-app notifications are always on.
 router.patch('/notifications', requireVerifiedEmail, validate({ body: switchesBody }), async (req, res) => {
   await setEmailSwitches(req.user, req.body.emailSwitches)

@@ -158,7 +158,7 @@ function CompanyForm({ company }) {
     <>
       <PageHeading />
 
-      <Panel className={styles.panel} padding="clamp(20px, 4vw, 32px)">
+      <Panel className={styles.panel} padding="clamp(20px, 4vw, 32px)" data-tour="company-card">
         <div className={styles.identity}>
           <CompanyLogo name={company.displayName} id={company.id} src={company.logoUrl ?? undefined} size={64} />
           <div className={styles.identityText}>

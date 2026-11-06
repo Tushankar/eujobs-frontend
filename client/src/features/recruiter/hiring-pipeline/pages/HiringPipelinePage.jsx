@@ -87,7 +87,7 @@ export default function HiringPipelinePage() {
         }
       />
 
-      <div className={styles.summary}>
+      <div className={styles.summary} data-tour="pipeline-filters">
         <SelectField variant="filter"
           className={styles.jobFilter}
           aria-label={t('applications:recruiter.jobFilter')}

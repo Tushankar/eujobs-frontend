@@ -70,7 +70,7 @@ export default function FindJobsPage() {
     <div>
       <PageTitle className={styles.title} eyebrow={t('findJobs:page.eyebrow')} title={t('findJobs:page.title')} description={t('findJobs:page.description')} />
 
-      <form className={styles.search} role="search" onSubmit={(event) => event.preventDefault()}>
+      <form className={styles.search} role="search" data-tour="jobs-search" onSubmit={(event) => event.preventDefault()}>
         <div className={styles.fields}>
           <TextField
             className={styles.query}

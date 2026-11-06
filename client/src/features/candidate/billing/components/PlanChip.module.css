@@ -1,0 +1,11 @@
+/* The paid badge's gold crown (PlanBadge.module.css), alone: no pill, no lock. */
+.chip {
+  display: inline-flex;
+  flex-shrink: 0;
+  align-items: center;
+}
+
+.chip svg {
+  color: #b8860b;
+  fill: #e8b931;
+}
