@@ -1,4 +1,40 @@
 import { interpolate, t } from '../lib/i18n.js'
+import { calendarInvite, detailsLine, formatWhen } from '../modules/interviews/interviews.emails.js'
+
+/**
+ * §3.23: the interview and document-request emails, as the service sends them: times in the recipient's zone
+ * (Europe/London here), the optional lines already translated, and an `ical` invite for the calendar emails
+ * (mail:test attaches it; renderers ignore it).
+ */
+function interviewSamples(language, origin, role) {
+  const label = (key, params = {}) => interpolate(t(language, `labels.interview.${key}`), params)
+  const user = { language, timezone: 'Europe/London', role, fullName: 'Mail test', email: 'mail-test@example.com' }
+  const startAt = new Date(Date.now() + 3 * 24 * 60 * 60 * 1000)
+  startAt.setUTCHours(9, 0, 0, 0)
+  const interview = { _id: '000000000000000000000001', mode: 'video', startAt, minutes: 45, sequence: 1 }
+  const names = { company: 'Mail Test Ltd', job: 'Senior Product Designer', candidate: 'Mail Tester' }
+  const when = formatWhen(user, startAt, 45)
+  const link = `${origin}/${role}/interviews/${interview._id}`
+  const base = { ...names, link, details: detailsLine(user, interview), when, intro: label(`intro.${role}`, names) }
+  const slots = [0, 1, 2].map((day) => formatWhen(user, new Date(startAt.getTime() + day * 24 * 60 * 60 * 1000), 45))
+  const ical = (method) => calendarInvite(user, interview, method, names)
+  return {
+    interview_invitation: { ...base, items: slots, aiNotes: label('aiNotesLine') },
+    interview_rescheduled: { ...base, items: slots, released: label('released', { when }), aiNotes: '', ical: ical('CANCEL') },
+    interview_confirmed: { ...base, ical: ical('REQUEST') },
+    interview_cancelled: { ...base, wasBooked: label('wasBooked', { when }), reasonLine: label('reasonLine', { reason: 'The role was filled.' }), ical: ical('CANCEL') },
+    interview_other_times: { ...base, noteLine: label('noteLine', { note: 'Could we meet on Friday morning instead?' }) },
+    interview_reschedule_request: { ...base, noteLine: label('noteLine', { note: 'I have a clash that day; could we move it?' }) },
+    interview_reminder: { ...base, soon: label('in24h') },
+    document_request: {
+      ...names,
+      link: `${origin}/candidate/document-requests/000000000000000000000002`,
+      items: ['id', 'signed_offer'].map((kind) => t(language, `labels.documentKind.${kind}`)),
+      noteLine: label('noteLine', { note: 'Please sign the offer letter attached.' }),
+    },
+    documents_received: { ...names, link: `${origin}/recruiter/document-requests/000000000000000000000002` },
+  }
+}
 
 /*
  * Sample parameters for every email type (npm run mail:test, and the P11-04 browser check that renders each email
@@ -84,6 +120,7 @@ export function mailSample(type, language, origin, role = 'candidate') {
     admin_joined: { admin: 'Mail Tester', link: `${origin}/admin/access-management` },
   }
   SAMPLE_PARAMS.alert_weekly = SAMPLE_PARAMS.alert_daily
+  Object.assign(SAMPLE_PARAMS, interviewSamples(language, origin, role))
   // Verification emails name the check in the recipient's language, as the decision does.
   const check = type.startsWith('verification_') ? { check: t(language, 'verification.category.identity') } : {}
   // So does the reason a recruiter picked for a CV request.

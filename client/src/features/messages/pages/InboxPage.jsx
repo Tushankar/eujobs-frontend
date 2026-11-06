@@ -61,7 +61,8 @@ export default function InboxPage() {
                   data-conversation={conversation.id}
                 >
                   <Counterpart conversation={conversation} role={me.role} size={40} />
-                  <span className={styles.preview}>{conversation.lastMessagePreview}</span>
+                  {/* §3.23: an interview or document-request event names itself in the reader's language. */}
+                  <span className={styles.preview}>{conversation.lastMessageCard ? t(`interviews:preview.${conversation.lastMessageCard}`) : conversation.lastMessagePreview}</span>
                   <span className={styles.meta}>
                     <time dateTime={conversation.lastMessageAt}>{format.relative(conversation.lastMessageAt)}</time>
                     {conversation.unread > 0 && (

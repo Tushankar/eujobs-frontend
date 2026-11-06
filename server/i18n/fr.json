@@ -313,6 +313,106 @@
         "Vos candidatures, conversations, notes et votre short-list sont conservées."
       ],
       "action": "Ouvrir les offres"
+    },
+    "interview_invitation": {
+      "subject": "{{company}} souhaite vous faire passer un entretien",
+      "heading": "Choisissez un créneau d’entretien",
+      "body": [
+        "Bonjour {{name}},",
+        "{{company}} vous invite à un entretien pour {{job}}.",
+        "{{details}}",
+        "{{aiNotes}}",
+        "Choisissez l’un de ces créneaux (à votre heure locale) ou demandez-en d’autres :"
+      ],
+      "action": "Choisir un créneau"
+    },
+    "interview_rescheduled": {
+      "subject": "{{company}} vous propose de nouveaux créneaux d’entretien",
+      "heading": "Choisissez un nouveau créneau",
+      "body": [
+        "Bonjour {{name}},",
+        "{{company}} propose de nouveaux créneaux pour votre entretien pour {{job}}.",
+        "{{released}}",
+        "{{details}}",
+        "{{aiNotes}}",
+        "Choisissez l’un de ces créneaux (à votre heure locale) ou demandez-en d’autres :"
+      ],
+      "action": "Choisir un créneau"
+    },
+    "interview_confirmed": {
+      "subject": "Entretien confirmé : {{job}}",
+      "heading": "Votre entretien est confirmé",
+      "body": [
+        "Bonjour {{name}},",
+        "{{intro}} est prévu le {{when}}.",
+        "{{details}}",
+        "L’invitation d’agenda est jointe."
+      ],
+      "action": "Ouvrir l’entretien"
+    },
+    "interview_cancelled": {
+      "subject": "Entretien annulé : {{job}}",
+      "heading": "Votre entretien a été annulé",
+      "body": [
+        "Bonjour {{name}},",
+        "{{company}} a annulé votre entretien pour {{job}}.",
+        "{{wasBooked}}",
+        "{{reasonLine}}"
+      ],
+      "action": "Ouvrir la conversation"
+    },
+    "interview_other_times": {
+      "subject": "{{candidate}} demande d’autres créneaux d’entretien",
+      "heading": "Autres créneaux demandés",
+      "body": [
+        "Bonjour {{name}},",
+        "Aucun des créneaux proposés pour {{job}} ne convient à {{candidate}}.",
+        "{{noteLine}}",
+        "Proposez de nouveaux créneaux depuis la carte de l’entretien."
+      ],
+      "action": "Proposer de nouveaux créneaux"
+    },
+    "interview_reschedule_request": {
+      "subject": "{{candidate}} demande à déplacer l’entretien",
+      "heading": "Report demandé",
+      "body": [
+        "Bonjour {{name}},",
+        "{{candidate}} demande à déplacer l’entretien pour {{job}} prévu le {{when}}.",
+        "{{noteLine}}",
+        "La réservation est maintenue jusqu’à ce que vous proposiez de nouveaux créneaux ou l’annuliez."
+      ],
+      "action": "Ouvrir l’entretien"
+    },
+    "interview_reminder": {
+      "subject": "Rappel : entretien {{soon}}",
+      "heading": "Votre entretien commence {{soon}}",
+      "body": [
+        "Bonjour {{name}},",
+        "{{intro}} commence {{soon}} : {{when}}.",
+        "{{details}}"
+      ],
+      "action": "Ouvrir l’entretien"
+    },
+    "document_request": {
+      "subject": "{{company}} vous demande des documents",
+      "heading": "Documents demandés",
+      "body": [
+        "Bonjour {{name}},",
+        "{{company}} vous demande ces documents pour votre candidature à {{job}}. Envoyez chacun en PDF, JPG ou PNG de 10 Mo maximum :",
+        "{{noteLine}}"
+      ],
+      "action": "Envoyer les documents",
+      "note": "Seule l’entreprise qui les a demandés peut ouvrir les fichiers que vous envoyez."
+    },
+    "documents_received": {
+      "subject": "{{candidate}} a répondu à votre demande de documents",
+      "heading": "Documents reçus",
+      "body": [
+        "Bonjour {{name}},",
+        "{{candidate}} a répondu à tous les points de votre demande de documents pour {{job}}.",
+        "Ouvrez la demande pour consulter les fichiers. Chaque ouverture est enregistrée."
+      ],
+      "action": "Ouvrir la demande"
     }
   },
   "verification": {
@@ -477,6 +577,36 @@
     "pausedJobs": {
       "one": "{{job}} reste en ligne ; 1 autre offre d’emploi a été mise en pause. Abonnez-vous de nouveau pour la republier.",
       "other": "{{job}} reste en ligne ; {{count}} autres offres d’emploi ont été mises en pause. Abonnez-vous de nouveau pour les republier."
+    },
+    "interview": {
+      "minutes": "{{n}} min",
+      "summary": "Entretien : {{job}} ({{company}})",
+      "aiNotesLine": "Le recruteur souhaite des notes par IA de cet entretien. Au début, la question vous sera posée à l’écran à tous les deux ; rien n’est enregistré sans votre accord commun, et seulement l’audio.",
+      "in24h": "dans 24 heures",
+      "in1h": "dans 1 heure",
+      "intro": {
+        "candidate": "Votre entretien avec {{company}} pour {{job}}",
+        "recruiter": "Votre entretien avec {{candidate}} pour {{job}}"
+      },
+      "released": "Le créneau que vous aviez réservé, {{when}}, est annulé.",
+      "wasBooked": "Il était prévu le {{when}}.",
+      "reasonLine": "Motif : {{reason}}",
+      "noteLine": "Note : « {{note}} »",
+      "details": {
+        "video": "Appel vidéo dans Local WorkMan : rejoignez-le depuis la carte de l’entretien, à partir de 10 minutes avant le début.",
+        "phone_candidate": "Appel téléphonique : le recruteur vous appellera au numéro de téléphone de votre profil.",
+        "phone_recruiter": "Appel téléphonique : appelez {{candidate}} au {{phone}}.",
+        "in_person": "En personne : {{address}}",
+        "link": "Réunion en ligne : {{link}}"
+      }
+    },
+    "documentKind": {
+      "id": "Pièce d’identité",
+      "right_to_work": "Droit de travailler",
+      "degree": "Diplôme ou certificat",
+      "references": "Références",
+      "signed_offer": "Offre signée",
+      "other": "Autre"
     }
   },
   "certificate": {
@@ -560,7 +690,8 @@
       "payments": "Paiements",
       "paid": "Payé",
       "notifications": "Notifications",
-      "exportedAt": "Exporté le (UTC)"
+      "exportedAt": "Exporté le (UTC)",
+      "interviews": "Entretiens"
     }
   },
   "audit": {

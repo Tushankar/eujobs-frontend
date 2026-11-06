@@ -1,4 +1,5 @@
 {
+  "includes": "{{plan}} includes",
   "perMonth": "per month",
   "upgradeTo": "Upgrade to {{plan}}",
   "manageBilling": "Manage billing",

@@ -14,7 +14,9 @@ import { ProfileView, RecruiterActivity, ShortlistEntry } from '../modules/disco
 import { Job, SavedJob } from '../modules/jobs/jobs.model.js'
 import { Course, Enrollment } from '../modules/learning/learning.model.js'
 import { File } from '../modules/files/files.model.js'
+import { DocumentRequest, Interview } from '../modules/interviews/interviews.model.js'
 import { Conversation, Message } from '../modules/messages/messages.model.js'
+import { Notification } from '../modules/notifications/notifications.model.js'
 import { Country, Faq, LegalDocument } from '../modules/meta/meta.model.js'
 import { Payment, Plan, Subscription } from '../modules/payments/payments.model.js'
 import { User } from '../modules/users/users.model.js'
@@ -236,7 +238,8 @@ describe('seed:demo (§3.20, OD9, P12)', () => {
     assert.deepEqual(applications.map(placement).sort(), [
       'Aisha Patel: Product Designer, Growth: applied',
       'Daniel Kim: Senior UX Designer: applied',
-      'Emma Wilson: Senior Product Designer: under_review',
+      // P11d-Q30: Emma's seeded interview booking moved her to Interview.
+      'Emma Wilson: Senior Product Designer: interview',
       'James Chen: Product Designer, Growth: under_review',
       'Oliver Park: Senior UX Designer: interview',
       'Sofia Martinez: Senior Product Designer: applied',
@@ -260,7 +263,27 @@ describe('seed:demo (§3.20, OD9, P12)', () => {
     const oliver = applications.find((application) => application.candidateId.fullName === 'Oliver Park')
     assert.deepEqual(oliver.history.map((step) => step.stageName), ['Applied', 'Screening', 'Shortlisted', 'Interview'])
     assert.equal(await RecruiterActivity.countDocuments({ type: 'applied' }), 6)
-    assert.equal(await RecruiterActivity.countDocuments({ type: 'stage_changed' }), 6)
+    assert.equal(await RecruiterActivity.countDocuments({ type: 'stage_changed' }), 7)
+    const emma = applications.find((application) => application.candidateId.fullName === 'Emma Wilson')
+    assert.deepEqual(emma.history.map((step) => step.stageName), ['Applied', 'Screening', 'Interview'])
+  })
+
+  it('seeds Emma’s booked interview and document request and Oliver’s pending offer, with their tasks (P11d-Q25, Q30)', async () => {
+    const interviews = await Interview.find().populate('candidateId', 'fullName').sort({ status: 1 })
+    assert.deepEqual(interviews.map((item) => [item.candidateId.fullName, item.status, item.mode, item.aiNotes, item.slots.length]), [
+      ['Emma Wilson', 'confirmed', 'video', false, 3],
+      ['Oliver Park', 'offered', 'video', true, 2],
+    ])
+    const [booked, offered] = interviews
+    assert.ok(booked.startAt > new Date() && booked.confirmedAt < new Date())
+    assert.ok(offered.slots.every((slot) => slot.startAt > new Date(Date.now() + 2 * 24 * 60 * 60 * 1000)))
+    const request = await DocumentRequest.findOne()
+    assert.deepEqual([request.status, request.items.map((item) => item.kind)], ['open', ['id', 'right_to_work']])
+    assert.deepEqual((await ScheduledTask.find({ type: /^interview./ })).map((task) => task.key.split(':')[0]).sort(), ['interview.close', 'interview.expire', 'interview.reminder', 'interview.reminder'])
+    const events = await Message.find({ kind: { $ne: 'text' } }).sort({ createdAt: 1 })
+    assert.deepEqual(events.map((message) => `${message.kind}.${message.event}`), ['interview.offered', 'interview.confirmed', 'interview.offered', 'document_request.created'])
+    assert.ok(events.every((message) => message.readAt))
+    assert.equal(await Notification.countDocuments({ type: /^(interview|document)/ }), 0)
   })
 
   it('seeds two Acme threads and Emma’s two alerts, with no email scheduled (P7-Q3, P7-Q4)', async () => {
@@ -270,7 +293,7 @@ describe('seed:demo (§3.20, OD9, P12)', () => {
     const summary = (conversation) => `${conversation.candidateId.fullName}: ${conversation.jobId.title}: ${conversation.unread.candidate}/${conversation.unread.recruiter}`
     assert.deepEqual(conversations.map(summary).sort(), ['Emma Wilson: Senior Product Designer: 0/1', 'Oliver Park: Senior UX Designer: 1/0'])
     assert.ok(conversations.every((conversation) => String(conversation.companyId) === String(sarah.companyId) && conversation.lastMessageAt < new Date()))
-    assert.equal(await Message.countDocuments(), 3)
+    assert.equal(await Message.countDocuments({ kind: 'text' }), 3)
     assert.equal(await RecruiterActivity.countDocuments({ type: 'outreach' }), 2)
     assert.equal(await RecruiterActivity.countDocuments({ type: 'message_reply' }), 1)
     assert.equal(await ScheduledTask.countDocuments({ type: 'email.message' }), 0)

@@ -11,6 +11,7 @@ import * as companyRoutes from '../modules/companies/companies.routes.js'
 import cvRoutes from '../modules/cv/cv.routes.js'
 import * as discoveryRoutes from '../modules/discovery/discovery.routes.js'
 import filesRoutes from '../modules/files/files.routes.js'
+import * as interviewRoutes from '../modules/interviews/interviews.routes.js'
 import * as jobRoutes from '../modules/jobs/jobs.routes.js'
 import * as learningRoutes from '../modules/learning/learning.routes.js'
 import * as matchingRoutes from '../modules/matching/matching.routes.js'
@@ -79,6 +80,8 @@ router.use('/recruiter/applications', applicationRoutes.recruiterRouter)
 router.use('/recruiter/pipeline', applicationRoutes.pipelineRouter)
 router.use('/skills', jobRoutes.skillsRouter)
 router.use('/conversations', messagesRoutes)
+router.use('/interviews', interviewRoutes.interviewsRouter)
+router.use('/document-requests', interviewRoutes.documentsRouter)
 router.use('/reports', moderationRoutes.reportsRouter)
 router.use('/notifications', notificationRoutes)
 router.use('/courses', learningRoutes.coursesRouter)

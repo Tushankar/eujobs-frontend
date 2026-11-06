@@ -34,6 +34,16 @@ export const EMAIL_TYPES = {
   admin_content_report: 'non_critical',
   admin_renewal_failed: 'non_critical',
   admin_joined: 'non_critical',
+  // §3.23: invitations and changes are always sent; reminders and "documents received" follow the Interviews switch
+  interview_invitation: 'decision',
+  interview_rescheduled: 'decision',
+  interview_confirmed: 'decision',
+  interview_cancelled: 'decision',
+  interview_other_times: 'decision',
+  interview_reschedule_request: 'decision',
+  interview_reminder: 'non_critical',
+  document_request: 'decision',
+  documents_received: 'non_critical',
 }
 
 /** The email switch (category) of each non-critical type (P11b-Q12); critical and decision emails have none. */
@@ -51,12 +61,14 @@ export const EMAIL_CATEGORY = {
   admin_content_report: 'content_reports',
   admin_renewal_failed: 'failed_renewals',
   admin_joined: 'admin_joined',
+  interview_reminder: 'interviews',
+  documents_received: 'interviews',
 }
 
 /** The email switches each role sees in Settings → Notifications, in this order (P11b-Q3, Q12). */
 export const EMAIL_CATEGORIES = {
-  candidate: ['applications', 'messages', 'cv_requests', 'job_alerts'],
-  recruiter: ['new_applications', 'messages'],
+  candidate: ['applications', 'messages', 'cv_requests', 'job_alerts', 'interviews'],
+  recruiter: ['new_applications', 'messages', 'interviews'],
   admin: ['account_reviews', 'verification', 'content_reports', 'failed_renewals', 'admin_joined'],
 }
 
@@ -81,6 +93,18 @@ export const NOTIFICATION_TYPES = {
   application_new: { sections: { recruiter: 'applications' } },
   application_withdrawn: { sections: { recruiter: 'applications' } },
   cv_request_decided: { sections: { recruiter: 'findCandidates' } },
+  // §3.23: interviews and document requests open their card in the thread
+  interview_offered: { sections: { candidate: 'applications' } },
+  interview_confirmed: { sections: { candidate: 'applications', recruiter: 'applications' } },
+  interview_cancelled: { sections: { candidate: 'applications' } },
+  interview_other_times: { sections: { recruiter: 'applications' } },
+  interview_reschedule_requested: { sections: { recruiter: 'applications' } },
+  interview_expired: { sections: { recruiter: 'applications' } },
+  interview_reminder: { sections: { candidate: 'applications', recruiter: 'applications' } },
+  interview_notes_ready: { sections: { recruiter: 'applications' } },
+  document_requested: { sections: { candidate: 'applications' } },
+  document_answered: { sections: { recruiter: 'applications' } },
+  documents_received: { sections: { recruiter: 'applications' } },
   admin_account_review: { sections: { admin: 'moderation' }, permission: 'moderation.manage', email: 'admin_account_review' },
   admin_verification_submitted: { sections: { admin: 'moderation' }, permission: 'moderation.manage', email: 'admin_verification_submitted' },
   admin_content_report: { sections: { admin: 'moderation' }, permission: 'moderation.manage', email: 'admin_content_report' },
@@ -163,10 +187,24 @@ export const ENUMS = {
     'cv_request_decided',
     'cv_updated',
     'cv_download',
+    'interview_confirmed',
+    'interview_cancelled',
+    'interview_outcome',
+    'document_request',
+    'documents_received',
   ],
+  // §3.23
+  interviewMode: ['video', 'phone', 'in_person', 'link'],
+  interviewStatus: ['offered', 'other_times', 'confirmed', 'cancelled', 'expired', 'completed'],
+  interviewOutcome: ['offer', 'another_round', 'not_selected', 'did_not_attend'],
+  recordingStatus: ['off', 'recording', 'processing', 'ready', 'failed'],
+  documentKind: ['id', 'right_to_work', 'degree', 'references', 'signed_offer', 'other'],
+  documentRequestStatus: ['open', 'complete'],
+  messageKind: ['text', 'interview', 'document_request'],
   planKey: ['free', 'plus', 'recruiter_free', 'recruiter_plus'],
-  // Plus (candidates): apply, message_send, job_alerts, ai. Recruiter Plus (§3.22): jobs_unlimited, discovery, outreach, ai.
-  entitlement: ['apply', 'message_send', 'job_alerts', 'ai', 'jobs_unlimited', 'discovery', 'outreach'],
+  // Plus (candidates): apply, message_send, job_alerts, ai. Recruiter Plus (§3.22): jobs_unlimited, discovery, outreach, ai,
+  // interviews (§3.23: scheduling, AI interview notes, document requests).
+  entitlement: ['apply', 'message_send', 'job_alerts', 'ai', 'jobs_unlimited', 'discovery', 'outreach', 'interviews'],
   paymentKind: ['course', 'subscription'],
   paymentStatus: ['paid', 'failed', 'refunded'],
   paymentSource: ['stripe', 'seed'],
@@ -199,6 +237,7 @@ export const ENUMS = {
     'report_summary',
     'skill_name',
     'reply_suggestions',
+    'interview_notes',
   ],
   emailType: Object.keys(EMAIL_TYPES),
   emailCategory: [...new Set(Object.values(EMAIL_CATEGORY))],
@@ -219,12 +258,15 @@ export const ENUMS = {
     'certificate_pdf',
     'report_csv',
     'export_zip',
+    'interview_audio',
+    'document_request',
+    'document_attachment',
   ],
   reportType: ['marketplace_summary', 'skills_demand', 'platform_activity'],
   reportPeriod: ['this_week', 'last_week', 'last_month'],
   legalDoc: ['terms', 'privacy', 'imprint'],
   faqAudience: ['candidate', 'recruiter', 'admin'],
-  taskType: ['email.message', 'email.stage', 'email.new-applications', 'alerts.instant', 'matching.recompute'],
+  taskType: ['email.message', 'email.stage', 'email.new-applications', 'alerts.instant', 'matching.recompute', 'interview.reminder', 'interview.expire', 'interview.close', 'interview.notes'],
   permission: PERMISSIONS.map((permission) => permission.id),
   permissionGroup: ['people', 'roles', 'recruitment', 'finance', 'governance'],
 }

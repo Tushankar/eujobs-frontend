@@ -15,6 +15,7 @@ import { CvAccessRequest, CvVersion } from '../modules/cv/cv.model.js'
 import { CandidateNote, ProfileView, RecruiterActivity, ShortlistEntry } from '../modules/discovery/discovery.model.js'
 import { File, FileAccessLog } from '../modules/files/files.model.js'
 import { AiUsage } from '../modules/ai/ai.model.js'
+import { DocumentRequest, Interview } from '../modules/interviews/interviews.model.js'
 import { Job, SavedJob } from '../modules/jobs/jobs.model.js'
 import { Course, Enrollment } from '../modules/learning/learning.model.js'
 import { ensureDefaultPolicy } from '../modules/matching/matching.admin.js'
@@ -32,6 +33,7 @@ import { VerificationSubmission } from '../modules/verification/verification.mod
 import { seedApplications } from './applications.js'
 import { seedCandidates } from './candidates.js'
 import { seedLearning } from './learning.js'
+import { seedInterviews } from './interviews.js'
 import { seedMessages } from './messages.js'
 import { seedModeration } from './moderation.js'
 import { seedNotifications } from './notifications.js'
@@ -131,6 +133,8 @@ export async function seedDemo() {
     ModerationCase.deleteMany({}),
     ReportExport.deleteMany({}),
     Notification.deleteMany({}),
+    Interview.deleteMany({}),
+    DocumentRequest.deleteMany({}),
   ])
   await ensureDefaultPolicy()
   // Every stored file is demo data: one folder per purpose under the upload root (never another root).
@@ -159,6 +163,7 @@ export async function seedDemo() {
   await seedLearning({ emailOf, owner, now: now.getTime() })
   await seedApplications({ emailOf, now: now.getTime() })
   await seedMessages({ emailOf, now: now.getTime() })
+  await seedInterviews({ emailOf, now: now.getTime() })
   await seedModeration({ emailOf, owner, now: now.getTime() })
   await seedNotifications()
   // U6, U7: embeddings, scores and relevant counts of the seeded people and jobs.

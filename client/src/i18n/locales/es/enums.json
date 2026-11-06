@@ -88,6 +88,11 @@
   },
   "cvRequestStatus": { "pending": "Pendiente", "approved": "Aprobada", "declined": "Rechazada" },
   "activityType": {
+    "interview_confirmed": "Entrevista reservada",
+    "interview_cancelled": "Entrevista cancelada",
+    "interview_outcome": "Resultado de la entrevista",
+    "document_request": "Documentos solicitados",
+    "documents_received": "Documentos recibidos",
     "applied": "Se postuló",
     "withdrawn": "Retiró la candidatura",
     "stage_changed": "Cambio de fase",
@@ -104,7 +109,7 @@
     "cv_download": "CV descargado"
   },
   "planKey": { "free": "Gratis", "plus": "Plus", "recruiter_free": "Gratis", "recruiter_plus": "Recruiter Plus" },
-  "entitlement": { "apply": "Postularse a ofertas", "message_send": "Mensajes", "job_alerts": "Alertas de empleo", "ai": "Funciones de IA", "jobs_unlimited": "Más de 1 oferta activa", "discovery": "Buscar candidatos", "outreach": "Iniciar conversaciones y solicitar CV" },
+  "entitlement": { "interviews": "Entrevistas y solicitudes de documentos", "apply": "Postularse a ofertas", "message_send": "Mensajes", "job_alerts": "Alertas de empleo", "ai": "Funciones de IA", "jobs_unlimited": "Más de 1 oferta activa", "discovery": "Buscar candidatos", "outreach": "Iniciar conversaciones y solicitar CV" },
   "paymentKind": { "course": "Curso", "subscription": "Suscripción" },
   "paymentStatus": { "paid": "Pagado", "failed": "Fallido", "refunded": "Reembolsado" },
   "paymentSource": { "stripe": "Stripe", "seed": "Datos de ejemplo" },
@@ -142,6 +147,7 @@
   "policyStatus": { "draft": "Borrador", "active": "Activa", "archived": "Archivada" },
   "matchLabel": { "strong": "Muy compatible", "good": "Compatible" },
   "aiKind": {
+    "interview_notes": "Notas de entrevista",
     "job_summary": "Resumen de la oferta",
     "match_explanation": "Explicación de la compatibilidad",
     "insights": "Análisis",
@@ -155,6 +161,15 @@
     "reply_suggestions": "Respuestas sugeridas"
   },
   "emailType": {
+    "interview_invitation": "Invitación a entrevista",
+    "interview_rescheduled": "Horarios de entrevista cambiados",
+    "interview_confirmed": "Entrevista reservada",
+    "interview_cancelled": "Entrevista cancelada",
+    "interview_other_times": "Otros horarios pedidos",
+    "interview_reschedule_request": "Cambio de horario pedido",
+    "interview_reminder": "Recordatorio de entrevista",
+    "document_request": "Documentos solicitados",
+    "documents_received": "Documentos recibidos",
     "verify_email": "Confirmación del correo",
     "already_registered": "Cuenta ya registrada",
     "recruiter_email_code": "Código de correo del reclutador",
@@ -194,6 +209,9 @@
     "skipped_cap": "No enviado (límite diario)"
   },
   "filePurpose": {
+    "interview_audio": "Audio de entrevista",
+    "document_request": "Documento solicitado",
+    "document_attachment": "Archivo de la solicitud",
     "photo": "Foto de perfil",
     "cv": "CV",
     "evidence": "Prueba de verificación",
@@ -213,6 +231,7 @@
   "legalDoc": { "terms": "Condiciones del servicio", "privacy": "Política de privacidad", "imprint": "Aviso legal" },
   "faqAudience": { "candidate": "Candidatos", "recruiter": "Reclutadores", "admin": "Administración" },
   "taskType": {
+    "interview": { "reminder": "Recordatorio de entrevista", "expire": "Caducidad de horarios", "close": "Cierre de la entrevista", "notes": "Notas de entrevista" },
     "email": { "message": "Correo de mensaje", "stage": "Correo de fase", "new-applications": "Correo de nuevas candidaturas" },
     "alerts": { "instant": "Alerta inmediata" },
     "matching": { "recompute": "Recálculo de compatibilidad" }
@@ -239,6 +258,7 @@
     "governance": "Gobernanza"
   },
   "emailCategory": {
+    "interviews": "Entrevistas",
     "applications": "Candidaturas",
     "messages": "Mensajes",
     "cv_requests": "Solicitudes de CV",
@@ -251,6 +271,17 @@
     "admin_joined": "Nuevos administradores"
   },
   "notificationType": {
+    "interview_offered": "Horarios de entrevista",
+    "interview_confirmed": "Entrevista reservada",
+    "interview_cancelled": "Entrevista cancelada",
+    "interview_other_times": "Otros horarios pedidos",
+    "interview_reschedule_requested": "Cambio de horario pedido",
+    "interview_expired": "Horarios caducados",
+    "interview_reminder": "Recordatorio de entrevista",
+    "interview_notes_ready": "Notas de entrevista con IA",
+    "document_requested": "Documentos solicitados",
+    "document_answered": "Documento respondido",
+    "documents_received": "Documentos recibidos",
     "application_status": "Novedad de candidatura",
     "message": "Mensaje",
     "cv_request": "Solicitud de CV",
@@ -272,5 +303,12 @@
     "admin_content_report": "Denuncia de contenido",
     "admin_renewal_failed": "Renovación fallida",
     "admin_joined": "Accesos"
-  }
+  },
+  "interviewMode": { "video": "Videollamada", "phone": "Teléfono", "in_person": "En persona", "link": "Enlace externo" },
+  "interviewStatus": { "offered": "Horarios propuestos", "other_times": "Otros horarios pedidos", "confirmed": "Reservada", "cancelled": "Cancelada", "expired": "Caducada", "completed": "Completada" },
+  "interviewOutcome": { "offer": "Pasar a oferta", "another_round": "Otra ronda", "not_selected": "No seleccionada", "did_not_attend": "No se presentó" },
+  "recordingStatus": { "off": "Sin grabar", "recording": "Grabando", "processing": "Preparando notas", "ready": "Notas listas", "failed": "Error en las notas" },
+  "documentKind": { "id": "Documento de identidad", "right_to_work": "Permiso de trabajo", "degree": "Título o certificado", "references": "Referencias", "signed_offer": "Oferta firmada", "other": "Otro" },
+  "documentRequestStatus": { "open": "Abierta", "complete": "Completada" },
+  "messageKind": { "text": "Mensaje", "interview": "Entrevista", "document_request": "Solicitud de documentos" }
 }

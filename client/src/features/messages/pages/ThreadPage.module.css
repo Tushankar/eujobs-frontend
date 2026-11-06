@@ -131,3 +131,19 @@
 .skeletonSend {
   align-self: flex-end;
 }
+
+/* §3.23: the header holds the recruiter's Schedule interview and Request documents. */
+.headerRow {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  justify-content: space-between;
+  gap: 12px;
+}
+
+/* A card or an event line spans the thread, centred. */
+.cardMessage {
+  align-self: stretch;
+  align-items: center;
+  max-width: none;
+}

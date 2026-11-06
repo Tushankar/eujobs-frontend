@@ -8,6 +8,7 @@ import { tableState } from '@/components/common/tableState.js'
 import EmptyState from '@/components/common/EmptyState.jsx'
 import NoticeBanner from '@/components/common/NoticeBanner.jsx'
 import PageTitle from '@/components/common/PageTitle.jsx'
+import UpcomingInterviews from '@/features/interviews/components/UpcomingInterviews.jsx'
 import { useMarkSeen } from '@/features/notifications/api.js'
 import { useGetRecruiterJobsQuery } from '@/features/recruiter/jobs/api.js'
 import { useFormat } from '@/lib/preferences.js'
@@ -126,6 +127,7 @@ export default function ApplicationsPage() {
     <div>
       <PageTitle title={t('applications:recruiter.title')} description={t('applications:recruiter.description')} />
       {focusMissing && <NoticeBanner>{t('notifications:unavailable')}</NoticeBanner>}
+      <UpcomingInterviews />
 
       <div className={styles.filters}>
         <TextField variant="filter"

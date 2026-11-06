@@ -6,13 +6,14 @@ import { useErrorText } from '@/lib/forms.js'
 import { useFormat } from '@/lib/preferences.js'
 import { useCreateCheckoutSessionMutation, useGetQuoteQuery } from '../api.js'
 import styles from './CheckoutDialog.module.css'
+import PlanFeatures from './PlanFeatures.jsx'
 
 /**
  * The step before Stripe (M-124): the server's item, price and currency, then "Continue to secure payment" opens
  * Stripe's hosted Checkout. `item` = { kind, itemId } (null closes the dialog). Stripe returns to the role's return
  * page and then to `from` (default: this page), or straight to `from` when the buyer cancels (M-125).
  */
-export default function CheckoutDialog({ item, from, description, onClose }) {
+export default function CheckoutDialog({ item, from, description, plan, onClose }) {
   const { t } = useTranslation('billing')
   const format = useFormat()
   const errorText = useErrorText()
@@ -103,6 +104,7 @@ export default function CheckoutDialog({ item, from, description, onClose }) {
             <p className={styles.total}>{format.money(quote.amountMinor, quote.currency)}</p>
           </div>
         )}
+        {plan && <PlanFeatures plan={plan} />}
         <p className={styles.note}>{t('checkout.note')}</p>
         <div role="alert">{failure && <p className={styles.failure}>{errorText.code(failure)}</p>}</div>
       </div>

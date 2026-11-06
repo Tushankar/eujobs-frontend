@@ -1,0 +1,191 @@
+/* Interview and document-request cards in a thread (§3.23): a quiet bordered card, neutral icons, pill buttons. */
+.card {
+  display: flex;
+  flex-direction: column;
+  gap: 14px;
+  width: min(560px, 100%);
+  padding: 16px 18px;
+  border: 1px solid var(--border);
+  border-radius: var(--radius-lg);
+  background: var(--card, #fff);
+}
+
+.head {
+  display: flex;
+  align-items: flex-start;
+  gap: 12px;
+}
+
+.headIcon {
+  flex: none;
+  margin-top: 2px;
+  color: var(--muted-foreground);
+}
+
+.headText {
+  flex: 1;
+  min-width: 0;
+}
+
+.title {
+  font-family: var(--font-heading, inherit);
+  font-size: 15px;
+  font-weight: 700;
+  line-height: 22px;
+  color: var(--foreground);
+  overflow-wrap: anywhere;
+}
+
+.sub {
+  font-size: 13px;
+  line-height: 19px;
+  color: var(--muted-foreground);
+  overflow-wrap: anywhere;
+}
+
+.rows {
+  display: flex;
+  flex-direction: column;
+  margin: 0;
+  padding: 0;
+  list-style: none;
+  border-top: 1px solid var(--border);
+}
+
+.row {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: 8px 12px;
+  padding: 10px 0;
+  border-bottom: 1px solid var(--border);
+  font-size: 14px;
+  line-height: 20px;
+  color: var(--foreground);
+}
+
+.rowMain {
+  flex: 1 1 200px;
+  min-width: 0;
+  overflow-wrap: anywhere;
+}
+
+.rowMeta {
+  display: block;
+  font-size: 12px;
+  line-height: 17px;
+  color: var(--muted-foreground);
+}
+
+.slot {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  width: 100%;
+  cursor: pointer;
+}
+
+.slot input {
+  width: 16px;
+  height: 16px;
+  accent-color: var(--primary);
+}
+
+.slotDisabled {
+  cursor: not-allowed;
+  color: var(--muted-foreground);
+}
+
+.line {
+  display: flex;
+  align-items: flex-start;
+  gap: 8px;
+  font-size: 14px;
+  line-height: 20px;
+  color: var(--foreground);
+  overflow-wrap: anywhere;
+}
+
+.line svg {
+  flex: none;
+  margin-top: 2px;
+  color: var(--muted-foreground);
+}
+
+.when {
+  font-weight: 600;
+}
+
+.note {
+  margin: 0;
+  padding: 10px 12px;
+  border-radius: var(--radius-md, 8px);
+  background: var(--muted);
+  font-size: 13px;
+  line-height: 19px;
+  color: var(--foreground);
+  white-space: pre-wrap;
+  overflow-wrap: anywhere;
+}
+
+.hint {
+  font-size: 13px;
+  line-height: 19px;
+  color: var(--muted-foreground);
+}
+
+.actions {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 8px;
+}
+
+.link {
+  color: var(--primary);
+  font-weight: 600;
+  overflow-wrap: anywhere;
+}
+
+.link:hover {
+  text-decoration: underline;
+}
+
+.inlineForm {
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+}
+
+/* An earlier step of a card: one centred line in the thread. */
+.event {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 6px;
+  align-self: center;
+  max-width: 100%;
+  font-size: 12px;
+  line-height: 18px;
+  color: var(--muted-foreground);
+  text-align: center;
+  overflow-wrap: anywhere;
+}
+
+.recording {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  font-size: 12px;
+  font-weight: 600;
+  color: var(--destructive, #c0392b);
+}
+
+.hidden {
+  display: none;
+}
+
+@media (max-width: 767px) {
+  .card {
+    padding: 14px;
+  }
+}

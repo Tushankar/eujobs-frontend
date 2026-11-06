@@ -1,0 +1,198 @@
+{
+  "minutes_one": "{{count}} min",
+  "minutes_other": "{{count}} min",
+  "offer": {
+    "title": "Schedule an interview",
+    "rescheduleTitle": "Offer new interview times",
+    "description": "Offer 2 or 3 times. The candidate sees them in their own time zone and picks one, or asks for other times.",
+    "send": "Send times",
+    "sendNew": "Send new times",
+    "application": "Application",
+    "mode": "Where",
+    "address": "Address",
+    "link": "Meeting link",
+    "linkInvalid": "Enter a link that starts with https://",
+    "phoneHint": "You call the candidate on the phone number in their profile. It is shown to you once the interview is booked.",
+    "slots": "Times",
+    "slotsHint": "In your time zone. Each time can be picked until 1 hour before it starts.",
+    "date": "Date",
+    "time": "Time",
+    "length": "Length",
+    "removeSlot": "Remove this time",
+    "addSlot": "Add a time",
+    "aiNotes": "AI interview notes",
+    "aiNotesHint": "Audio only, and only if you both agree on screen when the call starts. The audio is deleted once the notes are ready.",
+    "slotErrors": {
+      "too_soon": "Choose a time at least 1 hour from now.",
+      "overlap": "This time overlaps another one.",
+      "invalid": "Choose a date, a time and a length."
+    }
+  },
+  "card": {
+    "title": "Interview",
+    "aiNotesRequested": "AI notes requested: you will both be asked when the call starts.",
+    "waiting": "Waiting for {{name}} to pick a time.",
+    "pickHint": "Pick the time that suits you (shown in your time zone).",
+    "slots": "Offered times",
+    "slotClosed": "No longer available",
+    "confirm": "Confirm time",
+    "otherTimes": "Ask for other times",
+    "otherTimesAsked": "{{name}} asked for other times.",
+    "otherTimesSent": "You asked for other times. The company will offer new ones.",
+    "rescheduleAsked": "{{name}} asked to move this interview.",
+    "rescheduleSent": "You asked to move this interview. It stays booked until the company offers new times.",
+    "joinOpens": "You can join from 10 minutes before the start.",
+    "notesPreparing": "AI notes are being prepared.",
+    "expired": "No time was picked before the offered times passed.",
+    "join": "Join interview",
+    "addToCalendar": "Add to calendar",
+    "askReschedule": "Ask to reschedule",
+    "recordOutcome": "Record outcome",
+    "notes": "AI notes",
+    "reschedule": "Reschedule",
+    "offerNew": "Offer new times",
+    "cancel": "Cancel interview"
+  },
+  "mode": {
+    "video": "Video call in Local WorkMan",
+    "phone": "Phone call",
+    "phoneRecruiter": "Phone call: call the candidate on {{phone}}",
+    "phoneCandidate": "Phone call: the recruiter calls you on the number in your profile",
+    "in_person": "In person",
+    "link": "Online meeting"
+  },
+  "otherTimes": {
+    "title": "Ask for other times",
+    "description": "Tell the company when you are free. They will offer new times.",
+    "label": "When suits you?",
+    "send": "Send"
+  },
+  "askReschedule": {
+    "title": "Ask to reschedule",
+    "description": "Your interview stays booked until the company offers new times.",
+    "label": "Why do you need to move it?",
+    "send": "Send request"
+  },
+  "cancel": {
+    "title": "Cancel the interview",
+    "description": "{{name}} is told by email, with a calendar cancellation if a time was booked.",
+    "label": "Reason (optional)",
+    "confirm": "Cancel interview"
+  },
+  "outcome": {
+    "title": "Record the outcome",
+    "description": "How did the interview with {{name}} go? Only your company sees this.",
+    "save": "Save outcome",
+    "notify": "Email the candidate",
+    "note": "Private feedback",
+    "noteHint": "Only your company sees this note."
+  },
+  "noShow": {
+    "title": "Didn’t attend",
+    "description": "{{name}} did not attend. Offer new times, or close the application as not selected.",
+    "notSelected": "Not selected",
+    "reschedule": "Offer new times"
+  },
+  "notes": {
+    "title": "AI interview notes",
+    "description": "Made from the recording of your interview with {{name}}. Only your company sees them.",
+    "summary": "Summary",
+    "keyAnswers": "Key answers",
+    "strengths": "Strengths",
+    "concerns": "Concerns",
+    "followUps": "Follow-up questions",
+    "transcript": "Transcript",
+    "generated": "Made {{date}}. The audio was deleted."
+  },
+  "documents": {
+    "title": "Documents requested",
+    "declined": "Declined: “{{note}}”",
+    "removed": "Removed after the retention period",
+    "waiting": "Waiting for the file",
+    "replace": "Replace",
+    "upload": "Upload",
+    "decline": "Decline",
+    "declineTitle": "Decline “{{name}}”",
+    "declineDescription": "Tell the company why you cannot share this document.",
+    "declineLabel": "Note",
+    "privacyCandidate": "Only this company can open your files, and every opening is recorded.",
+    "privacyRecruiter": "Every opening of these files is recorded.",
+    "complete": "Mark complete"
+  },
+  "requestDocuments": {
+    "title": "Request documents",
+    "description": "The candidate uploads each document into the card. Only your company can open the files.",
+    "send": "Send request",
+    "documents": "Documents",
+    "pickOne": "Choose at least one document.",
+    "otherLabel": "Name of the other document",
+    "note": "Note (optional)",
+    "attachment": "File for the candidate (optional)",
+    "removeFile": "Remove the file",
+    "attach": "Attach a file"
+  },
+  "events": {
+    "interview": {
+      "offered": "Interview times offered",
+      "confirmed": "Interview booked for {{when}}",
+      "other_times": "Other interview times requested",
+      "rescheduled": "New interview times offered",
+      "cancelled": "Interview cancelled",
+      "reschedule_requested": "Asked to reschedule the interview"
+    },
+    "document_request": {
+      "created": "Documents requested"
+    }
+  },
+  "preview": {
+    "interview": {
+      "offered": "Interview times offered",
+      "confirmed": "Interview booked",
+      "other_times": "Other interview times requested",
+      "rescheduled": "New interview times offered",
+      "cancelled": "Interview cancelled",
+      "reschedule_requested": "Asked to reschedule the interview"
+    },
+    "document_request": {
+      "created": "Documents requested"
+    }
+  },
+  "thread": {
+    "schedule": "Schedule interview",
+    "requestDocuments": "Request documents"
+  },
+  "upcoming": {
+    "title": "Upcoming interviews"
+  },
+  "call": {
+    "back": "Back to the conversation",
+    "cannotJoin": "You cannot join this interview now",
+    "reasons": {
+      "too_early": "The interview opens 10 minutes before the start.",
+      "closed": "The time to join this interview has passed."
+    },
+    "title": "Interview: {{job}}",
+    "recording": "Recording",
+    "consentTitle": "AI interview notes",
+    "consentText": "The recruiter would like AI notes of this interview. Only the audio is recorded, and only if you both agree. If either of you declines, the interview goes ahead without notes.",
+    "decline": "Decline",
+    "agree": "Agree",
+    "notesOff": "AI notes are off for this interview.",
+    "waitingConsent": "Recording starts when you have both agreed and you are both in the call.",
+    "recordingStopped": "The recording has stopped.",
+    "failedTitle": "We couldn’t connect the video call",
+    "fallbackRecruiter": "Call the candidate on {{phone}} instead.",
+    "fallbackCandidate": "The recruiter can call you on {{phone}} instead.",
+    "fallbackNoPhone": "Contact each other in the conversation to agree another way to talk.",
+    "mediaError": "Allow your camera and microphone in the browser to take part in the call.",
+    "them": "Them",
+    "waiting": "Waiting for the other person to join",
+    "you": "You",
+    "mute": "Mute",
+    "unmute": "Unmute",
+    "cameraOff": "Camera off",
+    "cameraOn": "Camera on",
+    "stopRecording": "Stop recording",
+    "leave": "Leave"
+  }
+}

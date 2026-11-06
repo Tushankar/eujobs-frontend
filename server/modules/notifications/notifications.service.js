@@ -2,6 +2,7 @@ import { EMAIL_CATEGORIES, NOTIFICATION_TYPES } from '../../config/enums.js'
 import { sendEmail } from '../../lib/mailer.js'
 import { effectivePermissions } from '../admin/admin.service.js'
 import { Application } from '../applications/applications.model.js'
+import { DocumentRequest, Interview } from '../interviews/interviews.model.js'
 import { accessibleCandidate } from '../discovery/discovery.service.js'
 import { Job } from '../jobs/jobs.model.js'
 import { jobDetails } from '../jobs/jobs.search.js'
@@ -44,6 +45,9 @@ const PATHS = {
   case: (role, id) => `/admin/moderation/content/${id}`,
   payment: (role, id) => `/admin/payments/${id}`,
   admin: (role, id) => `/admin/access-management/users/${id}`,
+  // §3.23: the item route opens the thread at the card.
+  interview: (role, id) => `/${role}/interviews/${id}`,
+  document_request: (role, id) => `/${role}/document-requests/${id}`,
 }
 
 const own = (user) => (user.role === 'candidate' ? { candidateId: user._id } : { companyId: user.companyId })
@@ -62,6 +66,8 @@ const AVAILABLE = {
   case: (user, id) => ModerationCase.exists({ _id: id }),
   payment: (user, id) => Payment.exists({ _id: id }),
   admin: (user, id) => User.exists({ _id: id, role: 'admin' }),
+  interview: (user, id) => Interview.exists({ _id: id, ...own(user) }),
+  document_request: (user, id) => DocumentRequest.exists({ _id: id, ...own(user) }),
 }
 
 async function isAvailable(user, target) {

@@ -9,6 +9,8 @@
     "label": "Vue du recrutement"
   },
   "stats": {
+    "interviewsScheduled": "Entretiens planifiés",
+    "interviewsCompleted": "Entretiens terminés",
     "publishedRoles": "Offres publiées",
     "applications": "Candidatures",
     "applicationsCaption": "Depuis le début, hors candidatures retirées",

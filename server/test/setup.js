@@ -18,3 +18,7 @@ setAiClient(aiStub)
 const { setRatesSource } = await import('../lib/fxRates.js')
 const { fxStub } = await import('./helpers/fx.js')
 setRatesSource(fxStub)
+
+// P11d-Q29: API tests never ask Cloudflare for TURN credentials (interviews.test.js stubs the request when it checks them).
+const { config } = await import('../config/env.js')
+config.turn = null

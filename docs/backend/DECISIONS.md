@@ -858,6 +858,8 @@ Should applications keep a dated status history and a real 'Next step'?
 
 **Decision:** Status history + Next step. Dated steps (status, date, actor); no interview scheduling yet.
 
+> **Superseded 2026-11-06 (Phase 11d, owner answers P11d-Q1 … Q29 in docs/BACKEND_PLAN.md, §3.23):** Recruiter Plus schedules interviews: 2–3 offered slots, in-app video (own WebRTC), phone, in person or an external link, calendar invites and reminders, AI interview notes with both people's consent, and an outcome record. Status history stays as decided here.
+
 *Rejected:* Current step only.
 
 *Sources:* CAN-Q24
@@ -977,6 +979,8 @@ Recruiters can message candidates. Does that include a candidate who is not disc
 How are conversations organised and what can a message contain?
 
 **Decision:** One thread per company + candidate. Optionally tagged with a job; text only, up to 2,000 chars; no attachments.
+
+> **Superseded in part 2026-11-06 (Phase 11d, P11d-Q7 in docs/BACKEND_PLAN.md, §3.23):** the thread also shows interview cards and document-request cards; a request card carries the recruiter's optional file and the candidate's uploads (PDF/JPG/PNG ≤ 10 MB, company-only, every opening logged). Typed messages stay text only, up to 2,000 characters.
 
 *Context:* Decision: two-way inbox, Messages sidebar item, polling ~15 s. REC-RQ-81 and CAN-Q29 both propose 2,000 chars.
 

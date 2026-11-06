@@ -1,4 +1,5 @@
 {
+  "includes": "{{plan}} incluye",
   "perMonth": "al mes",
   "upgradeTo": "Pasar a {{plan}}",
   "manageBilling": "Gestionar la facturación",

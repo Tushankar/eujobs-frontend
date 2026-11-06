@@ -74,6 +74,7 @@
     "locked": "Hay alumnos inscritos, así que las lecciones y el cuestionario están bloqueados. Los textos y los precios aún se pueden cambiar.",
     "problemsTitle": "Antes de poder publicar",
     "problemsText_one": "Te falta {{count}} cosa para poder publicar este curso.",
+    "problemsText_many": "Te faltan {{count}} cosas para poder publicar este curso.",
     "problemsText_other": "Te faltan {{count}} cosas para poder publicar este curso.",
     "problemsOpen": "Abrir {{tab}}",
     "tabsLabel": "Secciones del editor de cursos",

@@ -10,6 +10,7 @@ import { Company } from '../companies/companies.model.js'
 import { logoUrls } from '../companies/companies.service.js'
 import { accessibleCandidate, recordActivity } from '../discovery/discovery.service.js'
 import { File } from '../files/files.model.js'
+import { cardsFor } from '../interviews/interviews.cards.js'
 import { Job } from '../jobs/jobs.model.js'
 import { markSeen, notify, notifyCompany } from '../notifications/notifications.service.js'
 import { User } from '../users/users.model.js'
@@ -65,6 +66,7 @@ async function conversationDtos(user, conversations) {
     job: conversation.jobId ? { id: String(conversation.jobId), title: jobTitles.get(String(conversation.jobId)) ?? null } : null,
     lastMessageAt: conversation.lastMessageAt ?? null,
     lastMessagePreview: conversation.lastMessagePreview ?? '',
+    lastMessageCard: conversation.lastMessageCard ?? null,
     unread: conversation.unread[user.role],
     // The other side deleted their account (P12-Q2, M-189): no more replies.
     closed: Boolean(conversation.closedAt),
@@ -75,10 +77,20 @@ const messageDto = (message, side) => ({
   id: String(message._id),
   mine: message.senderRole === side,
   senderRole: message.senderRole,
-  body: message.body,
+  kind: message.kind ?? 'text',
+  body: message.body ?? '',
+  // §3.23: an interview or document-request event and its card.
+  ...(message.kind && message.kind !== 'text' && {
+    event: message.event,
+    params: message.params ?? {},
+    cardId: String(message.interviewId ?? message.documentRequestId),
+  }),
   createdAt: message.createdAt,
   readAt: message.readAt ?? null,
 })
+
+/** Typed messages: everything that is not an interview or document-request event (older rows have no kind). */
+const TEXT_ONLY = { kind: { $nin: ['interview', 'document_request'] } }
 
 export async function listConversations(user, company) {
   const conversations = await Conversation.find({ ...ownFilter(user, company), lastMessageAt: { $ne: null } }).sort({ lastMessageAt: -1 })
@@ -86,12 +98,12 @@ export async function listConversations(user, company) {
   return { items, total: items.length, page: 1, pageSize: items.length }
 }
 
-/** The thread and every message, oldest first (threads are short; §2.3 all rows). */
+/** The thread and every message, oldest first (threads are short; §2.3 all rows), with the live interview and request cards (§3.23). */
 export async function getMessages(user, company, id) {
   const conversation = await ownConversation(user, company, id)
   const messages = await Message.find({ conversationId: conversation._id }).sort({ createdAt: 1 })
   const [dto] = await conversationDtos(user, [conversation])
-  return { conversation: dto, items: messages.map((message) => messageDto(message, user.role)) }
+  return { conversation: dto, items: messages.map((message) => messageDto(message, user.role)), cards: await cardsFor(user, conversation) }
 }
 
 /**
@@ -153,7 +165,7 @@ async function replyContext(conversation) {
 export async function replySuggestions(user, company, id) {
   const conversation = await ownConversation(user, company, id)
   const R = LIMITS.message.replySuggestions
-  const latest = (await Message.find({ conversationId: conversation._id }).sort({ createdAt: -1 }).limit(R.messages)).reverse()
+  const latest = (await Message.find({ conversationId: conversation._id, ...TEXT_ONLY }).sort({ createdAt: -1 }).limit(R.messages)).reverse()
   const last = latest.at(-1)
   if (conversation.closedAt || !last || last.senderRole === user.role) return { messageId: last ? String(last._id) : null, replies: [] }
   const input = {
@@ -169,11 +181,11 @@ export async function replySuggestions(user, company, id) {
 async function addMessage(conversation, user, body) {
   if (conversation.closedAt) throw new AppError('CONFLICT', { params: { reason: 'conversation_closed' } })
   const side = user.role
-  const previous = await Message.findOne({ conversationId: conversation._id }, 'senderRole').sort({ createdAt: -1 })
+  const previous = await Message.findOne({ conversationId: conversation._id, ...TEXT_ONLY }, 'senderRole').sort({ createdAt: -1 })
   const message = await Message.create({ conversationId: conversation._id, senderId: user._id, senderRole: side, body })
   await Conversation.updateOne(
     { _id: conversation._id },
-    { $set: { lastMessageAt: message.createdAt, lastMessagePreview: body.slice(0, PREVIEW_LENGTH) }, $inc: { [`unread.${otherSide(side)}`]: 1 } },
+    { $set: { lastMessageAt: message.createdAt, lastMessagePreview: body.slice(0, PREVIEW_LENGTH), lastMessageCard: null }, $inc: { [`unread.${otherSide(side)}`]: 1 } },
   )
   if (side === 'candidate' && previous?.senderRole === 'recruiter') {
     await recordActivity({ companyId: conversation.companyId, candidateId: user._id, type: 'message_reply', params: {} })
@@ -194,8 +206,21 @@ async function notifyMessage(conversation, user) {
   if (candidate) await notify(candidate, 'message', { ...options, params: { sender: company.displayName } })
 }
 
+/**
+ * §3.23: an interview or document-request event in the thread, written by the side that acted. It counts as unread for
+ * the other side; its own notification and email replace the new-message ones.
+ */
+export async function addEvent(conversation, user, { kind, event, params = {}, interviewId, documentRequestId }) {
+  const message = await Message.create({ conversationId: conversation._id, senderId: user._id, senderRole: user.role, kind, event, params, interviewId, documentRequestId })
+  await Conversation.updateOne(
+    { _id: conversation._id },
+    { $set: { lastMessageAt: message.createdAt, lastMessagePreview: '', lastMessageCard: `${kind}.${event}` }, $inc: { [`unread.${otherSide(user.role)}`]: 1 } },
+  )
+  return message
+}
+
 /** The thread of this pair, created on first use; `created` tells whether it is new. */
-async function threadFor({ companyId, candidateId, jobId, startedBy }) {
+export async function threadFor({ companyId, candidateId, jobId, startedBy }) {
   const existing = await Conversation.findOne({ companyId, candidateId })
   if (existing) return { conversation: existing, created: false }
   try {

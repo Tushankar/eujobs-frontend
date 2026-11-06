@@ -13,6 +13,7 @@ import PageTitle from '@/components/common/PageTitle.jsx'
 import StatusBadge from '@/components/common/StatusBadge.jsx'
 import { useCompanyMessageStart } from '@/features/messages/api.js'
 import { CompanyMessageDialog } from '@/features/messages/components/StartConversation.jsx'
+import UpcomingInterviews from '@/features/interviews/components/UpcomingInterviews.jsx'
 import { useMarkSeen } from '@/features/notifications/api.js'
 import { useJobText } from '@/lib/jobText.js'
 import { useFormat } from '@/lib/preferences.js'
@@ -115,6 +116,7 @@ export default function ApplicationsPage() {
       <PageTitle className={styles.pageTitle} title={t('applications:list.title')} description={t('applications:list.description')} />
 
       {data && applicationId && !applications.some((application) => application.id === applicationId) && <NoticeBanner>{t('notifications:unavailable')}</NoticeBanner>}
+      <UpcomingInterviews />
 
       {noApplications ? (
         <FirstApplication />

@@ -1,0 +1,199 @@
+{
+  "minutes_one": "{{count}} min",
+  "minutes_many": "{{count}} min",
+  "minutes_other": "{{count}} min",
+  "offer": {
+    "title": "Programar una entrevista",
+    "rescheduleTitle": "Proponer nuevos horarios",
+    "description": "Propón 2 o 3 horarios. La persona candidata los ve en su zona horaria y elige uno o pide otros.",
+    "send": "Enviar horarios",
+    "sendNew": "Enviar nuevos horarios",
+    "application": "Candidatura",
+    "mode": "Dónde",
+    "address": "Dirección",
+    "link": "Enlace de la reunión",
+    "linkInvalid": "Introduce un enlace que empiece por https://",
+    "phoneHint": "Llamas a la persona candidata al número de su perfil. Lo verás cuando la entrevista esté reservada.",
+    "slots": "Horarios",
+    "slotsHint": "En tu zona horaria. Cada horario se puede elegir hasta 1 hora antes de que empiece.",
+    "date": "Fecha",
+    "time": "Hora",
+    "length": "Duración",
+    "removeSlot": "Quitar este horario",
+    "addSlot": "Añadir un horario",
+    "aiNotes": "Notas de entrevista con IA",
+    "aiNotesHint": "Solo audio, y solo si ambos aceptáis en pantalla al empezar la llamada. El audio se borra cuando las notas están listas.",
+    "slotErrors": {
+      "too_soon": "Elige un horario al menos 1 hora a partir de ahora.",
+      "overlap": "Este horario se solapa con otro.",
+      "invalid": "Elige una fecha, una hora y una duración."
+    }
+  },
+  "card": {
+    "title": "Entrevista",
+    "aiNotesRequested": "Notas con IA solicitadas: se os preguntará a ambos al empezar la llamada.",
+    "waiting": "Esperando a que {{name}} elija un horario.",
+    "pickHint": "Elige el horario que te venga mejor (en tu zona horaria).",
+    "slots": "Horarios propuestos",
+    "slotClosed": "Ya no está disponible",
+    "confirm": "Confirmar horario",
+    "otherTimes": "Pedir otros horarios",
+    "otherTimesAsked": "{{name}} ha pedido otros horarios.",
+    "otherTimesSent": "Has pedido otros horarios. La empresa te propondrá nuevos.",
+    "rescheduleAsked": "{{name}} ha pedido cambiar esta entrevista.",
+    "rescheduleSent": "Has pedido cambiar esta entrevista. Sigue reservada hasta que la empresa proponga nuevos horarios.",
+    "joinOpens": "Puedes unirte a partir de 10 minutos antes del inicio.",
+    "notesPreparing": "Se están preparando las notas con IA.",
+    "expired": "No se eligió ningún horario antes de que pasaran los propuestos.",
+    "join": "Unirse a la entrevista",
+    "addToCalendar": "Añadir al calendario",
+    "askReschedule": "Pedir un cambio de horario",
+    "recordOutcome": "Registrar resultado",
+    "notes": "Notas con IA",
+    "reschedule": "Cambiar horario",
+    "offerNew": "Proponer nuevos horarios",
+    "cancel": "Cancelar entrevista"
+  },
+  "mode": {
+    "video": "Videollamada en Local WorkMan",
+    "phone": "Llamada telefónica",
+    "phoneRecruiter": "Llamada telefónica: llama a la persona candidata al {{phone}}",
+    "phoneCandidate": "Llamada telefónica: el reclutador te llama al número de tu perfil",
+    "in_person": "En persona",
+    "link": "Reunión en línea"
+  },
+  "otherTimes": {
+    "title": "Pedir otros horarios",
+    "description": "Indica a la empresa cuándo estás disponible. Te propondrá nuevos horarios.",
+    "label": "¿Qué horarios te vienen bien?",
+    "send": "Enviar"
+  },
+  "askReschedule": {
+    "title": "Pedir un cambio de horario",
+    "description": "Tu entrevista sigue reservada hasta que la empresa proponga nuevos horarios.",
+    "label": "¿Por qué necesitas cambiarla?",
+    "send": "Enviar solicitud"
+  },
+  "cancel": {
+    "title": "Cancelar la entrevista",
+    "description": "{{name}} recibirá un correo, con la cancelación en el calendario si había un horario reservado.",
+    "label": "Motivo (opcional)",
+    "confirm": "Cancelar entrevista"
+  },
+  "outcome": {
+    "title": "Registrar el resultado",
+    "description": "¿Cómo fue la entrevista con {{name}}? Solo tu empresa lo ve.",
+    "save": "Guardar resultado",
+    "notify": "Enviar un correo a la persona candidata",
+    "note": "Comentarios privados",
+    "noteHint": "Solo tu empresa ve esta nota."
+  },
+  "noShow": {
+    "title": "No se presentó",
+    "description": "{{name}} no se presentó. Propón nuevos horarios o cierra la candidatura como no seleccionada.",
+    "notSelected": "No seleccionada",
+    "reschedule": "Proponer nuevos horarios"
+  },
+  "notes": {
+    "title": "Notas de entrevista con IA",
+    "description": "Hechas a partir de la grabación de tu entrevista con {{name}}. Solo tu empresa las ve.",
+    "summary": "Resumen",
+    "keyAnswers": "Respuestas clave",
+    "strengths": "Puntos fuertes",
+    "concerns": "Dudas",
+    "followUps": "Preguntas de seguimiento",
+    "transcript": "Transcripción",
+    "generated": "Creadas el {{date}}. El audio se ha borrado."
+  },
+  "documents": {
+    "title": "Documentos solicitados",
+    "declined": "Rechazado: «{{note}}»",
+    "removed": "Borrado tras el plazo de conservación",
+    "waiting": "Esperando el archivo",
+    "replace": "Sustituir",
+    "upload": "Subir",
+    "decline": "Rechazar",
+    "declineTitle": "Rechazar «{{name}}»",
+    "declineDescription": "Explica a la empresa por qué no puedes compartir este documento.",
+    "declineLabel": "Nota",
+    "privacyCandidate": "Solo esta empresa puede abrir tus archivos y cada apertura queda registrada.",
+    "privacyRecruiter": "Cada apertura de estos archivos queda registrada.",
+    "complete": "Marcar como completada"
+  },
+  "requestDocuments": {
+    "title": "Solicitar documentos",
+    "description": "La persona candidata sube cada documento en la tarjeta. Solo tu empresa puede abrir los archivos.",
+    "send": "Enviar solicitud",
+    "documents": "Documentos",
+    "pickOne": "Elige al menos un documento.",
+    "otherLabel": "Nombre del otro documento",
+    "note": "Nota (opcional)",
+    "attachment": "Archivo para la persona candidata (opcional)",
+    "removeFile": "Quitar el archivo",
+    "attach": "Adjuntar un archivo"
+  },
+  "events": {
+    "interview": {
+      "offered": "Horarios de entrevista propuestos",
+      "confirmed": "Entrevista reservada para el {{when}}",
+      "other_times": "Se han pedido otros horarios",
+      "rescheduled": "Nuevos horarios de entrevista propuestos",
+      "cancelled": "Entrevista cancelada",
+      "reschedule_requested": "Se ha pedido cambiar la entrevista"
+    },
+    "document_request": {
+      "created": "Documentos solicitados"
+    }
+  },
+  "preview": {
+    "interview": {
+      "offered": "Horarios de entrevista propuestos",
+      "confirmed": "Entrevista reservada",
+      "other_times": "Se han pedido otros horarios",
+      "rescheduled": "Nuevos horarios de entrevista propuestos",
+      "cancelled": "Entrevista cancelada",
+      "reschedule_requested": "Se ha pedido cambiar la entrevista"
+    },
+    "document_request": {
+      "created": "Documentos solicitados"
+    }
+  },
+  "thread": {
+    "schedule": "Programar entrevista",
+    "requestDocuments": "Solicitar documentos"
+  },
+  "upcoming": {
+    "title": "Próximas entrevistas"
+  },
+  "call": {
+    "back": "Volver a la conversación",
+    "cannotJoin": "Ahora no puedes unirte a esta entrevista",
+    "reasons": {
+      "too_early": "La entrevista se abre 10 minutos antes del inicio.",
+      "closed": "Ya ha pasado el plazo para unirse a esta entrevista."
+    },
+    "title": "Entrevista: {{job}}",
+    "recording": "Grabando",
+    "consentTitle": "Notas de entrevista con IA",
+    "consentText": "El reclutador quiere notas con IA de esta entrevista. Solo se graba el audio, y solo si ambos aceptáis. Si alguno lo rechaza, la entrevista sigue sin notas.",
+    "decline": "Rechazar",
+    "agree": "Aceptar",
+    "notesOff": "Las notas con IA están desactivadas en esta entrevista.",
+    "waitingConsent": "La grabación empieza cuando ambos hayáis aceptado y estéis en la llamada.",
+    "recordingStopped": "La grabación se ha detenido.",
+    "failedTitle": "No hemos podido conectar la videollamada",
+    "fallbackRecruiter": "Llama a la persona candidata al {{phone}}.",
+    "fallbackCandidate": "El reclutador puede llamarte al {{phone}}.",
+    "fallbackNoPhone": "Escribíos en la conversación para acordar otra forma de hablar.",
+    "mediaError": "Permite el acceso a la cámara y al micrófono en el navegador para participar en la llamada.",
+    "them": "La otra persona",
+    "waiting": "Esperando a que la otra persona se una",
+    "you": "Tú",
+    "mute": "Silenciar",
+    "unmute": "Activar micrófono",
+    "cameraOff": "Apagar cámara",
+    "cameraOn": "Encender cámara",
+    "stopRecording": "Detener grabación",
+    "leave": "Salir"
+  }
+}

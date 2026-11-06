@@ -22,7 +22,10 @@ export default function CandidateActivityPage() {
     const actor = event.actor?.name ?? t('discovery:activityTab.candidate')
     const key = event.type === 'cv_request_decided' ? `cv_request_decided_${event.params.decision}` : event.type
     const reason = event.params.reason && t(`enums:cvRequestReason.${event.params.reason}`).toLocaleLowerCase()
-    return t(`discovery:activityTab.events.${key}`, { ...event.params, actor, reason })
+    // §3.23: an interview's time in the reader's zone and its outcome in their language.
+    const when = event.params.startAt && format.dateTime(event.params.startAt)
+    const result = event.params.result && t(`enums:interviewOutcome.${event.params.result}`)
+    return t(`discovery:activityTab.events.${key}`, { ...event.params, actor, reason, when, result })
   }
 
   return (

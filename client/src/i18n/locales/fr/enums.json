@@ -88,6 +88,11 @@
   },
   "cvRequestStatus": { "pending": "En attente", "approved": "Acceptée", "declined": "Refusée" },
   "activityType": {
+    "interview_confirmed": "Entretien confirmé",
+    "interview_cancelled": "Entretien annulé",
+    "interview_outcome": "Résultat de l’entretien",
+    "document_request": "Documents demandés",
+    "documents_received": "Documents reçus",
     "applied": "A postulé",
     "withdrawn": "A retiré sa candidature",
     "stage_changed": "Étape modifiée",
@@ -104,7 +109,7 @@
     "cv_download": "CV téléchargé"
   },
   "planKey": { "free": "Gratuit", "plus": "Plus", "recruiter_free": "Gratuit", "recruiter_plus": "Recruiter Plus" },
-  "entitlement": { "apply": "Postuler aux offres", "message_send": "Messagerie", "job_alerts": "Alertes emploi", "ai": "Fonctions d’IA", "jobs_unlimited": "Plus d’1 offre d’emploi active", "discovery": "Trouver des candidats", "outreach": "Démarrer des conversations et demander des CV" },
+  "entitlement": { "interviews": "Entretiens et demandes de documents", "apply": "Postuler aux offres", "message_send": "Messagerie", "job_alerts": "Alertes emploi", "ai": "Fonctions d’IA", "jobs_unlimited": "Plus d’1 offre d’emploi active", "discovery": "Trouver des candidats", "outreach": "Démarrer des conversations et demander des CV" },
   "paymentKind": { "course": "Formation", "subscription": "Abonnement" },
   "paymentStatus": { "paid": "Payé", "failed": "Échoué", "refunded": "Remboursé" },
   "paymentSource": { "stripe": "Stripe", "seed": "Données d’exemple" },
@@ -142,6 +147,7 @@
   "policyStatus": { "draft": "Brouillon", "active": "Active", "archived": "Archivée" },
   "matchLabel": { "strong": "Très compatible", "good": "Compatible" },
   "aiKind": {
+    "interview_notes": "Notes d’entretien",
     "job_summary": "Résumé de l’offre",
     "match_explanation": "Explication de la correspondance",
     "insights": "Analyses",
@@ -155,6 +161,15 @@
     "reply_suggestions": "Réponses suggérées"
   },
   "emailType": {
+    "interview_invitation": "Invitation à un entretien",
+    "interview_rescheduled": "Créneaux d’entretien modifiés",
+    "interview_confirmed": "Entretien confirmé",
+    "interview_cancelled": "Entretien annulé",
+    "interview_other_times": "Autres créneaux demandés",
+    "interview_reschedule_request": "Report demandé",
+    "interview_reminder": "Rappel d’entretien",
+    "document_request": "Documents demandés",
+    "documents_received": "Documents reçus",
     "verify_email": "Confirmation de l’e-mail",
     "already_registered": "Compte déjà existant",
     "recruiter_email_code": "Code e-mail recruteur",
@@ -194,6 +209,9 @@
     "skipped_cap": "Non envoyé (limite quotidienne)"
   },
   "filePurpose": {
+    "interview_audio": "Audio d’entretien",
+    "document_request": "Document demandé",
+    "document_attachment": "Pièce jointe de la demande",
     "photo": "Photo de profil",
     "cv": "CV",
     "evidence": "Justificatif",
@@ -213,6 +231,7 @@
   "legalDoc": { "terms": "Conditions d’utilisation", "privacy": "Politique de confidentialité", "imprint": "Mentions légales" },
   "faqAudience": { "candidate": "Candidats", "recruiter": "Recruteurs", "admin": "Administration" },
   "taskType": {
+    "interview": { "reminder": "Rappel d’entretien", "expire": "Expiration des créneaux", "close": "Fin de l’entretien", "notes": "Notes d’entretien" },
     "email": { "message": "E-mail de message", "stage": "E-mail d’étape", "new-applications": "E-mail de nouvelles candidatures" },
     "alerts": { "instant": "Alerte immédiate" },
     "matching": { "recompute": "Recalcul des correspondances" }
@@ -239,6 +258,7 @@
     "governance": "Gouvernance"
   },
   "emailCategory": {
+    "interviews": "Entretiens",
     "applications": "Candidatures",
     "messages": "Messages",
     "cv_requests": "Demandes de CV",
@@ -251,6 +271,17 @@
     "admin_joined": "Nouveaux administrateurs"
   },
   "notificationType": {
+    "interview_offered": "Créneaux d’entretien",
+    "interview_confirmed": "Entretien confirmé",
+    "interview_cancelled": "Entretien annulé",
+    "interview_other_times": "Autres créneaux demandés",
+    "interview_reschedule_requested": "Report demandé",
+    "interview_expired": "Créneaux expirés",
+    "interview_reminder": "Rappel d’entretien",
+    "interview_notes_ready": "Notes d’entretien par IA",
+    "document_requested": "Documents demandés",
+    "document_answered": "Document envoyé",
+    "documents_received": "Documents reçus",
     "application_status": "Suivi de candidature",
     "message": "Message",
     "cv_request": "Demande de CV",
@@ -272,5 +303,12 @@
     "admin_content_report": "Signalement de contenu",
     "admin_renewal_failed": "Renouvellement échoué",
     "admin_joined": "Accès"
-  }
+  },
+  "interviewMode": { "video": "Appel vidéo", "phone": "Téléphone", "in_person": "En personne", "link": "Lien externe" },
+  "interviewStatus": { "offered": "Créneaux proposés", "other_times": "Autres créneaux demandés", "confirmed": "Confirmé", "cancelled": "Annulé", "expired": "Expiré", "completed": "Terminé" },
+  "interviewOutcome": { "offer": "Passer à l’offre", "another_round": "Nouvel entretien", "not_selected": "Non retenu", "did_not_attend": "Absent" },
+  "recordingStatus": { "off": "Non enregistré", "recording": "Enregistrement", "processing": "Notes en préparation", "ready": "Notes prêtes", "failed": "Échec des notes" },
+  "documentKind": { "id": "Pièce d’identité", "right_to_work": "Droit de travailler", "degree": "Diplôme ou certificat", "references": "Références", "signed_offer": "Offre signée", "other": "Autre" },
+  "documentRequestStatus": { "open": "Ouverte", "complete": "Terminée" },
+  "messageKind": { "text": "Message", "interview": "Entretien", "document_request": "Demande de documents" }
 }

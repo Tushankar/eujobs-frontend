@@ -220,6 +220,11 @@
     "empty": "Aún no hay actividad.",
     "candidate": "El candidato",
     "events": {
+      "interview_confirmed": "Entrevista reservada para {{jobTitle}}: {{when}}.",
+      "interview_cancelled": "{{actor}} canceló la entrevista para {{jobTitle}}.",
+      "interview_outcome": "{{actor}} registró el resultado de la entrevista para {{jobTitle}}: {{result}}.",
+      "document_request": "{{actor}} solicitó documentos para {{jobTitle}}.",
+      "documents_received": "{{actor}} respondió a la solicitud de documentos para {{jobTitle}}.",
       "applied": "{{actor}} se postuló a la oferta {{jobTitle}}.",
       "withdrawn": "{{actor}} retiró la candidatura a la oferta {{jobTitle}}.",
       "stage_changed": "{{actor}} pasó la candidatura a la oferta {{jobTitle}} a la etapa {{stage}}.",

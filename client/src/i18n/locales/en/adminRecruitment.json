@@ -9,6 +9,8 @@
     "label": "Recruitment view"
   },
   "stats": {
+    "interviewsScheduled": "Interviews scheduled",
+    "interviewsCompleted": "Interviews completed",
     "publishedRoles": "Published roles",
     "applications": "Applications",
     "applicationsCaption": "All time, not withdrawn",

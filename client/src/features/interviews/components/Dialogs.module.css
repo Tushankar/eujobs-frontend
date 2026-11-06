@@ -1,0 +1,155 @@
+.form {
+  display: flex;
+  flex-direction: column;
+  gap: 16px;
+}
+
+.slots {
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+  margin: 0;
+  padding: 0;
+  border: 0;
+  min-width: 0;
+}
+
+.legend {
+  padding: 0;
+  font-size: 14px;
+  font-weight: 600;
+  color: var(--foreground);
+}
+
+.slotRow {
+  display: grid;
+  grid-template-columns: minmax(0, 1.3fr) minmax(0, 1fr) minmax(0, 1fr) 40px;
+  align-items: start;
+  gap: 10px;
+}
+
+.removeSlot {
+  margin-top: 26px;
+}
+
+.hint {
+  margin: 0;
+  font-size: 13px;
+  line-height: 19px;
+  color: var(--muted-foreground);
+}
+
+.checkText {
+  display: flex;
+  flex-direction: column;
+  gap: 2px;
+  font-size: 14px;
+  line-height: 20px;
+}
+
+.checkText span {
+  font-size: 13px;
+  color: var(--muted-foreground);
+}
+
+.error {
+  margin: 0;
+  font-size: 13px;
+  color: var(--destructive, #c0392b);
+}
+
+.kinds {
+  display: grid;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  gap: 10px 16px;
+  margin: 0;
+  padding: 0;
+  border: 0;
+}
+
+.section {
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+}
+
+.sectionTitle {
+  margin: 0;
+  font-family: var(--font-heading, inherit);
+  font-size: 14px;
+  font-weight: 700;
+  color: var(--foreground);
+}
+
+.list {
+  margin: 0;
+  padding-left: 18px;
+  font-size: 14px;
+  line-height: 21px;
+  color: var(--foreground);
+}
+
+.paragraph {
+  margin: 0;
+  font-size: 14px;
+  line-height: 21px;
+  color: var(--foreground);
+  white-space: pre-wrap;
+  overflow-wrap: anywhere;
+}
+
+.transcript {
+  max-height: 260px;
+  overflow: auto;
+  padding: 12px;
+  border: 1px solid var(--border);
+  border-radius: var(--radius-md, 8px);
+  font-size: 13px;
+  line-height: 20px;
+  white-space: pre-wrap;
+  overflow-wrap: anywhere;
+}
+
+.outcomes {
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+  margin: 0;
+  padding: 0;
+  border: 0;
+}
+
+.outcome {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  padding: 10px 12px;
+  border: 1px solid var(--border);
+  border-radius: var(--radius-md, 8px);
+  font-size: 14px;
+  cursor: pointer;
+}
+
+.outcome input {
+  accent-color: var(--primary);
+}
+
+@media (max-width: 767px) {
+  .slotRow {
+    grid-template-columns: minmax(0, 1fr) minmax(0, 1fr);
+    padding-bottom: 10px;
+    border-bottom: 1px solid var(--border);
+  }
+
+  .slotRow > :first-child {
+    grid-column: 1 / -1;
+  }
+
+  .removeSlot {
+    margin-top: 0;
+  }
+
+  .kinds {
+    grid-template-columns: minmax(0, 1fr);
+  }
+}

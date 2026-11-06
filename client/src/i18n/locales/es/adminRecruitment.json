@@ -9,6 +9,8 @@
     "label": "Vista de selección"
   },
   "stats": {
+    "interviewsScheduled": "Entrevistas programadas",
+    "interviewsCompleted": "Entrevistas completadas",
     "publishedRoles": "Ofertas publicadas",
     "applications": "Candidaturas",
     "applicationsCaption": "Todo el periodo, sin retiradas",

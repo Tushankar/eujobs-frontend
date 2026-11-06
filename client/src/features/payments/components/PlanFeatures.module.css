@@ -1,0 +1,30 @@
+.title {
+  margin: 0 0 8px;
+  font-size: 13px;
+  font-weight: 700;
+  color: var(--foreground);
+}
+
+.list {
+  display: grid;
+  gap: 6px;
+  margin: 0;
+  padding: 0;
+  list-style: none;
+}
+
+.list li {
+  display: flex;
+  align-items: flex-start;
+  gap: 8px;
+  font-size: 13px;
+  line-height: 19px;
+  color: var(--foreground);
+  overflow-wrap: anywhere;
+}
+
+.check {
+  flex: none;
+  margin-top: 2px;
+  color: var(--success, #1e8e3e);
+}

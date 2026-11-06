@@ -313,6 +313,106 @@
         "Conservas tus candidaturas, conversaciones, notas y tu preselección."
       ],
       "action": "Abrir ofertas"
+    },
+    "interview_invitation": {
+      "subject": "{{company}} quiere hacerte una entrevista",
+      "heading": "Elige un horario para la entrevista",
+      "body": [
+        "Hola, {{name}}:",
+        "{{company}} te invita a una entrevista para {{job}}.",
+        "{{details}}",
+        "{{aiNotes}}",
+        "Elige uno de estos horarios (en tu zona horaria) o pide otros:"
+      ],
+      "action": "Elegir un horario"
+    },
+    "interview_rescheduled": {
+      "subject": "{{company}} te ha propuesto nuevos horarios de entrevista",
+      "heading": "Elige un nuevo horario para la entrevista",
+      "body": [
+        "Hola, {{name}}:",
+        "{{company}} ha propuesto nuevos horarios para tu entrevista para {{job}}.",
+        "{{released}}",
+        "{{details}}",
+        "{{aiNotes}}",
+        "Elige uno de estos horarios (en tu zona horaria) o pide otros:"
+      ],
+      "action": "Elegir un horario"
+    },
+    "interview_confirmed": {
+      "subject": "Entrevista reservada: {{job}}",
+      "heading": "Tu entrevista está reservada",
+      "body": [
+        "Hola, {{name}}:",
+        "{{intro}} está reservada para el {{when}}.",
+        "{{details}}",
+        "Adjuntamos la invitación de calendario."
+      ],
+      "action": "Abrir la entrevista"
+    },
+    "interview_cancelled": {
+      "subject": "Entrevista cancelada: {{job}}",
+      "heading": "Tu entrevista se ha cancelado",
+      "body": [
+        "Hola, {{name}}:",
+        "{{company}} ha cancelado tu entrevista para {{job}}.",
+        "{{wasBooked}}",
+        "{{reasonLine}}"
+      ],
+      "action": "Abrir la conversación"
+    },
+    "interview_other_times": {
+      "subject": "{{candidate}} ha pedido otros horarios de entrevista",
+      "heading": "Otros horarios solicitados",
+      "body": [
+        "Hola, {{name}}:",
+        "Ninguno de los horarios que propusiste para {{job}} le va bien a {{candidate}}.",
+        "{{noteLine}}",
+        "Propón nuevos horarios desde la tarjeta de la entrevista."
+      ],
+      "action": "Proponer nuevos horarios"
+    },
+    "interview_reschedule_request": {
+      "subject": "{{candidate}} ha pedido cambiar la entrevista",
+      "heading": "Cambio de horario solicitado",
+      "body": [
+        "Hola, {{name}}:",
+        "{{candidate}} ha pedido cambiar la entrevista para {{job}} reservada para el {{when}}.",
+        "{{noteLine}}",
+        "La reserva se mantiene hasta que propongas nuevos horarios o la canceles."
+      ],
+      "action": "Abrir la entrevista"
+    },
+    "interview_reminder": {
+      "subject": "Recordatorio: entrevista {{soon}}",
+      "heading": "Tu entrevista empieza {{soon}}",
+      "body": [
+        "Hola, {{name}}:",
+        "{{intro}} empieza {{soon}}: {{when}}.",
+        "{{details}}"
+      ],
+      "action": "Abrir la entrevista"
+    },
+    "document_request": {
+      "subject": "{{company}} te ha solicitado documentos",
+      "heading": "Documentos solicitados",
+      "body": [
+        "Hola, {{name}}:",
+        "{{company}} te pide estos documentos para tu candidatura a {{job}}. Sube cada uno como archivo PDF, JPG o PNG de hasta 10 MB:",
+        "{{noteLine}}"
+      ],
+      "action": "Subir documentos",
+      "note": "Solo la empresa que los ha pedido puede abrir los archivos que subas."
+    },
+    "documents_received": {
+      "subject": "{{candidate}} ha respondido a tu solicitud de documentos",
+      "heading": "Documentos recibidos",
+      "body": [
+        "Hola, {{name}}:",
+        "{{candidate}} ha respondido a todos los puntos de tu solicitud de documentos para {{job}}.",
+        "Abre la solicitud para ver los archivos. Cada apertura queda registrada."
+      ],
+      "action": "Abrir la solicitud"
     }
   },
   "verification": {
@@ -477,6 +577,36 @@
     "pausedJobs": {
       "one": "{{job}} sigue publicada; se ha pausado 1 oferta más. Vuelve a suscribirte para publicarla de nuevo.",
       "other": "{{job}} sigue publicada; se han pausado {{count}} ofertas más. Vuelve a suscribirte para publicarlas de nuevo."
+    },
+    "interview": {
+      "minutes": "{{n}} min",
+      "summary": "Entrevista: {{job}} ({{company}})",
+      "aiNotesLine": "El reclutador quiere notas con IA de esta entrevista. Al empezar se os preguntará en pantalla a los dos; no se graba nada si no aceptáis ambos, y solo el audio.",
+      "in24h": "dentro de 24 horas",
+      "in1h": "dentro de 1 hora",
+      "intro": {
+        "candidate": "Tu entrevista con {{company}} para {{job}}",
+        "recruiter": "Tu entrevista con {{candidate}} para {{job}}"
+      },
+      "released": "El horario que reservaste, {{when}}, queda cancelado.",
+      "wasBooked": "Estaba reservada para el {{when}}.",
+      "reasonLine": "Motivo: {{reason}}",
+      "noteLine": "Nota: «{{note}}»",
+      "details": {
+        "video": "Videollamada en Local WorkMan: únete desde la tarjeta de la entrevista a partir de 10 minutos antes del inicio.",
+        "phone_candidate": "Llamada telefónica: el reclutador te llamará al número de teléfono de tu perfil.",
+        "phone_recruiter": "Llamada telefónica: llama a {{candidate}} al {{phone}}.",
+        "in_person": "En persona: {{address}}",
+        "link": "Reunión en línea: {{link}}"
+      }
+    },
+    "documentKind": {
+      "id": "Documento de identidad",
+      "right_to_work": "Permiso de trabajo",
+      "degree": "Título o certificado",
+      "references": "Referencias",
+      "signed_offer": "Oferta firmada",
+      "other": "Otro"
     }
   },
   "certificate": {
@@ -560,7 +690,8 @@
       "payments": "Pagos",
       "paid": "Pagado",
       "notifications": "Notificaciones",
-      "exportedAt": "Exportado el (UTC)"
+      "exportedAt": "Exportado el (UTC)",
+      "interviews": "Entrevistas"
     }
   },
   "audit": {

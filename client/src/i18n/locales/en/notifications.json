@@ -21,6 +21,17 @@
   "unreadMark": "Unread",
   "unavailable": "This item is no longer available.",
   "types": {
+    "interview_offered": { "new": "{{company}} offered interview times for {{job}}", "rescheduled": "{{company}} offered new interview times for {{job}}" },
+    "interview_confirmed": { "candidate": "Interview with {{company}} booked for {{when}}", "recruiter": "{{candidate}} booked the interview for {{job}}: {{when}}" },
+    "interview_cancelled": "{{company}} cancelled your interview for {{job}}",
+    "interview_other_times": "{{candidate}} asked for other interview times for {{job}}",
+    "interview_reschedule_requested": "{{candidate}} asked to move the interview for {{job}}",
+    "interview_expired": "No time was picked: {{candidate}}, {{job}}. Offer new times.",
+    "interview_reminder": { "candidate_one": "Your interview with {{company}} starts in {{count}} hour", "candidate_other": "Your interview with {{company}} starts in {{count}} hours", "recruiter_one": "Your interview with {{candidate}} starts in {{count}} hour", "recruiter_other": "Your interview with {{candidate}} starts in {{count}} hours" },
+    "interview_notes_ready": "AI notes of your interview with {{candidate}} are ready",
+    "document_requested": "{{company}} requested documents for {{job}}",
+    "document_answered": "{{candidate}} answered your document request for {{job}}",
+    "documents_received": "{{candidate}} answered every document you requested for {{job}}",
     "application_status": "{{company}} updated your application for {{job}}: {{status}}",
     "message_one": "New message from {{sender}}",
     "message_other": "{{count}} new messages from {{sender}}",
@@ -75,6 +86,7 @@
       "admin": "Always sent: password reset and invitations."
     },
     "categories": {
+      "interviews": "Reminders 24 hours and 1 hour before an interview, and when a candidate has answered a document request. Invitations and changes are always sent.",
       "applications": "Status changes on your applications, including when you are not selected.",
       "messages": "A message still unread after 15 minutes, at most one email per conversation an hour.",
       "cv_requests": "A company asks to see an earlier version of your CV.",

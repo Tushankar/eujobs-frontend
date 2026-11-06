@@ -1,0 +1,199 @@
+{
+  "minutes_one": "{{count}} min",
+  "minutes_many": "{{count}} min",
+  "minutes_other": "{{count}} min",
+  "offer": {
+    "title": "Planifier un entretien",
+    "rescheduleTitle": "Proposer de nouveaux créneaux",
+    "description": "Proposez 2 ou 3 créneaux. La personne candidate les voit à son heure locale et en choisit un, ou en demande d’autres.",
+    "send": "Envoyer les créneaux",
+    "sendNew": "Envoyer les nouveaux créneaux",
+    "application": "Candidature",
+    "mode": "Où",
+    "address": "Adresse",
+    "link": "Lien de la réunion",
+    "linkInvalid": "Saisissez un lien qui commence par https://",
+    "phoneHint": "Vous appelez la personne candidate au numéro de son profil. Il s’affiche une fois l’entretien confirmé.",
+    "slots": "Créneaux",
+    "slotsHint": "À votre heure locale. Chaque créneau peut être choisi jusqu’à 1 heure avant son début.",
+    "date": "Date",
+    "time": "Heure",
+    "length": "Durée",
+    "removeSlot": "Retirer ce créneau",
+    "addSlot": "Ajouter un créneau",
+    "aiNotes": "Notes d’entretien par IA",
+    "aiNotesHint": "Audio uniquement, et seulement si vous acceptez tous les deux à l’écran au début de l’appel. L’audio est supprimé dès que les notes sont prêtes.",
+    "slotErrors": {
+      "too_soon": "Choisissez un créneau au moins 1 heure à l’avance.",
+      "overlap": "Ce créneau en chevauche un autre.",
+      "invalid": "Choisissez une date, une heure et une durée."
+    }
+  },
+  "card": {
+    "title": "Entretien",
+    "aiNotesRequested": "Notes par IA demandées : la question vous sera posée à tous les deux au début de l’appel.",
+    "waiting": "En attente du choix de {{name}}.",
+    "pickHint": "Choisissez le créneau qui vous convient (à votre heure locale).",
+    "slots": "Créneaux proposés",
+    "slotClosed": "Plus disponible",
+    "confirm": "Confirmer le créneau",
+    "otherTimes": "Demander d’autres créneaux",
+    "otherTimesAsked": "{{name}} a demandé d’autres créneaux.",
+    "otherTimesSent": "Vous avez demandé d’autres créneaux. L’entreprise vous en proposera de nouveaux.",
+    "rescheduleAsked": "{{name}} a demandé à déplacer cet entretien.",
+    "rescheduleSent": "Vous avez demandé à déplacer cet entretien. Il reste prévu jusqu’à ce que l’entreprise propose de nouveaux créneaux.",
+    "joinOpens": "Vous pourrez rejoindre l’entretien 10 minutes avant le début.",
+    "notesPreparing": "Les notes par IA sont en cours de préparation.",
+    "expired": "Aucun créneau n’a été choisi avant que les créneaux proposés ne passent.",
+    "join": "Rejoindre l’entretien",
+    "addToCalendar": "Ajouter à l’agenda",
+    "askReschedule": "Demander un report",
+    "recordOutcome": "Enregistrer le résultat",
+    "notes": "Notes par IA",
+    "reschedule": "Reporter",
+    "offerNew": "Proposer de nouveaux créneaux",
+    "cancel": "Annuler l’entretien"
+  },
+  "mode": {
+    "video": "Appel vidéo dans Local WorkMan",
+    "phone": "Appel téléphonique",
+    "phoneRecruiter": "Appel téléphonique : appelez la personne candidate au {{phone}}",
+    "phoneCandidate": "Appel téléphonique : le recruteur vous appelle au numéro de votre profil",
+    "in_person": "En personne",
+    "link": "Réunion en ligne"
+  },
+  "otherTimes": {
+    "title": "Demander d’autres créneaux",
+    "description": "Indiquez à l’entreprise vos disponibilités. Elle proposera de nouveaux créneaux.",
+    "label": "Quels créneaux vous conviennent ?",
+    "send": "Envoyer"
+  },
+  "askReschedule": {
+    "title": "Demander un report",
+    "description": "Votre entretien reste prévu jusqu’à ce que l’entreprise propose de nouveaux créneaux.",
+    "label": "Pourquoi devez-vous le déplacer ?",
+    "send": "Envoyer la demande"
+  },
+  "cancel": {
+    "title": "Annuler l’entretien",
+    "description": "{{name}} est prévenu par e-mail, avec une annulation d’agenda si un créneau était réservé.",
+    "label": "Motif (facultatif)",
+    "confirm": "Annuler l’entretien"
+  },
+  "outcome": {
+    "title": "Enregistrer le résultat",
+    "description": "Comment s’est passé l’entretien avec {{name}} ? Seule votre entreprise le voit.",
+    "save": "Enregistrer le résultat",
+    "notify": "Envoyer un e-mail à la personne candidate",
+    "note": "Retour privé",
+    "noteHint": "Seule votre entreprise voit cette note."
+  },
+  "noShow": {
+    "title": "Absent",
+    "description": "{{name}} ne s’est pas présenté. Proposez de nouveaux créneaux ou clôturez la candidature comme non retenue.",
+    "notSelected": "Non retenu",
+    "reschedule": "Proposer de nouveaux créneaux"
+  },
+  "notes": {
+    "title": "Notes d’entretien par IA",
+    "description": "Rédigées à partir de l’enregistrement de votre entretien avec {{name}}. Seule votre entreprise les voit.",
+    "summary": "Résumé",
+    "keyAnswers": "Réponses clés",
+    "strengths": "Points forts",
+    "concerns": "Points d’attention",
+    "followUps": "Questions de suivi",
+    "transcript": "Transcription",
+    "generated": "Rédigées le {{date}}. L’audio a été supprimé."
+  },
+  "documents": {
+    "title": "Documents demandés",
+    "declined": "Refusé : « {{note}} »",
+    "removed": "Supprimé après la durée de conservation",
+    "waiting": "En attente du fichier",
+    "replace": "Remplacer",
+    "upload": "Envoyer",
+    "decline": "Refuser",
+    "declineTitle": "Refuser « {{name}} »",
+    "declineDescription": "Expliquez à l’entreprise pourquoi vous ne pouvez pas partager ce document.",
+    "declineLabel": "Note",
+    "privacyCandidate": "Seule cette entreprise peut ouvrir vos fichiers, et chaque ouverture est enregistrée.",
+    "privacyRecruiter": "Chaque ouverture de ces fichiers est enregistrée.",
+    "complete": "Marquer comme terminée"
+  },
+  "requestDocuments": {
+    "title": "Demander des documents",
+    "description": "La personne candidate envoie chaque document dans la carte. Seule votre entreprise peut ouvrir les fichiers.",
+    "send": "Envoyer la demande",
+    "documents": "Documents",
+    "pickOne": "Choisissez au moins un document.",
+    "otherLabel": "Nom de l’autre document",
+    "note": "Note (facultatif)",
+    "attachment": "Fichier pour la personne candidate (facultatif)",
+    "removeFile": "Retirer le fichier",
+    "attach": "Joindre un fichier"
+  },
+  "events": {
+    "interview": {
+      "offered": "Créneaux d’entretien proposés",
+      "confirmed": "Entretien prévu le {{when}}",
+      "other_times": "Autres créneaux demandés",
+      "rescheduled": "Nouveaux créneaux d’entretien proposés",
+      "cancelled": "Entretien annulé",
+      "reschedule_requested": "Report de l’entretien demandé"
+    },
+    "document_request": {
+      "created": "Documents demandés"
+    }
+  },
+  "preview": {
+    "interview": {
+      "offered": "Créneaux d’entretien proposés",
+      "confirmed": "Entretien confirmé",
+      "other_times": "Autres créneaux demandés",
+      "rescheduled": "Nouveaux créneaux d’entretien proposés",
+      "cancelled": "Entretien annulé",
+      "reschedule_requested": "Report de l’entretien demandé"
+    },
+    "document_request": {
+      "created": "Documents demandés"
+    }
+  },
+  "thread": {
+    "schedule": "Planifier un entretien",
+    "requestDocuments": "Demander des documents"
+  },
+  "upcoming": {
+    "title": "Entretiens à venir"
+  },
+  "call": {
+    "back": "Retour à la conversation",
+    "cannotJoin": "Vous ne pouvez pas rejoindre cet entretien maintenant",
+    "reasons": {
+      "too_early": "L’entretien ouvre 10 minutes avant le début.",
+      "closed": "Le délai pour rejoindre cet entretien est passé."
+    },
+    "title": "Entretien : {{job}}",
+    "recording": "Enregistrement",
+    "consentTitle": "Notes d’entretien par IA",
+    "consentText": "Le recruteur souhaite des notes par IA de cet entretien. Seul l’audio est enregistré, et seulement si vous acceptez tous les deux. Si l’un de vous refuse, l’entretien a lieu sans notes.",
+    "decline": "Refuser",
+    "agree": "Accepter",
+    "notesOff": "Les notes par IA sont désactivées pour cet entretien.",
+    "waitingConsent": "L’enregistrement commence quand vous avez tous les deux accepté et que vous êtes tous les deux dans l’appel.",
+    "recordingStopped": "L’enregistrement est arrêté.",
+    "failedTitle": "Impossible de connecter l’appel vidéo",
+    "fallbackRecruiter": "Appelez plutôt la personne candidate au {{phone}}.",
+    "fallbackCandidate": "Le recruteur peut vous appeler au {{phone}}.",
+    "fallbackNoPhone": "Écrivez-vous dans la conversation pour convenir d’un autre moyen d’échanger.",
+    "mediaError": "Autorisez la caméra et le micro dans le navigateur pour participer à l’appel.",
+    "them": "L’autre personne",
+    "waiting": "En attente de l’autre personne",
+    "you": "Vous",
+    "mute": "Couper le micro",
+    "unmute": "Activer le micro",
+    "cameraOff": "Couper la caméra",
+    "cameraOn": "Activer la caméra",
+    "stopRecording": "Arrêter l’enregistrement",
+    "leave": "Quitter"
+  }
+}

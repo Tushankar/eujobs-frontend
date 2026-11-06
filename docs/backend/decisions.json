@@ -1947,7 +1947,8 @@
           "decisionNote": "",
           "sources": [
             "CAN-Q24"
-          ]
+          ],
+          "supersededBy": "Phase 11d (P11d-Q1 … Q29, docs/BACKEND_PLAN.md §3.23, 2026-11-06): Recruiter Plus schedules interviews (slots, in-app video, calendar invites, reminders, AI notes with consent, outcome)"
         },
         {
           "id": "M-076",
@@ -2224,7 +2225,8 @@
           "sources": [
             "REC-RQ-81",
             "CAN-Q29"
-          ]
+          ],
+          "supersededBy": "In part, Phase 11d (P11d-Q7, docs/BACKEND_PLAN.md §3.23, 2026-11-06): interview and document-request cards with files in the thread; typed messages stay text only"
         },
         {
           "id": "M-087",

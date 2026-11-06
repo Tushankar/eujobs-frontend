@@ -128,7 +128,34 @@ export const LIMITS = {
     lesson_document: { types: ['pdf'], maxBytes: 50 * MB, toDisk: true },
     // M-182
     report_voice: { types: ['mp3', 'm4a', 'wav', 'webm', 'ogg'], maxBytes: 25 * MB, toDisk: true },
+    // §3.23 (P11d-Q7): the candidate's files in a request card and the recruiter's attachment
+    document_request: { types: ['pdf', 'jpg', 'png'], maxBytes: 10 * MB },
+    document_attachment: { types: ['pdf', 'jpg', 'png'], maxBytes: 10 * MB },
   },
+  // §3.23, P11d-Q3 … Q26: slots 2–3, each pickable until `pickCutoffMs` before its start; join from `joinEarlyMs` before
+  // the start until `joinLateMs` after the end; reminders 24 h and 1 h before; signaling tickets live 2 minutes; the audio
+  // of one interview stays under the transcription upload limit (25 MB); documents and notes go 6 months after the close.
+  interviews: {
+    slots: { min: 2, max: 3 },
+    // P11d-Q3: the lengths a slot can have, in minutes
+    minutes: [30, 45, 60],
+    pickCutoffMs: HOUR,
+    joinEarlyMs: 10 * MINUTE,
+    joinLateMs: 30 * MINUTE,
+    reminderHours: [24, 1],
+    ticketTtlMs: 2 * MINUTE,
+    connectTimeoutMs: 20_000,
+    chunkMaxBytes: 2 * MB,
+    audioMaxBytes: 24 * MB,
+    note: { max: 500 },
+    reason: { max: 500 },
+    feedback: { max: 2000 },
+    address: { max: 300 },
+    link: { max: 300 },
+    retentionMonths: 6,
+    upcoming: 10,
+  },
+  documentRequest: { items: { min: 1, max: 6 }, otherLabel: { max: 60 }, note: { max: 500 }, declineNote: { max: 300 } },
   // M-164, U20, OQ-1: content reports; M-167: the decision reason uses the moderation limit
   report: { details: { max: 500 }, perDay: 10, excerptEarlier: 5 },
   moderationReason: { max: 300 },

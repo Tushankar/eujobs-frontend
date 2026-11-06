@@ -88,6 +88,11 @@
   },
   "cvRequestStatus": { "pending": "Pending", "approved": "Approved", "declined": "Declined" },
   "activityType": {
+    "interview_confirmed": "Interview booked",
+    "interview_cancelled": "Interview cancelled",
+    "interview_outcome": "Interview outcome",
+    "document_request": "Documents requested",
+    "documents_received": "Documents received",
     "applied": "Applied",
     "withdrawn": "Withdrew the application",
     "stage_changed": "Stage changed",
@@ -104,7 +109,7 @@
     "cv_download": "CV downloaded"
   },
   "planKey": { "free": "Free", "plus": "Plus", "recruiter_free": "Free", "recruiter_plus": "Recruiter Plus" },
-  "entitlement": { "apply": "Applying to jobs", "message_send": "Messaging", "job_alerts": "Job alerts", "ai": "AI features", "jobs_unlimited": "More than 1 active job", "discovery": "Find candidates", "outreach": "Starting conversations and CV requests" },
+  "entitlement": { "interviews": "Interviews and document requests", "apply": "Applying to jobs", "message_send": "Messaging", "job_alerts": "Job alerts", "ai": "AI features", "jobs_unlimited": "More than 1 active job", "discovery": "Find candidates", "outreach": "Starting conversations and CV requests" },
   "paymentKind": { "course": "Course", "subscription": "Subscription" },
   "paymentStatus": { "paid": "Paid", "failed": "Failed", "refunded": "Refunded" },
   "paymentSource": { "stripe": "Stripe", "seed": "Seeded" },
@@ -142,6 +147,7 @@
   "policyStatus": { "draft": "Draft", "active": "Active", "archived": "Archived" },
   "matchLabel": { "strong": "Strong match", "good": "Good match" },
   "aiKind": {
+    "interview_notes": "Interview notes",
     "job_summary": "Job summary",
     "match_explanation": "Match explanation",
     "insights": "Insights",
@@ -155,6 +161,15 @@
     "reply_suggestions": "Suggested replies"
   },
   "emailType": {
+    "interview_invitation": "Interview invitation",
+    "interview_rescheduled": "Interview times changed",
+    "interview_confirmed": "Interview booked",
+    "interview_cancelled": "Interview cancelled",
+    "interview_other_times": "Other interview times asked",
+    "interview_reschedule_request": "Reschedule asked",
+    "interview_reminder": "Interview reminder",
+    "document_request": "Documents requested",
+    "documents_received": "Documents received",
     "verify_email": "Email confirmation",
     "already_registered": "Already registered",
     "recruiter_email_code": "Recruiter email code",
@@ -194,6 +209,9 @@
     "skipped_cap": "Not sent (daily limit)"
   },
   "filePurpose": {
+    "interview_audio": "Interview audio",
+    "document_request": "Requested document",
+    "document_attachment": "Request attachment",
     "photo": "Profile photo",
     "cv": "CV",
     "evidence": "Verification evidence",
@@ -213,6 +231,7 @@
   "legalDoc": { "terms": "Terms of Service", "privacy": "Privacy Policy", "imprint": "Imprint" },
   "faqAudience": { "candidate": "Candidates", "recruiter": "Recruiters", "admin": "Admins" },
   "taskType": {
+    "interview": { "reminder": "Interview reminder", "expire": "Interview offer expiry", "close": "Interview window close", "notes": "Interview notes" },
     "email": { "message": "Message email", "stage": "Stage email", "new-applications": "New applications email" },
     "alerts": { "instant": "Instant alert" },
     "matching": { "recompute": "Match recalculation" }
@@ -239,6 +258,7 @@
     "governance": "Governance"
   },
   "emailCategory": {
+    "interviews": "Interviews",
     "applications": "Applications",
     "messages": "Messages",
     "cv_requests": "CV requests",
@@ -251,6 +271,17 @@
     "admin_joined": "Admins joining"
   },
   "notificationType": {
+    "interview_offered": "Interview times",
+    "interview_confirmed": "Interview booked",
+    "interview_cancelled": "Interview cancelled",
+    "interview_other_times": "Other times asked",
+    "interview_reschedule_requested": "Reschedule asked",
+    "interview_expired": "Interview times expired",
+    "interview_reminder": "Interview reminder",
+    "interview_notes_ready": "AI interview notes",
+    "document_requested": "Documents requested",
+    "document_answered": "Document answered",
+    "documents_received": "Documents received",
     "application_status": "Application update",
     "message": "Message",
     "cv_request": "CV request",
@@ -272,5 +303,12 @@
     "admin_content_report": "Content report",
     "admin_renewal_failed": "Failed renewal",
     "admin_joined": "Access"
-  }
+  },
+  "interviewMode": { "video": "Video call", "phone": "Phone", "in_person": "In person", "link": "External link" },
+  "interviewStatus": { "offered": "Times offered", "other_times": "Other times asked", "confirmed": "Booked", "cancelled": "Cancelled", "expired": "Expired", "completed": "Completed" },
+  "interviewOutcome": { "offer": "Move to Offer", "another_round": "Another round", "not_selected": "Not selected", "did_not_attend": "Didn’t attend" },
+  "recordingStatus": { "off": "Not recorded", "recording": "Recording", "processing": "Making notes", "ready": "Notes ready", "failed": "Notes failed" },
+  "documentKind": { "id": "Identity document", "right_to_work": "Right to work", "degree": "Degree or certificate", "references": "References", "signed_offer": "Signed offer", "other": "Other" },
+  "documentRequestStatus": { "open": "Open", "complete": "Complete" },
+  "messageKind": { "text": "Message", "interview": "Interview", "document_request": "Document request" }
 }

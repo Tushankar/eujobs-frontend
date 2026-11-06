@@ -3,6 +3,7 @@ import {
   BadgeCheck,
   Bell,
   BriefcaseBusiness,
+  CalendarClock,
   CreditCard,
   FileText,
   Flag,
@@ -13,7 +14,7 @@ import {
   UserPlus,
   Users,
 } from 'lucide-react'
-import { useFormat } from '@/lib/preferences.js'
+import { useFormat, usePreferences } from '@/lib/preferences.js'
 
 /** One neutral icon per type (LinkedIn style: grey glyphs, no tinted tiles). */
 export const NOTIFICATION_ICONS = {
@@ -38,6 +39,17 @@ export const NOTIFICATION_ICONS = {
   admin_content_report: Flag,
   admin_renewal_failed: CreditCard,
   admin_joined: UserPlus,
+  interview_offered: CalendarClock,
+  interview_confirmed: CalendarClock,
+  interview_cancelled: CalendarClock,
+  interview_other_times: CalendarClock,
+  interview_reschedule_requested: CalendarClock,
+  interview_expired: CalendarClock,
+  interview_reminder: CalendarClock,
+  interview_notes_ready: CalendarClock,
+  document_requested: FileText,
+  document_answered: FileText,
+  documents_received: FileText,
 }
 
 const PLURAL_TYPES = ['message', 'admin_content_report']
@@ -49,6 +61,7 @@ const PLURAL_TYPES = ['message', 'admin_content_report']
 export function useNotificationText() {
   const { t } = useTranslation()
   const format = useFormat()
+  const { me } = usePreferences()
   return ({ type, params, count }) => {
     const amount = params.amountMinor !== undefined ? format.money(params.amountMinor, params.currency) : undefined
     const values = {
@@ -64,6 +77,8 @@ export function useNotificationText() {
       target: params.targetType && t(`enums:reportTargetType.${params.targetType}`),
       // Plan notifications name the plan (Plus or Recruiter Plus, §3.22); rows from before 11c are Plus.
       plan: t(`enums:planKey.${params.planKey ?? 'plus'}`),
+      // §3.23: interview times in the reader's time zone.
+      when: params.startAt && format.dateTime(params.startAt),
     }
     switch (type) {
       case 'verification_decided':
@@ -76,6 +91,13 @@ export function useNotificationText() {
       case 'plan_ended':
         // P11c-Q18: a recruiter's names the job kept live and the number paused.
         return params.paused ? t('notifications:types.plan_ended_paused', { ...values, count: params.paused }) : t('notifications:types.plan_ended', values)
+      // §3.23: the candidate reads the company, the recruiter the candidate; a reminder says how soon.
+      case 'interview_confirmed':
+        return t(`notifications:types.${type}.${me?.role === 'recruiter' ? 'recruiter' : 'candidate'}`, values)
+      case 'interview_reminder':
+        return t(`notifications:types.${type}.${me?.role === 'recruiter' ? 'recruiter' : 'candidate'}`, { ...values, count: params.hours })
+      case 'interview_offered':
+        return t(`notifications:types.${type}.${params.rescheduled ? 'rescheduled' : 'new'}`, values)
       case 'admin_account_review':
         return t(`notifications:types.${type}.${params.resubmitted ? 'resubmitted' : 'submitted'}`, values)
       default:

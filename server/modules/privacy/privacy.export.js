@@ -12,6 +12,7 @@ import { Company, KycDocument } from '../companies/companies.model.js'
 import { CvAccessRequest, CvVersion } from '../cv/cv.model.js'
 import { CandidateNote } from '../discovery/discovery.model.js'
 import { File, FileAccessLog } from '../files/files.model.js'
+import { DocumentRequest, Interview } from '../interviews/interviews.model.js'
 import { Job, SavedJob } from '../jobs/jobs.model.js'
 import { Certificate, Course, Enrollment, QuizAttempt } from '../learning/learning.model.js'
 import { Conversation, Message } from '../messages/messages.model.js'
@@ -53,7 +54,13 @@ async function conversations(filter, nameOf) {
       startedBy: thread.startedBy,
       messages: messages
         .filter((message) => String(message.conversationId) === String(thread._id))
-        .map((message) => ({ from: message.senderRole, body: message.body, sentAt: message.createdAt, readAt: message.readAt ?? null })),
+        .map((message) => ({
+          from: message.senderRole,
+          // §3.23: interview and document-request events have no text; their kind and event say what happened.
+          ...(message.kind && message.kind !== 'text' ? { kind: message.kind, event: message.event, params: message.params ?? {} } : { body: message.body }),
+          sentAt: message.createdAt,
+          readAt: message.readAt ?? null,
+        })),
     })),
   )
 }
@@ -158,8 +165,10 @@ async function candidateExport(user) {
     'learning.json': learned,
     'ai-feedback.json': feedback.map(({ jobId, value, updatedAt }) => ({ job: jobOf(jobId)?.title ?? null, value, at: updatedAt })),
     'notifications.json': await notifications(user),
+    ...(await interviewRecords(user, companyName, jobOf)),
   }
   const files = [
+    ...(await requestFiles(user)),
     ...cvVersions.filter((version) => version.fileId).map((version) => ({ fileId: version.fileId, name: `files/cv/v${version.number}-${safeName(version.originalName)}` })),
     ...(profile?.photo?.fileId ? [{ fileId: profile.photo.fileId, name: 'files/photo' }] : []),
     ...(profile?.certificates ?? []).filter((entry) => entry.fileId).map((entry, index) => ({ fileId: entry.fileId, name: `files/profile-certificates/${index + 1}-${safeName(entry.name)}` })),
@@ -167,6 +176,74 @@ async function candidateExport(user) {
     ...pdfs,
   ]
   return { data, files }
+}
+
+/**
+ * P11d-Q5: the candidate's interviews with the AI notes and transcript (the company's outcome and feedback note stay
+ * out, like recruiter notes, U31), and their document requests.
+ */
+async function interviewRecords(user, companyName, jobOf) {
+  const [interviews, requests] = await Promise.all([Interview.find({ candidateId: user._id }).sort({ createdAt: 1 }).lean(), DocumentRequest.find({ candidateId: user._id }).sort({ createdAt: 1 }).lean()])
+  const titles = byId(await Job.find({ _id: { $in: [...interviews, ...requests].map((item) => item.jobId) } }, 'title companyId').lean())
+  const job = (id) => titles.get(String(id)) ?? jobOf(id)
+  return {
+    'interviews.json': interviews.map((item) => ({
+      job: job(item.jobId)?.title ?? null,
+      company: companyName(item.companyId),
+      status: item.status,
+      mode: item.mode,
+      address: item.address ?? null,
+      link: item.link ?? null,
+      offeredSlots: item.slots,
+      startAt: item.startAt ?? null,
+      minutes: item.minutes ?? null,
+      aiNotesConsent: item.aiNotes ? (item.consent?.candidate ?? null) : null,
+      notes: item.notes?.generatedAt ? omit(item.notes, ['_id']) : null,
+      transcript: item.transcript ?? null,
+      createdAt: item.createdAt,
+    })),
+    'document-requests.json': requests.map((item) => ({
+      job: job(item.jobId)?.title ?? null,
+      company: companyName(item.companyId),
+      status: item.status,
+      note: item.note ?? null,
+      items: item.items.map(({ kind, label, uploadedAt, declineNote, declinedAt }) => ({ kind, label: label ?? null, uploadedAt: uploadedAt ?? null, declineNote: declineNote ?? null, declinedAt: declinedAt ?? null })),
+      requestedAt: item.createdAt,
+      completedAt: item.completedAt ?? null,
+    })),
+  }
+}
+
+/** The files the candidate uploaded into request cards (P11d-Q7). */
+async function requestFiles(user) {
+  const files = await File.find({ ownerId: user._id, purpose: 'document_request' }, 'originalName').lean()
+  return files.map((file, index) => ({ fileId: file._id, name: `files/documents/${index + 1}-${safeName(file.originalName ?? 'document')}` }))
+}
+
+/** The company's interviews (P11d-A2): times, type, outcome, feedback note, AI notes and transcript it still holds. */
+async function companyInterviews(companyFilter) {
+  const interviews = await Interview.find(companyFilter).sort({ createdAt: 1 }).lean()
+  const [people, jobs] = await Promise.all([
+    User.find({ _id: { $in: interviews.map((item) => item.candidateId) } }, 'fullName').lean(),
+    Job.find({ _id: { $in: interviews.map((item) => item.jobId) } }, 'title').lean(),
+  ])
+  const names = byId(people)
+  const titles = byId(jobs)
+  return interviews.map((item) => ({
+    candidate: names.get(String(item.candidateId))?.fullName ?? null,
+    job: titles.get(String(item.jobId))?.title ?? null,
+    status: item.status,
+    mode: item.mode,
+    address: item.address ?? null,
+    link: item.link ?? null,
+    offeredSlots: item.slots,
+    startAt: item.startAt ?? null,
+    minutes: item.minutes ?? null,
+    outcome: item.outcome?.result ? { result: item.outcome.result, note: item.outcome.note ?? null, at: item.outcome.at } : null,
+    notes: item.notes?.generatedAt ? omit(item.notes, ['_id']) : null,
+    transcript: item.transcript ?? null,
+    createdAt: item.createdAt,
+  }))
 }
 
 async function recruiterExport(user) {
@@ -183,6 +260,8 @@ async function recruiterExport(user) {
     'company.json': omit(company, ['_id', 'ownerUserId', '__v']),
     'jobs.json': jobs.map((job) => omit(job, ['_id', 'companyId', 'createdBy', '__v', 'relevantCount', 'relevantComputedAt', 'contentHash'])),
     'notes.json': notes.map(({ candidateId, text, createdAt, editedAt }) => ({ candidate: candidates.get(String(candidateId))?.fullName ?? null, text, createdAt, editedAt: editedAt ?? null })),
+    // Owner answer P11d-A2: the company's interviews, with its outcome, feedback note, AI notes and transcript.
+    'interviews.json': await companyInterviews(companyFilter),
     'conversations.json': threads,
     // Phase 11c: the Recruiter Plus plan, its status and every payment (plan invoices and courses).
     'subscription.json': await subscription(user),
@@ -200,6 +279,7 @@ async function recruiterExport(user) {
     [label('company'), company?.displayName ?? ''],
     ...jobCounts,
     [label('notes'), notes.length],
+    [label('interviews'), data['interviews.json'].length],
     [label('conversations'), threads.length],
     [label('messages'), threads.reduce((sum, thread) => sum + thread.messages.length, 0)],
     [label('payments'), paid.length],

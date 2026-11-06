@@ -22,6 +22,17 @@
   "unreadMark": "Sin leer",
   "unavailable": "Este elemento ya no está disponible.",
   "types": {
+    "interview_offered": { "new": "{{company}} ha propuesto horarios de entrevista para {{job}}", "rescheduled": "{{company}} ha propuesto nuevos horarios de entrevista para {{job}}" },
+    "interview_confirmed": { "candidate": "Entrevista con {{company}} reservada para el {{when}}", "recruiter": "{{candidate}} ha reservado la entrevista para {{job}}: {{when}}" },
+    "interview_cancelled": "{{company}} ha cancelado tu entrevista para {{job}}",
+    "interview_other_times": "{{candidate}} ha pedido otros horarios de entrevista para {{job}}",
+    "interview_reschedule_requested": "{{candidate}} ha pedido cambiar la entrevista para {{job}}",
+    "interview_expired": "No se eligió ningún horario: {{candidate}}, {{job}}. Propón nuevos horarios.",
+    "interview_reminder": { "candidate_one": "Tu entrevista con {{company}} empieza dentro de {{count}} hora", "candidate_many": "Tu entrevista con {{company}} empieza dentro de {{count}} horas", "candidate_other": "Tu entrevista con {{company}} empieza dentro de {{count}} horas", "recruiter_one": "Tu entrevista con {{candidate}} empieza dentro de {{count}} hora", "recruiter_many": "Tu entrevista con {{candidate}} empieza dentro de {{count}} horas", "recruiter_other": "Tu entrevista con {{candidate}} empieza dentro de {{count}} horas" },
+    "interview_notes_ready": "Ya están listas las notas con IA de tu entrevista con {{candidate}}",
+    "document_requested": "{{company}} te ha solicitado documentos para {{job}}",
+    "document_answered": "{{candidate}} ha respondido a tu solicitud de documentos para {{job}}",
+    "documents_received": "{{candidate}} ha respondido a todos los documentos que pediste para {{job}}",
     "application_status": "{{company}} actualizó tu candidatura a {{job}}: {{status}}",
     "message_one": "Nuevo mensaje de {{sender}}",
     "message_many": "{{count}} mensajes nuevos de {{sender}}",
@@ -79,6 +90,7 @@
       "admin": "Siempre se envían: restablecimiento de contraseña e invitaciones."
     },
     "categories": {
+      "interviews": "Recordatorios 24 horas y 1 hora antes de una entrevista, y cuando una persona candidata ha respondido a una solicitud de documentos. Las invitaciones y los cambios se envían siempre.",
       "applications": "Cambios de estado de tus candidaturas, también cuando no te seleccionan.",
       "messages": "Un mensaje que sigue sin leer después de 15 minutos, como máximo un correo por conversación cada hora.",
       "cv_requests": "Una empresa pide ver una versión anterior de tu CV.",

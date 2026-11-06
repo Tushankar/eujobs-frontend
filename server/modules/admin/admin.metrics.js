@@ -6,6 +6,7 @@ import { photoUrls } from '../candidates/candidates.service.js'
 import { logoUrls } from '../companies/companies.service.js'
 import { Company } from '../companies/companies.model.js'
 import { ShortlistEntry } from '../discovery/discovery.model.js'
+import { Interview } from '../interviews/interviews.model.js'
 import { Job } from '../jobs/jobs.model.js'
 import { Certificate, Enrollment } from '../learning/learning.model.js'
 import { MatchResult } from '../matching/matching.model.js'
@@ -215,7 +216,9 @@ export async function recruitment(admin, { country }) {
   const scope = await scopeOf(country)
   const applications = await Application.find({ ...NOT_WITHDRAWN, ...scope.application }).sort({ appliedAt: -1 })
   const candidateIds = applications.map((application) => application.candidateId)
-  const [stages, jobs, users, profiles, shortlist, conversations, published, recentJobs] = await Promise.all([
+  // P11d-Q24: counts only; admins never see interview notes, transcripts or documents.
+  const interviewScope = scope.companyIds ? { companyId: { $in: scope.companyIds } } : {}
+  const [stages, jobs, users, profiles, shortlist, conversations, published, recentJobs, interviewsScheduled, interviewsCompleted] = await Promise.all([
     PipelineStage.find({ _id: { $in: applications.map((application) => application.stageId) } }, 'category name'),
     Job.find({ _id: { $in: applications.map((application) => application.jobId) } }, 'title companyId'),
     User.find({ _id: { $in: candidateIds } }, 'fullName'),
@@ -224,6 +227,8 @@ export async function recruitment(admin, { country }) {
     Conversation.find({ startedBy: 'recruiter' }, 'companyId candidateId'),
     Job.countDocuments({ status: 'published', ...scope.job }),
     Job.find({ status: 'published', ...scope.job }).sort({ publishedAt: -1 }).limit(SIDEBAR_ROWS),
+    Interview.countDocuments({ confirmedAt: { $ne: null }, ...interviewScope }),
+    Interview.countDocuments({ status: 'completed', ...interviewScope }),
   ])
   const companyDocs = await Company.find({ _id: { $in: [...jobs, ...recentJobs].map((job) => job.companyId) } }, 'displayName logoFileId')
   const companies = new Map(companyDocs.map((company) => [String(company._id), company.displayName]))
@@ -264,7 +269,7 @@ export async function recruitment(admin, { country }) {
     }
   })
   return {
-    stats: { publishedRoles: published, applications: applications.length, shortlisted: scopedShortlist.length, reviewedOutreach: scopedOutreach.length },
+    stats: { publishedRoles: published, applications: applications.length, shortlisted: scopedShortlist.length, reviewedOutreach: scopedOutreach.length, interviewsScheduled, interviewsCompleted },
     stages: CATEGORIES.map((category) => ({ category, count: current[category] })),
     funnel: CATEGORIES.map((category) => ({ category, count: reached[category] })),
     movement,

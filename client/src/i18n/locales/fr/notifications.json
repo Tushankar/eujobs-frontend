@@ -22,6 +22,17 @@
   "unreadMark": "Non lue",
   "unavailable": "Cet élément n’est plus disponible.",
   "types": {
+    "interview_offered": { "new": "{{company}} propose des créneaux d’entretien pour {{job}}", "rescheduled": "{{company}} propose de nouveaux créneaux d’entretien pour {{job}}" },
+    "interview_confirmed": { "candidate": "Entretien avec {{company}} prévu le {{when}}", "recruiter": "{{candidate}} a confirmé l’entretien pour {{job}} : {{when}}" },
+    "interview_cancelled": "{{company}} a annulé votre entretien pour {{job}}",
+    "interview_other_times": "{{candidate}} demande d’autres créneaux d’entretien pour {{job}}",
+    "interview_reschedule_requested": "{{candidate}} demande à déplacer l’entretien pour {{job}}",
+    "interview_expired": "Aucun créneau choisi : {{candidate}}, {{job}}. Proposez-en de nouveaux.",
+    "interview_reminder": { "candidate_one": "Votre entretien avec {{company}} commence dans {{count}} heure", "candidate_many": "Votre entretien avec {{company}} commence dans {{count}} heures", "candidate_other": "Votre entretien avec {{company}} commence dans {{count}} heures", "recruiter_one": "Votre entretien avec {{candidate}} commence dans {{count}} heure", "recruiter_many": "Votre entretien avec {{candidate}} commence dans {{count}} heures", "recruiter_other": "Votre entretien avec {{candidate}} commence dans {{count}} heures" },
+    "interview_notes_ready": "Les notes par IA de votre entretien avec {{candidate}} sont prêtes",
+    "document_requested": "{{company}} vous demande des documents pour {{job}}",
+    "document_answered": "{{candidate}} a répondu à votre demande de documents pour {{job}}",
+    "documents_received": "{{candidate}} a répondu à tous les documents demandés pour {{job}}",
     "application_status": "{{company}} a mis à jour votre candidature pour {{job}} : {{status}}",
     "message_one": "Nouveau message de {{sender}}",
     "message_many": "{{count}} nouveaux messages de {{sender}}",
@@ -79,6 +90,7 @@
       "admin": "Toujours envoyés : réinitialisation du mot de passe et invitations."
     },
     "categories": {
+      "interviews": "Rappels 24 heures et 1 heure avant un entretien, et quand une personne candidate a répondu à une demande de documents. Les invitations et les modifications sont toujours envoyées.",
       "applications": "Les changements de statut de vos candidatures, y compris quand vous n’êtes pas retenu.",
       "messages": "Un message toujours non lu au bout de 15 minutes, au plus un e-mail par conversation et par heure.",
       "cv_requests": "Une entreprise demande à voir une version antérieure de votre CV.",

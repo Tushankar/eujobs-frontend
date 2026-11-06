@@ -9,6 +9,7 @@ import { Company } from '../companies/companies.model.js'
 import { CvVersion } from '../cv/cv.model.js'
 import { noteCounts, recordActivity } from '../discovery/discovery.service.js'
 import { File } from '../files/files.model.js'
+import { interviewsByApplication } from '../interviews/interviews.cards.js'
 import { Job } from '../jobs/jobs.model.js'
 import { isVisible, visibleFilter } from '../jobs/jobs.search.js'
 import { notifyCompany } from '../notifications/notifications.service.js'
@@ -61,6 +62,7 @@ async function candidateDtos(user, applications) {
   const versions = new Map((await CvVersion.find({ _id: { $in: applications.map((application) => application.cvVersionId) } }, 'number originalName fileId')).map((version) => [String(version._id), version]))
   const jobById = new Map(jobs.map((job) => [String(job._id), job]))
   const companyById = new Map(companies.map((company) => [String(company._id), company]))
+  const interviews = await interviewsByApplication(user, applications.map((application) => application._id))
 
   return applications.map((application) => {
     const job = jobById.get(String(application.jobId))
@@ -74,6 +76,8 @@ async function candidateDtos(user, applications) {
       withdrawnAt: application.withdrawnAt ?? null,
       coverNote: application.coverNote ?? '',
       history: steps,
+      // §3.23: the application's interviews, for its activity.
+      interviews: interviews.get(String(application._id)) ?? [],
       cv: version ? { number: version.number, originalName: version.originalName, removed: !version.fileId } : null,
       job: {
         id: String(job._id),

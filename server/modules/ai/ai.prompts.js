@@ -75,6 +75,13 @@ When job.inferred is true the conversation never named the job: it is the compan
 Make the replies differ in intent (for example: say yes and move forward, ask one useful question the facts do not answer, decline politely or propose a next step).
 Never state anything the facts or messages do not contain (no invented dates, times, salaries, availability, experience or contact details), and never use placeholders such as [name] or [date]; ask instead when a detail is needed.`,
   },
+  // §3.23, P11d-Q5: notes of a recorded interview for the recruiter's company, from the transcript only.
+  interviewNotes: {
+    kind: 'interview_notes',
+    schema: object({ summary: text, keyAnswers: texts, strengths: texts, concerns: texts, followUps: texts }),
+    instructions: `${RULES}
+You write interview notes for the recruiter from the transcript of a recorded job interview (both voices, unlabelled; tell interviewer and candidate apart from context). Give a summary of three or four sentences, up to six key answers the candidate gave (what was asked and what they answered), up to four strengths and up to four concerns, each tied to what was said, and up to four follow-up questions worth asking next. Use only what the transcript says; when it says too little for a list, return fewer items or none.`,
+  },
   // M-144: user content in the reader's language.
   translate: {
     kind: 'translation',

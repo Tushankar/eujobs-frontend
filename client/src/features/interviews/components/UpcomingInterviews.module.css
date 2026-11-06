@@ -1,0 +1,100 @@
+.panel {
+  margin-bottom: 20px;
+  overflow: hidden;
+}
+
+.title {
+  margin: 0;
+  padding: 14px 20px;
+  border-bottom: 1px solid var(--border);
+  font-family: var(--font-heading, inherit);
+  font-size: 15px;
+  font-weight: 800;
+  color: var(--foreground);
+}
+
+.rows {
+  margin: 0;
+  padding: 0;
+  list-style: none;
+}
+
+.rows li + li {
+  border-top: 1px solid var(--border);
+}
+
+.row {
+  display: flex;
+  align-items: center;
+  gap: 16px;
+  padding: 12px 20px;
+  color: var(--foreground);
+}
+
+.row:hover {
+  background: var(--muted);
+}
+
+.main {
+  display: flex;
+  flex: 1 1 auto;
+  flex-direction: column;
+  min-width: 0;
+}
+
+.name {
+  font-size: 14px;
+  font-weight: 600;
+  overflow-wrap: anywhere;
+}
+
+.meta {
+  font-size: 12px;
+  color: var(--muted-foreground);
+  overflow-wrap: anywhere;
+}
+
+.when {
+  flex: none;
+  font-size: 13px;
+  font-weight: 600;
+  text-align: right;
+}
+
+.join {
+  display: inline-flex;
+  flex: none;
+  align-items: center;
+  gap: 6px;
+  padding: 6px 12px;
+  border-radius: 999px;
+  background: var(--primary);
+  font-size: 12px;
+  font-weight: 600;
+  color: var(--primary-foreground);
+}
+
+.chevron {
+  flex: none;
+  color: var(--muted-foreground);
+}
+
+@media (max-width: 767px) {
+  .row {
+    flex-wrap: wrap;
+    gap: 6px 12px;
+    padding: 12px 16px;
+  }
+
+  .main {
+    flex-basis: 100%;
+  }
+
+  .when {
+    text-align: left;
+  }
+
+  .title {
+    padding: 12px 16px;
+  }
+}

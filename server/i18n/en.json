@@ -313,6 +313,106 @@
         "Your applications, conversations, notes and shortlist are kept."
       ],
       "action": "Open jobs"
+    },
+    "interview_invitation": {
+      "subject": "{{company}} would like to interview you",
+      "heading": "Choose an interview time",
+      "body": [
+        "Hi {{name}},",
+        "{{company}} invites you to an interview for {{job}}.",
+        "{{details}}",
+        "{{aiNotes}}",
+        "Pick one of these times (shown in your time zone), or ask for other times:"
+      ],
+      "action": "Choose a time"
+    },
+    "interview_rescheduled": {
+      "subject": "{{company}} offered new interview times",
+      "heading": "Pick a new interview time",
+      "body": [
+        "Hi {{name}},",
+        "{{company}} offered new times for your interview for {{job}}.",
+        "{{released}}",
+        "{{details}}",
+        "{{aiNotes}}",
+        "Pick one of these times (shown in your time zone), or ask for other times:"
+      ],
+      "action": "Choose a time"
+    },
+    "interview_confirmed": {
+      "subject": "Interview booked: {{job}}",
+      "heading": "Your interview is booked",
+      "body": [
+        "Hi {{name}},",
+        "{{intro}} is booked for {{when}}.",
+        "{{details}}",
+        "The calendar invite is attached."
+      ],
+      "action": "Open the interview"
+    },
+    "interview_cancelled": {
+      "subject": "Interview cancelled: {{job}}",
+      "heading": "Your interview was cancelled",
+      "body": [
+        "Hi {{name}},",
+        "{{company}} cancelled your interview for {{job}}.",
+        "{{wasBooked}}",
+        "{{reasonLine}}"
+      ],
+      "action": "Open the conversation"
+    },
+    "interview_other_times": {
+      "subject": "{{candidate}} asked for other interview times",
+      "heading": "Other times requested",
+      "body": [
+        "Hi {{name}},",
+        "None of the times you offered for {{job}} suits {{candidate}}.",
+        "{{noteLine}}",
+        "Offer new times from the interview card."
+      ],
+      "action": "Offer new times"
+    },
+    "interview_reschedule_request": {
+      "subject": "{{candidate}} asked to move the interview",
+      "heading": "Reschedule requested",
+      "body": [
+        "Hi {{name}},",
+        "{{candidate}} asked to move the interview for {{job}} booked for {{when}}.",
+        "{{noteLine}}",
+        "The booking stays until you offer new times or cancel it."
+      ],
+      "action": "Open the interview"
+    },
+    "interview_reminder": {
+      "subject": "Reminder: interview {{soon}}",
+      "heading": "Your interview starts {{soon}}",
+      "body": [
+        "Hi {{name}},",
+        "{{intro}} starts {{soon}}: {{when}}.",
+        "{{details}}"
+      ],
+      "action": "Open the interview"
+    },
+    "document_request": {
+      "subject": "{{company}} requested documents",
+      "heading": "Documents requested",
+      "body": [
+        "Hi {{name}},",
+        "{{company}} asks for these documents for your application to {{job}}. Upload each as a PDF, JPG or PNG file of up to 10 MB:",
+        "{{noteLine}}"
+      ],
+      "action": "Upload documents",
+      "note": "Only the company that asked can open the files you upload."
+    },
+    "documents_received": {
+      "subject": "{{candidate}} answered your document request",
+      "heading": "Documents received",
+      "body": [
+        "Hi {{name}},",
+        "{{candidate}} answered every item of your document request for {{job}}.",
+        "Open the request to view the files. Each opening is logged."
+      ],
+      "action": "Open the request"
     }
   },
   "verification": {
@@ -477,6 +577,36 @@
     "pausedJobs": {
       "one": "{{job}} stays live; 1 other job was paused. Subscribe again to republish it.",
       "other": "{{job}} stays live; {{count}} other jobs were paused. Subscribe again to republish them."
+    },
+    "interview": {
+      "minutes": "{{n}} min",
+      "summary": "Interview: {{job}} ({{company}})",
+      "aiNotesLine": "The recruiter would like AI notes of this interview. You will both be asked on screen at the start; nothing is recorded unless you both agree, and only the audio.",
+      "in24h": "in 24 hours",
+      "in1h": "in 1 hour",
+      "intro": {
+        "candidate": "Your interview with {{company}} for {{job}}",
+        "recruiter": "Your interview with {{candidate}} for {{job}}"
+      },
+      "released": "The time you booked, {{when}}, is cancelled.",
+      "wasBooked": "It was booked for {{when}}.",
+      "reasonLine": "Reason: {{reason}}",
+      "noteLine": "Note: “{{note}}”",
+      "details": {
+        "video": "Video call in Local WorkMan: join from the interview card, from 10 minutes before the start.",
+        "phone_candidate": "Phone call: the recruiter will call you on the phone number in your profile.",
+        "phone_recruiter": "Phone call: call {{candidate}} on {{phone}}.",
+        "in_person": "In person: {{address}}",
+        "link": "Online meeting: {{link}}"
+      }
+    },
+    "documentKind": {
+      "id": "Identity document",
+      "right_to_work": "Right to work",
+      "degree": "Degree or certificate",
+      "references": "References",
+      "signed_offer": "Signed offer",
+      "other": "Other"
     }
   },
   "certificate": {
@@ -560,7 +690,8 @@
       "payments": "Payments",
       "paid": "Paid",
       "notifications": "Notifications",
-      "exportedAt": "Exported at (UTC)"
+      "exportedAt": "Exported at (UTC)",
+      "interviews": "Interviews"
     }
   },
   "audit": {

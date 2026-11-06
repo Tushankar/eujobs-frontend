@@ -212,6 +212,11 @@
     "empty": "No activity yet.",
     "candidate": "The candidate",
     "events": {
+      "interview_confirmed": "Interview booked for {{jobTitle}}: {{when}}.",
+      "interview_cancelled": "{{actor}} cancelled the interview for {{jobTitle}}.",
+      "interview_outcome": "{{actor}} recorded the interview outcome for {{jobTitle}}: {{result}}.",
+      "document_request": "{{actor}} requested documents for {{jobTitle}}.",
+      "documents_received": "{{actor}} answered the document request for {{jobTitle}}.",
       "applied": "{{actor}} applied for {{jobTitle}}.",
       "withdrawn": "{{actor}} withdrew the application for {{jobTitle}}.",
       "stage_changed": "{{actor}} moved the application for {{jobTitle}} to {{stage}}.",

@@ -20,6 +20,8 @@ if (!params || !target) {
 
 const to = target.startsWith('+') ? demoAddress(target.slice(1)) : target
 await connectDb()
-const status = await sendEmail({ type, to, language, params })
+// §3.23: the calendar emails carry their invite.
+const { ical, ...emailParams } = params
+const status = await sendEmail({ type, to, language, params: emailParams, ical })
 console.log(`mail:test ${type} (${language}) to ${target.startsWith('+') ? `the ${target} alias` : 'the given address'}: ${status}`)
 await disconnectDb()

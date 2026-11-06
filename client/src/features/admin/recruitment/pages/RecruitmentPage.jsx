@@ -1,7 +1,7 @@
 import { useState } from 'react'
 import { useTranslation } from 'react-i18next'
 import { Link, useLocation, useNavigate } from 'react-router-dom'
-import { BriefcaseBusiness, Bookmark, Clock, FileText, Layers, MessageSquare } from 'lucide-react'
+import { BriefcaseBusiness, Bookmark, CalendarCheck, CalendarClock, Clock, FileText, Layers, MessageSquare } from 'lucide-react'
 import PageTitle from '@/components/common/PageTitle.jsx'
 import SectionTitle from '@/components/common/SectionTitle.jsx'
 import StatCard from '@/components/common/StatCard.jsx'
@@ -77,6 +77,9 @@ export default function RecruitmentPage() {
         <StatCard label={t('stats.applications')} value={data?.stats.applications ?? 0} caption={t('stats.applicationsCaption')} icon={FileText} loading={isLoading} />
         <StatCard label={t('stats.shortlisted')} value={data?.stats.shortlisted ?? 0} caption={t('stats.allTime')} icon={Bookmark} loading={isLoading} />
         <StatCard label={t('stats.reviewedOutreach')} value={data?.stats.reviewedOutreach ?? 0} caption={t('stats.allTime')} icon={MessageSquare} loading={isLoading} />
+        {/* P11d-Q24: counts only; admins never see interview notes or documents. */}
+        <StatCard label={t('stats.interviewsScheduled')} value={data?.stats.interviewsScheduled ?? 0} caption={t('stats.allTime')} icon={CalendarClock} loading={isLoading} />
+        <StatCard label={t('stats.interviewsCompleted')} value={data?.stats.interviewsCompleted ?? 0} caption={t('stats.allTime')} icon={CalendarCheck} loading={isLoading} />
       </div>
       <section className={styles.pipeline} aria-labelledby="hiring-pipeline">
         <SectionTitle id="hiring-pipeline" title={t('pipeline.title')} description={t(view === 'funnel' ? 'pipeline.funnelText' : 'pipeline.dataText')}>

@@ -106,6 +106,24 @@ export default function ApplicationActivityModal({ application, canReapply, onCl
             <dd>{t(cv.removed ? 'applications:activity.cvRemoved' : 'applications:activity.cvVersion', { number: cv.number, name: cv.originalName })}</dd>
           </div>
         )}
+        {application.interviews?.length > 0 && (
+          // §3.23: the application's interviews, each opening its card in the thread.
+          <div>
+            <dt>{t('applications:activity.interviews')}</dt>
+            <dd>
+              <ul className={styles.interviews} data-application-interviews>
+                {application.interviews.map((interview) => (
+                  <li key={interview.id}>
+                    <Link to={`/candidate/messages/${interview.conversationId}?card=${interview.id}`} onClick={onClose}>
+                      {t(`enums:interviewStatus.${interview.status}`)}
+                      {interview.startAt && <> · {format.dateTime(interview.startAt)}</>} · {t(`enums:interviewMode.${interview.mode}`)}
+                    </Link>
+                  </li>
+                ))}
+              </ul>
+            </dd>
+          </div>
+        )}
         {application.coverNote && (
           <div>
             <dt>{t('applications:activity.coverNote')}</dt>

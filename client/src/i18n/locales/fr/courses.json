@@ -74,6 +74,7 @@
     "locked": "Des apprenants sont inscrits : les leçons et le quiz sont verrouillés. Les textes et les prix peuvent encore changer.",
     "problemsTitle": "Avant de pouvoir publier",
     "problemsText_one": "Il reste {{count}} élément à compléter avant de publier cette formation.",
+    "problemsText_many": "Il reste {{count}} éléments à compléter avant de publier cette formation.",
     "problemsText_other": "Il reste {{count}} éléments à compléter avant de publier cette formation.",
     "problemsOpen": "Ouvrir {{tab}}",
     "tabsLabel": "Sections de l’éditeur de formation",

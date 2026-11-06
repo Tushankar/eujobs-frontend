@@ -9,6 +9,7 @@ import { usePlan } from '@/features/candidate/billing/usePlan.js'
 import { useErrorText } from '@/lib/forms.js'
 import { useFormat, usePreferences } from '@/lib/preferences.js'
 import styles from './PlanCard.module.css'
+import PlanFeatures from './PlanFeatures.jsx'
 
 /** The plan pill: active, retrying a failed renewal (M-120) or ending at period end (M-121). */
 function planState(subscription) {
@@ -94,6 +95,8 @@ export default function PlanCard() {
           {!paid && plus && <Button onClick={() => dispatch(openUpgrade())}>{t('upgradeTo', { plan: plus.name })}</Button>}
         </div>
       </div>
+      {/* P11d-Q9: what the paid plan includes, from its plan record. */}
+      <PlanFeatures plan={plus} className={styles.features} />
       <div role="alert">{portalError && <p className={styles.failure}>{errorText.code(portalError)}</p>}</div>
     </>
   )

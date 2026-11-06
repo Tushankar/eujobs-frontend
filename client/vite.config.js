@@ -13,7 +13,8 @@ export default defineConfig({
   // The API runs locally; the e2e harness points the proxy at its own server (M-204).
   server: {
     proxy: {
-      '/api': process.env.VITE_API_PROXY ?? 'http://localhost:5000',
+      // ws: the interview signaling WebSocket (§3.23) shares the API's port.
+      '/api': { target: process.env.VITE_API_PROXY ?? 'http://localhost:5000', ws: true },
     },
   },
 })

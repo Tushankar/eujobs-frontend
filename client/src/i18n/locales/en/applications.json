@@ -80,6 +80,7 @@
     "withdrawn": "You withdrew this application."
   },
   "activity": {
+    "interviews": "Interviews",
     "title": "Application activity",
     "progress": "Application progress",
     "appliedOn": "Applied {{date}}",

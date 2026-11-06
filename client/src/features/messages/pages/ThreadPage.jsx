@@ -1,12 +1,13 @@
 import { useEffect, useRef, useState } from 'react'
 import { useTranslation } from 'react-i18next'
 import { useDispatch } from 'react-redux'
-import { Link, useParams } from 'react-router-dom'
+import { Link, useLocation, useParams } from 'react-router-dom'
 import { ArrowLeft, Lock, MessageSquareOff, Sparkles } from 'lucide-react'
 import { openUpgrade } from '@/app/upgrade.js'
 import { Button, Icon, Panel, Skeleton, SkeletonRegion } from '@/components/ui'
 import EmptyState from '@/components/common/EmptyState.jsx'
 import Translatable from '@/features/ai/components/Translatable.jsx'
+import { CardMessage, RecruiterThreadActions } from '@/features/interviews/components/ThreadCards.jsx'
 import { lacksEntitlement } from '@/features/candidate/billing/usePlan.js'
 import ReportButton from '@/features/moderation/components/ReportButton.jsx'
 import { useFormat, usePreferences } from '@/lib/preferences.js'
@@ -76,6 +77,11 @@ export default function ThreadPage() {
   const inboxPath = `/${me.role}/messages`
   const unread = data?.conversation.unread ?? 0
   const count = data?.items.length ?? 0
+  // §3.23: the latest message of each interview or request shows its live card; the suggested replies answer typed messages only.
+  const latestCard = new Map((data?.items ?? []).filter((message) => message.cardId).map((message) => [message.cardId, message.id]))
+  const lastText = data?.items.filter((message) => message.kind === 'text').at(-1)
+  // An item link (/interviews/:id, /document-requests/:id) opens the thread at its card.
+  const focusCard = new URLSearchParams(useLocation().search).get('card')
 
   // Opening the thread, and every poll that brings new messages, marks the other side's messages read.
   useEffect(() => {
@@ -83,8 +89,9 @@ export default function ThreadPage() {
   }, [unread, conversationId, markRead])
 
   useEffect(() => {
-    end.current?.scrollIntoView({ block: 'end' })
-  }, [count])
+    const card = focusCard && document.querySelector(`[data-interview-card="${focusCard}"], [data-document-request="${focusCard}"]`)
+    ;(card ?? end.current)?.scrollIntoView({ block: card ? 'center' : 'end' })
+  }, [count, focusCard])
 
   const back = (
     <Link to={inboxPath} className={styles.back}>
@@ -114,13 +121,16 @@ export default function ThreadPage() {
     <>
       {back}
       <Panel padding={0} className={styles.thread}>
-        <header className={styles.header}>
+        <header className={cx(styles.header, styles.headerRow)}>
           <Counterpart conversation={data.conversation} role={me.role} size={44} />
+          {me.role === 'recruiter' && !data.conversation.closed && <RecruiterThreadActions applications={data.cards?.activeApplications} />}
         </header>
         <ol className={styles.messages} aria-label={t('messages:thread.messages')}>
           {data.items.map((message) => (
-            <li key={message.id} className={cx(styles.message, message.mine && styles.mine)} data-message={message.mine ? 'mine' : 'theirs'}>
-              {message.mine ? (
+            <li key={message.id} className={cx(styles.message, message.mine && styles.mine, message.cardId && styles.cardMessage)} data-message={message.mine ? 'mine' : 'theirs'}>
+              {message.cardId ? (
+                <CardMessage message={message} latest={latestCard.get(message.cardId) === message.id} cards={data.cards} counterpartName={data.conversation.counterpart?.name ?? ''} />
+              ) : message.mine ? (
                 <>
                   <p className={styles.bubble}>{message.body}</p>
                   <time className={styles.time} dateTime={message.createdAt}>
@@ -165,7 +175,7 @@ export default function ThreadPage() {
             </div>
           ) : (
             <>
-              <ReplySuggestions conversationId={conversationId} lastMessage={data.items.at(-1)} onPick={setDraft} />
+              <ReplySuggestions conversationId={conversationId} lastMessage={lastText} onPick={setDraft} />
               <MessageForm
                 submitLabel={t('messages:thread.send')}
                 placeholder={t('messages:form.placeholder')}

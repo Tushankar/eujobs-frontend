@@ -1,3 +1,4 @@
+import { execFileSync } from 'node:child_process'
 import { existsSync, mkdirSync, truncateSync, writeFileSync } from 'node:fs'
 import { join } from 'node:path'
 // The server's in-memory builders (pdfkit, sharp, archiver), so the API tests and the browser checks use the same files.
@@ -115,6 +116,30 @@ async function makeVoiceNote() {
   writeFileSync(path, Buffer.from(await speech.arrayBuffer()))
 }
 
+/*
+ * P11d (owner answer A4): Chrome's fake microphone plays a WAV file, one per side of the interview call, each a
+ * different sentence, so the transcript must hold both voices. The recruiter's is the voice note above (as WAV, through
+ * ffmpeg); the candidate's is one more sentence made once with OpenAI speech.
+ */
+export const INTERVIEW_VOICES = {
+  recruiter: { file: 'voice-note.wav', keyword: 'applications' },
+  candidate: { file: 'interview-candidate.wav', keyword: 'fintech', text: 'I led the design system at a fintech start-up, with forty components used by six product teams.' },
+}
+
+async function makeInterviewVoices() {
+  const recruiter = join(FIXTURES_DIR, INTERVIEW_VOICES.recruiter.file)
+  if (!existsSync(recruiter)) execFileSync('ffmpeg', ['-loglevel', 'error', '-y', '-i', join(FIXTURES_DIR, VOICE_NOTE), '-ar', '48000', '-ac', '1', '-c:a', 'pcm_s16le', recruiter])
+  const candidate = join(FIXTURES_DIR, INTERVIEW_VOICES.candidate.file)
+  if (existsSync(candidate)) return
+  const OpenAI = createRequire(join(SERVER_DIR, 'package.json'))('openai')
+  const client = new (OpenAI.default ?? OpenAI)({ apiKey: openaiApiKey })
+  const speech = await client.audio.speech.create({ model: 'gpt-4o-mini-tts', voice: 'coral', input: INTERVIEW_VOICES.candidate.text, response_format: 'mp3' })
+  const mp3 = join(FIXTURES_DIR, 'interview-candidate.mp3')
+  writeFileSync(mp3, Buffer.from(await speech.arrayBuffer()))
+  // A plain 16-bit PCM WAV with a complete header, which Chrome's fake microphone reads.
+  execFileSync('ffmpeg', ['-loglevel', 'error', '-y', '-i', mp3, '-ar', '48000', '-ac', '1', '-c:a', 'pcm_s16le', candidate])
+}
+
 export async function makeFixtures() {
   mkdirSync(FIXTURES_DIR, { recursive: true })
   for (const [name, build] of Object.entries(FIXTURES)) {
@@ -129,6 +154,7 @@ export async function makeFixtures() {
   }
   await makeRecordings()
   await makeVoiceNote()
+  await makeInterviewVoices()
 }
 
 export const fixture = (name) => join(FIXTURES_DIR, name)

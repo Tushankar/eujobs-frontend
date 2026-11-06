@@ -74,6 +74,18 @@ export const PLANS = [
         es: 'Ayuda de la IA con tu CV, el resumen de tu perfil y las traducciones',
         fr: 'Aide de l’IA pour votre CV, le résumé de votre profil et les traductions',
       },
+      // P11d-Q9: interviews and documents (never gated for candidates, P11d-Q22; listed as what Plus includes)
+      {
+        en: 'Pick interview times, with calendar invites and reminders',
+        es: 'Elige el horario de tus entrevistas, con invitaciones de calendario y recordatorios',
+        fr: 'Choisissez l’horaire de vos entretiens, avec invitations d’agenda et rappels',
+      },
+      { en: 'In-app video interviews', es: 'Entrevistas por vídeo en la aplicación', fr: 'Entretiens vidéo dans l’application' },
+      {
+        en: 'Share documents securely with employers',
+        es: 'Comparte documentos de forma segura con las empresas',
+        fr: 'Partagez vos documents en toute sécurité avec les employeurs',
+      },
     ],
     interval: 'month',
     prices: minor(PLUS_PRICES),
@@ -121,10 +133,27 @@ export const PLANS = [
         es: 'Resúmenes de ofertas con IA, análisis de compatibilidad y traducciones',
         fr: 'Résumés d’offres par IA, analyses de compatibilité et traductions',
       },
+      // P11d-Q9
+      {
+        en: 'Schedule interviews: offer 2–3 time slots, with calendar invites',
+        es: 'Programa entrevistas: ofrece de 2 a 3 horarios, con invitaciones de calendario',
+        fr: 'Planifiez des entretiens : proposez 2 ou 3 créneaux, avec invitations d’agenda',
+      },
+      { en: 'In-app video interviews', es: 'Entrevistas por vídeo en la aplicación', fr: 'Entretiens vidéo dans l’application' },
+      {
+        en: "AI interview notes (with both people's consent)",
+        es: 'Notas de entrevista con IA (con el consentimiento de ambas personas)',
+        fr: 'Notes d’entretien par IA (avec le consentement des deux personnes)',
+      },
+      {
+        en: 'Request documents securely in chat',
+        es: 'Solicita documentos de forma segura en el chat',
+        fr: 'Demandez des documents en toute sécurité dans la messagerie',
+      },
     ],
     interval: 'month',
     prices: minor(RECRUITER_PLUS_PRICES),
-    entitlements: ['jobs_unlimited', 'discovery', 'outreach', 'ai'],
+    entitlements: ['jobs_unlimited', 'discovery', 'outreach', 'ai', 'interviews'],
   },
 ]
 

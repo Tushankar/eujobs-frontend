@@ -40,10 +40,18 @@ async function logCvAccess(file, accessorId, range) {
   }
 }
 
+/** P11d-Q7: every opening of a requested document or a request's attachment is logged, whoever opens it. */
+async function logDocumentAccess(file, accessorId, range) {
+  if (!['document_request', 'document_attachment'].includes(file.purpose) || (range && !range.startsWith('bytes=0-'))) return
+  const accessor = await User.findById(accessorId, 'companyId')
+  await FileAccessLog.create({ fileId: file._id, ownerId: file.ownerId, accessorId, companyId: accessor?.companyId })
+}
+
 router.get('/:fileId', validate({ params: z.object({ fileId: objectId }), query: signedQuery }), async (req, res, next) => {
   const file = await File.findById(req.params.fileId)
   if (!file || !validSignature(file, req.query)) throw new AppError('FORBIDDEN')
   await logCvAccess(file, req.query.u, req.get('range'))
+  await logDocumentAccess(file, req.query.u, req.get('range'))
   if (req.query.download) res.attachment(file.originalName ?? file.path.split('/').pop())
   else res.set('Content-Disposition', 'inline')
   res.set('Cache-Control', 'private')

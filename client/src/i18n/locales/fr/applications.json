@@ -80,6 +80,7 @@
     "withdrawn": "Vous avez retiré cette candidature."
   },
   "activity": {
+    "interviews": "Entretiens",
     "title": "Activité de la candidature",
     "progress": "Avancement de la candidature",
     "appliedOn": "Envoyée le {{date}}",

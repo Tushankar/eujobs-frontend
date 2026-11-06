@@ -15,6 +15,7 @@ import { Company, KycDocument } from '../companies/companies.model.js'
 import { CvAccessRequest, CvVersion } from '../cv/cv.model.js'
 import { CandidateNote, ProfileView, RecruiterActivity, ShortlistEntry } from '../discovery/discovery.model.js'
 import { File, FileAccessLog } from '../files/files.model.js'
+import { DocumentRequest, Interview } from '../interviews/interviews.model.js'
 import { Job, SavedJob } from '../jobs/jobs.model.js'
 import { Certificate, Enrollment, QuizAttempt } from '../learning/learning.model.js'
 import { Embedding, MatchResult } from '../matching/matching.model.js'
@@ -90,6 +91,16 @@ export const COVERAGE = {
   MatchingPolicyVersion: 'kept (admin settings)',
   ReportExport: 'kept (admin reports hold aggregates only)',
   JobRun: 'kept (scheduler slots)',
+  Interview: "deleted with any audio (the candidate's, or every interview of a deleted recruiter's company; §3.23)",
+  DocumentRequest: "deleted with both sides' files (the candidate's, or every request of a deleted recruiter's company; §3.23)",
+}
+
+/** §3.23: interviews and document requests of the pair go with every file in them and their pending tasks. */
+async function removeInterviewData(filter) {
+  const [interviews, requests] = await Promise.all([Interview.find(filter), DocumentRequest.find(filter)])
+  await removeFiles([...interviews.map((item) => item.recording?.fileId), ...requests.flatMap((item) => [item.attachmentFileId, ...item.items.map((entry) => entry.fileId)])])
+  await ScheduledTask.deleteMany({ status: 'pending', 'payload.interviewId': { $in: interviews.map((item) => String(item._id)) } })
+  await Promise.all([Interview.deleteMany(filter), DocumentRequest.deleteMany(filter)])
 }
 
 async function checkPassword(user, password) {
@@ -178,6 +189,7 @@ async function eraseCandidate(user) {
     VerificationSubmission.deleteMany({ userId: user._id }),
     CandidateProfile.deleteMany({ userId: user._id }),
   ])
+  await removeInterviewData({ candidateId: user._id })
   await removeOwnRecords(user)
   await removeFiles((await File.find({ ownerId: user._id }, '_id')).map((file) => file._id))
   // The jobs' relevant counts no longer include the candidate (U7).
@@ -214,6 +226,7 @@ async function deleteRecruiter(user) {
       }),
       Company.updateOne({ _id: company._id }, { $set: { deletedAt: now }, $unset: { businessEmail: '', businessAddress: '', registrationDetails: '' } }),
     ])
+    await removeInterviewData(companyFilter)
   }
   await removeOwnRecords(user)
   const keep = company?.logoFileId ? [String(company.logoFileId)] : []
