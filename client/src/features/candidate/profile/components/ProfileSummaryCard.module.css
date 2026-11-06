@@ -1,3 +1,81 @@
+.card {
+  display: flex;
+  flex-direction: column;
+  gap: 14px;
+}
+
+.head {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 12px;
+}
+
+.title {
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+  font-family: var(--font-display);
+  font-size: 18px;
+  font-weight: 700;
+  line-height: 27px;
+  letter-spacing: -0.25px;
+  color: var(--foreground);
+}
+
+.lead {
+  font-size: 13.5px;
+  line-height: 21px;
+  color: var(--muted-foreground);
+}
+
+/* What the summary covers: neutral hairline pills (SkillPills style). */
+.covers {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 6px;
+  margin: 0;
+  padding: 0;
+  list-style: none;
+}
+
+.covers li {
+  padding: 4px 10px;
+  border: 1px solid var(--border-strong);
+  border-radius: var(--radius-full);
+  background: var(--card);
+  font-size: 12px;
+  font-weight: 600;
+  line-height: 16px;
+  color: var(--foreground);
+}
+
+.points {
+  display: grid;
+  gap: 8px;
+  margin: 0;
+  padding: 14px 0 2px;
+  border-top: 1px solid var(--border);
+  list-style: none;
+}
+
+.points li {
+  display: flex;
+  align-items: flex-start;
+  gap: 10px;
+  font-size: 13px;
+  line-height: 19px;
+  color: var(--foreground);
+}
+
+.check {
+  flex: none;
+  margin-top: 2px;
+  color: var(--success-fg);
+}
+
+/* The dialog */
+
 .body {
   display: flex;
   flex-direction: column;
