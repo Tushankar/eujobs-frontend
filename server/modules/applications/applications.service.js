@@ -9,7 +9,7 @@ import { Company } from '../companies/companies.model.js'
 import { CvVersion } from '../cv/cv.model.js'
 import { noteCounts, recordActivity } from '../discovery/discovery.service.js'
 import { File } from '../files/files.model.js'
-import { interviewsByApplication } from '../interviews/interviews.cards.js'
+import { interviewsByApplication, latestInterviews } from '../interviews/interviews.cards.js'
 import { Job } from '../jobs/jobs.model.js'
 import { isVisible, visibleFilter } from '../jobs/jobs.search.js'
 import { notifyCompany } from '../notifications/notifications.service.js'
@@ -187,12 +187,13 @@ const stageOf = (application, stages) => {
  */
 async function recruiterDtos(viewer, applications) {
   const candidateIds = applications.map((application) => application.candidateId)
-  const [users, profiles, jobs, stages, notes] = await Promise.all([
+  const [users, profiles, jobs, stages, notes, interviews] = await Promise.all([
     User.find({ _id: { $in: candidateIds } }, 'fullName'),
     CandidateProfile.find({ userId: { $in: candidateIds } }),
     Job.find({ _id: { $in: applications.map((application) => application.jobId) } }),
     PipelineStage.find({ _id: { $in: applications.map((application) => application.stageId) } }),
     applications.length ? noteCounts(applications[0].companyId, candidateIds) : new Map(),
+    latestInterviews(applications.map((application) => application._id)),
   ])
   const photos = new Map((await File.find({ _id: { $in: profiles.map((profile) => profile.photo?.fileId).filter(Boolean) } })).map((file) => [String(file._id), file]))
   const userById = new Map(users.map((user) => [String(user._id), user]))
@@ -212,6 +213,8 @@ async function recruiterDtos(viewer, applications) {
       stage: stageOf(application, stageById),
       history: application.history.map(({ status, stageName, at }) => ({ status, stageName, at })),
       noteCount: notes.get(String(application.candidateId)) ?? 0,
+      // P11d-A6: the latest interview, shown on the card and used by the move prompts.
+      interview: interviews.get(String(application._id)) ?? null,
       job: { id: String(job._id), title: job.title },
       candidate: {
         id: String(candidate._id),

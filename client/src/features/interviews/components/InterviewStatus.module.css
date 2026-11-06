@@ -1,0 +1,16 @@
+.status {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  margin: 0;
+  font-size: 12px;
+  font-weight: 600;
+  line-height: 17px;
+  color: var(--foreground);
+  overflow-wrap: anywhere;
+}
+
+.status svg {
+  flex: none;
+  color: var(--muted-foreground);
+}

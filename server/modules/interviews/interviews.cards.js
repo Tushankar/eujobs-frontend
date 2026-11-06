@@ -97,6 +97,28 @@ export async function documentRequestDtos(user, requests) {
   }))
 }
 
+/**
+ * The latest interview of each application, for the pipeline and Applications rows (owner answer P11d-A6): its state,
+ * booked time and outcome; `active` when it is still under way (offered, other times asked, or booked and not started).
+ */
+export async function latestInterviews(applicationIds, now = new Date()) {
+  const interviews = await Interview.find({ applicationId: { $in: applicationIds }, status: { $ne: 'cancelled' } }, 'applicationId status startAt minutes outcome createdAt').sort({ createdAt: 1 })
+  const latest = new Map(interviews.map((interview) => [String(interview.applicationId), interview]))
+  return new Map(
+    [...latest].map(([applicationId, interview]) => [
+      applicationId,
+      {
+        id: String(interview._id),
+        status: interview.status,
+        startAt: interview.startAt ?? null,
+        minutes: interview.minutes ?? null,
+        outcome: interview.outcome?.result ?? null,
+        active: ['offered', 'other_times'].includes(interview.status) || (interview.status === 'confirmed' && interview.startAt > now),
+      },
+    ]),
+  )
+}
+
 /** The interviews of these applications, oldest first, per application id (the application's activity, P11d-Q16). */
 export async function interviewsByApplication(user, applicationIds) {
   const dtos = await interviewDtos(user, await Interview.find({ applicationId: { $in: applicationIds } }).sort({ createdAt: 1 }))

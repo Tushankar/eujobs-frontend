@@ -32,7 +32,7 @@ export default {
     await clickText(page, 'Warsaw', '[role="option"]')
     await waitForText(page, 'Minimum salary in PLN')
     await fill(page, 'input[name="salaryAmount"]', '12000')
-    await page.select('select[name="salaryPeriod"]', 'month')
+    await page.click('label:has(input[name="salaryPeriod"][value="month"])')
     await ctx.screenshot(page, '3-preferences')
     await clickText(page, 'Find my next chapter', 'button')
     await waitForPath(page, '/candidate/onboarding/plan')

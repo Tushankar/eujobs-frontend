@@ -1,5 +1,5 @@
 {
-  "step": "Étape {{step}} sur {{total}} · {{name}}",
+  "progress": "Étape {{step}} sur {{total}}",
   "story": {
     "name": "Votre parcours",
     "title": "Une meilleure correspondance commence par vous.",
@@ -21,10 +21,17 @@
     "salaryNeedsCity": "Choisissez d’abord votre ville pour définir la devise.",
     "period": "Période du salaire",
     "submit": "Trouver mon prochain chapitre",
-    "back": "Retour"
+    "back": "Retour",
+    "modes": {
+      "remote": "Travaillez de chez vous ou d’où vous voulez",
+      "hybrid": "Partagez votre semaine entre la maison et le bureau",
+      "on_site": "Travaillez dans les locaux de l’entreprise"
+    },
+    "salaryPlaceholder": "ex. 45000",
+    "salaryHint": "Nous l’utilisons pour classer les offres pour vous."
   },
   "plan": {
-    "eyebrow": "Dernière étape · Choisissez une offre",
+    "name": "Choisir une formule",
     "title": "Choisissez comment continuer",
     "lead": "Plus ajoute les candidatures, la messagerie, les alertes emploi et la compatibilité par IA. Vous pourrez changer d’offre plus tard dans Facturation.",
     "forever": "pour toujours",
@@ -35,5 +42,17 @@
     "onPlan": "Vous avez {{plan}}",
     "onPlanText": "Votre offre ne change pas. Vous pouvez la gérer dans Facturation.",
     "continue": "Continuer"
+  },
+  "summary": {
+    "title": "Votre configuration",
+    "cv": "CV actif",
+    "workMode": "Mode de travail",
+    "location": "Lieu",
+    "salary": "Salaire minimum",
+    "plan": "Formule",
+    "notSet": "Pas encore renseigné",
+    "optional": "Facultatif",
+    "planNext": "Pas encore choisie",
+    "note": "Vous pourrez tout modifier plus tard dans Mon profil et Facturation."
   }
 }

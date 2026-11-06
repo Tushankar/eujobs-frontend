@@ -1,5 +1,5 @@
 {
-  "step": "Step {{step}} of {{total}} · {{name}}",
+  "progress": "Step {{step}} of {{total}}",
   "story": {
     "name": "Your story",
     "title": "A better match starts with you.",
@@ -21,10 +21,17 @@
     "salaryNeedsCity": "Choose your city first to set the currency.",
     "period": "Salary period",
     "submit": "Find my next chapter",
-    "back": "Back"
+    "back": "Back",
+    "modes": {
+      "remote": "Work from home or anywhere you like",
+      "hybrid": "Split your week between home and the office",
+      "on_site": "Work at the company’s location"
+    },
+    "salaryPlaceholder": "e.g. 45000",
+    "salaryHint": "We use it to rank jobs for you."
   },
   "plan": {
-    "eyebrow": "Last step · Choose a plan",
+    "name": "Choose a plan",
     "title": "Choose how you want to continue",
     "lead": "Plus adds applying, messaging, job alerts and AI matching. You can change your plan later in Billing.",
     "forever": "forever",
@@ -35,5 +42,17 @@
     "onPlan": "You’re on {{plan}}",
     "onPlanText": "Your plan stays as it is. You can manage it in Billing.",
     "continue": "Continue"
+  },
+  "summary": {
+    "title": "Your setup",
+    "cv": "Live CV",
+    "workMode": "Work mode",
+    "location": "Location",
+    "salary": "Minimum salary",
+    "plan": "Plan",
+    "notSet": "Not set yet",
+    "optional": "Optional",
+    "planNext": "Not chosen yet",
+    "note": "You can change all of this later in My profile and Billing."
   }
 }

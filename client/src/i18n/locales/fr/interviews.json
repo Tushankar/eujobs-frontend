@@ -195,5 +195,21 @@
     "cameraOn": "Activer la caméra",
     "stopRecording": "Arrêter l’enregistrement",
     "leave": "Quitter"
+  },
+  "move": {
+    "title": "Annuler aussi l’entretien ?",
+    "description": "{{name}} a un entretien en cours.",
+    "text": "Vous sortez cette candidature de l’étape d’entretien. Annuler aussi l’entretien ? La personne candidate est prévenue, avec une annulation d’agenda si un créneau était réservé.",
+    "keep": "Garder l’entretien",
+    "cancel": "L’annuler aussi",
+    "alsoCancel": "Annuler aussi l’entretien en cours"
+  },
+  "status": {
+    "booked": "Entretien confirmé · {{when}}",
+    "outcome": "Résultat de l’entretien : {{outcome}}"
+  },
+  "panel": {
+    "title": "Entretien",
+    "none": "Pas encore d’entretien."
   }
 }

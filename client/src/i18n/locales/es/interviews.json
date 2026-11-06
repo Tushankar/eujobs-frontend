@@ -195,5 +195,21 @@
     "cameraOn": "Encender cámara",
     "stopRecording": "Detener grabación",
     "leave": "Salir"
+  },
+  "move": {
+    "title": "¿Cancelar también la entrevista?",
+    "description": "{{name}} tiene una entrevista en curso.",
+    "text": "Vas a sacar esta candidatura de la etapa de entrevista. ¿Cancelar también la entrevista? La persona candidata recibirá un aviso, con la cancelación en el calendario si había un horario reservado.",
+    "keep": "Mantener la entrevista",
+    "cancel": "Cancelarla también",
+    "alsoCancel": "Cancelar también la entrevista en curso"
+  },
+  "status": {
+    "booked": "Entrevista reservada · {{when}}",
+    "outcome": "Resultado de la entrevista: {{outcome}}"
+  },
+  "panel": {
+    "title": "Entrevista",
+    "none": "Aún no hay entrevista."
   }
 }

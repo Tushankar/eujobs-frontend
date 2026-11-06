@@ -1,15 +1,32 @@
 import { onboardedCandidate } from '../lib/candidates.js'
 import { clickText, signInWithForm, waitForPath, waitForText } from '../lib/flows.js'
-import { meOf } from '../lib/payments.js'
+import { meOf, until } from '../lib/payments.js'
 import { approvedRecruiter } from '../lib/recruiters.js'
 import { TEST_PASSWORD } from '../lib/testApi.js'
 
 const card = (page, id) => page.waitForSelector(`[data-tour-card="${id}"]`, { visible: true, timeout: 15_000 })
 const cardButton = (page, text) => clickText(page, text, '[data-tour-card] button')
 
+/** Records when the Overview heading and the welcome dialog first appear (performance.now()). */
+const trackOpening = (page) =>
+  page.evaluateOnNewDocument(() => {
+    new MutationObserver(() => {
+      if (!window.__overviewAt && document.querySelector('main h1')) window.__overviewAt = performance.now()
+      if (!window.__welcomeAt && document.querySelector('[role="dialog"]')?.textContent.includes('Start the tour')) window.__welcomeAt = performance.now()
+    }).observe(document, { childList: true, subtree: true })
+  })
+
+/** The welcome dialog opens right after the Overview shows (no wait on top of the page itself). */
+async function checkImmediate(ctx, page, role) {
+  const { overviewAt, welcomeAt } = await page.evaluate(() => ({ overviewAt: window.__overviewAt, welcomeAt: window.__welcomeAt }))
+  const gap = Math.round(welcomeAt - overviewAt)
+  ctx.check(gap < 400, `${role}: the welcome opens ${gap} ms after the Overview`)
+}
+
 /** Walks every step: the sidebar card, "Take me there", the page card (spotlit on desktop), then Next / Finish. */
 async function walk(ctx, page, role, steps) {
   await waitForText(page, 'Welcome,')
+  await checkImmediate(ctx, page, role)
   // The intro shows the role's paid plan with its live price and features.
   const offer = await page.waitForSelector('[data-tour-plan="offer"]', { timeout: 15_000 })
   const offerText = await offer.evaluate((element) => element.innerText)
@@ -29,6 +46,7 @@ async function walk(ctx, page, role, steps) {
     await cardButton(page, index === steps.length - 1 ? 'Finish' : 'Next')
   }
   await waitForText(page, "You're all set")
+  await new Promise((resolve) => setTimeout(resolve, 400))
   await ctx.screenshot(page, `${role}-9-done`)
 }
 
@@ -41,6 +59,7 @@ export default {
     ctx.check((await meOf(candidate.token)).tourPending === true, 'a new candidate has the tour pending')
     const handle = await ctx.newPage()
     const { page } = handle
+    await trackOpening(page)
     await signInWithForm(page, ctx.webUrl, '/sign-in', candidate.email, TEST_PASSWORD)
     await walk(ctx, page, 'candidate', [
       { key: 'cv', path: '/candidate/cv-versions' },
@@ -50,7 +69,7 @@ export default {
     ])
     await clickText(page, 'Upload my CV', '[role="dialog"] button')
     await waitForPath(page, "/candidate/cv-versions")
-    ctx.check((await meOf(candidate.token)).tourPending === false, 'finishing records the tour')
+    await until(() => meOf(candidate.token), (me) => me.tourPending === false, { timeout: 10_000, label: 'the candidate tour is recorded' })
 
     // Shown once: the Overview opens without it after a reload.
     await page.goto(`${ctx.webUrl}/candidate`, { waitUntil: 'networkidle0' })
@@ -58,7 +77,7 @@ export default {
     ctx.check(!(await page.evaluate(() => document.body.innerText.includes('Start the tour'))), 'the tour does not open again')
 
     // Replay from the profile menu, then skip.
-    await page.click('button[aria-label="Open profile menu"], header button[aria-haspopup]')
+    await page.click('button[aria-label="Open profile menu"]')
     await clickText(page, 'Take the product tour')
     await waitForText(page, 'Start the tour')
     await handle.checkOverflow()
@@ -68,6 +87,7 @@ export default {
     const recruiter = await approvedRecruiter(`TourRec${ctx.viewport}`, { tour: true, plus: false })
     ctx.check((await meOf(recruiter.token)).tourPending === true, 'a new recruiter has the tour pending')
     const second = await ctx.newPage()
+    await trackOpening(second.page)
     await signInWithForm(second.page, ctx.webUrl, '/recruiter/sign-in', recruiter.email, TEST_PASSWORD)
     await walk(ctx, second.page, 'recruiter', [
       { key: 'company', path: '/recruiter/company' },
@@ -77,7 +97,7 @@ export default {
     ])
     await clickText(second.page, 'Post a job', '[role="dialog"] button')
     await waitForPath(second.page, "/recruiter/jobs/new")
-    ctx.check((await meOf(recruiter.token)).tourPending === false, 'finishing records the recruiter tour')
+    await until(() => meOf(recruiter.token), (me) => me.tourPending === false, { timeout: 10_000, label: 'the recruiter tour is recorded' })
     ctx.assertClean(second.issues, 'recruiter')
   },
 }

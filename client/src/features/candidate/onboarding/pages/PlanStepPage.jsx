@@ -1,14 +1,16 @@
 import { useState } from 'react'
 import { useTranslation } from 'react-i18next'
 import { Link, useNavigate } from 'react-router-dom'
-import { ArrowLeft, Check } from 'lucide-react'
+import { ArrowLeft, Check, Crown } from 'lucide-react'
 import { Button, Icon, Panel } from '@/components/ui'
-import PageTitle from '@/components/common/PageTitle.jsx'
 import { usePlan } from '@/features/candidate/billing/usePlan.js'
 import CheckoutDialog from '@/features/payments/components/CheckoutDialog.jsx'
 import { useErrorText } from '@/lib/forms.js'
 import { useFormat } from '@/lib/preferences.js'
+import { cx } from '@/utils/cx.js'
 import { useCompleteOnboardingMutation } from '../api.js'
+import OnboardingStep from '../components/OnboardingStep.jsx'
+import SetupSummary from '../components/SetupSummary.jsx'
 import styles from './PlanStepPage.module.css'
 
 /**
@@ -36,60 +38,77 @@ export default function PlanStepPage() {
   }
 
   return (
-    <>
-      <PageTitle eyebrow={t('onboarding:plan.eyebrow')} title={t('onboarding:plan.title')} description={t('onboarding:plan.lead')} />
-      <div className={styles.column}>
-        {isPlus ? (
-          <Panel padding={24} className={styles.current} data-on-plan>
-            <h2 className={styles.name}>{t('onboarding:plan.onPlan', { plan: plus?.name ?? t('enums:planKey.plus') })}</h2>
-            <p className={styles.currentText}>{t('onboarding:plan.onPlanText')}</p>
-            <Button loading={isLoading} onClick={() => finish('/candidate')}>
-              {t('onboarding:plan.continue')}
-            </Button>
-          </Panel>
-        ) : (
-          <div className={styles.grid}>
-            {plans.map((plan) => (
-              <Panel key={plan.key} padding={0}>
+    <OnboardingStep
+      step={3}
+      title={t('onboarding:plan.title')}
+      lead={t('onboarding:plan.lead')}
+      aside={<SetupSummary />}
+      framed={false}
+      actions={
+        <Button as={Link} to="/candidate/onboarding/preferences" variant="outline" leftIcon={<Icon as={ArrowLeft} size={14} />}>
+          {t('onboarding:plan.back')}
+        </Button>
+      }
+    >
+      {isPlus ? (
+        <Panel padding={28} className={styles.current} data-on-plan>
+          <h2 className={styles.name}>
+            <Icon as={Crown} size={16} strokeWidth={2} className={styles.crown} />
+            {t('onboarding:plan.onPlan', { plan: plus?.name ?? t('enums:planKey.plus') })}
+          </h2>
+          <p className={styles.currentText}>{t('onboarding:plan.onPlanText')}</p>
+          <Button loading={isLoading} onClick={() => finish('/candidate')}>
+            {t('onboarding:plan.continue')}
+          </Button>
+        </Panel>
+      ) : (
+        <div className={styles.grid}>
+          {plans.map((plan) => {
+            const paid = plan.key !== 'free'
+            return (
+              <Panel key={plan.key} padding={0} className={cx(styles.plan, paid && styles.paid)}>
                 <section className={styles.card} aria-labelledby={`plan-${plan.key}`}>
-                  <h2 id={`plan-${plan.key}`} className={styles.name}>
-                    {plan.name}
-                  </h2>
-                  {plan.price && (
-                    <p className={styles.price}>
-                      {format.money(plan.price.amountMinor, plan.price.currency)}{' '}
-                      <span>{t(plan.key === 'free' ? 'onboarding:plan.forever' : 'onboarding:plan.perMonth')}</span>
-                    </p>
-                  )}
+                  <div className={styles.head}>
+                    <h2 id={`plan-${plan.key}`} className={styles.name}>
+                      {paid && <Icon as={Crown} size={16} strokeWidth={2} className={styles.crown} />}
+                      {plan.name}
+                    </h2>
+                    {plan.price && (
+                      <p className={styles.price}>
+                        <strong>{format.money(plan.price.amountMinor, plan.price.currency)}</strong>
+                        <span>{t(paid ? 'onboarding:plan.perMonth' : 'onboarding:plan.forever')}</span>
+                      </p>
+                    )}
+                  </div>
                   <ul className={styles.features}>
                     {plan.features.map((feature) => (
                       <li key={feature}>
-                        <Icon as={Check} size={14} /> {feature}
+                        <Icon as={Check} size={15} strokeWidth={2.2} className={styles.check} />
+                        <span>{feature}</span>
                       </li>
                     ))}
                   </ul>
-                  {plan.key === 'free' ? (
-                    <Button variant="secondary" fullWidth loading={isLoading} onClick={() => finish('/candidate')}>
-                      {t('onboarding:plan.continueFree')}
-                    </Button>
-                  ) : (
+                  {paid ? (
                     <Button fullWidth onClick={() => setCheckingOut(true)}>
                       {t('onboarding:plan.startPlus')}
+                    </Button>
+                  ) : (
+                    <Button variant="outline" fullWidth loading={isLoading} onClick={() => finish('/candidate')}>
+                      {t('onboarding:plan.continueFree')}
                     </Button>
                   )}
                 </section>
               </Panel>
-            ))}
-          </div>
-        )}
-        {failure && <p role="alert">{errorText.code(failure)}</p>}
-        <div className={styles.footer}>
-          <Button as={Link} to="/candidate/onboarding/preferences" variant="ghost" leftIcon={<Icon as={ArrowLeft} size={12} />}>
-            {t('onboarding:plan.back')}
-          </Button>
+            )
+          })}
         </div>
-      </div>
+      )}
+      {failure && (
+        <p className={styles.failure} role="alert">
+          {errorText.code(failure)}
+        </p>
+      )}
       <CheckoutDialog item={checkingOut ? item : null} onClose={() => setCheckingOut(false)} />
-    </>
+    </OnboardingStep>
   )
 }

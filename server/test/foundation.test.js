@@ -16,13 +16,15 @@ const CATALOGUE = {
   role: 3, userStatus: 7, language: 3, workPreference: 3, employmentType: 4, jobLevel: 4, jobStatus: 4,
   salaryPeriod: 2, companySize: 6, availability: 5, languageLevel: 7, rtwRegion: 2, rtwStatus: 3,
   verificationCategory: 5, evidenceType: 9, verificationStatus: 3, kycDocType: 3, applicationStatus: 7,
-  stageCategory: 6, stageTone: 3, alertFrequency: 3, cvRequestReason: 4, cvRequestStatus: 3, activityType: 14,
-  planKey: 4, entitlement: 7, paymentKind: 2, paymentStatus: 3, paymentSource: 2, courseAudience: 2,
+  stageCategory: 6, stageTone: 3, alertFrequency: 3, cvRequestReason: 4, cvRequestStatus: 3, activityType: 19,
+  planKey: 4, entitlement: 8, paymentKind: 2, paymentStatus: 3, paymentSource: 2, courseAudience: 2,
   courseLevel: 3, courseStatus: 3, lessonType: 4, questionType: 2, certificateStatus: 3, reportTargetType: 4,
   reportReason: 6, caseStatus: 3, accountDecision: 3, auditCategory: 8, actorType: 3, roleScope: 4,
-  roleStatus: 2, policySignal: 3, policyStatus: 3, matchLabel: 2, aiKind: 11, emailType: 29, emailCategory: 10, notificationType: 21, emailClass: 3,
-  emailStatus: 5, filePurpose: 13, reportType: 3, reportPeriod: 3, legalDoc: 3, faqAudience: 3, taskType: 5,
+  roleStatus: 2, policySignal: 3, policyStatus: 3, matchLabel: 2, aiKind: 12, emailType: 38, emailCategory: 11, notificationType: 32, emailClass: 3,
+  emailStatus: 5, filePurpose: 16, reportType: 3, reportPeriod: 3, legalDoc: 3, faqAudience: 3, taskType: 9,
   permission: 21, permissionGroup: 5,
+  // Phase 11d (§3.23)
+  interviewMode: 4, interviewStatus: 6, interviewOutcome: 4, recordingStatus: 5, documentKind: 6, documentRequestStatus: 2, messageKind: 3,
 }
 
 describe('conventions', () => {

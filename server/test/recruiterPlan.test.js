@@ -26,7 +26,8 @@ useFakePlaces()
 before(() => seedCatalog())
 
 const v1 = '/api/v1'
-const RECRUITER_KEYS = ['jobs_unlimited', 'discovery', 'outreach', 'ai']
+// P11d-C1: Recruiter Plus also holds `interviews`.
+const RECRUITER_KEYS = ['jobs_unlimited', 'discovery', 'outreach', 'ai', 'interviews']
 const createJob = (user, body) => api().post(`${v1}/recruiter/jobs`).set(auth(user)).send(jobBody(body))
 const setStatus = (user, id, status) => api().patch(`${v1}/recruiter/jobs/${id}/status`).set(auth(user)).send({ status })
 async function published(user, body) {

@@ -3,19 +3,39 @@ import { useTranslation } from 'react-i18next'
 import { Link, useNavigate } from 'react-router-dom'
 import { ArrowLeft, ArrowRight } from 'lucide-react'
 import { errorCode, useGetConfigQuery, useGetCountriesQuery } from '@/app/api.js'
-import { Button, Icon, SelectField, TextField } from '@/components/ui'
+import { Button, Icon, TextField } from '@/components/ui'
 import CityField from '@/components/common/CityField.jsx'
 import { check, compact, serverFieldErrors, useErrorText } from '@/lib/forms.js'
+import { cx } from '@/utils/cx.js'
 import { useGetProfileQuery } from '../../profile/api.js'
 import { useSavePreferencesMutation } from '../api.js'
 import OnboardingStep from '../components/OnboardingStep.jsx'
+import SetupSummary from '../components/SetupSummary.jsx'
 import WorkModePicker from '../components/WorkModePicker.jsx'
 import styles from './PreferencesStepPage.module.css'
 
-/** Step 2 of 2 (M-014, P3-D2): work preference and city required, minimum salary optional in the city's currency. */
+/** Step 2 (M-014, P3-D2): work preference and city required, minimum salary optional in the city's currency. */
 export default function PreferencesStepPage() {
   const { data: profile } = useGetProfileQuery()
   return profile ? <PreferencesForm profile={profile} /> : null
+}
+
+/** Per year / per month as a two-option pill switch (native radios). */
+function PeriodSwitch({ legend, options, value, disabled, onChange }) {
+  const { t } = useTranslation()
+  return (
+    <fieldset className={styles.period} disabled={disabled}>
+      <legend className={styles.periodLegend}>{legend}</legend>
+      <div className={styles.switch}>
+        {options.map((period) => (
+          <label key={period} className={cx(styles.switchOption, value === period && styles.switchOn)}>
+            <input type="radio" className="sr-only" name="salaryPeriod" value={period} checked={value === period} onChange={() => onChange(period)} />
+            {t(`enums:salaryPeriod.${period}`)}
+          </label>
+        ))}
+      </div>
+    </fieldset>
+  )
 }
 
 function PreferencesForm({ profile }) {
@@ -31,6 +51,7 @@ function PreferencesForm({ profile }) {
   const [errors, setErrors] = useState({})
   const [failure, setFailure] = useState(null)
   const currency = place && countries.find((country) => country.code === place.countryCode)?.currency
+  const amount = salary.amount.trim()
 
   function validate() {
     return compact({
@@ -46,7 +67,6 @@ function PreferencesForm({ profile }) {
     setErrors(nextErrors)
     setFailure(null)
     if (Object.keys(nextErrors).length > 0) return
-    const amount = salary.amount.trim()
     try {
       await savePreferences({
         workPreference,
@@ -61,67 +81,85 @@ function PreferencesForm({ profile }) {
     }
   }
 
+  // The side card follows the form as it is filled in; a salary shows once it is a whole number with a currency.
+  const draft = { workPreference, place, salary: currency && /^\d+$/.test(amount) ? { amount: Number(amount), currency, period: salary.period } : null }
+
   return (
     <OnboardingStep
       step={2}
-      stepName={t('onboarding:preferences.name')}
       title={t('onboarding:preferences.title')}
       lead={t('onboarding:preferences.lead')}
-      size="narrow"
-      footer={
-        <Button as={Link} to="/candidate/onboarding/story" variant="ghost" className={styles.back} leftIcon={<Icon as={ArrowLeft} size={12} />}>
-          {t('onboarding:preferences.back')}
-        </Button>
+      aside={<SetupSummary draft={draft} />}
+      actions={
+        <>
+          <Button as={Link} to="/candidate/onboarding/story" variant="outline" leftIcon={<Icon as={ArrowLeft} size={14} />}>
+            {t('onboarding:preferences.back')}
+          </Button>
+          <Button type="submit" form="preferences-form" loading={isLoading} rightIcon={<Icon as={ArrowRight} size={14} />}>
+            {t('onboarding:preferences.submit')}
+          </Button>
+        </>
       }
     >
-      <form className={styles.form} onSubmit={handleSubmit} noValidate>
-        <WorkModePicker
-          legend={t('onboarding:preferences.workMode')}
-          name="workPreference"
-          options={config?.enums.workPreference ?? []}
-          value={workPreference}
-          onChange={(value) => {
-            setWorkPreference(value)
-            setErrors((current) => ({ ...current, workPreference: undefined }))
-          }}
-          error={errorText.field('workPreference', errors.workPreference)}
-        />
-        <CityField
-          label={t('onboarding:preferences.city')}
-          value={place}
-          onChange={(value) => {
-            setPlace(value)
-            setErrors((current) => ({ ...current, placeId: undefined }))
-          }}
-          error={errorText.field('placeId', errors.placeId)}
-        />
-        <div className={styles.salary}>
-          <TextField
-            label={currency ? t('onboarding:preferences.salary', { currency }) : t('onboarding:preferences.salaryNoCurrency')}
-            name="salaryAmount"
-            inputMode="numeric"
-            disabled={!currency}
-            hint={currency ? undefined : t('onboarding:preferences.salaryNeedsCity')}
-            value={salary.amount}
-            onChange={(event) => {
-              setSalary((current) => ({ ...current, amount: event.target.value }))
-              setErrors((current) => ({ ...current, salaryMin: undefined }))
+      <form id="preferences-form" className={styles.form} onSubmit={handleSubmit} noValidate>
+        <section className={styles.section}>
+          <WorkModePicker
+            legend={t('onboarding:preferences.workMode')}
+            name="workPreference"
+            options={config?.enums.workPreference ?? []}
+            value={workPreference}
+            onChange={(value) => {
+              setWorkPreference(value)
+              setErrors((current) => ({ ...current, workPreference: undefined }))
             }}
-            error={errorText.field('salaryMin', errors.salaryMin)}
+            error={errorText.field('workPreference', errors.workPreference)}
           />
-          <SelectField
-            label={t('onboarding:preferences.period')}
-            name="salaryPeriod"
-            disabled={!currency}
-            options={(config?.enums.salaryPeriod ?? []).map((period) => ({ value: period, label: t(`enums:salaryPeriod.${period}`) }))}
-            value={salary.period}
-            onChange={(event) => setSalary((current) => ({ ...current, period: event.target.value }))}
+        </section>
+
+        <section className={styles.section}>
+          <CityField
+            label={t('onboarding:preferences.city')}
+            value={place}
+            onChange={(value) => {
+              setPlace(value)
+              setErrors((current) => ({ ...current, placeId: undefined }))
+            }}
+            error={errorText.field('placeId', errors.placeId)}
           />
-        </div>
-        {failure && <p role="alert">{errorText.code(failure)}</p>}
-        <Button type="submit" fullWidth loading={isLoading} rightIcon={<Icon as={ArrowRight} size={14} />}>
-          {t('onboarding:preferences.submit')}
-        </Button>
+        </section>
+
+        <section className={styles.section}>
+          <div className={styles.salary}>
+            <TextField
+              label={currency ? t('onboarding:preferences.salary', { currency }) : t('onboarding:preferences.salaryNoCurrency')}
+              name="salaryAmount"
+              inputMode="numeric"
+              disabled={!currency}
+              placeholder={currency ? t('onboarding:preferences.salaryPlaceholder') : undefined}
+              rightSlot={currency && <span className={styles.currency}>{currency}</span>}
+              hint={currency ? t('onboarding:preferences.salaryHint') : t('onboarding:preferences.salaryNeedsCity')}
+              value={salary.amount}
+              onChange={(event) => {
+                setSalary((current) => ({ ...current, amount: event.target.value }))
+                setErrors((current) => ({ ...current, salaryMin: undefined }))
+              }}
+              error={errorText.field('salaryMin', errors.salaryMin)}
+            />
+            <PeriodSwitch
+              legend={t('onboarding:preferences.period')}
+              options={config?.enums.salaryPeriod ?? []}
+              value={salary.period}
+              disabled={!currency}
+              onChange={(period) => setSalary((current) => ({ ...current, period }))}
+            />
+          </div>
+        </section>
+
+        {failure && (
+          <p className={styles.failure} role="alert">
+            {errorText.code(failure)}
+          </p>
+        )}
       </form>
     </OnboardingStep>
   )

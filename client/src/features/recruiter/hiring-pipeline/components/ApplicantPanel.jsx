@@ -3,6 +3,8 @@ import { useTranslation } from 'react-i18next'
 import { Link } from 'react-router-dom'
 import { ArrowUpRight } from 'lucide-react'
 import { Avatar, Icon, Modal } from '@/components/ui'
+import InterviewStatus from '@/features/interviews/components/InterviewStatus.jsx'
+import ScheduleInterviewButton from '@/features/interviews/components/ScheduleInterviewButton.jsx'
 import ApplicationStageSelect from '@/features/recruiter/applications/components/ApplicationStageSelect.jsx'
 import CandidateNotes from '@/features/recruiter/find-candidates/components/CandidateNotes.jsx'
 import { useFormat } from '@/lib/preferences.js'
@@ -50,6 +52,15 @@ export default function ApplicantPanel({ application, stages, onClose }) {
             jobTitle={job.title}
             label={t('applications:board.move', { name: candidate.fullName })}
           />
+        </section>
+
+        {/* P11d-A6: the state of the interview and scheduling from the pipeline. */}
+        <section className={styles.section} aria-labelledby="panel-interview">
+          <h3 id="panel-interview" className={styles.heading}>
+            {t('interviews:panel.title')}
+          </h3>
+          {current.interview ? <InterviewStatus interview={current.interview} /> : <p className={styles.stepTime}>{t('interviews:panel.none')}</p>}
+          <ScheduleInterviewButton application={current} />
         </section>
 
         <section className={styles.section} aria-labelledby="panel-notes">

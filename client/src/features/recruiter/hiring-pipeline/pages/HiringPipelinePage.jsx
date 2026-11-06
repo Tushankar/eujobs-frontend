@@ -12,6 +12,7 @@ import FunnelStageList from '../components/FunnelStageList.jsx'
 import ManageStagesModal from '../components/ManageStagesModal.jsx'
 import PipelineColumn, { PipelineColumnSkeleton } from '../components/PipelineColumn.jsx'
 import PipelineFunnel from '../components/PipelineFunnel.jsx'
+import { useInterviewMove } from '@/features/interviews/useInterviewMove.jsx'
 import { useStageMove } from '../useStageMove.js'
 import styles from './HiringPipelinePage.module.css'
 
@@ -51,7 +52,9 @@ export default function HiringPipelinePage() {
   const { data: funnel, isLoading: funnelLoading } = useGetPipelineFunnelQuery(jobId ? { jobId } : {}, { skip: view !== 'funnel' })
   const stages = pipeline?.items ?? []
   const applications = data?.items ?? []
-  const move = useStageMove(applications)
+  // P11d-A6: a drop into or out of an Interview stage keeps the interview consistent.
+  const interviewMove = useInterviewMove()
+  const move = useStageMove(applications, (application, stageId) => interviewMove.request(application, stageId, stages))
   const opened = applications.find((application) => application.id === params.get('application'))
   const funnelStages = funnel?.items ?? []
   // `boardLoading`: nothing to show yet. `busy`: another job's applications are loading; the board stays, dimmed.
@@ -202,6 +205,7 @@ export default function HiringPipelinePage() {
       )}
 
       <ApplicantPanel application={opened} stages={stages} onClose={() => setParam('application', '')} />
+      {interviewMove.element}
       <ManageStagesModal open={managing} onClose={() => navigate(PIPELINE_PATH)} stages={stages} />
     </div>
   )

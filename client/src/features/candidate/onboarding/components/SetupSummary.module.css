@@ -1,0 +1,83 @@
+.card {
+  display: flex;
+  flex-direction: column;
+  padding: 20px 20px 18px;
+  border: 1px solid var(--border);
+  border-radius: var(--radius-xl);
+  background: var(--card);
+}
+
+.title {
+  margin-bottom: 6px;
+  font-family: var(--font-display);
+  font-size: 16px;
+  font-weight: 800;
+  line-height: 24px;
+  color: var(--foreground);
+}
+
+.row {
+  display: flex;
+  align-items: flex-start;
+  gap: 12px;
+  padding: 12px 0;
+}
+
+.row + .row {
+  border-top: 1px solid var(--border);
+}
+
+/* To do: a dashed circle; done: a filled green tick. */
+.mark {
+  display: inline-flex;
+  flex-shrink: 0;
+  align-items: center;
+  justify-content: center;
+  width: 22px;
+  height: 22px;
+  margin-top: 1px;
+  border: 1.5px dashed var(--border-strong);
+  border-radius: var(--radius-full);
+}
+
+.markDone {
+  border: 0;
+  background: var(--success-fg);
+  color: #fff;
+}
+
+.text {
+  display: flex;
+  flex-direction: column;
+  gap: 2px;
+  min-width: 0;
+}
+
+.label {
+  font-size: 12px;
+  font-weight: 500;
+  line-height: 16px;
+  color: var(--muted-foreground);
+}
+
+.value {
+  overflow-wrap: anywhere;
+  font-size: 14px;
+  font-weight: 600;
+  line-height: 20px;
+  color: var(--foreground);
+}
+
+.valueEmpty {
+  font-weight: 500;
+  color: var(--muted-foreground);
+}
+
+.note {
+  margin-top: 6px;
+  padding-top: 14px;
+  border-top: 1px solid var(--border);
+  font-size: 12px;
+  line-height: 18px;
+  color: var(--muted-foreground);
+}

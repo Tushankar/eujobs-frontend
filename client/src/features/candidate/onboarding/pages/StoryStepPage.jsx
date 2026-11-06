@@ -9,11 +9,12 @@ import { useFormat } from '@/lib/preferences.js'
 import { useGetCvVersionsQuery, useUploadCvMutation } from '../../cv/api.js'
 import UploadDropzone from '../../cv/components/UploadDropzone.jsx'
 import OnboardingStep from '../components/OnboardingStep.jsx'
+import SetupSummary from '../components/SetupSummary.jsx'
 import styles from './StoryStepPage.module.css'
 
 const NEXT_STEP = '/candidate/onboarding/preferences'
 
-/** Step 1 of 2 (M-014): a CV upload becomes version 1, the live CV. The CV can also be added later. */
+/** Step 1 (M-014): a CV upload becomes version 1, the live CV. The CV can also be added later. */
 export default function StoryStepPage() {
   const { t } = useTranslation()
   const navigate = useNavigate()
@@ -42,16 +43,16 @@ export default function StoryStepPage() {
   return (
     <OnboardingStep
       step={1}
-      stepName={t('onboarding:story.name')}
       title={t('onboarding:story.title')}
       lead={t('onboarding:story.lead')}
-      footer={
+      aside={<SetupSummary />}
+      actions={
         live ? (
           <Button rightIcon={<Icon as={ArrowRight} size={14} />} onClick={() => navigate(NEXT_STEP)}>
             {t('onboarding:story.continue')}
           </Button>
         ) : (
-          <Button variant="ghost" className={styles.skip} rightIcon={<Icon as={ArrowRight} size={12} />} onClick={() => navigate(NEXT_STEP)}>
+          <Button variant="outline" rightIcon={<Icon as={ArrowRight} size={14} />} onClick={() => navigate(NEXT_STEP)}>
             {t('onboarding:story.skip')}
           </Button>
         )

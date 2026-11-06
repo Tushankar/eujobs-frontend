@@ -363,6 +363,6 @@ describe('retention-sweep (M-186, U32, C18, P11b-Q5)', () => {
   })
 
   test('the sweep returns what it removed', async () => {
-    assert.deepEqual(await retentionSweep(new Date()), { files: 0, notifications: 0 })
+    assert.deepEqual(await retentionSweep(new Date()), { files: 0, notifications: 0, interviews: 0, documentRequests: 0 })
   })
 })

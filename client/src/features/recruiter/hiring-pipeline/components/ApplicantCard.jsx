@@ -2,6 +2,7 @@ import { useTranslation } from 'react-i18next'
 import { Clock, MessageSquareText, Sparkles } from 'lucide-react'
 import { Avatar, Icon, Skeleton } from '@/components/ui'
 import PillBadge from '@/components/common/PillBadge.jsx'
+import InterviewStatus from '@/features/interviews/components/InterviewStatus.jsx'
 import ApplicationStageSelect from '@/features/recruiter/applications/components/ApplicationStageSelect.jsx'
 import { useFormat } from '@/lib/preferences.js'
 import { cx } from '@/utils/cx.js'
@@ -55,6 +56,7 @@ export default function ApplicantCard({ application, stages, dragging, onDragSta
           </button>
         )}
       </div>
+      <InterviewStatus interview={application.interview} />
       <div className={styles.footer}>
         <ApplicationStageSelect
           application={application}

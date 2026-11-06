@@ -8,6 +8,8 @@ import { tableState } from '@/components/common/tableState.js'
 import EmptyState from '@/components/common/EmptyState.jsx'
 import NoticeBanner from '@/components/common/NoticeBanner.jsx'
 import PageTitle from '@/components/common/PageTitle.jsx'
+import InterviewStatus from '@/features/interviews/components/InterviewStatus.jsx'
+import ScheduleInterviewButton from '@/features/interviews/components/ScheduleInterviewButton.jsx'
 import UpcomingInterviews from '@/features/interviews/components/UpcomingInterviews.jsx'
 import { useMarkSeen } from '@/features/notifications/api.js'
 import { useGetRecruiterJobsQuery } from '@/features/recruiter/jobs/api.js'
@@ -101,13 +103,18 @@ export default function ApplicationsPage() {
       skeleton: 'action',
       width: '22%',
       render: (row) => (
-        <ApplicationStageSelect
-          application={row}
-          stages={stages}
-          candidateName={row.candidate.fullName}
-          jobTitle={row.job.title}
-          label={t('applications:recruiter.stageLabel', { name: row.candidate.fullName })}
-        />
+        <div className={styles.stageCell}>
+          <ApplicationStageSelect
+            application={row}
+            stages={stages}
+            candidateName={row.candidate.fullName}
+            jobTitle={row.job.title}
+            label={t('applications:recruiter.stageLabel', { name: row.candidate.fullName })}
+          />
+          {/* P11d-A6: the latest interview and scheduling from the row. */}
+          <InterviewStatus interview={row.interview} />
+          <ScheduleInterviewButton application={row} compact />
+        </div>
       ),
     },
     {

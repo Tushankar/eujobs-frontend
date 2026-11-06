@@ -194,5 +194,21 @@
     "cameraOn": "Camera on",
     "stopRecording": "Stop recording",
     "leave": "Leave"
+  },
+  "move": {
+    "title": "Cancel the interview too?",
+    "description": "{{name}} has an interview under way.",
+    "text": "You are moving this application out of the Interview stage. Cancel the interview as well? The candidate is told, with a calendar cancellation if a time was booked.",
+    "keep": "Keep the interview",
+    "cancel": "Cancel it too",
+    "alsoCancel": "Also cancel the interview under way"
+  },
+  "status": {
+    "booked": "Interview booked · {{when}}",
+    "outcome": "Interview outcome: {{outcome}}"
+  },
+  "panel": {
+    "title": "Interview",
+    "none": "No interview yet."
   }
 }

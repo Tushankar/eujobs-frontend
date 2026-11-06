@@ -1,5 +1,5 @@
 {
-  "step": "Paso {{step}} de {{total}} · {{name}}",
+  "progress": "Paso {{step}} de {{total}}",
   "story": {
     "name": "Tu historia",
     "title": "Un mejor encaje empieza por ti.",
@@ -21,10 +21,17 @@
     "salaryNeedsCity": "Elige primero tu ciudad para fijar la moneda.",
     "period": "Periodo del salario",
     "submit": "Buscar mi próximo capítulo",
-    "back": "Atrás"
+    "back": "Atrás",
+    "modes": {
+      "remote": "Trabaja desde casa o desde donde quieras",
+      "hybrid": "Reparte la semana entre casa y la oficina",
+      "on_site": "Trabaja en las instalaciones de la empresa"
+    },
+    "salaryPlaceholder": "p. ej., 45000",
+    "salaryHint": "Lo usamos para ordenar los empleos para ti."
   },
   "plan": {
-    "eyebrow": "Último paso · Elige un plan",
+    "name": "Elige un plan",
     "title": "Elige cómo quieres continuar",
     "lead": "Plus añade las candidaturas, los mensajes, las alertas de empleo y la compatibilidad con IA. Puedes cambiar de plan más adelante en Facturación.",
     "forever": "para siempre",
@@ -35,5 +42,17 @@
     "onPlan": "Tienes {{plan}}",
     "onPlanText": "Tu plan no cambia. Puedes gestionarlo en Facturación.",
     "continue": "Continuar"
+  },
+  "summary": {
+    "title": "Tu configuración",
+    "cv": "CV activo",
+    "workMode": "Modalidad",
+    "location": "Ubicación",
+    "salary": "Salario mínimo",
+    "plan": "Plan",
+    "notSet": "Aún sin definir",
+    "optional": "Opcional",
+    "planNext": "Aún sin elegir",
+    "note": "Puedes cambiar todo esto más adelante en Mi perfil y Facturación."
   }
 }

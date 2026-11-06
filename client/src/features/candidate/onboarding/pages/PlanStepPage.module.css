@@ -1,57 +1,95 @@
-.column {
-  max-width: 880px;
-  margin: 0 auto;
-  display: grid;
-  gap: 16px;
-}
-
 .grid {
   display: grid;
-  grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+  grid-template-columns: repeat(auto-fit, minmax(260px, 1fr));
   gap: 16px;
+  align-items: stretch;
+}
+
+/* The paid plan carries the primary edge. */
+.paid {
+  border-color: var(--primary);
+  box-shadow: inset 0 0 0 1px var(--primary);
 }
 
 .card {
-  display: grid;
-  gap: 16px;
+  display: flex;
+  flex-direction: column;
+  gap: 20px;
+  height: 100%;
   padding: 24px;
 }
 
+.head {
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+  padding-bottom: 20px;
+  border-bottom: 1px solid var(--border);
+}
+
 .name {
+  display: inline-flex;
+  align-items: center;
+  gap: 7px;
   margin: 0;
-  font-size: 18px;
-  font-weight: 700;
+  font-family: var(--font-display);
+  font-size: 17px;
+  font-weight: 800;
+  line-height: 24px;
+  color: var(--foreground);
+}
+
+/* The paid badge's gold crown (PlanBadge.module.css). */
+.crown {
+  color: #b8860b;
+  fill: #e8b931;
 }
 
 .price {
+  display: flex;
+  align-items: baseline;
+  gap: 6px;
   margin: 0;
-  font-size: 28px;
+}
+
+.price strong {
+  font-family: var(--font-display);
+  font-size: 32px;
   font-weight: 800;
+  line-height: 38px;
+  letter-spacing: -0.6px;
+  color: var(--foreground);
 }
 
 .price span {
-  font-size: 14px;
+  font-size: 13px;
   font-weight: 500;
   color: var(--muted-foreground);
 }
 
 .features {
+  display: grid;
+  flex: 1;
+  align-content: start;
+  gap: 10px;
   margin: 0;
   padding: 0;
   list-style: none;
-  display: grid;
-  gap: 8px;
 }
 
 .features li {
   display: flex;
-  gap: 8px;
   align-items: flex-start;
+  gap: 10px;
+  font-size: 13.5px;
+  line-height: 20px;
+  color: var(--foreground);
 }
 
-.footer {
-  display: flex;
-  justify-content: flex-start;
+.check {
+  flex: none;
+  margin-top: 2px;
+  color: var(--success-fg);
 }
 
 /* M-129: a subscriber sees their plan instead of the cards. */
@@ -65,4 +103,10 @@
   margin: 0;
   font-size: 14px;
   color: var(--muted-foreground);
+}
+
+.failure {
+  margin-top: 16px;
+  font-size: 13px;
+  color: var(--destructive);
 }

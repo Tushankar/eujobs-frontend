@@ -10,9 +10,12 @@ import { CandidateProfile } from '../modules/candidates/candidates.model.js'
 import { Company } from '../modules/companies/companies.model.js'
 import { ShortlistEntry } from '../modules/discovery/discovery.model.js'
 import { File } from '../modules/files/files.model.js'
+import { Interview } from '../modules/interviews/interviews.model.js'
 import { Job } from '../modules/jobs/jobs.model.js'
+import { Enrollment } from '../modules/learning/learning.model.js'
 import { MatchResult } from '../modules/matching/matching.model.js'
 import { Conversation } from '../modules/messages/messages.model.js'
+import { Payment, Subscription } from '../modules/payments/payments.model.js'
 import { ReportExport } from '../modules/reports/reports.model.js'
 import { User } from '../modules/users/users.model.js'
 import { VerificationSubmission } from '../modules/verification/verification.model.js'
@@ -26,7 +29,7 @@ import { approvedRecruiter, listedCandidate } from './helpers/market.js'
  * fixtures and against the other admin pages; Applications (P10-Q14) with its export; Reports (M-181 … M-183, U23) with
  * the transcription fallback, the stored snapshot and the audit events.
  */
-useTestDb([User, AuditEvent, CandidateProfile, Company, Job, Application, PipelineStage, ShortlistEntry, Conversation, MatchResult, VerificationSubmission, ReportExport, File])
+useTestDb([User, AuditEvent, CandidateProfile, Company, Job, Application, PipelineStage, ShortlistEntry, Conversation, MatchResult, VerificationSubmission, ReportExport, File, Enrollment, Interview, Subscription, Payment])
 useTestUploads()
 before(async () => {
   await AdminRole.deleteMany({ system: false })
@@ -169,7 +172,7 @@ describe('Recruitment (M-178, P10-Q13)', () => {
     const of = (list) => Object.fromEntries(list.map((item) => [item.category, item.count]))
     assert.deepEqual(of(body.stages), { applied: 1, screening: 0, shortlisted: 0, interview: 1, offer: 0, hired: 0 })
     assert.deepEqual(of(body.funnel), { applied: 2, screening: 1, shortlisted: 0, interview: 1, offer: 0, hired: 0 })
-    assert.deepEqual(body.stats, { publishedRoles: 3, applications: 2, shortlisted: 1, reviewedOutreach: 1 })
+    assert.deepEqual(body.stats, { publishedRoles: 3, applications: 2, shortlisted: 1, reviewedOutreach: 1, interviewsScheduled: 0, interviewsCompleted: 0 })
     const row = body.movement.find((item) => item.candidate.id === String(anna._id))
     assert.equal(row.category, 'interview')
     assert.equal(row.shortlisted, true)

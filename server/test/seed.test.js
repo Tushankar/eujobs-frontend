@@ -60,7 +60,7 @@ describe('seed:catalog (U41)', () => {
     assert.equal(plus.prices.length, 8)
     // P11c-Q2: Recruiter Plus, the £49 row, with its own Stripe prices.
     const recruiterPlus = await Plan.findOne({ key: 'recruiter_plus' }).lean()
-    assert.deepEqual([recruiterPlus.role, recruiterPlus.name.fr, recruiterPlus.entitlements], ['recruiter', 'Recruiter Plus', ['jobs_unlimited', 'discovery', 'outreach', 'ai']])
+    assert.deepEqual([recruiterPlus.role, recruiterPlus.name.fr, recruiterPlus.entitlements], ['recruiter', 'Recruiter Plus', ['jobs_unlimited', 'discovery', 'outreach', 'ai', 'interviews']])
     assert.deepEqual(
       recruiterPlus.prices.map((price) => `${price.currency} ${price.amountMinor / 100}`),
       ['GBP 49', 'EUR 57', 'PLN 245', 'SEK 629', 'DKK 429', 'CZK 1399', 'HUF 21990', 'RON 289'],
@@ -281,7 +281,7 @@ describe('seed:demo (§3.20, OD9, P12)', () => {
     assert.deepEqual([request.status, request.items.map((item) => item.kind)], ['open', ['id', 'right_to_work']])
     assert.deepEqual((await ScheduledTask.find({ type: /^interview./ })).map((task) => task.key.split(':')[0]).sort(), ['interview.close', 'interview.expire', 'interview.reminder', 'interview.reminder'])
     const events = await Message.find({ kind: { $ne: 'text' } }).sort({ createdAt: 1 })
-    assert.deepEqual(events.map((message) => `${message.kind}.${message.event}`), ['interview.offered', 'interview.confirmed', 'interview.offered', 'document_request.created'])
+    assert.deepEqual(events.map((message) => `${message.kind}.${message.event}`), ['interview.offered', 'interview.confirmed', 'document_request.created', 'interview.offered'])
     assert.ok(events.every((message) => message.readAt))
     assert.equal(await Notification.countDocuments({ type: /^(interview|document)/ }), 0)
   })

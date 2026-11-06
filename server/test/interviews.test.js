@@ -154,6 +154,10 @@ describe('Offer and pick (P11d-Q3, Q4, Q13)', () => {
     const keys = (await ScheduledTask.find({ status: 'pending', key: new RegExp(id) })).map((task) => task.key).sort()
     assert.deepEqual(keys, [`interview.close:${id}`, `interview.reminder:${id}:1`, `interview.reminder:${id}:24`])
 
+    // P11d-A6: the recruiter's rows carry the latest interview, under way until it starts.
+    const [row] = (await get(recruiter, '/recruiter/applications')).body.items
+    assert.deepEqual([row.interview.id, row.interview.status, row.interview.active], [id, 'confirmed', true])
+
     // The candidate's applications list the interview (the application's activity, P11d-Q16).
     const list = (await get(candidate, '/candidate/applications')).body.items
     assert.equal(list[0].interviews[0].status, 'confirmed')
