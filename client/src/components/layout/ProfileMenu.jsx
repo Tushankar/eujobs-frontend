@@ -9,6 +9,7 @@ import { LANGUAGES, languageName } from '@/i18n/index.js'
 import { useCountryOptions } from '@/lib/countries.js'
 import { usePreferences, useFormat } from '@/lib/preferences.js'
 import { identitySubtitle } from './identity.js'
+import PlanBadge, { isPaidPlan } from './PlanBadge.jsx'
 import styles from './ProfileMenu.module.css'
 
 function OptionList({ options, selected, onSelect, className }) {
@@ -43,6 +44,7 @@ export default function ProfileMenu({ workspace }) {
   const [open, setOpen] = useState(null)
   const toggle = (row) => setOpen((current) => (current === row ? null : row))
   if (!me) return null
+  const paid = isPaidPlan(me)
 
   return (
     <Dropdown
@@ -58,9 +60,11 @@ export default function ProfileMenu({ workspace }) {
           <div className={styles.identity}>
             <p className={styles.name}>{me.fullName}</p>
             <p className={styles.email}>{me.email}</p>
-            <p className={styles.role}>{identitySubtitle(me, t)}</p>
+            {/* A paid plan (Plus, Recruiter Plus) shows as the premium badge; Free stays a text line. */}
+            {!(me.role === 'candidate' && paid) && <p className={styles.role}>{identitySubtitle(me, t)}</p>}
             {/* P11c-Q19: a recruiter's plan (Free or Recruiter Plus) under the company. */}
-            {me.role === 'recruiter' && <p className={styles.role} data-recruiter-plan>{t(`enums:planKey.${me.plan}`)}</p>}
+            {me.role === 'recruiter' && !paid && <p className={styles.role} data-recruiter-plan>{t(`enums:planKey.${me.plan}`)}</p>}
+            <PlanBadge me={me} />
           </div>
 
           <div className={styles.body}>

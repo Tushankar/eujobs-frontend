@@ -17,6 +17,7 @@ import aiNavIcon from '@/assets/icons/ai-nav.svg'
 import aiNavIconActive from '@/assets/icons/ai-sparkle-blue-16.svg'
 import BrandLogo from './BrandLogo.jsx'
 import { identitySubtitle } from './identity.js'
+import PlanBadge, { isPaidPlan } from './PlanBadge.jsx'
 import styles from './Sidebar.module.css'
 
 /** A badge whose text a hook computes (e.g. the live count of active applications); none when the hook returns null (M-094). */
@@ -165,7 +166,9 @@ export default function Sidebar({ workspace, open, onClose }) {
               <Avatar name={me.fullName} src={(me.photoUrl ?? me.company?.logoUrl) ?? undefined} size={32} className={styles.avatar} />
               <div className={styles.userText}>
                 <p className={styles.userName}>{me.fullName}</p>
-                <p className={styles.userSubtitle}>{identitySubtitle(me, t)}</p>
+                {/* A candidate's paid plan shows as the premium badge; a recruiter's sits under the company. */}
+                {!(me.role === 'candidate' && isPaidPlan(me)) && <p className={styles.userSubtitle}>{identitySubtitle(me, t)}</p>}
+                <PlanBadge me={me} small />
               </div>
               <IconButton icon={LogOut} label={t('shell:signOut')} onClick={handleSignOut} />
             </div>

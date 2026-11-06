@@ -92,7 +92,7 @@ export default function AdminSettingsPage() {
     <>
       <PageTitle title={t('account:admin.title')} description={t('account:admin.description')} />
       <div className={styles.layout}>
-        <div className={styles.sections}>
+        <div className={`${styles.sections} sticky-side`}>
           <Panel padding={24} className={styles.identity}>
             <Avatar name={me.fullName} size={64} />
             <div className={styles.identityText}>

@@ -46,7 +46,7 @@ export default function VerificationPage() {
       <PageTitle eyebrow={t('verification:eyebrow')} title={t('verification:title')} description={t('verification:description')} />
 
       <div className={styles.layout}>
-        <div className={styles.main}>
+        <div className={`${styles.main} sticky-side`}>
           <Panel padding={24}>
             <h2 className={styles.sectionTitle}>{t('verification:basic.title')}</h2>
             <p className={styles.sectionLead}>{t('verification:basic.lead')}</p>

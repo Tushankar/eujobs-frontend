@@ -1,5 +1,6 @@
 .sidebar {
   --nav-active-bg: var(--accent);
+  --nav-hover-bg: #eceef2;
 
   position: fixed;
   inset: 0 auto 0 0;
@@ -28,12 +29,13 @@
 
 .sectionLabel {
   padding: 28px 0 12px 12px;
-  font-size: 9px;
-  font-weight: 600;
-  line-height: 13.5px;
-  letter-spacing: 1.8px;
+  font-family: var(--font-display);
+  font-size: 11px;
+  font-weight: 800;
+  line-height: 16px;
+  letter-spacing: 1.2px;
   text-transform: uppercase;
-  color: var(--text-nav-heading);
+  color: var(--foreground);
 }
 
 .nav {
@@ -49,23 +51,26 @@
   min-height: 40px;
   padding: 10px 12px;
   border-radius: var(--radius-xl);
-  font-size: 12px;
-  line-height: 18px;
-  color: var(--text-nav);
+  font-family: var(--font-display);
+  font-size: 14px;
+  font-weight: 600;
+  line-height: 20px;
+  letter-spacing: -0.2px;
+  color: var(--foreground);
   transition:
     background-color var(--transition),
     color var(--transition);
 }
 
 .link:hover {
-  background: var(--muted);
+  background: var(--nav-hover-bg);
 }
 
 .active,
 .active:hover {
   background: var(--nav-active-bg);
   color: var(--primary);
-  font-weight: 600;
+  font-weight: 700;
 }
 
 .customIcon {
@@ -197,21 +202,25 @@
   gap: 12px;
   padding: 12px;
   border-radius: var(--radius-xl);
-  font-size: 12px;
-  line-height: 16px;
-  color: var(--muted-foreground);
+  font-family: var(--font-display);
+  font-size: 14px;
+  font-weight: 600;
+  line-height: 20px;
+  letter-spacing: -0.2px;
+  color: var(--foreground);
   transition: background-color var(--transition);
 }
 
 .utility:hover {
-  background: var(--muted);
+  background: var(--nav-hover-bg);
 }
 
-/* Settings / Help active state (Figma Settings frames): accent fill, primary text, regular weight. */
+/* Settings / Help active state: accent fill, primary text, same weight as the active nav row. */
 .utilityActive,
 .utilityActive:hover {
   background: var(--nav-active-bg);
   color: var(--primary);
+  font-weight: 700;
 }
 
 .utilityAfterPromo {

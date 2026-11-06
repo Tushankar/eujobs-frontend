@@ -45,7 +45,11 @@
 }
 
 .titleMuted {
-  color: #858ba0;
+  color: var(--primary);
+  background: linear-gradient(90deg, #0a4fc2 0%, var(--primary) 100%);
+  -webkit-background-clip: text;
+  background-clip: text;
+  -webkit-text-fill-color: transparent;
 }
 
 .lead {
@@ -175,25 +179,14 @@
   min-width: 0;
 }
 
-/* Wide layouts: the rail stays pinned under the header so only the job list moves with the
-   page. It is taller than most screens, so it scrolls inside itself (scrollbar hidden). */
-@media (min-width: 1200px) {
-  .rail {
-    position: sticky;
-    top: calc(var(--header-height) + 24px);
-    max-height: calc(100vh - var(--header-height) - 48px);
-    overflow-y: auto;
-    scrollbar-width: none;
-  }
-
-  .rail::-webkit-scrollbar {
-    display: none;
-  }
-}
-
 @media (max-width: 1199px) {
   .columns {
     grid-template-columns: minmax(0, 1fr);
+  }
+
+  /* Stacked: the job list must not pin over the rail below it. */
+  .columns > .main {
+    position: static;
   }
 
   .rail {

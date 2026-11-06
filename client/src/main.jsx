@@ -13,11 +13,13 @@ import './styles/utilities.css'
 import { loadMe } from './app/session.js'
 import { browserLanguage, initI18n } from './i18n/index.js'
 import { readAnonymousPreference } from './lib/preferences.js'
+import { startStickySide } from './lib/stickySide.js'
 import App from './app/App.jsx'
 
 // Anonymous language first (M-135); a signed-in account then switches to its own before the first paint.
 await initI18n(readAnonymousPreference('language') ?? browserLanguage())
 await loadMe()
+startStickySide()
 
 createRoot(document.getElementById('root')).render(
   <StrictMode>

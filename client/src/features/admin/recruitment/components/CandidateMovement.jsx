@@ -25,7 +25,7 @@ export default function CandidateMovement({ rows, stage, onClearStage, loading }
   const shown = stage ? rows.filter((row) => row.category === stage) : rows
   const stageLabel = stage && t(`enums:stageCategory.${stage}`)
   return (
-    <Panel padding={24} aria-labelledby="candidate-movement">
+    <Panel padding={24} className="sticky-side" aria-labelledby="candidate-movement">
       <SectionTitle id="candidate-movement" title={t('movement.title')} description={t('movement.description')}>
         <Link to={workspacePath(WORKSPACES.admin, 'applications')} className={styles.link}>
           {t('movement.viewApplications')}

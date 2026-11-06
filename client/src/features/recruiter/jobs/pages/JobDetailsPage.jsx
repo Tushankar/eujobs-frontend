@@ -66,7 +66,7 @@ export default function JobDetailsPage() {
       {job?.restricted && <p className={styles.restricted}>{t('jobs:details.restricted', { reason: job.restricted.reason })}</p>}
 
       <div className={styles.layout}>
-        <section className={styles.card} aria-labelledby="brief-title">
+        <section className={`${styles.card} sticky-side`} aria-labelledby="brief-title">
           <h2 className={styles.cardTitle} id="brief-title">
             {t('jobs:details.brief')}
           </h2>

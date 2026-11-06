@@ -15,9 +15,9 @@
 
 .cardTitle {
   font-family: var(--font-display);
-  font-size: 14px;
+  font-size: 16px;
   font-weight: 700;
-  line-height: 21px;
+  line-height: 24px;
   color: var(--foreground);
 }
 
@@ -44,16 +44,16 @@
 }
 
 .muted {
-  font-size: 10px;
-  line-height: 15px;
+  font-size: 12px;
+  line-height: 18px;
   color: var(--muted-foreground);
 }
 
 .strong {
-  font-size: 10px;
+  font-size: 13px;
   font-weight: 600;
-  line-height: 15px;
-  color: var(--primary);
+  line-height: 18px;
+  color: var(--foreground);
 }
 
 .meterRow,
@@ -66,52 +66,75 @@
 
 .lead {
   padding-top: 12px;
-  font-size: 10px;
-  line-height: 20px;
+  font-size: 12px;
+  line-height: 18px;
   color: var(--muted-foreground);
 }
 
-/* Figma leaves an 18px gap where the strength meter would be. */
-.afterMeter {
-  padding-top: 30px;
+/* Progress meter under "Profile strength" and "Verification progress". */
+.bar {
+  display: block;
+  height: 6px;
+  margin-top: 8px;
+  overflow: hidden;
+  border-radius: var(--radius-full);
+  background: var(--muted);
 }
 
-.checklist {
-  padding: 16px 0 20px;
+.bar > span {
+  display: block;
+  height: 100%;
+  border-radius: inherit;
+  background: var(--primary);
 }
 
-.checkItem {
+/* Open profile items (links) or the all-done summary, as divided rows. */
+.rows {
+  margin: 12px 0 16px;
+  border-top: 1px solid var(--border);
+}
+
+.row {
   display: flex;
   align-items: center;
+  justify-content: space-between;
   gap: 8px;
-  height: 27px;
-  padding-top: 12px;
-  font-size: 10px;
-  line-height: 15px;
-  color: #727a8b;
+  padding: 10px 0;
+  border-bottom: 1px solid var(--border);
+  font-size: 13px;
+  line-height: 18px;
+  color: var(--foreground);
 }
 
-.checkItem:first-child {
-  height: 15px;
-  padding-top: 0;
+.rowLabel {
+  display: inline-flex;
+  align-items: center;
+  gap: 10px;
+}
+
+.rowChevron {
+  color: var(--muted-foreground);
+}
+
+a.row:hover {
+  color: var(--primary);
 }
 
 .checkDone {
-  color: #5da27e;
+  color: var(--foreground);
 }
 
 .checkOpen {
-  width: 12px;
-  height: 12px;
-  border: 1px solid #cdd0d9;
+  flex-shrink: 0;
+  width: 14px;
+  height: 14px;
+  border: 1.5px solid var(--border-strong);
   border-radius: var(--radius-full);
 }
 
 .cardButton.cardButton {
   border-color: var(--border);
   background: var(--card);
-  font-size: 10px;
-  line-height: 15px;
 }
 
 .cardButton.cardButton:hover,
@@ -120,15 +143,15 @@
 }
 
 .verifyButton.verifyButton {
+  margin-top: 16px;
   border-color: var(--border);
   background: var(--card);
 }
 
 .verifyText {
-  max-width: 204px;
   padding-top: 4px;
-  font-size: 10px;
-  line-height: 20px;
+  font-size: 12px;
+  line-height: 18px;
   color: var(--muted-foreground);
 }
 
@@ -155,8 +178,8 @@
   display: inline-flex;
   align-items: center;
   gap: 8px;
-  font-size: 11px;
-  line-height: 16.5px;
+  font-size: 13px;
+  line-height: 18px;
   color: var(--foreground);
 }
 
@@ -168,10 +191,8 @@
   padding-top: 16px;
 }
 
-.locked {
-  display: flex;
-  width: fit-content;
-  margin: 40.5px 0 16px;
+.headBadge {
+  flex-shrink: 0;
 }
 
 .activityTitle {

@@ -57,7 +57,7 @@ export default function WhyRecommendedPage() {
       {(rolesLoading || page.isLoading) && <WhySkeleton details={details} />}
       {evidence && (
         <div className={cx(styles.layout, busy && styles.busy)} aria-busy={busy || undefined}>
-          <div className={styles.main}>
+          <div className={`${styles.main} sticky-side`}>
             <Panel padding={24} aria-labelledby="why-title">
               <div className={styles.badges}>
                 <PillBadge tone="primary">

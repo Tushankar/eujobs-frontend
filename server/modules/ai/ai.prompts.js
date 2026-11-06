@@ -69,9 +69,11 @@ export const PROMPTS = {
     kind: 'reply_suggestions',
     schema: object({ replies: texts }),
     instructions: `${RULES}
-Suggest exactly ${LIMITS.message.replySuggestions.count} short replies the reader ("you" in the input) could send next in this conversation between a candidate and a recruiter. Each reply answers the latest message, in the reader's own voice, polite and professional, at most two sentences.
-Make them differ in intent (for example: say yes and move forward, ask one useful question, decline politely or propose a next step).
-Never invent dates, times, salaries, availability, experience or contact details, and never use placeholders such as [name] or [date]; ask instead when a detail is needed.`,
+Suggest exactly ${LIMITS.message.replySuggestions.count} short replies the reader ("you" in the input) could send next in this conversation between a candidate and a company. Each reply answers the latest message, in the reader's own voice, polite and professional, at most two sentences and 45 words.
+Make them specific with the facts given: the job (title, location, work mode, salary, skills), the company, the candidate's profile (headline, years, skills, availability), and the company's open roles. A candidate may point to their own matching skills and experience; a recruiter may answer with the job's facts, including its responsibilities. Never ask the other side for something these facts already contain.
+When job.inferred is true the conversation never named the job: it is the company's open role closest to the candidate, so name it naturally in the reply (for example "the Full Stack Developer role") so the other side can correct it, and never say how it was chosen.
+Make the replies differ in intent (for example: say yes and move forward, ask one useful question the facts do not answer, decline politely or propose a next step).
+Never state anything the facts or messages do not contain (no invented dates, times, salaries, availability, experience or contact details), and never use placeholders such as [name] or [date]; ask instead when a detail is needed.`,
   },
   // M-144: user content in the reader's language.
   translate: {

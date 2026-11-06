@@ -19,6 +19,7 @@ import { useFormat } from '@/lib/preferences.js'
 import { useGetApplicationsQuery, useWithdrawMutation } from '../api.js'
 import ApplicationActivityModal from '../components/ApplicationActivityModal.jsx'
 import ApplyFlow from '../components/ApplyFlow.jsx'
+import FirstApplication from '../components/FirstApplication.jsx'
 import { STATUS_TONES } from '../status.js'
 import styles from './ApplicationsPage.module.css'
 
@@ -51,6 +52,8 @@ export default function ApplicationsPage() {
 
   const applications = data?.items ?? []
   const rows = applications.filter((application) => filter === 'all' || application.status === filter)
+  // No applications at all: the get-started card and jobs to apply to, instead of a filter with nothing to filter.
+  const noApplications = Boolean(data) && applications.length === 0
   const activity = applications.find((application) => application.id === activityId)
   useMarkSeen('application', activity?.id)
   const activeJobs = new Set(applications.filter((application) => application.status !== 'withdrawn').map((application) => application.job.id))
@@ -113,26 +116,23 @@ export default function ApplicationsPage() {
 
       {data && applicationId && !applications.some((application) => application.id === applicationId) && <NoticeBanner>{t('notifications:unavailable')}</NoticeBanner>}
 
-      <FilterChips className={styles.chips} label={t('applications:list.filtersLabel')} options={filters} value={filter} onChange={setFilter} />
+      {noApplications ? (
+        <FirstApplication />
+      ) : (
+        <>
+          <FilterChips className={styles.chips} label={t('applications:list.filtersLabel')} options={filters} value={filter} onChange={setFilter} />
 
-      <div className={styles.table}>
-        {isLoading ? (
-          <DataTable loading caption={t('applications:list.caption')} columns={columns} rows={[]} getRowKey={(row) => row.id} />
-        ) : !data ? null : rows.length === 0 ? (
-          <EmptyState
-            icon={BriefcaseBusiness}
-            title={t(filter === 'all' ? 'applications:list.empty' : 'applications:list.emptyFiltered')}
-            description={t(filter === 'all' ? 'applications:list.emptyText' : 'applications:list.emptyFilteredText')}
-            action={
-              <Button as={Link} to="/candidate/jobs">
-                {t('applications:list.findJobs')}
-              </Button>
-            }
-          />
-        ) : (
-          <DataTable caption={t('applications:list.caption')} columns={columns} rows={rows} getRowKey={(row) => row.id} />
-        )}
-      </div>
+          <div className={styles.table}>
+            {isLoading ? (
+              <DataTable loading caption={t('applications:list.caption')} columns={columns} rows={[]} getRowKey={(row) => row.id} />
+            ) : !data ? null : rows.length === 0 ? (
+              <EmptyState icon={BriefcaseBusiness} title={t('applications:list.emptyFiltered')} description={t('applications:list.emptyFilteredText')} />
+            ) : (
+              <DataTable caption={t('applications:list.caption')} columns={columns} rows={rows} getRowKey={(row) => row.id} />
+            )}
+          </div>
+        </>
+      )}
 
       <ApplicationActivityModal
         application={activity}

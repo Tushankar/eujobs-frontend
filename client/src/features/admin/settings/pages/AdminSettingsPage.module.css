@@ -22,14 +22,10 @@
   }
 }
 
-/*
- * Two columns (as `sticky-side` elsewhere): the shorter column stays pinned under the header while the taller one
- * scrolls with the page. Both columns get it because either can be the shorter one (an open row grows the left).
- */
-@media (min-width: 1200px) {
-  .layout > * {
-    position: sticky;
-    top: calc(var(--header-height) + 24px);
+/* Both columns are `sticky-side` (either can be the shorter one); this layout only has two columns from 1200px. */
+@media (max-width: 1199px) {
+  .layout > :global(.sticky-side) {
+    position: static;
   }
 }
 

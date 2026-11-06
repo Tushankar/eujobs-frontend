@@ -14,7 +14,7 @@ export default function VerificationCard() {
   if (!state) return null
   return (
     <section className={styles.card} data-card="verification">
-      <VerificationHead />
+      <VerificationHead verified={state.verified} />
       <ul className={styles.checks}>
         {state.checks.map((check) => {
           const status = !check.required && check.status === 'not_started' ? 'not_needed' : check.status
@@ -33,11 +33,9 @@ export default function VerificationCard() {
         <span className={styles.muted}>{t('completeness:verification.progress')}</span>
         <span className={styles.strong}>{t('completeness:verification.count', { done: state.verifiedCount, total: state.requiredCount })}</span>
       </div>
-      {state.verified && (
-        <PillBadge tone="success" dot className={styles.locked}>
-          {t('completeness:verification.verified')}
-        </PillBadge>
-      )}
+      <span className={styles.bar} aria-hidden="true">
+        <span style={{ width: `${state.requiredCount ? (state.verifiedCount / state.requiredCount) * 100 : 0}%` }} />
+      </span>
       <Button as={Link} to="/candidate/verification" variant="secondary" fullWidth className={styles.verifyButton} rightIcon={<Icon as={ArrowRight} size={12} />}>
         {t('completeness:verification.button')}
       </Button>
@@ -45,7 +43,8 @@ export default function VerificationCard() {
   )
 }
 
-function VerificationHead() {
+/** Title and lead; a verified profile shows the Verified pill where the icon sits. */
+function VerificationHead({ verified }) {
   const { t } = useTranslation()
   return (
     <div className={styles.head}>
@@ -53,9 +52,15 @@ function VerificationHead() {
         <h2 className={styles.cardTitle}>{t('completeness:verification.title')}</h2>
         <p className={styles.verifyText}>{t('completeness:verification.lead')}</p>
       </div>
-      <span className={styles.roundTile}>
-        <Icon as={CircleCheck} size={18} strokeWidth={1.5} />
-      </span>
+      {verified ? (
+        <PillBadge tone="success" dot className={styles.headBadge}>
+          {t('completeness:verification.verified')}
+        </PillBadge>
+      ) : (
+        <span className={styles.roundTile}>
+          <Icon as={CircleCheck} size={18} strokeWidth={1.5} />
+        </span>
+      )}
     </div>
   )
 }
@@ -82,6 +87,7 @@ function VerificationCardSkeleton() {
           <span className={styles.muted}>{t('completeness:verification.progress')}</span>
           <Skeleton width={40} height={8} />
         </div>
+        <span className={styles.bar} aria-hidden="true" />
       </SkeletonRegion>
       <Button as={Link} to="/candidate/verification" variant="secondary" fullWidth className={styles.verifyButton} rightIcon={<Icon as={ArrowRight} size={12} />}>
         {t('completeness:verification.button')}

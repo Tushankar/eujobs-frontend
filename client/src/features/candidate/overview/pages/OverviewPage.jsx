@@ -109,7 +109,7 @@ export default function OverviewPage() {
       </div>
 
       <div className={styles.columns}>
-        <section className={styles.main}>
+        <section className={`${styles.main} sticky-side`}>
           <div className={styles.sectionHead}>
             <div>
               <h2 className={styles.sectionTitle}>{t('findJobs:overview.opportunities')}</h2>
@@ -162,7 +162,7 @@ export default function OverviewPage() {
           </p>
         </section>
 
-        <aside className={styles.rail} aria-label={t('findJobs:overview.rail')}>
+        <aside className={`${styles.rail} sticky-side`} aria-label={t('findJobs:overview.rail')}>
           <InsightCard />
           <ProfileStrengthCard />
           <VerificationCard />

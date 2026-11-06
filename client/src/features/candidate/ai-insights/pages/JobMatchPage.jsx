@@ -105,7 +105,7 @@ export default function JobMatchPage() {
       {(rolesLoading || page.isLoading) && <JobMatchSkeleton />}
       {evidence && (
         <div className={cx(styles.layout, busy && styles.busy)} aria-busy={busy || undefined}>
-          <div className={styles.main}>
+          <div className={`${styles.main} sticky-side`}>
             <Panel padding={24} aria-labelledby="fit-title">
               <div className={styles.fitHead}>
                 <SectionHeading id="fit-title" className={styles.fitTitle} title={t('jobMatch.fit')} description={t('jobMatch.fitLead')} />

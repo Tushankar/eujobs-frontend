@@ -89,7 +89,8 @@
     "railText": "Enregistrez le poste et revenez-y quand vous serez prêt.",
     "save": "Enregistrer pour plus tard",
     "saved": "Enregistrée pour plus tard",
-    "aboutCompany": "À propos de {{company}}"
+    "aboutCompany": "À propos de l’entreprise",
+    "companyJobs": "Voir les offres de {{company}}"
   },
   "overview": {
     "morning": "Bonjour, {{name}}",

@@ -6,7 +6,7 @@ import { openUpgrade } from '@/app/upgrade.js'
 import { cx } from '@/utils/cx.js'
 import { Button, Icon, IconButton, Panel, Skeleton, SkeletonRegion } from '@/components/ui'
 import ConfirmDialog from '@/components/common/ConfirmDialog.jsx'
-import EmptyState from '@/components/common/EmptyState.jsx'
+import GetStartedCard from '@/components/common/GetStartedCard.jsx'
 import PageTitle from '@/components/common/PageTitle.jsx'
 import { PlanGate } from '@/features/candidate/billing/components/RequirePlan.jsx'
 import { useFormat } from '@/lib/preferences.js'
@@ -41,9 +41,12 @@ export default function JobAlertsPage() {
     </Button>
   )
 
+  // No alerts yet: the get-started card holds the only Create action.
+  const noAlerts = alerts.length === 0
+
   return (
     <div>
-      <PageTitle title={t('jobAlerts:title')} description={t('jobAlerts:description')} actions={createButton} />
+      <PageTitle title={t('jobAlerts:title')} description={t('jobAlerts:description')} actions={!noAlerts && createButton} />
 
       {paused && (
         <Panel padding={20} className={styles.paused} data-alerts-paused>
@@ -58,8 +61,14 @@ export default function JobAlertsPage() {
       )}
 
       <div className={styles.list}>
-        {alerts.length === 0 ? (
-          <EmptyState icon={Bell} title={t('jobAlerts:empty')} description={t('jobAlerts:emptyText')} action={createButton} />
+        {noAlerts ? (
+          <GetStartedCard
+            id="alerts-start-title"
+            title={t('jobAlerts:start.title')}
+            text={t('jobAlerts:start.text')}
+            steps={t('jobAlerts:start.steps', { returnObjects: true })}
+            action={createButton}
+          />
         ) : (
           <ul className={styles.items}>
             {alerts.map((alert) => {

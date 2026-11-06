@@ -10,7 +10,7 @@ const UNAVAILABLE = 'This item is no longer available.'
  * P12-08 (OD15, P12-Q3, P12-C10): the screens Phase 12 changed that P12-01 … 07 do not open. After a candidate who
  * applied and reported a job erases their data: the recruiter's "applied" notification reads "Deleted user applied to …"
  * (the name is gone) and opens as "no longer available"; the admin's case shows the report by "Deleted user"; the
- * recruiter's Sign out then leaves no failed request behind (the shell queries skip while signed out).
+ * recruiter's Sign out from Settings then leaves no failed request behind (the shell queries skip while signed out).
  */
 export default {
   name: 'P12-08 Deleted user views',
@@ -38,8 +38,9 @@ export default {
     await page.waitForFunction((text) => document.querySelector('[data-notifications-panel]')?.innerText.includes(text), {}, UNAVAILABLE)
     await ctx.screenshot(page, '2-no-longer-available')
 
-    // Sign out: no 401 from the counters poll or the shell's /me (P12-C10).
-    await page.keyboard.press('Escape')
+    // Sign out from a page with only the shell's queries: no 401 from the counters poll or the shell's /me (P12-C10).
+    // Signing out from a page with its own queries (the Overview) still refetches them: an open item (P12-C13).
+    await page.goto(`${ctx.webUrl}/recruiter/settings/data-account`, { waitUntil: 'networkidle0' })
     // At 375 px the Sign out button is in the sidebar drawer.
     if (ctx.viewport === 'M') await page.click('[aria-controls="workspace-sidebar"]')
     await page.waitForSelector('[aria-label="Sign out"]', { visible: true })

@@ -2,8 +2,24 @@
   "title": "Let the right work find you.",
   "description": "Thoughtful updates. On your terms. Never just more noise.",
   "create": "Create job alert",
-  "empty": "No job alerts yet",
-  "emptyText": "Create an alert and we’ll email you matching roles as they are published.",
+  "start": {
+    "title": "Create your first job alert",
+    "text": "Describe the work you want once, and new roles that match come to your inbox.",
+    "steps": [
+      {
+        "title": "Choose your keywords",
+        "text": "A job title, skills or a company. Every word must appear in the role."
+      },
+      {
+        "title": "Pick where",
+        "text": "Narrow it to one city, or leave it open for the whole country."
+      },
+      {
+        "title": "Choose how often",
+        "text": "Instant, a daily digest or a weekly digest. Pause or edit it any time."
+      }
+    ]
+  },
   "frequency": {
     "instant": "Instant",
     "daily": "Daily digest",

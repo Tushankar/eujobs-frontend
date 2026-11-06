@@ -1,0 +1,32 @@
+/* The paid plan (Plus, Recruiter Plus): a flat gold pill, no gradient or glow. */
+.badge {
+  display: inline-flex;
+  align-items: center;
+  gap: 5px;
+  margin-top: 8px;
+  padding: 3px 10px 3px 8px;
+  border: 1px solid #e3c878;
+  border-radius: var(--radius-full);
+  background: #fbf4df;
+  font-size: 11px;
+  font-weight: 600;
+  line-height: 16px;
+  letter-spacing: 0.01em;
+  white-space: nowrap;
+  color: #6b4e0e;
+}
+
+.badge svg {
+  flex-shrink: 0;
+  color: #b8860b;
+  fill: #e8b931;
+}
+
+/* The sidebar's identity block is narrow and its text is 9-11px. */
+.small {
+  gap: 4px;
+  margin-top: 3px;
+  padding: 1px 7px 1px 5px;
+  font-size: 9.5px;
+  line-height: 14px;
+}

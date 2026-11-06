@@ -2,8 +2,24 @@
   "title": "Deja que el trabajo adecuado te encuentre.",
   "description": "Novedades útiles, a tu manera. Nunca más ruido.",
   "create": "Crear alerta de empleo",
-  "empty": "Aún no tienes alertas de empleo",
-  "emptyText": "Crea una alerta y te enviaremos por correo las ofertas que coincidan en cuanto se publiquen.",
+  "start": {
+    "title": "Crea tu primera alerta de empleo",
+    "text": "Describe una vez el trabajo que buscas y las ofertas nuevas que encajen llegarán a tu correo.",
+    "steps": [
+      {
+        "title": "Elige tus palabras clave",
+        "text": "Un puesto, habilidades o una empresa. Cada palabra debe aparecer en la oferta."
+      },
+      {
+        "title": "Elige dónde",
+        "text": "Limítala a una ciudad o déjala abierta para todo el país."
+      },
+      {
+        "title": "Elige la frecuencia",
+        "text": "Al instante, un resumen diario o uno semanal. Pausa o edítala cuando quieras."
+      }
+    ]
+  },
   "frequency": {
     "instant": "Al momento",
     "daily": "Resumen diario",

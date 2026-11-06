@@ -129,7 +129,7 @@ export default function CourseDetailsPage() {
       <PageTitle eyebrow={`${course.category} · ${text.level(course)}`} title={course.title} description={course.lead} actions={<PillBadge tone="accent">{text.duration(course)}</PillBadge>} />
 
       <div className={styles.layout}>
-        <div className={styles.main}>
+        <div className={`${styles.main} sticky-side`}>
           <figure className={styles.hero}>
             {course.coverUrl && <img src={course.coverUrl} alt="" className={styles.heroImage} width={784} height={320} />}
             <figcaption className={styles.caption}>

@@ -115,7 +115,7 @@ export default function JobWizard({ initialValues, initialStep = 0, reachable = 
   return (
     <div className={styles.shell}>
       <div className={styles.wizard}>
-        <aside className={styles.sidebar}>
+        <aside className={`${styles.sidebar} sticky-side`}>
           <div className={styles.progress}>
             <p className={styles.progressText}>{t('jobs:wizard.progress', { done: doneCount, total: sections })}</p>
             <div className={styles.bar} role="progressbar" aria-valuemin={0} aria-valuemax={sections} aria-valuenow={doneCount} aria-label={t('jobs:wizard.progress', { done: doneCount, total: sections })}>
@@ -144,7 +144,7 @@ export default function JobWizard({ initialValues, initialStep = 0, reachable = 
           </ol>
         </aside>
 
-        <form className={styles.form} onSubmit={handleSubmit} noValidate>
+        <form className={`${styles.form} sticky-side`} onSubmit={handleSubmit} noValidate>
           <div className={styles.header}>
             <p className={styles.eyebrow}>{t('jobs:wizard.stepCount', { current: step + 1, total: JOB_STEPS.length })}</p>
             <h2 className={styles.title} ref={headingRef} tabIndex={-1}>
@@ -192,7 +192,7 @@ export default function JobWizard({ initialValues, initialStep = 0, reachable = 
           </div>
         </form>
 
-        <JobPreviewCard values={values} companyName={companyName} className={styles.preview} />
+        <JobPreviewCard values={values} companyName={companyName} className={`${styles.preview} sticky-side`} />
       </div>
     </div>
   )

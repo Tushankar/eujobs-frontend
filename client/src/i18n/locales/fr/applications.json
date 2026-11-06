@@ -44,11 +44,31 @@
     "status": "Statut",
     "nextStep": "Prochaine étape",
     "viewActivity": "Voir l’activité",
-    "empty": "Aucune candidature pour l’instant",
-    "emptyText": "Postulez à un poste : il apparaîtra ici avec son statut.",
     "emptyFiltered": "Aucune candidature avec ce statut",
     "emptyFilteredText": "Les candidatures avec ce statut apparaîtront ici.",
     "findJobs": "Trouver un emploi"
+  },
+  "start": {
+    "title": "Envoyez votre première candidature",
+    "text": "Chaque candidature envoyée est suivie ici, avec son statut et l’historique daté de chaque étape.",
+    "steps": [
+      {
+        "title": "Trouvez un poste",
+        "text": "Cherchez par compétence, ville ou mode de travail, ou partez des offres ci-dessous."
+      },
+      {
+        "title": "Postulez depuis l’offre",
+        "text": "Envoyez votre profil et votre CV à l’entreprise en quelques étapes."
+      },
+      {
+        "title": "Suivez chaque étape",
+        "text": "Suivez chaque changement de statut et écrivez à l’entreprise une fois votre candidature envoyée."
+      }
+    ],
+    "suggestions": "Offres auxquelles postuler",
+    "matchedText": "Des postes qui partagent des compétences avec votre profil.",
+    "recentText": "Les postes les plus récents de votre marché.",
+    "viewAll": "Tout voir"
   },
   "nextStep": {
     "applied": "L’entreprise a reçu votre candidature.",

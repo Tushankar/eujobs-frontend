@@ -1,4 +1,4 @@
-import { useEffect, useRef } from 'react'
+import { useEffect, useRef, useState } from 'react'
 import { useTranslation } from 'react-i18next'
 import { useDispatch } from 'react-redux'
 import { Link, useParams } from 'react-router-dom'
@@ -14,6 +14,7 @@ import { cx } from '@/utils/cx.js'
 import { useMarkReadMutation, useSendMessageMutation, useThread } from '../api.js'
 import Counterpart from '../components/Counterpart.jsx'
 import MessageForm from '../components/MessageForm.jsx'
+import ReplySuggestions from '../components/ReplySuggestions.jsx'
 import styles from './ThreadPage.module.css'
 
 // The loading thread's bubbles: whose side, width and lines.
@@ -70,6 +71,8 @@ export default function ThreadPage() {
   const [markRead] = useMarkReadMutation()
   const [send] = useSendMessageMutation()
   const end = useRef(null)
+  // A picked suggested reply, handed to the composer.
+  const [draft, setDraft] = useState(null)
   const inboxPath = `/${me.role}/messages`
   const unread = data?.conversation.unread ?? 0
   const count = data?.items.length ?? 0
@@ -118,17 +121,29 @@ export default function ThreadPage() {
           {data.items.map((message) => (
             <li key={message.id} className={cx(styles.message, message.mine && styles.mine)} data-message={message.mine ? 'mine' : 'theirs'}>
               {message.mine ? (
-                <p className={styles.bubble}>{message.body}</p>
+                <>
+                  <p className={styles.bubble}>{message.body}</p>
+                  <time className={styles.time} dateTime={message.createdAt}>
+                    {format.dateTime(message.createdAt)}
+                  </time>
+                </>
               ) : (
-                // M-144, M-088: the other side's message in the reader's language on demand
-                <Translatable source={{ entity: 'message', id: message.id, field: 'body' }} texts={[message.body]}>
+                // M-144, M-088: the other side's message in the reader's language on demand; time, Translate and Report on one line
+                <Translatable
+                  source={{ entity: 'message', id: message.id, field: 'body' }}
+                  texts={[message.body]}
+                  meta={
+                    <>
+                      <time className={styles.time} dateTime={message.createdAt}>
+                        {format.dateTime(message.createdAt)}
+                      </time>
+                      <ReportButton targetType="message" targetId={message.id} size="sm" className={styles.report} />
+                    </>
+                  }
+                >
                   {([body]) => <p className={styles.bubble}>{body}</p>}
                 </Translatable>
               )}
-              <time className={styles.time} dateTime={message.createdAt}>
-                {format.dateTime(message.createdAt)}
-              </time>
-              {!message.mine && <ReportButton targetType="message" targetId={message.id} size="sm" className={styles.report} />}
             </li>
           ))}
         </ol>
@@ -149,7 +164,16 @@ export default function ThreadPage() {
               </Button>
             </div>
           ) : (
-            <MessageForm submitLabel={t('messages:thread.send')} onSubmit={(body) => send({ id: conversationId, body }).unwrap()} resetOnSuccess />
+            <>
+              <ReplySuggestions conversationId={conversationId} lastMessage={data.items.at(-1)} onPick={setDraft} />
+              <MessageForm
+                submitLabel={t('messages:thread.send')}
+                placeholder={t('messages:form.placeholder')}
+                draft={draft}
+                onSubmit={(body) => send({ id: conversationId, body }).unwrap()}
+                resetOnSuccess
+              />
+            </>
           )}
         </footer>
       </Panel>

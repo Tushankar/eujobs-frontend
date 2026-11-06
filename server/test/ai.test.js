@@ -39,7 +39,8 @@ const plus = async (user) => {
   await Subscription.create({ userId: user._id, planKey: 'plus', status: 'active' })
   return user
 }
-const responses = () => aiStub.calls.filter((call) => call.kind === 'response')
+// The generated texts these tests are about; the skill-name lookup (21ecf3f) also calls the model when skills are saved.
+const responses = () => aiStub.calls.filter((call) => call.kind === 'response' && call.text?.format?.name !== 'skill_names')
 
 async function market() {
   const { user: recruiter, company } = await approvedRecruiter()

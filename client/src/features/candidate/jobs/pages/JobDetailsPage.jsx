@@ -1,9 +1,10 @@
 import { useTranslation } from 'react-i18next'
 import { Link, useParams } from 'react-router-dom'
-import { ArrowLeft, Bookmark, Building2, BriefcaseBusiness, Check, Globe, MapPin, SearchX, Users } from 'lucide-react'
+import { ArrowLeft, ArrowUpRight, Bookmark, BriefcaseBusiness, Check, ChevronRight, Globe, MapPin, SearchX } from 'lucide-react'
 import { cx } from '@/utils/cx.js'
 import { Button, CompanyLogo, Icon, Skeleton, SkeletonRegion } from '@/components/ui'
 import EmptyState from '@/components/common/EmptyState.jsx'
+import SkillPills from '@/components/common/SkillPills.jsx'
 import aiGlyph from '@/assets/icons/ai-glyph-blue.svg'
 import Translatable from '@/features/ai/components/Translatable.jsx'
 import { ApplyButton } from '@/features/candidate/applications/components/ApplyFlow.jsx'
@@ -16,6 +17,9 @@ import { useGetJobQuery, useSaveToggle } from '../api.js'
 import MatchBadge from '../components/MatchBadge.jsx'
 import styles from './JobDetailsPage.module.css'
 import { useMarkSeen } from '@/features/notifications/api.js'
+
+/** The company website as its bare host ("kyptronix.com"); the server always stores it with https://. */
+const hostOf = (website) => new URL(website).hostname.replace(/^www\./, '')
 
 /** A bulleted section; with `source`, the items can be translated on demand (M-144). */
 function ListSection({ title, items, source }) {
@@ -48,13 +52,7 @@ function SkillSection({ title, skills }) {
   return (
     <section className={styles.section}>
       <h2 className={styles.h2}>{title}</h2>
-      <ul className={styles.skills}>
-        {skills.map((skill) => (
-          <li key={skill} className={styles.skill}>
-            {skill}
-          </li>
-        ))}
-      </ul>
+      <SkillPills skills={skills} className={styles.skills} />
     </section>
   )
 }
@@ -170,7 +168,7 @@ export default function JobDetailsPage() {
       )}
 
       <div className={styles.layout}>
-        <article className={styles.article}>
+        <article className={`${styles.article} sticky-side`}>
           <header className={styles.hero}>
             <CompanyLogo name={company.displayName} id={company.id} src={company.logoUrl ?? undefined} size={44} />
             <div className={styles.heroText}>
@@ -239,28 +237,43 @@ export default function JobDetailsPage() {
             <ReportButton targetType="job" targetId={job.id} size="sm" className={styles.report} />
           </section>
 
-          <section className={styles.card}>
-            <h2 className={styles.aboutTitle}>
-              <VerifiedCompany name={t('findJobs:details.aboutCompany', { company: company.displayName })} verified={company.verified} />
+          <section className={styles.card} aria-labelledby="about-company">
+            <h2 id="about-company" className={styles.aboutHeading}>
+              {t('findJobs:details.aboutCompany')}
             </h2>
+            <div className={styles.aboutHead}>
+              <CompanyLogo name={company.displayName} id={company.id} src={company.logoUrl ?? undefined} size={48} />
+              <div className={styles.aboutHeadText}>
+                <VerifiedCompany className={styles.aboutName} name={company.displayName} verified={company.verified} />
+                <p className={styles.aboutMeta}>{[company.industry, company.size && t(`enums:companySize.${company.size}`)].filter(Boolean).join(' · ')}</p>
+              </div>
+            </div>
             {company.description && (
               <Translatable source={{ entity: 'company', id: company.id, field: 'description' }} texts={[company.description]}>
                 {([description]) => <p className={styles.aboutText}>{description}</p>}
               </Translatable>
             )}
-            <ul className={styles.facts}>
-              {company.industry && (
+            <ul className={styles.aboutRows}>
+              {company.website && (
                 <li>
-                  <Icon as={Building2} size={13} />
-                  {company.industry}
+                  <a href={company.website} target="_blank" rel="noopener noreferrer" className={styles.aboutRow}>
+                    <span className={styles.aboutRowLabel}>
+                      <Icon as={Globe} size={16} />
+                      {hostOf(company.website)}
+                    </span>
+                    <Icon as={ArrowUpRight} size={14} className={styles.aboutRowIcon} />
+                  </a>
                 </li>
               )}
-              {company.size && (
-                <li>
-                  <Icon as={Users} size={13} />
-                  {t(`enums:companySize.${company.size}`)}
-                </li>
-              )}
+              <li>
+                <Link to={`/candidate/jobs?q=${encodeURIComponent(company.displayName)}`} className={styles.aboutRow}>
+                  <span className={styles.aboutRowLabel}>
+                    <Icon as={BriefcaseBusiness} size={16} />
+                    {t('findJobs:details.companyJobs', { company: company.displayName })}
+                  </span>
+                  <Icon as={ChevronRight} size={14} className={styles.aboutRowIcon} />
+                </Link>
+              </li>
             </ul>
             <ReportButton targetType="company" targetId={company.id} size="sm" className={styles.report} />
           </section>

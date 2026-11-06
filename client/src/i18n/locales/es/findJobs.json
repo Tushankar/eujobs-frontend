@@ -89,7 +89,8 @@
     "railText": "Guarda el puesto y vuelve a él cuando estés listo.",
     "save": "Guardar para más tarde",
     "saved": "Guardada para más tarde",
-    "aboutCompany": "Sobre {{company}}"
+    "aboutCompany": "Sobre la empresa",
+    "companyJobs": "Ver ofertas de {{company}}"
   },
   "overview": {
     "morning": "Buenos días, {{name}}",

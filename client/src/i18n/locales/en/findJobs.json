@@ -85,7 +85,8 @@
     "railText": "Save the role and come back to it when you are ready.",
     "save": "Save for later",
     "saved": "Saved for later",
-    "aboutCompany": "About {{company}}"
+    "aboutCompany": "About the company",
+    "companyJobs": "See jobs at {{company}}"
   },
   "overview": {
     "morning": "Good morning, {{name}}",

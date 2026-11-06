@@ -2,8 +2,24 @@
   "title": "Laissez le bon poste venir à vous.",
   "description": "Des nouvelles utiles, à votre rythme. Jamais du bruit en plus.",
   "create": "Créer une alerte emploi",
-  "empty": "Aucune alerte emploi pour le moment",
-  "emptyText": "Créez une alerte et nous vous enverrons par e-mail les offres correspondantes dès leur publication.",
+  "start": {
+    "title": "Créez votre première alerte emploi",
+    "text": "Décrivez une fois le poste que vous cherchez, et les nouvelles offres correspondantes arrivent dans votre boîte mail.",
+    "steps": [
+      {
+        "title": "Choisissez vos mots-clés",
+        "text": "Un intitulé, des compétences ou une entreprise. Chaque mot doit figurer dans l’offre."
+      },
+      {
+        "title": "Choisissez où",
+        "text": "Limitez-la à une ville ou laissez-la ouverte à tout le pays."
+      },
+      {
+        "title": "Choisissez la fréquence",
+        "text": "Instantanée, résumé quotidien ou hebdomadaire. Mettez-la en pause ou modifiez-la à tout moment."
+      }
+    ]
+  },
   "frequency": {
     "instant": "Immédiate",
     "daily": "Récapitulatif quotidien",

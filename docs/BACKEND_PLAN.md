@@ -378,7 +378,7 @@ M-164 lets users report jobs, profiles, companies and messages. M-167 defines "R
 | P12-C10 builder call: signing out after a deletion | P12-02 found two 401s: `signOut()` resets the API cache while the workspace is still mounted, so queries that do not skip when signed out refetch without a token. Found by request timing: the 15 s counters poll and the My profile sidebar badge (`useGetMeQuery()`), both mounted on every workspace page. They now skip while signed out (the counters by `session.signedIn`, the badge through `usePreferences`), which also covers the normal Sign out. Page-level `useGetMeQuery()` calls without a skip remain on the candidate and recruiter Overview, the apply flow and the job wizard; signing out from those pages may still show one 401 (not changed: other sessions own those screens). | 2026-11-05 |
 | P12-C11 builder call: npm audit | server: 3 moderate, one chain: archiver 8 → readdir-glob 3.0.0 → minimatch 10.2.6 (GHSA-g3hv-75wg-m249, DoS on crafted glob patterns; fixed in minimatch ≥ 11.0.1). readdir-glob's latest pins `^10.2.2`; the suggested fix downgrades to archiver 7 (a different API). Not reachable here: only archiver's `glob()`/`directory()` use readdir-glob, and the code never calls them (it appends buffers and named files). Left as is; re-check when readdir-glob updates. client and e2e: 0. | 2026-11-05 |
 | P12-C12 builder call: P12-06 | The journeys create accounts, profiles, approvals and the Plus subscription through the API (their screens were verified in P2-01, P3-09, P4-03, P5-01/02); applying, the stage move, the French reply, Checkout for the course and every role's view are done in the browser on the same accounts. | 2026-11-05 |
-| P12-C13 builder call: closing Phase 12 | P12-08 covers the screens Phase 12 changed that P12-01 … 07 do not open (the notification row and the moderation case with a removed name, Sign out without a 401). `foundation.test.js` enum counts brought in line with the catalogue: `activityType` 14 (`note_added`, `66846b2`) and `planKey` 4 (`recruiter_free`), committed in `b51ccab`; `aiKind` 10 (`skill_name`) was updated by its own session in `21ecf3f`. All 60 counts match. | 2026-11-05 |
+| P12-C13 builder call: closing Phase 12 | P12-08 covers the screens Phase 12 changed that P12-01 … 07 do not open (the notification row and the moderation case with a removed name, Sign out without a 401). `foundation.test.js` enum counts brought in line with the catalogue: `activityType` 14 (`note_added`, `66846b2`) and `planKey` 4 (`recruiter_free`), committed in `b51ccab`; `aiKind` 10 (`skill_name`) was updated by its own session in `21ecf3f`. All 60 counts match. `ai.test.js`: 3 tests failed after `21ecf3f` because its skill-name lookup is also a stubbed model call; their `responses()` helper now leaves out the `skill_names` format (14/14). Open (found by P12-08, not changed: the regular Sign out, not Phase 12): signing out from a page with its own queries (the recruiter Overview: momentum, funnel, jobs) refetches them without a session after the cache reset, giving 401s; P12-08 therefore signs out from Settings, where only the shell queries run. | 2026-11-05 |
 
 _(Answers to any new question asked during the build are appended to this table.)_
 
@@ -2967,7 +2967,7 @@ The course-purchase path is built here but verified in Phase 8. AI pages are gat
 | P12-05 | Full sweep | D, M | Every route × every role × en/es/fr: no console errors, failed requests, missing keys or overflow. |
 | P12-06 | Cross-role journeys | D, M | (1) A new fr candidate signs up, verifies, onboards, completes the profile, gets approvals, subscribes in EUR, applies; the recruiter moves stages; fr emails arrive; they message; the recruiter rejects; the candidate sees "Not selected". (2) A new recruiter signs up, is approved, publishes; a Plus candidate gets the instant alert and applies. (3) The admin restricts that job → candidates see "no longer available". (4) A course purchase → certificate → public verification. (5) Candidate erasure → every view stays consistent. |
 | P12-07 | Static audit | — | `node e2e/audit-static.js` reports 0 findings. |
-| P12-08 | Deleted user views | D, M | After an applicant who reported a job erases their data: the recruiter's notification reads "Deleted user applied to …" and opens as "no longer available"; Sign out leaves no failed request; the admin's case lists the report by "Deleted user". (Added by the builder, P12-C13.) |
+| P12-08 | Deleted user views | D, M | After an applicant who reported a job erases their data: the recruiter's notification reads "Deleted user applied to …" and opens as "no longer available"; Sign out from Settings leaves no failed request; the admin's case lists the report by "Deleted user". (Added by the builder, P12-C13.) |
 
 **API tests.** Export contents for both roles; the erasure cascade (one assertion per collection); the recruiter deletion cascade; the retention sweep; tombstones; Stripe calls (stubbed in API tests, real in the e2e).
 
@@ -2986,7 +2986,7 @@ The course-purchase path is built here but verified in Phase 8. AI pages are gat
 | Command | Result |
 |---|---|
 | `npm test -- test/privacy.test.js` | 11/11 (the 4 failures found in 11c are fixed: filename quoting ×2 and a `??` in an assertion were test mistakes; the retention test dated its files from real time instead of the 03:00 tick) |
-| `cd server && npm test` (full) | RESULT_FULL |
+| `cd server && npm test` (full, 18:04–18:26, through the lock) | 410 tests: 407 pass, 3 fail, 0 todo. The 3 were in `ai.test.js`, caused by `21ecf3f` (P12-C13), fixed: `ai.test.js` 14/14. Confirmation run after the fixes (2026-11-06 11:09–11:30, through the lock, with other sessions' uncommitted work in the tree): **411 tests, 411 pass, 0 fail, 0 todo.** An earlier full run (16:12–16:34): 406/407, the stale `activityType` count, fixed with `planKey` (`foundation.test.js` counts all match the catalogue). |
 | `npm run lint` server, client; `npx oxlint .` e2e | clean |
 | `cd client && npm run build` (check-i18n first) | clean; "es, fr match en" |
 | `node e2e/audit-static.js` | 0 findings (822 files, 20 seeded names); its first run found 2, fixed (P12-C8) |
@@ -2997,6 +2997,7 @@ The course-purchase path is built here but verified in Phase 8. AI pages are gat
 | P12-05 (D, M) | runs in task 9 (the sweep in en, es and fr; P11-01 and the en sweep passed in 11c) |
 | P12-06 (D, M) | pass |
 | P12-07 | pass |
+| P12-08 (D, M) | pass (2026-11-06; first run found the Overview sign-out 401s, P12-C13, and now signs out from Settings) |
 | `npm audit` | client 0, e2e 0, server 3 moderate (one chain, not reachable; P12-C11) |
 
 **Open before task 9.** P10-05 at 375 px (the 4 px overflow seen once in 11c) is watched in the full run.

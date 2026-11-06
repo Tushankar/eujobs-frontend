@@ -71,7 +71,7 @@ export default function LearningDetailsPage() {
       />
 
       <div className={styles.layout}>
-        <div className={styles.main}>
+        <div className={`${styles.main} sticky-side`}>
           {preview && (
             <section className={styles.hero} aria-labelledby="intro-heading">
               <div className={styles.heroTop}>

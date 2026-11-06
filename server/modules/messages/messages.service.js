@@ -1,9 +1,10 @@
 import { LIMITS } from '../../config/limits.js'
 import { AppError, fieldError } from '../../lib/errors.js'
 import { signedUrl } from '../../lib/files.js'
+import { skillOverlap } from '../../lib/skills.js'
 import { Application } from '../applications/applications.model.js'
 import { CandidateProfile } from '../candidates/candidates.model.js'
-import { write } from '../ai/ai.facts.js'
+import { jobFacts, write } from '../ai/ai.facts.js'
 import { PROMPTS } from '../ai/ai.prompts.js'
 import { Company } from '../companies/companies.model.js'
 import { logoUrls } from '../companies/companies.service.js'
@@ -94,8 +95,60 @@ export async function getMessages(user, company, id) {
 }
 
 /**
+ * The job the thread is about: its own job, else the candidate's latest active application to the company, else
+ * (`inferred`, a recruiter wrote about "a role" without picking one) the company's open job sharing the most skills
+ * with the candidate, newest first on a tie; null when the company has none open.
+ */
+async function threadJob(conversation, profile) {
+  if (conversation.jobId) return { job: await Job.findById(conversation.jobId), inferred: false }
+  const application = await Application.findOne({ candidateId: conversation.candidateId, companyId: conversation.companyId, status: { $ne: 'withdrawn' } }, 'jobId').sort({ createdAt: -1 })
+  if (application) return { job: await Job.findById(application.jobId), inferred: false }
+  const open = await Job.find({ companyId: conversation.companyId, status: 'published' }).sort({ publishedAt: -1 }).limit(LIMITS.message.replySuggestions.openRoles)
+  const fit = (job) => skillOverlap(profile?.skills ?? [], job).matched.length
+  const best = open.reduce((top, job) => (!top || fit(job) > fit(top) ? job : top), null)
+  return { job: best, inferred: true, openRoles: open.map((job) => job.title) }
+}
+
+/** The candidate as both sides of the thread may know them: what Find candidates and the profile show, no salary or CV. */
+function candidateBrief(user, profile) {
+  return {
+    name: user.fullName,
+    headline: profile?.headline ?? '',
+    yearsExperience: profile?.yearsExperience ?? null,
+    skills: (profile?.skills ?? []).map((skill) => skill.standard || skill.name),
+    availability: profile?.availability ?? null,
+    workPreference: profile?.workPreference ?? null,
+    city: profile?.location?.city ?? null,
+    languages: (profile?.languages ?? []).map(({ code, level }) => `${code} ${level}`),
+    recentRoles: (profile?.workHistory ?? []).slice(0, 2).map(({ title, employer }) => [title, employer].filter(Boolean).join(' at ')),
+  }
+}
+
+/**
+ * The facts a suggested reply may use (few tokens): the job (brief and responsibilities cut short; `inferred` when the
+ * thread names none, with the company's open roles), the company and the candidate.
+ */
+async function replyContext(conversation) {
+  const R = LIMITS.message.replySuggestions
+  const [company, candidate, profile] = await Promise.all([
+    Company.findById(conversation.companyId, 'displayName industry size location'),
+    User.findById(conversation.candidateId, 'fullName'),
+    CandidateProfile.findOne({ userId: conversation.candidateId }),
+  ])
+  const { job, inferred, openRoles = [] } = await threadJob(conversation, profile)
+  const facts = job && (await jobFacts(job))
+  return {
+    job: facts && { ...facts, brief: facts.brief.slice(0, R.briefChars), responsibilities: facts.responsibilities.slice(0, R.responsibilities), inferred },
+    openRoles,
+    company: company && { name: company.displayName, industry: company.industry ?? null, size: company.size ?? null, city: company.location?.city ?? null },
+    candidate: candidate && candidateBrief(candidate, profile),
+  }
+}
+
+/**
  * GET /conversations/:id/reply-suggestions: three replies to the latest message when it is the other side's, from the
- * last few messages only (few tokens) and cached per message and language, so reopening the thread costs nothing.
+ * last few messages and the facts of the job, company and candidate (few tokens), cached per message, facts and
+ * language, so reopening the thread costs nothing.
  */
 export async function replySuggestions(user, company, id) {
   const conversation = await ownConversation(user, company, id)
@@ -103,11 +156,9 @@ export async function replySuggestions(user, company, id) {
   const latest = (await Message.find({ conversationId: conversation._id }).sort({ createdAt: -1 }).limit(R.messages)).reverse()
   const last = latest.at(-1)
   if (conversation.closedAt || !last || last.senderRole === user.role) return { messageId: last ? String(last._id) : null, replies: [] }
-  const [dto] = await conversationDtos(user, [conversation])
   const input = {
-    you: user.role,
-    otherSide: { role: otherSide(user.role), name: dto.counterpart?.name ?? null },
-    job: dto.job?.title ?? null,
+    you: user.role === 'candidate' ? 'the candidate' : 'a recruiter at the company',
+    ...(await replyContext(conversation)),
     messages: latest.map((message) => ({ from: message.senderRole === user.role ? 'you' : 'them', text: message.body.slice(0, R.chars) })),
   }
   const { replies } = await write(PROMPTS.replySuggestions, { user, input, subjectId: conversation.candidateId })

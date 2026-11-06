@@ -1,9 +1,10 @@
 import { useState } from 'react'
 import { useTranslation } from 'react-i18next'
 import { Link } from 'react-router-dom'
-import { ArrowUpRight, Bookmark, BriefcaseBusiness, ChevronDown, Globe, MapPin } from 'lucide-react'
+import { ArrowUpRight, Bookmark, BriefcaseBusiness, ChartNoAxesColumnIncreasing, ChevronDown, Globe, MapPin } from 'lucide-react'
 import { cx } from '@/utils/cx.js'
 import { CompanyLogo, Icon, IconButton, Skeleton } from '@/components/ui'
+import SkillPills from '@/components/common/SkillPills.jsx'
 import StatusBadge from '@/components/common/StatusBadge.jsx'
 import aiGlyph from '@/assets/icons/ai-glyph-blue.svg'
 import JobSummaryButton from '@/features/ai/components/JobSummaryButton.jsx'
@@ -29,7 +30,6 @@ export default function JobCard({ job, onToggleSave }) {
   const detailsPath = `/candidate/jobs/${job.id}`
   const company = job.company.displayName
   const eligible = jobText.eligible(job)
-  const tags = [job.level && t('findJobs:card.level', { level: t(`enums:jobLevel.${job.level}`), years: job.experienceYears ?? 0 }), ...job.requiredSkills].filter(Boolean)
 
   return (
     <article className={styles.card} data-job={job.id}>
@@ -69,17 +69,19 @@ export default function JobCard({ job, onToggleSave }) {
           <Icon as={BriefcaseBusiness} size={12} />
           {t(`enums:employmentType.${job.employmentType}`)}
         </span>
+        {job.level && (
+          <span className={styles.metaItem}>
+            <Icon as={ChartNoAxesColumnIncreasing} size={12} />
+            {t('findJobs:card.level', { level: t(`enums:jobLevel.${job.level}`), years: job.experienceYears ?? 0 })}
+          </span>
+        )}
         {job.salary && <span className={styles.salary}>{jobText.salary(job)}</span>}
       </div>
       {eligible && <p className={styles.eligible}>{t('findJobs:card.eligible', { countries: eligible })}</p>}
 
-      <ul className={styles.tags} aria-label={t('findJobs:card.requirements')}>
-        {tags.map((tag) => (
-          <li key={tag} className={styles.tag}>
-            {tag}
-          </li>
-        ))}
-      </ul>
+      {job.requiredSkills.length > 0 && (
+        <SkillPills skills={job.requiredSkills} label={t('findJobs:card.requirements')} className={styles.tags} />
+      )}
 
       <div className={styles.footer}>
         <button type="button" className={styles.why} aria-expanded={whyOpen} aria-controls={whyId} onClick={() => setWhyOpen((open) => !open)}>
@@ -130,7 +132,7 @@ export function JobCardSkeleton() {
       </div>
       <div className={styles.tags}>
         {[84, 56, 72, 64].map((width) => (
-          <Skeleton key={width} shape="block" width={width} height={23} />
+          <Skeleton key={width} shape="pill" width={width} height={28} />
         ))}
       </div>
       <div className={styles.footer}>

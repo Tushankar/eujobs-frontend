@@ -67,7 +67,7 @@ export default function CandidateProfilePage() {
     <>
       <BackLink />
       <div className={styles.layout}>
-        <div className={styles.main}>
+        <div className={`${styles.main} sticky-side`}>
           <ProfileSummary candidate={candidate} />
           <div className={styles.tabs}>
             <ProfileTabs basePath={`${LIST_PATH}/${candidate.id}`} />

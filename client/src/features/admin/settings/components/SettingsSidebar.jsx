@@ -174,7 +174,7 @@ function AccessCard({ me }) {
 /** Right-hand column of admin Settings: things to do, quick actions and the admin's access. */
 export default function SettingsSidebar({ me }) {
   return (
-    <div className={styles.sidebar}>
+    <div className={`${styles.sidebar} sticky-side`}>
       <TodoCard me={me} />
       <QuickActionsCard me={me} />
       <AccessCard me={me} />

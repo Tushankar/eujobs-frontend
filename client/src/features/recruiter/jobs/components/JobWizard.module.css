@@ -202,18 +202,6 @@
   display: none;
 }
 
-/*
- * Every column is sticky: whichever is shorter stays pinned under the header while the tallest one scrolls the page,
- * so no empty gap opens beside a short step. (A sticky column never outgrows the grid, so the tallest just scrolls.)
- */
-@media (min-width: 1024px) {
-  .sidebar,
-  .form,
-  .preview {
-    position: sticky;
-    top: calc(var(--header-height) + 24px);
-  }
-}
 
 @container (min-width: 1080px) {
   .wizard {

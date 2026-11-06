@@ -44,11 +44,31 @@
     "status": "Estado",
     "nextStep": "Siguiente paso",
     "viewActivity": "Ver actividad",
-    "empty": "Aún no tienes candidaturas",
-    "emptyText": "Postúlate a un puesto y aparecerá aquí con su estado.",
     "emptyFiltered": "No hay candidaturas con este estado",
     "emptyFilteredText": "Las candidaturas con este estado aparecerán aquí.",
     "findJobs": "Buscar empleo"
+  },
+  "start": {
+    "title": "Envía tu primera candidatura",
+    "text": "Cada candidatura que envíes aparece aquí, con su estado y un historial fechado de cada paso.",
+    "steps": [
+      {
+        "title": "Encuentra un puesto",
+        "text": "Busca por habilidad, ciudad o modalidad, o empieza por las ofertas de abajo."
+      },
+      {
+        "title": "Postúlate desde la oferta",
+        "text": "Envía tu perfil y tu CV a la empresa en pocos pasos."
+      },
+      {
+        "title": "Sigue cada paso",
+        "text": "Consulta cada cambio de estado y escribe a la empresa cuando te hayas postulado."
+      }
+    ],
+    "suggestions": "Ofertas a las que puedes postularte",
+    "matchedText": "Puestos que comparten habilidades con tu perfil.",
+    "recentText": "Los puestos más recientes de tu mercado.",
+    "viewAll": "Ver todo"
   },
   "nextStep": {
     "applied": "La empresa ha recibido tu candidatura.",

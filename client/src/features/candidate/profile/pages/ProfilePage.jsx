@@ -240,7 +240,7 @@ function ProfileView({ profile }) {
       )}
 
       <div className={styles.layout}>
-        <Panel padding={32} className={styles.main}>
+        <Panel padding={32} className={`${styles.main} sticky-side`}>
           <div className={styles.identity}>
             <div className={cx(styles.avatarRing, profile.completeness.complete && styles.avatarRingDone)} title={t('completeness:progress', profile.completeness)}>
               <svg viewBox="0 0 100 100" aria-hidden="true">
@@ -503,7 +503,7 @@ function ProfileView({ profile }) {
           </Section>
         </Panel>
 
-        <aside className={styles.side}>
+        <aside className={`${styles.side} sticky-side`}>
           <Panel padding={24}>
             <CompletenessChecklist
               completeness={profile.completeness}
@@ -646,7 +646,7 @@ function ProfileSkeleton() {
           </SkeletonRegion>
         </Panel>
 
-        <aside className={styles.side}>
+        <aside className={`${styles.side} sticky-side`}>
           <Panel padding={24}>
             <div className={styles.checklistHead}>
               <h2 className={styles.sectionTitle}>{t('completeness:title')}</h2>

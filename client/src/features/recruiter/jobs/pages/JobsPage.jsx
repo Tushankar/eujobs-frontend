@@ -5,6 +5,7 @@ import { Plus, SearchX } from 'lucide-react'
 import { useGetConfigQuery } from '@/app/api.js'
 import EmptyState from '@/components/common/EmptyState.jsx'
 import FilterChips from '@/components/common/FilterChips.jsx'
+import GetStartedCard from '@/components/common/GetStartedCard.jsx'
 import PageTitle from '@/components/common/PageTitle.jsx'
 import { Button, Icon, TextField } from '@/components/ui'
 import { useJobText } from '@/lib/jobText.js'
@@ -69,24 +70,14 @@ export default function JobsPage() {
       <PageTitle title={t('jobs:page.title')} description={t('jobs:page.description')} actions={!noJobs && <div className={styles.actions}>{createButton}</div>} />
 
       {noJobs ? (
-        <section className={styles.start} aria-labelledby="jobs-start-title">
-          <div className={styles.startHead}>
-            <h2 id="jobs-start-title" className={styles.startTitle}>
-              {t('jobs:page.start.title')}
-            </h2>
-            <p className={styles.startText}>{t('jobs:page.start.text')}</p>
-          </div>
-          <ol className={styles.steps}>
-            {t('jobs:page.start.steps', { returnObjects: true }).map((step, index) => (
-              <li key={step.title} className={styles.step}>
-                <span className={styles.stepNumber}>{index + 1}</span>
-                <span className={styles.stepTitle}>{step.title}</span>
-                <span className={styles.stepText}>{step.text}</span>
-              </li>
-            ))}
-          </ol>
-          <div className={styles.startAction}>{createButton}</div>
-        </section>
+        <GetStartedCard
+          id="jobs-start-title"
+          className={styles.start}
+          title={t('jobs:page.start.title')}
+          text={t('jobs:page.start.text')}
+          steps={t('jobs:page.start.steps', { returnObjects: true })}
+          action={createButton}
+        />
       ) : (
         <>
           <div className={styles.toolbar}>

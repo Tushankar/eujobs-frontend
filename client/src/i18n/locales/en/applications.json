@@ -44,11 +44,31 @@
     "status": "Status",
     "nextStep": "Next step",
     "viewActivity": "View activity",
-    "empty": "No applications yet",
-    "emptyText": "Apply to a role and it will show up here with its status.",
     "emptyFiltered": "No applications with this status",
     "emptyFilteredText": "Applications with this status will appear here.",
     "findJobs": "Find jobs"
+  },
+  "start": {
+    "title": "Start your first application",
+    "text": "Every application you send is tracked here, with its status and a dated history of each step.",
+    "steps": [
+      {
+        "title": "Find a role",
+        "text": "Search by skill, city or work mode, or start from the jobs below."
+      },
+      {
+        "title": "Apply from the job page",
+        "text": "Send your profile and CV to the company in a few steps."
+      },
+      {
+        "title": "Track every step",
+        "text": "Follow each status change and message the company once you have applied."
+      }
+    ],
+    "suggestions": "Jobs you can apply to",
+    "matchedText": "Roles that share skills with your profile.",
+    "recentText": "The newest roles in your market.",
+    "viewAll": "View all"
   },
   "nextStep": {
     "applied": "The company has your application.",

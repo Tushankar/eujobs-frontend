@@ -2,6 +2,7 @@ import assert from 'node:assert/strict'
 import { before, describe, it } from 'node:test'
 import { ScheduledTask } from '../jobs/models.js'
 import { EmailLog } from '../lib/mail/emailLog.model.js'
+import { AiCache, AiUsage } from '../modules/ai/ai.model.js'
 import { Application, PipelineStage } from '../modules/applications/applications.model.js'
 import { CandidateProfile } from '../modules/candidates/candidates.model.js'
 import { Company } from '../modules/companies/companies.model.js'
@@ -15,10 +16,11 @@ import { User } from '../modules/users/users.model.js'
 import { VerificationSubmission } from '../modules/verification/verification.model.js'
 import { seedCatalog } from '../seed/catalog.js'
 import { PLACES } from '../seed/data/places.js'
+import { aiStub } from './helpers/ai.js'
 import { api, auth, createUser, mailTo, useTestDb } from './helpers/index.js'
 import { applicantCandidate, approvedRecruiter, listedCandidate } from './helpers/market.js'
 
-useTestDb([User, Company, Job, CandidateProfile, CvVersion, File, VerificationSubmission, Subscription, PipelineStage, Application, Conversation, Message, ScheduledTask, EmailLog, RecruiterActivity])
+useTestDb([User, Company, Job, CandidateProfile, CvVersion, File, VerificationSubmission, Subscription, PipelineStage, Application, Conversation, Message, ScheduledTask, EmailLog, RecruiterActivity, AiCache, AiUsage])
 before(() => seedCatalog())
 
 const MINUTE = 60 * 1000
@@ -259,5 +261,49 @@ describe('the new-message email (M-089, U13)', () => {
     await tickAt(16 * MINUTE)
     assert.equal(mailTo(candidate.email).length, 0)
     assert.equal(await EmailLog.countDocuments({ type: 'new_message', status: 'skipped_toggle' }), 1)
+  })
+})
+
+describe('suggested replies', () => {
+  const suggestions = (user, id) => api().get(`${v1}/conversations/${id}/reply-suggestions`).set(auth(user))
+
+  it("suggests replies to the other side's latest message from the last four only and the thread's facts, cached per message; AI plans only", async () => {
+    aiStub.reset()
+    aiStub.reply = () => ({ replies: [' Yes, happy to talk. ', 'Could you share more about the role?', 'Thanks, not right now.', 'A fourth one'] })
+    const { user: recruiter, company } = await approvedRecruiter()
+    await publish(company, recruiter)
+    const candidate = await applicantCandidate()
+    const opened = await start(recruiter, { candidateId: String(candidate._id), body: 'Hi, your profile stood out.' })
+    const id = opened.body.conversation.id
+    for (const body of ['Are you open to a call?', 'We are hiring a designer.', 'Remote is possible.', 'Reply when you can.']) await send(recruiter, id, body)
+
+    const res = await suggestions(candidate, id)
+    assert.equal(res.status, 200)
+    assert.deepEqual(res.body.replies, ['Yes, happy to talk.', 'Could you share more about the role?', 'Thanks, not right now.'])
+    const input = JSON.parse(aiStub.calls.at(-1).input)
+    assert.deepEqual(input.messages.map((message) => message.text), ['Are you open to a call?', 'We are hiring a designer.', 'Remote is possible.', 'Reply when you can.'])
+    assert.ok(input.messages.every((message) => message.from === 'them'))
+    // The thread names no job and there is no application: the company's open job closest to the candidate, flagged.
+    assert.equal(input.job.title, 'Senior Product Designer')
+    assert.equal(input.job.inferred, true)
+    assert.deepEqual(input.openRoles, ['Senior Product Designer'])
+    assert.equal(input.company.name, company.displayName)
+    assert.equal(input.candidate.name, candidate.fullName)
+    assert.equal('salaryMin' in input.candidate, false, 'never the candidate salary')
+    await suggestions(candidate, id)
+    assert.equal(aiStub.calls.filter((call) => call.text?.format.name === 'reply_suggestions').length, 1, 'cached per message')
+
+    // Nothing to answer once the latest message is the reader's own; the recruiter gets them for the reply.
+    await send(candidate, id, 'Yes, happy to talk.')
+    assert.deepEqual((await suggestions(candidate, id)).body.replies, [])
+    assert.equal((await suggestions(recruiter, id)).body.replies.length, 3)
+
+    // A Free candidate and a recruiter without Recruiter Plus: PLAN_REQUIRED.
+    const free = await applicantCandidate({ plus: false })
+    const freeThread = (await start(recruiter, { candidateId: String(free._id), body: 'Hello' })).body.conversation.id
+    assert.equal((await suggestions(free, freeThread)).status, 402)
+    const { user: freeRecruiter } = await approvedRecruiter({ plus: false })
+    assert.equal((await suggestions(freeRecruiter, id)).status, 402)
+    aiStub.reset()
   })
 })

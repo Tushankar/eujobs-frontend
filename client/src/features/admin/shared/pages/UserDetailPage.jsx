@@ -459,7 +459,7 @@ export default function UserDetailPage({ role }) {
       </Panel>
       {/* Two independent columns (LinkedIn-style): each stacks its own cards, so a long section never leaves a gap beside a short one. */}
       <div className={styles.layout}>
-        <div className={styles.column}>
+        <div className={`${styles.column} sticky-side`}>
           {candidate ? <CandidateSections user={user} part="main" /> : <RecruiterSections user={user} part="main" />}
           <History events={user.history} />
         </div>
