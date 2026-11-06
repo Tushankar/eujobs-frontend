@@ -123,8 +123,6 @@
     },
     "preferences": "Preferencias",
     "empty": {
-      "for-you": "Aún no hay ofertas que compartan tus habilidades",
-      "for-youText": "Añade habilidades a tu perfil o explora todas las oportunidades.",
       "recent": "No hay ofertas nuevas en tu país",
       "recentText": "Cambia el país en la cabecera o vuelve pronto.",
       "saved": "Aún no tienes ofertas guardadas",
@@ -133,5 +131,33 @@
     "browse": "Ver ofertas",
     "caption": "La compatibilidad muestra las pruebas. La decisión siempre es tuya.",
     "rail": "Progreso del perfil"
+  },
+  "forYou": {
+    "browse": "Ver todos los empleos",
+    "remote": "empleos en remoto",
+    "newest": "Lo más nuevo en {{place}}",
+    "openRoles_one": "{{count}} empleo abierto",
+    "openRoles_many": "{{count}} empleos abiertos",
+    "openRoles_other": "{{count}} empleos abiertos",
+    "profile": {
+      "title": "Tus coincidencias empiezan por tu perfil",
+      "text": "Añade tus habilidades y tu experiencia y ordenaremos los empleos abiertos según lo bien que encajan contigo.",
+      "action": "Completar mi perfil"
+    },
+    "plus": {
+      "title": "Consigue la búsqueda con IA de {{plan}}",
+      "text": "Tu perfil está completo. {{plan}} puntúa cada empleo abierto según tu perfil y tu CV, y explica cada coincidencia.",
+      "points": {
+        "scores": "Puntuaciones de compatibilidad",
+        "reasons": "Por qué encaja cada empleo",
+        "alerts": "Alertas de empleo por correo"
+      },
+      "action": "Mejorar a {{plan}}"
+    },
+    "alerts": {
+      "title": "Aún no hay coincidencias sólidas",
+      "text": "Los nuevos empleos se puntúan según tu perfil en cuanto se publican. Activa las alertas de empleo para enterarte antes que nadie.",
+      "action": "Activar alertas de empleo"
+    }
   }
 }

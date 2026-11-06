@@ -119,8 +119,6 @@
     },
     "preferences": "Preferences",
     "empty": {
-      "for-you": "No jobs share your skills yet",
-      "for-youText": "Add skills to your profile or browse every opportunity.",
       "recent": "No new jobs in your country",
       "recentText": "Change the country in the header, or check back soon.",
       "saved": "No saved jobs yet",
@@ -129,5 +127,32 @@
     "browse": "Browse jobs",
     "caption": "Matching shows the evidence. The decision is always yours.",
     "rail": "Profile progress"
+  },
+  "forYou": {
+    "browse": "Browse all jobs",
+    "remote": "remote roles",
+    "newest": "Newest in {{place}}",
+    "openRoles_one": "{{count}} open role",
+    "openRoles_other": "{{count}} open roles",
+    "profile": {
+      "title": "Your matches start with your profile",
+      "text": "Add your skills and work history and we’ll rank open roles by how well they fit you.",
+      "action": "Complete my profile"
+    },
+    "plus": {
+      "title": "Get AI matching with {{plan}}",
+      "text": "Your profile is complete. {{plan}} scores every open role against your profile and CV, and explains each match.",
+      "points": {
+        "scores": "Match scores",
+        "reasons": "Why each job fits",
+        "alerts": "Job alerts by email"
+      },
+      "action": "Upgrade to {{plan}}"
+    },
+    "alerts": {
+      "title": "No strong matches yet",
+      "text": "New roles are scored against your profile as soon as they’re posted. Turn on job alerts to hear about them first.",
+      "action": "Turn on job alerts"
+    }
   }
 }

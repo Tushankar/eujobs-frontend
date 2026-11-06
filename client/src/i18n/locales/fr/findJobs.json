@@ -123,8 +123,6 @@
     },
     "preferences": "Préférences",
     "empty": {
-      "for-you": "Aucune offre ne partage encore vos compétences",
-      "for-youText": "Ajoutez des compétences à votre profil ou parcourez toutes les opportunités.",
       "recent": "Aucune nouvelle offre dans votre pays",
       "recentText": "Changez de pays dans l’en-tête ou revenez bientôt.",
       "saved": "Aucune offre enregistrée pour l’instant",
@@ -133,5 +131,33 @@
     "browse": "Parcourir les offres",
     "caption": "La correspondance montre les éléments. La décision vous appartient toujours.",
     "rail": "Progression du profil"
+  },
+  "forYou": {
+    "browse": "Voir toutes les offres",
+    "remote": "offres en télétravail",
+    "newest": "Les plus récentes : {{place}}",
+    "openRoles_one": "{{count}} offre ouverte",
+    "openRoles_many": "{{count}} offres ouvertes",
+    "openRoles_other": "{{count}} offres ouvertes",
+    "profile": {
+      "title": "Vos correspondances commencent par votre profil",
+      "text": "Ajoutez vos compétences et votre parcours, et nous classerons les offres ouvertes selon leur adéquation avec vous.",
+      "action": "Compléter mon profil"
+    },
+    "plus": {
+      "title": "Profitez de la correspondance par IA avec {{plan}}",
+      "text": "Votre profil est complet. {{plan}} note chaque offre ouverte par rapport à votre profil et à votre CV, et explique chaque correspondance.",
+      "points": {
+        "scores": "Scores de correspondance",
+        "reasons": "Pourquoi chaque offre vous convient",
+        "alerts": "Alertes emploi par e-mail"
+      },
+      "action": "Passer à {{plan}}"
+    },
+    "alerts": {
+      "title": "Pas encore de correspondance solide",
+      "text": "Les nouvelles offres sont notées par rapport à votre profil dès leur publication. Activez les alertes emploi pour être informé en premier.",
+      "action": "Activer les alertes emploi"
+    }
   }
 }
