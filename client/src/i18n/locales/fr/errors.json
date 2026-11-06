@@ -35,6 +35,7 @@
   "AI_UNAVAILABLE": "Le service d’IA est indisponible pour le moment. Réessayez dans un instant.",
   "PAYMENT_PROVIDER_ERROR": "Le service de paiement est indisponible pour le moment. Réessayez dans un instant.",
   "PLACES_UNAVAILABLE": "La recherche de villes n’est pas disponible pour le moment. Réessayez dans quelques instants.",
+  "FX_UNAVAILABLE": "Les taux de change ne sont pas disponibles pour le moment : les prix n’ont pas été convertis. Réessayez dans un instant.",
   "INTERNAL_ERROR": "Une erreur s’est produite de notre côté. Réessayez.",
   "NETWORK_ERROR": "Impossible de joindre le serveur. Vérifiez votre connexion et réessayez."
 }

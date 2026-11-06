@@ -37,6 +37,8 @@ export const detailsBody = z
     coverFileId: objectId.nullable(),
     isFree: z.boolean(),
     prices: z.array(z.object({ currency: z.string().trim().toUpperCase().length(3), amountMinor: z.number().int().min(C.amountMinor.min).max(C.amountMinor.max) })),
+    // The EUR price in minor units: the server sets all 8 prices from it at the day's ECB rates; null clears them.
+    euroPrice: z.number().int().min(C.amountMinor.min).max(C.amountMinor.max).nullable(),
   })
   .partial()
 

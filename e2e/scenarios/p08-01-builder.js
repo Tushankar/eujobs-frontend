@@ -50,16 +50,20 @@ export default {
     await waitForPath(page, () => /^\/admin\/courses\/[a-f\d]{24}\/edit$/.test(location.pathname))
     const courseId = page.url().split('/').at(-2)
 
-    // Details: every learner field, a JPG cover, 7 of the 8 prices.
+    // Details: every learner field, a JPG cover and one EUR price; the draft saves itself and the server converts
+    // the other 7 currencies at the ECB rate.
     await fill(page, 'input[name="category"]', 'Interaction Design')
     await page.select('select[name="level"]', 'foundation')
     await fill(page, 'textarea[name="summary"]', 'Build clear flows and useful states through one practical exercise.')
     await fill(page, 'textarea[name="about"]', 'Prototype one flow end to end, with keyboard use, empty states and helpful errors.')
     await fill(page, 'input[aria-label="Outcome 1"]', 'Map a flow from the first screen to the goal.')
     await fill(page, 'input[name="skillTags"]', 'Interaction Design, Prototyping')
-    for (const [currency, amount] of Object.entries(PRICES_19)) if (currency !== 'HUF') await fill(page, `input[data-price="${currency}"]`, String(amount))
-    await page.click('[data-save-details]')
-    await waitForText(page, 'Saved')
+    await fill(page, 'input[data-price="EUR"]', String(PRICES_19.EUR))
+    // The converted line appears only once the EUR price is saved; the status shows "saved" before any edit too.
+    await page.waitForSelector('[data-converted-prices]', { visible: true, timeout: 15_000 })
+    await page.waitForSelector('[data-autosave="saved"]', { timeout: 15_000 })
+    const priced = (await pageApi(page, `/admin/courses/${courseId}`)).body
+    ctx.check(priced.category === 'Interaction Design' && priced.prices.length === 8 && priced.prices.find((price) => price.currency === 'EUR').amountMinor === PRICES_19.EUR * 100, `autosaved, with 8 prices from EUR ${JSON.stringify(priced.prices)}`)
     await chooseFile(page, '[data-upload="course_cover"] input[type="file"]', fixture('cover.jpg'))
     await page.waitForSelector('[data-cover-preview]', { visible: true })
     await ctx.screenshot(page, '1-details')
@@ -69,9 +73,9 @@ export default {
     const refused = page.waitForResponse((response) => response.url().endsWith(`/admin/courses/${courseId}/status`))
     await page.click('[data-publish]')
     ctx.check((await refused).status() === 422, 'the publish request is refused with 422')
-    await page.waitForFunction(() => document.querySelector('[data-publish-problems]')?.innerText.includes('Add the HUF price'), { timeout: 10_000 })
+    await page.waitForFunction(() => document.querySelector('[data-publish-problems]')?.innerText.includes('Add at least one lesson'), { timeout: 10_000 })
     const problems = await page.$eval('[data-publish-problems]', (element) => element.innerText)
-    ctx.check(problems.includes('Add at least one lesson') && problems.includes('Add at least one quiz question'), `the reasons name lessons and quiz too:\n${problems}`)
+    ctx.check(problems.includes('Add at least one quiz question') && !problems.includes('price'), `the reasons are lessons and quiz, not prices:\n${problems}`)
     ctx.check((await page.$eval('[data-course-status]', (element) => element.dataset.courseStatus)) === 'draft', 'the course stays a draft')
     await ctx.screenshot(page, '2-publish-blocked')
 
@@ -182,11 +186,7 @@ export default {
     ctx.check(quiz.questions.length === 5 && quiz.questions[2].type === 'multiple' && quiz.questions[2].correct.join() === '0,1', `5 questions saved, single and multiple (${JSON.stringify(quiz.questions.map((question) => question.correct))})`)
     await ctx.screenshot(page, '8-quiz')
 
-    // The HUF price, then publish.
-    await openTab(page, 'Details')
-    await fill(page, 'input[data-price="HUF"]', String(PRICES_19.HUF))
-    await page.click('[data-save-details]')
-    await waitForText(page, 'Saved')
+    // Publish.
     await page.click('[data-publish]')
     await page.waitForSelector('[data-course-status="published"]', { timeout: 10_000 })
     await openTab(page, 'Preview')

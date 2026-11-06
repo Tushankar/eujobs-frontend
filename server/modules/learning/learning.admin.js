@@ -2,6 +2,7 @@ import { LIMITS } from '../../config/limits.js'
 import { addStandardNames } from '../../lib/ai.js'
 import { actorFor, recordAudit } from '../../lib/audit.js'
 import { AppError, fieldError } from '../../lib/errors.js'
+import { pricesFromEuro } from '../../lib/fxRates.js'
 import { removeFiles, signedUrl, storeFile } from '../../lib/files.js'
 import { reencodeImage } from '../../lib/images.js'
 import { renderMarkdown } from '../../lib/markdown.js'
@@ -121,6 +122,7 @@ async function builderDto(course, admin) {
     cover: file(course.coverFileId),
     isFree: course.isFree,
     prices: course.prices.map(({ currency, amountMinor }) => ({ currency, amountMinor })),
+    priceRatesDate: course.priceRatesDate ?? null,
     currencies: await courseCurrencies(),
     status: course.status,
     locked: Boolean(course.lockedAt),
@@ -274,7 +276,7 @@ export async function createCourse(admin, { audience, title }) {
 /** Details and prices: always editable, also after enrollment (M-108). */
 export async function updateDetails(admin, id, body) {
   const course = await findCourse(id)
-  const { skillTags, coverFileId, pipelineCategory, prices, ...fields } = body
+  const { skillTags, coverFileId, pipelineCategory, prices, euroPrice, ...fields } = body
   course.set(fields)
   if (skillTags) {
     const tags = skillEntries(skillTags, 'skillTags')
@@ -287,6 +289,12 @@ export async function updateDetails(admin, id, body) {
     const unknown = prices.find((price) => !currencies.includes(price.currency))
     if (unknown || new Set(prices.map((price) => price.currency)).size !== prices.length) throw fieldError({ prices: 'invalid' })
     course.prices = prices
+    course.priceRatesDate = undefined
+  }
+  if (euroPrice !== undefined) {
+    const converted = euroPrice === null ? { prices: [], ratesDate: undefined } : await pricesFromEuro(euroPrice, await courseCurrencies())
+    course.prices = converted.prices
+    course.priceRatesDate = converted.ratesDate
   }
   const previousCover = course.coverFileId
   if (coverFileId !== undefined) course.coverFileId = (await uploadedFile(coverFileId, 'course_cover', 'coverFileId')) ?? undefined

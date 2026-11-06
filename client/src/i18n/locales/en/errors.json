@@ -33,6 +33,7 @@
   "AI_UNAVAILABLE": "The AI service is unavailable right now. Try again shortly.",
   "PAYMENT_PROVIDER_ERROR": "The payment service is unavailable right now. Try again shortly.",
   "PLACES_UNAVAILABLE": "City search isn't available right now. Try again shortly.",
+  "FX_UNAVAILABLE": "Exchange rates aren’t available right now, so the prices weren’t converted. Try again shortly.",
   "INTERNAL_ERROR": "Something went wrong on our side. Try again.",
   "NETWORK_ERROR": "We couldn't reach the server. Check your connection and try again."
 }

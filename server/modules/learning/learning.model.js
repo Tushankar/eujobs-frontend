@@ -50,6 +50,8 @@ const courseSchema = new Schema(
     pipelineCategory: { type: String, enum: ENUMS.stageCategory },
     isFree: { type: Boolean, default: false },
     prices: [{ _id: false, currency: String, amountMinor: Number }],
+    // The ECB reference date the prices were converted with, when they came from a EUR price.
+    priceRatesDate: String,
     status: { type: String, enum: ENUMS.courseStatus, default: 'draft' },
     lessons: [lessonSchema],
     quiz: {

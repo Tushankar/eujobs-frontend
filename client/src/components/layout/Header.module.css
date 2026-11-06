@@ -168,49 +168,68 @@
 }
 
 .menu {
-  min-width: 200px;
-  padding: 8px;
+  min-width: 240px;
+  padding: 6px;
 }
 
-/* 29 countries: the list scrolls inside the sticky header instead of running off-screen. */
+/* 29 countries: the list scrolls inside the sticky header instead of running off-screen. Short enough that the list
+   and the note fit the dropdown panel (max 360px), so only this list scrolls. */
 .menuScroll {
-  max-height: min(360px, 60vh);
+  display: flex;
+  flex-direction: column;
+  gap: 2px;
+  max-height: min(250px, 50vh);
+  padding-right: 2px;
   overflow-y: auto;
+  scrollbar-width: thin;
+  scrollbar-color: #d3d7e0 transparent;
 }
 
 .menuItem {
   display: flex;
   align-items: center;
-  gap: 8px;
+  gap: 10px;
   width: 100%;
   min-height: 40px;
-  padding: 10px 12px;
+  padding: 9px 12px;
   border: 0;
   border-radius: var(--radius-xl);
   background: transparent;
-  font-size: 12px;
+  font-family: var(--font-display);
+  font-size: 14px;
   font-weight: 600;
-  line-height: 18px;
+  line-height: 20px;
+  letter-spacing: -0.2px;
   text-align: left;
   white-space: nowrap;
   color: var(--foreground);
+  transition: background-color var(--transition);
 }
 
 .menuItem:hover {
-  background: var(--muted);
+  background: #eceef2;
+}
+
+.menuItem[aria-current] {
+  background: var(--accent);
+  font-weight: 700;
+  color: var(--primary);
 }
 
 .menuCheck {
   display: inline-flex;
-  width: 14px;
+  flex-shrink: 0;
+  width: 16px;
   color: var(--primary);
 }
 
 .menuNote {
   max-width: 240px;
-  padding: 8px 12px 4px;
-  font-size: 10px;
-  line-height: 15px;
+  margin-top: 6px;
+  padding: 10px 12px 6px;
+  border-top: 1px solid var(--border);
+  font-size: 12px;
+  line-height: 17px;
   color: var(--muted-foreground);
 }
 

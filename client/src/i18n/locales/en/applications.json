@@ -91,7 +91,8 @@
     "notAccepting": "This role no longer accepts applications.",
     "viewJob": "View job",
     "withdraw": "Withdraw application",
-    "applyAgain": "Apply again"
+    "applyAgain": "Apply again",
+    "current": "Current"
   },
   "withdraw": {
     "title": "Withdraw this application?",

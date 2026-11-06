@@ -13,3 +13,8 @@ if (holder && String(holder.pid) !== process.env.EUJOBS_TEST_LOCK) {
 const { setAiClient } = await import('../lib/ai.js')
 const { aiStub } = await import('./helpers/ai.js')
 setAiClient(aiStub)
+
+// API tests never call the ECB either: a fixed rate table.
+const { setRatesSource } = await import('../lib/fxRates.js')
+const { fxStub } = await import('./helpers/fx.js')
+setRatesSource(fxStub)

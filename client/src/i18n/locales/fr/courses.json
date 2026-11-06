@@ -73,6 +73,9 @@
     "unpublish": "Dépublier",
     "locked": "Des apprenants sont inscrits : les leçons et le quiz sont verrouillés. Les textes et les prix peuvent encore changer.",
     "problemsTitle": "Avant de pouvoir publier",
+    "problemsText_one": "Il reste {{count}} élément à compléter avant de publier cette formation.",
+    "problemsText_other": "Il reste {{count}} éléments à compléter avant de publier cette formation.",
+    "problemsOpen": "Ouvrir {{tab}}",
     "tabsLabel": "Sections de l’éditeur de formation",
     "tab": {
       "details": "Détails",
@@ -80,9 +83,49 @@
       "quiz": "Quiz",
       "preview": "Aperçu"
     },
-    "saved": "Enregistré"
+    "saved": "Enregistré",
+    "new": {
+      "formTitle": "Informations du cours",
+      "formText": "Donnez au cours un titre clair que les apprenants reconnaîtront. Tout le reste s’ajoute dans l’éditeur.",
+      "titleHint": "Vous pourrez le modifier à tout moment dans Détails.",
+      "draftNote": "Seuls les administrateurs voient les brouillons.",
+      "cancel": "Annuler",
+      "stepsTitle": "La suite",
+      "here": "Vous êtes ici",
+      "steps": {
+        "title": "Nommez le cours et créez le brouillon.",
+        "details": "Catégorie, niveau, résumé, objectifs, couverture et prix.",
+        "lessons": "Leçons vidéo, texte, PDF ou lien, dans l’ordre.",
+        "quiz": "Le quiz final et sa note de réussite.",
+        "preview": "Vérifiez-le comme le verront les apprenants, puis publiez."
+      }
+    }
+  },
+  "learnerPreview": {
+    "label": "Aperçu apprenant",
+    "cover": "Votre image de couverture",
+    "untitled": "Formation sans titre",
+    "noLevel": "Niveau non défini",
+    "free": "Gratuit",
+    "noPrice": "Prix non défini",
+    "enrol": "S’inscrire"
   },
   "details": {
+    "euroPrice": "Prix en euros",
+    "euroHint": "Prix unique, TVA incluse. Les 7 autres devises sont calculées à partir de celui-ci.",
+    "convertedAt": "Converti au taux de la BCE du {{date}}, arrondi aux prix locaux.",
+    "convertedManual": "Saisis à la main. Un nouveau prix en euros recalcule les autres au taux BCE du jour.",
+    "autosave": {
+      "pending": "Modifications non enregistrées",
+      "saving": "Enregistrement…",
+      "saved": "Toutes les modifications sont enregistrées",
+      "error": "Non enregistré. Vérifiez les champs en rouge."
+    },
+    "pageTitle": "Détails de la formation",
+    "pageText": "Tout ce que voient les apprenants avant de s’inscrire. L’aperçu se met à jour pendant la saisie.",
+    "sectionCatalogue": "Titre et catalogue",
+    "sectionPitch": "Présentation",
+    "sectionCoverPrice": "Couverture et prix",
     "title": "Titre de la formation",
     "category": "Catégorie ou parcours",
     "categoryHint": "Affiché sur les cartes, par exemple Design d’interaction.",
@@ -206,6 +249,7 @@
       "required": "Ajoutez au moins une étiquette de compétence."
     },
     "price": "Ajoutez le prix en {{currency}}, ou rendez la formation gratuite.",
+    "prices": "Ajoutez les prix en {{currencies}}, ou rendez la formation gratuite.",
     "lessons": {
       "too_few": "Ajoutez au moins une leçon.",
       "required": "Ajoutez au moins une leçon."

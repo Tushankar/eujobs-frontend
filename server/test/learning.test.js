@@ -8,6 +8,9 @@ import { enroll } from '../modules/learning/learning.service.js'
 import { Payment } from '../modules/payments/payments.model.js'
 import { User } from '../modules/users/users.model.js'
 import { seedCatalog } from '../seed/catalog.js'
+import { AppError } from '../lib/errors.js'
+import { nicePrice, setRatesSource } from '../lib/fxRates.js'
+import { FX_STUB, fxStub } from './helpers/fx.js'
 import { image, MB, mp4Header, padded, textPdf, webmHeader } from './helpers/fixtures.js'
 import { api, attach, auth, createUser, useTestDb, useTestUploads } from './helpers/index.js'
 import { approvedRecruiter } from './helpers/market.js'
@@ -260,5 +263,39 @@ describe('lock, unpublish and the learner side (M-106, M-108, M-109, M-110, M-13
       revenue: [{ currency: 'GBP', amountMinor: 1900 }],
     })
     assert.ok((await Course.findById(id)).lockedAt)
+  })
+})
+
+describe('course prices from one EUR price (ECB rates)', () => {
+  it('rounds converted amounts to shop prices', () => {
+    assert.deepEqual([2.4, 18.7, 94, 242, 550, 8910, 21_960].map(nicePrice), [2, 19, 99, 239, 549, 8890, 21_990])
+  })
+
+  it('sets all 8 prices from the EUR price, so the course can publish', async () => {
+    const user = await owner()
+    const { id } = await readyCourse(user, { publish: false, prices: undefined, euroPrice: 2200 })
+    const course = (await api().get(`${v1}/admin/courses/${id}`).set(auth(user))).body
+    const byCurrency = Object.fromEntries(course.prices.map((price) => [price.currency, price.amountMinor]))
+    assert.deepEqual(byCurrency, { EUR: 2200, GBP: 1900, PLN: 9900, SEK: 23900, DKK: 16900, CZK: 53900, HUF: 799000, RON: 11900 })
+    assert.equal(course.priceRatesDate, FX_STUB.date)
+    assert.equal((await admin.status(user, id, 'published')).body.status, 'published')
+
+    // null clears them again.
+    const cleared = await admin.details(user, id, { euroPrice: null, isFree: true })
+    assert.deepEqual([cleared.body.prices, cleared.body.priceRatesDate], [[], null])
+  })
+
+  it('answers FX_UNAVAILABLE when no rates can be had', async () => {
+    const user = await owner()
+    const created = await admin.create(user, { audience: 'candidate', title: 'Rates check course' })
+    setRatesSource(() => {
+      throw new AppError('FX_UNAVAILABLE')
+    })
+    try {
+      const res = await admin.details(user, created.body.id, { euroPrice: 2200 })
+      assert.deepEqual([res.status, code(res)], [503, 'FX_UNAVAILABLE'])
+    } finally {
+      setRatesSource(fxStub)
+    }
   })
 })

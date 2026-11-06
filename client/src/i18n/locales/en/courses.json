@@ -72,6 +72,9 @@
     "unpublish": "Unpublish",
     "locked": "Learners are enrolled, so lessons and the quiz are locked. Copy and prices can still change.",
     "problemsTitle": "Before you can publish",
+    "problemsText_one": "{{count}} thing to finish before this course can go live.",
+    "problemsText_other": "{{count}} things to finish before this course can go live.",
+    "problemsOpen": "Open {{tab}}",
     "tabsLabel": "Course builder sections",
     "tab": {
       "details": "Details",
@@ -79,9 +82,49 @@
       "quiz": "Quiz",
       "preview": "Preview"
     },
-    "saved": "Saved"
+    "saved": "Saved",
+    "new": {
+      "formTitle": "Course basics",
+      "formText": "Give the course a clear title learners will recognise. Everything else is added in the builder.",
+      "titleHint": "You can change it any time in Details.",
+      "draftNote": "Drafts are only visible to admins.",
+      "cancel": "Cancel",
+      "stepsTitle": "What comes next",
+      "here": "You’re here",
+      "steps": {
+        "title": "Name the course and create the draft.",
+        "details": "Category, level, summary, outcomes, cover and price.",
+        "lessons": "Video, text, PDF or link lessons, in order.",
+        "quiz": "The final quiz and its pass mark.",
+        "preview": "Check it as learners will see it, then publish."
+      }
+    }
+  },
+  "learnerPreview": {
+    "label": "Learner preview",
+    "cover": "Your cover image",
+    "untitled": "Untitled course",
+    "noLevel": "Level not set",
+    "free": "Free",
+    "noPrice": "Price not set",
+    "enrol": "Enrol"
   },
   "details": {
+    "euroPrice": "Price in euro",
+    "euroHint": "One-time price, VAT included. The other 7 currencies are converted from it.",
+    "convertedAt": "Converted at the ECB rate of {{date}}, rounded to local price points.",
+    "convertedManual": "Set by hand. A new euro price converts the others at today’s ECB rate.",
+    "autosave": {
+      "pending": "Unsaved changes",
+      "saving": "Saving…",
+      "saved": "All changes saved",
+      "error": "Not saved. Check the fields marked in red."
+    },
+    "pageTitle": "Course details",
+    "pageText": "Everything learners see before they enrol. The preview updates as you type.",
+    "sectionCatalogue": "Title and catalogue",
+    "sectionPitch": "Pitch",
+    "sectionCoverPrice": "Cover and price",
     "title": "Course title",
     "category": "Category or stream",
     "categoryHint": "Shown on cards, for example Interaction Design.",
@@ -204,6 +247,7 @@
       "required": "Add at least one skill tag."
     },
     "price": "Add the {{currency}} price, or make the course free.",
+    "prices": "Add the {{currencies}} prices, or make the course free.",
     "lessons": {
       "too_few": "Add at least one lesson.",
       "required": "Add at least one lesson."

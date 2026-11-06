@@ -91,7 +91,8 @@
     "notAccepting": "Ce poste n’accepte plus de candidatures.",
     "viewJob": "Voir l’offre",
     "withdraw": "Retirer la candidature",
-    "applyAgain": "Postuler à nouveau"
+    "applyAgain": "Postuler à nouveau",
+    "current": "En cours"
   },
   "withdraw": {
     "title": "Retirer cette candidature ?",

@@ -73,6 +73,9 @@
     "unpublish": "Retirar",
     "locked": "Hay alumnos inscritos, así que las lecciones y el cuestionario están bloqueados. Los textos y los precios aún se pueden cambiar.",
     "problemsTitle": "Antes de poder publicar",
+    "problemsText_one": "Te falta {{count}} cosa para poder publicar este curso.",
+    "problemsText_other": "Te faltan {{count}} cosas para poder publicar este curso.",
+    "problemsOpen": "Abrir {{tab}}",
     "tabsLabel": "Secciones del editor de cursos",
     "tab": {
       "details": "Detalles",
@@ -80,9 +83,49 @@
       "quiz": "Cuestionario",
       "preview": "Vista previa"
     },
-    "saved": "Guardado"
+    "saved": "Guardado",
+    "new": {
+      "formTitle": "Datos básicos del curso",
+      "formText": "Dale al curso un título claro que los alumnos reconozcan. Todo lo demás se añade en el editor.",
+      "titleHint": "Puedes cambiarlo cuando quieras en Detalles.",
+      "draftNote": "Los borradores solo los ven los administradores.",
+      "cancel": "Cancelar",
+      "stepsTitle": "Qué viene después",
+      "here": "Estás aquí",
+      "steps": {
+        "title": "Pon nombre al curso y crea el borrador.",
+        "details": "Categoría, nivel, resumen, resultados, portada y precio.",
+        "lessons": "Lecciones de vídeo, texto, PDF o enlace, en orden.",
+        "quiz": "El cuestionario final y su nota mínima.",
+        "preview": "Revísalo como lo verán los alumnos y publícalo."
+      }
+    }
+  },
+  "learnerPreview": {
+    "label": "Vista del alumno",
+    "cover": "Tu imagen de portada",
+    "untitled": "Curso sin título",
+    "noLevel": "Nivel sin definir",
+    "free": "Gratis",
+    "noPrice": "Precio sin definir",
+    "enrol": "Inscribirse"
   },
   "details": {
+    "euroPrice": "Precio en euros",
+    "euroHint": "Precio único, IVA incluido. Las otras 7 monedas se calculan a partir de él.",
+    "convertedAt": "Convertido al tipo del BCE del {{date}} y redondeado a precios locales.",
+    "convertedManual": "Fijados a mano. Un nuevo precio en euros recalcula los demás al tipo del BCE de hoy.",
+    "autosave": {
+      "pending": "Cambios sin guardar",
+      "saving": "Guardando…",
+      "saved": "Todos los cambios guardados",
+      "error": "No guardado. Revisa los campos en rojo."
+    },
+    "pageTitle": "Detalles del curso",
+    "pageText": "Todo lo que ven los alumnos antes de inscribirse. La vista previa se actualiza mientras escribes.",
+    "sectionCatalogue": "Título y catálogo",
+    "sectionPitch": "Presentación",
+    "sectionCoverPrice": "Portada y precio",
     "title": "Título del curso",
     "category": "Categoría o itinerario",
     "categoryHint": "Se muestra en las tarjetas, por ejemplo Diseño de interacción.",
@@ -206,6 +249,7 @@
       "required": "Añade al menos una etiqueta de habilidad."
     },
     "price": "Añade el precio en {{currency}} o haz que el curso sea gratuito.",
+    "prices": "Añade los precios en {{currencies}} o haz que el curso sea gratuito.",
     "lessons": {
       "too_few": "Añade al menos una lección.",
       "required": "Añade al menos una lección."
