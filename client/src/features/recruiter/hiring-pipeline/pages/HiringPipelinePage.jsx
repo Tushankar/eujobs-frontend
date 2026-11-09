@@ -12,7 +12,7 @@ import FunnelStageList from '../components/FunnelStageList.jsx'
 import ManageStagesModal from '../components/ManageStagesModal.jsx'
 import PipelineColumn, { PipelineColumnSkeleton } from '../components/PipelineColumn.jsx'
 import PipelineFunnel from '../components/PipelineFunnel.jsx'
-import { useInterviewMove } from '@/features/interviews/useInterviewMove.jsx'
+import { useInterviewMove } from '@/features/interviews/useInterviewMove.js'
 import { useStageMove } from '../useStageMove.js'
 import styles from './HiringPipelinePage.module.css'
 
@@ -205,7 +205,6 @@ export default function HiringPipelinePage() {
       )}
 
       <ApplicantPanel application={opened} stages={stages} onClose={() => setParam('application', '')} />
-      {interviewMove.element}
       <ManageStagesModal open={managing} onClose={() => navigate(PIPELINE_PATH)} stages={stages} />
     </div>
   )

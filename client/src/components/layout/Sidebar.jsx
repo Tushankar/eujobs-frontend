@@ -1,7 +1,7 @@
 import { useTranslation } from 'react-i18next'
 import { useDispatch } from 'react-redux'
 import { Link, NavLink, useNavigate } from 'react-router-dom'
-import { ArrowRight, ArrowUpRight, CircleHelp, LogOut, Settings2 } from 'lucide-react'
+import { ArrowRight, ArrowUpRight, CircleHelp, Crown, LogOut, Settings2 } from 'lucide-react'
 import { cx } from '@/utils/cx.js'
 import { Avatar, Icon, IconButton } from '@/components/ui'
 import { can } from '@/app/permissions.js'
@@ -18,6 +18,7 @@ import aiNavIconActive from '@/assets/icons/ai-sparkle-blue-16.svg'
 import BrandLogo from './BrandLogo.jsx'
 import { identitySubtitle } from './identity.js'
 import PlanBadge, { isPaidPlan } from './PlanBadge.jsx'
+import logoMark from '@/assets/images/logo-mark.png'
 import styles from './Sidebar.module.css'
 
 /** A badge whose text a hook computes (e.g. the live count of active applications); none when the hook returns null (M-094). */
@@ -79,32 +80,47 @@ function usePromo(workspace, me) {
   return me.completeness?.complete ? null : { kind: 'complete' }
 }
 
-function PromoCard({ workspace, promo }) {
+/** The Free upsell, LinkedIn Premium style: white card, the logo mark beside the gold Plus chip, the price, a gold button. */
+function UpsellCard({ plus }) {
   const { t } = useTranslation()
   const format = useFormat()
   const dispatch = useDispatch()
-  const upsell = promo.kind === 'upsell'
-  const plan = upsell ? promo.plus.name : ''
+  const plan = plus.name
+  return (
+    <div className={styles.upsell} data-promo="upsell">
+      <div className={styles.upsellHead}>
+        <img src={logoMark} alt="" className={styles.upsellLogo} />
+        <span className={styles.upsellCrown}>
+          <Icon as={Crown} size={11} strokeWidth={2.4} /> {plan}
+        </span>
+      </div>
+      <p className={styles.upsellTitle}>{t('shell:promo.upsellTitle', { plan })}</p>
+      <p className={styles.upsellText}>{t('shell:promo.upsellPerks')}</p>
+      <p className={styles.upsellPrice}>
+        <strong>{format.money(plus.price.amountMinor, plus.price.currency)}</strong> {t('shell:promo.perMonth')}
+      </p>
+      <button type="button" className={styles.upsellButton} onClick={() => dispatch(openUpgrade())}>
+        {t('shell:promo.upsellLink', { plan })}
+        <Icon as={ArrowRight} size={14} />
+      </button>
+    </div>
+  )
+}
+
+function PromoCard({ workspace, promo }) {
+  const { t } = useTranslation()
+  if (promo.kind === 'upsell') return <UpsellCard plus={promo.plus} />
   return (
     <div className={styles.promo} data-promo={promo.kind}>
       <div className={styles.promoTitle}>
         <img src={aiSparkle} alt="" width={14} height={14} />
-        <p>{upsell ? t('shell:promo.upsellTitle', { plan }) : t('shell:promo.title')}</p>
+        <p>{t('shell:promo.title')}</p>
       </div>
-      <p className={styles.promoText}>
-        {upsell ? t('shell:promo.upsellText', { price: format.money(promo.plus.price.amountMinor, promo.plus.price.currency) }) : t('shell:promo.text')}
-      </p>
-      {upsell ? (
-        <button type="button" className={cx(styles.promoLink, styles.promoButton)} onClick={() => dispatch(openUpgrade())}>
-          {t('shell:promo.upsellLink', { plan })}
-          <Icon as={ArrowRight} size={12} />
-        </button>
-      ) : (
-        <Link to={workspacePath(workspace, workspace.promo.to)} className={styles.promoLink}>
-          {t('shell:promo.link')}
-          <Icon as={ArrowRight} size={12} />
-        </Link>
-      )}
+      <p className={styles.promoText}>{t('shell:promo.text')}</p>
+      <Link to={workspacePath(workspace, workspace.promo.to)} className={styles.promoLink}>
+        {t('shell:promo.link')}
+        <Icon as={ArrowRight} size={12} />
+      </Link>
     </div>
   )
 }

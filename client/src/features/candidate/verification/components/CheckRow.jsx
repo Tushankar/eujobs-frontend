@@ -1,5 +1,5 @@
 import { useTranslation } from 'react-i18next'
-import { BadgeCheck } from 'lucide-react'
+import { BadgeCheck, CircleAlert } from 'lucide-react'
 import { Icon } from '@/components/ui'
 import PillBadge from '@/components/common/PillBadge.jsx'
 import { useFormat } from '@/lib/preferences.js'
@@ -33,7 +33,12 @@ export default function CheckRow({ icon, title, description, accepted, status, l
         {accepted && <p className={styles.accepted}>{accepted}</p>}
         {note && <p className={styles.accepted}>{note}</p>}
         {latest && <p className={styles.submitted}>{t(latest.evidenceType ? 'verification:submittedType' : 'verification:submitted', submittedParams)}</p>}
-        {latest?.status === 'rejected' && latest.reason && <p className={styles.reason}>{t('verification:reason', { reason: latest.reason })}</p>}
+        {latest?.status === 'rejected' && latest.reason && (
+          <div className={styles.rejection}>
+            <Icon as={CircleAlert} size={16} className={styles.rejectionIcon} />
+            <p className={styles.reason}>{t('verification:reason', { reason: latest.reason })}</p>
+          </div>
+        )}
       </div>
       <div className={styles.action}>
         <PillBadge tone={STATUS_TONES[status]} dot={status === 'approved'}>

@@ -21,23 +21,28 @@ export default function RequirePlan() {
   return lacksEntitlement(me, entitlement, [me?.role]) ? <PlanGate entitlement={entitlement} /> : <Outlet />
 }
 
-/** One plan column of the gate: name, price, what it includes and, crossed out, what it does not (`missing`). */
-function PlanColumn({ plan, badge, lead, featured, missing = [], children }) {
+/**
+ * One plan column (the gate and Billing): name, price, what it includes and, crossed out, what it does not (`missing`).
+ * `price` overrides the plan's own (Billing shows the subscription's); `meta` sits under it (renewal date).
+ */
+export function PlanColumn({ plan, badge, lead, featured, missing = [], price, meta, children }) {
   const { t } = useTranslation('billing')
   const format = useFormat()
+  const shownPrice = price ?? (plan.price && format.money(plan.price.amountMinor, plan.price.currency))
   return (
     <section className={cx(styles.plan, featured && styles.featured)} data-plan={plan.key}>
       <div className={styles.planHead}>
         <h2 className={styles.planName}>{plan.name}</h2>
         {badge}
       </div>
-      {plan.price && (
+      {shownPrice && (
         <p className={styles.price}>
-          {format.money(plan.price.amountMinor, plan.price.currency)} <span>{t('perMonth')}</span>
+          {shownPrice} <span>{t('perMonth')}</span>
         </p>
       )}
+      {meta}
       {lead && <p className={styles.lead}>{lead}</p>}
-      <ul className={styles.features}>
+      <ul className={styles.features} data-plan-features={plan.key}>
         {plan.features.map((feature) => (
           <li key={feature}>
             <Icon as={Check} size={16} strokeWidth={2.2} className={styles.check} /> {feature}

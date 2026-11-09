@@ -55,7 +55,12 @@
     "eligible": "Eligible in {{countries}}",
     "view": "View job",
     "viewLabel": "View job: {{title}} at {{company}}",
-    "notAccepting": "No longer accepting applications"
+    "notAccepting": "No longer accepting applications",
+    "unlock": {
+      "title": "See your full match with {{plan}}",
+      "text": "AI scores this job against your profile and CV, explains why it fits you and shows the gaps to close.",
+      "action": "Unlock AI insights"
+    }
   },
   "details": {
     "back": "Back to opportunities",
@@ -151,7 +156,7 @@
     },
     "alerts": {
       "title": "No strong matches yet",
-      "text": "New roles are scored against your profile as soon as they’re posted. Turn on job alerts to hear about them first.",
+      "text": "Roles show up here as soon as one fits your profile. Turn on job alerts to hear about new roles by email.",
       "action": "Turn on job alerts"
     }
   }

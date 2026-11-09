@@ -4,7 +4,7 @@ import { Checkbox } from '@/components/ui'
 import ConfirmDialog from '@/components/common/ConfirmDialog.jsx'
 import PillBadge from '@/components/common/PillBadge.jsx'
 import { useCancelInterviewMutation } from '@/features/interviews/api.js'
-import { useInterviewMove } from '@/features/interviews/useInterviewMove.jsx'
+import { useInterviewMove } from '@/features/interviews/useInterviewMove.js'
 import StageSelect from '@/features/recruiter/hiring-pipeline/components/StageSelect.jsx'
 import { useRejectApplicationMutation } from '../api.js'
 import styles from './ApplicationStageSelect.module.css'
@@ -73,7 +73,6 @@ export default function ApplicationStageSelect({ application, candidateName, job
           </Checkbox>
         )}
       </ConfirmDialog>
-      {interviewMove.element}
     </>
   )
 }

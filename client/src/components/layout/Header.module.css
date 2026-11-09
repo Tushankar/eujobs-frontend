@@ -271,7 +271,10 @@
     display: none;
   }
 
-  /* Only the page name shows on a phone: a long es/fr name ("Por qué te lo recomienda la IA") takes two lines. */
+  /*
+   * Only the page name shows on a phone. A long name ("AI recommendation explanation", "Correspondance avec les offres")
+   * wraps onto up to three lines, and a word wider than the space is hyphenated rather than cut.
+   */
   .breadcrumb {
     white-space: normal;
   }
@@ -279,7 +282,11 @@
   .crumbCurrent {
     display: -webkit-box;
     -webkit-box-orient: vertical;
-    -webkit-line-clamp: 2;
+    -webkit-line-clamp: 3;
+    font-size: 14px;
+    line-height: 18px;
+    overflow-wrap: anywhere;
+    hyphens: auto;
   }
 
   .identity {

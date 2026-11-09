@@ -51,8 +51,8 @@
 .accepted,
 .submitted {
   padding-top: 8px;
-  font-size: 10px;
-  line-height: 15px;
+  font-size: 12px;
+  line-height: 18px;
   color: var(--muted-foreground);
 }
 
@@ -61,10 +61,28 @@
   overflow-wrap: anywhere;
 }
 
+/* A rejected submission: the admin's reason in a red notice, so it cannot be missed. */
+.rejection {
+  display: flex;
+  align-items: flex-start;
+  gap: 8px;
+  margin-top: 10px;
+  padding: 10px 12px;
+  border: 1px solid #efc9c9;
+  border-radius: var(--radius-lg);
+  background: #fdf4f4;
+}
+
+.rejectionIcon {
+  flex-shrink: 0;
+  margin-top: 1px;
+  color: var(--destructive);
+}
+
 .reason {
-  padding-top: 4px;
-  font-size: 11px;
-  line-height: 16px;
+  font-size: 13px;
+  font-weight: 600;
+  line-height: 19px;
   overflow-wrap: anywhere;
   color: var(--destructive);
 }

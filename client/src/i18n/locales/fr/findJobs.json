@@ -58,7 +58,12 @@
     "eligible": "Pays éligibles : {{countries}}",
     "view": "Voir l’offre",
     "viewLabel": "Voir l’offre : {{title}} chez {{company}}",
-    "notAccepting": "Candidatures closes"
+    "notAccepting": "Candidatures closes",
+    "unlock": {
+      "title": "Découvrez votre correspondance complète avec {{plan}}",
+      "text": "L’IA note cette offre par rapport à votre profil et à votre CV, explique pourquoi elle vous convient et indique les points à renforcer.",
+      "action": "Débloquer les analyses IA"
+    }
   },
   "details": {
     "back": "Retour aux opportunités",
@@ -156,7 +161,7 @@
     },
     "alerts": {
       "title": "Pas encore de correspondance solide",
-      "text": "Les nouvelles offres sont notées par rapport à votre profil dès leur publication. Activez les alertes emploi pour être informé en premier.",
+      "text": "Les offres s’afficheront ici dès que l’une d’elles correspondra à votre profil. Activez les alertes pour recevoir les nouvelles par e-mail.",
       "action": "Activer les alertes emploi"
     }
   }

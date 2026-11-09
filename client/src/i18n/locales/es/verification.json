@@ -65,9 +65,13 @@
     "title": "Certificados externos",
     "lead": "Opcional: pide a un administrador que revise el archivo de un certificado. Los reclutadores solo ven “Verificado” en los certificados revisados.",
     "empty": "Primero añade certificados en Mi perfil.",
-    "noFile": "Añade un archivo a este certificado en Mi perfil para solicitar una revisión.",
+    "noFile": "Sube el archivo del certificado para solicitar una revisión.",
     "request": "Solicitar revisión",
-    "requestLabel": "Solicitar una revisión de {{name}}"
+    "requestLabel": "Solicitar una revisión de {{name}}",
+    "upload": "Subir documento",
+    "uploadNew": "Subir un documento nuevo",
+    "uploadLabel": "Subir un documento para {{name}} y solicitar una revisión",
+    "resubmitSame": "Reenviar el mismo archivo"
   },
   "dialog": {
     "title": "Enviar pruebas: {{check}}",

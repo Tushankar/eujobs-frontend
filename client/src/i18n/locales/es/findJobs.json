@@ -58,7 +58,12 @@
     "eligible": "Países admitidos: {{countries}}",
     "view": "Ver oferta",
     "viewLabel": "Ver oferta: {{title}} en {{company}}",
-    "notAccepting": "Ya no admite candidaturas"
+    "notAccepting": "Ya no admite candidaturas",
+    "unlock": {
+      "title": "Ve tu compatibilidad completa con {{plan}}",
+      "text": "La IA puntúa este empleo según tu perfil y tu CV, explica por qué encaja contigo y muestra lo que te falta.",
+      "action": "Desbloquear análisis con IA"
+    }
   },
   "details": {
     "back": "Volver a las oportunidades",
@@ -156,7 +161,7 @@
     },
     "alerts": {
       "title": "Aún no hay coincidencias sólidas",
-      "text": "Los nuevos empleos se puntúan según tu perfil en cuanto se publican. Activa las alertas de empleo para enterarte antes que nadie.",
+      "text": "Los empleos aparecerán aquí en cuanto alguno encaje con tu perfil. Activa las alertas para recibir los nuevos por correo.",
       "action": "Activar alertas de empleo"
     }
   }

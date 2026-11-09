@@ -176,15 +176,98 @@
   color: var(--primary);
 }
 
-.promoButton {
-  padding-right: 0;
-  padding-bottom: 0;
-  padding-left: 0;
+/* The Free upsell, LinkedIn Premium style: white card, hairline border, gold only on the plan chip and the button. */
+.upsell {
+  padding: 16px;
+  border: 1px solid var(--border);
+  border-radius: var(--radius-xl);
+  background: var(--card);
+}
+
+.upsellHead {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 8px;
+}
+
+.upsellLogo {
+  width: auto;
+  height: 26px;
+}
+
+.upsellCrown {
+  display: inline-flex;
+  align-items: center;
+  gap: 4px;
+  padding: 3px 9px;
+  border-radius: var(--radius-full);
+  background: #fbe7b0;
+  font-size: 11px;
+  font-weight: 700;
+  line-height: 14px;
+  color: #6b4a00;
+}
+
+.upsellCrown svg {
+  color: #b8860b;
+  fill: #e8b931;
+}
+
+.upsellTitle {
+  padding-top: 12px;
+  font-family: var(--font-display);
+  font-size: 15px;
+  font-weight: 800;
+  line-height: 20px;
+  letter-spacing: -0.2px;
+  color: var(--foreground);
+}
+
+.upsellText {
+  padding-top: 4px;
+  font-size: 12px;
+  line-height: 18px;
+  color: var(--muted-foreground);
+}
+
+.upsellPrice {
+  margin-top: 12px;
+  padding-top: 12px;
+  border-top: 1px solid var(--border);
+  font-size: 12px;
+  color: var(--muted-foreground);
+}
+
+.upsellPrice strong {
+  font-family: var(--font-display);
+  font-size: 18px;
+  font-weight: 800;
+  letter-spacing: -0.3px;
+  color: var(--foreground);
+}
+
+.upsellButton {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 6px;
+  width: 100%;
+  min-height: 36px;
+  margin-top: 10px;
   border: 0;
-  background: none;
-  font-family: inherit;
-  text-align: left;
+  border-radius: var(--radius-full);
+  background: #f8c77e;
+  font-family: var(--font-display);
+  font-size: 13px;
+  font-weight: 700;
+  color: #1d2226;
   cursor: pointer;
+  transition: background-color var(--transition);
+}
+
+.upsellButton:hover {
+  background: #f2b65c;
 }
 
 .utility {

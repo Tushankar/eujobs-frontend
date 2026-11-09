@@ -82,7 +82,7 @@ export default {
     await page.click('[data-email-switches] li:nth-child(2) [role="switch"]')
     await saved
     await page.reload({ waitUntil: 'networkidle0' })
-    ctx.check(JSON.stringify(await switchState(page)) === '["true","false","true","true"]', 'Messages stays off after a reload')
+    ctx.check(JSON.stringify(await switchState(page)) === '["true","false","true","true","true"]', 'Messages stays off after a reload')
     ctx.check((await meOf(candidate.token)).emailSwitches.messages === false, 'saved on the account')
     await handle.checkOverflow()
     await ctx.screenshot(page, '5-settings')

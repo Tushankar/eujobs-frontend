@@ -83,7 +83,8 @@
     "text": "Un profil plus complet ouvre des opportunités plus pertinentes.",
     "link": "Compléter votre profil",
     "upsellTitle": "Allez plus loin avec {{plan}}",
-    "upsellText": "Postulez, écrivez aux recruteurs, recevez des alertes emploi et la compatibilité par IA pour {{price}} par mois.",
+    "upsellPerks": "Postulez, écrivez aux recruteurs, recevez des alertes emploi et la compatibilité par IA.",
+    "perMonth": "par mois",
     "upsellLink": "Passer à {{plan}}"
   },
   "signOut": "Se déconnecter",

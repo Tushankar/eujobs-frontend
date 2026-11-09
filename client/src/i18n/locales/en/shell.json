@@ -83,7 +83,8 @@
     "text": "A stronger profile means more relevant opportunities.",
     "link": "Complete your profile",
     "upsellTitle": "Get more with {{plan}}",
-    "upsellText": "Apply to jobs, message recruiters, get job alerts and AI matching for {{price}} a month.",
+    "upsellPerks": "Apply to jobs, message recruiters, get job alerts and AI matching.",
+    "perMonth": "per month",
     "upsellLink": "Upgrade to {{plan}}"
   },
   "signOut": "Sign out",

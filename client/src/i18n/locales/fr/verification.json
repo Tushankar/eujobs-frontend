@@ -65,9 +65,13 @@
     "title": "Certificats externes",
     "lead": "Facultatif : demandez à un administrateur d’examiner le fichier d’un certificat. Les recruteurs ne voient « Vérifié » que pour les certificats examinés.",
     "empty": "Ajoutez d’abord des certificats dans Mon profil.",
-    "noFile": "Ajoutez un fichier à ce certificat dans Mon profil pour demander un examen.",
+    "noFile": "Importez le fichier du certificat pour demander une vérification.",
     "request": "Demander un examen",
-    "requestLabel": "Demander l’examen de {{name}}"
+    "requestLabel": "Demander l’examen de {{name}}",
+    "upload": "Importer le document",
+    "uploadNew": "Importer un nouveau document",
+    "uploadLabel": "Importer un document pour {{name}} et demander une vérification",
+    "resubmitSame": "Renvoyer le même fichier"
   },
   "dialog": {
     "title": "Envoyer des justificatifs : {{check}}",

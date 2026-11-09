@@ -113,9 +113,10 @@
   padding: 0;
   border: 0;
   background: none;
-  font-size: 10px;
-  line-height: 15px;
-  color: #79718f;
+  font-size: 12px;
+  font-weight: 600;
+  line-height: 18px;
+  color: var(--foreground);
 }
 
 .why:hover {
@@ -133,9 +134,48 @@
 
 .whyText {
   padding-top: 12px;
-  font-size: 11px;
-  line-height: 17px;
-  color: #79718f;
+  font-size: 13px;
+  line-height: 20px;
+  color: var(--muted-foreground);
+}
+
+/* Free: what AI adds for this job, with the way to unlock it. */
+.unlock {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  justify-content: space-between;
+  gap: 12px 20px;
+  margin-top: 12px;
+  padding: 14px 16px;
+  border: 1px solid #e3c878;
+  border-radius: var(--radius-lg);
+  background: #fffaec;
+}
+
+.unlockText {
+  flex: 1 1 320px;
+  min-width: 0;
+  color: var(--foreground);
+}
+
+.unlockTitle {
+  display: flex;
+  align-items: center;
+  gap: 7px;
+  margin-bottom: 2px;
+  font-family: var(--font-display);
+  font-size: 14px;
+  font-weight: 800;
+  line-height: 20px;
+  color: var(--foreground);
+}
+
+/* The paid badge's gold crown (PlanBadge.module.css). */
+.crown {
+  flex-shrink: 0;
+  color: #b8860b;
+  fill: #e8b931;
 }
 
 .actions {

@@ -72,7 +72,7 @@ export default {
     await page.click('[data-email-switches] li:nth-child(1) [role="switch"]')
     await saved
     await page.reload({ waitUntil: 'networkidle0' })
-    ctx.check(JSON.stringify(await switchState(page)) === '["false","true"]', 'New applications stays off after a reload')
+    ctx.check(JSON.stringify(await switchState(page)) === '["false","true","true"]', 'New applications stays off after a reload')
     ctx.check((await meOf(recruiter.token)).emailSwitches.new_applications === false, 'saved on the account')
     await handle.checkOverflow()
     await ctx.screenshot(page, '4-settings')

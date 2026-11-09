@@ -20,11 +20,11 @@ export default function BillingSettingsPage() {
 
   return (
     <div className={styles.stack}>
-      <SettingsCard title={t('page.planTitle')} description={t('page.planDescription')}>
+      <SettingsCard wide title={t('page.planTitle')} description={t('page.planDescription')}>
         <PlanCard />
       </SettingsCard>
 
-      <SettingsCard title={t('page.historyTitle')} description={t('page.historyDescription')}>
+      <SettingsCard wide title={t('page.historyTitle')} description={t('page.historyDescription')}>
         <div className={styles.history}>
           {isLoading || payments.length > 0 ? (
             <PaymentsTable payments={payments} loading={isLoading} />

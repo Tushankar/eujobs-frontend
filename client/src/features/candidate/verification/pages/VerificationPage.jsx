@@ -1,10 +1,12 @@
-import { useState } from 'react'
+import { useRef, useState } from 'react'
 import { useTranslation } from 'react-i18next'
-import { ArrowRight, Award, BriefcaseBusiness, CircleCheck, CircleHelp, Earth, GraduationCap, Mail, ShieldCheck } from 'lucide-react'
+import { ArrowRight, Award, BriefcaseBusiness, CircleCheck, CircleHelp, Earth, GraduationCap, Mail, ShieldCheck, Upload } from 'lucide-react'
+import { useGetConfigQuery } from '@/app/api.js'
 import { Button, Icon, Panel, Skeleton, SkeletonRegion } from '@/components/ui'
 import PageTitle from '@/components/common/PageTitle.jsx'
 import PillBadge from '@/components/common/PillBadge.jsx'
-import { useErrorText } from '@/lib/forms.js'
+import { checkUpload, useErrorText, useUploadText } from '@/lib/forms.js'
+import { useSetCertificateFileMutation } from '../../profile/api.js'
 import { cx } from '@/utils/cx.js'
 import { useGetVerificationQuery, useSubmitEvidenceMutation } from '../api.js'
 import CheckRow from '../components/CheckRow.jsx'
@@ -178,14 +180,27 @@ export default function VerificationPage() {
 }
 
 /** M-025: a certificate with a file can be sent for review; it is reviewed from that file. */
+/**
+ * External certificates (M-025): a review of the certificate's own file. A rejected certificate, or one without a file,
+ * takes a new document here: it replaces the file on the profile (which withdraws the old review) and asks for a new one.
+ */
 function CertificateChecks({ certificates }) {
   const { t } = useTranslation()
   const errorText = useErrorText()
+  const { data: config } = useGetConfigQuery()
+  const rule = config?.limits.uploads.certificate_file
+  const uploadText = useUploadText(rule)
   const [submitEvidence, { isLoading }] = useSubmitEvidenceMutation()
+  const [setCertificateFile] = useSetCertificateFileMutation()
   const [failure, setFailure] = useState(null)
+  const [problem, setProblem] = useState('')
+  const [uploadingId, setUploadingId] = useState(null)
+  const fileInput = useRef(null)
+  const target = useRef(null)
 
   async function requestReview(certificate) {
     setFailure(null)
+    setProblem('')
     try {
       await submitEvidence({ category: 'certificate', entryId: certificate.id }).unwrap()
     } catch (error) {
@@ -193,15 +208,85 @@ function CertificateChecks({ certificates }) {
     }
   }
 
+  function chooseFile(certificate) {
+    target.current = certificate
+    fileInput.current.click()
+  }
+
+  async function uploadAndRequest(event) {
+    const file = event.target.files[0]
+    event.target.value = ''
+    const certificate = target.current
+    if (!file || !certificate) return
+    setFailure(null)
+    const issue = checkUpload(file, rule)
+    setProblem(issue ? uploadText.problem(issue, file) : '')
+    if (issue) return
+    setUploadingId(certificate.id)
+    try {
+      await setCertificateFile({ id: certificate.id, file }).unwrap()
+      await submitEvidence({ category: 'certificate', entryId: certificate.id }).unwrap()
+    } catch (error) {
+      setFailure(error)
+    } finally {
+      setUploadingId(null)
+    }
+  }
+
+  function actionsFor(certificate) {
+    const busy = uploadingId === certificate.id
+    const upload = (
+      <Button
+        variant={certificate.status === 'rejected' ? 'primary' : 'outline'}
+        loading={busy}
+        disabled={!rule || (uploadingId !== null && !busy)}
+        leftIcon={<Icon as={Upload} size={14} />}
+        aria-label={t('verification:certificates.uploadLabel', { name: certificate.name })}
+        onClick={() => chooseFile(certificate)}
+        data-certificate-upload={certificate.id}
+      >
+        {t(certificate.hasFile ? 'verification:certificates.uploadNew' : 'verification:certificates.upload')}
+      </Button>
+    )
+    if (!certificate.hasFile) return certificate.status === 'not_started' ? upload : null
+    if (certificate.status === 'rejected') {
+      return (
+        <div className={styles.certificateActions}>
+          {upload}
+          <Button variant="ghost" size="sm" loading={isLoading && !busy} onClick={() => requestReview(certificate)}>
+            {t('verification:certificates.resubmitSame')}
+          </Button>
+        </div>
+      )
+    }
+    return (
+      canSubmit(certificate.status) && (
+        <Button variant="outline" loading={isLoading} aria-label={t('verification:certificates.requestLabel', { name: certificate.name })} onClick={() => requestReview(certificate)}>
+          {t('verification:certificates.request')}
+        </Button>
+      )
+    )
+  }
+
   return (
     <Panel padding={24}>
       <h2 className={styles.sectionTitle}>{t('verification:certificates.title')}</h2>
       <p className={styles.sectionLead}>{t('verification:certificates.lead')}</p>
-      {failure && (
+      {(failure || problem) && (
         <p className={styles.failure} role="alert">
-          {errorText.code(failure)}
+          {problem || errorText.code(failure)}
         </p>
       )}
+      <input
+        ref={fileInput}
+        type="file"
+        className="sr-only"
+        tabIndex={-1}
+        aria-hidden="true"
+        accept={rule?.types.flatMap((type) => (type === 'jpg' ? ['.jpg', '.jpeg'] : [`.${type}`])).join(',')}
+        onChange={uploadAndRequest}
+        data-certificate-file
+      />
       {certificates.length === 0 ? (
         <p className={styles.empty}>{t('verification:certificates.empty')}</p>
       ) : (
@@ -214,14 +299,7 @@ function CertificateChecks({ certificates }) {
               note={certificate.hasFile ? null : t('verification:certificates.noFile')}
               status={certificate.status}
               latest={certificate.latest}
-              action={
-                certificate.hasFile &&
-                canSubmit(certificate.status) && (
-                  <Button variant="outline" loading={isLoading} aria-label={t('verification:certificates.requestLabel', { name: certificate.name })} onClick={() => requestReview(certificate)}>
-                    {t('verification:certificates.request')}
-                  </Button>
-                )
-              }
+              action={actionsFor(certificate)}
             />
           ))}
         </ul>

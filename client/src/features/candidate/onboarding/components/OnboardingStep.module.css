@@ -158,9 +158,13 @@
     padding: 12px 14px;
   }
 
-  /* Only the current step keeps its name on a phone. */
+  /* Only the current step keeps its name on a phone, at its full width; the other steps share what is left. */
   .stepItem:not(.current) .stepLabel {
     display: none;
+  }
+
+  .stepItem.current {
+    flex: 0 0 auto;
   }
 
   .count {

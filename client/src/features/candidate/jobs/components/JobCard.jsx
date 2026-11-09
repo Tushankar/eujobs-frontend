@@ -1,20 +1,48 @@
 import { useState } from 'react'
 import { useTranslation } from 'react-i18next'
+import { useDispatch } from 'react-redux'
 import { Link } from 'react-router-dom'
-import { ArrowUpRight, Bookmark, BriefcaseBusiness, ChartNoAxesColumnIncreasing, ChevronDown, Globe, MapPin } from 'lucide-react'
+import { ArrowRight, ArrowUpRight, Bookmark, BriefcaseBusiness, ChartNoAxesColumnIncreasing, ChevronDown, Crown, Globe, MapPin } from 'lucide-react'
+import { openUpgrade } from '@/app/upgrade.js'
 import { cx } from '@/utils/cx.js'
-import { CompanyLogo, Icon, IconButton, Skeleton } from '@/components/ui'
+import { Button, CompanyLogo, Icon, IconButton, Skeleton } from '@/components/ui'
 import SkillPills from '@/components/common/SkillPills.jsx'
 import StatusBadge from '@/components/common/StatusBadge.jsx'
 import aiGlyph from '@/assets/icons/ai-glyph-blue.svg'
 import JobSummaryButton from '@/features/ai/components/JobSummaryButton.jsx'
 import { ApplyButton } from '@/features/candidate/applications/components/ApplyFlow.jsx'
+import { lacksEntitlement, usePlan } from '@/features/candidate/billing/usePlan.js'
 import { useJobText } from '@/lib/jobText.js'
 import VerifiedCompany from '@/components/common/VerifiedCompany.jsx'
-import { useFormat } from '@/lib/preferences.js'
+import { useFormat, usePreferences } from '@/lib/preferences.js'
 import JobExplanation from './JobExplanation.jsx'
 import MatchBadge from './MatchBadge.jsx'
 import styles from './JobCard.module.css'
+
+/**
+ * Without Plus, the skill overlap is all the card can show: this panel under it says what AI adds for this job (the
+ * match score, why it fits, the gaps) and opens the upgrade dialog (M-118).
+ */
+function AiUnlock() {
+  const { t } = useTranslation()
+  const dispatch = useDispatch()
+  const { plus } = usePlan()
+  const plan = plus?.name ?? t('enums:planKey.plus')
+  return (
+    <div className={styles.unlock} data-ai-unlock>
+      <div className={styles.unlockText}>
+        <p className={styles.unlockTitle}>
+          <Icon as={Crown} size={15} strokeWidth={2} className={styles.crown} />
+          {t('findJobs:card.unlock.title', { plan })}
+        </p>
+        <p>{t('findJobs:card.unlock.text')}</p>
+      </div>
+      <Button size="sm" onClick={() => dispatch(openUpgrade('ai'))} rightIcon={<Icon as={ArrowRight} size={13} />}>
+        {t('findJobs:card.unlock.action')}
+      </Button>
+    </div>
+  )
+}
 
 /**
  * Job listing card (Overview and Find jobs). Every candidate sees the skill overlap (M-050, M-052); Plus candidates
@@ -25,6 +53,7 @@ export default function JobCard({ job, onToggleSave }) {
   const { t } = useTranslation()
   const format = useFormat()
   const jobText = useJobText()
+  const { me } = usePreferences()
   const [whyOpen, setWhyOpen] = useState(false)
   const whyId = `why-${job.id}`
   const detailsPath = `/candidate/jobs/${job.id}`
@@ -103,6 +132,7 @@ export default function JobCard({ job, onToggleSave }) {
         <div id={whyId} className={styles.whyText} data-explanation>
           <p>{job.overlap.count > 0 ? t('findJobs:card.why', { skills: format.list(job.overlap.matched) }) : t('findJobs:card.whyNone')}</p>
           {job.match && <JobExplanation jobId={job.id} />}
+          {!job.match && lacksEntitlement(me, 'ai') && <AiUnlock />}
         </div>
       )}
     </article>

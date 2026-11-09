@@ -2,6 +2,10 @@
   max-width: 768px;
 }
 
+.wide {
+  max-width: none;
+}
+
 .title {
   font-family: var(--font-display);
   font-size: 18px;

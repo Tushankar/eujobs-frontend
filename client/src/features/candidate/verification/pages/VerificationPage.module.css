@@ -268,3 +268,17 @@
     flex-wrap: wrap;
   }
 }
+
+/* A rejected certificate: a new document first, the same file as the quieter option. */
+.certificateActions {
+  display: flex;
+  flex-direction: column;
+  align-items: flex-end;
+  gap: 4px;
+}
+
+@media (max-width: 767px) {
+  .certificateActions {
+    align-items: flex-start;
+  }
+}
