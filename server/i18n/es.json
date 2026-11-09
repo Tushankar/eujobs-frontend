@@ -413,6 +413,16 @@
         "Abre la solicitud para ver los archivos. Cada apertura queda registrada."
       ],
       "action": "Abrir la solicitud"
+    },
+    "interview_candidate_deleted": {
+      "subject": "Entrevista cancelada: {{job}}",
+      "heading": "La entrevista está cancelada",
+      "body": [
+        "Hola, {{name}}:",
+        "La persona candidata para {{job}} eliminó su cuenta, así que la entrevista queda cancelada.",
+        "{{wasBooked}}"
+      ],
+      "action": "Abrir candidaturas"
     }
   },
   "verification": {

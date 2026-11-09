@@ -23,6 +23,7 @@ function interviewSamples(language, origin, role) {
     interview_rescheduled: { ...base, items: slots, released: label('released', { when }), aiNotes: '', ical: ical('CANCEL') },
     interview_confirmed: { ...base, ical: ical('REQUEST') },
     interview_cancelled: { ...base, wasBooked: label('wasBooked', { when }), reasonLine: label('reasonLine', { reason: 'The role was filled.' }), ical: ical('CANCEL') },
+    interview_candidate_deleted: { ...base, candidate: t(language, 'labels.deletedUser'), wasBooked: label('wasBooked', { when }), ical: ical('CANCEL') },
     interview_other_times: { ...base, noteLine: label('noteLine', { note: 'Could we meet on Friday morning instead?' }) },
     interview_reschedule_request: { ...base, noteLine: label('noteLine', { note: 'I have a clash that day; could we move it?' }) },
     interview_reminder: { ...base, soon: label('in24h') },

@@ -413,6 +413,16 @@
         "Ouvrez la demande pour consulter les fichiers. Chaque ouverture est enregistrée."
       ],
       "action": "Ouvrir la demande"
+    },
+    "interview_candidate_deleted": {
+      "subject": "Entretien annulé : {{job}}",
+      "heading": "L’entretien est annulé",
+      "body": [
+        "Bonjour {{name}},",
+        "Le candidat pour {{job}} a supprimé son compte : l’entretien est donc annulé.",
+        "{{wasBooked}}"
+      ],
+      "action": "Ouvrir les candidatures"
     }
   },
   "verification": {

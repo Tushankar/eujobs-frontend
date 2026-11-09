@@ -25,6 +25,7 @@
     "interview_offered": { "new": "{{company}} ha propuesto horarios de entrevista para {{job}}", "rescheduled": "{{company}} ha propuesto nuevos horarios de entrevista para {{job}}" },
     "interview_confirmed": { "candidate": "Entrevista con {{company}} reservada para el {{when}}", "recruiter": "{{candidate}} ha reservado la entrevista para {{job}}: {{when}}" },
     "interview_cancelled": "{{company}} ha cancelado tu entrevista para {{job}}",
+    "interview_candidate_deleted": "La persona candidata para {{job}} eliminó su cuenta: la entrevista queda cancelada",
     "interview_other_times": "{{candidate}} ha pedido otros horarios de entrevista para {{job}}",
     "interview_reschedule_requested": "{{candidate}} ha pedido cambiar la entrevista para {{job}}",
     "interview_expired": "No se eligió ningún horario: {{candidate}}, {{job}}. Propón nuevos horarios.",

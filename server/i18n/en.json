@@ -413,6 +413,16 @@
         "Open the request to view the files. Each opening is logged."
       ],
       "action": "Open the request"
+    },
+    "interview_candidate_deleted": {
+      "subject": "Interview cancelled: {{job}}",
+      "heading": "The interview is cancelled",
+      "body": [
+        "Hi {{name}},",
+        "The candidate for {{job}} deleted their account, so the interview is cancelled.",
+        "{{wasBooked}}"
+      ],
+      "action": "Open applications"
     }
   },
   "verification": {

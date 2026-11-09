@@ -24,6 +24,7 @@
     "interview_offered": { "new": "{{company}} offered interview times for {{job}}", "rescheduled": "{{company}} offered new interview times for {{job}}" },
     "interview_confirmed": { "candidate": "Interview with {{company}} booked for {{when}}", "recruiter": "{{candidate}} booked the interview for {{job}}: {{when}}" },
     "interview_cancelled": "{{company}} cancelled your interview for {{job}}",
+    "interview_candidate_deleted": "The candidate for {{job}} deleted their account: the interview is cancelled",
     "interview_other_times": "{{candidate}} asked for other interview times for {{job}}",
     "interview_reschedule_requested": "{{candidate}} asked to move the interview for {{job}}",
     "interview_expired": "No time was picked: {{candidate}}, {{job}}. Offer new times.",

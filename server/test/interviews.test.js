@@ -531,3 +531,68 @@ describe('Admins, export and retention (P11d-Q5, Q8, Q24)', () => {
     assert.equal(await DocumentRequest.countDocuments({ candidateId: candidate._id }), 0)
   })
 })
+
+describe('Erasure, recruiter deletion and retention (P12-Q9, P11d-Q8)', () => {
+  const PASSWORD = 'Harbour-Lantern-58'
+  const book = async ({ candidate, offer }) => {
+    const { body } = await offer()
+    await post(candidate, `/interviews/${body.id}/pick`, { startAt: body.slots[0].startAt }).expect(200)
+    return body.id
+  }
+
+  it('candidate erasure: the recruiter is told the booked interview is cancelled (bell, email, calendar CANCEL, no name); interviews and documents go', async () => {
+    const { recruiter, candidate, application, job, offer } = await market()
+    // A name of its own: both factories default to the same one, which the recruiter's greeting would match.
+    await User.updateOne({ _id: candidate._id }, { fullName: 'Ines Erased' })
+    const id = await book({ candidate, offer })
+    const pdf = await textPdf(['Passport scan'])
+    const created = await attach(api().post(`${v1}/document-requests`).set(auth(recruiter)), pdf, 'offer.pdf', 'application/pdf', { applicationId: String(application._id), items: JSON.stringify([{ kind: 'id' }]) })
+    await attach(api().post(`${v1}/document-requests/${created.body.id}/items/${created.body.items[0].id}`).set(auth(candidate)), pdf, 'id.pdf', 'application/pdf').expect(200)
+    const request = await DocumentRequest.findById(created.body.id)
+    const files = [request.attachmentFileId, ...request.items.map((item) => item.fileId)].filter(Boolean)
+    assert.equal(files.length, 2)
+
+    await api().delete(`${v1}/me`).set(auth(candidate)).send({ currentPassword: PASSWORD }).expect(204)
+
+    const [mail] = mailTo(recruiter.email, 'interview_candidate_deleted')
+    assert.ok(mail, 'the recruiter gets the always-sent email')
+    assert.equal(mail.ical.method, 'CANCEL')
+    assert.equal(mail.params.candidate, 'Deleted user')
+    assert.ok(!JSON.stringify(mail).includes('Ines Erased'), 'P12-Q3: the candidate is not named')
+    const bell = await Notification.findOne({ userId: recruiter._id, type: 'interview_candidate_deleted' })
+    assert.deepEqual(bell.params, { job: job.title })
+    assert.deepEqual((await post(recruiter, `/notifications/${bell._id}/open`)).body, { available: false })
+    assert.equal(await Interview.countDocuments({ _id: id }), 0)
+    assert.equal(await DocumentRequest.countDocuments({ candidateId: candidate._id }), 0)
+    assert.equal(await File.countDocuments({ _id: { $in: files } }), 0)
+  })
+
+  it('recruiter deletion: the candidate is told the booked interview is cancelled (bell, email, calendar CANCEL); the company\'s interviews go', async () => {
+    const { recruiter, company, candidate, offer } = await market()
+    await book({ candidate, offer })
+    await api().delete(`${v1}/me`).set(auth(recruiter)).send({ currentPassword: PASSWORD }).expect(204)
+    const [mail] = mailTo(candidate.email, 'interview_cancelled')
+    assert.ok(mail, 'the candidate gets the cancellation email')
+    assert.equal(mail.ical.method, 'CANCEL')
+    assert.ok(await Notification.exists({ userId: candidate._id, type: 'interview_cancelled' }))
+    assert.equal(await Interview.countDocuments({ companyId: company._id }), 0)
+  })
+
+  it('retention keeps transcripts and AI notes until 6 months after the application closed, then deletes them', async () => {
+    const { candidate, application, offer } = await market()
+    const id = await book({ candidate, offer })
+    await Interview.updateOne({ _id: id }, { $set: { transcript: 'Hello there', notes: { summary: 'Calm and clear', keyAnswers: [], strengths: [], concerns: [], followUps: [], generatedAt: new Date() } } })
+    const closedMonthsAgo = (months, extraDays = 0) => {
+      const date = new Date()
+      date.setMonth(date.getMonth() - months)
+      return new Date(date.getTime() - extraDays * 24 * HOUR)
+    }
+    await Application.updateOne({ _id: application._id }, { status: 'withdrawn', withdrawnAt: closedMonthsAgo(5) })
+    assert.equal((await retentionSweep(new Date())).interviews, 0)
+    assert.equal((await Interview.findById(id)).transcript, 'Hello there', 'kept at 5 months')
+    await Application.updateOne({ _id: application._id }, { withdrawnAt: closedMonthsAgo(6, 1) })
+    assert.equal((await retentionSweep(new Date())).interviews, 1)
+    const purged = await Interview.findById(id)
+    assert.deepEqual([purged.transcript, purged.notes?.summary], [undefined, undefined])
+  })
+})

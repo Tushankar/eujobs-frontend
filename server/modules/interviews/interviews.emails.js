@@ -75,7 +75,7 @@ export function sendInterviewEmail(type, user, { interview, company, job, candid
     aiNotes: aiNotes ? label(language, 'aiNotesLine') : '',
     soon: hours ? label(language, `in${hours}h`) : '',
     released: type === 'interview_rescheduled' && when ? label(language, 'released', { when }) : '',
-    wasBooked: type === 'interview_cancelled' && when ? label(language, 'wasBooked', { when }) : '',
+    wasBooked: ['interview_cancelled', 'interview_candidate_deleted'].includes(type) && when ? label(language, 'wasBooked', { when }) : '',
     reasonLine: reason ? label(language, 'reasonLine', { reason }) : '',
     noteLine: note ? label(language, 'noteLine', { note }) : '',
   }

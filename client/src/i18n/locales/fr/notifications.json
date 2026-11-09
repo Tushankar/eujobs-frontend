@@ -25,6 +25,7 @@
     "interview_offered": { "new": "{{company}} propose des créneaux d’entretien pour {{job}}", "rescheduled": "{{company}} propose de nouveaux créneaux d’entretien pour {{job}}" },
     "interview_confirmed": { "candidate": "Entretien avec {{company}} prévu le {{when}}", "recruiter": "{{candidate}} a confirmé l’entretien pour {{job}} : {{when}}" },
     "interview_cancelled": "{{company}} a annulé votre entretien pour {{job}}",
+    "interview_candidate_deleted": "Le candidat pour {{job}} a supprimé son compte : l’entretien est annulé",
     "interview_other_times": "{{candidate}} demande d’autres créneaux d’entretien pour {{job}}",
     "interview_reschedule_requested": "{{candidate}} demande à déplacer l’entretien pour {{job}}",
     "interview_expired": "Aucun créneau choisi : {{candidate}}, {{job}}. Proposez-en de nouveaux.",

@@ -39,6 +39,8 @@ export const EMAIL_TYPES = {
   interview_rescheduled: 'decision',
   interview_confirmed: 'decision',
   interview_cancelled: 'decision',
+  // P12-Q9: the recruiter's notice that an open interview ended with the candidate's erasure
+  interview_candidate_deleted: 'decision',
   interview_other_times: 'decision',
   interview_reschedule_request: 'decision',
   interview_reminder: 'non_critical',
@@ -97,6 +99,7 @@ export const NOTIFICATION_TYPES = {
   interview_offered: { sections: { candidate: 'applications' } },
   interview_confirmed: { sections: { candidate: 'applications', recruiter: 'applications' } },
   interview_cancelled: { sections: { candidate: 'applications' } },
+  interview_candidate_deleted: { sections: { recruiter: 'applications' } },
   interview_other_times: { sections: { recruiter: 'applications' } },
   interview_reschedule_requested: { sections: { recruiter: 'applications' } },
   interview_expired: { sections: { recruiter: 'applications' } },

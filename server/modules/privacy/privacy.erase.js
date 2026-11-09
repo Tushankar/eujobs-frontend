@@ -15,7 +15,11 @@ import { Company, KycDocument } from '../companies/companies.model.js'
 import { CvAccessRequest, CvVersion } from '../cv/cv.model.js'
 import { CandidateNote, ProfileView, RecruiterActivity, ShortlistEntry } from '../discovery/discovery.model.js'
 import { File, FileAccessLog } from '../files/files.model.js'
+import { config } from '../../config/env.js'
+import { t } from '../../lib/i18n.js'
+import { sendInterviewEmail } from '../interviews/interviews.emails.js'
 import { DocumentRequest, Interview } from '../interviews/interviews.model.js'
+import { cancel as cancelInterview } from '../interviews/interviews.service.js'
 import { Job, SavedJob } from '../jobs/jobs.model.js'
 import { Certificate, Enrollment, QuizAttempt } from '../learning/learning.model.js'
 import { Embedding, MatchResult } from '../matching/matching.model.js'
@@ -23,6 +27,7 @@ import { scheduleRecompute } from '../matching/matching.service.js'
 import { Conversation, Message } from '../messages/messages.model.js'
 import { ModerationCase } from '../moderation/moderation.model.js'
 import { Notification } from '../notifications/notifications.model.js'
+import { companyRecruiter, notify } from '../notifications/notifications.service.js'
 import { Payment, Subscription } from '../payments/payments.model.js'
 import { User } from '../users/users.model.js'
 import { VerificationSubmission } from '../verification/verification.model.js'
@@ -95,6 +100,39 @@ export const COVERAGE = {
   DocumentRequest: "deleted with both sides' files (the candidate's, or every request of a deleted recruiter's company; §3.23)",
 }
 
+/** Interviews that still hold a time or a pending offer: they are cancelled before an account goes (P12-Q9). */
+const OPEN_INTERVIEW = ['offered', 'other_times', 'confirmed']
+
+/**
+ * P12-Q9: before a candidate's erasure, the recruiter of each open interview gets a bell notification and the
+ * always-sent email (decision class, §3.23) that it is cancelled, with the calendar cancellation of a booked time.
+ * The candidate is not named (P12-Q3).
+ */
+async function tellRecruitersOfErasure(user) {
+  for (const interview of await Interview.find({ candidateId: user._id, status: { $in: OPEN_INTERVIEW } })) {
+    const recruiter = await companyRecruiter(interview.companyId)
+    if (!recruiter) continue
+    const [company, job] = await Promise.all([Company.findById(interview.companyId, 'displayName'), Job.findById(interview.jobId, 'title')])
+    const booked = interview.status === 'confirmed'
+    // The calendar cancellation supersedes the invite the recruiter holds.
+    interview.sequence += 1
+    await notify(recruiter, 'interview_candidate_deleted', { params: { job: job?.title ?? '' }, target: { kind: 'interview', id: interview._id } })
+    await sendInterviewEmail('interview_candidate_deleted', recruiter, {
+      interview: booked ? interview : null,
+      ical: booked ? 'CANCEL' : undefined,
+      company: company?.displayName ?? '',
+      job: job?.title ?? '',
+      candidateName: t(recruiter.language ?? 'en', 'labels.deletedUser'),
+      link: `${config.clientOrigin}/recruiter/applications`,
+    })
+  }
+}
+
+/** P12-Q9: before a recruiter's deletion, each open interview of the company is cancelled the usual way (§3.23). */
+async function cancelCompanyInterviews(user, companyId) {
+  for (const interview of await Interview.find({ companyId, status: { $in: OPEN_INTERVIEW } }, '_id')) await cancelInterview(user, interview._id, { reason: '' })
+}
+
 /** §3.23: interviews and document requests of the pair go with every file in them and their pending tasks. */
 async function removeInterviewData(filter) {
   const [interviews, requests] = await Promise.all([Interview.find(filter), DocumentRequest.find(filter)])
@@ -153,6 +191,7 @@ async function removeOwnRecords(user) {
 }
 
 async function eraseCandidate(user) {
+  await tellRecruitersOfErasure(user)
   const [applications, conversations, submissions, payments, cvVersions] = await Promise.all([
     Application.find({ candidateId: user._id }, '_id'),
     Conversation.find({ candidateId: user._id }, '_id'),
@@ -204,6 +243,8 @@ async function deleteRecruiter(user) {
   await removeName(user, [user._id, ...(company ? [company._id] : []), ...payments.map((item) => item._id)])
 
   if (company) {
+    // P12-Q9: the candidates of open interviews are told the usual way (bell, email, calendar cancellation, thread line).
+    await cancelCompanyInterviews(user, company._id)
     // M-189: jobs closed and the author removed; applications and threads keep the company display name.
     const now = new Date()
     await Job.updateMany({ companyId: company._id, status: { $ne: 'closed' } }, { $set: { status: 'closed', closedAt: now } })
