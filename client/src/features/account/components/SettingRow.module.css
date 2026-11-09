@@ -133,11 +133,15 @@ button.rowHead:hover .pill {
   }
 
   /* A row's button drops under its text on a phone. */
-  div.rowHead {
+  .withAction {
     flex-wrap: wrap;
   }
 
-  div.rowHead > :last-child:not(svg) {
+  .withAction > .rowText {
+    flex-basis: calc(100% - 34px);
+  }
+
+  .withAction > :last-child {
     margin-left: 34px;
   }
 }

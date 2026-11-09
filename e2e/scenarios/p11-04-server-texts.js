@@ -2,7 +2,6 @@ import { readFileSync } from 'node:fs'
 import { getDocument } from '../../server/node_modules/pdfjs-dist/legacy/build/pdf.mjs'
 import { ENUMS } from '../../server/config/enums.js'
 import { renderEmail } from '../../server/lib/mail/templates.js'
-import { mailSample } from '../../server/scripts/mailSamples.js'
 import { onboardedCandidate } from '../lib/candidates.js'
 import { API_URL } from '../lib/env.js'
 import { enrolFree, openLessons, passQuiz, publishedCourse } from '../lib/learning.js'
@@ -33,10 +32,22 @@ async function certificateText(owner, language, viewport) {
  * recipient, shown in Chrome (screenshots to read): translated, every placeholder filled, and no English sentence of
  * the server dictionary left. Then a real certificate PDF in Spanish and in French with its chrome in that language.
  */
+/**
+ * The mail samples reach server/config/env.js (the interview emails, Phase 11d), which needs server/.env. It is loaded
+ * here, in test mode with the e2e origin, into this process only and only when the scenario runs: the harness's API,
+ * seed and Vite processes keep the environment they were given at start, and the other scenarios load without it.
+ */
+async function loadMailSamples(webUrl) {
+  process.loadEnvFile(new URL('../../server/.env', import.meta.url))
+  Object.assign(process.env, { NODE_ENV: 'test', CLIENT_ORIGIN: webUrl })
+  return (await import('../../server/scripts/mailSamples.js')).mailSample
+}
+
 export default {
   name: 'P11-04 Server texts',
   viewports: ['D'],
   async run(ctx) {
+    const mailSample = await loadMailSamples(ctx.webUrl)
     const english = dictionary('en')
     const englishSentences = (language) => {
       const own = new Set(strings(dictionary(language)))

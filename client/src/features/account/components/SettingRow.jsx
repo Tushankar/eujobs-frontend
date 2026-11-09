@@ -39,7 +39,7 @@ export default function SettingRow({ id, icon, label, value, note, open, onToggl
           <span className={styles.pill}>{open ? t('common:cancel') : t('account:admin.edit')}</span>
         </button>
       ) : (
-        <div className={styles.rowHead}>
+        <div className={cx(styles.rowHead, action && styles.withAction)}>
           {text}
           {action ?? <Icon as={Lock} size={16} className={styles.rowIcon} />}
         </div>
