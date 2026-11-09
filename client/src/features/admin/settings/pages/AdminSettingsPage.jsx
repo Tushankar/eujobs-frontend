@@ -1,57 +1,19 @@
 import { useState } from 'react'
 import { useTranslation } from 'react-i18next'
-import { Globe, KeyRound, Lock, Mail, UserRound } from 'lucide-react'
-import { Avatar, Button, Icon, Panel, SelectField, TextField } from '@/components/ui'
+import { Globe, KeyRound, Mail, UserRound } from 'lucide-react'
+import { Avatar, Button, Panel, SelectField, TextField } from '@/components/ui'
 import NoticeBanner from '@/components/common/NoticeBanner.jsx'
 import PageTitle from '@/components/common/PageTitle.jsx'
 import { useUpdateMeMutation } from '@/app/api.js'
 import { identitySubtitle } from '@/components/layout/identity.js'
 import ChangePasswordForm from '@/features/account/components/ChangePasswordForm.jsx'
+import SettingRow, { SettingsSection } from '@/features/account/components/SettingRow.jsx'
 import EmailSwitches from '@/features/notifications/components/EmailSwitches.jsx'
 import { LANGUAGES, languageName } from '@/i18n/index.js'
 import { check, serverFieldErrors, useErrorText } from '@/lib/forms.js'
 import { usePreferences } from '@/lib/preferences.js'
-import { cx } from '@/utils/cx.js'
 import SettingsSidebar from '../components/SettingsSidebar.jsx'
 import styles from './AdminSettingsPage.module.css'
-
-/**
- * One settings row (LinkedIn style): grey icon, label, current value and an Edit pill. The whole head toggles the
- * row's form open below it; rows without `children` (the email) are read-only.
- */
-function SettingRow({ id, icon, label, value, note, open, onToggle, children }) {
-  const { t } = useTranslation()
-  const text = (
-    <>
-      <Icon as={icon} size={20} className={styles.rowIcon} />
-      <span className={styles.rowText}>
-        <span className={styles.label}>{label}</span>
-        {!open && <span className={styles.value}>{value}</span>}
-      </span>
-    </>
-  )
-  return (
-    <li className={cx(styles.row, open && styles.rowOpen)} data-setting={id}>
-      {children ? (
-        <button type="button" className={styles.rowHead} aria-expanded={open} aria-controls={`setting-${id}`} onClick={onToggle}>
-          {text}
-          <span className={styles.pill}>{open ? t('common:cancel') : t('account:admin.edit')}</span>
-        </button>
-      ) : (
-        <div className={styles.rowHead}>
-          {text}
-          <Icon as={Lock} size={16} className={styles.rowIcon} />
-        </div>
-      )}
-      {note && !open && <div className={styles.note}>{note}</div>}
-      {open && (
-        <div id={`setting-${id}`} className={styles.rowBody}>
-          {children}
-        </div>
-      )}
-    </li>
-  )
-}
 
 /**
  * Admin Settings (M-199): own name, password and language, and the email switches (P11b-Q3); no permission needed.
@@ -103,9 +65,7 @@ export default function AdminSettingsPage() {
             </div>
           </Panel>
 
-          <Panel padding={0} className={styles.card}>
-            <h2 className={styles.heading}>{t('account:admin.profile')}</h2>
-            <ul className={styles.rows}>
+          <SettingsSection title={t('account:admin.profile')}>
               <SettingRow
                 id="name"
                 icon={UserRound}
@@ -151,8 +111,7 @@ export default function AdminSettingsPage() {
                 <p className={styles.description}>{t('account:password.description')}</p>
                 <ChangePasswordForm />
               </SettingRow>
-            </ul>
-          </Panel>
+          </SettingsSection>
 
           {/* P11b-Q3, Q12 (supersedes OD6): the email switches of the admin's notification categories. */}
           <Panel padding={0} className={styles.card} data-card="notifications">

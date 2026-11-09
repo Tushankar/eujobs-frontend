@@ -1,12 +1,22 @@
 {
+  "security": {
+    "title": "Connexion et sécurité",
+    "verified": "Vérifié"
+  },
   "password": {
-    "title": "Modifier le mot de passe",
     "description": "Saisissez votre mot de passe actuel, puis le nouveau. Vous restez connecté sur vos autres appareils.",
     "current": "Mot de passe actuel",
     "new": "Nouveau mot de passe",
     "confirm": "Confirmez le nouveau mot de passe",
     "submit": "Modifier le mot de passe",
-    "saved": "Votre mot de passe a été modifié."
+    "saved": "Votre mot de passe a été modifié.",
+    "rules": {
+      "title": "Votre nouveau mot de passe",
+      "length": "Au moins {{min}} caractères",
+      "email": "Différent de la partie de votre e-mail avant le @",
+      "match": "Correspond à la confirmation",
+      "common": "Pas un mot de passe trop courant. Nous le vérifions à l’enregistrement."
+    }
   },
   "notifications": {
     "title": "Des nouvelles utiles. Moins de bruit."

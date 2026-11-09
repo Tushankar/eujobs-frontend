@@ -1,66 +1,21 @@
-.notice {
-  max-width: 720px;
-  padding-top: 20px;
-  font-size: 12px;
-  line-height: 28px;
-  color: var(--muted-foreground);
-}
-
-.actions {
-  display: flex;
-  flex-direction: column;
-  gap: 16px;
-  padding-top: 24px;
-  list-style: none;
-}
-
-.action {
-  display: flex;
-  align-items: center;
-  justify-content: space-between;
-  gap: 16px;
-  min-height: 75px;
-  padding: 16px;
-  border: 1px solid var(--border);
-  border-radius: var(--radius-xl);
-}
-
-.actionDanger {
-  border-color: #ffe2e2;
-}
-
-.actionText {
-  min-width: 0;
-}
-
-.actionLabel {
-  font-size: 12px;
-  font-weight: 600;
-  line-height: 16px;
-  color: var(--foreground);
-}
-
-.actionDescription {
-  padding-top: 4px;
-  font-size: 11px;
-  line-height: 16.5px;
-  color: var(--muted-foreground);
-}
-
-.action .dangerButton {
+.button {
   flex-shrink: 0;
+}
+
+.button.dangerButton {
   border-color: #ffc9c9;
   background: #fef2f2;
   color: #c10007;
 }
 
-.action .dangerButton:hover {
+.button.dangerButton:hover {
   background: #fde4e4;
 }
 
 .status {
-  padding-top: 16px;
-  font-size: 12px;
+  padding: 12px 24px 16px;
+  border-top: 1px solid var(--border);
+  font-size: 13px;
   line-height: 18px;
   color: var(--success-fg);
 }
@@ -70,7 +25,7 @@
 }
 
 .statusError {
-  font-size: 12px;
+  font-size: 13px;
   line-height: 18px;
   color: var(--destructive);
 }
@@ -88,8 +43,8 @@
 }
 
 @media (max-width: 639px) {
-  .action {
-    flex-direction: column;
-    align-items: flex-start;
+  .status {
+    padding-left: 16px;
+    padding-right: 16px;
   }
 }

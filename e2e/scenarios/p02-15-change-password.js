@@ -20,6 +20,8 @@ export default {
       const { page } = handle
       await signInWithForm(page, ctx.webUrl, '/sign-in', emma, ctx.seedCredentials.password)
       await page.goto(`${ctx.webUrl}/candidate/settings/data-account`, { waitUntil: 'networkidle0' })
+      // The Password row of Sign in & security opens the form.
+      await page.click('[data-setting="password"] button')
       await fill(page, 'input[name="currentPassword"]', 'Not-My-Password-1')
       await fill(page, 'input[name="newPassword"]', NEW_PASSWORD)
       await fill(page, 'input[name="confirmPassword"]', NEW_PASSWORD)

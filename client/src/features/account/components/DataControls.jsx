@@ -1,7 +1,7 @@
 import { useState } from 'react'
 import { useTranslation } from 'react-i18next'
 import { useNavigate } from 'react-router-dom'
-import { Download } from 'lucide-react'
+import { Download, FileDown, Trash2 } from 'lucide-react'
 import { Button, Icon, Modal, PasswordField } from '@/components/ui'
 import { errorCode } from '@/app/api.js'
 import { signOut } from '@/app/session.js'
@@ -10,6 +10,7 @@ import { check, compact, serverFieldErrors, useErrorText } from '@/lib/forms.js'
 import { usePreferences } from '@/lib/preferences.js'
 import { cx } from '@/utils/cx.js'
 import { useDeleteAccountMutation } from '../api.js'
+import SettingRow, { SettingsSection } from './SettingRow.jsx'
 import styles from './DataControls.module.css'
 
 /**
@@ -67,30 +68,38 @@ export default function DataControls() {
 
   return (
     <>
-      <p className={styles.notice}>{t('account:data.notice')}</p>
-      <ul className={styles.actions}>
-        <li className={styles.action}>
-          <div className={styles.actionText}>
-            <p className={styles.actionLabel}>{t('account:data.export.label')}</p>
-            <p className={styles.actionDescription}>{t('account:data.export.description')}</p>
-          </div>
-          <Button variant="outline" leftIcon={<Icon as={Download} size={13} />} onClick={handleExport} loading={exporting}>
-            {t('account:data.export.action')}
-          </Button>
-        </li>
-        <li className={cx(styles.action, styles.actionDanger)}>
-          <div className={styles.actionText}>
-            <p className={styles.actionLabel}>{t(`${deleteKey}.label`)}</p>
-            <p className={styles.actionDescription}>{t(`${deleteKey}.description`)}</p>
-          </div>
-          <Button variant="outline" className={styles.dangerButton} onClick={() => setConfirming(true)}>
-            {t(`${deleteKey}.action`)}
-          </Button>
-        </li>
-      </ul>
-      <p className={cx(styles.status, status?.error && styles.statusError)} role="status">
-        {status?.text}
-      </p>
+      <SettingsSection
+        title={t('account:data.title')}
+        description={t('account:data.notice')}
+        footer={
+          <p className={cx(styles.status, status?.error && styles.statusError)} role="status">
+            {status?.text}
+          </p>
+        }
+      >
+        <SettingRow
+          id="export"
+          icon={FileDown}
+          label={t('account:data.export.label')}
+          value={t('account:data.export.description')}
+          action={
+            <Button variant="outline" leftIcon={<Icon as={Download} size={13} />} onClick={handleExport} loading={exporting} className={styles.button}>
+              {t('account:data.export.action')}
+            </Button>
+          }
+        />
+        <SettingRow
+          id="delete"
+          icon={Trash2}
+          label={t(`${deleteKey}.label`)}
+          value={t(`${deleteKey}.description`)}
+          action={
+            <Button variant="outline" className={cx(styles.button, styles.dangerButton)} onClick={() => setConfirming(true)}>
+              {t(`${deleteKey}.action`)}
+            </Button>
+          }
+        />
+      </SettingsSection>
 
       <Modal
         open={confirming}

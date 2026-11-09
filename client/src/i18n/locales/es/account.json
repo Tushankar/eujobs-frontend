@@ -1,12 +1,22 @@
 {
+  "security": {
+    "title": "Inicio de sesión y seguridad",
+    "verified": "Verificado"
+  },
   "password": {
-    "title": "Cambiar la contraseña",
     "description": "Introduce tu contraseña actual y después la nueva. Seguirás con la sesión iniciada en tus otros dispositivos.",
     "current": "Contraseña actual",
     "new": "Nueva contraseña",
     "confirm": "Confirma la nueva contraseña",
     "submit": "Cambiar la contraseña",
-    "saved": "Tu contraseña se ha cambiado."
+    "saved": "Tu contraseña se ha cambiado.",
+    "rules": {
+      "title": "Tu nueva contraseña",
+      "length": "Al menos {{min}} caracteres",
+      "email": "Distinta de la parte de tu email antes de la @",
+      "match": "Coincide con la confirmación",
+      "common": "No es una contraseña muy común. Lo comprobamos al guardar."
+    }
   },
   "notifications": {
     "title": "Avisos útiles. Menos ruido."

@@ -1,0 +1,21 @@
+.email {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: 4px 12px;
+}
+
+.verified {
+  display: inline-flex;
+  align-items: center;
+  gap: 4px;
+  font-size: 12px;
+  font-weight: 600;
+  color: var(--success-fg);
+}
+
+.description {
+  font-size: 13px;
+  line-height: 20px;
+  color: var(--muted-foreground);
+}

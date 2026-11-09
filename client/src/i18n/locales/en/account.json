@@ -1,12 +1,22 @@
 {
+  "security": {
+    "title": "Sign in & security",
+    "verified": "Verified"
+  },
   "password": {
-    "title": "Change password",
     "description": "Enter your current password, then the new one. You stay signed in on your other devices.",
     "current": "Current password",
     "new": "New password",
     "confirm": "Confirm new password",
     "submit": "Change password",
-    "saved": "Your password has been changed."
+    "saved": "Your password has been changed.",
+    "rules": {
+      "title": "Your new password",
+      "length": "At least {{min}} characters",
+      "email": "Not the part of your email before the @",
+      "match": "Matches the confirmation",
+      "common": "Not a very common password. We check this when you save."
+    }
   },
   "notifications": {
     "title": "Useful updates. Less noise."
