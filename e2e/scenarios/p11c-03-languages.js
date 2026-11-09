@@ -14,8 +14,8 @@ async function checkTranslated(ctx, page, language, root, label) {
 }
 
 const COPY = {
-  es: { manage: 'Gestionar', search: 'Buscar candidatos', publish: 'Publicar oferta', notice: 'Con el plan gratuito ves a las personas', gate: 'Crea tu preselección', upsell: 'Recruiter Plus cuesta' },
-  fr: { manage: 'Gérer', search: 'Rechercher des candidats', publish: 'Publier l’offre', notice: 'Avec l’offre gratuite, vous voyez', gate: 'Constituez votre short-list', upsell: 'Recruiter Plus coûte' },
+  es: { manage: 'Gestionar', search: 'Buscar candidatos', publish: 'Publicar oferta', notice: 'Con el plan gratuito ves a las personas', gate: 'Crea tu preselección', upsell: 'Pasar a Recruiter Plus' },
+  fr: { manage: 'Gérer', search: 'Rechercher des candidats', publish: 'Publier l’offre', notice: 'Avec l’offre gratuite, vous voyez', gate: 'Constituez votre short-list', upsell: 'Passer à Recruiter Plus' },
 }
 
 /**

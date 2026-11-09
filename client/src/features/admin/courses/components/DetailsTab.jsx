@@ -277,7 +277,7 @@ export default function DetailsTab({ course, checklist }) {
                 className={styles.euroField}
                 label={t('details.euroPrice')}
                 inputMode="decimal"
-                leftIcon={<span className={styles.euroSign}>€</span>}
+                leftIcon={<span className={styles.euroSign}>{format.currencySymbol('EUR')}</span>}
                 value={values.euroPrice}
                 onChange={(event) => set('euroPrice', event.target.value)}
                 error={errorText.field('price', errors.euroPrice)}

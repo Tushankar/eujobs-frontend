@@ -2,10 +2,8 @@ import { useTranslation } from 'react-i18next'
 import { Crown } from 'lucide-react'
 import { cx } from '@/utils/cx.js'
 import { Icon } from '@/components/ui'
+import { isPaidPlan } from '@/lib/plans.js'
 import styles from './PlanBadge.module.css'
-
-/** True when the user is on a paid plan (candidate Plus, Recruiter Plus). */
-export const isPaidPlan = (me) => me?.plan === 'plus' || me?.plan === 'recruiter_plus'
 
 /** The paid plan's premium badge (profile menu, sidebar): a flat gold pill with a crown. `small` for the sidebar. */
 export default function PlanBadge({ me, small = false }) {

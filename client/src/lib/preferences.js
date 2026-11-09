@@ -4,6 +4,7 @@ import { useSelector } from 'react-redux'
 import { useGetMeQuery, useUpdateMeMutation } from '@/app/api.js'
 import {
   countryName,
+  currencySymbol,
   formatDate,
   formatDateTime,
   formatDuration,
@@ -73,6 +74,7 @@ export function useFormat() {
       locale,
       number: (value, options) => formatNumber(value, locale, options),
       money: (amountMinor, currency) => formatMoney(amountMinor, currency, locale),
+      currencySymbol: (currency) => currencySymbol(currency, locale),
       date: (value, options) => formatDate(value, locale, options),
       dateTime: (value) => formatDateTime(value, locale),
       month: (value) => formatMonth(value, locale),

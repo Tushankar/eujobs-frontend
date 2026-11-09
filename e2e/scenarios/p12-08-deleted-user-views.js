@@ -39,7 +39,7 @@ export default {
     await ctx.screenshot(page, '2-no-longer-available')
 
     // Sign out from a page with only the shell's queries: no 401 from the counters poll or the shell's /me (P12-C10).
-    // Signing out from a page with its own queries (the Overview) still refetches them: an open item (P12-C13).
+    // Signing out from a page with its own queries (the Overview) is P12-09.
     await page.goto(`${ctx.webUrl}/recruiter/settings/data-account`, { waitUntil: 'networkidle0' })
     // At 375 px the Sign out button is in the sidebar drawer.
     if (ctx.viewport === 'M') await page.click('[aria-controls="workspace-sidebar"]')

@@ -182,6 +182,8 @@ textarea.input {
 select.input {
   appearance: none;
   cursor: pointer;
+  /* A long chosen option (a job title and company) ends in an ellipsis inside the field on phones. */
+  text-overflow: ellipsis;
 }
 
 /* Toolbar filters (variant="filter"): LinkedIn-style 40px pills. A dropdown with a filter applied fills with ink. */

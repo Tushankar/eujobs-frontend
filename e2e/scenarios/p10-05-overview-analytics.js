@@ -1,9 +1,10 @@
 import { createRequire } from 'node:module'
 import { join } from 'node:path'
-import { openAsAdmin } from '../lib/admins.js'
+import { openAsAdmin, systemRole } from '../lib/admins.js'
 import { responseTo } from '../lib/flows.js'
 import { SERVER_DIR } from '../lib/env.js'
-import { db } from '../lib/testApi.js'
+import { ownerToken } from '../lib/recruiters.js'
+import { api, db, uniqueEmail } from '../lib/testApi.js'
 
 const { DateTime } = createRequire(join(SERVER_DIR, 'package.json'))('luxon')
 const ZONE = 'Europe/Madrid'
@@ -101,10 +102,20 @@ export default {
   name: 'P10-05 Overview and Analytics',
   viewports: ['D', 'M'],
   async run(ctx) {
+    // Recent platform activity names an invited admin's email: a long one (no break opportunity) must wrap inside the
+    // card, not widen the page at 375 px (the overflow P10-05 M showed in 11c and task 9). Admins are not in the KPIs.
+    const owner = await ownerToken()
+    const longEmail = uniqueEmail(`recentactivity${ctx.viewport.toLowerCase()}`.repeat(2))
+    const invited = await api('/admin/invitations', { method: 'POST', token: owner, body: { email: longEmail, fullName: 'Long Address', roleId: (await systemRole('Staff', owner)).id } })
+    ctx.check(invited.status === 201, `invited an admin with a long email (${invited.status})`)
+
     const handle = await ctx.newPage()
     const { page } = handle
     await page.emulateTimezone(ZONE)
     await openAsAdmin(ctx, handle, ctx.seedCredentials.email(null), '/admin', ctx.seedCredentials.password)
+    await page.waitForSelector('[data-recent-event="access.admin_invited"]')
+    ctx.check(await page.$$eval('[data-recent-event]', (rows, email) => rows.some((row) => row.textContent.includes(email)), longEmail), 'Recent activity shows the long email')
+    await handle.checkOverflow()
 
     for (const country of ['', 'GB']) {
       const want = await expected(country)

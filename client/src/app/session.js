@@ -68,11 +68,14 @@ export async function signIn(token, me) {
   if (i18n.language !== me.language) await i18n.changeLanguage(me.language)
 }
 
-/** Logout is client-side (M-007): drop the token and every cached response. */
+/**
+ * Logout is client-side (M-007), in this order: signed out first, so the workspace unmounts and its queries and polling
+ * stop; then every cached response is dropped; the token goes last. No query refetches without a session (no 401).
+ */
 export function signOut() {
-  clearToken()
   store.dispatch(signedOut())
   store.dispatch(api.util.resetApiState())
+  clearToken()
 }
 
 const PUBLIC_PORTAL_PAGES = ['/recruiter/sign-in', '/recruiter/sign-up', '/admin/sign-in']

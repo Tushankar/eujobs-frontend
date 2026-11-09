@@ -21,6 +21,8 @@
   font-size: 12px;
   line-height: 24px;
   color: var(--muted-foreground);
+  /* A long email address in the lead (invite, email code) breaks instead of widening the page on phones. */
+  overflow-wrap: anywhere;
 }
 
 /* Short desktop windows: see AuthLayout. */

@@ -1,9 +1,9 @@
-import { useLayoutEffect } from 'react'
-import { createBrowserRouter, Outlet, redirect, useLocation, useNavigationType } from 'react-router-dom'
+import { createBrowserRouter, redirect } from 'react-router-dom'
 import WorkspaceLayout from '@/components/layout/WorkspaceLayout.jsx'
 import HydrateFallback from '@/components/layout/HydrateFallback.jsx'
 import { WORKSPACES } from './workspaces.js'
 import NotFoundPage from './NotFoundPage.jsx'
+import ScrollToTop from './ScrollToTop.jsx'
 import { setRouter } from './navigation.js'
 import { landingPath, loadMe, requiredPage } from './session.js'
 import authRoutes from '@/features/auth/routes.jsx'
@@ -63,19 +63,6 @@ const routes = [
   workspaceRoute('admin', adminRoutes),
   { path: '*', element: <NotFoundPage /> },
 ]
-
-/**
- * Every page opens at the top: a new path scrolls the window up. Back/Forward (POP) keeps the browser's position, and
- * a change of only the query (filters, tabs) does not move the page.
- */
-function ScrollToTop() {
-  const { pathname } = useLocation()
-  const navigationType = useNavigationType()
-  useLayoutEffect(() => {
-    if (navigationType !== 'POP') window.scrollTo(0, 0)
-  }, [pathname]) // only a new path resets the scroll, so navigationType is left out on purpose
-  return <Outlet />
-}
 
 // The first render waits for the loaders (GET /me), so it shows a loading state meanwhile.
 export const router = createBrowserRouter([{ element: <ScrollToTop />, children: routes.map((route) => ({ ...route, HydrateFallback })) }])

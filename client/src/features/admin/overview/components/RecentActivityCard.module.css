@@ -18,6 +18,8 @@
   font-size: 11px;
   line-height: 24px;
   color: var(--muted-foreground);
+  /* An event naming a long email address (an admin invite) breaks inside the card instead of widening the page. */
+  overflow-wrap: anywhere;
 }
 
 .itemIcon {

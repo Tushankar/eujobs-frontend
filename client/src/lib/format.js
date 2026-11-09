@@ -21,6 +21,11 @@ export function formatMoney(amountMinor, currency, locale) {
   return new Intl.NumberFormat(locale, { style: 'currency', currency, minimumFractionDigits: digits, maximumFractionDigits: digits }).format(amount)
 }
 
+/** The currency's symbol as the locale writes it (EUR, GBP and PLN each get their own sign), e.g. a price field's prefix. */
+export function currencySymbol(currency, locale) {
+  return new Intl.NumberFormat(locale, { style: 'currency', currency }).formatToParts(0).find((part) => part.type === 'currency').value
+}
+
 /** A salary in major units (M-131); the caller adds the translated period. */
 export function formatSalary({ min, max, currency }, locale) {
   const format = new Intl.NumberFormat(locale, { style: 'currency', currency, maximumFractionDigits: 0 })

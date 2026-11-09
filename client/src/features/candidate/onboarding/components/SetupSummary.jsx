@@ -1,7 +1,7 @@
 import { useTranslation } from 'react-i18next'
 import { Check } from 'lucide-react'
 import { Icon, Skeleton, SkeletonRegion } from '@/components/ui'
-import { isPaidPlan } from '@/components/layout/PlanBadge.jsx'
+import { isPaidPlan } from '@/lib/plans.js'
 import { useFormat, usePreferences } from '@/lib/preferences.js'
 import { cx } from '@/utils/cx.js'
 import { useGetCvVersionsQuery } from '../../cv/api.js'

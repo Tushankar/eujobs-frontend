@@ -11,7 +11,8 @@ import { LANGUAGES, languageName } from '@/i18n/index.js'
 import { useCountryOptions } from '@/lib/countries.js'
 import { usePreferences, useFormat } from '@/lib/preferences.js'
 import { identitySubtitle } from './identity.js'
-import PlanBadge, { isPaidPlan } from './PlanBadge.jsx'
+import PlanBadge from './PlanBadge.jsx'
+import { isPaidPlan } from '@/lib/plans.js'
 import styles from './ProfileMenu.module.css'
 
 function OptionList({ options, selected, onSelect, className }) {

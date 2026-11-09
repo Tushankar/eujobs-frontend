@@ -164,7 +164,8 @@ export function checkLayout(page, texts, root = 'body') {
       }
 
       // 4. A native select's chosen option is drawn by the browser (no text node): measure it against the room left
-      // inside the select (padding and arrow excluded).
+      // inside the select (padding and arrow excluded). A select that ends it in an ellipsis follows the rule of
+      // step 2: user data may be truncated (a note), a translated label may not.
       const pen = document.createElement('canvas').getContext('2d')
       for (const select of scope.querySelectorAll('select')) {
         if (!shown(select)) continue
@@ -172,7 +173,9 @@ export function checkLayout(page, texts, root = 'body') {
         pen.font = `${style.fontWeight} ${style.fontSize} ${style.fontFamily}`
         const text = select.options[select.selectedIndex]?.text ?? ''
         const room = select.clientWidth - parseFloat(style.paddingLeft) - parseFloat(style.paddingRight) - (style.appearance === 'none' ? 0 : 20)
-        if (text && pen.measureText(text).width > room + 1) problems.push(`select text cut: select "${text}" (${Math.round(pen.measureText(text).width - room)}px)`)
+        if (!text || pen.measureText(text).width <= room + 1) continue
+        if (style.textOverflow === 'ellipsis' && !uiLabels.has(normal(text))) notes.push(`ellipsis (data): select "${text}"`)
+        else problems.push(`select text cut: select "${text}" (${Math.round(pen.measureText(text).width - room)}px)`)
       }
 
       // 3. Text over text: two elements whose text lines intersect (pinned bars only against their own kind).

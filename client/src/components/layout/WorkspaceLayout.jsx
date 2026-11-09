@@ -1,5 +1,6 @@
 import { useState } from 'react'
 import { useTranslation } from 'react-i18next'
+import { useSelector } from 'react-redux'
 import { Link, Navigate, Outlet, useLocation } from 'react-router-dom'
 import ForbiddenPage from '@/app/ForbiddenPage.jsx'
 import { adminHome, adminNavItemFor, can } from '@/app/permissions.js'
@@ -29,6 +30,11 @@ export default function WorkspaceLayout({ workspaceId }) {
   const { me } = usePreferences()
   const page = workspaceId === 'admin' ? adminNavItemFor(pathname) : null
   const blocked = page && me && !can(me, page.permission) ? page : null
+  const signedIn = useSelector((state) => state.session.signedIn)
+
+  // Signed out (Sign out, a deleted account, another tab): the workspace unmounts at once, so its pages' queries and
+  // polling stop before the cache reset instead of refetching without a session.
+  if (!signedIn) return null
 
   return (
     <>
