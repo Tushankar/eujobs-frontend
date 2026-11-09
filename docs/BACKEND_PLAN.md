@@ -3130,6 +3130,26 @@ The course-purchase path is built here but verified in Phase 8. AI pages are gat
 
 **Open before task 9.** P10-05 at 375 px (the 4 px overflow seen once in 11c) is watched in the full run.
 
+**Task 9, final regression (2026-11-09, HEAD `bcc5491`; `d1a01f1` committed the same tree mid-run; nothing fixed or committed during it)**
+
+| Command | Result |
+|---|---|
+| `cd server && npm test` (13:34–13:57, through the lock) | **432 tests, 432 pass** (incl. the P12-Q9 interview erasure/deletion/retention tests in `interviews.test.js`) |
+| lint server, e2e | clean |
+| lint client | 0 errors, 3 warnings (`router.jsx:71`, `router.jsx:75`, `PlanBadge.jsx:8`) |
+| client build + check-i18n | clean; es, fr match en |
+| `node e2e/audit-static.js` | 1 finding: `admin/courses/components/DetailsTab.jsx:280` hard-coded `€` (from `9fe9c83`) |
+| `npm audit` | client 0, e2e 0, server 3 moderate (P12-C11) |
+| `node e2e/run.js all` (13:57–16:39, D + M) | **221 results: 213 pass, 8 fail**. Artifacts `e2e/artifacts/2026-11-09T08-27-32-820Z-all` |
+
+Failures (not fixed; waiting for the owner):
+- P2-16 D: the scenario expects 4 email switches; the page has 5 (Interviews, added in 11d). Stale scenario.
+- P11c-03 D, M: "es: Billing upsell": the copy `Recruiter Plus cuesta` was removed by the Billing redesign `8e0da01` (plan cards). Stale scenario.
+- P10-05 M: 5 px horizontal overflow at 375 px on Overview/Analytics. Repeated (4 px in 11c); cause not yet traced.
+- P12-05 M: `/admin/ai-matching` job select cuts "ErasedMRec Designer · ErasedMRec Studio 24355 Ltd" (85 px) in en/es/fr; long title created by the P12 deletion scenarios. Real mobile layout issue.
+- P3-01 M ("Waiting failed: 15000ms") and P11-01 M ("Navigation timeout of 30000 ms"): timeouts; D passed and the same routes passed in P12-05 M. Likely timing under the 2 h 40 min run; needs a rerun to confirm.
+- P12-07 D: the static audit finding above.
+
 ---
 
 ## 7. Prep checklist
