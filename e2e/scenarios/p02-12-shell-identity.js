@@ -42,7 +42,7 @@ export default {
       text: element.innerText,
       links: [...element.querySelectorAll('a')].map((link) => link.getAttribute('href')),
     }))
-    ctx.check(footer.text.includes(`© ${new Date().getFullYear()} Local WorkMan`), `footer text: ${footer.text}`)
+    ctx.check(footer.text.includes(`© ${new Date().getFullYear()} EU Jobs`), `footer text: ${footer.text}`)
     ctx.check(JSON.stringify(footer.links) === JSON.stringify(['/legal/terms', '/legal/privacy', '/legal/imprint']), `footer links ${footer.links}`)
     ctx.check(!/demo|saved on this device/i.test(footer.text), 'no demo footer note')
     ctx.assertClean(handle.issues, 'candidate shell')

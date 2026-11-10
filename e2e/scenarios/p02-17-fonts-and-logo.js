@@ -1,6 +1,6 @@
 import { signInWithForm } from '../lib/flows.js'
 
-/** P2-17 (M-192, OD11): no Google Fonts request; the logo is the AI mark plus live "Local WorkMan" and "AI Job Portal". */
+/** P2-17 (M-192, OD11): no Google Fonts request; the logo is the EU JOBS image (Figma 426:64) with the brand as alt text. */
 export default {
   name: 'P2-17 Fonts and logo',
   viewports: ['D'],
@@ -20,14 +20,9 @@ export default {
     })
     ctx.check(fonts.manrope && fonts.inter, `self-hosted fonts loaded: ${JSON.stringify(fonts)}`)
 
-    const logo = await page.$eval('aside a[aria-label]', (link) => ({
-      mark: link.querySelector('img')?.getAttribute('src') ?? '',
-      text: link.innerText.replace(/\s+/g, ' ').trim(),
-      family: getComputedStyle(link.querySelector('span span')).fontFamily,
-    }))
-    ctx.check(logo.mark.includes('logo-mark'), `logo image ${logo.mark}`)
-    ctx.check(logo.text === 'Local WorkMan AI Job Portal', `logo text "${logo.text}"`)
-    ctx.check(logo.family.includes('Manrope'), `logo font ${logo.family}`)
+    const logo = await page.$eval('aside a[aria-label] img', (img) => ({ src: img.getAttribute('src'), alt: img.alt, loaded: img.naturalWidth > 0 }))
+    ctx.check(/\/logo\.png/.test(logo.src) && logo.loaded, `logo image ${logo.src} loaded=${logo.loaded}`)
+    ctx.check(logo.alt === 'EU Jobs · AI Powered Careers', `logo alt "${logo.alt}"`)
     await ctx.screenshot(page, 'logo-and-fonts')
     ctx.assertClean(handle.issues, 'fonts and logo')
   },
