@@ -168,10 +168,10 @@
     "certificateIssued": "{{issuer}} · {{date}}",
     "noCertificates": "No hay certificados indicados.",
     "courseCertificates": "Certificados de cursos",
-    "noCourseCertificates": "No ha obtenido certificados de cursos en Local WorkMan.",
+    "noCourseCertificates": "No ha obtenido certificados de cursos en EU Jobs.",
     "checkCertificate": "Comprobar {{code}}",
     "courseCertificatesNote": "Los certificados de cursos confirman que se completó el curso y se aprobó una prueba de conocimientos. No verifican habilidades profesionales.",
-    "courses": "Cursos en Local WorkMan",
+    "courses": "Cursos en EU Jobs",
     "noCourses": "Aún no ha hecho ningún curso."
   },
   "educationTab": {

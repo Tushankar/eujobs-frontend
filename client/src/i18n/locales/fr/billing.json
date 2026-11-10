@@ -8,7 +8,7 @@
     "description": "Vérifiez le prix, puis continuez vers Stripe pour payer.",
     "monthly": "Facturé chaque mois en {{currency}}",
     "oneTime": "Paiement unique en {{currency}}",
-    "note": "Vous payez sur la page sécurisée de Stripe par carte ou avec Link. Les prix incluent la TVA. Vos données de carte ne parviennent jamais à Local WorkMan.",
+    "note": "Vous payez sur la page sécurisée de Stripe par carte ou avec Link. Les prix incluent la TVA. Vos données de carte ne parviennent jamais à EU Jobs.",
     "cancel": "Annuler",
     "continue": "Continuer vers le paiement sécurisé"
   },
@@ -48,7 +48,7 @@
     "stepApplyHint": "Nous l’ajoutons à votre compte.",
     "stepBack": "Retour en cours",
     "stepBackHint": "Vous revenez à la page d’où vous êtes parti.",
-    "secure": "Traité en toute sécurité par Stripe. Les données de votre carte n’arrivent jamais chez Local WorkMan.",
+    "secure": "Traité en toute sécurité par Stripe. Les données de votre carte n’arrivent jamais chez EU Jobs.",
     "summaryTitle": "Récapitulatif de la commande",
     "summaryItem": "Article",
     "summaryBilling": "Facturation",

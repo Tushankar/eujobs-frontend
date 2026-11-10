@@ -71,7 +71,7 @@
   },
   "data": {
     "title": "Entiende y controla tus datos",
-    "notice": "Los datos de tu cuenta se guardan en los servidores de Local WorkMan. Descarga una copia cuando quieras o elimina tu cuenta y tus datos personales.",
+    "notice": "Los datos de tu cuenta se guardan en los servidores de EU Jobs. Descarga una copia cuando quieras o elimina tu cuenta y tus datos personales.",
     "export": {
       "label": "Descargar tus datos",
       "description": "Un archivo ZIP con tus registros en JSON y los archivos que subiste.",

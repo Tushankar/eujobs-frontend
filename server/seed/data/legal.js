@@ -9,7 +9,7 @@ export const LEGAL_DOCUMENTS = {
     en: {
       title: 'Terms of Service',
       body: `## About these terms
-Local WorkMan is a job portal for the EU and the UK that connects candidates with recruiters and uses AI to suggest matches. These terms apply when you create an account or use the service.
+EU Jobs is a job portal for the EU and the UK that connects candidates with recruiters and uses AI to suggest matches. These terms apply when you create an account or use the service.
 
 ## Your account
 - Each account has one role: candidate, recruiter or administrator.
@@ -39,7 +39,7 @@ When these terms change, we ask you to accept the new version the next time you 
     es: {
       title: 'Condiciones del servicio',
       body: `## Sobre estas condiciones
-Local WorkMan es un portal de empleo para la UE y el Reino Unido que pone en contacto a candidatos y reclutadores y usa IA para sugerir coincidencias. Estas condiciones se aplican cuando creas una cuenta o usas el servicio.
+EU Jobs es un portal de empleo para la UE y el Reino Unido que pone en contacto a candidatos y reclutadores y usa IA para sugerir coincidencias. Estas condiciones se aplican cuando creas una cuenta o usas el servicio.
 
 ## Tu cuenta
 - Cada cuenta tiene un solo rol: candidato, reclutador o administrador.
@@ -69,7 +69,7 @@ Cuando estas condiciones cambien, te pediremos que aceptes la nueva versión la 
     fr: {
       title: 'Conditions d’utilisation',
       body: `## À propos de ces conditions
-Local WorkMan est un portail emploi pour l’UE et le Royaume-Uni qui met en relation candidats et recruteurs et utilise l’IA pour proposer des correspondances. Ces conditions s’appliquent lorsque vous créez un compte ou utilisez le service.
+EU Jobs est un portail emploi pour l’UE et le Royaume-Uni qui met en relation candidats et recruteurs et utilise l’IA pour proposer des correspondances. Ces conditions s’appliquent lorsque vous créez un compte ou utilisez le service.
 
 ## Votre compte
 - Chaque compte a un seul rôle : candidat, recruteur ou administrateur.
@@ -101,7 +101,7 @@ Lorsque ces conditions changent, nous vous demandons d’accepter la nouvelle ve
     en: {
       title: 'Privacy Policy',
       body: `## Who we are
-Local WorkMan runs this job portal. The operator's details are in the [Imprint](/legal/imprint).
+EU Jobs runs this job portal. The operator's details are in the [Imprint](/legal/imprint).
 
 ## What we collect
 - **Account:** name, email address, password (stored only as a secure hash), language, country and time zone.
@@ -135,7 +135,7 @@ When this policy changes, we ask you to accept the new version the next time you
     es: {
       title: 'Política de privacidad',
       body: `## Quiénes somos
-Local WorkMan gestiona este portal de empleo. Los datos del responsable están en el [Aviso legal](/legal/imprint).
+EU Jobs gestiona este portal de empleo. Los datos del responsable están en el [Aviso legal](/legal/imprint).
 
 ## Qué datos recogemos
 - **Cuenta:** nombre, correo electrónico, contraseña (guardada solo como un hash seguro), idioma, país y zona horaria.
@@ -169,7 +169,7 @@ Cuando esta política cambie, te pediremos que aceptes la nueva versión la pró
     fr: {
       title: 'Politique de confidentialité',
       body: `## Qui nous sommes
-Local WorkMan exploite ce portail emploi. Les coordonnées de l’exploitant figurent dans les [Mentions légales](/legal/imprint).
+EU Jobs exploite ce portail emploi. Les coordonnées de l’exploitant figurent dans les [Mentions légales](/legal/imprint).
 
 ## Les données que nous collectons
 - **Compte :** nom, adresse e-mail, mot de passe (conservé uniquement sous forme de hachage sécurisé), langue, pays et fuseau horaire.

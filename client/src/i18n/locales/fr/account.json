@@ -71,7 +71,7 @@
   },
   "data": {
     "title": "Comprendre et maîtriser vos données",
-    "notice": "Les données de votre compte sont enregistrées sur les serveurs de Local WorkMan. Téléchargez-en une copie quand vous le souhaitez, ou supprimez votre compte et vos données personnelles.",
+    "notice": "Les données de votre compte sont enregistrées sur les serveurs de EU Jobs. Téléchargez-en une copie quand vous le souhaitez, ou supprimez votre compte et vos données personnelles.",
     "export": {
       "label": "Télécharger vos données",
       "description": "Un fichier ZIP avec vos enregistrements au format JSON et les fichiers que vous avez déposés.",

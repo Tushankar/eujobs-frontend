@@ -8,7 +8,7 @@
     "description": "Check the price, then continue to Stripe to pay.",
     "monthly": "Billed monthly in {{currency}}",
     "oneTime": "One-time payment in {{currency}}",
-    "note": "You pay on Stripe’s secure page with a card or Link. Prices include VAT. Your card details never reach Local WorkMan.",
+    "note": "You pay on Stripe’s secure page with a card or Link. Prices include VAT. Your card details never reach EU Jobs.",
     "cancel": "Cancel",
     "continue": "Continue to secure payment"
   },
@@ -48,7 +48,7 @@
     "stepApplyHint": "We are adding it to your account.",
     "stepBack": "Taking you back",
     "stepBackHint": "You return to the page you started from.",
-    "secure": "Processed securely by Stripe. Your card details never reach Local WorkMan.",
+    "secure": "Processed securely by Stripe. Your card details never reach EU Jobs.",
     "summaryTitle": "Order summary",
     "summaryItem": "Item",
     "summaryBilling": "Billing",

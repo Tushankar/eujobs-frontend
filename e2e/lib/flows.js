@@ -89,7 +89,9 @@ export async function pickMonth(page, name, value) {
 
 /** Chooses a file in a file input. */
 export async function chooseFile(page, selector, path) {
-  const input = await page.waitForSelector(selector)
+  // A file chosen while the input is still disabled (e.g. the CV dropzone until GET /meta/config has its rules) is
+  // ignored by the browser, so wait until it is enabled.
+  const input = await page.waitForSelector(`${selector}:not([disabled])`)
   await input.uploadFile(path)
 }
 

@@ -1,16 +1,8 @@
 import { BRAND } from '@/app/brand.js'
-import mark from '@/assets/images/logo-mark.png'
+import logo from '@/assets/images/logo.png'
 import styles from './BrandLogo.module.css'
 
-/** OD11: the "AI" mark cropped from the original logo, with the name and tagline as live Manrope text. `height` in px. */
+/** The EU JOBS logo from Figma (node 426:64), name and tagline included in the image. `height` in px. */
 export default function BrandLogo({ height = 45 }) {
-  return (
-    <span className={styles.logo} style={{ '--logo-height': `${height}px` }}>
-      <img src={mark} alt="" className={styles.mark} />
-      <span className={styles.text}>
-        <span className={styles.name}>{BRAND.name}</span>
-        <span className={styles.tagline}>{BRAND.tagline}</span>
-      </span>
-    </span>
-  )
+  return <img src={logo} alt={`${BRAND.name} · ${BRAND.tagline}`} className={styles.logo} style={{ height }} />
 }

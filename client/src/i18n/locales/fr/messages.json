@@ -43,7 +43,7 @@
   "outreach": {
     "button": "Message",
     "title": "Lancer une conversation avec {{firstName}}",
-    "description": "Le candidat reçoit votre message dans Local WorkMan, et par e-mail s’il reste non lu.",
+    "description": "Le candidat reçoit votre message dans EU Jobs, et par e-mail s’il reste non lu.",
     "template": "Bonjour {{firstName}}, votre profil a retenu notre attention pour notre poste de {{job}}. J’aimerais en savoir plus sur votre travail. Seriez-vous disponible pour un court échange ?",
     "templateNoJob": "Bonjour {{firstName}}, votre profil a retenu notre attention pour un poste que nous recrutons. J’aimerais en savoir plus sur votre travail. Seriez-vous disponible pour un court échange ?"
   }

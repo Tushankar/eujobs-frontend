@@ -55,7 +55,7 @@
     "cancel": "Cancelar entrevista"
   },
   "mode": {
-    "video": "Videollamada en Local WorkMan",
+    "video": "Videollamada en EU Jobs",
     "phone": "Llamada telefónica",
     "phoneRecruiter": "Llamada telefónica: llama a la persona candidata al {{phone}}",
     "phoneCandidate": "Llamada telefónica: el reclutador te llama al número de tu perfil",

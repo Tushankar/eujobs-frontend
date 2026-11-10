@@ -2,31 +2,31 @@
   "email": {
     "layout": {
       "linkHint": "If the button does not work, copy this link into your browser:",
-      "footer": "This is an automated message from Local WorkMan."
+      "footer": "This is an automated message from EU Jobs."
     },
     "verify_email": {
       "subject": "Confirm your email address",
       "heading": "Confirm your email address",
       "body": [
         "Hi {{name}},",
-        "Thanks for signing up to Local WorkMan. Confirm your email address to finish creating your account. The link works once and expires in 24 hours."
+        "Thanks for signing up to EU Jobs. Confirm your email address to finish creating your account. The link works once and expires in 24 hours."
       ],
       "action": "Confirm email address",
       "note": "If you did not sign up, you can ignore this email."
     },
     "already_registered": {
-      "subject": "You already have a Local WorkMan account",
+      "subject": "You already have a EU Jobs account",
       "heading": "You already have an account",
       "body": [
         "Hi {{name}},",
-        "Someone tried to sign up to Local WorkMan with this email address. You already have an account, so no new one was created."
+        "Someone tried to sign up to EU Jobs with this email address. You already have an account, so no new one was created."
       ],
       "action": "Sign in",
       "secondary": "Forgot your password? Reset it here:",
       "note": "If this was not you, you can ignore this email. Your account has not changed."
     },
     "recruiter_email_code": {
-      "subject": "Your Local WorkMan verification code",
+      "subject": "Your EU Jobs verification code",
       "heading": "Your verification code",
       "body": [
         "Hi {{name}},",
@@ -35,7 +35,7 @@
       "note": "If you did not sign up, you can ignore this email."
     },
     "password_reset": {
-      "subject": "Reset your Local WorkMan password",
+      "subject": "Reset your EU Jobs password",
       "heading": "Reset your password",
       "body": [
         "Hi {{name}},",
@@ -66,7 +66,7 @@
     },
     "recruiter_approved": {
       "subject": "Your recruiter account is approved",
-      "heading": "Welcome to Local WorkMan",
+      "heading": "Welcome to EU Jobs",
       "body": [
         "Hi {{name}},",
         "An administrator reviewed {{company}} and approved your recruiter account. Your recruiter workspace is now open: you can post jobs and discover candidates."
@@ -142,7 +142,7 @@
       "body": [
         "Hi {{name}},",
         "{{company}} reviewed your application for {{job}} and decided not to move forward with it.",
-        "Thank you for your interest. You can keep applying to other roles on Local WorkMan."
+        "Thank you for your interest. You can keep applying to other roles on EU Jobs."
       ],
       "action": "Find more jobs"
     },
@@ -161,7 +161,7 @@
       "heading": "You have an unread message",
       "body": [
         "Hi {{name}},",
-        "{{sender}} sent you a message on Local WorkMan.",
+        "{{sender}} sent you a message on EU Jobs.",
         "Open the conversation to read it and reply."
       ],
       "action": "Open conversation"
@@ -210,11 +210,11 @@
       "secondary": "Public check:"
     },
     "admin_invite": {
-      "subject": "You are invited to the Local WorkMan admin workspace",
+      "subject": "You are invited to the EU Jobs admin workspace",
       "heading": "Join the admin workspace",
       "body": [
         "Hi {{name}},",
-        "{{inviter}} invited you to the Local WorkMan admin workspace with the role {{role}}. Set a password to finish your account. The link works once and expires in 72 hours."
+        "{{inviter}} invited you to the EU Jobs admin workspace with the role {{role}}. Set a password to finish your account. The link works once and expires in 72 hours."
       ],
       "action": "Set your password",
       "note": "If you were not expecting this invitation, you can ignore this email."
@@ -603,7 +603,7 @@
       "reasonLine": "Reason: {{reason}}",
       "noteLine": "Note: “{{note}}”",
       "details": {
-        "video": "Video call in Local WorkMan: join from the interview card, from 10 minutes before the start.",
+        "video": "Video call in EU Jobs: join from the interview card, from 10 minutes before the start.",
         "phone_candidate": "Phone call: the recruiter will call you on the phone number in your profile.",
         "phone_recruiter": "Phone call: call {{candidate}} on {{phone}}.",
         "in_person": "In person: {{address}}",
@@ -620,7 +620,7 @@
     }
   },
   "certificate": {
-    "tagline": "AI Job Portal",
+    "tagline": "AI Powered Careers",
     "title": "Certificate of completion",
     "intro": "This certifies that",
     "completed": "has completed the course",

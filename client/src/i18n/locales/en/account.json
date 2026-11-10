@@ -70,7 +70,7 @@
   },
   "data": {
     "title": "Understand and control your data",
-    "notice": "Your account data is stored on Local WorkMan’s servers. Download a copy whenever you like, or delete your account and personal data.",
+    "notice": "Your account data is stored on EU Jobs servers. Download a copy whenever you like, or delete your account and personal data.",
     "export": {
       "label": "Download your data",
       "description": "A ZIP file with your records as JSON and the files you uploaded.",

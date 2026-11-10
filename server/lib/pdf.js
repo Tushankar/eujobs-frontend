@@ -11,7 +11,7 @@ import { interpolate, t } from './i18n.js'
 const font = (weight) => fileURLToPath(new URL(`../assets/fonts/Inter-${weight}.ttf`, import.meta.url))
 const LOCALE = { en: 'en-IE', es: 'es-ES', fr: 'fr-FR' }
 // The brand never changes with the language (M-193).
-const BRAND = 'Local WorkMan'
+const BRAND = 'EU Jobs'
 const COLOURS = { ink: '#202534', muted: '#687184', primary: '#0066C4', border: '#E8EAF0' }
 
 /** The QR code's dark modules as filled squares, `size` points wide, at (x, y). */

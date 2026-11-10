@@ -8,7 +8,7 @@ import styles from './CandidateSkillsPage.module.css'
 
 /**
  * Skills tab (M-026): listed skills, languages with level, certificates ("Verified" only when reviewed, M-025) and the
- * course certificates earned on Local WorkMan (C24: shown wherever the profile is visible; they do not verify skills).
+ * course certificates earned on EU Jobs (C24: shown wherever the profile is visible; they do not verify skills).
  */
 export default function CandidateSkillsPage() {
   const { t } = useTranslation()

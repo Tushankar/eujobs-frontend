@@ -8,7 +8,7 @@
     "uploaded": "{{name}} es la versión {{number}} y tu CV activo.",
     "continue": "Continuar",
     "skip": "Añadiré mi currículum más tarde",
-    "privacy": "Tu currículum se guarda de forma privada en Local WorkMan. Los reclutadores solo pueden abrirlo según tu configuración de privacidad, y cada descarga queda registrada."
+    "privacy": "Tu currículum se guarda de forma privada en EU Jobs. Los reclutadores solo pueden abrirlo según tu configuración de privacidad, y cada descarga queda registrada."
   },
   "preferences": {
     "name": "Tus preferencias",

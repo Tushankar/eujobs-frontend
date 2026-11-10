@@ -54,7 +54,7 @@
     "cancel": "Cancel interview"
   },
   "mode": {
-    "video": "Video call in Local WorkMan",
+    "video": "Video call in EU Jobs",
     "phone": "Phone call",
     "phoneRecruiter": "Phone call: call the candidate on {{phone}}",
     "phoneCandidate": "Phone call: the recruiter calls you on the number in your profile",

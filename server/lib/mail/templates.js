@@ -9,8 +9,8 @@ import { interpolate, t } from '../i18n.js'
  * Colours are DESIGN_SYSTEM tokens; the button uses #0066C4 for AA contrast.
  */
 // The brand and its English tagline stay the same in every language (M-193).
-const BRAND = 'Local WorkMan'
-const TAGLINE = 'AI Job Portal'
+const BRAND = 'EU Jobs'
+const TAGLINE = 'AI Powered Careers'
 
 const escapeHtml = (value) =>
   String(value).replace(/[&<>"']/g, (char) => ({ '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;', "'": '&#39;' })[char])

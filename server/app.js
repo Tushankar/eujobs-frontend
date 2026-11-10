@@ -4,10 +4,15 @@ import helmet from 'helmet'
 import { config } from './config/env.js'
 import { errorHandler, notFound } from './middleware/error.js'
 import { webhookRouter } from './modules/payments/payments.routes.js'
+import { manualPlaces } from './modules/places/places.manual.js'
+import { setPlacesClient } from './modules/places/places.service.js'
 import v1 from './routes/v1.js'
 
 /* The Express app without listening, so tests can import it (§2.1, §2.12). */
 const app = express()
+
+// Testing only (PLACES_MANUAL=true): city fields take a typed "City, Country" instead of calling Google.
+if (config.placesManual) setPlacesClient(manualPlaces)
 
 // Requests reach the API directly or through a local tunnel (C26).
 app.set('trust proxy', 'loopback')

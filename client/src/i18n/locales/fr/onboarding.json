@@ -8,7 +8,7 @@
     "uploaded": "{{name}} est la version {{number}} et votre CV actif.",
     "continue": "Continuer",
     "skip": "J’ajouterai mon CV plus tard",
-    "privacy": "Votre CV est conservé de façon privée sur Local WorkMan. Les recruteurs ne peuvent l’ouvrir que selon vos paramètres de confidentialité, et chaque téléchargement est enregistré."
+    "privacy": "Votre CV est conservé de façon privée sur EU Jobs. Les recruteurs ne peuvent l’ouvrir que selon vos paramètres de confidentialité, et chaque téléchargement est enregistré."
   },
   "preferences": {
     "name": "Vos préférences",

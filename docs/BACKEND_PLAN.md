@@ -428,6 +428,7 @@ M-164 lets users report jobs, profiles, companies and messages. M-167 defines "R
 | P12-Q10 task 9 follow-ups (owner) | Fix the 8 failures of the final regression: update P2-16 (5 email switches incl. Interviews) and P11c-03 (the new Billing wording); find and fix the P10-05 375 px overflow; long job titles in the `/admin/ai-matching` dropdown truncate or wrap inside it at 375 px (en/es/fr); the course price prefix through the currency formatter (static audit 0); recruiter Overview sign-out without 401s or console errors (stop polling and reset the cache before the token is cleared) with a browser check; the 3 client lint warnings; accept the 3 moderate `npm audit` warnings (archiver chain, unreachable) with a recheck before go-live; send `content_restricted` and `content_restriction_lifted` live to +alex. Rerun only what the fixes touch, all through the lock. | 2026-11-09 |
 | P12-C15 builder call: overflow at 375 px | Cause found: an email address is one unbreakable word. P10-05: the Overview's Recent platform activity row "Admin invited: {name} ({email}) as {role}" (an audit event from P10-01's invites) widened the page by up to 126 px whenever the generated test email was long enough, so it came and went with the random suffix (4 px in 11c, 5 px in task 9). The same cause made P10-01 M fail once in the replay: the invite page's lead "choose a password for {email}". Fix: `overflow-wrap: anywhere` on the Recent activity row and the auth intro lead. P10-05 now invites an admin with a 51-character local part before opening the Overview, so the case is deterministic (it fails with a 126 px overflow without the fix). `checkOverflow()` now names the culprit (the innermost element past the edge, else the element whose text spills). | 2026-11-09 |
 | P12-C16 builder call: long options and sign-out | Native selects cannot wrap, so `select.input` (the DS `SelectField`) ends a long chosen option in an ellipsis (Chrome draws it on a select); the long-text checker treats a select that ends in an ellipsis like step 2: user data may be truncated (a note), a translated label may not. Sign-out: `signOut()` now dispatches `signedOut` first, then `resetApiState`, then clears the token, and `WorkspaceLayout` renders nothing while signed out, so the page's queries and polling unmount before the reset instead of refetching without a token (the Overview's overview, momentum, funnel, jobs and `/me`). New scenario P12-09 signs out from each role's Overview (D, M): no failed request, no console error, token gone. Lint: `isPaidPlan` moved to `lib/plans.js`, `ScrollToTop` to `app/ScrollToTop.jsx` (it now tracks the last path, so `navigationType` is a real dependency). Course price prefix: `format.currencySymbol('EUR')` (new `currencySymbol` in `lib/format.js`, Intl). | 2026-11-09 |
+| P12-C18 builder call: P3-01 M and Places in API tests | P3-01 M picked the CV while the dropzone was disabled (it waits for `GET /meta/config`); the browser drops such a file. `chooseFile()` waits for an enabled input. `admin.lists.test.js` now installs the Places fake (it called the real Google, §2.16). Details in the Phase 12 handoff, task 9 follow-ups. | 2026-11-09 |
 | P12-C17 builder call: npm audit accepted | The 3 moderate server advisories are one chain: `archiver` → `readdir-glob` → `minimatch` (ReDoS on a crafted glob pattern). Outside the test fixtures, `archiver` is used only in the GDPR export (`privacy.export.js`): `archive.append` for the JSON and `archive.file` for the person's stored files by their exact path; `archive.glob`/`directory` are never called, so no glob pattern (from a user or otherwise) reaches `minimatch`. Accepted (owner, P12-Q10). Recheck before go-live: `cd server && npm audit` and `npm ls minimatch`; upgrade when `archiver` ships a fixed `readdir-glob`. | 2026-11-09 |
 
 _(Answers to any new question asked during the build are appended to this table.)_
@@ -3153,6 +3154,27 @@ Failures (not fixed; waiting for the owner):
 - P12-05 M: `/admin/ai-matching` job select cuts "ErasedMRec Designer · ErasedMRec Studio 24355 Ltd" (85 px) in en/es/fr; long title created by the P12 deletion scenarios. Real mobile layout issue.
 - P3-01 M ("Waiting failed: 15000ms") and P11-01 M ("Navigation timeout of 30000 ms"): timeouts; D passed and the same routes passed in P12-05 M. Likely timing under the 2 h 40 min run; needs a rerun to confirm.
 - P12-07 D: the static audit finding above.
+
+**Task 9 follow-ups (P12-Q10, 2026-11-09; P12-C15 … C18; the owner committed the client/e2e part as `34ec628` at 18:12)**
+
+| Item | Result |
+|---|---|
+| 1 Outdated tests | P2-16 expects 5 switches: pass. P11c-03 expects "Pasar a / Passer à Recruiter Plus": not verifiable yet (blocked by Places, below) |
+| 2 P10-05 overflow | Cause found and fixed (P12-C15); P10-05 D, M pass, and fail with a 126 px overflow if the fix is removed; P10-01 D, M pass |
+| 3 AI matching dropdown | Ellipsis inside the select (P12-C16); P12-05 M (en, es, fr) pass |
+| 4 Course price prefix | `format.currencySymbol('EUR')`; static audit 0 findings; browser probe D, M shows "€", no overflow, no issue |
+| 5 Sign-out 401s | Fixed (P12-C16); new P12-09 D, M pass (recruiter, candidate and admin Overviews: no failed request, no console error, token gone); reproduced first (5 × 401 on the recruiter Overview) |
+| 6 Client lint | 0 warnings; server and e2e lint clean |
+| 7 npm audit | Accepted with the reason and the go-live recheck (P12-C17) |
+| 8 Live emails | `content_restricted` and `content_restriction_lifted` sent to +alex (en), owner to confirm |
+| P3-01 M | Cause found (P12-C18), fixed in `chooseFile`; P3-01 M now passes the CV step |
+| Server suite (through the lock) | 18:44–19:09: **432 tests, 432 pass, 0 fail, 0 todo** (the 17:27 run had 431/432: the `admin.lists.test.js` Places call, P12-C18) |
+| P11-01 | D, M pass |
+| Build, check-i18n | clean; es, fr match en |
+
+**Blocked: Google Places refuses the key.** Since between 16:39 and 17:50 every Places call returns HTTP 403 `PERMISSION_DENIED: The caller does not have permission` for `GOOGLE_PLACES_API_KEY` in `server/.env` (checked with one direct call; the key itself never printed). The cause is on the Google Cloud side (key restriction, the Places API (New) disabled, or billing). It fails P3-01 D, M (city suggestions), P8-01 D, M, P11c-03 D, M and P12-08 D, M (company or preferences setup: 503 `PLACES_UNAVAILABLE`); they need a rerun once the key works.
+
+**P12-C18 builder call: P3-01 M and a test that called Google.** P3-01 M chose the CV while the onboarding dropzone was still disabled (it waits for `GET /meta/config`'s upload rules); the browser drops a file chosen into a disabled input, so nothing uploaded and the wait timed out. Reproduced with config held back 3 s. `chooseFile()` now waits for the input to be enabled. Separately, `admin.lists.test.js` created a job draft through the real Google Places (it never installed the fake, against §2.16), so the Places outage failed "records recruiter job status changes" (431/432); it now uses `useFakePlaces()` (10/10).
 
 ---
 

@@ -56,7 +56,7 @@
   "certificates": {
     "title": "Certificates",
     "add": "Add a certificate",
-    "empty": "Optional: certificates from outside Local WorkMan.",
+    "empty": "Optional: certificates from outside EU Jobs.",
     "issued": "Issued {{date}}",
     "expires": "Expires {{date}}",
     "link": "View credential",
@@ -66,7 +66,7 @@
     "title": "Certificates & badges",
     "meta": "Issued {{date}} · {{code}}",
     "check": "Public check",
-    "empty": "Course certificates you earn on Local WorkMan appear here.",
+    "empty": "Course certificates you earn on EU Jobs appear here.",
     "browse": "Browse courses"
   },
   "nextStep": {
@@ -176,7 +176,7 @@
   },
   "courses": {
     "title": "Courses",
-    "empty": "Courses you buy or join on Local WorkMan show here with your progress. Recruiters who can see your profile see them too.",
+    "empty": "Courses you buy or join on EU Jobs show here with your progress. Recruiters who can see your profile see them too.",
     "browse": "Browse courses"
   }
 }

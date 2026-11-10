@@ -49,11 +49,11 @@ export function clearPlacesCache() {
 }
 
 /** EU 27 + UK: every enabled country row except Remote (M-139). */
-async function allowedCountryCodes() {
+export async function allowedCountryCodes() {
   return (await Country.find({ enabled: true, isRemote: false }, 'code')).map((country) => country.code)
 }
 
-const normalize = (text) => text.normalize('NFD').replace(/\p{M}/gu, '').toLowerCase().trim()
+export const normalize = (text) => text.normalize('NFD').replace(/\p{M}/gu, '').toLowerCase().trim()
 
 /** Country name in `language` → code, for the allowed countries. */
 function countryCodesByName(codes, language) {

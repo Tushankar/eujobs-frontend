@@ -8,7 +8,7 @@
     "description": "Comprueba el precio y continúa a Stripe para pagar.",
     "monthly": "Facturación mensual en {{currency}}",
     "oneTime": "Pago único en {{currency}}",
-    "note": "Pagas en la página segura de Stripe con tarjeta o Link. Los precios incluyen el IVA. Los datos de tu tarjeta nunca llegan a Local WorkMan.",
+    "note": "Pagas en la página segura de Stripe con tarjeta o Link. Los precios incluyen el IVA. Los datos de tu tarjeta nunca llegan a EU Jobs.",
     "cancel": "Cancelar",
     "continue": "Continuar al pago seguro"
   },
@@ -48,7 +48,7 @@
     "stepApplyHint": "Lo estamos añadiendo a tu cuenta.",
     "stepBack": "Volviendo",
     "stepBackHint": "Vuelves a la página desde la que empezaste.",
-    "secure": "Procesado de forma segura por Stripe. Los datos de tu tarjeta nunca llegan a Local WorkMan.",
+    "secure": "Procesado de forma segura por Stripe. Los datos de tu tarjeta nunca llegan a EU Jobs.",
     "summaryTitle": "Resumen del pedido",
     "summaryItem": "Artículo",
     "summaryBilling": "Facturación",

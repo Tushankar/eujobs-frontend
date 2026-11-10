@@ -29,7 +29,7 @@ export function buildIcs({ method, uid, sequence, startAt, minutes, summary, des
   const lines = [
     'BEGIN:VCALENDAR',
     'VERSION:2.0',
-    'PRODID:-//Local WorkMan//Interviews//EN',
+    'PRODID:-//EU Jobs//Interviews//EN',
     'CALSCALE:GREGORIAN',
     `METHOD:${method}`,
     'BEGIN:VEVENT',

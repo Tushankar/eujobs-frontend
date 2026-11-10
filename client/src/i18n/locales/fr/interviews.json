@@ -55,7 +55,7 @@
     "cancel": "Annuler l’entretien"
   },
   "mode": {
-    "video": "Appel vidéo dans Local WorkMan",
+    "video": "Appel vidéo dans EU Jobs",
     "phone": "Appel téléphonique",
     "phoneRecruiter": "Appel téléphonique : appelez la personne candidate au {{phone}}",
     "phoneCandidate": "Appel téléphonique : le recruteur vous appelle au numéro de votre profil",

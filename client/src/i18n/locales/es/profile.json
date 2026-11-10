@@ -57,7 +57,7 @@
   "certificates": {
     "title": "Certificados",
     "add": "Añadir un certificado",
-    "empty": "Opcional: certificados obtenidos fuera de Local WorkMan.",
+    "empty": "Opcional: certificados obtenidos fuera de EU Jobs.",
     "issued": "Emitido el {{date}}",
     "expires": "Caduca el {{date}}",
     "link": "Ver credencial",
@@ -67,7 +67,7 @@
     "title": "Certificados e insignias",
     "meta": "Emitido el {{date}} · {{code}}",
     "check": "Comprobación pública",
-    "empty": "Aquí aparecen los certificados de cursos que obtengas en Local WorkMan.",
+    "empty": "Aquí aparecen los certificados de cursos que obtengas en EU Jobs.",
     "browse": "Ver cursos"
   },
   "nextStep": {
@@ -177,7 +177,7 @@
   },
   "courses": {
     "title": "Cursos",
-    "empty": "Los cursos que compres o a los que te unas en Local WorkMan aparecen aquí con tu progreso. Los reclutadores que pueden ver tu perfil también los ven.",
+    "empty": "Los cursos que compres o a los que te unas en EU Jobs aparecen aquí con tu progreso. Los reclutadores que pueden ver tu perfil también los ven.",
     "browse": "Ver cursos"
   }
 }

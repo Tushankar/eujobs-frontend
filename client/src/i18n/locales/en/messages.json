@@ -42,7 +42,7 @@
   "outreach": {
     "button": "Message",
     "title": "Start a conversation with {{firstName}}",
-    "description": "The candidate gets your message in Local WorkMan, and by email if it stays unread.",
+    "description": "The candidate gets your message in EU Jobs, and by email if it stays unread.",
     "template": "Hi {{firstName}}, your profile stood out for our {{job}} role. I’d like to learn more about your work. Would you be open to a short conversation?",
     "templateNoJob": "Hi {{firstName}}, your profile stood out for a role we are hiring for. I’d like to learn more about your work. Would you be open to a short conversation?"
   }

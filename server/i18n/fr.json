@@ -2,31 +2,31 @@
   "email": {
     "layout": {
       "linkHint": "Si le bouton ne fonctionne pas, copiez ce lien dans votre navigateur :",
-      "footer": "Ceci est un message automatique de Local WorkMan."
+      "footer": "Ceci est un message automatique de EU Jobs."
     },
     "verify_email": {
       "subject": "Confirmez votre adresse e-mail",
       "heading": "Confirmez votre adresse e-mail",
       "body": [
         "Bonjour {{name}},",
-        "Merci de vous être inscrit sur Local WorkMan. Confirmez votre adresse e-mail pour finaliser la création de votre compte. Le lien ne fonctionne qu’une fois et expire dans 24 heures."
+        "Merci de vous être inscrit sur EU Jobs. Confirmez votre adresse e-mail pour finaliser la création de votre compte. Le lien ne fonctionne qu’une fois et expire dans 24 heures."
       ],
       "action": "Confirmer l’adresse e-mail",
       "note": "Si vous ne vous êtes pas inscrit, vous pouvez ignorer cet e-mail."
     },
     "already_registered": {
-      "subject": "Vous avez déjà un compte Local WorkMan",
+      "subject": "Vous avez déjà un compte EU Jobs",
       "heading": "Vous avez déjà un compte",
       "body": [
         "Bonjour {{name}},",
-        "Quelqu’un a essayé de s’inscrire sur Local WorkMan avec cette adresse e-mail. Vous avez déjà un compte, aucun nouveau compte n’a donc été créé."
+        "Quelqu’un a essayé de s’inscrire sur EU Jobs avec cette adresse e-mail. Vous avez déjà un compte, aucun nouveau compte n’a donc été créé."
       ],
       "action": "Se connecter",
       "secondary": "Mot de passe oublié ? Réinitialisez-le ici :",
       "note": "Si ce n’était pas vous, vous pouvez ignorer cet e-mail. Votre compte n’a pas changé."
     },
     "recruiter_email_code": {
-      "subject": "Votre code de vérification Local WorkMan",
+      "subject": "Votre code de vérification EU Jobs",
       "heading": "Votre code de vérification",
       "body": [
         "Bonjour {{name}},",
@@ -35,7 +35,7 @@
       "note": "Si vous ne vous êtes pas inscrit, vous pouvez ignorer cet e-mail."
     },
     "password_reset": {
-      "subject": "Réinitialisez votre mot de passe Local WorkMan",
+      "subject": "Réinitialisez votre mot de passe EU Jobs",
       "heading": "Réinitialisez votre mot de passe",
       "body": [
         "Bonjour {{name}},",
@@ -66,7 +66,7 @@
     },
     "recruiter_approved": {
       "subject": "Votre compte recruteur est approuvé",
-      "heading": "Bienvenue sur Local WorkMan",
+      "heading": "Bienvenue sur EU Jobs",
       "body": [
         "Bonjour {{name}},",
         "Un administrateur a examiné {{company}} et approuvé votre compte recruteur. Votre espace recruteur est ouvert : vous pouvez publier des offres et découvrir des candidats."
@@ -142,7 +142,7 @@
       "body": [
         "Bonjour {{name}},",
         "{{company}} a examiné votre candidature à {{job}} et a décidé de ne pas y donner suite.",
-        "Merci de votre intérêt. Vous pouvez continuer à postuler à d’autres offres sur Local WorkMan."
+        "Merci de votre intérêt. Vous pouvez continuer à postuler à d’autres offres sur EU Jobs."
       ],
       "action": "Trouver d’autres offres"
     },
@@ -161,7 +161,7 @@
       "heading": "Vous avez un message non lu",
       "body": [
         "Bonjour {{name}},",
-        "{{sender}} vous a envoyé un message sur Local WorkMan.",
+        "{{sender}} vous a envoyé un message sur EU Jobs.",
         "Ouvrez la conversation pour le lire et répondre."
       ],
       "action": "Ouvrir la conversation"
@@ -210,11 +210,11 @@
       "secondary": "Vérification publique :"
     },
     "admin_invite": {
-      "subject": "Vous êtes invité à l’espace d’administration de Local WorkMan",
+      "subject": "Vous êtes invité à l’espace d’administration de EU Jobs",
       "heading": "Rejoignez l’espace d’administration",
       "body": [
         "Bonjour {{name}},",
-        "{{inviter}} vous a invité à l’espace d’administration de Local WorkMan avec le rôle {{role}}. Créez un mot de passe pour finaliser votre compte. Le lien fonctionne une fois et expire dans 72 heures."
+        "{{inviter}} vous a invité à l’espace d’administration de EU Jobs avec le rôle {{role}}. Créez un mot de passe pour finaliser votre compte. Le lien fonctionne une fois et expire dans 72 heures."
       ],
       "action": "Créer votre mot de passe",
       "note": "Si vous n’attendiez pas cette invitation, vous pouvez ignorer cet e-mail."
@@ -603,7 +603,7 @@
       "reasonLine": "Motif : {{reason}}",
       "noteLine": "Note : « {{note}} »",
       "details": {
-        "video": "Appel vidéo dans Local WorkMan : rejoignez-le depuis la carte de l’entretien, à partir de 10 minutes avant le début.",
+        "video": "Appel vidéo dans EU Jobs : rejoignez-le depuis la carte de l’entretien, à partir de 10 minutes avant le début.",
         "phone_candidate": "Appel téléphonique : le recruteur vous appellera au numéro de téléphone de votre profil.",
         "phone_recruiter": "Appel téléphonique : appelez {{candidate}} au {{phone}}.",
         "in_person": "En personne : {{address}}",
@@ -620,7 +620,7 @@
     }
   },
   "certificate": {
-    "tagline": "AI Job Portal",
+    "tagline": "AI Powered Careers",
     "title": "Certificat de réussite",
     "intro": "Nous certifions que",
     "completed": "a terminé la formation",

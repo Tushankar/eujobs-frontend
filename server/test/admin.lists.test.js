@@ -14,8 +14,11 @@ import { VerificationSubmission } from '../modules/verification/verification.mod
 import { seedCatalog } from '../seed/catalog.js'
 import { api, auth, createUser, useTestDb } from './helpers/index.js'
 import { approvedRecruiter, jobBody, listedCandidate } from './helpers/market.js'
+import { useFakePlaces } from './helpers/places.js'
 
 useTestDb([User, AuditEvent, CandidateProfile, VerificationSubmission, Subscription, Payment, Company, Job, Application, File, Enrollment, Certificate])
+// §2.16: the job draft below resolves its city; API tests never call Google (this file used the real Places until now).
+useFakePlaces()
 before(async () => {
   await AdminRole.deleteMany({ system: false })
   await seedCatalog()

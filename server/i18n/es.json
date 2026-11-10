@@ -2,31 +2,31 @@
   "email": {
     "layout": {
       "linkHint": "Si el botón no funciona, copia este enlace en tu navegador:",
-      "footer": "Este es un mensaje automático de Local WorkMan."
+      "footer": "Este es un mensaje automático de EU Jobs."
     },
     "verify_email": {
       "subject": "Confirma tu dirección de correo electrónico",
       "heading": "Confirma tu dirección de correo electrónico",
       "body": [
         "Hola, {{name}}:",
-        "Gracias por registrarte en Local WorkMan. Confirma tu dirección de correo electrónico para terminar de crear tu cuenta. El enlace solo se puede usar una vez y caduca en 24 horas."
+        "Gracias por registrarte en EU Jobs. Confirma tu dirección de correo electrónico para terminar de crear tu cuenta. El enlace solo se puede usar una vez y caduca en 24 horas."
       ],
       "action": "Confirmar correo electrónico",
       "note": "Si no te has registrado, puedes ignorar este correo."
     },
     "already_registered": {
-      "subject": "Ya tienes una cuenta en Local WorkMan",
+      "subject": "Ya tienes una cuenta en EU Jobs",
       "heading": "Ya tienes una cuenta",
       "body": [
         "Hola, {{name}}:",
-        "Alguien ha intentado registrarse en Local WorkMan con esta dirección de correo electrónico. Ya tienes una cuenta, así que no se ha creado ninguna nueva."
+        "Alguien ha intentado registrarse en EU Jobs con esta dirección de correo electrónico. Ya tienes una cuenta, así que no se ha creado ninguna nueva."
       ],
       "action": "Iniciar sesión",
       "secondary": "¿Has olvidado tu contraseña? Restablécela aquí:",
       "note": "Si no has sido tú, puedes ignorar este correo. Tu cuenta no ha cambiado."
     },
     "recruiter_email_code": {
-      "subject": "Tu código de verificación de Local WorkMan",
+      "subject": "Tu código de verificación de EU Jobs",
       "heading": "Tu código de verificación",
       "body": [
         "Hola, {{name}}:",
@@ -35,7 +35,7 @@
       "note": "Si no te has registrado, puedes ignorar este correo."
     },
     "password_reset": {
-      "subject": "Restablece tu contraseña de Local WorkMan",
+      "subject": "Restablece tu contraseña de EU Jobs",
       "heading": "Restablece tu contraseña",
       "body": [
         "Hola, {{name}}:",
@@ -66,7 +66,7 @@
     },
     "recruiter_approved": {
       "subject": "Tu cuenta de reclutador está aprobada",
-      "heading": "Te damos la bienvenida a Local WorkMan",
+      "heading": "Te damos la bienvenida a EU Jobs",
       "body": [
         "Hola, {{name}}:",
         "Un administrador revisó {{company}} y aprobó tu cuenta de reclutador. Tu espacio de trabajo ya está abierto: puedes publicar ofertas y descubrir candidatos."
@@ -142,7 +142,7 @@
       "body": [
         "Hola, {{name}}:",
         "{{company}} ha revisado tu candidatura a {{job}} y ha decidido no continuar con ella.",
-        "Gracias por tu interés. Puedes seguir postulándote a otras ofertas en Local WorkMan."
+        "Gracias por tu interés. Puedes seguir postulándote a otras ofertas en EU Jobs."
       ],
       "action": "Buscar más empleos"
     },
@@ -161,7 +161,7 @@
       "heading": "Tienes un mensaje sin leer",
       "body": [
         "Hola, {{name}}:",
-        "{{sender}} te ha enviado un mensaje en Local WorkMan.",
+        "{{sender}} te ha enviado un mensaje en EU Jobs.",
         "Abre la conversación para leerlo y responder."
       ],
       "action": "Abrir conversación"
@@ -210,11 +210,11 @@
       "secondary": "Comprobación pública:"
     },
     "admin_invite": {
-      "subject": "Te han invitado al espacio de administración de Local WorkMan",
+      "subject": "Te han invitado al espacio de administración de EU Jobs",
       "heading": "Únete al espacio de administración",
       "body": [
         "Hola, {{name}}:",
-        "{{inviter}} te ha invitado al espacio de administración de Local WorkMan con el rol {{role}}. Crea una contraseña para terminar tu cuenta. El enlace funciona una vez y caduca en 72 horas."
+        "{{inviter}} te ha invitado al espacio de administración de EU Jobs con el rol {{role}}. Crea una contraseña para terminar tu cuenta. El enlace funciona una vez y caduca en 72 horas."
       ],
       "action": "Crear tu contraseña",
       "note": "Si no esperabas esta invitación, puedes ignorar este correo."
@@ -603,7 +603,7 @@
       "reasonLine": "Motivo: {{reason}}",
       "noteLine": "Nota: «{{note}}»",
       "details": {
-        "video": "Videollamada en Local WorkMan: únete desde la tarjeta de la entrevista a partir de 10 minutos antes del inicio.",
+        "video": "Videollamada en EU Jobs: únete desde la tarjeta de la entrevista a partir de 10 minutos antes del inicio.",
         "phone_candidate": "Llamada telefónica: el reclutador te llamará al número de teléfono de tu perfil.",
         "phone_recruiter": "Llamada telefónica: llama a {{candidate}} al {{phone}}.",
         "in_person": "En persona: {{address}}",
@@ -620,7 +620,7 @@
     }
   },
   "certificate": {
-    "tagline": "AI Job Portal",
+    "tagline": "AI Powered Careers",
     "title": "Certificado de finalización",
     "intro": "Se certifica que",
     "completed": "ha completado el curso",

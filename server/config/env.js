@@ -31,6 +31,8 @@ const schema = z.object({
   OPENAI_EMBEDDING_MODEL: required,
   OPENAI_TRANSCRIBE_MODEL: required,
   GOOGLE_PLACES_API_KEY: required,
+  // Testing only: 'true' makes city fields take a typed "City, Country" without calling Google.
+  PLACES_MANUAL: z.enum(['true', 'false']).optional(),
   // P11d-Q29: Cloudflare Realtime TURN; without both values interview calls use STUN only.
   CLOUDFLARE_TURN_KEY_ID: z.string().trim().optional(),
   CLOUDFLARE_TURN_API_TOKEN: z.string().trim().optional(),
@@ -67,6 +69,7 @@ export const config = {
   },
   // Server only (G-1, §2.16): never sent to the browser, a response, a log or an error.
   googlePlacesApiKey: env.GOOGLE_PLACES_API_KEY,
+  placesManual: env.PLACES_MANUAL === 'true',
   // Server only, like the Places key.
   turn: env.CLOUDFLARE_TURN_KEY_ID && env.CLOUDFLARE_TURN_API_TOKEN ? { keyId: env.CLOUDFLARE_TURN_KEY_ID, apiToken: env.CLOUDFLARE_TURN_API_TOKEN } : null,
 }
