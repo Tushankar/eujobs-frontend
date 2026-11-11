@@ -72,11 +72,11 @@ ${params.items.map((item, index) => `<tr><td style="padding:14px 18px;font-size:
 <img src="${escapeHtml(`${config.clientOrigin}/email/logo-white.png`)}" width="180" alt="${BRAND} · ${TAGLINE}" style="display:block;width:180px;max-width:100%;height:auto;border:0;color:#FFFFFF;font-size:20px;font-weight:700">
 </td></tr>
 <tr><td style="padding:40px 40px 16px">
-<h1 style="margin:0 0 20px;font-family:Manrope,Inter,Arial,sans-serif;font-size:24px;line-height:1.3;font-weight:800;color:${INK}">${fillHtml(template.heading)}</h1>
+<h1 style="margin:0 0 20px;font-size:24px;line-height:1.3;font-weight:700;letter-spacing:-0.2px;color:${INK}">${fillHtml(template.heading)}</h1>
 ${body.map((line) => paragraph(fillHtml(line))).join('\n')}
 ${items}
 ${params.moreLink ? paragraph(`${fillHtml(template.more)}<br>${link(params.moreLink)}`, 'font-size:14px') : ''}
-${params.code ? `<p style="margin:8px 0 24px;padding:20px;background:#F3F6FB;border:1px solid ${LINE};border-radius:12px;text-align:center;font-family:Manrope,Inter,Arial,sans-serif;font-size:32px;font-weight:800;letter-spacing:8px;color:${NAVY}">${escapeHtml(params.code)}</p>` : ''}
+${params.code ? `<p style="margin:8px 0 24px;padding:20px;background:#F3F6FB;border:1px solid ${LINE};border-radius:12px;text-align:center;font-size:32px;font-weight:700;letter-spacing:8px;color:${NAVY}">${escapeHtml(params.code)}</p>` : ''}
 ${
   template.action
     ? `<p style="margin:12px 0 28px"><a href="${escapeHtml(params.link)}" style="display:inline-block;background:${NAVY};color:#FFFFFF;text-decoration:none;font-size:15px;font-weight:600;padding:14px 28px;border-radius:999px">${escapeHtml(template.action)}</a></p>
@@ -87,7 +87,7 @@ ${template.secondary ? paragraph(`${escapeHtml(template.secondary)}<br>${link(pa
 ${template.note ? paragraph(escapeHtml(template.note), `font-size:13px;color:${MUTED}`) : ''}
 </td></tr>
 <tr><td style="padding:24px 40px 32px;background:#F7F9FC;border-top:1px solid ${LINE}">
-<p style="margin:0 0 6px;font-family:Manrope,Inter,Arial,sans-serif;font-size:14px;font-weight:800;color:${NAVY}">${BRAND} <span style="font-weight:600;color:${MUTED}">· ${TAGLINE}</span></p>
+<p style="margin:0 0 6px;font-size:14px;font-weight:700;color:${NAVY}">${BRAND} <span style="font-weight:600;color:${MUTED}">· ${TAGLINE}</span></p>
 <p style="margin:0;font-size:12px;line-height:1.6;color:${MUTED}">${escapeHtml(layout.footer)}</p>
 </td></tr>
 </table>
