@@ -53,7 +53,7 @@
 
 /* Figma shows the unavailable Save button as the primary button at 40% opacity (doubled selector beats the Button disabled style). */
 .save.save:disabled {
-  background: var(--primary);
+  background: var(--brand-gradient);
   color: var(--primary-foreground);
   opacity: 0.4;
 }

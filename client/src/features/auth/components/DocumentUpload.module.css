@@ -11,7 +11,7 @@
 }
 
 .row:hover {
-  border-color: rgba(0, 132, 255, 0.5);
+  border-color: rgba(2, 99, 220, 0.5);
 }
 
 .row:has(.input:focus-visible) {

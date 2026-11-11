@@ -1,0 +1,98 @@
+{
+  "nav": {
+    "label": "Principal",
+    "home": "Inicio",
+    "about": "Nosotros",
+    "jobs": "Empleos",
+    "faq": "Preguntas",
+    "contact": "Contacto",
+    "signIn": "Iniciar sesión",
+    "home_aria": "Inicio de {{brand}}"
+  },
+  "hero": {
+    "titleLead": "Encuentra el empleo de tus sueños",
+    "titleWith": "Con <brand>{{brand}}</brand>",
+    "searchLabel": "Buscar empleos",
+    "what": "Puesto o empresa",
+    "where": "Ubicación",
+    "search": "Buscar",
+    "text": "Descubre miles de oportunidades adaptadas a tus habilidades. Postúlate con facilidad, sigue tu progreso y da el siguiente paso en tu carrera, todo en un solo lugar.",
+    "start": "Empecemos",
+    "join": "Crear una cuenta",
+    "talentTitle": "«Encuentra talento remoto ágil en minutos»",
+    "talentText": "Conecta con profesionales cualificados y flexibles listos para incorporarse.",
+    "remoteTitle": "«Talento remoto, listo cuando tú lo estés»",
+    "remoteText": "Accede a una selección de profesionales versátiles de todo el mundo."
+  },
+  "trusted": {
+    "title": "Empresas líderes confían en nosotros"
+  },
+  "categories": {
+    "titleLead": "Empieza tu búsqueda por",
+    "titleAccent": "categoría",
+    "text": "Navega fácilmente por los tipos de empleo y encuentra el que mejor se adapta a ti. Remoto, híbrido, jornada completa y más, a un clic.",
+    "jobs_one": "{{count}} empleo abierto",
+    "jobs_many": "{{count}} empleos abiertos",
+    "jobs_other": "{{count}} empleos abiertos",
+    "remote": "Trabaja desde cualquier lugar de la UE y el Reino Unido con equipos totalmente remotos.",
+    "hybrid": "Reparte tu semana entre casa y la oficina.",
+    "on_site": "Únete al equipo en persona en su lugar de trabajo.",
+    "full_time": "Puestos estables con jornada completa.",
+    "part_time": "Horarios flexibles que encajan con el resto de tu vida.",
+    "contract": "Proyectos de duración determinada para especialistas y freelancers."
+  },
+  "steps": {
+    "titleLead": "Pasos sencillos para conseguir el",
+    "titleAccent": "empleo de tus sueños",
+    "text": "Olvídate de las conjeturas. Con nuestro método paso a paso, encontrar y conseguir tu empleo ideal nunca ha sido tan sencillo.",
+    "imageAlt": "Una entrevista de trabajo en una oficina moderna",
+    "registerTitle": "Registro",
+    "registerText": "Regístrate en la plataforma para acceder a todas las funciones.",
+    "searchTitle": "Busca y encuentra empleos",
+    "searchText": "Explora las vacantes y consigue enseguida el empleo de tus sueños.",
+    "resumeTitle": "Sube tu currículum",
+    "resumeText": "Sube tu currículum más reciente para que los reclutadores conozcan tu experiencia.",
+    "applyTitle": "Postúlate",
+    "applyText": "Completa los datos que pide cada oferta y envía tu candidatura."
+  },
+  "vacancies": {
+    "titleLead": "Explora las últimas",
+    "titleAccent": "vacantes",
+    "text": "No te lo pierdas: descubre las ofertas más recientes y postúlate antes de que desaparezcan.",
+    "apply": "Postularme",
+    "years_one": "{{count}} año",
+    "years_many": "{{count}} años",
+    "years_other": "{{count}} años",
+    "empty": "Ahora mismo no hay empleos abiertos. Los nuevos puestos aparecen aquí en cuanto las empresas los publican.",
+    "all": "Ver todos los empleos"
+  },
+  "career": {
+    "title": "Impulsa tu carrera con oportunidades hechas para ti",
+    "text": "Busca puestos de todos los sectores con ofertas en tiempo real, alertas de empleo personalizadas y empresas de confianza.",
+    "imageAlt": "Una profesional trabajando en un ordenador"
+  },
+  "faq": {
+    "titleLead": "¿Necesitas ayuda? Empieza por estas",
+    "titleAccent": "respuestas",
+    "text": "Estamos aquí para ayudarte en cada paso."
+  },
+  "cta": {
+    "title": "Donde tus metas profesionales encuentran oportunidades reales",
+    "text": "Únete ahora y accede a ofertas de confianza, información del sector y una red pensada para ayudarte a crecer.",
+    "join": "Únete ahora",
+    "imageAlt": "Una profesional sonriente"
+  },
+  "footer": {
+    "about": "Nosotros",
+    "jobs": "Empleos",
+    "faq": "Preguntas",
+    "signIn": "Iniciar sesión",
+    "signUp": "Crear cuenta",
+    "recruiters": "Para reclutadores",
+    "privacy": "Política de privacidad",
+    "terms": "Términos y condiciones",
+    "imprint": "Aviso legal",
+    "copyright": "Copyright © {{year}} {{brand}}. Todos los derechos reservados."
+  },
+  "loadError": "No hemos podido cargar los últimos empleos. Actualiza la página."
+}

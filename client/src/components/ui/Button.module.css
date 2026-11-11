@@ -58,22 +58,22 @@
   width: 100%;
 }
 
+/* The logo gradient (owner choice 2026-11-11); hover and press only deepen it (no glow or lift). */
 .primary {
-  background: var(--primary);
+  background: var(--brand-gradient);
   color: var(--primary-foreground);
 }
 
-/* Flat: hover only deepens the colour (no glow or lift). */
 .primary:hover {
-  background: var(--primary-hover);
+  background: var(--brand-gradient-hover);
 }
 
 .primary:active {
-  background: #005bb0;
+  background: var(--brand-gradient-active);
 }
 
 .primary[aria-busy='true'] {
-  background: var(--primary);
+  background: var(--brand-gradient);
   color: var(--primary-foreground);
 }
 

@@ -489,7 +489,7 @@
   height: 36px;
   padding: 0 18px;
   border-radius: var(--radius-full);
-  background: var(--primary);
+  background: var(--brand-gradient);
   font-size: 13px;
   font-weight: 600;
   color: var(--primary-foreground);

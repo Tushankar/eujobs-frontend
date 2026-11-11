@@ -28,7 +28,7 @@
   gap: 12px;
   margin-top: 20px;
   padding: 16px;
-  border: 1px solid rgba(0, 132, 255, 0.2);
+  border: 1px solid rgba(2, 99, 220, 0.2);
   border-radius: var(--radius-xl);
   background: var(--accent);
 }
@@ -88,7 +88,7 @@
 
 /* Figma shows the disabled primary as the brand blue at 40% rather than the grey disabled button. */
 .footer .create:disabled {
-  background: var(--primary);
+  background: var(--brand-gradient);
   color: var(--primary-foreground);
   opacity: 0.4;
 }

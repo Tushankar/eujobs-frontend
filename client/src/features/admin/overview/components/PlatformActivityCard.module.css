@@ -206,7 +206,7 @@
 }
 
 .registrationHalo {
-  fill: rgba(0, 132, 255, 0.25);
+  fill: rgba(2, 99, 220, 0.25);
 }
 
 .registrationDot {
@@ -214,7 +214,7 @@
 }
 
 .applicationHalo {
-  fill: rgba(0, 132, 255, 0.04);
+  fill: rgba(2, 99, 220, 0.04);
 }
 
 .applicationDot {

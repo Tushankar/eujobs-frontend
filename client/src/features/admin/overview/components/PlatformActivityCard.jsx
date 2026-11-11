@@ -78,12 +78,12 @@ function LineChart({ data }) {
     <svg viewBox={`0 0 ${WIDTH} ${HEIGHT}`} className={styles.lineSvg} aria-hidden="true">
       <defs>
         <linearGradient id={`${gradientId}-registrations`} x1="0" y1="0" x2="0" y2="1">
-          <stop offset="0" stopColor="#0084ff" stopOpacity="0.3" />
-          <stop offset="1" stopColor="#0084ff" stopOpacity="0.04" />
+          <stop offset="0" stopColor="#0263dc" stopOpacity="0.3" />
+          <stop offset="1" stopColor="#0263dc" stopOpacity="0.04" />
         </linearGradient>
         <linearGradient id={`${gradientId}-applications`} x1="0" y1="0" x2="0" y2="1">
-          <stop offset="0" stopColor="#0084ff" stopOpacity="0.07" />
-          <stop offset="1" stopColor="#0084ff" stopOpacity="0.01" />
+          <stop offset="0" stopColor="#0263dc" stopOpacity="0.07" />
+          <stop offset="1" stopColor="#0263dc" stopOpacity="0.01" />
         </linearGradient>
       </defs>
       {ticks.map((tick) => (

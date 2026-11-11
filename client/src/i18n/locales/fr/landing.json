@@ -1,0 +1,98 @@
+{
+  "nav": {
+    "label": "Principal",
+    "home": "Accueil",
+    "about": "À propos",
+    "jobs": "Offres",
+    "faq": "FAQ",
+    "contact": "Contact",
+    "signIn": "Connexion",
+    "home_aria": "Accueil {{brand}}"
+  },
+  "hero": {
+    "titleLead": "Trouvez l’emploi de vos rêves",
+    "titleWith": "Avec <brand>{{brand}}</brand>",
+    "searchLabel": "Rechercher des offres",
+    "what": "Poste ou entreprise",
+    "where": "Lieu",
+    "search": "Rechercher",
+    "text": "Découvrez des milliers d’opportunités adaptées à vos compétences. Postulez facilement, suivez vos démarches et passez à l’étape suivante de votre carrière, le tout au même endroit.",
+    "start": "C’est parti",
+    "join": "Créer un compte",
+    "talentTitle": "« Trouvez des talents à distance en quelques minutes »",
+    "talentText": "Échangez avec des professionnels qualifiés et flexibles, prêts à démarrer.",
+    "remoteTitle": "« Des talents à distance, prêts quand vous l’êtes »",
+    "remoteText": "Accédez à une sélection de professionnels polyvalents du monde entier."
+  },
+  "trusted": {
+    "title": "Ils nous font confiance"
+  },
+  "categories": {
+    "titleLead": "Commencez votre recherche par",
+    "titleAccent": "catégorie",
+    "text": "Parcourez facilement les types de postes pour trouver celui qui vous convient. Télétravail, hybride, temps plein et plus encore, en un clic.",
+    "jobs_one": "{{count}} offre ouverte",
+    "jobs_many": "{{count}} offres ouvertes",
+    "jobs_other": "{{count}} offres ouvertes",
+    "remote": "Travaillez depuis n’importe où dans l’UE et au Royaume-Uni avec des équipes 100 % à distance.",
+    "hybrid": "Partagez votre semaine entre la maison et le bureau.",
+    "on_site": "Rejoignez l’équipe en personne sur son lieu de travail.",
+    "full_time": "Des postes durables à temps plein.",
+    "part_time": "Des horaires flexibles qui s’adaptent à votre vie.",
+    "contract": "Des missions à durée déterminée pour spécialistes et freelances."
+  },
+  "steps": {
+    "titleLead": "Des étapes simples pour décrocher",
+    "titleAccent": "l’emploi de vos rêves",
+    "text": "Fini les incertitudes. Avec notre méthode étape par étape, trouver et décrocher le poste idéal n’a jamais été aussi simple.",
+    "imageAlt": "Un entretien d’embauche dans un bureau moderne",
+    "registerTitle": "Inscription",
+    "registerText": "Inscrivez-vous sur la plateforme pour accéder à toutes les fonctionnalités.",
+    "searchTitle": "Cherchez et trouvez des offres",
+    "searchText": "Parcourez les offres et décrochez rapidement l’emploi de vos rêves.",
+    "resumeTitle": "Ajoutez votre CV",
+    "resumeText": "Ajoutez votre CV le plus récent pour présenter votre expérience aux recruteurs.",
+    "applyTitle": "Postulez",
+    "applyText": "Renseignez les informations demandées par l’offre et envoyez votre candidature."
+  },
+  "vacancies": {
+    "titleLead": "Découvrez les dernières",
+    "titleAccent": "offres",
+    "text": "Ne manquez rien : découvrez les offres les plus récentes et postulez avant qu’elles ne disparaissent.",
+    "apply": "Postuler",
+    "years_one": "{{count}} an",
+    "years_many": "{{count}} ans",
+    "years_other": "{{count}} ans",
+    "empty": "Aucune offre ouverte pour le moment. Les nouveaux postes apparaissent ici dès leur publication.",
+    "all": "Voir toutes les offres"
+  },
+  "career": {
+    "title": "Lancez votre carrière avec des opportunités faites pour vous",
+    "text": "Trouvez des postes dans tous les secteurs grâce aux offres en temps réel, aux alertes personnalisées et à des entreprises de confiance.",
+    "imageAlt": "Une professionnelle travaillant sur un ordinateur"
+  },
+  "faq": {
+    "titleLead": "Besoin d’aide ? Commencez par ces",
+    "titleAccent": "réponses",
+    "text": "Nous sommes là pour vous accompagner à chaque étape."
+  },
+  "cta": {
+    "title": "Là où vos ambitions rencontrent de vraies opportunités",
+    "text": "Inscrivez-vous et accédez à des offres fiables, à des conseils du secteur et à un réseau pensé pour votre évolution.",
+    "join": "Je m’inscris",
+    "imageAlt": "Une professionnelle souriante"
+  },
+  "footer": {
+    "about": "À propos",
+    "jobs": "Offres",
+    "faq": "FAQ",
+    "signIn": "Connexion",
+    "signUp": "Créer un compte",
+    "recruiters": "Recruteurs",
+    "privacy": "Politique de confidentialité",
+    "terms": "Conditions générales",
+    "imprint": "Mentions légales",
+    "copyright": "Copyright © {{year}} {{brand}}. Tous droits réservés."
+  },
+  "loadError": "Impossible de charger les dernières offres. Actualisez la page."
+}

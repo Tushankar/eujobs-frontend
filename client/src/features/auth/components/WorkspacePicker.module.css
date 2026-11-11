@@ -40,13 +40,13 @@
 }
 
 button.choice:hover {
-  border-color: rgba(0, 132, 255, 0.5);
+  border-color: rgba(2, 99, 220, 0.5);
 }
 
 .choiceActive,
 button.choiceActive:hover {
-  border-color: rgba(0, 132, 255, 0.5);
-  background: linear-gradient(to left, #004cfb, #0084ff);
+  border-color: rgba(2, 99, 220, 0.5);
+  background: linear-gradient(to left, #004cfb, #0263dc);
   color: #f3f4f6;
 }
 

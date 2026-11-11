@@ -145,12 +145,12 @@ export function LineChart({ labels, registrations, applications }) {
     >
       <defs>
         <linearGradient id="activity-registrations" x1="0" x2="0" y1="0" y2="1">
-          <stop offset="0" stopColor="#0084ff" stopOpacity="0.3" />
-          <stop offset="1" stopColor="#0084ff" stopOpacity="0.05" />
+          <stop offset="0" stopColor="#0263dc" stopOpacity="0.3" />
+          <stop offset="1" stopColor="#0263dc" stopOpacity="0.05" />
         </linearGradient>
         <linearGradient id="activity-applications" x1="0" x2="0" y1="0" y2="1">
-          <stop offset="0" stopColor="#eaf4ff" stopOpacity="0.3" />
-          <stop offset="1" stopColor="#eaf4ff" stopOpacity="0.05" />
+          <stop offset="0" stopColor="#eaf1fd" stopOpacity="0.3" />
+          <stop offset="1" stopColor="#eaf1fd" stopOpacity="0.05" />
         </linearGradient>
       </defs>
       {ticks.map((tick) => (

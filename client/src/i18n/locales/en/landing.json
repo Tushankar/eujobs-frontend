@@ -1,0 +1,96 @@
+{
+  "nav": {
+    "label": "Main",
+    "home": "Home",
+    "about": "About Us",
+    "jobs": "Jobs",
+    "faq": "FAQ",
+    "contact": "Contact Us",
+    "signIn": "Login",
+    "home_aria": "{{brand}} home"
+  },
+  "hero": {
+    "titleLead": "Find a Dream Job",
+    "titleWith": "With <brand>{{brand}}</brand>",
+    "searchLabel": "Search jobs",
+    "what": "Job title or company",
+    "where": "Location",
+    "search": "Search",
+    "text": "Discover thousands of opportunities tailored to your skills. Apply with ease, track your progress, and take the next step in your career — all in one place.",
+    "start": "Let’s Get Started",
+    "join": "Create an account",
+    "talentTitle": "“Find Agile Remote Talent in Minutes”",
+    "talentText": "Connect with skilled, flexible professionals who are ready to jump in.",
+    "remoteTitle": "“Remote Talent. Ready When You Are.”",
+    "remoteText": "Access a curated pool of adaptable professionals from around the globe."
+  },
+  "trusted": {
+    "title": "Trusted by leading companies"
+  },
+  "categories": {
+    "titleLead": "Start Your Search by",
+    "titleAccent": "Category",
+    "text": "Easily navigate through job types to find what suits you best. Remote, hybrid, full-time and more — just a click away.",
+    "jobs_one": "{{count}} open job",
+    "jobs_other": "{{count}} open jobs",
+    "remote": "Work from anywhere in the EU and the UK with fully remote teams.",
+    "hybrid": "Split your week between home and the office.",
+    "on_site": "Join the team in person at their workplace.",
+    "full_time": "Permanent roles with a full working week.",
+    "part_time": "Flexible hours that fit around the rest of your life.",
+    "contract": "Fixed-term projects for specialists and freelancers."
+  },
+  "steps": {
+    "titleLead": "Easy Step to Get Your",
+    "titleAccent": "Dream Job",
+    "text": "Skip the guesswork. With our step-by-step approach, finding and securing your ideal job has never been simpler.",
+    "imageAlt": "A job interview in a modern office",
+    "registerTitle": "Registration",
+    "registerText": "Register your personal identity on this platform to access features.",
+    "searchTitle": "Search & Find Jobs",
+    "searchText": "Look for job vacancies and immediately get your dream job.",
+    "resumeTitle": "Upload Resume",
+    "resumeText": "Upload the latest resume to let recruiters know about work experience.",
+    "applyTitle": "Apply For Job",
+    "applyText": "Fill necessary details according to the job requirement and apply."
+  },
+  "vacancies": {
+    "titleLead": "Explore All Latest",
+    "titleAccent": "Vacancy",
+    "text": "Don’t miss out — discover the newest job listings and apply before they’re gone.",
+    "apply": "Apply Now",
+    "years_one": "{{count}} year",
+    "years_other": "{{count}} years",
+    "empty": "No open jobs right now. New roles appear here as soon as companies publish them.",
+    "all": "See all jobs"
+  },
+  "career": {
+    "title": "Launch Your Career With Opportunities Made for You",
+    "text": "Search roles across industries with real-time listings, personalized job alerts, and companies that you can trust.",
+    "imageAlt": "A professional woman working at a computer"
+  },
+  "faq": {
+    "titleLead": "Need Help? Start With These",
+    "titleAccent": "Answers",
+    "text": "We’re here to help you every step of the way."
+  },
+  "cta": {
+    "title": "Where Your Career Goals Meet Real Opportunity",
+    "text": "Join now and get access to trusted listings, industry insights, and a network built to support your growth.",
+    "join": "Join Now",
+    "imageAlt": "A smiling professional woman"
+  },
+  "footer": {
+    "about": "About",
+    "jobs": "Jobs",
+    "faq": "FAQ",
+    "signIn": "Login",
+    "signUp": "Create account",
+    "recruiters": "For recruiters",
+    "privacy": "Privacy Policy",
+    "terms": "Terms & Conditions",
+    "imprint": "Imprint",
+    "copyright": "Copyright © {{year}} {{brand}}. All Rights Reserved."
+  },
+  "loadError": "We could not load the latest jobs. Please refresh the page."
+}

@@ -18,6 +18,7 @@ import * as matchingRoutes from '../modules/matching/matching.routes.js'
 import messagesRoutes from '../modules/messages/messages.routes.js'
 import * as moderationRoutes from '../modules/moderation/moderation.routes.js'
 import notificationRoutes from '../modules/notifications/notifications.routes.js'
+import landingRoutes from '../modules/landing/landing.routes.js'
 import metaRoutes from '../modules/meta/meta.routes.js'
 import * as paymentRoutes from '../modules/payments/payments.routes.js'
 import placesRoutes from '../modules/places/places.routes.js'
@@ -50,6 +51,7 @@ router.use('/auth', authRoutes)
 router.use('/me/payments', paymentRoutes.myPaymentsRouter)
 router.use('/me', privacyRoutes)
 router.use('/me', usersRoutes)
+router.use('/landing', landingRoutes)
 router.use(metaRoutes)
 router.use('/places', placesRoutes)
 router.use('/payments', paymentRoutes.paymentsRouter)

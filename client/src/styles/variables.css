@@ -9,21 +9,26 @@
   --foreground: #202534;
   --card: #ffffff;
   --card-foreground: #202534;
-  --primary: #0084ff;
+  --primary: #0263dc; /* logo blue (EU JOBS mark, 2026-11-11) */
   --primary-foreground: #ffffff;
-  --primary-hover: #0066c4;
+  --primary-hover: #0247c1;
+  --brand-navy: #012b74; /* the logo navy ("JOBS") */
+  /* Owner choice (2026-11-11): primary buttons use the EU JOBS logo gradient (bright blue to navy, sampled from the logo). */
+  --brand-gradient: linear-gradient(135deg, #0a6cf0 0%, #0247c1 55%, #012b74 100%);
+  --brand-gradient-hover: linear-gradient(135deg, #0860d8 0%, #013ca8 55%, #01225e 100%);
+  --brand-gradient-active: linear-gradient(135deg, #0654bd 0%, #01338f 55%, #011c4f 100%);
   --secondary: #eef0f5;
   --secondary-foreground: #202534;
   --muted: #f5f6f8;
   --muted-foreground: #687184;
-  --accent: #eaf4ff;
-  --accent-foreground: #0066c4;
+  --accent: #eaf1fd;
+  --accent-foreground: #0247c1;
   --border: #e8eaf0;
   --border-strong: #c9cdd6; /* form controls and quiet outlined buttons */
   --destructive: #bf4545;
-  --ring: #0084ff;
-  --selection: #cce6ff;
-  --blue-light-100: #e0f2fe;
+  --ring: #0263dc;
+  --selection: #cddff9;
+  --blue-light-100: #e3edfc;
 
   /* Neutrals read from screens (not exposed as Figma variables) */
   --text-label: #555b6d;

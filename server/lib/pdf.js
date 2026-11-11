@@ -9,6 +9,7 @@ import { interpolate, t } from './i18n.js'
  * (OQ-6b regions), the code and a vector QR code with the link to the public check.
  */
 const font = (weight) => fileURLToPath(new URL(`../assets/fonts/Inter-${weight}.ttf`, import.meta.url))
+const LOGO = fileURLToPath(new URL('../assets/logo.png', import.meta.url))
 const LOCALE = { en: 'en-IE', es: 'es-ES', fr: 'fr-FR' }
 // The brand never changes with the language (M-193).
 const BRAND = 'EU Jobs'
@@ -40,8 +41,8 @@ export function certificatePdf({ holderName, courseTitle, issuedAt, code, langua
   doc.rect(24, 24, width - 48, height - 48).lineWidth(1).strokeColor(COLOURS.border).stroke()
   doc.rect(24, 24, width - 48, 8).fillColor(COLOURS.primary).fill()
 
-  doc.font('Bold').fontSize(16).fillColor(COLOURS.ink).text(BRAND, inner.x, inner.y)
-  doc.font('Regular').fontSize(9).fillColor(COLOURS.muted).text(text('tagline'), inner.x, inner.y + 20)
+  // The EU JOBS logo (name and tagline are part of the image).
+  doc.image(LOGO, inner.x, inner.y - 6, { height: 40 })
 
   const centre = (fontName, size, colour, value, y) => doc.font(fontName).fontSize(size).fillColor(colour).text(value, inner.x, y, { width: inner.width, align: 'center' })
   centre('SemiBold', 12, COLOURS.primary, text('title').toUpperCase(), 140)

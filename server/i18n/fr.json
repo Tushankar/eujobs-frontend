@@ -2,7 +2,12 @@
   "email": {
     "layout": {
       "linkHint": "Si le bouton ne fonctionne pas, copiez ce lien dans votre navigateur :",
-      "footer": "Ceci est un message automatique de EU Jobs."
+      "footer": "Ceci est un message automatique de EU Jobs.",
+      "open": "Ouvrir EU Jobs",
+      "reason": "Vous recevez cet e-mail car vous avez un compte EU Jobs. Les e-mails importants liés au compte et à la sécurité sont toujours envoyés.",
+      "privacy": "Confidentialité",
+      "terms": "Conditions",
+      "imprint": "Mentions légales"
     },
     "verify_email": {
       "subject": "Confirmez votre adresse e-mail",
@@ -620,7 +625,6 @@
     }
   },
   "certificate": {
-    "tagline": "AI Powered Careers",
     "title": "Certificat de réussite",
     "intro": "Nous certifions que",
     "completed": "a terminé la formation",

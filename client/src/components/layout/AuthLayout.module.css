@@ -72,11 +72,11 @@
   color: #fff;
 }
 
-/* The "AI" mark cropped from the logo (OD11) */
+/* The white EU mark cropped from the EU JOBS logo (Figma 426:64) */
 .heroBrandMark {
   flex-shrink: 0;
-  width: 32px;
-  height: auto;
+  width: auto;
+  height: 22px;
 }
 
 .heroContent {

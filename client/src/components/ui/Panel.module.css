@@ -6,6 +6,6 @@
 }
 
 .selected {
-  border-color: rgba(0, 132, 255, 0.2);
+  border-color: rgba(2, 99, 220, 0.2);
   background: var(--accent);
 }

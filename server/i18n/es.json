@@ -2,7 +2,12 @@
   "email": {
     "layout": {
       "linkHint": "Si el botón no funciona, copia este enlace en tu navegador:",
-      "footer": "Este es un mensaje automático de EU Jobs."
+      "footer": "Este es un mensaje automático de EU Jobs.",
+      "open": "Abrir EU Jobs",
+      "reason": "Recibes este correo porque tienes una cuenta en EU Jobs. Los correos importantes de cuenta y seguridad se envían siempre.",
+      "privacy": "Privacidad",
+      "terms": "Términos",
+      "imprint": "Aviso legal"
     },
     "verify_email": {
       "subject": "Confirma tu dirección de correo electrónico",
@@ -620,7 +625,6 @@
     }
   },
   "certificate": {
-    "tagline": "AI Powered Careers",
     "title": "Certificado de finalización",
     "intro": "Se certifica que",
     "completed": "ha completado el curso",
