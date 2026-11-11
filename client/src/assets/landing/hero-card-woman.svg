@@ -2,8 +2,8 @@
 <path id="Rectangle 34624201" d="M0 40C0 17.9086 17.9086 0 40 0H221C243.091 0 261 17.9086 261 40V196.756C261 214.469 249.352 230.072 232.37 235.106L51.3701 288.77C25.7326 296.371 0 277.16 0 250.42V40Z" fill="url(#paint0_linear_0_90)"/>
 <defs>
 <linearGradient id="paint0_linear_0_90" x1="261" y1="152" x2="0" y2="152" gradientUnits="userSpaceOnUse">
-<stop stop-color="#004CFB"/>
-<stop offset="1" stop-color="#0084FF"/>
+<stop stop-color="#012B74"/>
+<stop offset="1" stop-color="#0A6CF0"/>
 </linearGradient>
 </defs>
 </svg>
