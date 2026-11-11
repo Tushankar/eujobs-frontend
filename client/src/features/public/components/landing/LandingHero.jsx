@@ -23,7 +23,7 @@ import BrandLogo from '@/components/layout/BrandLogo.jsx'
 import { Icon } from '@/components/ui'
 import styles from './Landing.module.css'
 
-export const SECTIONS = ['about', 'jobs', 'faq', 'contact']
+const SECTIONS = ['about', 'jobs', 'faq', 'contact']
 
 /** Pill with the round ↗ badge used across the Figma page. */
 export function ArrowPill({ to, children, white = false }) {
@@ -37,6 +37,24 @@ export function ArrowPill({ to, children, white = false }) {
   )
 }
 
+/** The overlapping people of the design with the round "+" (hero and job cards). */
+export function AvatarStack({ to, label }) {
+  return (
+    <Link to={to} className={styles.avatars} aria-label={label}>
+      {[avatar1, avatar2, avatar3, avatar1].map((src, index) => (
+        <span key={index} className={styles.avatar}>
+          <img src={src} alt="" className={src === avatar1 ? styles.avatarLarge : styles.avatarSmall} />
+        </span>
+      ))}
+      <span className={styles.avatar}>
+        <span className={styles.avatarMore} aria-hidden="true">
+          +
+        </span>
+      </span>
+    </Link>
+  )
+}
+
 /** A box placed at Figma coordinates inside the 468 × 445 art frame. */
 const at = (left, top, width, height) => ({ left, top, width, height })
 
@@ -44,7 +62,7 @@ const at = (left, top, width, height) => ({ left, top, width, height })
 function HeroArt() {
   const { t } = useTranslation()
   return (
-    <div className={styles.art} aria-hidden="true">
+    <div className={styles.art} aria-hidden="true" data-hero-art data-parallax="-70">
       <img src={cardWoman} alt="" style={{ ...at(0, 8, 261, 290.4) }} />
       <div className={styles.maskedPhoto} style={{ ...at(24.1, 0, 210.67, 296), maskImage: `url(${maskWoman})`, WebkitMaskImage: `url(${maskWoman})`, maskPosition: '-24.098px 8px', WebkitMaskPosition: '-24.098px 8px', maskSize: '261px 290.445px', WebkitMaskSize: '261px 290.445px' }}>
         <img src={photoWoman} alt="" style={{ height: '100%', left: '-94.49%', width: '210.81%' }} />
@@ -52,7 +70,7 @@ function HeroArt() {
       <div className={styles.flipY} style={at(277, 151.5, 191, 288.5)}>
         <img src={cardMan} alt="" style={{ width: '100%', height: '97.02%' }} />
       </div>
-      <img src={sparkles} alt="" style={{ ...at(292, 187, 48, 45.5), opacity: 0.5 }} />
+      <img src={sparkles} alt="" style={{ ...at(292, 187, 48, 45.5), opacity: 0.5 }} data-twinkle />
       <div className={styles.maskedPhoto} style={{ ...at(277, 208, 191, 237), maskImage: `url(${maskMan})`, WebkitMaskImage: `url(${maskMan})`, maskPosition: '0 -25.773px', WebkitMaskPosition: '0 -25.773px', maskSize: '191px 257.773px', WebkitMaskSize: '191px 257.773px' }}>
         <img src={photoMan} alt="" style={{ height: '168.42%', left: '-112.22%', width: '312.6%' }} />
       </div>
@@ -94,8 +112,8 @@ export default function LandingHero() {
 
   return (
     <section className={styles.hero} id="home">
-      <img src={hexagons} alt="" className={styles.heroPattern} aria-hidden="true" />
-      <header className={styles.header}>
+      <img src={hexagons} alt="" className={styles.heroPattern} aria-hidden="true" data-parallax="90" />
+      <header className={styles.header} data-hero-header>
         <Link to="/" className={styles.brandLink} aria-label={t('landing:nav.home_aria', { brand: BRAND.name })}>
           <BrandLogo height={52} />
         </Link>
@@ -117,13 +135,17 @@ export default function LandingHero() {
       <div className={styles.heroBody}>
         <div className={styles.heroText}>
           <h1 className={styles.heroTitle}>
-            <span>{t('landing:hero.titleLead')}</span>
-            <span>
-              <Trans i18nKey="landing:hero.titleWith" values={{ brand: BRAND.name }} components={{ brand: <em className={styles.heroBrand} style={{ fontStyle: 'normal' }} /> }} />
+            <span className={styles.heroLine}>
+              <span data-hero-line>{t('landing:hero.titleLead')}</span>
+            </span>
+            <span className={styles.heroLine}>
+              <span data-hero-line>
+                <Trans i18nKey="landing:hero.titleWith" values={{ brand: BRAND.name }} components={{ brand: <em className={styles.heroBrand} /> }} />
+              </span>
             </span>
           </h1>
 
-          <form className={styles.search} role="search" aria-label={t('landing:hero.searchLabel')} onSubmit={search}>
+          <form className={styles.search} data-hero-fade role="search" aria-label={t('landing:hero.searchLabel')} onSubmit={search}>
             <label className={styles.searchField}>
               <Icon as={Search} size={16} />
               <input value={what} onChange={(event) => setWhat(event.target.value)} placeholder={t('landing:hero.what')} aria-label={t('landing:hero.what')} />
@@ -132,27 +154,17 @@ export default function LandingHero() {
               <Icon as={MapPin} size={16} />
               <input value={where} onChange={(event) => setWhere(event.target.value)} placeholder={t('landing:hero.where')} aria-label={t('landing:hero.where')} />
             </label>
-            <button type="submit" className={styles.searchButton} aria-label={t('landing:hero.search')}>
+            <button type="submit" className={styles.searchButton}>
               <Icon as={Search} size={16} />
+              <span className={styles.searchLabel}>{t('landing:hero.search')}</span>
             </button>
           </form>
 
-          <p className={styles.heroCopy}>{t('landing:hero.text')}</p>
+          <p className={styles.heroCopy} data-hero-fade>{t('landing:hero.text')}</p>
 
-          <div className={styles.heroActions}>
+          <div className={styles.heroActions} data-hero-fade>
             <ArrowPill to="/sign-up">{t('landing:hero.start')}</ArrowPill>
-            <Link to="/sign-up" className={styles.avatars} aria-label={t('landing:hero.join')}>
-              {[avatar1, avatar2, avatar3, avatar1].map((src, index) => (
-                <span key={index} className={styles.avatar}>
-                  <img src={src} alt="" className={src === avatar1 ? styles.avatarLarge : styles.avatarSmall} />
-                </span>
-              ))}
-              <span className={styles.avatar}>
-                <span className={styles.avatarMore} aria-hidden="true">
-                  +
-                </span>
-              </span>
-            </Link>
+            <AvatarStack to="/sign-up" label={t('landing:hero.join')} />
           </div>
         </div>
         <HeroArt />

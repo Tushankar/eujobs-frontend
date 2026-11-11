@@ -92,7 +92,15 @@
     "privacy": "Política de privacidad",
     "terms": "Términos y condiciones",
     "imprint": "Aviso legal",
-    "copyright": "Copyright © {{year}} {{brand}}. Todos los derechos reservados."
+    "copyright": "Copyright © {{year}} {{brand}}. Todos los derechos reservados.",
+    "blurb": "Empleos con IA de empresas de confianza en la UE y el Reino Unido. Crea tu perfil una vez y postúlate en pocos clics.",
+    "explore": "Explorar",
+    "account": "Cuenta",
+    "legal": "Legal",
+    "openJobs_one": "{{count}} empleo abierto ahora",
+    "openJobs_many": "{{count}} empleos abiertos ahora",
+    "openJobs_other": "{{count}} empleos abiertos ahora",
+    "backToTop": "Volver arriba"
   },
   "loadError": "No hemos podido cargar los últimos empleos. Actualiza la página."
 }

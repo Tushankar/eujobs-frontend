@@ -1,36 +1,29 @@
+import gsap from 'gsap'
 import { useEffect, useRef, useState } from 'react'
 
-const DURATION_MS = 600
-
 /**
- * Counts a number up from zero when it first appears, and from its old value to the new one when it changes.
- * Works on numbers only (formatting is the caller's job, so no locale is guessed here); anything else, or
- * reduced motion, is returned as is.
+ * Counts a number up from zero when it first appears, and from its old value to the new one when it changes (GSAP,
+ * owner 2026-11-11). Works on numbers only (formatting is the caller's job, so no locale is guessed here); anything
+ * else, or reduced motion, is returned as is.
  */
 export function useCountUp(value) {
   const [reduced] = useState(() => window.matchMedia('(prefers-reduced-motion: reduce)').matches)
   const animate = typeof value === 'number' && Number.isFinite(value) && !reduced
 
   const [shown, setShown] = useState(0)
-  const shownRef = useRef(0)
+  const counter = useRef({ n: 0 })
 
   useEffect(() => {
     if (!animate) return undefined
-    const from = shownRef.current
-    const start = performance.now()
-    let frame
-
-    function tick(now) {
-      const progress = Math.min((now - start) / DURATION_MS, 1)
-      const eased = 1 - (1 - progress) ** 3
-      // Keep the target's precision so decimals (e.g. 12.5) land exactly.
-      shownRef.current = progress === 1 ? value : from + (value - from) * eased
-      setShown(shownRef.current)
-      if (progress < 1) frame = requestAnimationFrame(tick)
-    }
-
-    frame = requestAnimationFrame(tick)
-    return () => cancelAnimationFrame(frame)
+    // Keep the target's precision so decimals (e.g. 12.5) land exactly.
+    const tween = gsap.to(counter.current, {
+      n: value,
+      duration: 0.9,
+      ease: 'power3.out',
+      onUpdate: () => setShown(counter.current.n),
+      onComplete: () => setShown(value),
+    })
+    return () => tween.kill()
   }, [animate, value])
 
   return animate ? shown : value

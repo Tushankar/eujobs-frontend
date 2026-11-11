@@ -63,3 +63,19 @@
   gap: 18px;
   padding-top: 18px;
 }
+
+/* Hover lift (owner 2026-11-11: GSAP-era dashboard motion). */
+.card {
+  transition:
+    transform var(--duration-base) var(--ease-out),
+    box-shadow var(--duration-base) var(--ease-out),
+    border-color var(--duration-base) var(--ease-out);
+}
+
+@media (hover: hover) and (prefers-reduced-motion: no-preference) {
+  .card:hover {
+    transform: translateY(-3px);
+    border-color: rgba(2, 99, 220, 0.25);
+    box-shadow: 0 12px 24px -12px rgba(1, 43, 116, 0.25);
+  }
+}

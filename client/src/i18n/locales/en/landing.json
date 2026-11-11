@@ -90,7 +90,14 @@
     "privacy": "Privacy Policy",
     "terms": "Terms & Conditions",
     "imprint": "Imprint",
-    "copyright": "Copyright © {{year}} {{brand}}. All Rights Reserved."
+    "copyright": "Copyright © {{year}} {{brand}}. All Rights Reserved.",
+    "blurb": "AI-matched jobs from trusted employers across the EU and the UK. Build your profile once and apply in a few clicks.",
+    "explore": "Explore",
+    "account": "Account",
+    "legal": "Legal",
+    "openJobs_one": "{{count}} open job right now",
+    "openJobs_other": "{{count}} open jobs right now",
+    "backToTop": "Back to top"
   },
   "loadError": "We could not load the latest jobs. Please refresh the page."
 }

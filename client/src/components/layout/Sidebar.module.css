@@ -39,9 +39,23 @@
 }
 
 .nav {
+  position: relative;
   display: flex;
   flex-direction: column;
   gap: 4px;
+}
+
+/* One highlight behind the active item that glides between items (useNavIndicator). */
+.indicator {
+  position: absolute;
+  top: 0;
+  right: 0;
+  left: 0;
+  border-radius: var(--radius-xl);
+  background: var(--nav-active-bg);
+  visibility: hidden;
+  opacity: 0;
+  pointer-events: none;
 }
 
 .link {
@@ -56,6 +70,8 @@
   font-weight: 600;
   line-height: 20px;
   letter-spacing: -0.2px;
+  position: relative;
+  z-index: 1;
   color: var(--foreground);
   transition:
     background-color var(--transition),
@@ -68,7 +84,7 @@
 
 .active,
 .active:hover {
-  background: var(--nav-active-bg);
+  background: transparent;
   color: var(--primary);
   font-weight: 700;
 }

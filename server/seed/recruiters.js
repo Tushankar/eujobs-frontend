@@ -1,3 +1,4 @@
+import { existsSync, readFileSync } from 'node:fs'
 import sharp from 'sharp'
 import { storeFile } from '../lib/files.js'
 import { createDefaultStages } from '../modules/companies/companies.review.js'
@@ -19,6 +20,16 @@ const HOUR_MS = 60 * 60 * 1000
 const DAY_MS = 24 * HOUR_MS
 const skills = (names) => names.map((name) => ({ name, key: name.toLocaleLowerCase() }))
 const ago = (now, ms) => new Date(now - ms)
+// Real-brand demo companies get their public logo (owner request 2026-11-11); fictional ones keep their initials.
+const logoPath = (key) => new URL(`./assets/logos/${key}.png`, import.meta.url)
+
+async function seedLogo(company, ownerId, key) {
+  if (!existsSync(logoPath(key))) return
+  const buffer = await sharp(readFileSync(logoPath(key))).resize(256, 256, { fit: 'contain', background: { r: 0, g: 0, b: 0, alpha: 0 } }).png().toBuffer()
+  const file = await storeFile({ ownerId, purpose: 'company_logo', buffer, ext: 'png', originalName: `${key}.png` })
+  company.logoFileId = file._id
+  await company.save()
+}
 
 async function seedCompany({ owner, recruiter, now, data, status }) {
   const company = await Company.create({
@@ -39,6 +50,7 @@ async function seedCompany({ owner, recruiter, now, data, status }) {
       reviewHistory: [{ decision: 'approved', by: owner._id, at: ago(now, (data.approvedDaysAgo ?? 45) * DAY_MS) }],
     }),
   })
+  await seedLogo(company, recruiter._id, data.key)
   recruiter.companyId = company._id
   recruiter.phone = { e164: data.phone ?? recruiter.phone?.e164 ?? '+442079460200', verifiedAt: company.submittedAt }
   await recruiter.save()

@@ -47,6 +47,6 @@ describe('GET /landing (public home page)', () => {
   })
 
   it('refuses an unknown language', async () => {
-    assert.equal((await api().get('/api/v1/landing?language=xx')).status, 400)
+    assert.equal((await api().get('/api/v1/landing?language=xx')).status, 422)
   })
 })

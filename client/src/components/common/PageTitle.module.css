@@ -56,3 +56,14 @@
     line-height: 36px;
   }
 }
+
+/* The title rises through this mask when the page enters (useWorkspaceMotion). */
+.titleMask {
+  display: block;
+  overflow: hidden;
+  padding-bottom: 0.08em;
+}
+
+.titleMask > span {
+  display: inline-block;
+}

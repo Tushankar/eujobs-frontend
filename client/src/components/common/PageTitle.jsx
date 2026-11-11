@@ -7,7 +7,11 @@ export default function PageTitle({ eyebrow, title, description, actions, classN
     <div className={cx(styles.root, className)}>
       <div className={styles.text}>
         {eyebrow && <p className={styles.eyebrow}>{eyebrow}</p>}
-        <h1 className={styles.title}>{title}</h1>
+        <h1 className={styles.title}>
+          <span className={styles.titleMask}>
+            <span data-motion-title>{title}</span>
+          </span>
+        </h1>
         {description && <p className={styles.description}>{description}</p>}
       </div>
       {actions && <div className={styles.actions}>{actions}</div>}

@@ -6,6 +6,7 @@ import NotFoundPage from './NotFoundPage.jsx'
 import ScrollToTop from './ScrollToTop.jsx'
 import { setRouter } from './navigation.js'
 import { landingPath, loadMe, requiredPage } from './session.js'
+import { lazyPage } from './lazyPage.js'
 import authRoutes from '@/features/auth/routes.jsx'
 import publicRoutes from '@/features/public/routes.jsx'
 import candidateRoutes from '@/features/candidate/routes.jsx'
@@ -50,11 +51,13 @@ function workspaceRoute(id, children) {
  */
 const routes = [
   {
+    // Signed-out visitors get the public landing page (Figma 396:547); a session goes straight to its workspace.
     path: '/',
     loader: async () => {
       const me = await loadMe()
-      return redirect(me ? landingPath(me) : '/sign-in')
+      return me ? redirect(landingPath(me)) : null
     },
+    lazy: lazyPage(() => import('@/features/public/pages/LandingPage.jsx')),
   },
   ...authRoutes,
   ...publicRoutes,

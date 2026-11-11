@@ -14,7 +14,7 @@ export default function StatCard({ label, value, format, delta, caption, icon, i
   const shown = useCountUp(value)
   const text = typeof shown === 'number' ? (format ?? ((number) => formatter.number(Math.round(number))))(shown) : shown
   return (
-    <section className={styles.card}>
+    <section className={styles.card} data-motion-card>
       <div className={styles.head}>
         <p className={styles.label}>{label}</p>
         {iconSrc ? (

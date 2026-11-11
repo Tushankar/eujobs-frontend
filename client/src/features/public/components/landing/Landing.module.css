@@ -204,11 +204,19 @@
   color: #161719;
 }
 
-.heroTitle span {
+/* Each line is a mask the words rise through on load. */
+.heroLine {
+  display: block;
+  overflow: hidden;
+  padding-bottom: 4px;
+}
+
+.heroLine > span {
   display: block;
 }
 
 .heroBrand {
+  font-style: normal;
   font-weight: 600;
   color: var(--primary);
 }
@@ -263,6 +271,16 @@
   background: var(--brand-gradient);
   color: #fff;
   cursor: pointer;
+}
+
+/* Visually hidden next to the round icon button; shown on phones where the button spans the card. */
+.searchLabel {
+  position: absolute;
+  width: 1px;
+  height: 1px;
+  overflow: hidden;
+  clip-path: inset(50%);
+  white-space: nowrap;
 }
 
 .searchButton:hover {
@@ -388,7 +406,7 @@
 .trusted {
   display: flex;
   align-items: center;
-  gap: 60px;
+  gap: 40px;
   min-height: 120px;
   padding: 16px 46px 16px 39px;
   border: 1px solid #eef0f3;
@@ -408,12 +426,25 @@
   color: #777e8b;
 }
 
+/* A slow marquee (GSAP) inside a window with soft edges; the set is rendered twice for a seamless loop. */
 .trustedLogos {
-  display: flex;
   flex: 1;
-  flex-wrap: wrap;
-  justify-content: space-between;
-  gap: 16px 30px;
+  min-width: 0;
+  overflow: hidden;
+  mask-image: linear-gradient(90deg, transparent, #000 8%, #000 92%, transparent);
+  -webkit-mask-image: linear-gradient(90deg, transparent, #000 8%, #000 92%, transparent);
+}
+
+.marquee {
+  display: flex;
+  width: max-content;
+}
+
+.marqueeSet {
+  display: flex;
+  flex-shrink: 0;
+  gap: 40px;
+  padding-right: 40px;
 }
 
 .trustedLogos img {
@@ -636,25 +667,12 @@
   pointer-events: none;
 }
 
+/* Figma ellipses 1875/1876 (60% opacity, blur 350) bleeding in from the bottom of the section. */
 .glow {
   position: absolute;
-  bottom: -120px;
-  width: 413px;
-  height: 195px;
-  border-radius: 50%;
-  opacity: 0.25;
-  filter: blur(110px);
+  max-width: none;
+  height: 895px;
   pointer-events: none;
-}
-
-.glowGreen {
-  left: 292px;
-  background: #249756;
-}
-
-.glowBlue {
-  left: 568px;
-  background: #7cd4fd;
 }
 
 .jobs {
@@ -728,10 +746,17 @@
 
 .jobBottom {
   display: flex;
+  align-items: flex-end;
+  justify-content: space-between;
+  gap: 16px;
+  margin-top: 14px;
+}
+
+.jobPay {
+  display: flex;
   flex-direction: column;
   align-items: flex-end;
   gap: 8px;
-  margin-top: 14px;
 }
 
 .jobSalary {
@@ -749,6 +774,14 @@
 
 .jobApply:hover {
   text-decoration: underline;
+}
+
+.jobsMore {
+  position: relative;
+  z-index: 1;
+  display: flex;
+  justify-content: center;
+  margin-top: 28px;
 }
 
 .empty {
@@ -872,6 +905,12 @@
   margin-top: 2px;
 }
 
+.faqOpen .faqIcon {
+  width: 14px;
+  height: 14px;
+  margin: 5px 3px 0;
+}
+
 .faqAnswer {
   margin: 0;
   padding: 0 64px 22px 62px;
@@ -880,26 +919,6 @@
   color: #687184;
 }
 
-.faqGlow {
-  position: absolute;
-  bottom: -120px;
-  width: 362px;
-  height: 195px;
-  border-radius: 50%;
-  opacity: 0.18;
-  filter: blur(110px);
-  pointer-events: none;
-}
-
-.faqGlowViolet {
-  left: 291px;
-  background: #483aae;
-}
-
-.faqGlowRed {
-  left: 456px;
-  background: #bf4545;
-}
 
 /* ---------- Call to action (396:14853) ---------- */
 
@@ -930,6 +949,13 @@
   height: 250px;
   opacity: 0.3;
   pointer-events: none;
+}
+
+.ctaCopy {
+  position: relative;
+  display: flex;
+  flex-direction: column;
+  align-items: flex-start;
 }
 
 .ctaTitle {
@@ -966,32 +992,76 @@
 }
 
 .footerTop {
+  display: grid;
+  grid-template-columns: minmax(0, 1.1fr) minmax(0, 1.4fr);
+  gap: 48px;
+  padding: 44px 0 36px;
+}
+
+.footerBrand {
   display: flex;
+  flex-direction: column;
   align-items: flex-start;
-  justify-content: space-between;
-  gap: 32px;
-  padding: 34px 0;
+  gap: 16px;
+}
+
+.footerBlurb {
+  max-width: 360px;
+  margin: 0;
+  font-size: 14px;
+  line-height: 22px;
+  color: #545960;
+}
+
+.footerLive {
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+  margin: 0;
+  padding: 6px 12px;
+  border-radius: 999px;
+  background: var(--accent);
+  font-size: 13px;
+  font-weight: 600;
+  color: var(--accent-foreground);
+}
+
+.liveDot {
+  width: 8px;
+  height: 8px;
+  border-radius: 50%;
+  background: #1f9d55;
+  box-shadow: 0 0 0 3px rgba(31, 157, 85, 0.18);
 }
 
 .footerLinks {
-  display: flex;
-  flex-wrap: wrap;
-  gap: 24px 54px;
+  display: grid;
+  grid-template-columns: repeat(3, minmax(0, 1fr));
+  gap: 24px;
+}
+
+.footerHeading {
+  margin: 0 0 14px;
+  font-size: 12px;
+  font-weight: 700;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+  color: #8a8f97;
 }
 
 .footerColumn {
   display: grid;
-  align-content: start;
-  gap: 10px;
+  gap: 12px;
   margin: 0;
   padding: 0;
   list-style: none;
-  font-size: 12px;
-  line-height: 15px;
+  font-size: 14px;
+  line-height: 18px;
 }
 
 .footerColumn a {
   color: #161719;
+  transition: color var(--transition);
 }
 
 .footerColumn a:hover {
@@ -999,11 +1069,21 @@
 }
 
 .footerBottom {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  justify-content: space-between;
+  gap: 12px;
   padding: 20px 0 24px;
   border-top: 1px solid #e9ebef;
-  font-size: 11px;
-  line-height: 13.5px;
+  font-size: 12px;
+  line-height: 16px;
   color: #5f646b;
+}
+
+.backToTop {
+  font-weight: 600;
+  color: var(--primary);
 }
 
 /* ---------- Narrower screens ---------- */
@@ -1063,6 +1143,10 @@
     width: auto;
   }
 
+  .trustedLogos {
+    align-self: stretch;
+  }
+
   .categories,
   .jobs,
   .stepsBody,
@@ -1090,46 +1174,154 @@
   }
 
   .footerTop {
-    flex-direction: column;
+    grid-template-columns: minmax(0, 1fr);
+    gap: 32px;
+    padding-top: 32px;
   }
 }
 
 @media (max-width: 599px) {
   .page {
-    padding-top: 16px;
+    padding: 16px 12px 32px;
   }
 
   .hero {
     border-radius: 24px;
   }
 
-  .heroTitle {
-    font-size: 34px;
-    line-height: 38px;
+  .header {
+    height: 72px;
+    padding: 0 16px;
   }
 
+  .heroBody,
+  .section,
+  .steps {
+    padding-right: 20px;
+    padding-left: 20px;
+  }
+
+  .heroBody {
+    padding-top: 28px;
+    padding-bottom: 32px;
+  }
+
+  .heroTitle {
+    font-size: 36px;
+    line-height: 40px;
+    letter-spacing: -1.6px;
+  }
+
+  /* The search becomes a stacked card: two fields and a full-width button. */
   .search {
-    grid-template-columns: minmax(0, 1fr) 40px;
-    border-radius: 24px;
+    grid-template-columns: minmax(0, 1fr);
+    margin-top: 28px;
+    padding: 6px;
+    border-radius: 20px;
+  }
+
+  .searchField {
+    padding: 0 12px;
   }
 
   .searchField + .searchField {
-    grid-row: 2;
     border-top: 1px solid #e9ebef;
     border-left: 0;
   }
 
   .searchButton {
-    grid-row: 1 / span 2;
-    grid-column: 2;
-    align-self: center;
+    gap: 8px;
+    display: flex;
+    justify-content: center;
+    width: 100%;
+    height: 44px;
+    margin-top: 6px;
+    border-radius: 14px;
+    font: inherit;
+    font-size: 14px;
+    font-weight: 600;
+  }
+
+  .searchLabel {
+    position: static;
+    width: auto;
+    height: auto;
+    overflow: visible;
+    clip-path: none;
+  }
+
+  .heroCopy {
+    margin-top: 24px;
   }
 
   .heroActions {
-    flex-wrap: wrap;
+    gap: 14px;
+    margin-top: 24px;
+  }
+
+  .sectionTitle {
+    font-size: 28px;
+    line-height: 34px;
+    letter-spacing: -1px;
+  }
+
+  .stepsTitle {
+    font-size: 28px;
+    line-height: 34px;
+    letter-spacing: -1px;
+  }
+
+  /* Job cards: people, then salary and Apply on one line. */
+  .jobBottom {
+    flex-direction: column;
+    align-items: stretch;
+    gap: 14px;
+  }
+
+  .jobPay {
+    flex-direction: row;
+    align-items: center;
+    justify-content: space-between;
+  }
+
+  .faqButton {
+    gap: 14px;
+    padding: 20px 4px;
+  }
+
+  .faqOpen .faqButton {
+    padding: 20px 16px 8px;
+  }
+
+  .faqNumber,
+  .faqQuestion {
+    font-size: 16px;
   }
 
   .faqAnswer {
-    padding: 0 20px 22px;
+    padding: 0 16px 20px 50px;
+    font-size: 15px;
+  }
+
+  .ctaTitle {
+    font-size: 30px;
+    line-height: 34px;
+    letter-spacing: -1.2px;
+  }
+
+  .careerTitle {
+    font-size: 22px;
+  }
+
+  .footer {
+    padding: 0 20px;
+  }
+
+  .footerLinks {
+    gap: 16px;
+  }
+
+  .footerColumn {
+    font-size: 13px;
   }
 }

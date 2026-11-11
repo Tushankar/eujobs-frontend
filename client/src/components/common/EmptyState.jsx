@@ -5,7 +5,7 @@ import styles from './EmptyState.module.css'
 /** Centred "nothing here" message with an optional icon and action. `size="lg"` is the solid-bordered, roomier variant. */
 export default function EmptyState({ icon, title, description, action, size = 'md', iconSize = 20 }) {
   return (
-    <div className={cx(styles.root, size === 'lg' && styles.large)}>
+    <div className={cx(styles.root, size === 'lg' && styles.large)} data-motion-card>
       {icon && (
         <span className={styles.icon}>
           <Icon as={icon} size={iconSize} />

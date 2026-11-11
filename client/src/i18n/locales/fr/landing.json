@@ -92,7 +92,15 @@
     "privacy": "Politique de confidentialité",
     "terms": "Conditions générales",
     "imprint": "Mentions légales",
-    "copyright": "Copyright © {{year}} {{brand}}. Tous droits réservés."
+    "copyright": "Copyright © {{year}} {{brand}}. Tous droits réservés.",
+    "blurb": "Des offres associées par IA, d’employeurs fiables dans l’UE et au Royaume-Uni. Créez votre profil une fois et postulez en quelques clics.",
+    "explore": "Découvrir",
+    "account": "Compte",
+    "legal": "Légal",
+    "openJobs_one": "{{count}} offre ouverte en ce moment",
+    "openJobs_many": "{{count}} offres ouvertes en ce moment",
+    "openJobs_other": "{{count}} offres ouvertes en ce moment",
+    "backToTop": "Retour en haut"
   },
   "loadError": "Impossible de charger les dernières offres. Actualisez la page."
 }

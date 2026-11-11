@@ -81,7 +81,7 @@ export default function DataTable({ columns, rows, getRowKey, getRowProps, capti
               : rows.map((row) => {
                   const { className: rowClass, ...rowProps } = getRowProps?.(row) ?? {}
                   return (
-                    <tr key={getRowKey(row)} className={cx(styles.row, rowClass)} {...rowProps}>
+                    <tr key={getRowKey(row)} className={cx(styles.row, rowClass)} data-motion-card {...rowProps}>
                       {columns.map((column) => (
                         <td key={column.key} className={styles.td} data-label={labelOf(column)}>
                           {column.render(row)}

@@ -10,6 +10,7 @@ export default function Panel({ as: Component = 'section', padding = 20, selecte
     <Component
       className={cx(styles.panel, selected && styles.selected, className)}
       style={{ padding }}
+      data-motion-card
       {...rest}
     >
       {children}

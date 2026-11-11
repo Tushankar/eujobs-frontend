@@ -1,4 +1,4 @@
-import { useState } from 'react'
+import { useRef, useState } from 'react'
 import { useTranslation } from 'react-i18next'
 import { useSelector } from 'react-redux'
 import { Link, Navigate, Outlet, useLocation } from 'react-router-dom'
@@ -11,11 +11,11 @@ import UpgradeDialog from '@/features/candidate/billing/components/UpgradeDialog
 import InterviewMovePrompts from '@/features/interviews/components/InterviewMovePrompts.jsx'
 import LegalAcceptDialog from '@/features/public/components/LegalAcceptDialog.jsx'
 import ProductTour from '@/features/tour/ProductTour.jsx'
-import { cx } from '@/utils/cx.js'
 import Copyright from './Copyright.jsx'
 import Header from './Header.jsx'
 import Sidebar from './Sidebar.jsx'
 import styles from './WorkspaceLayout.module.css'
+import { useWorkspaceMotion } from './useWorkspaceMotion.js'
 
 const LEGAL_DOCS = ['terms', 'privacy', 'imprint']
 
@@ -24,6 +24,8 @@ export default function WorkspaceLayout({ workspaceId }) {
   const { t } = useTranslation()
   const workspace = WORKSPACES[workspaceId]
   const { pathname, state } = useLocation()
+  const content = useRef(null)
+  useWorkspaceMotion(content, pathname)
   // The mobile drawer remembers the path it was opened on, so navigating anywhere closes it.
   const [drawerPath, setDrawerPath] = useState(null)
   const drawerOpen = drawerPath === pathname
@@ -42,8 +44,8 @@ export default function WorkspaceLayout({ workspaceId }) {
       <div className={styles.platform}>
         <Header workspace={workspace} onOpenMenu={() => setDrawerPath(pathname)} />
         <main className={styles.main}>
-          {/* Keyed by path so each page's sections cascade in again on navigation (utilities.css). */}
-          <div className={cx(styles.content, 'stagger-page')} key={pathname}>
+          {/* Keyed by path so each page's sections rise in again on navigation (GSAP, useWorkspaceMotion). */}
+          <div ref={content} className={styles.content} key={pathname}>
             {/* M-005: signed in on the other portal, so this account's own workspace opened instead. */}
             {state?.notice === 'wrongPortal' && <NoticeBanner>{t('shell:notices.wrongPortal')}</NoticeBanner>}
             {blocked ? (

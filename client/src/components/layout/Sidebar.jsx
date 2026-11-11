@@ -1,6 +1,9 @@
+import { useGSAP } from '@gsap/react'
+import gsap from 'gsap'
+import { useRef } from 'react'
 import { useTranslation } from 'react-i18next'
 import { useDispatch } from 'react-redux'
-import { Link, NavLink, useNavigate } from 'react-router-dom'
+import { Link, NavLink, useLocation, useNavigate } from 'react-router-dom'
 import { ArrowRight, ArrowUpRight, CircleHelp, Crown, LogOut, Settings2 } from 'lucide-react'
 import { cx } from '@/utils/cx.js'
 import { Avatar, Icon, IconButton } from '@/components/ui'
@@ -126,11 +129,37 @@ function PromoCard({ workspace, promo }) {
   )
 }
 
+/** The active-item highlight glides to the new item on navigation (GSAP); placed instantly the first time. */
+function useNavIndicator(navRef, indicatorRef, pathname, itemCount) {
+  const placed = useRef(false)
+  useGSAP(
+    () => {
+      const indicator = indicatorRef.current
+      const active = navRef.current?.querySelector(`.${styles.active}`)
+      if (!indicator) return
+      if (!active) {
+        gsap.to(indicator, { autoAlpha: 0, duration: 0.2 })
+        return
+      }
+      const to = { y: active.offsetTop, height: active.offsetHeight, autoAlpha: 1 }
+      if (!placed.current || window.matchMedia('(prefers-reduced-motion: reduce)').matches) gsap.set(indicator, to)
+      else gsap.to(indicator, { ...to, duration: 0.45, ease: 'power3.out', overwrite: true })
+      placed.current = true
+    },
+    { dependencies: [pathname, itemCount] },
+  )
+}
+
 export default function Sidebar({ workspace, open, onClose }) {
   const { t } = useTranslation()
   const navigate = useNavigate()
+  const { pathname } = useLocation()
   const { me } = usePreferences()
   const promo = usePromo(workspace, me)
+  const navItems = workspace.nav.filter((item) => can(me, item.permission))
+  const navRef = useRef(null)
+  const indicatorRef = useRef(null)
+  useNavIndicator(navRef, indicatorRef, pathname, navItems.length)
 
   function handleSignOut() {
     signOut()
@@ -152,8 +181,9 @@ export default function Sidebar({ workspace, open, onClose }) {
 
         <div className={styles.navArea}>
           <p className={styles.sectionLabel}>{t('shell:sidebar.section')}</p>
-          <nav className={cx(styles.nav, 'stagger')} aria-label={t('shell:sidebar.section')}>
-            {workspace.nav.filter((item) => can(me, item.permission)).map((item) => (
+          <nav ref={navRef} className={cx(styles.nav, 'stagger')} aria-label={t('shell:sidebar.section')}>
+            <span ref={indicatorRef} className={styles.indicator} aria-hidden="true" />
+            {navItems.map((item) => (
               <NavItem key={item.to} workspace={workspace} item={item} me={me} />
             ))}
           </nav>

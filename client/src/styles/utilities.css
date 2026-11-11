@@ -31,13 +31,12 @@
 }
 
 /*
- * Entrances. `stagger` cascades its direct children in; `stagger-page` does the same for a routed
- * page, which renders either one wrapper element or several sibling sections (see WorkspaceLayout).
+ * Entrances. `stagger` cascades its direct children in (routed pages use GSAP instead: useWorkspaceMotion).
  * From the 5th child on they all share the last delay, so a long page never waits on its tail. Put the class
  * on an element that is remounted (keyed) whenever the content should replay.
  */
 @media (prefers-reduced-motion: no-preference) {
-  :is(.stagger > *, .stagger-page > :only-child > *, .stagger-page > :not(:only-child)) {
+  .stagger > * {
     animation: rise var(--duration-enter) var(--ease-out) backwards;
     animation-delay: calc(var(--i, 4) * var(--stagger-step));
 

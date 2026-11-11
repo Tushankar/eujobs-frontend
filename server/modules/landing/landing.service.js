@@ -11,7 +11,7 @@ import { listFaqs } from '../meta/meta.service.js'
  * the candidate FAQs. Only what a job card already shows candidates is exposed. Logo links are signed for the logo's
  * owner, since there is no viewer; logo files are not access-logged (files.routes.js).
  */
-const LATEST_JOBS = 8
+const LATEST_JOBS = 6
 
 async function logoUrls(companies) {
   const files = await File.find({ _id: { $in: companies.map((company) => company.logoFileId).filter(Boolean) } })
