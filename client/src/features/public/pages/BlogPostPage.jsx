@@ -38,7 +38,9 @@ export default function BlogPostPage() {
               <h1 className={styles.title}>{post.title}</h1>
               <p className={styles.meta}>
                 <span>{post.author ?? t('landing:blog.team')}</span>
-                {post.publishedAt && <time dateTime={post.publishedAt}>{format.date(post.publishedAt, { day: 'numeric', month: 'long', year: 'numeric' })}</time>}
+                {post.publishedAt && (
+                  <time dateTime={post.publishedAt}>{format.date(post.publishedAt, { day: 'numeric', month: 'long', year: 'numeric' })}</time>
+                )}
               </p>
               {post.coverUrl && <img src={post.coverUrl} alt="" className={styles.cover} />}
               <p className={styles.excerpt}>{post.excerpt}</p>

@@ -9,9 +9,10 @@ const TABS = [
   { key: 'notifications', to: '/candidate/settings/notifications' },
   { key: 'data', to: '/candidate/settings/data-account' },
   { key: 'billing', to: '/candidate/settings/billing' },
+  { key: 'review', to: '/candidate/settings/review' },
 ]
 
-/** Shared frame of the four settings tabs: page title, tab navigation and the routed tab content. */
+/** Shared frame of the settings tabs: page title, tab navigation and the routed tab content. */
 export default function SettingsLayout() {
   const { t } = useTranslation('account')
   return (

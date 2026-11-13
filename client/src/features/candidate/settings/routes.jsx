@@ -12,6 +12,7 @@ export default [
       { path: 'notifications', lazy: lazyPage(() => import('./pages/NotificationSettingsPage.jsx')) },
       { path: 'data-account', lazy: lazyPage(() => import('./pages/DataAccountSettingsPage.jsx')) },
       { path: 'billing', lazy: lazyPage(() => import('./pages/BillingSettingsPage.jsx')) },
+      { path: 'review', lazy: lazyPage(() => import('@/features/account/pages/ReviewSettingsPage.jsx')) },
     ],
   },
 ]

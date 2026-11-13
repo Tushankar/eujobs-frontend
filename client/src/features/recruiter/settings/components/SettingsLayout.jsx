@@ -8,6 +8,7 @@ const TABS = [
   { key: 'data', to: '/recruiter/settings/data-account' },
   { key: 'billing', to: '/recruiter/settings/billing' },
   { key: 'courses', to: '/recruiter/settings/courses' },
+  { key: 'review', to: '/recruiter/settings/review' },
 ]
 
 /** Shared frame of the settings pages: page title, tab navigation, then the page's card(s). */

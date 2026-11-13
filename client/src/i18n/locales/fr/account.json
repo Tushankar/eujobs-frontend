@@ -66,7 +66,8 @@
       "notifications": "Notifications",
       "data": "Données et compte",
       "billing": "Facturation",
-      "courses": "Mes cours"
+      "courses": "Mes cours",
+      "review": "Avis"
     }
   },
   "data": {
@@ -93,6 +94,26 @@
       "confirmTitle": "Supprimer votre compte recruteur ?",
       "confirmBody": "Vos offres sont fermées, et vos documents KYC, vos notes sur les candidats, votre short-list et votre activité sont supprimés. Un plan Recruiter Plus est résilié immédiatement, sans remboursement. Les candidats conservent leurs candidatures et leurs conversations sous le nom public de votre entreprise. Les paiements sont conservés sans votre nom. Vous serez déconnecté. Cette action est irréversible.",
       "password": "Saisissez votre mot de passe actuel pour confirmer."
+    }
+  },
+  "review": {
+    "title": "Donnez votre avis sur EU Jobs",
+    "description": "Dites aux autres candidats et recruteurs ce que vous en pensez. Après une rapide vérification par notre équipe, votre avis peut apparaître sur la page d’accueil d’EU Jobs avec votre prénom et l’initiale de votre nom.",
+    "rating": "Votre note",
+    "stars_one": "{{count}} étoile",
+    "stars_many": "{{count}} étoiles",
+    "stars_other": "{{count}} étoiles",
+    "text": "Votre avis",
+    "hint": "{{count}} / {{max}} caractères",
+    "submit": "Envoyer l’avis",
+    "update": "Mettre à jour l’avis",
+    "delete": "Supprimer l’avis",
+    "saved": "Merci ! Votre avis a été envoyé pour validation.",
+    "reason": "Note de notre équipe : {{reason}}",
+    "status": {
+      "pending": "En attente de validation (envoyé le {{date}})",
+      "approved": "Approuvé le {{date}} : affiché sur la page d’accueil",
+      "rejected": "Non approuvé ({{date}}). Vous pouvez le modifier et le renvoyer."
     }
   }
 }

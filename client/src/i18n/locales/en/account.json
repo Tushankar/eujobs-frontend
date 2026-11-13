@@ -65,7 +65,8 @@
       "notifications": "Notifications",
       "data": "Data & account",
       "billing": "Billing",
-      "courses": "My courses"
+      "courses": "My courses",
+      "review": "Review"
     }
   },
   "data": {
@@ -92,6 +93,25 @@
       "confirmTitle": "Delete your recruiter account?",
       "confirmBody": "Your jobs are closed and your KYC documents, candidate notes, shortlist and activity are deleted. A Recruiter Plus plan is cancelled at once, without a refund. Candidates keep their applications and conversations under your company’s display name. Payment records are kept with your name removed. You will be signed out. This can’t be undone.",
       "password": "Enter your current password to confirm."
+    }
+  },
+  "review": {
+    "title": "Review EU Jobs",
+    "description": "Tell other job seekers and recruiters what you think. After a quick check by our team, your review can appear on the EU Jobs home page with your first name and last initial.",
+    "rating": "Your rating",
+    "stars_one": "{{count}} star",
+    "stars_other": "{{count}} stars",
+    "text": "Your review",
+    "hint": "{{count}} / {{max}} characters",
+    "submit": "Submit review",
+    "update": "Update review",
+    "delete": "Delete review",
+    "saved": "Thanks! Your review was sent for approval.",
+    "reason": "Note from our team: {{reason}}",
+    "status": {
+      "pending": "Waiting for approval (sent {{date}})",
+      "approved": "Approved on {{date}} — shown on the home page",
+      "rejected": "Not approved ({{date}}). You can edit it and send it again."
     }
   }
 }

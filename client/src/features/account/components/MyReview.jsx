@@ -58,55 +58,55 @@ function ReviewForm({ review }) {
   }
 
   return (
-        <form className={styles.form} onSubmit={submit} noValidate>
-          {review && (
-            <p className={cx(styles.status, styles[review.status])} role="status">
-              {t(`account:review.status.${review.status}`, { date: format.date(review.decidedAt ?? review.submittedAt) })}
-              {review.reason && <span className={styles.reason}>{t('account:review.reason', { reason: review.reason })}</span>}
-            </p>
-          )}
-          <fieldset className={styles.stars}>
-            <legend className={styles.label}>{t('account:review.rating')}</legend>
-            <div className={styles.starRow}>
-              {[1, 2, 3, 4, 5].map((value) => (
-                <label key={value} className={cx(styles.star, value <= form.values.rating && styles.starOn)}>
-                  <input type="radio" name="rating" value={value} checked={form.values.rating === value} onChange={() => form.set('rating', value)} />
-                  <Icon as={Star} size={26} />
-                  <span className={styles.srOnly}>{t('account:review.stars', { count: value })}</span>
-                </label>
-              ))}
-            </div>
-            {form.errors.rating && <p className={styles.error}>{errorText.field('rating', form.errors.rating)}</p>}
-          </fieldset>
-          <TextareaField
-            label={t('account:review.text')}
-            hint={limits && t('account:review.hint', { count: form.values.text.trim().length, max: limits.max })}
-            rows={4}
-            maxLength={limits?.max}
-            value={form.values.text}
-            onChange={(event) => form.set('text', event.target.value)}
-            error={errorText.field('text', form.errors.text)}
-          />
-          {form.failure && (
-            <p className={styles.error} role="alert">
-              {errorText.code(form.failure)}
-            </p>
-          )}
-          {saved && (
-            <p className={styles.saved} role="status">
-              {t('account:review.saved')}
-            </p>
-          )}
-          <div className={styles.actions}>
-            {review && (
-              <Button variant="outline" onClick={() => remove()} loading={removing}>
-                {t('account:review.delete')}
-              </Button>
-            )}
-            <Button type="submit" loading={saving}>
-              {t(review ? 'account:review.update' : 'account:review.submit')}
-            </Button>
-          </div>
-        </form>
+    <form className={styles.form} onSubmit={submit} noValidate>
+      {review && (
+        <p className={cx(styles.status, styles[review.status])} role="status">
+          {t(`account:review.status.${review.status}`, { date: format.date(review.decidedAt ?? review.submittedAt) })}
+          {review.reason && <span className={styles.reason}>{t('account:review.reason', { reason: review.reason })}</span>}
+        </p>
+      )}
+      <fieldset className={styles.stars}>
+        <legend className={styles.label}>{t('account:review.rating')}</legend>
+        <div className={styles.starRow}>
+          {[1, 2, 3, 4, 5].map((value) => (
+            <label key={value} className={cx(styles.star, value <= form.values.rating && styles.starOn)}>
+              <input type="radio" name="rating" value={value} checked={form.values.rating === value} onChange={() => form.set('rating', value)} />
+              <Icon as={Star} size={26} />
+              <span className={styles.srOnly}>{t('account:review.stars', { count: value })}</span>
+            </label>
+          ))}
+        </div>
+        {form.errors.rating && <p className={styles.error}>{errorText.field('rating', form.errors.rating)}</p>}
+      </fieldset>
+      <TextareaField
+        label={t('account:review.text')}
+        hint={limits && t('account:review.hint', { count: form.values.text.trim().length, max: limits.max })}
+        rows={4}
+        maxLength={limits?.max}
+        value={form.values.text}
+        onChange={(event) => form.set('text', event.target.value)}
+        error={errorText.field('text', form.errors.text)}
+      />
+      {form.failure && (
+        <p className={styles.error} role="alert">
+          {errorText.code(form.failure)}
+        </p>
+      )}
+      {saved && (
+        <p className={styles.saved} role="status">
+          {t('account:review.saved')}
+        </p>
+      )}
+      <div className={styles.actions}>
+        {review && (
+          <Button variant="outline" onClick={() => remove()} loading={removing}>
+            {t('account:review.delete')}
+          </Button>
+        )}
+        <Button type="submit" loading={saving}>
+          {t(review ? 'account:review.update' : 'account:review.submit')}
+        </Button>
+      </div>
+    </form>
   )
 }

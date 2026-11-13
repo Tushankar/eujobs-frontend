@@ -66,7 +66,8 @@
       "notifications": "Notificaciones",
       "data": "Datos y cuenta",
       "billing": "Facturación",
-      "courses": "Mis cursos"
+      "courses": "Mis cursos",
+      "review": "Reseña"
     }
   },
   "data": {
@@ -93,6 +94,26 @@
       "confirmTitle": "¿Eliminar tu cuenta de reclutador?",
       "confirmBody": "Tus empleos se cierran y se eliminan tus documentos KYC, las notas sobre candidatos, la lista de preseleccionados y la actividad. Un plan Recruiter Plus se cancela de inmediato, sin reembolso. Los candidatos conservan sus candidaturas y conversaciones con el nombre visible de tu empresa. Los registros de pago se conservan sin tu nombre. Se cerrará tu sesión. Esta acción no se puede deshacer.",
       "password": "Introduce tu contraseña actual para confirmar."
+    }
+  },
+  "review": {
+    "title": "Valora EU Jobs",
+    "description": "Cuenta a otros candidatos y reclutadores qué te parece. Tras una breve revisión de nuestro equipo, tu reseña puede aparecer en la página de inicio de EU Jobs con tu nombre y la inicial de tu apellido.",
+    "rating": "Tu valoración",
+    "stars_one": "{{count}} estrella",
+    "stars_many": "{{count}} estrellas",
+    "stars_other": "{{count}} estrellas",
+    "text": "Tu reseña",
+    "hint": "{{count}} / {{max}} caracteres",
+    "submit": "Enviar reseña",
+    "update": "Actualizar reseña",
+    "delete": "Eliminar reseña",
+    "saved": "¡Gracias! Tu reseña se ha enviado para su aprobación.",
+    "reason": "Nota de nuestro equipo: {{reason}}",
+    "status": {
+      "pending": "Pendiente de aprobación (enviada el {{date}})",
+      "approved": "Aprobada el {{date}}: se muestra en la página de inicio",
+      "rejected": "No aprobada ({{date}}). Puedes editarla y enviarla de nuevo."
     }
   }
 }
