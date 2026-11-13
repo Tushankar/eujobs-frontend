@@ -135,5 +135,8 @@
     "subscribe": "Subscribe",
     "note": "We send a confirmation link first. Unsubscribe at any time.",
     "sent": "Almost done! Check your inbox and click the link to confirm your subscription."
+  },
+  "pricing": {
+    "details": "See full plan details"
   }
 }

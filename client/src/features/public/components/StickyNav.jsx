@@ -8,14 +8,14 @@ import { Link, useLocation } from 'react-router-dom'
 import { BRAND } from '@/app/brand.js'
 import BrandLogo from '@/components/layout/BrandLogo.jsx'
 import { ArrowPill } from './landing/LandingHero.jsx'
-import { NAV } from './landing/siteNav.js'
+import { NAV, navItemOf } from './landing/siteNav.js'
 import styles from './StickyNav.module.css'
 
 gsap.registerPlugin(useGSAP, ScrollTrigger, ScrollToPlugin)
 
 const SHOW_AFTER = 140
 // On the home page, the section in view picks the highlighted item (top to bottom).
-const SECTIONS = ['about', 'jobs', 'blog', 'faq', 'contact']
+const SECTIONS = ['about', 'jobs', 'pricing', 'blog', 'faq', 'contact']
 const REDUCE = '(prefers-reduced-motion: reduce)'
 
 /**
@@ -32,7 +32,7 @@ export default function StickyNav() {
   const marker = useRef(null)
   const [section, setSection] = useState(null)
   // The home page's blog section belongs to the Blog item, which opens the /blog page.
-  const current = home ? (section ? (section === 'blog' ? '/blog' : `/#${section}`) : '/') : NAV.find(([to]) => to !== '/' && !to.includes('#') && pathname.startsWith(to))?.[0]
+  const current = home ? (section ? (section === 'blog' ? '/blog' : `/#${section}`) : '/') : navItemOf(pathname)
 
   // Show and hide with the scroll position.
   useGSAP(

@@ -23,7 +23,7 @@ import BrandLogo from '@/components/layout/BrandLogo.jsx'
 import { Icon } from '@/components/ui'
 import InlineSvg from './InlineSvg.jsx'
 import styles from './Landing.module.css'
-import { NAV } from './siteNav.js'
+import { NAV, navItemOf } from './siteNav.js'
 
 /** Pill with the round ↗ badge used across the Figma page. */
 export function ArrowPill({ to, children, white = false }) {
@@ -59,7 +59,7 @@ export function AvatarStack({ to, label }) {
 export function SiteHeader({ className = '' }) {
   const { t } = useTranslation()
   const { pathname } = useLocation()
-  const current = pathname === '/' ? '/' : NAV.find(([to]) => to !== '/' && !to.includes('#') && pathname.startsWith(to))?.[0]
+  const current = pathname === '/' ? '/' : navItemOf(pathname)
   return (
     <header className={`${styles.header} ${className}`} data-hero-header>
       <Link to="/" className={styles.brandLink} aria-label={t('landing:nav.home_aria', { brand: BRAND.name })}>

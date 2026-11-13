@@ -5,6 +5,7 @@ import { useDocumentTitle } from '@/components/layout/useDocumentTitle.js'
 import { useGetLandingQuery } from '../api.js'
 import LandingHero from '../components/landing/LandingHero.jsx'
 import { CallToAction, CareerBanner, Categories, Faq, Footer, Steps, TrustedStrip, Vacancies } from '../components/landing/LandingSections.jsx'
+import LandingPricing from '../components/landing/LandingPricing.jsx'
 import { Blogs, Testimonials } from '../components/landing/LandingStories.jsx'
 import styles from '../components/landing/Landing.module.css'
 import StickyNav from '../components/StickyNav.jsx'
@@ -42,6 +43,7 @@ export default function LandingPage() {
         {isError ? <p className={`${styles.card} ${styles.empty}`}>{t('landing:loadError')}</p> : <Vacancies jobs={data?.jobs ?? null} />}
         <CareerBanner />
         <Testimonials reviews={data?.reviews} />
+        <LandingPricing />
         {data && <Faq faqs={data.faqs} />}
         <Blogs posts={data?.posts} />
         <CallToAction />

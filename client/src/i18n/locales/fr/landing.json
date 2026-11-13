@@ -138,5 +138,8 @@
     "subscribe": "S’abonner",
     "note": "Nous envoyons d’abord un lien de confirmation. Désabonnement possible à tout moment.",
     "sent": "Presque terminé ! Consultez votre boîte de réception et cliquez sur le lien pour confirmer votre abonnement."
+  },
+  "pricing": {
+    "details": "Voir le détail des offres"
   }
 }
