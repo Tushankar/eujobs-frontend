@@ -1,4 +1,3 @@
-import { Briefcase, Building2, Clock3, FileSignature, Globe2, Repeat } from 'lucide-react'
 import { useRef, useState } from 'react'
 import { useTranslation } from 'react-i18next'
 import { Link } from 'react-router-dom'
@@ -9,6 +8,12 @@ import ctaGlass from '@/assets/landing/cta-glass.webp'
 import ctaPhoto from '@/assets/landing/cta-photo.webp'
 import faqGlowRed from '@/assets/landing/faq-glow-2.svg'
 import faqGlowViolet from '@/assets/landing/faq-glow-1.svg'
+import iconArrange from '@/assets/landing/icon-arrange-circle.svg'
+import iconBriefcase from '@/assets/landing/icon-briefcase.svg'
+import iconBuildings from '@/assets/landing/icon-buildings.svg'
+import iconClock from '@/assets/landing/icon-clock.svg'
+import iconGlobal from '@/assets/landing/icon-global.svg'
+import iconNote from '@/assets/landing/icon-note-text.svg'
 import iconAdd from '@/assets/landing/icon-add.svg'
 import iconClipboard from '@/assets/landing/icon-clipboard-tick.svg'
 import iconClose from '@/assets/landing/icon-close.svg'
@@ -31,7 +36,7 @@ import contours from '@/assets/landing/pattern-contours.svg'
 import stepsGlass from '@/assets/landing/steps-glass.webp'
 import stepsPhoto from '@/assets/landing/steps-photo.webp'
 import BrandLogo from '@/components/layout/BrandLogo.jsx'
-import { CompanyLogo, Icon, Skeleton, SkeletonRegion } from '@/components/ui'
+import { CompanyLogo, Skeleton, SkeletonRegion } from '@/components/ui'
 import { useJobText } from '@/lib/jobText.js'
 import { useFormat } from '@/lib/preferences.js'
 import { ArrowPill, AvatarStack } from './LandingHero.jsx'
@@ -62,7 +67,7 @@ export function TrustedStrip() {
               <img src={egyptair} alt="EgyptAir" />
               <img src={cubana} alt="Cubana" />
               <img src={delta} alt="Delta" />
-              <span role="img" aria-label="ATA Airlines" className={styles.ata} style={{ backgroundImage: `url(${ata})`, maskImage: `url(${ataMask})`, WebkitMaskImage: `url(${ataMask})`, maskPosition: 'center', WebkitMaskPosition: 'center', maskSize: '84px 25.6px', WebkitMaskSize: '84px 25.6px' }} />
+              <span role="img" aria-label="ATA Airlines" className={styles.ata} style={{ backgroundImage: `url("${ata}")`, maskImage: `url("${ataMask}")`, WebkitMaskImage: `url("${ataMask}")`, maskPosition: 'center', WebkitMaskPosition: 'center', maskSize: '84px 25.6px', WebkitMaskSize: '84px 25.6px' }} />
               <img src={westjet} alt="WestJet" />
               <img src={abx} alt="ABX Air" />
               <img src={viking} alt="Viking" />
@@ -75,14 +80,15 @@ export function TrustedStrip() {
   )
 }
 
-/* The six cards: the three work modes and three employment types, with live open-job counts. */
+/* The six cards: the three work modes and three employment types, with live open-job counts. Icons are the
+   Figma file's vuesax/linear set (D S › Outlined), like the steps section, tinted through a CSS mask. */
 const CATEGORIES = [
-  { group: 'workPreference', value: 'remote', icon: Globe2 },
-  { group: 'workPreference', value: 'hybrid', icon: Repeat },
-  { group: 'workPreference', value: 'on_site', icon: Building2 },
-  { group: 'employmentType', value: 'full_time', icon: Briefcase },
-  { group: 'employmentType', value: 'part_time', icon: Clock3 },
-  { group: 'employmentType', value: 'contract', icon: FileSignature },
+  { group: 'workPreference', value: 'remote', icon: iconGlobal },
+  { group: 'workPreference', value: 'hybrid', icon: iconArrange },
+  { group: 'workPreference', value: 'on_site', icon: iconBuildings },
+  { group: 'employmentType', value: 'full_time', icon: iconBriefcase },
+  { group: 'employmentType', value: 'part_time', icon: iconClock },
+  { group: 'employmentType', value: 'contract', icon: iconNote },
 ]
 
 /** Figma 396:887. Every card opens the job list (it reads only `q` from the URL; its filters are on the page). */
@@ -100,9 +106,7 @@ export function Categories({ counts }) {
       <div className={styles.categories} data-stagger>
         {CATEGORIES.map(({ group, value, icon }, index) => (
           <Link key={value} to="/candidate/jobs" className={index === 0 ? `${styles.category} ${styles.categoryActive}` : styles.category}>
-            <span className={styles.categoryIcon}>
-              <Icon as={icon} size={15} />
-            </span>
+            <span className={styles.categoryIcon} style={{ maskImage: `url("${icon}")`, WebkitMaskImage: `url("${icon}")` }} aria-hidden="true" />
             <span>
               <h3 className={styles.categoryName}>{t(`enums:${group}.${value}`)}</h3>
               <p className={styles.categoryText}>{t(`landing:categories.${value}`)}</p>

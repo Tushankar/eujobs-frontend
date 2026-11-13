@@ -96,14 +96,21 @@
 }
 
 /* Long es/fr labels ("Por qué te lo recomienda la IA") wrap onto a second line; the clamp is only a last resort. */
+/* Long translations wrap to a second line between words, never inside one ("Application s"). */
 .linkLabel {
   display: -webkit-box;
   flex: 1;
   min-width: 0;
   overflow: hidden;
-  overflow-wrap: anywhere;
+  overflow-wrap: normal;
   -webkit-box-orient: vertical;
   -webkit-line-clamp: 2;
+}
+
+/* Badges after the label sit closer together, so a label with a count and an alert keeps its room. */
+.linkLabel ~ * {
+  flex-shrink: 0;
+  margin-left: -6px;
 }
 
 .badge {

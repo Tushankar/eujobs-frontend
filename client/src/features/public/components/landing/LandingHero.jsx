@@ -64,14 +64,14 @@ function HeroArt() {
   return (
     <div className={styles.art} aria-hidden="true" data-hero-art data-parallax="-70">
       <img src={cardWoman} alt="" style={{ ...at(0, 8, 261, 290.4) }} />
-      <div className={styles.maskedPhoto} style={{ ...at(24.1, 0, 210.67, 296), maskImage: `url(${maskWoman})`, WebkitMaskImage: `url(${maskWoman})`, maskPosition: '-24.098px 8px', WebkitMaskPosition: '-24.098px 8px', maskSize: '261px 290.445px', WebkitMaskSize: '261px 290.445px' }}>
+      <div className={styles.maskedPhoto} style={{ ...at(24.1, 0, 210.67, 296), maskImage: `url("${maskWoman}")`, WebkitMaskImage: `url("${maskWoman}")`, maskPosition: '-24.098px 8px', WebkitMaskPosition: '-24.098px 8px', maskSize: '261px 290.445px', WebkitMaskSize: '261px 290.445px' }}>
         <img src={photoWoman} alt="" style={{ height: '100%', left: '-94.49%', width: '210.81%' }} />
       </div>
       <div className={styles.flipY} style={at(277, 151.5, 191, 288.5)}>
         <img src={cardMan} alt="" style={{ width: '100%', height: '97.02%' }} />
       </div>
       <img src={sparkles} alt="" style={{ ...at(292, 187, 48, 45.5), opacity: 0.5 }} data-twinkle />
-      <div className={styles.maskedPhoto} style={{ ...at(277, 208, 191, 237), maskImage: `url(${maskMan})`, WebkitMaskImage: `url(${maskMan})`, maskPosition: '0 -25.773px', WebkitMaskPosition: '0 -25.773px', maskSize: '191px 257.773px', WebkitMaskSize: '191px 257.773px' }}>
+      <div className={styles.maskedPhoto} style={{ ...at(277, 208, 191, 237), maskImage: `url("${maskMan}")`, WebkitMaskImage: `url("${maskMan}")`, maskPosition: '0 -25.773px', WebkitMaskPosition: '0 -25.773px', maskSize: '191px 257.773px', WebkitMaskSize: '191px 257.773px' }}>
         <img src={photoMan} alt="" style={{ height: '168.42%', left: '-112.22%', width: '312.6%' }} />
       </div>
       <div className={styles.flipY} style={at(277, 8, 190, 164)}>

@@ -27,10 +27,10 @@ function useHeroMotion(scope) {
         const move = conditions.reduce ? 0 : 1
         gsap
           .timeline({ defaults: { ease, duration: 0.9 } })
-          .from(q('[data-hero-header]'), { y: -24 * move, autoAlpha: 0, duration: 0.7 })
-          .from(q('[data-hero-line]'), move ? { yPercent: 110, stagger: 0.12, duration: 1 } : { autoAlpha: 0, stagger: 0.12 }, '-=0.35')
-          .from(q('[data-hero-fade]'), { y: 24 * move, autoAlpha: 0, stagger: 0.1 }, '-=0.6')
-          .from(q('[data-hero-art] > *'), { y: 40 * move, autoAlpha: 0, scale: move ? 0.96 : 1, stagger: 0.06, duration: 0.8 }, 0.35)
+          .from(q('[data-hero-header]'), { y: -24 * move, opacity: 0, duration: 0.7 })
+          .from(q('[data-hero-line]'), move ? { yPercent: 110, stagger: 0.12, duration: 1 } : { opacity: 0, stagger: 0.12 }, '-=0.35')
+          .from(q('[data-hero-fade]'), { y: 24 * move, opacity: 0, stagger: 0.1 }, '-=0.6')
+          .from(q('[data-hero-art] > *'), { y: 40 * move, opacity: 0, scale: move ? 0.96 : 1, stagger: 0.06, duration: 0.8 }, 0.35)
         if (!move) return
 
         q('[data-parallax]').forEach((element) => {
@@ -78,15 +78,15 @@ function useScrollReveals(scope, ready) {
       mm.add(CONDITIONS, ({ conditions }) => {
         const move = conditions.reduce ? 0 : 1
         q('[data-reveal]').forEach((element) => {
-          gsap.from(element.children, { y: 36 * move, autoAlpha: 0, stagger: 0.12, duration: 0.9, ease, scrollTrigger: { trigger: element, start: 'top 97%', once: true } })
+          gsap.from(element.children, { y: 36 * move, opacity: 0, stagger: 0.12, duration: 0.9, ease, scrollTrigger: { trigger: element, start: 'top 97%', once: true } })
         })
         q('[data-stagger]').forEach((group) => {
           const items = gsap.utils.toArray(group.children)
-          gsap.set(items, { y: 40 * move, autoAlpha: 0 })
+          gsap.set(items, { y: 40 * move, opacity: 0 })
           ScrollTrigger.batch(items, {
             start: 'top 97%',
             once: true,
-            onEnter: (batch) => gsap.to(batch, { y: 0, autoAlpha: 1, stagger: 0.08, duration: 0.8, ease, overwrite: true }),
+            onEnter: (batch) => gsap.to(batch, { y: 0, opacity: 1, stagger: 0.08, duration: 0.8, ease, overwrite: true }),
           })
         })
         q('[data-wipe]').forEach((element) => {
@@ -94,7 +94,7 @@ function useScrollReveals(scope, ready) {
           if (move) {
             gsap.fromTo(element, { clipPath: 'inset(0% 0% 100% 0% round 14px)' }, { clipPath: 'inset(0% 0% 0% 0% round 14px)', duration: 1.2, ease: 'power4.out', scrollTrigger: trigger })
           } else {
-            gsap.from(element, { autoAlpha: 0, duration: 0.8, scrollTrigger: trigger })
+            gsap.from(element, { opacity: 0, duration: 0.8, scrollTrigger: trigger })
           }
         })
         if (move) {

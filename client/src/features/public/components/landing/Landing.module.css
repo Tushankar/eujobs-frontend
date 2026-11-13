@@ -517,21 +517,21 @@
   color: #fff;
 }
 
+/* A vuesax/linear outline icon painted in the text colour (blue, white on the active card). */
 .categoryIcon {
-  display: grid;
   flex-shrink: 0;
-  place-items: center;
-  width: 28px;
-  height: 28px;
-  border: 1px solid var(--primary);
-  border-radius: 14px;
-  color: var(--primary);
+  width: 24px;
+  height: 24px;
+  margin-top: -2px;
+  background: var(--primary);
+  mask: center / contain no-repeat;
+  -webkit-mask: center / contain no-repeat;
+  transition: background-color var(--transition);
 }
 
 .categoryActive .categoryIcon,
 .category:hover .categoryIcon {
-  border-color: #fff;
-  color: #fff;
+  background: #fff;
 }
 
 .categoryName {

@@ -33,8 +33,9 @@ function blocksBelow(parent, fold, out, depth = 0) {
  *    from a slight scale, a few at a time;
  *  - everything below the fold (any page's cards, rows and blocks, see blocksBelow) rises in as it scrolls into
  *    view, including content that arrives later (data replacing a skeleton, tabs, pagination).
- * Under reduce motion everything only fades. Animated properties are cleared afterwards, so layouts and sticky
- * columns are untouched.
+ * Under reduce motion everything only fades. Only opacity and transform animate (never visibility), so content
+ * waiting below the fold stays readable to screen readers and tests; both are cleared afterwards, so layouts and
+ * sticky columns are untouched.
  */
 export function useWorkspaceMotion(content, pathname) {
   useGSAP(
@@ -54,12 +55,12 @@ export function useWorkspaceMotion(content, pathname) {
           const fresh = elements.filter((element) => !isSeen(element))
           if (!fresh.length) return
           fresh.forEach((element) => seen.add(element))
-          gsap.set(fresh, { y: 30 * move, scale: move ? 0.98 : 1, autoAlpha: 0 })
+          gsap.set(fresh, { y: 30 * move, scale: move ? 0.98 : 1, opacity: 0 })
           ScrollTrigger.batch(fresh, {
             start: 'top 94%',
             once: true,
             onEnter: (batch) =>
-              gsap.to(batch, { y: 0, scale: 1, autoAlpha: 1, duration: 0.7, stagger: 0.07, ease, overwrite: true, clearProps: 'transform,opacity,visibility' }),
+              gsap.to(batch, { y: 0, scale: 1, opacity: 1, duration: 0.7, stagger: 0.07, ease, overwrite: true, clearProps: 'transform,opacity,visibility' }),
           })
         }
 
@@ -70,8 +71,8 @@ export function useWorkspaceMotion(content, pathname) {
         const below = blocksBelow(page, fold, [])
         const onScreen = sections.filter((section) => section.getBoundingClientRect().top < fold)
 
-        gsap.from(onScreen, { y: 28 * move, autoAlpha: 0, duration: 0.7, stagger: 0.08, ease, clearProps: 'transform,opacity,visibility' })
-        gsap.from(gsap.utils.toArray('[data-motion-title]', root), move ? { yPercent: 105, duration: 0.85, ease: 'power4.out', delay: 0.05 } : { autoAlpha: 0, duration: 0.6 })
+        gsap.from(onScreen, { y: 28 * move, opacity: 0, duration: 0.7, stagger: 0.08, ease, clearProps: 'transform,opacity,visibility' })
+        gsap.from(gsap.utils.toArray('[data-motion-title]', root), move ? { yPercent: 105, duration: 0.85, ease: 'power4.out', delay: 0.05 } : { opacity: 0, duration: 0.6 })
         reveal(below)
         // Cards on screen come in right after their section.
         reveal(gsap.utils.toArray('[data-motion-card]', root).filter((card) => card.getBoundingClientRect().top < fold))
