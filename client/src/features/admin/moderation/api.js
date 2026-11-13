@@ -29,12 +29,20 @@ export const moderationApi = api.injectEndpoints({
       query: ({ id, ...body }) => ({ url: `/admin/moderation/content/${id}/decision`, method: 'POST', body }),
       invalidatesTags: ['ContentCases', 'AdminJobs', 'AdminMetrics'],
     }),
+    // Reviews for the landing page (2026-11-13)
+    getReviewQueue: build.query({ query: (status = 'pending') => ({ url: '/admin/moderation/reviews', params: { status } }), providesTags: ['AdminReviews'] }),
+    decideReview: build.mutation({
+      query: ({ id, ...body }) => ({ url: `/admin/moderation/reviews/${id}/decision`, method: 'POST', body }),
+      invalidatesTags: ['AdminReviews', 'MyReview'],
+    }),
     // A signed URL for a sensitive file (documents.view, §2.6)
     getAdminFileUrl: build.query({ query: (fileId) => `/admin/files/${fileId}`, keepUnusedDataFor: 0 }),
   }),
 })
 
 export const {
+  useGetReviewQueueQuery,
+  useDecideReviewMutation,
   useGetVerificationQueueQuery,
   useGetVerificationSubmissionQuery,
   useDecideVerificationMutation,
