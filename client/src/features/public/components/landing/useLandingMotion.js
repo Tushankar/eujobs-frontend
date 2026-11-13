@@ -2,6 +2,7 @@ import { useGSAP } from '@gsap/react'
 import gsap from 'gsap'
 import { ScrollToPlugin } from 'gsap/ScrollToPlugin'
 import { ScrollTrigger } from 'gsap/ScrollTrigger'
+import { animateSvgs } from './svgMotion.js'
 
 gsap.registerPlugin(useGSAP, ScrollTrigger, ScrollToPlugin)
 
@@ -104,12 +105,16 @@ function useScrollReveals(scope, ready) {
             gsap.from(element, { opacity: 0, duration: 0.8, scrollTrigger: trigger })
           }
         })
+        let removePulses
         if (move) {
           q('[data-zoom]').forEach((element) => {
             gsap.from(element, { scale: 1.12, duration: 1.6, ease: 'power2.out', scrollTrigger: { trigger: element, start: 'top 90%', once: true } })
           })
+          // 2026-11-13: the decorative SVGs draw in, pulse and drift (svgMotion.js).
+          removePulses = animateSvgs(scope)
         }
         ScrollTrigger.refresh()
+        return () => removePulses?.()
       })
     },
     { scope, dependencies: [ready], revertOnUpdate: true },

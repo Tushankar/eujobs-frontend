@@ -83,6 +83,20 @@ export function mailSample(type, language, origin, role = 'candidate') {
       paused: interpolate(t(language, 'labels.pausedJobs.other'), { job: 'Senior Product Designer', count: 2 }),
       link: `${origin}/recruiter/jobs`,
     },
+    // 2026-11-13: the plan lifecycle emails share one parameter set.
+    ...Object.fromEntries(
+      ['plan_started', 'renewal_receipt', 'payment_recovered', 'plan_cancel_scheduled', 'plan_resumed', 'plan_changed', 'plan_change_scheduled', 'renewal_reminder'].map((type) => [
+        type,
+        {
+          plan: recruiter ? 'Recruiter Plus' : 'Plus',
+          amount: recruiter ? money('EUR', 581) : money('EUR', 102),
+          billing: t(language, `labels.billingInterval.${type === 'plan_change_scheduled' ? 'month' : 'year'}`),
+          date: new Intl.DateTimeFormat(language, { dateStyle: 'long', timeZone: 'UTC' }).format(new Date('2027-11-13')),
+          link: `${origin}/${recruiter ? 'recruiter' : 'candidate'}/settings/billing`,
+          secondaryLink: 'https://invoice.stripe.com/i/sample',
+        },
+      ]),
+    ),
     application_status: { job: 'Senior Product Designer', company: 'Mail Test Ltd', link: `${origin}/candidate/applications` },
     application_rejected: { job: 'Senior Product Designer', company: 'Mail Test Ltd', link: `${origin}/candidate/jobs` },
     new_applications: { job: 'Senior Product Designer', link: `${origin}/recruiter/applications` },

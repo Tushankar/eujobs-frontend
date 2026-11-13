@@ -6,6 +6,15 @@
   margin-top: 20px;
 }
 
+/* Monthly / Yearly above the columns (2026-11-13). */
+.interval {
+  margin-top: 20px;
+}
+
+.interval + .plans {
+  margin-top: 16px;
+}
+
 .badges {
   display: inline-flex;
   flex-wrap: wrap;

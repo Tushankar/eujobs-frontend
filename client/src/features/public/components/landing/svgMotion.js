@@ -10,7 +10,7 @@ gsap.registerPlugin(DrawSVGPlugin)
  *   circuit  as pattern, then light pulses run along the traces;
  *   orbit    the hero's orbit line draws in, then a comet runs along it;
  *   icon     the strokes draw in when the icon scrolls into view.
- * <img> glows (data-glow) breathe and drift; sparkles (data-sparkle) pulse and turn. Called only without reduce motion.
+ * <img> glows (data-glow) breathe and drift; sparkles (data-sparkle) pulse and turn; card line fans (data-lines) sweep in. Called only without reduce motion.
  */
 const SHAPES = 'path, circle, ellipse, rect, line, polyline, polygon'
 const PULSE = '#0a6cf0'
@@ -75,16 +75,19 @@ export function animateSvgs(scope) {
   const q = gsap.utils.selector(scope)
   const added = []
 
+  // The drift moves the inner <svg>, so it never fights a wrapper's own motion (the hero pattern's parallax).
   q('[data-svg="pattern"]').forEach((element) => {
     traceIn(element, { trigger: element.closest('section') ?? element, amount: 1.8 })
-    drift(element)
+    drift(element.firstElementChild)
   })
 
+  // Pulses start once the circuit has traced itself in.
   q('[data-svg="circuit"]').forEach((element) => {
-    const trigger = element.closest('section') ?? element
-    const intro = traceIn(element, { trigger, amount: 1.2, duration: 1 })
-    added.push(...pulses(element, { start: intro ? intro.duration() : 0 }))
-    drift(element, 6)
+    const intro = traceIn(element, { trigger: element.closest('section') ?? element, amount: 1.2, duration: 1 })
+    const start = () => added.push(...pulses(element))
+    if (intro) intro.eventCallback('onComplete', start)
+    else start()
+    drift(element.firstElementChild, 6)
   })
 
   q('[data-svg="orbit"]').forEach((element, index) => {
@@ -98,6 +101,12 @@ export function animateSvgs(scope) {
     gsap.fromTo(lines, { drawSVG: '0%' }, { drawSVG: '100%', duration: 1.1, stagger: 0.12, ease: 'power2.inOut', scrollTrigger: { trigger: element, start: 'top 92%', once: true } })
   })
 
+  // The category cards' line fans sweep in from the right as the cards appear.
+  const fans = q('[data-lines]')
+  if (fans.length) {
+    gsap.fromTo(fans, { opacity: 0, x: 40, scale: 1.12 }, { opacity: 1, x: 0, scale: 1, duration: 1.4, ease: 'power3.out', stagger: 0.1, scrollTrigger: { trigger: fans[0].closest('section'), start: 'top 80%', once: true } })
+  }
+
   q('[data-glow]').forEach((glow, index) => {
     gsap.fromTo(glow, { opacity: 0.7, scale: 0.94 }, { opacity: 1, scale: 1.08, x: index % 2 ? -40 : 40, duration: random(6, 9), ease: 'sine.inOut', repeat: -1, yoyo: true, delay: index * 0.4 })
   })
@@ -106,5 +115,10 @@ export function animateSvgs(scope) {
     gsap.to(sparkle, { scale: 1.25, rotation: index % 2 ? -18 : 18, transformOrigin: '50% 50%', duration: 2.2, ease: 'sine.inOut', repeat: -1, yoyo: true, delay: 1.4 + index * 0.5 })
   })
 
-  return () => added.forEach((pulse) => pulse.remove())
+  // Pulses made after the trace-in sit outside the GSAP context, so their endless tweens are killed here too.
+  return () =>
+    added.forEach((pulse) => {
+      gsap.killTweensOf(pulse)
+      pulse.remove()
+    })
 }

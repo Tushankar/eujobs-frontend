@@ -46,25 +46,12 @@
 }
 
 .price {
-  display: flex;
-  align-items: baseline;
-  gap: 6px;
-  margin: 0;
+  padding-top: 0;
 }
 
-.price strong {
-  font-family: var(--font-display);
-  font-size: 32px;
-  font-weight: 800;
-  line-height: 38px;
-  letter-spacing: -0.6px;
-  color: var(--foreground);
-}
-
-.price span {
-  font-size: 13px;
-  font-weight: 500;
-  color: var(--muted-foreground);
+/* Monthly / Yearly above the cards (2026-11-13). */
+.interval {
+  margin-bottom: 16px;
 }
 
 .features {

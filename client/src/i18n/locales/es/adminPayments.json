@@ -76,5 +76,80 @@
     "incorrect_cvc": "Código de seguridad incorrecto",
     "processing_error": "Error de procesamiento",
     "authentication_required": "Autenticación necesaria"
+  },
+  "tabs": {
+    "payments": "Pagos",
+    "plans": "Planes"
+  },
+  "plans": {
+    "title": "Planes y precios",
+    "description": "Lo que pagan los candidatos y los reclutadores. Un precio nuevo se aplica a las nuevas suscripciones; los suscriptores actuales mantienen el precio con el que se suscribieron.",
+    "loadError": "No hemos podido cargar los planes. Actualiza la página.",
+    "roles": {
+      "candidate": "Candidatos",
+      "recruiter": "Reclutadores"
+    },
+    "edit": "Editar",
+    "view": "Ver",
+    "monthly": "{{price}} / mes",
+    "yearly": "{{price}} / año",
+    "freePrice": "Gratis",
+    "discount": "{{percent}} % de descuento anual",
+    "yearlyOff": "Facturación anual desactivada",
+    "currencies_one": "{{count}} moneda",
+    "currencies_other": "{{count}} monedas",
+    "subscribers": "{{month}} mensuales · {{year}} anuales",
+    "olderPrice_one": "{{count}} mantiene un precio anterior",
+    "olderPrice_other": "{{count}} mantienen un precio anterior",
+    "features_one": "{{count}} función",
+    "features_other": "{{count}} funciones",
+    "updated": "Actualizado el {{date}}",
+    "saved": "{{plan}} guardado. Los nuevos precios se aplican a partir de ahora a las nuevas suscripciones.",
+    "editor": {
+      "title": "Editar {{plan}}",
+      "viewTitle": "{{plan}}",
+      "description": "El nombre y las funciones que se muestran en la página de precios y en las tarjetas de planes.",
+      "descriptionPaid": "El nombre y las funciones que se muestran en la página de precios, las tarjetas de planes y el pago, y los precios en cada moneda.",
+      "texts": "Nombre y funciones",
+      "language": "Idioma",
+      "languages": {
+        "en": "Inglés",
+        "es": "Español",
+        "fr": "Francés"
+      },
+      "name": "Nombre del plan",
+      "features": "Funciones",
+      "feature": "Función {{number}}",
+      "addFeature": "Añadir función",
+      "removeFeature": "Quitar la función {{number}}",
+      "moveUp": "Subir la función {{number}}",
+      "moveDown": "Bajar la función {{number}}",
+      "prices": "Precios",
+      "yearlyEnabled": "Ofrecer facturación anual",
+      "discount": "Descuento anual",
+      "discountHint": "Los precios anuales automáticos son 12 meses menos este descuento, redondeados.",
+      "currency": "Moneda",
+      "monthly": "Mensual",
+      "yearly": "Anual",
+      "saving": "Ahorro",
+      "monthlyFor": "Precio mensual en {{currency}}",
+      "yearlyFor": "Precio anual en {{currency}}",
+      "auto": "Auto",
+      "useAuto": "Usar el precio anual automático en {{currency}}",
+      "pricesNote": "Los precios incluyen el IVA. Un precio modificado se convierte en un nuevo precio de Stripe para las nuevas suscripciones. Deja un precio anual vacío para aplicar el descuento.",
+      "impact_one": "{{count}} suscriptor actual mantiene el precio con el que se suscribió. Los nuevos precios solo se aplican a las nuevas suscripciones.",
+      "impact_other": "{{count}} suscriptores actuales mantienen el precio con el que se suscribieron. Los nuevos precios solo se aplican a las nuevas suscripciones.",
+      "cancel": "Cancelar",
+      "save": "Guardar cambios",
+      "close": "Cerrar"
+    },
+    "errors": {
+      "required": "Escribe este texto.",
+      "languageMissing": "Falta texto en este idioma",
+      "amount": "Escribe un importe.",
+      "tooHigh": "Un año no puede costar más que 12 meses.",
+      "discount": "Escribe un número entero de 0 a 50.",
+      "form": "Revisa los campos marcados, en todos los idiomas."
+    }
   }
 }

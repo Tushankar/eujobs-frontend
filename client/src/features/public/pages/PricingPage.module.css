@@ -1,0 +1,194 @@
+/* /pricing (2026-11-13): centred heading, quiet white cards; the paid plan leads with a firm edge, not colour. */
+.head {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  text-align: center;
+}
+
+.lead {
+  max-width: 560px;
+  margin: 10px 0 0;
+  font-size: 15px;
+  line-height: 24px;
+  color: #5f646b;
+}
+
+.controls {
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: center;
+  align-items: center;
+  gap: 12px 16px;
+  margin-top: 28px;
+}
+
+/* The role tabs bring their own top margin (shared with Legal). */
+.controls > * {
+  margin-top: 0;
+}
+
+.plans {
+  display: grid;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  gap: 24px;
+  max-width: 840px;
+  margin: 36px auto 0;
+}
+
+.plan {
+  display: flex;
+  flex-direction: column;
+  min-width: 0;
+  padding: 32px;
+  border: 1px solid #e4e7ec;
+  border-radius: 20px;
+  background: #fff;
+}
+
+.featured {
+  border-color: var(--brand-navy);
+  box-shadow:
+    inset 0 0 0 1px var(--brand-navy),
+    0 12px 32px rgba(1, 43, 116, 0.08);
+}
+
+.planHead {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 12px;
+  min-height: 28px;
+}
+
+.planName {
+  margin: 0;
+  font-size: 20px;
+  font-weight: 600;
+  line-height: 28px;
+  color: #161719;
+}
+
+.recommended {
+  padding: 3px 10px;
+  border: 1px solid var(--brand-navy);
+  border-radius: 999px;
+  font-size: 12px;
+  font-weight: 600;
+  line-height: 16px;
+  color: var(--brand-navy);
+}
+
+.cta {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  min-height: 44px;
+  margin-top: 24px;
+  padding: 0 20px;
+  border: 1px solid #d0d5dd;
+  border-radius: 999px;
+  background: #fff;
+  font-size: 15px;
+  font-weight: 600;
+  color: #161719;
+  text-decoration: none;
+  transition: background var(--duration-base) var(--ease-out);
+}
+
+.cta:hover {
+  background: #f5f6f8;
+}
+
+.cta:focus-visible {
+  outline: 2px solid var(--primary);
+  outline-offset: 2px;
+}
+
+.ctaPrimary {
+  border-color: var(--brand-navy);
+  background: var(--brand-navy);
+  color: #fff;
+}
+
+.ctaPrimary:hover {
+  background: #01225c;
+}
+
+.everything {
+  margin: 28px 0 0;
+  padding-top: 24px;
+  border-top: 1px solid #eef0f3;
+  font-size: 14px;
+  font-weight: 600;
+  color: #161719;
+}
+
+.features {
+  display: grid;
+  gap: 12px;
+  margin: 28px 0 0;
+  padding: 24px 0 0;
+  border-top: 1px solid #eef0f3;
+  list-style: none;
+}
+
+.everything + .features {
+  margin-top: 14px;
+  padding-top: 0;
+  border-top: 0;
+}
+
+.features li {
+  display: flex;
+  align-items: flex-start;
+  gap: 10px;
+  font-size: 14px;
+  line-height: 20px;
+  color: #3d4249;
+}
+
+.check {
+  flex-shrink: 0;
+  margin-top: 2px;
+  color: #667085;
+}
+
+.featured .check {
+  color: var(--brand-navy);
+}
+
+.trust {
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: center;
+  gap: 8px 28px;
+  margin: 32px 0 0;
+  padding: 0;
+  list-style: none;
+  font-size: 13px;
+  color: #5f646b;
+}
+
+.trust li {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+}
+
+@media (max-width: 899px) {
+  .plans {
+    grid-template-columns: minmax(0, 1fr);
+  }
+
+  /* The paid plan comes first on a phone. */
+  .featured {
+    order: -1;
+  }
+}
+
+@media (max-width: 599px) {
+  .plan {
+    padding: 24px;
+  }
+}

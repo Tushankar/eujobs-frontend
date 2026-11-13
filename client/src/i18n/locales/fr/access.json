@@ -131,7 +131,7 @@
     },
     "candidates": { "view": "Ouvrir les pages Candidatures et Recrutement." },
     "jobs": { "view": "Ouvrir la liste des offres et leurs synthèses IA." },
-    "finance": { "view": "Ouvrir Paiements, les détails d’abonnement et les revenus." },
+    "finance": { "view": "Ouvrir Paiements, les détails d’abonnement et les revenus.", "manage": "Modifier les noms, les fonctions, les prix mensuels et annuels et la remise annuelle des offres." },
     "reports": {
       "view": "Ouvrir Statistiques et l’historique des rapports.",
       "export": "Générer des rapports et télécharger des exports CSV."

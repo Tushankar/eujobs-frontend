@@ -92,7 +92,9 @@ describe('plan, /me and prices (P11c-Q1, Q2)', () => {
       assert.equal(res.status, 200)
       const { value } = await AppConfig.findOne({ key: 'stripe' })
       assert.equal(params.customer, 'cus_portal')
-      assert.equal(params.configuration, value.portalConfigurationId)
+      // 2026-11-13: the recruiter configuration, whose plan switches offer Recruiter Plus prices only.
+      assert.equal(params.configuration, value.portalConfigurationIds.recruiter)
+      assert.notEqual(value.portalConfigurationIds.recruiter, value.portalConfigurationIds.candidate)
       assert.match(params.return_url, /\/recruiter\/settings\/billing$/)
     } finally {
       setStripeClient()
@@ -362,11 +364,20 @@ describe('admin totals by role (P11c-Q8, Q17, Q20)', () => {
     const { user: free } = await approvedRecruiter({ plus: false })
     const candidate = await createUser()
     await Subscription.create({ userId: candidate._id, planKey: 'plus', status: 'active', currency: 'GBP', amountMinor: 900 })
+    // 2026-11-13: a yearly plan counts a twelfth of its price in MRR.
+    const yearly = await createUser()
+    await Subscription.create({ userId: yearly._id, planKey: 'plus', status: 'active', currency: 'EUR', amountMinor: 10200, interval: 'year' })
     await Payment.create({ reference: 'LWM-900001', userId: plus._id, payerRole: 'recruiter', kind: 'subscription', amountMinor: 4900, currency: 'GBP', status: 'failed', paidAt: new Date() })
 
     const stats = (await api().get(`${v1}/admin/payments/stats`).set(auth(admin))).body
-    assert.deepEqual(stats.activeSubscribers, { total: 2, candidate: 1, recruiter: 1 })
-    assert.deepEqual(stats.mrr, { candidate: [{ currency: 'GBP', amountMinor: 900 }], recruiter: [{ currency: 'GBP', amountMinor: 4900 }] })
+    assert.deepEqual(stats.activeSubscribers, { total: 3, candidate: 2, recruiter: 1 })
+    assert.deepEqual(stats.mrr, {
+      candidate: [
+        { currency: 'GBP', amountMinor: 900 },
+        { currency: 'EUR', amountMinor: 850 },
+      ],
+      recruiter: [{ currency: 'GBP', amountMinor: 4900 }],
+    })
     assert.deepEqual(stats.failedRenewals, { total: 1, candidate: 0, recruiter: 1 })
     const overview = (await api().get(`${v1}/admin/overview`).set(auth(admin))).body
     assert.deepEqual(overview.health.activeSubscribers, stats.activeSubscribers)

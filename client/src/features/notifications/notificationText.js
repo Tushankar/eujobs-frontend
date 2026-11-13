@@ -29,6 +29,12 @@ export const NOTIFICATION_ICONS = {
   payment_paid: CreditCard,
   renewal_failed: CreditCard,
   plan_ended: CreditCard,
+  payment_recovered: CreditCard,
+  plan_cancel_scheduled: CreditCard,
+  plan_resumed: CreditCard,
+  plan_changed: CreditCard,
+  plan_change_scheduled: CreditCard,
+  renewal_reminder: CreditCard,
   course_purchased: GraduationCap,
   certificate_issued: GraduationCap,
   content_restricted: TriangleAlert,
@@ -79,6 +85,9 @@ export function useNotificationText() {
       plan: t(`enums:planKey.${params.planKey ?? 'plus'}`),
       // §3.23: interview times in the reader's time zone.
       when: params.startAt && format.dateTime(params.startAt),
+      // 2026-11-13: plan lifecycle notifications name a date and the billing period.
+      date: params.date && format.date(params.date),
+      billing: params.interval && t(`billing:page.billing.${params.interval}`),
     }
     switch (type) {
       case 'verification_decided':

@@ -13,14 +13,15 @@ import cardWoman from '@/assets/landing/hero-card-woman.svg'
 import maskMan from '@/assets/landing/hero-mask-man.svg'
 import maskWoman from '@/assets/landing/hero-mask-woman.svg'
 import photoMan from '@/assets/landing/hero-man.webp'
-import orbit1 from '@/assets/landing/hero-orbit-1.svg'
-import orbit2 from '@/assets/landing/hero-orbit-2.svg'
+import orbit1 from '@/assets/landing/hero-orbit-1.svg?raw'
+import orbit2 from '@/assets/landing/hero-orbit-2.svg?raw'
 import orbit3 from '@/assets/landing/hero-orbit-3.svg'
 import sparkles from '@/assets/landing/hero-sparkles.svg'
 import photoWoman from '@/assets/landing/hero-woman.webp'
-import hexagons from '@/assets/landing/pattern-hexagons.svg'
+import hexagons from '@/assets/landing/pattern-hexagons.svg?raw'
 import BrandLogo from '@/components/layout/BrandLogo.jsx'
 import { Icon } from '@/components/ui'
+import InlineSvg from './InlineSvg.jsx'
 import styles from './Landing.module.css'
 
 /** Figma nav order (Home, About Us, Jobs, Blog, Pricing Plan, Contact Us) plus the FAQ (owner 2026-11-11). */
@@ -103,7 +104,7 @@ function HeroArt() {
       <div className={styles.flipY} style={at(277, 151.5, 191, 288.5)}>
         <img src={cardMan} alt="" style={{ width: '100%', height: '97.02%' }} />
       </div>
-      <img src={sparkles} alt="" style={{ ...at(292, 187, 48, 45.5), opacity: 0.5 }} data-twinkle />
+      <img src={sparkles} alt="" style={{ ...at(292, 187, 48, 45.5), opacity: 0.5 }} data-twinkle data-sparkle />
       <div className={styles.maskedPhoto} style={{ ...at(277, 208, 191, 237), maskImage: `url("${maskMan}")`, WebkitMaskImage: `url("${maskMan}")`, maskPosition: '0 -25.773px', WebkitMaskPosition: '0 -25.773px', maskSize: '191px 257.773px', WebkitMaskSize: '191px 257.773px' }}>
         <img src={photoMan} alt="" style={{ height: '168.42%', left: '-112.22%', width: '312.6%' }} />
       </div>
@@ -123,9 +124,9 @@ function HeroArt() {
       <p className={styles.artText} style={{ left: 20, top: 381, width: 227 }}>
         {t('landing:hero.remoteText')}
       </p>
-      <img src={orbit1} alt="" style={at(-0.4, 186, 35.6, 32.7)} />
-      <img src={orbit2} alt="" style={at(22.8, 138.6, 238.6, 85)} />
-      <img src={orbit3} alt="" style={at(3, 208.85, 19.8, 23.9)} />
+      <InlineSvg svg={orbit1} className={styles.inlineArt} style={at(-0.4, 186, 35.6, 32.7)} motion="orbit" />
+      <InlineSvg svg={orbit2} className={styles.inlineArt} style={at(22.8, 138.6, 238.6, 85)} motion="orbit" />
+      <img src={orbit3} alt="" style={at(3, 208.85, 19.8, 23.9)} data-sparkle />
     </div>
   )
 }
@@ -145,7 +146,7 @@ export default function LandingHero() {
 
   return (
     <section className={styles.hero} id="home">
-      <img src={hexagons} alt="" className={styles.heroPattern} aria-hidden="true" data-parallax="90" />
+      <InlineSvg svg={hexagons} className={styles.heroPattern} motion="pattern" data-parallax="90" />
       <SiteHeader />
 
       <div className={styles.heroBody}>

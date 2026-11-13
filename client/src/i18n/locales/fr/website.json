@@ -16,13 +16,19 @@
     "title": "Tarifs",
     "titleLead": "Des tarifs simples et",
     "titleAccent": "transparents",
-    "text": "Commencez gratuitement et passez à l’offre supérieure quand vous en avez besoin. Les prix sont mensuels et résiliables à tout moment.",
+    "text": "Commencez gratuitement et passez à l’offre supérieure quand vous en avez besoin. Payez au mois, ou à l’année et économisez. Résiliable à tout moment.",
     "for": "Offres pour",
     "candidate": "Pour les candidats",
     "recruiter": "Pour les recruteurs",
-    "perMonth": "/ mois",
     "startFree": "Commencer gratuitement",
-    "startPaid": "Commencer"
+    "startPaid": "Commencer",
+    "recommended": "Recommandé",
+    "everything": "Tout {{plan}}, et en plus :",
+    "trust": {
+      "vat": "TVA incluse",
+      "stripe": "Paiement sécurisé par Stripe",
+      "cancel": "Résiliable à tout moment"
+    }
   },
   "newsletter": {
     "title": "Newsletter",

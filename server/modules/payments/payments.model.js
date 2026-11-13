@@ -4,7 +4,12 @@ import { ENUMS } from '../../config/enums.js'
 const { Schema } = mongoose
 const localized = { en: String, es: String, fr: String }
 
-/* Plan catalogue (M-115, M-116, OD1, §3.22): edited through seed:catalog; each plan belongs to one role. */
+/*
+ * Plan catalogue (M-115, M-116, OD1, §3.22): each plan belongs to one role. seed:catalog creates the plans and owns their
+ * entitlements; admins edit names, features and prices in Payments › Plans (2026-11-13). `prices` are monthly;
+ * `yearlyPrices` default to 12 months less `yearlyDiscountPercent`, unless the admin set that currency's own (`override`).
+ */
+const price = { _id: false, currency: String, amountMinor: Number, stripePriceId: String }
 const planSchema = new Schema(
   {
     key: { type: String, enum: ENUMS.planKey, required: true, unique: true },
@@ -12,13 +17,16 @@ const planSchema = new Schema(
     name: localized,
     features: [{ _id: false, ...localized }],
     interval: { type: String, enum: ['month'], default: 'month' },
-    prices: [{ _id: false, currency: String, amountMinor: Number, stripePriceId: String }],
+    prices: [price],
+    yearlyPrices: [{ ...price, override: { type: Boolean, default: false } }],
+    yearlyDiscountPercent: { type: Number, default: 15 },
+    yearlyEnabled: { type: Boolean, default: true },
     entitlements: [{ type: String, enum: ENUMS.entitlement }],
   },
   { timestamps: true },
 )
 
-/* Server-side settings, e.g. AppConfig('stripe') = { productIds: { plus, recruiter_plus }, portalConfigurationId } (U40, P6). */
+/* Server-side settings, e.g. AppConfig('stripe') = { productIds: { plus, recruiter_plus }, portalConfigurationIds: { candidate, recruiter } } (U40, P6). */
 const appConfigSchema = new Schema(
   {
     key: { type: String, required: true, unique: true },
@@ -32,7 +40,9 @@ export const AppConfig = mongoose.model('AppConfig', appConfigSchema)
 
 /*
  * A candidate's or recruiter's Stripe subscription (§3.22), mirrored from the webhooks (U38, M-119 … M-121). One row per user,
- * replaced when the user subscribes again. `retrying` comes from the last failed invoice (§2.10).
+ * replaced when the user subscribes again. `retrying` comes from the last failed invoice (§2.10). `pendingInterval` and
+ * `pendingAt`: a switch the Portal scheduled for the period end (yearly → monthly). `renewalRemindedFor`: the period end
+ * the yearly renewal reminder was sent for.
  */
 const subscriptionSchema = new Schema(
   {
@@ -42,6 +52,11 @@ const subscriptionSchema = new Schema(
     retrying: { type: Boolean, default: false },
     currency: String,
     amountMinor: Number,
+    interval: { type: String, enum: ENUMS.billingInterval, default: 'month' },
+    pendingInterval: { type: String, enum: [...ENUMS.billingInterval, null], default: null },
+    pendingAt: Date,
+    pendingAmountMinor: Number,
+    renewalRemindedFor: Date,
     stripeCustomerId: String,
     stripeSubscriptionId: { type: String, index: true },
     currentPeriodStart: Date,

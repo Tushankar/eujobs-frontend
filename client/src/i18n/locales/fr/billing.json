@@ -10,7 +10,11 @@
     "oneTime": "Paiement unique en {{currency}}",
     "note": "Vous payez sur la page sécurisée de Stripe par carte ou avec Link. Les prix incluent la TVA. Vos données de carte ne parviennent jamais à EU Jobs.",
     "cancel": "Annuler",
-    "continue": "Continuer vers le paiement sécurisé"
+    "continue": "Continuer vers le paiement sécurisé",
+    "yearly": "Facturé chaque année en {{currency}}",
+    "period": "Période de facturation",
+    "perMonth": "{{price}} / mois",
+    "perYear": "{{price}} / an"
   },
   "upgrade": {
     "description": "Plus permet de postuler, d’écrire aux recruteurs, de recevoir des alertes emploi et d’utiliser les fonctions d’IA.",
@@ -56,7 +60,8 @@
     "billedOnce": "Paiement unique",
     "summaryDate": "Date",
     "summaryTotal": "Total",
-    "back": "Retour"
+    "back": "Retour",
+    "billedYearly": "Abonnement annuel"
   },
   "status": {
     "active": "Actif",
@@ -74,7 +79,13 @@
     "historyTitle": "Historique des paiements",
     "historyDescription": "Les offres et formations que vous avez payées, avec le reçu ou la facture Stripe de chacune.",
     "emptyTitle": "Aucun paiement pour l’instant",
-    "emptyDescription": "Les offres et formations que vous payez apparaissent ici."
+    "emptyDescription": "Les offres et formations que vous payez apparaissent ici.",
+    "perYear": "par an",
+    "switchesOn": "Passe en facturation {{billing}} le {{date}}",
+    "billing": {
+      "month": "mensuelle",
+      "year": "annuelle"
+    }
   },
   "recruiter": {
     "lead": "Les factures Recruiter Plus et les paiements de formations de cet espace de travail, avec le reçu ou la facture Stripe de chacun.",
@@ -99,5 +110,18 @@
   "methods": {
     "link": "Link",
     "other": "Autre"
+  },
+  "interval": {
+    "label": "Période de facturation",
+    "month": "Mensuel",
+    "year": "Annuel",
+    "save": "Économisez {{percent}} %"
+  },
+  "price": {
+    "perMonth": "/ mois",
+    "billedMonthly": "Facturé chaque mois",
+    "billedYearly": "{{amount}} facturés par an",
+    "forever": "Gratuit pour toujours",
+    "insteadOf": "Au lieu de"
   }
 }

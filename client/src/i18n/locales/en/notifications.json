@@ -45,6 +45,12 @@
     "payment_paid": "Payment received: {{item}} · {{amount}}",
     "renewal_failed": "We could not renew your {{plan}} plan ({{amount}}). Update your card in Billing.",
     "plan_ended": "Your {{plan}} plan has ended. You are on Free now.",
+    "payment_recovered": "Payment received: your {{plan}} plan continues ({{amount}}).",
+    "plan_cancel_scheduled": "Your {{plan}} plan will end on {{date}}. You can resume it in Billing.",
+    "plan_resumed": "Your {{plan}} plan will renew as usual on {{date}}.",
+    "plan_changed": "Your {{plan}} plan is now billed {{billing}} ({{amount}}).",
+    "plan_change_scheduled": "Your {{plan}} plan switches to {{billing}} billing on {{date}}.",
+    "renewal_reminder": "Your {{plan}} plan renews on {{date}} for {{amount}}.",
     "course_purchased": "You bought “{{course}}”. You can start learning.",
     "certificate_issued": "Certificate issued for “{{course}}”",
     "content_restricted": {

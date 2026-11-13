@@ -5,8 +5,10 @@ import { ArrowLeft, Check, Crown } from 'lucide-react'
 import { Button, Icon, Panel } from '@/components/ui'
 import { usePlan } from '@/features/candidate/billing/usePlan.js'
 import CheckoutDialog from '@/features/payments/components/CheckoutDialog.jsx'
+import IntervalSwitch from '@/features/payments/components/IntervalSwitch.jsx'
+import { bestSaving } from '@/features/payments/bestSaving.js'
+import PlanPrice from '@/features/payments/components/PlanPrice.jsx'
 import { useErrorText } from '@/lib/forms.js'
-import { useFormat } from '@/lib/preferences.js'
 import { cx } from '@/utils/cx.js'
 import { useCompleteOnboardingMutation } from '../api.js'
 import OnboardingStep from '../components/OnboardingStep.jsx'
@@ -14,18 +16,20 @@ import SetupSummary from '../components/SetupSummary.jsx'
 import styles from './PlanStepPage.module.css'
 
 /**
- * The plan step ends onboarding (M-014, M-129): plan cards from GET /plans in the header country's currency.
+ * The plan step ends onboarding (M-014, M-129): plan cards from GET /plans in the header country's currency, monthly
+ * or yearly (2026-11-13).
  * "Continue with Free" completes onboarding and opens the Overview; "Start Plus" goes through Stripe Checkout, whose
  * return page completes onboarding and opens AI insights (P3-C10). A subscriber only sees "You're on Plus".
  */
 export default function PlanStepPage() {
   const { t } = useTranslation()
   const navigate = useNavigate()
-  const format = useFormat()
   const errorText = useErrorText()
   const { isPlus, plans, plus, item } = usePlan()
   const [completeOnboarding, { isLoading }] = useCompleteOnboardingMutation()
   const [checkingOut, setCheckingOut] = useState(false)
+  const [interval, setInterval] = useState('month')
+  const saving = bestSaving(plans)
   const [failure, setFailure] = useState(null)
 
   async function finish(path) {
@@ -62,6 +66,8 @@ export default function PlanStepPage() {
           </Button>
         </Panel>
       ) : (
+        <>
+        {saving > 0 && <IntervalSwitch value={interval} onChange={setInterval} saving={saving} className={styles.interval} />}
         <div className={styles.grid}>
           {plans.map((plan) => {
             const paid = plan.key !== 'free'
@@ -73,12 +79,7 @@ export default function PlanStepPage() {
                       {paid && <Icon as={Crown} size={16} strokeWidth={2} className={styles.crown} />}
                       {plan.name}
                     </h2>
-                    {plan.price && (
-                      <p className={styles.price}>
-                        <strong>{format.money(plan.price.amountMinor, plan.price.currency)}</strong>
-                        <span>{t(paid ? 'onboarding:plan.perMonth' : 'onboarding:plan.forever')}</span>
-                      </p>
-                    )}
+                    <PlanPrice plan={plan} interval={interval} className={styles.price} />
                   </div>
                   <ul className={styles.features}>
                     {plan.features.map((feature) => (
@@ -102,13 +103,14 @@ export default function PlanStepPage() {
             )
           })}
         </div>
+        </>
       )}
       {failure && (
         <p className={styles.failure} role="alert">
           {errorText.code(failure)}
         </p>
       )}
-      <CheckoutDialog item={checkingOut ? item : null} onClose={() => setCheckingOut(false)} />
+      <CheckoutDialog item={checkingOut ? { ...item, interval } : null} plan={plus} onClose={() => setCheckingOut(false)} />
     </OnboardingStep>
   )
 }

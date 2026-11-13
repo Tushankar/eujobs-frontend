@@ -47,6 +47,12 @@
     "payment_paid": "Paiement reçu : {{item}} · {{amount}}",
     "renewal_failed": "Nous n’avons pas pu renouveler votre offre {{plan}} ({{amount}}). Mettez à jour votre carte dans Facturation.",
     "plan_ended": "Votre offre {{plan}} a pris fin. Vous êtes maintenant sur l’offre Free.",
+    "payment_recovered": "Paiement reçu : votre offre {{plan}} continue ({{amount}}).",
+    "plan_cancel_scheduled": "Votre offre {{plan}} prendra fin le {{date}}. Vous pouvez la reprendre dans Facturation.",
+    "plan_resumed": "Votre offre {{plan}} sera renouvelée normalement le {{date}}.",
+    "plan_changed": "Votre offre {{plan}} est désormais en facturation {{billing}} ({{amount}}).",
+    "plan_change_scheduled": "Votre offre {{plan}} passe en facturation {{billing}} le {{date}}.",
+    "renewal_reminder": "Votre offre {{plan}} se renouvelle le {{date}} pour {{amount}}.",
     "course_purchased": "Vous avez acheté « {{course}} ». Vous pouvez commencer.",
     "certificate_issued": "Certificat délivré pour « {{course}} »",
     "content_restricted": {

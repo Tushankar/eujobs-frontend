@@ -16,13 +16,19 @@
     "title": "Pricing",
     "titleLead": "Simple, Transparent",
     "titleAccent": "Pricing",
-    "text": "Start free and upgrade when you need more. Prices are monthly and you can cancel at any time.",
+    "text": "Start free and upgrade when you need more. Pay monthly, or yearly and save. Cancel at any time.",
     "for": "Plans for",
     "candidate": "For job seekers",
     "recruiter": "For recruiters",
-    "perMonth": "/ month",
     "startFree": "Start for free",
-    "startPaid": "Get started"
+    "startPaid": "Get started",
+    "recommended": "Recommended",
+    "everything": "Everything in {{plan}}, plus:",
+    "trust": {
+      "vat": "Prices include VAT",
+      "stripe": "Secure payment with Stripe",
+      "cancel": "Cancel at any time"
+    }
   },
   "newsletter": {
     "title": "Newsletter",

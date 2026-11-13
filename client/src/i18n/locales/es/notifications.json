@@ -47,6 +47,12 @@
     "payment_paid": "Pago recibido: {{item}} · {{amount}}",
     "renewal_failed": "No pudimos renovar tu plan {{plan}} ({{amount}}). Actualiza tu tarjeta en Facturación.",
     "plan_ended": "Tu plan {{plan}} ha terminado. Ahora tienes el plan Free.",
+    "payment_recovered": "Pago recibido: tu plan {{plan}} continúa ({{amount}}).",
+    "plan_cancel_scheduled": "Tu plan {{plan}} terminará el {{date}}. Puedes reanudarlo en Facturación.",
+    "plan_resumed": "Tu plan {{plan}} se renovará con normalidad el {{date}}.",
+    "plan_changed": "Tu plan {{plan}} ahora tiene facturación {{billing}} ({{amount}}).",
+    "plan_change_scheduled": "Tu plan {{plan}} pasa a facturación {{billing}} el {{date}}.",
+    "renewal_reminder": "Tu plan {{plan}} se renueva el {{date}} por {{amount}}.",
     "course_purchased": "Compraste “{{course}}”. Ya puedes empezar a aprender.",
     "certificate_issued": "Certificado emitido para “{{course}}”",
     "content_restricted": {

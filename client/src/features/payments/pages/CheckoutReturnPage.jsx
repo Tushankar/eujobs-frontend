@@ -81,7 +81,7 @@ export default function CheckoutReturnPage() {
   // Order summary from the Stripe session (hidden when there is no session to describe).
   const summary = session && [
     { key: 'item', label: t('return.summaryItem'), value: session.itemName },
-    { key: 'billing', label: t('return.summaryBilling'), value: t(session.interval ? 'return.billedMonthly' : 'return.billedOnce') },
+    { key: 'billing', label: t('return.summaryBilling'), value: t({ month: 'return.billedMonthly', year: 'return.billedYearly' }[session.interval] ?? 'return.billedOnce') },
     { key: 'date', label: t('return.summaryDate'), value: session.createdAt && format.date(session.createdAt) },
   ]
   const showSummary = sessionId && !error

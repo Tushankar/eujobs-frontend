@@ -17,7 +17,7 @@ describe('admin permissions (M-155, M-156, M-160)', () => {
   it('lets the Owner through without any role', async () => {
     const res = await getPermissions(await createUser({ role: 'admin', isOwner: true }))
     assert.equal(res.status, 200)
-    assert.equal(res.body.total, 23)
+    assert.equal(res.body.total, 24)
     assert.deepEqual(res.body.items[0], { id: 'users.view', group: 'people', order: 1 })
   })
 

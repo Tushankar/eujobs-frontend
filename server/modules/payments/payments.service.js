@@ -1,4 +1,5 @@
 import { config } from '../../config/env.js'
+import { dailyJobs } from '../../jobs/scheduler.js'
 import { actorFor, recordAudit, SYSTEM_ACTOR } from '../../lib/audit.js'
 import { AppError, fieldError } from '../../lib/errors.js'
 import { interpolate, t } from '../../lib/i18n.js'
@@ -51,14 +52,18 @@ export async function companyCurrency(user) {
   return (code && (await Country.findOne({ code }, 'currency'))?.currency) ?? 'EUR'
 }
 
-/** The item, its name in the user's language and its price in the user's currency (M-124, M-130; Remote = EUR). */
-async function priceItem(user, kind, itemId) {
+/**
+ * The item, its name in the user's language and its price in the user's currency (M-124, M-130; Remote = EUR). A plan
+ * is billed monthly or, while the admin offers it, yearly (2026-11-13).
+ */
+async function priceItem(user, kind, itemId, interval = 'month') {
   const currency = kind === 'subscription' && user.role === 'recruiter' ? await companyCurrency(user) : ((await userCurrency(user)) ?? 'EUR')
   if (kind === 'subscription') {
     if (itemId !== PAID_PLAN[user.role]) throw fieldError({ itemId: 'not_allowed' })
     const plan = await Plan.findOne({ key: itemId })
-    const price = plan.prices.find((entry) => entry.currency === currency)
-    return { kind, itemId, itemName: plan.name[user.language], amountMinor: price.amountMinor, currency, interval: plan.interval, stripePriceId: price.stripePriceId }
+    if (interval === 'year' && !plan.yearlyEnabled) throw fieldError({ interval: 'not_allowed' })
+    const price = (interval === 'year' ? plan.yearlyPrices : plan.prices).find((entry) => entry.currency === currency)
+    return { kind, itemId, itemName: plan.name[user.language], amountMinor: price.amountMinor, currency, interval, stripePriceId: price.stripePriceId }
   }
   const course = /^[a-f\d]{24}$/i.test(itemId) ? await Course.findOne({ _id: itemId, status: 'published', audience: user.role }) : null
   if (!course) throw new AppError('NOT_FOUND')
@@ -68,8 +73,8 @@ async function priceItem(user, kind, itemId) {
   return { kind, itemId, itemName: course.title, amountMinor: price.amountMinor, currency, interval: null }
 }
 
-export async function quote(user, { kind, itemId }) {
-  const { stripePriceId: _stripePriceId, ...item } = await priceItem(user, kind, itemId)
+export async function quote(user, { kind, itemId, interval }) {
+  const { stripePriceId: _stripePriceId, ...item } = await priceItem(user, kind, itemId, interval)
   return item
 }
 
@@ -92,9 +97,9 @@ async function ensureCustomer(user) {
 }
 
 /** A hosted Checkout session (U40, C13); the client redirects to `url`. `from` is the page to return to. */
-export async function createCheckoutSession(user, { kind, itemId, from }) {
+export async function createCheckoutSession(user, { kind, itemId, interval, from }) {
   if (!from.startsWith(`/${user.role}`)) throw fieldError({ from: 'invalid' })
-  const item = await priceItem(user, kind, itemId)
+  const item = await priceItem(user, kind, itemId, interval)
   if (kind === 'subscription' && isPaid(await Subscription.findOne({ userId: user._id }))) throw new AppError('CONFLICT')
   if (kind === 'course' && (await Enrollment.exists({ userId: user._id, courseId: itemId }))) throw new AppError('CONFLICT')
   const customer = await ensureCustomer(user)
@@ -149,7 +154,7 @@ export async function checkoutSessionStatus(user, id) {
   }
 }
 
-/** M-121: the Stripe Customer Portal (P6 configuration), for candidates and recruiters who have subscribed. */
+/** M-121: the Stripe Customer Portal (the role's configuration: P6 plus monthly ↔ yearly), for candidates and recruiters who have subscribed. */
 export async function createPortalSession(user) {
   const subscription = await Subscription.findOne({ userId: user._id })
   if (!subscription) throw new AppError('FORBIDDEN')
@@ -157,7 +162,7 @@ export async function createPortalSession(user) {
   const session = await callStripe((s) =>
     s.billingPortal.sessions.create({
       customer: subscription.stripeCustomerId,
-      configuration: value.portalConfigurationId,
+      configuration: value.portalConfigurationIds[user.role],
       return_url: billingLink(user),
       locale: user.language,
     }),
@@ -169,8 +174,23 @@ export async function createPortalSession(user) {
 export async function subscriptionDto(userId) {
   const subscription = await Subscription.findOne({ userId })
   if (!subscription) return null
-  const { planKey, status, retrying, currency, amountMinor, currentPeriodStart, currentPeriodEnd, cancelAtPeriodEnd, startedAt } = subscription
-  return { planKey, status, paid: isPaid(subscription), retrying, currency, amountMinor, currentPeriodStart, currentPeriodEnd, cancelAtPeriodEnd, startedAt }
+  const { planKey, status, retrying, currency, amountMinor, interval, pendingInterval, pendingAt, currentPeriodStart, currentPeriodEnd, cancelAtPeriodEnd, startedAt } =
+    subscription
+  return {
+    planKey,
+    status,
+    paid: isPaid(subscription),
+    retrying,
+    currency,
+    amountMinor,
+    interval,
+    pendingInterval: pendingInterval ?? null,
+    pendingAt: pendingAt ?? null,
+    currentPeriodStart,
+    currentPeriodEnd,
+    cancelAtPeriodEnd,
+    startedAt,
+  }
 }
 
 export const paymentDto = (payment) => ({
@@ -209,26 +229,42 @@ const methodOf = (charge) => {
   return details ? { type: details.type, brand: details.card?.brand, last4: details.card?.last4 } : undefined
 }
 
+/** A monthly ↔ yearly switch the Portal scheduled for the period end (a subscription schedule's next phase), or none. */
+async function pendingSwitch(subscription, interval) {
+  const none = { pendingInterval: null, pendingAt: null, pendingAmountMinor: null }
+  if (!subscription.schedule) return none
+  const id = typeof subscription.schedule === 'string' ? subscription.schedule : subscription.schedule.id
+  const schedule = await stripe().subscriptionSchedules.retrieve(id, { expand: ['phases.items.price'] })
+  const next = schedule.phases?.find((phase) => fromUnix(phase.start_date) > new Date())
+  const price = next?.items?.[0]?.price
+  if (!price?.recurring || price.recurring.interval === interval) return none
+  return { pendingInterval: price.recurring.interval, pendingAt: fromUnix(next.start_date), pendingAmountMinor: price.unit_amount }
+}
+
 /**
  * Mirrors one Stripe subscription (fetched fresh, so event order and the account's event API version do not matter).
  * `retrying` = past due with a further attempt scheduled on the latest invoice (U38, M-120). Paid → Free sends
- * `plan_ended`, whatever the final retry action; a recruiter's extra jobs are paused first (§3.22).
+ * `plan_ended`, whatever the final retry action; a recruiter's extra jobs are paused first (§3.22). The state before is
+ * read in the same write, so a change is told once however many events report it (planChanges).
  */
 async function syncSubscription(stripeSubscriptionId) {
   const subscription = await stripe().subscriptions.retrieve(stripeSubscriptionId, { expand: ['latest_invoice'] })
   const user = await ownerOf(subscription.metadata, subscription.customer)
   if (!PAID_PLAN[user?.role]) return
-  const before = await Subscription.findOne({ userId: user._id })
+  const latest = await Subscription.findOne({ userId: user._id })
   // Late events of an older subscription never overwrite a newer one.
-  if (before && before.stripeSubscriptionId !== subscription.id && before.startedAt > fromUnix(subscription.start_date)) return
+  if (latest && latest.stripeSubscriptionId !== subscription.id && latest.startedAt > fromUnix(subscription.start_date)) return
   const item = subscription.items.data[0]
   const invoice = subscription.latest_invoice
+  const interval = item.price.recurring?.interval ?? 'month'
   const next = {
     planKey: PAID_PLAN[user.role],
     status: subscription.status,
     retrying: subscription.status === 'past_due' && invoice?.status === 'open' && invoice.next_payment_attempt !== null,
     currency: subscription.currency.toUpperCase(),
     amountMinor: item.price.unit_amount,
+    interval,
+    ...(await pendingSwitch(subscription, interval)),
     stripeCustomerId: subscription.customer,
     stripeSubscriptionId: subscription.id,
     currentPeriodStart: fromUnix(item.current_period_start),
@@ -237,9 +273,69 @@ async function syncSubscription(stripeSubscriptionId) {
     cancelAtPeriodEnd: subscription.cancel_at_period_end || Boolean(subscription.cancel_at),
     startedAt: fromUnix(subscription.start_date),
   }
-  const after = await Subscription.findOneAndUpdate({ userId: user._id }, { $set: next }, { upsert: true, returnDocument: 'after' })
-  if (isPaid(before) && !isPaid(after)) await planEnded(user, after.planKey)
+  const before = await Subscription.findOneAndUpdate({ userId: user._id }, { $set: next }, { upsert: true, returnDocument: 'before' })
+  if (isPaid(before) && !isPaid(next)) await planEnded(user, next.planKey)
+  await planChanges(user, before, next)
 }
+
+/**
+ * 2026-11-13: what changed on a paid subscription, told by email and in the app: a cancellation at period end (with the
+ * end date), its undoing, a monthly ↔ yearly switch, or a switch scheduled for the period end.
+ */
+async function planChanges(user, before, after) {
+  if (!before || before.stripeSubscriptionId !== after.stripeSubscriptionId || !isPaid(after)) return
+  const message = { planKey: after.planKey, amountMinor: after.amountMinor, currency: after.currency, interval: after.interval, date: after.currentPeriodEnd }
+  if (!before.cancelAtPeriodEnd && after.cancelAtPeriodEnd) return planMessage(user, 'plan_cancel_scheduled', message)
+  if (before.cancelAtPeriodEnd && !after.cancelAtPeriodEnd) await planMessage(user, 'plan_resumed', message)
+  if (before.interval !== after.interval) return planMessage(user, 'plan_changed', message)
+  const scheduled = after.pendingInterval && (before.pendingInterval !== after.pendingInterval || before.pendingAt?.getTime() !== after.pendingAt?.getTime())
+  if (scheduled) await planMessage(user, 'plan_change_scheduled', { ...message, interval: after.pendingInterval, amountMinor: after.pendingAmountMinor, date: after.pendingAt })
+}
+
+const formatDate = (language, date) => new Intl.DateTimeFormat(language, { dateStyle: 'long', timeZone: 'UTC' }).format(date)
+
+/**
+ * 2026-11-13: one plan email (decision class: always sent, it is about the user's own money) and, unless `notification`
+ * is false, the in-app notification of the same type. `invoice` adds a "View invoice" link.
+ */
+async function planMessage(user, type, { planKey, amountMinor, currency, interval, date, invoice, notification = true }) {
+  const plan = await Plan.findOne({ key: planKey }, 'name')
+  if (notification) await notify(user, type, { params: { planKey, amountMinor, currency, interval, date }, target: BILLING })
+  await sendEmail({
+    type,
+    to: user.email,
+    userId: user._id,
+    language: user.language,
+    params: {
+      name: user.fullName,
+      plan: plan.name[user.language],
+      amount: formatAmount(user.language, amountMinor, currency),
+      billing: t(user.language, `labels.billingInterval.${interval}`),
+      date: date ? formatDate(user.language, date) : '',
+      link: billingLink(user),
+      ...(invoice && { secondaryLink: invoice }),
+    },
+  })
+}
+
+/** 2026-11-13: yearly subscribers are reminded 7 days before they are charged again (once per period). */
+const REMINDER_DAYS = 7
+export async function sendRenewalReminders(now = new Date()) {
+  const until = new Date(now.getTime() + REMINDER_DAYS * 24 * 60 * 60 * 1000)
+  const due = await Subscription.find({ interval: 'year', status: 'active', cancelAtPeriodEnd: false, pendingInterval: null, currentPeriodEnd: { $gt: now, $lte: until } })
+  for (const subscription of due) {
+    const { currentPeriodEnd } = subscription
+    const claimed = await Subscription.updateOne(
+      { _id: subscription._id, renewalRemindedFor: { $ne: currentPeriodEnd } },
+      { $set: { renewalRemindedFor: currentPeriodEnd } },
+    )
+    const user = claimed.modifiedCount && (await User.findById(subscription.userId))
+    if (!user || user.erasedAt) continue
+    const { planKey, amountMinor, currency } = subscription
+    await planMessage(user, 'renewal_reminder', { planKey, amountMinor, currency, interval: 'year', date: currentPeriodEnd })
+  }
+}
+dailyJobs.push({ name: 'renewal-reminders', hour: 9, run: sendRenewalReminders })
 
 const BILLING = { kind: 'page', id: 'billing' }
 const billingLink = (user) => `${config.clientOrigin}/${user.role}/settings/billing`
@@ -303,6 +399,7 @@ async function onInvoice(object) {
   if (!PAID_PLAN[user?.role]) return
 
   const paid = invoice.status === 'paid'
+  let receipt = null
   const failedRenewal = !paid && invoice.attempted && invoice.billing_reason === 'subscription_cycle'
   if ((paid && invoice.amount_paid > 0) || failedRenewal) {
     const invoicePayment = invoice.payments?.data.find((entry) => entry.status === 'paid') ?? invoice.payments?.data[0]
@@ -348,7 +445,12 @@ async function onInvoice(object) {
       else await notifyRenewalFailed(user, created, amount, plan)
     }
     if (!created) {
-      await Payment.updateOne({ 'stripe.invoiceId': invoice.id }, { $set: fields })
+      // A retry that went through after a failed renewal (read in the same write, so it is told once).
+      const previous = await Payment.findOneAndUpdate({ 'stripe.invoiceId': invoice.id }, { $set: fields }, { returnDocument: 'before' })
+      if (paid && previous?.status === 'failed') receipt = { type: 'payment_recovered', notification: true }
+    } else if (paid && ['subscription_create', 'subscription_cycle'].includes(invoice.billing_reason)) {
+      // The welcome email of a new plan, or the receipt of a renewal (the payment_paid notification is already sent).
+      receipt = { type: invoice.billing_reason === 'subscription_create' ? 'plan_started' : 'renewal_receipt', notification: false }
     } else if (!paid) {
       await sendEmail({
         type: 'renewal_failed',
@@ -365,6 +467,19 @@ async function onInvoice(object) {
     }
   }
   await syncSubscription(subscriptionId)
+  // 2026-11-13: sent after the mirror, so it names the interval and the next renewal date.
+  if (receipt) {
+    const subscription = await Subscription.findOne({ userId: user._id, stripeSubscriptionId: subscriptionId })
+    await planMessage(user, receipt.type, {
+      planKey: PAID_PLAN[user.role],
+      amountMinor: invoice.amount_paid,
+      currency: invoice.currency.toUpperCase(),
+      interval: subscription?.interval ?? 'month',
+      date: subscription?.currentPeriodEnd,
+      invoice: invoice.hosted_invoice_url,
+      notification: receipt.notification,
+    })
+  }
 }
 
 /** checkout.session.completed: a course purchase becomes a row and an enrollment; a subscription is mirrored at once. */

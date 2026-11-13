@@ -4,7 +4,7 @@ import { useRef } from 'react'
 import { useTranslation } from 'react-i18next'
 import { useDispatch } from 'react-redux'
 import { Link, NavLink, useLocation, useNavigate } from 'react-router-dom'
-import { ArrowRight, ArrowUpRight, CircleHelp, Crown, LogOut, Settings2 } from 'lucide-react'
+import { ArrowRight, ArrowUpRight, Crown, LogOut } from 'lucide-react'
 import { cx } from '@/utils/cx.js'
 import { Avatar, Icon, IconButton } from '@/components/ui'
 import { can } from '@/app/permissions.js'
@@ -19,6 +19,7 @@ import aiSparkle from '@/assets/icons/ai-sparkle-blue.svg'
 import aiNavIcon from '@/assets/icons/ai-nav.svg'
 import aiNavIconActive from '@/assets/icons/ai-sparkle-blue-16.svg'
 import BrandLogo from './BrandLogo.jsx'
+import NavIcon from './NavIcon.jsx'
 import { identitySubtitle } from './identity.js'
 import PlanBadge from './PlanBadge.jsx'
 import { isPaidPlan } from '@/lib/plans.js'
@@ -56,8 +57,8 @@ function NavItem({ workspace, item, me }) {
     >
       {({ isActive }) => (
         <>
-          {item.icon || (isActive && item.activeIcon) ? (
-            <Icon as={isActive && item.activeIcon ? item.activeIcon : item.icon} size={17} />
+          {item.vuesax ? (
+            <NavIcon name={item.vuesax} />
           ) : (
             <img src={isActive && item.iconSrc === aiNavIcon ? aiNavIconActive : item.iconSrc} alt="" className={styles.customIcon} />
           )}
@@ -196,14 +197,14 @@ export default function Sidebar({ workspace, open, onClose }) {
             to={workspacePath(workspace, 'settings')}
             className={({ isActive }) => cx(styles.utility, promo && styles.utilityAfterPromo, isActive && styles.utilityActive)}
           >
-            <Icon as={Settings2} size={17} />
+            <NavIcon name="setting-2" />
             {t('shell:sidebar.settings')}
           </NavLink>
           <NavLink
             to={workspacePath(workspace, 'help')}
             className={({ isActive }) => cx(styles.utility, isActive && styles.utilityActive)}
           >
-            <Icon as={CircleHelp} size={17} />
+            <NavIcon name="message-question" />
             <span className={styles.utilityLabel}>{t('shell:sidebar.help')}</span>
             <Icon as={ArrowUpRight} size={13} />
           </NavLink>

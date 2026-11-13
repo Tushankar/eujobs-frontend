@@ -1,0 +1,47 @@
+.root {
+  padding-top: 16px;
+}
+
+.line {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: baseline;
+  gap: 6px;
+  margin: 0;
+}
+
+.amount {
+  font-family: var(--font-display);
+  font-size: 32px;
+  font-weight: 800;
+  line-height: 40px;
+  letter-spacing: -0.5px;
+  color: var(--foreground);
+}
+
+.per {
+  font-size: 14px;
+  font-weight: 500;
+  color: var(--muted-foreground);
+}
+
+.note {
+  margin: 4px 0 0;
+  font-size: 13px;
+  line-height: 20px;
+  color: var(--muted-foreground);
+}
+
+.full {
+  color: var(--text-faint);
+}
+
+.large .amount {
+  font-size: 44px;
+  line-height: 52px;
+  letter-spacing: -1.5px;
+}
+
+.large .note {
+  font-size: 14px;
+}

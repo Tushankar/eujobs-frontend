@@ -10,7 +10,11 @@
     "oneTime": "One-time payment in {{currency}}",
     "note": "You pay on Stripe’s secure page with a card or Link. Prices include VAT. Your card details never reach EU Jobs.",
     "cancel": "Cancel",
-    "continue": "Continue to secure payment"
+    "continue": "Continue to secure payment",
+    "yearly": "Billed yearly in {{currency}}",
+    "period": "Billing period",
+    "perMonth": "{{price}} / month",
+    "perYear": "{{price}} / year"
   },
   "upgrade": {
     "description": "Plus adds applying, messaging recruiters, job alerts and the AI features.",
@@ -56,7 +60,8 @@
     "billedOnce": "One-time payment",
     "summaryDate": "Date",
     "summaryTotal": "Total",
-    "back": "Go back"
+    "back": "Go back",
+    "billedYearly": "Yearly subscription"
   },
   "status": {
     "active": "Active",
@@ -74,7 +79,13 @@
     "historyTitle": "Payment history",
     "historyDescription": "Plans and courses you paid for, with the Stripe receipt or invoice for each.",
     "emptyTitle": "No payments yet",
-    "emptyDescription": "Plans and courses you pay for appear here."
+    "emptyDescription": "Plans and courses you pay for appear here.",
+    "perYear": "per year",
+    "switchesOn": "Switches to {{billing}} billing on {{date}}",
+    "billing": {
+      "month": "monthly",
+      "year": "yearly"
+    }
   },
   "recruiter": {
     "lead": "Recruiter Plus invoices and course payments from this workspace, with the Stripe receipt or invoice for each.",
@@ -99,5 +110,18 @@
   "methods": {
     "link": "Link",
     "other": "Other"
+  },
+  "interval": {
+    "label": "Billing period",
+    "month": "Monthly",
+    "year": "Yearly",
+    "save": "Save {{percent}}%"
+  },
+  "price": {
+    "perMonth": "/ month",
+    "billedMonthly": "Billed monthly",
+    "billedYearly": "{{amount}} billed yearly",
+    "forever": "Free forever",
+    "insteadOf": "Instead of"
   }
 }

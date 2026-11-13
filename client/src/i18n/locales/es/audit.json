@@ -97,7 +97,8 @@
     "payments": {
       "payment_recorded": "Pago {{reference}}: {{payer}}, {{item}} ({{amount}})",
       "renewal_failed": "Renovación fallida {{reference}}: {{payer}}, {{item}} ({{amount}})",
-      "payment_refunded": "Pago reembolsado {{reference}}: {{payer}}, {{item}} ({{amount}})"
+      "payment_refunded": "Pago reembolsado {{reference}}: {{payer}}, {{item}} ({{amount}})",
+      "plan_updated": "Plan actualizado: {{plan}}"
     },
     "workspace": {
       "initialized": "Espacio de trabajo inicializado"

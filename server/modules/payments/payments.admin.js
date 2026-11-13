@@ -93,7 +93,7 @@ const countByRole = (items, roleOf) => ({ total: items.length, ...Object.fromEnt
 
 /**
  * P10-Q7: all-time cards that follow only the country filter. Collected = paid rows (refunds excluded); Active
- * subscribers = paid subscriptions (U38); MRR = their monthly amounts per currency; Failed renewals = failed rows.
+ * subscribers = paid subscriptions (U38); MRR = their monthly amounts per currency (yearly ÷ 12); Failed renewals = failed rows.
  * P11c-Q8: the plan cards are split by role (Plus = candidates, Recruiter Plus = recruiters).
  */
 export async function paymentStats({ country }) {
@@ -107,7 +107,12 @@ export async function paymentStats({ country }) {
     mrr: Object.fromEntries(
       ROLES.map((role) => [
         role,
-        perCurrency(active.filter((subscription) => roleOfPlan[subscription.planKey] === role).map(({ currency, amountMinor }) => ({ currency, amountMinor }))),
+        perCurrency(
+          active
+            .filter((subscription) => roleOfPlan[subscription.planKey] === role)
+            // 2026-11-13: a yearly plan counts a twelfth of its price each month.
+            .map(({ currency, amountMinor, interval }) => ({ currency, amountMinor: interval === 'year' ? Math.round(amountMinor / 12) : amountMinor })),
+        ),
       ]),
     ),
     failedRenewals: countByRole(

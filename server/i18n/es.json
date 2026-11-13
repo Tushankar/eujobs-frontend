@@ -440,6 +440,89 @@
       "secondary": "¿Has cambiado de opinión? Darte de baja:",
       "note": "Si no te has suscrito, ignora este correo y no quedarás suscrito.",
       "reason": "Recibes este correo porque esta dirección se introdujo en el formulario del boletín de EU Jobs."
+    },
+    "plan_started": {
+      "subject": "Te damos la bienvenida a {{plan}}",
+      "heading": "Tu plan {{plan}} está activo",
+      "body": [
+        "Hola, {{name}}:",
+        "Gracias por suscribirte. Tu plan {{plan}} ya está activo y todas sus funciones están desbloqueadas.",
+        "Has pagado {{amount}} con facturación {{billing}}. Tu plan se renueva el {{date}}.",
+        "En Facturación puedes cambiar entre facturación mensual y anual, actualizar tu tarjeta o cancelar cuando quieras."
+      ],
+      "action": "Abrir Facturación",
+      "secondary": "Ver tu factura:"
+    },
+    "renewal_receipt": {
+      "subject": "Recibo de tu plan {{plan}}",
+      "heading": "Tu plan se ha renovado",
+      "body": [
+        "Hola, {{name}}:",
+        "Hemos recibido tu pago de {{amount}}. Tu plan {{plan}} se ha renovado con facturación {{billing}}.",
+        "Tu próxima renovación es el {{date}}."
+      ],
+      "action": "Abrir Facturación",
+      "secondary": "Ver tu factura:"
+    },
+    "payment_recovered": {
+      "subject": "Pago recibido de tu plan {{plan}}",
+      "heading": "Pago recibido",
+      "body": [
+        "Hola, {{name}}:",
+        "Tu pago de {{amount}} se ha completado, así que tu plan {{plan}} continúa sin interrupciones.",
+        "Tu próxima renovación es el {{date}}."
+      ],
+      "action": "Abrir Facturación",
+      "secondary": "Ver tu factura:"
+    },
+    "plan_cancel_scheduled": {
+      "subject": "Tu plan {{plan}} termina el {{date}}",
+      "heading": "Cancelación confirmada",
+      "body": [
+        "Hola, {{name}}:",
+        "Tu plan {{plan}} no se renovará. Mantienes todas las funciones de {{plan}} hasta el {{date}} y no se te volverá a cobrar.",
+        "¿Has cambiado de opinión? Puedes reanudar tu plan en Facturación antes del {{date}}."
+      ],
+      "action": "Reanudar plan"
+    },
+    "plan_resumed": {
+      "subject": "Tu plan {{plan}} continúa",
+      "heading": "Plan reanudado",
+      "body": [
+        "Hola, {{name}}:",
+        "Tu plan {{plan}} se renovará con normalidad. Tu próximo pago de {{amount}} es el {{date}}, con facturación {{billing}}."
+      ],
+      "action": "Abrir Facturación"
+    },
+    "plan_changed": {
+      "subject": "Tu plan {{plan}} ahora tiene facturación {{billing}}",
+      "heading": "Facturación actualizada",
+      "body": [
+        "Hola, {{name}}:",
+        "Tu plan {{plan}} ahora tiene facturación {{billing}} por {{amount}}.",
+        "Tu próximo pago es el {{date}}. Tus facturas están en Facturación."
+      ],
+      "action": "Abrir Facturación"
+    },
+    "plan_change_scheduled": {
+      "subject": "Tu plan {{plan}} pasa a facturación {{billing}} el {{date}}",
+      "heading": "Cambio de facturación programado",
+      "body": [
+        "Hola, {{name}}:",
+        "A partir del {{date}}, tu plan {{plan}} tendrá facturación {{billing}} por {{amount}}. Hasta entonces no cambia nada.",
+        "Puedes cancelar este cambio en Facturación antes del {{date}}."
+      ],
+      "action": "Abrir Facturación"
+    },
+    "renewal_reminder": {
+      "subject": "Tu plan {{plan}} se renueva el {{date}}",
+      "heading": "Próxima renovación",
+      "body": [
+        "Hola, {{name}}:",
+        "Tu plan anual {{plan}} se renueva el {{date}}. Cobraremos {{amount}} en tu método de pago guardado.",
+        "Si quieres continuar, no tienes que hacer nada. Para cambiar tu tarjeta, pasar a facturación mensual o cancelar, abre Facturación antes del {{date}}."
+      ],
+      "action": "Gestionar la facturación"
     }
   },
   "verification": {
@@ -634,6 +717,10 @@
       "references": "Referencias",
       "signed_offer": "Oferta firmada",
       "other": "Otro"
+    },
+    "billingInterval": {
+      "month": "mensual",
+      "year": "anual"
     }
   },
   "certificate": {
@@ -791,7 +878,8 @@
     "payments": {
       "payment_recorded": "Pago {{reference}}: {{payer}}, {{item}} ({{amount}})",
       "renewal_failed": "Renovación fallida {{reference}}: {{payer}}, {{item}} ({{amount}})",
-      "payment_refunded": "Pago reembolsado {{reference}}: {{payer}}, {{item}} ({{amount}})"
+      "payment_refunded": "Pago reembolsado {{reference}}: {{payer}}, {{item}} ({{amount}})",
+      "plan_updated": "Plan actualizado: {{plan}}"
     },
     "workspace": {
       "initialized": "Espacio de trabajo inicializado"

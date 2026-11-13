@@ -7,6 +7,7 @@ import { requireApprovedRecruiter, requireAuth, requireRole, requireVerifiedEmai
 import { requirePermission } from '../../middleware/permissions.js'
 import { idParams, paymentsQuery, statsQuery } from '../admin/admin.schemas.js'
 import * as admin from './payments.admin.js'
+import * as plans from './plans.admin.js'
 import * as schemas from './payments.schemas.js'
 import * as payments from './payments.service.js'
 
@@ -50,7 +51,10 @@ subscriptionRouter.get('/', requireAuth, requireBuyer, async (req, res) => {
   res.json({ subscription: await payments.subscriptionDto(req.user._id) })
 })
 
-/* /admin/payments (M-122, M-123): view only, `finance.view`; the export also needs `reports.export`. */
+/*
+ * /admin/payments (M-122, M-123): view only, `finance.view`; the export also needs `reports.export`. The plans
+ * (2026-11-13) are read with `finance.view` and changed with `finance.manage`.
+ */
 export const adminRouter = Router()
 adminRouter.use(requireAuth, requireRole('admin'), requirePermission('finance.view'))
 
@@ -65,6 +69,15 @@ adminRouter.get('/stats', validate({ query: statsQuery }), async (req, res) => {
 adminRouter.get('/export', requirePermission('reports.export'), validate({ query: paymentsQuery }), async (req, res) => {
   const rows = admin.exportRows(await admin.filteredPayments(req.query), req.user.language)
   await auditedExport(req, res, { type: 'payments_exported', name: 'payments', rows })
+})
+
+adminRouter.get('/plans', async (req, res) => {
+  const items = await plans.listPlans()
+  res.json({ items, total: items.length, page: 1, pageSize: items.length })
+})
+
+adminRouter.patch('/plans/:key', requirePermission('finance.manage'), validate({ params: plans.planParams, body: plans.planBody }), async (req, res) => {
+  res.json(await plans.updatePlan(req.user, req.params.key, req.body))
 })
 
 adminRouter.get('/:id', validate({ params: idParams }), async (req, res) => {

@@ -127,7 +127,7 @@
     },
     "candidates": { "view": "Open the Applications and Recruitment pages." },
     "jobs": { "view": "Open the Jobs list and the job AI summaries." },
-    "finance": { "view": "Open Payments, subscription details and revenue." },
+    "finance": { "view": "Open Payments, subscription details and revenue.", "manage": "Edit plan names, features, monthly and yearly prices and the yearly discount." },
     "reports": {
       "view": "Open Analytics and the report history.",
       "export": "Generate reports and download CSV exports."

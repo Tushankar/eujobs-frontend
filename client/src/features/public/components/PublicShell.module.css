@@ -276,82 +276,6 @@
   color: #fff;
 }
 
-.plans {
-  display: grid;
-  grid-template-columns: repeat(2, minmax(0, 1fr));
-  gap: 28px;
-  max-width: 860px;
-  margin-top: 32px;
-}
-
-.plan {
-  display: flex;
-  flex-direction: column;
-  padding: 32px;
-  border: 1px solid #e8eaf0;
-  border-radius: 24px;
-  background: #fff;
-  box-shadow: 0 8.76px 26.28px rgba(31, 31, 51, 0.06);
-}
-
-.planFeatured {
-  border-color: transparent;
-  background: var(--brand-gradient);
-  color: #fff;
-}
-
-.planName {
-  margin: 0;
-  font-size: 18px;
-  font-weight: 600;
-}
-
-.price {
-  margin: 16px 0 0;
-  font-size: 40px;
-  font-weight: 600;
-  line-height: 1.1;
-  letter-spacing: -1.5px;
-}
-
-.interval {
-  margin-left: 6px;
-  font-size: 14px;
-  font-weight: 400;
-  letter-spacing: 0;
-  opacity: 0.75;
-}
-
-.features {
-  display: grid;
-  gap: 12px;
-  margin: 24px 0 32px;
-  padding: 0;
-  list-style: none;
-  font-size: 14px;
-  line-height: 20px;
-}
-
-.features li {
-  display: flex;
-  gap: 10px;
-}
-
-.check {
-  flex-shrink: 0;
-  margin-top: 2px;
-  color: var(--primary);
-}
-
-.planFeatured .check {
-  color: #fff;
-}
-
-.planAction {
-  align-self: flex-start;
-  margin-top: auto;
-}
-
 /* ---------- Newsletter ---------- */
 
 .notice {
@@ -384,7 +308,6 @@
   }
 
   .grid,
-  .plans,
   .featured {
     grid-template-columns: minmax(0, 1fr);
   }

@@ -212,6 +212,7 @@ describe('webhook (§2.10; signed constructed payloads)', () => {
           return { ...subscription, latest_invoice: subscription.latest_invoice && (await fetch(subscription.latest_invoice)) }
         },
       },
+      subscriptionSchedules: { retrieve: fetch },
       invoices: { retrieve: fetch },
       paymentIntents: { retrieve: fetch },
       charges: { retrieve: fetch },
@@ -350,6 +351,61 @@ describe('webhook (§2.10; signed constructed payloads)', () => {
     assert.equal((await Payment.findOne({ 'stripe.invoiceId': 'in_retry_2' })).status, 'paid')
     assert.equal((await Subscription.findOne({ userId: user._id })).retrying, false)
     assert.equal(mailTo(user.email, 'plan_ended').length, 0)
+    // 2026-11-13: "payment received" once, with the invoice, instead of a plain renewal receipt.
+    await send('invoice.paid', 'in_retry_2')
+    const recovered = mailTo(user.email, 'payment_recovered')
+    assert.deepEqual([recovered.length, recovered[0]?.params.secondaryLink, mailTo(user.email, 'renewal_receipt').length], [1, 'https://invoice.stripe.com/i/in_retry_2', 0])
+    assert.equal(await Notification.countDocuments({ userId: user._id, type: 'payment_recovered' }), 1)
+  })
+
+  it('welcomes a new subscriber once and sends a receipt for each renewal (2026-11-13)', async () => {
+    const { user, ids, invoice, charge } = await subscriber('welcome')
+    await send('customer.subscription.created', ids.sub)
+    await send('invoice.paid', ids.in1)
+    await send('invoice.paid', ids.in1)
+    const welcome = mailTo(user.email, 'plan_started')
+    assert.equal(welcome.length, 1)
+    const { params, subject } = welcome[0]
+    assert.deepEqual([subject, params.amount, params.billing, params.secondaryLink], ['Welcome to Plus', '£9.00', 'monthly', `https://invoice.stripe.com/i/${ids.in1}`])
+    assert.equal(params.date, new Intl.DateTimeFormat('en', { dateStyle: 'long', timeZone: 'UTC' }).format((NOW + 30 * DAY) * 1000))
+    put(invoice('in_welcome_2', 'pi_welcome_2', { billing_reason: 'subscription_cycle' }))
+    put({ id: 'pi_welcome_2', latest_charge: charge('ch_welcome_2') })
+    await send('invoice.paid', 'in_welcome_2')
+    assert.deepEqual([mailTo(user.email, 'renewal_receipt').length, mailTo(user.email, 'plan_started').length], [1, 1])
+  })
+
+  it('tells a cancellation, its undoing and monthly ↔ yearly switches once each (2026-11-13)', async () => {
+    const { user, ids, subscription } = await subscriber('lifecycle')
+    const types = async () => (await Notification.find({ userId: user._id }).sort({ at: 1, _id: 1 })).map((item) => item.type)
+    await send('customer.subscription.created', ids.sub)
+    put(subscription({ cancel_at: NOW + 30 * DAY }))
+    await send('customer.subscription.updated', ids.sub)
+    await send('customer.subscription.updated', ids.sub)
+    const [cancelled, ...again] = mailTo(user.email, 'plan_cancel_scheduled')
+    assert.equal(again.length, 0)
+    assert.match(cancelled.subject, /^Your Plus plan ends on /)
+    put(subscription())
+    await send('customer.subscription.updated', ids.sub)
+    assert.equal(mailTo(user.email, 'plan_resumed').length, 1)
+
+    // Monthly → yearly takes effect at once.
+    const yearly = { price: { unit_amount: 9200, recurring: { interval: 'year' } }, current_period_start: NOW, current_period_end: NOW + 365 * DAY }
+    put(subscription({ items: { data: [yearly] } }))
+    await send('customer.subscription.updated', ids.sub)
+    const changed = mailTo(user.email, 'plan_changed')
+    assert.deepEqual([changed.length, changed[0].params.billing, changed[0].params.amount], [1, 'yearly', '£92.00'])
+
+    // Yearly → monthly waits for the period end (a subscription schedule): told once, and shown in Billing.
+    const phase = (start, amount, interval) => ({ start_date: start, items: [{ price: { unit_amount: amount, recurring: { interval } } }] })
+    put({ id: 'sub_sched_lifecycle', phases: [phase(NOW - DAY, 9200, 'year'), phase(NOW + 365 * DAY, 900, 'month')] })
+    put(subscription({ items: { data: [yearly] }, schedule: 'sub_sched_lifecycle' }))
+    await send('customer.subscription.updated', ids.sub)
+    await send('customer.subscription.updated', ids.sub)
+    const scheduled = mailTo(user.email, 'plan_change_scheduled')
+    assert.deepEqual([scheduled.length, scheduled[0].params.billing, scheduled[0].params.amount], [1, 'monthly', '£9.00'])
+    const billing = (await api().get('/api/v1/candidate/subscription').set(auth(user))).body.subscription
+    assert.deepEqual([billing.interval, billing.amountMinor, billing.pendingInterval, new Date(billing.pendingAt).getTime()], ['year', 9200, 'month', (NOW + 365 * DAY) * 1000])
+    assert.deepEqual(await types(), ['plan_cancel_scheduled', 'plan_resumed', 'plan_changed', 'plan_change_scheduled'])
   })
 
   it('does not record a declined first payment', async () => {

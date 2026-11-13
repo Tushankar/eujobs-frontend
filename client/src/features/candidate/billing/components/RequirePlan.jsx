@@ -5,7 +5,10 @@ import { Check, Crown, X } from 'lucide-react'
 import { Button, Icon, Skeleton, SkeletonRegion } from '@/components/ui'
 import PageTitle from '@/components/common/PageTitle.jsx'
 import CheckoutDialog from '@/features/payments/components/CheckoutDialog.jsx'
-import { useFormat, usePreferences } from '@/lib/preferences.js'
+import IntervalSwitch from '@/features/payments/components/IntervalSwitch.jsx'
+import { bestSaving } from '@/features/payments/bestSaving.js'
+import PlanPrice from '@/features/payments/components/PlanPrice.jsx'
+import { usePreferences } from '@/lib/preferences.js'
 import { lacksEntitlement, usePlan } from '../usePlan.js'
 import { cx } from '@/utils/cx.js'
 import styles from './RequirePlan.module.css'
@@ -23,22 +26,23 @@ export default function RequirePlan() {
 
 /**
  * One plan column (the gate and Billing): name, price, what it includes and, crossed out, what it does not (`missing`).
- * `price` overrides the plan's own (Billing shows the subscription's); `meta` sits under it (renewal date).
+ * The plan's price follows `interval` (monthly or yearly, 2026-11-13). `price` and `per` override it (Billing shows the
+ * subscription's own amount and period); `meta` sits under it (renewal date).
  */
-export function PlanColumn({ plan, badge, lead, featured, missing = [], price, meta, children }) {
+export function PlanColumn({ plan, badge, lead, featured, missing = [], price, per, interval, meta, children }) {
   const { t } = useTranslation('billing')
-  const format = useFormat()
-  const shownPrice = price ?? (plan.price && format.money(plan.price.amountMinor, plan.price.currency))
   return (
     <section className={cx(styles.plan, featured && styles.featured)} data-plan={plan.key}>
       <div className={styles.planHead}>
         <h2 className={styles.planName}>{plan.name}</h2>
         {badge}
       </div>
-      {shownPrice && (
+      {price ? (
         <p className={styles.price}>
-          {shownPrice} <span>{t('perMonth')}</span>
+          {price} <span>{per ?? t('perMonth')}</span>
         </p>
+      ) : (
+        <PlanPrice plan={plan} interval={interval} />
       )}
       {meta}
       {lead && <p className={styles.lead}>{lead}</p>}
@@ -64,8 +68,10 @@ export function PlanColumn({ plan, badge, lead, featured, missing = [], price, m
 export function PlanGate({ entitlement }) {
   const { t } = useTranslation('billing')
   const { me } = usePreferences()
-  const { plus, free, item, loading } = usePlan()
+  const { plans, plus, free, item, loading } = usePlan()
   const [checkingOut, setCheckingOut] = useState(false)
+  const [interval, setInterval] = useState('month')
+  const saving = bestSaving(plans)
 
   return (
     <>
@@ -93,9 +99,10 @@ export function PlanGate({ entitlement }) {
           ))}
         </SkeletonRegion>
       )}
+      {saving > 0 && <IntervalSwitch value={interval} onChange={setInterval} saving={saving} className={styles.interval} />}
       <div className={styles.plans} data-plan-gate={entitlement}>
         {free && (
-          <PlanColumn plan={free} missing={plus?.features} badge={<span className={styles.current}>{t('gate.currentPlan')}</span>}>
+          <PlanColumn plan={free} interval={interval} missing={plus?.features} badge={<span className={styles.current}>{t('gate.currentPlan')}</span>}>
             <Button variant="outline" fullWidth disabled>
               {t('gate.currentPlan')}
             </Button>
@@ -105,6 +112,7 @@ export function PlanGate({ entitlement }) {
           <PlanColumn
             plan={plus}
             featured
+            interval={interval}
             lead={free && t('gate.everything', { plan: free.name })}
             badge={
               <span className={styles.badge}>
@@ -121,7 +129,7 @@ export function PlanGate({ entitlement }) {
           </PlanColumn>
         )}
       </div>
-      <CheckoutDialog item={checkingOut ? item : null} onClose={() => setCheckingOut(false)} />
+      <CheckoutDialog item={checkingOut ? { ...item, interval } : null} plan={plus} onClose={() => setCheckingOut(false)} />
     </>
   )
 }

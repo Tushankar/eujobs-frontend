@@ -440,6 +440,89 @@
       "secondary": "Vous avez changé d’avis ? Se désinscrire :",
       "note": "Si vous ne vous êtes pas inscrit, ignorez cet e-mail : vous ne serez pas inscrit.",
       "reason": "Vous recevez cet e-mail parce que cette adresse a été saisie dans le formulaire de la newsletter EU Jobs."
+    },
+    "plan_started": {
+      "subject": "Bienvenue dans {{plan}}",
+      "heading": "Votre offre {{plan}} est active",
+      "body": [
+        "Bonjour {{name}},",
+        "Merci pour votre abonnement. Votre offre {{plan}} est active et toutes ses fonctions sont débloquées.",
+        "Vous avez payé {{amount}}, en facturation {{billing}}. Votre offre se renouvelle le {{date}}.",
+        "Dans Facturation, vous pouvez passer de la facturation mensuelle à annuelle, mettre à jour votre carte ou résilier à tout moment."
+      ],
+      "action": "Ouvrir Facturation",
+      "secondary": "Voir votre facture :"
+    },
+    "renewal_receipt": {
+      "subject": "Reçu de votre offre {{plan}}",
+      "heading": "Votre offre a été renouvelée",
+      "body": [
+        "Bonjour {{name}},",
+        "Nous avons reçu votre paiement de {{amount}}. Votre offre {{plan}} a été renouvelée, en facturation {{billing}}.",
+        "Votre prochain renouvellement a lieu le {{date}}."
+      ],
+      "action": "Ouvrir Facturation",
+      "secondary": "Voir votre facture :"
+    },
+    "payment_recovered": {
+      "subject": "Paiement reçu pour votre offre {{plan}}",
+      "heading": "Paiement reçu",
+      "body": [
+        "Bonjour {{name}},",
+        "Votre paiement de {{amount}} a abouti : votre offre {{plan}} continue sans interruption.",
+        "Votre prochain renouvellement a lieu le {{date}}."
+      ],
+      "action": "Ouvrir Facturation",
+      "secondary": "Voir votre facture :"
+    },
+    "plan_cancel_scheduled": {
+      "subject": "Votre offre {{plan}} prend fin le {{date}}",
+      "heading": "Résiliation confirmée",
+      "body": [
+        "Bonjour {{name}},",
+        "Votre offre {{plan}} ne sera pas renouvelée. Vous gardez toutes les fonctions de {{plan}} jusqu’au {{date}} et vous ne serez plus prélevé.",
+        "Vous avez changé d’avis ? Vous pouvez reprendre votre offre dans Facturation avant le {{date}}."
+      ],
+      "action": "Reprendre l’offre"
+    },
+    "plan_resumed": {
+      "subject": "Votre offre {{plan}} continue",
+      "heading": "Offre reprise",
+      "body": [
+        "Bonjour {{name}},",
+        "Votre offre {{plan}} sera renouvelée normalement. Votre prochain paiement de {{amount}} a lieu le {{date}}, en facturation {{billing}}."
+      ],
+      "action": "Ouvrir Facturation"
+    },
+    "plan_changed": {
+      "subject": "Votre offre {{plan}} passe en facturation {{billing}}",
+      "heading": "Facturation modifiée",
+      "body": [
+        "Bonjour {{name}},",
+        "Votre offre {{plan}} est désormais en facturation {{billing}} à {{amount}}.",
+        "Votre prochain paiement a lieu le {{date}}. Vos factures sont dans Facturation."
+      ],
+      "action": "Ouvrir Facturation"
+    },
+    "plan_change_scheduled": {
+      "subject": "Votre offre {{plan}} passe en facturation {{billing}} le {{date}}",
+      "heading": "Changement de facturation programmé",
+      "body": [
+        "Bonjour {{name}},",
+        "À partir du {{date}}, votre offre {{plan}} sera en facturation {{billing}} à {{amount}}. D’ici là, rien ne change.",
+        "Vous pouvez annuler ce changement dans Facturation avant le {{date}}."
+      ],
+      "action": "Ouvrir Facturation"
+    },
+    "renewal_reminder": {
+      "subject": "Votre offre {{plan}} se renouvelle le {{date}}",
+      "heading": "Renouvellement à venir",
+      "body": [
+        "Bonjour {{name}},",
+        "Votre offre annuelle {{plan}} se renouvelle le {{date}}. Nous prélèverons {{amount}} sur votre moyen de paiement enregistré.",
+        "Rien à faire si vous souhaitez continuer. Pour changer de carte, passer en facturation mensuelle ou résilier, ouvrez Facturation avant le {{date}}."
+      ],
+      "action": "Gérer la facturation"
     }
   },
   "verification": {
@@ -634,6 +717,10 @@
       "references": "Références",
       "signed_offer": "Offre signée",
       "other": "Autre"
+    },
+    "billingInterval": {
+      "month": "mensuelle",
+      "year": "annuelle"
     }
   },
   "certificate": {
@@ -791,7 +878,8 @@
     "payments": {
       "payment_recorded": "Paiement {{reference}} : {{payer}}, {{item}} ({{amount}})",
       "renewal_failed": "Échec du renouvellement {{reference}} : {{payer}}, {{item}} ({{amount}})",
-      "payment_refunded": "Paiement remboursé {{reference}} : {{payer}}, {{item}} ({{amount}})"
+      "payment_refunded": "Paiement remboursé {{reference}} : {{payer}}, {{item}} ({{amount}})",
+      "plan_updated": "Offre modifiée : {{plan}}"
     },
     "workspace": {
       "initialized": "Espace de travail initialisé"

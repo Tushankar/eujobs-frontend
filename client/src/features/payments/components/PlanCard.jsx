@@ -1,7 +1,6 @@
+import { useState } from 'react'
 import { useTranslation } from 'react-i18next'
-import { useDispatch } from 'react-redux'
 import { Crown, ExternalLink } from 'lucide-react'
-import { openUpgrade } from '@/app/upgrade.js'
 import { Button, Icon, Skeleton, SkeletonRegion } from '@/components/ui'
 import PillBadge from '@/components/common/PillBadge.jsx'
 import { useCreatePortalSessionMutation, useGetSubscriptionQuery } from '@/features/candidate/billing/api.js'
@@ -11,6 +10,9 @@ import { usePlan } from '@/features/candidate/billing/usePlan.js'
 import { useErrorText } from '@/lib/forms.js'
 import { useFormat, usePreferences } from '@/lib/preferences.js'
 import { cx } from '@/utils/cx.js'
+import CheckoutDialog from './CheckoutDialog.jsx'
+import IntervalSwitch from './IntervalSwitch.jsx'
+import { bestSaving } from '../bestSaving.js'
 import styles from './PlanCard.module.css'
 
 /** The plan pill: active, retrying a failed renewal (M-120) or ending at period end (M-121). */
@@ -23,16 +25,18 @@ const STATE_TONE = { active: 'success', ending: 'warning', retrying: 'warning' }
 
 /**
  * Billing's plans for candidates (Free / Plus) and recruiters (Free / Recruiter Plus, §3.22), side by side like the
- * plan gate: the current one marked, the paid one in the subscription's own currency (C14) with its renewal or end
- * date and the Stripe Customer Portal (M-121), or the upgrade.
+ * plan gate: the current one marked, the paid one in the subscription's own currency (C14) and period (monthly or
+ * yearly, 2026-11-13) with its renewal or end date, a switch the Portal scheduled, and the Stripe Customer Portal
+ * (M-121); or Monthly / Yearly and the upgrade.
  */
 export default function PlanCard() {
   const { t } = useTranslation('billing')
   const format = useFormat()
   const errorText = useErrorText()
-  const dispatch = useDispatch()
   const { me } = usePreferences()
-  const { plus, free, loading: planLoading } = usePlan()
+  const { plans, plus, free, item, loading: planLoading } = usePlan()
+  const [interval, setInterval] = useState('month')
+  const [checkingOut, setCheckingOut] = useState(false)
   const { data: subscription, isLoading } = useGetSubscriptionQuery(me.role)
   const [createPortal, { isLoading: opening, error: portalError }] = useCreatePortalSessionMutation()
   const state = planState(subscription)
@@ -75,15 +79,22 @@ export default function PlanCard() {
   const meta = paid && (
     <>
       <p className={styles.meta}>{t(state === 'ending' ? 'page.endsOn' : 'page.renewsOn', { date: format.date(subscription.currentPeriodEnd) })}</p>
+      {subscription.pendingInterval && state !== 'ending' && (
+        <p className={styles.meta} data-pending-interval={subscription.pendingInterval}>
+          {t('page.switchesOn', { billing: t(`page.billing.${subscription.pendingInterval}`), date: format.date(subscription.pendingAt) })}
+        </p>
+      )}
       {state === 'retrying' && <p className={styles.warning}>{t('page.retrying', { plan: plus?.name })}</p>}
     </>
   )
+  const saving = paid ? 0 : bestSaving(plans)
   return (
     <>
+      {saving > 0 && <IntervalSwitch value={interval} onChange={setInterval} saving={saving} className={styles.interval} />}
       <div className={styles.plans} data-billing-state={state}>
         {free && (
           // A subscriber sees Free in the subscription's currency too, never two currencies side by side.
-          <PlanColumn plan={free} missing={plus?.features} badge={!paid && current} price={paid ? format.money(0, subscription.currency) : undefined}>
+          <PlanColumn plan={free} interval={interval} missing={plus?.features} badge={!paid && current} price={paid ? format.money(0, subscription.currency) : undefined}>
             {!paid && (
               <Button variant="outline" fullWidth disabled>
                 {t('gate.currentPlan')}
@@ -95,7 +106,9 @@ export default function PlanCard() {
           <PlanColumn
             plan={plus}
             featured
+            interval={interval}
             price={paid ? format.money(subscription.amountMinor, subscription.currency) : undefined}
+            per={paid && subscription.interval === 'year' ? t('page.perYear') : undefined}
             meta={meta}
             lead={free && t('gate.everything', { plan: free.name })}
             badge={
@@ -117,7 +130,7 @@ export default function PlanCard() {
               </Button>
             )}
             {!paid && (
-              <Button fullWidth onClick={() => dispatch(openUpgrade())}>
+              <Button fullWidth onClick={() => setCheckingOut(true)}>
                 {t('upgradeTo', { plan: plus.name })}
               </Button>
             )}
@@ -125,6 +138,7 @@ export default function PlanCard() {
         )}
       </div>
       <div role="alert">{portalError && <p className={styles.failure}>{errorText.code(portalError)}</p>}</div>
+      <CheckoutDialog item={checkingOut ? { ...item, interval } : null} plan={plus} onClose={() => setCheckingOut(false)} />
     </>
   )
 }

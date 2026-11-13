@@ -2,6 +2,7 @@ import ISO6391 from 'iso-639-1'
 import { ENUMS } from '../../config/enums.js'
 import { AppError, fieldError } from '../../lib/errors.js'
 import { Plan } from '../payments/payments.model.js'
+import { savingPercent } from '../payments/plans.stripe.js'
 import { Country, Faq, LegalDocument } from './meta.model.js'
 
 /** An enabled country row, or VALIDATION_FAILED on `field` (M-135, M-139). */
@@ -59,12 +60,15 @@ export async function listPlans(currency, language, role) {
     .sort((a, b) => ENUMS.planKey.indexOf(a.key) - ENUMS.planKey.indexOf(b.key))
     .map((plan) => {
       const price = ['free', 'recruiter_free'].includes(plan.key) ? { currency, amountMinor: 0 } : plan.prices.find((entry) => entry.currency === currency)
+      // 2026-11-13: the yearly price while the admin offers it, and what it saves against 12 months.
+      const yearly = plan.yearlyEnabled && price && plan.yearlyPrices.find((entry) => entry.currency === currency)
       return {
         key: plan.key,
         name: plan.name[language],
         features: plan.features.map((feature) => feature[language]),
         interval: plan.interval,
         price: price ? { amountMinor: price.amountMinor, currency } : null,
+        yearlyPrice: yearly ? { amountMinor: yearly.amountMinor, currency, savingPercent: savingPercent(price.amountMinor, yearly.amountMinor) } : null,
         entitlements: plan.entitlements,
       }
     })

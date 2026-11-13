@@ -95,6 +95,7 @@ export const api = createApi({
     'AdminAccess',
     'AdminUsers',
     'AdminPayments',
+    'AdminPlans',
     'AuditEvents',
     'ContentCases',
     'AdminApplications',

@@ -6,6 +6,15 @@
   margin-top: 28px;
 }
 
+/* Monthly / Yearly above the columns (2026-11-13). */
+.interval {
+  margin-top: 24px;
+}
+
+.interval + .plans {
+  margin-top: 16px;
+}
+
 .plan {
   display: flex;
   flex-direction: column;

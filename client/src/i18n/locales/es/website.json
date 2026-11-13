@@ -16,13 +16,19 @@
     "title": "Precios",
     "titleLead": "Precios simples y",
     "titleAccent": "transparentes",
-    "text": "Empieza gratis y mejora tu plan cuando lo necesites. Los precios son mensuales y puedes cancelar cuando quieras.",
+    "text": "Empieza gratis y mejora tu plan cuando lo necesites. Paga cada mes, o cada año y ahorra. Cancela cuando quieras.",
     "for": "Planes para",
     "candidate": "Para candidatos",
     "recruiter": "Para reclutadores",
-    "perMonth": "/ mes",
     "startFree": "Empieza gratis",
-    "startPaid": "Empezar"
+    "startPaid": "Empezar",
+    "recommended": "Recomendado",
+    "everything": "Todo lo de {{plan}}, y además:",
+    "trust": {
+      "vat": "IVA incluido",
+      "stripe": "Pago seguro con Stripe",
+      "cancel": "Cancela cuando quieras"
+    }
   },
   "newsletter": {
     "title": "Boletín",

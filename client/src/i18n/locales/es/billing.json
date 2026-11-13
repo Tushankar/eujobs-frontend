@@ -10,7 +10,11 @@
     "oneTime": "Pago único en {{currency}}",
     "note": "Pagas en la página segura de Stripe con tarjeta o Link. Los precios incluyen el IVA. Los datos de tu tarjeta nunca llegan a EU Jobs.",
     "cancel": "Cancelar",
-    "continue": "Continuar al pago seguro"
+    "continue": "Continuar al pago seguro",
+    "yearly": "Facturación anual en {{currency}}",
+    "period": "Periodo de facturación",
+    "perMonth": "{{price}} / mes",
+    "perYear": "{{price}} / año"
   },
   "upgrade": {
     "description": "Plus añade postularte a ofertas, escribir a reclutadores, las alertas de empleo y las funciones de IA.",
@@ -56,7 +60,8 @@
     "billedOnce": "Pago único",
     "summaryDate": "Fecha",
     "summaryTotal": "Total",
-    "back": "Volver"
+    "back": "Volver",
+    "billedYearly": "Suscripción anual"
   },
   "status": {
     "active": "Activo",
@@ -74,7 +79,13 @@
     "historyTitle": "Historial de pagos",
     "historyDescription": "Planes y cursos que has pagado, con el recibo o la factura de Stripe de cada uno.",
     "emptyTitle": "Aún no hay pagos",
-    "emptyDescription": "Aquí aparecen los planes y cursos que pagues."
+    "emptyDescription": "Aquí aparecen los planes y cursos que pagues.",
+    "perYear": "al año",
+    "switchesOn": "Pasa a facturación {{billing}} el {{date}}",
+    "billing": {
+      "month": "mensual",
+      "year": "anual"
+    }
   },
   "recruiter": {
     "lead": "Las facturas de Recruiter Plus y los pagos de cursos de este espacio de trabajo, con el recibo o la factura de Stripe de cada uno.",
@@ -99,5 +110,18 @@
   "methods": {
     "link": "Link",
     "other": "Otro"
+  },
+  "interval": {
+    "label": "Periodo de facturación",
+    "month": "Mensual",
+    "year": "Anual",
+    "save": "Ahorra un {{percent}} %"
+  },
+  "price": {
+    "perMonth": "/ mes",
+    "billedMonthly": "Facturación mensual",
+    "billedYearly": "{{amount}} facturados al año",
+    "forever": "Gratis para siempre",
+    "insteadOf": "En lugar de"
   }
 }

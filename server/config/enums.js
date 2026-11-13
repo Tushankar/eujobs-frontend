@@ -21,6 +21,15 @@ export const EMAIL_TYPES = {
   renewal_failed: 'decision',
   plan_ended: 'decision',
   recruiter_plan_ended: 'decision',
+  // 2026-11-13: the plan's lifecycle (welcome, receipts, cancellation, switches, the yearly reminder)
+  plan_started: 'decision',
+  renewal_receipt: 'decision',
+  payment_recovered: 'decision',
+  plan_cancel_scheduled: 'decision',
+  plan_resumed: 'decision',
+  plan_changed: 'decision',
+  plan_change_scheduled: 'decision',
+  renewal_reminder: 'decision',
   alert_instant: 'non_critical',
   alert_daily: 'non_critical',
   alert_weekly: 'non_critical',
@@ -89,6 +98,13 @@ export const NOTIFICATION_TYPES = {
   payment_paid: { sections: { candidate: null, recruiter: null } },
   renewal_failed: { sections: { candidate: null, recruiter: null } },
   plan_ended: { sections: { candidate: null, recruiter: null } },
+  // 2026-11-13: plan lifecycle (Billing)
+  payment_recovered: { sections: { candidate: null, recruiter: null } },
+  plan_cancel_scheduled: { sections: { candidate: null, recruiter: null } },
+  plan_resumed: { sections: { candidate: null, recruiter: null } },
+  plan_changed: { sections: { candidate: null, recruiter: null } },
+  plan_change_scheduled: { sections: { candidate: null, recruiter: null } },
+  renewal_reminder: { sections: { candidate: null, recruiter: null } },
   course_purchased: { sections: { candidate: 'learning' } },
   certificate_issued: { sections: { candidate: 'learning', recruiter: 'recruiterLearning' } },
   content_restricted: { sections: { candidate: 'myProfile', recruiter: 'jobs' } },
@@ -130,6 +146,8 @@ export const PERMISSIONS = [
   { id: 'candidates.view', group: 'recruitment' },
   { id: 'jobs.view', group: 'recruitment' },
   { id: 'finance.view', group: 'finance' },
+  // 2026-11-13: plan names, features and prices (admin › Payments › Plans)
+  { id: 'finance.manage', group: 'finance' },
   { id: 'reports.view', group: 'finance' },
   { id: 'reports.export', group: 'finance' },
   { id: 'dashboard.view', group: 'finance' },
@@ -210,6 +228,8 @@ export const ENUMS = {
   documentRequestStatus: ['open', 'complete'],
   messageKind: ['text', 'interview', 'document_request'],
   planKey: ['free', 'plus', 'recruiter_free', 'recruiter_plus'],
+  // 2026-11-13: paid plans bill monthly or yearly
+  billingInterval: ['month', 'year'],
   // Plus (candidates): apply, message_send, job_alerts, ai. Recruiter Plus (§3.22): jobs_unlimited, discovery, outreach, ai,
   // interviews (§3.23: scheduling, AI interview notes, document requests).
   entitlement: ['apply', 'message_send', 'job_alerts', 'ai', 'jobs_unlimited', 'discovery', 'outreach', 'interviews'],

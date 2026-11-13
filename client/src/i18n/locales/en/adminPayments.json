@@ -76,5 +76,80 @@
     "incorrect_cvc": "Incorrect security code",
     "processing_error": "Processing error",
     "authentication_required": "Authentication required"
+  },
+  "tabs": {
+    "payments": "Payments",
+    "plans": "Plans"
+  },
+  "plans": {
+    "title": "Plans and pricing",
+    "description": "What candidates and recruiters pay. A new price applies to new subscribers; current subscribers keep the price they signed up with.",
+    "loadError": "We could not load the plans. Please refresh.",
+    "roles": {
+      "candidate": "Job seekers",
+      "recruiter": "Recruiters"
+    },
+    "edit": "Edit",
+    "view": "View",
+    "monthly": "{{price}} / month",
+    "yearly": "{{price}} / year",
+    "freePrice": "Free",
+    "discount": "{{percent}}% off yearly",
+    "yearlyOff": "Yearly billing off",
+    "currencies_one": "{{count}} currency",
+    "currencies_other": "{{count}} currencies",
+    "subscribers": "{{month}} monthly · {{year}} yearly subscribers",
+    "olderPrice_one": "{{count}} keeps an older price",
+    "olderPrice_other": "{{count}} keep an older price",
+    "features_one": "{{count}} feature",
+    "features_other": "{{count}} features",
+    "updated": "Updated {{date}}",
+    "saved": "{{plan}} saved. New prices apply to new subscribers from now on.",
+    "editor": {
+      "title": "Edit {{plan}}",
+      "viewTitle": "{{plan}}",
+      "description": "The name and features shown on the pricing page and the plan cards.",
+      "descriptionPaid": "The name and features shown on the pricing page, the plan cards and Checkout, and the prices in every currency.",
+      "texts": "Name and features",
+      "language": "Language",
+      "languages": {
+        "en": "English",
+        "es": "Spanish",
+        "fr": "French"
+      },
+      "name": "Plan name",
+      "features": "Features",
+      "feature": "Feature {{number}}",
+      "addFeature": "Add feature",
+      "removeFeature": "Remove feature {{number}}",
+      "moveUp": "Move feature {{number}} up",
+      "moveDown": "Move feature {{number}} down",
+      "prices": "Prices",
+      "yearlyEnabled": "Offer yearly billing",
+      "discount": "Yearly discount",
+      "discountHint": "Automatic yearly prices are 12 months less this discount, rounded.",
+      "currency": "Currency",
+      "monthly": "Monthly",
+      "yearly": "Yearly",
+      "saving": "Saving",
+      "monthlyFor": "Monthly price in {{currency}}",
+      "yearlyFor": "Yearly price in {{currency}}",
+      "auto": "Auto",
+      "useAuto": "Use the automatic yearly price in {{currency}}",
+      "pricesNote": "Prices include VAT. A changed price becomes a new Stripe price for new subscribers. Leave a yearly price empty to use the discount.",
+      "impact_one": "{{count}} current subscriber keeps the price they signed up with. The new prices apply to new subscribers only.",
+      "impact_other": "{{count}} current subscribers keep the price they signed up with. The new prices apply to new subscribers only.",
+      "cancel": "Cancel",
+      "save": "Save changes",
+      "close": "Close"
+    },
+    "errors": {
+      "required": "Enter this text.",
+      "languageMissing": "Text missing in this language",
+      "amount": "Enter an amount.",
+      "tooHigh": "A year cannot cost more than 12 months.",
+      "discount": "Enter a whole number from 0 to 50.",
+      "form": "Check the highlighted fields, in every language."
+    }
   }
 }

@@ -91,7 +91,8 @@ export default {
     ctx.check((await page.$$('[aria-labelledby="blog-title"] article img')).length === 3, 'three blog covers')
 
     // Newsletter double opt-in from the footer.
-    const email = uniqueEmail(`news${ctx.viewport}`)
+    // Addresses are stored lowercased.
+    const email = uniqueEmail(`news${ctx.viewport}`).toLowerCase()
     await fill(page, 'footer input[type="email"]', email)
     await page.click('footer form button[type="submit"]')
     await waitForText(page, 'Check your inbox')

@@ -440,6 +440,89 @@
       "secondary": "Changed your mind? Unsubscribe:",
       "note": "If you did not sign up, ignore this email and you will not be subscribed.",
       "reason": "You are receiving this email because this address was entered in the EU Jobs newsletter form."
+    },
+    "plan_started": {
+      "subject": "Welcome to {{plan}}",
+      "heading": "Your {{plan}} plan is active",
+      "body": [
+        "Hi {{name}},",
+        "Thank you for subscribing. Your {{plan}} plan is active now and every feature is unlocked.",
+        "You paid {{amount}}, billed {{billing}}. Your plan renews on {{date}}.",
+        "In Billing you can switch between monthly and yearly billing, update your card or cancel at any time."
+      ],
+      "action": "Open billing",
+      "secondary": "View your invoice:"
+    },
+    "renewal_receipt": {
+      "subject": "Receipt for your {{plan}} plan",
+      "heading": "Your plan has renewed",
+      "body": [
+        "Hi {{name}},",
+        "We received your payment of {{amount}}. Your {{plan}} plan has renewed, billed {{billing}}.",
+        "Your next renewal is on {{date}}."
+      ],
+      "action": "Open billing",
+      "secondary": "View your invoice:"
+    },
+    "payment_recovered": {
+      "subject": "Payment received for your {{plan}} plan",
+      "heading": "Payment received",
+      "body": [
+        "Hi {{name}},",
+        "Your payment of {{amount}} went through, so your {{plan}} plan continues without interruption.",
+        "Your next renewal is on {{date}}."
+      ],
+      "action": "Open billing",
+      "secondary": "View your invoice:"
+    },
+    "plan_cancel_scheduled": {
+      "subject": "Your {{plan}} plan ends on {{date}}",
+      "heading": "Cancellation confirmed",
+      "body": [
+        "Hi {{name}},",
+        "Your {{plan}} plan will not renew. You keep every {{plan}} feature until {{date}} and you will not be charged again.",
+        "Changed your mind? You can resume your plan in Billing before {{date}}."
+      ],
+      "action": "Resume plan"
+    },
+    "plan_resumed": {
+      "subject": "Your {{plan}} plan will continue",
+      "heading": "Plan resumed",
+      "body": [
+        "Hi {{name}},",
+        "Your {{plan}} plan will renew as usual. Your next payment of {{amount}} is on {{date}}, billed {{billing}}."
+      ],
+      "action": "Open billing"
+    },
+    "plan_changed": {
+      "subject": "Your {{plan}} plan is now billed {{billing}}",
+      "heading": "Billing updated",
+      "body": [
+        "Hi {{name}},",
+        "Your {{plan}} plan is now billed {{billing}} at {{amount}}.",
+        "Your next payment is on {{date}}. Your invoices are in Billing."
+      ],
+      "action": "Open billing"
+    },
+    "plan_change_scheduled": {
+      "subject": "Your {{plan}} plan switches to {{billing}} billing on {{date}}",
+      "heading": "Billing change scheduled",
+      "body": [
+        "Hi {{name}},",
+        "From {{date}}, your {{plan}} plan will be billed {{billing}} at {{amount}}. Until then nothing changes.",
+        "You can cancel this change in Billing before {{date}}."
+      ],
+      "action": "Open billing"
+    },
+    "renewal_reminder": {
+      "subject": "Your {{plan}} plan renews on {{date}}",
+      "heading": "Upcoming renewal",
+      "body": [
+        "Hi {{name}},",
+        "Your yearly {{plan}} plan renews on {{date}}. We will charge {{amount}} to your saved payment method.",
+        "Nothing to do if you want to continue. To change your card, switch to monthly billing or cancel, open Billing before {{date}}."
+      ],
+      "action": "Manage billing"
     }
   },
   "verification": {
@@ -634,6 +717,10 @@
       "references": "References",
       "signed_offer": "Signed offer",
       "other": "Other"
+    },
+    "billingInterval": {
+      "month": "monthly",
+      "year": "yearly"
     }
   },
   "certificate": {
@@ -791,7 +878,8 @@
     "payments": {
       "payment_recorded": "Payment {{reference}}: {{payer}}, {{item}} ({{amount}})",
       "renewal_failed": "Renewal failed {{reference}}: {{payer}}, {{item}} ({{amount}})",
-      "payment_refunded": "Payment refunded {{reference}}: {{payer}}, {{item}} ({{amount}})"
+      "payment_refunded": "Payment refunded {{reference}}: {{payer}}, {{item}} ({{amount}})",
+      "plan_updated": "Plan updated: {{plan}}"
     },
     "workspace": {
       "initialized": "Workspace initialized"

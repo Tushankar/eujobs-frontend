@@ -18,7 +18,8 @@ import { useErrorText } from '@/lib/forms.js'
 import { useUrlFilters } from '@/lib/useUrlFilters.js'
 import { useFormat, usePreferences } from '@/lib/preferences.js'
 import { useMarkSeen } from '@/features/notifications/api.js'
-import { useGetAdminPaymentQuery, useGetAdminPaymentsQuery, useGetPaymentStatsQuery } from '../api.js'
+import { useGetAdminPaymentQuery, useGetAdminPaymentsQuery, useGetAdminPlansQuery, useGetPaymentStatsQuery } from '../api.js'
+import PaymentsTabs from '../components/PaymentsTabs.jsx'
 import styles from './PaymentsPage.module.css'
 
 const STATUS_TONE = { paid: 'success', failed: 'danger', refunded: 'neutral' }
@@ -141,6 +142,7 @@ export default function PaymentsPage() {
   const { data, isSuccess } = result
   const table = tableState(result, data?.items ?? [])
   const { data: stats, isLoading: statsLoading } = useGetPaymentStatsQuery(filters.country ? { country: filters.country } : {}, { refetchOnMountOrArgChange: true })
+  const { data: plans } = useGetAdminPlansQuery()
   const format = useFormat()
   const byRole = (counts) => t('stats.byRole', { candidates: format.number(counts.candidate), recruiters: format.number(counts.recruiter) })
 
@@ -175,6 +177,7 @@ export default function PaymentsPage() {
           )
         }
       />
+      <PaymentsTabs value="payments" payments={data?.total} plans={plans?.length} />
       {exportError && (
         <p className={styles.error} role="alert">
           {exportError}

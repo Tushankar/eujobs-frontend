@@ -1,7 +1,7 @@
 import { useMemo, useState } from 'react'
 import { useTranslation } from 'react-i18next'
 import { useNavigate } from 'react-router-dom'
-import { CircleHelp, Search, Settings2 } from 'lucide-react'
+import { Search } from 'lucide-react'
 import { Icon, Modal } from '@/components/ui'
 import { can } from '@/app/permissions.js'
 import { workspacePath } from '@/app/workspaces.js'
@@ -9,6 +9,7 @@ import PlanChip from '@/features/candidate/billing/components/PlanChip.jsx'
 import { lacksEntitlement } from '@/features/candidate/billing/usePlan.js'
 import { usePreferences } from '@/lib/preferences.js'
 import { foldText } from '@/lib/text.js'
+import NavIcon from './NavIcon.jsx'
 import styles from './GlobalSearch.module.css'
 
 /** "Search anything" (Ctrl/⌘+K): a quick jump between this workspace's pages, by their translated labels (M-194). */
@@ -23,12 +24,12 @@ export default function GlobalSearch({ workspace, open, onClose }) {
       ...workspace.nav.filter((item) => can(me, item.permission)).map((item) => ({
         label: t(`shell:nav.${item.key}`),
         to: workspacePath(workspace, item.to),
-        icon: item.icon,
+        vuesax: item.vuesax,
         iconSrc: item.iconSrc,
         locked: Boolean(item.entitlement) && lacksEntitlement(me, item.entitlement, [workspace.id]),
       })),
-      { label: t('shell:sidebar.settings'), to: workspacePath(workspace, 'settings'), icon: Settings2 },
-      { label: t('shell:sidebar.help'), to: workspacePath(workspace, 'help'), icon: CircleHelp },
+      { label: t('shell:sidebar.settings'), to: workspacePath(workspace, 'settings'), vuesax: 'setting-2' },
+      { label: t('shell:sidebar.help'), to: workspacePath(workspace, 'help'), vuesax: 'message-question' },
     ],
     [workspace, t, me],
   )
@@ -73,8 +74,8 @@ export default function GlobalSearch({ workspace, open, onClose }) {
           {results.map((item) => (
             <li key={item.to}>
               <button type="button" className={styles.result} onClick={() => go(item)}>
-                {item.icon ? (
-                  <Icon as={item.icon} size={17} />
+                {item.vuesax ? (
+                  <NavIcon name={item.vuesax} />
                 ) : item.iconSrc ? (
                   <img src={item.iconSrc} alt="" className={styles.customIcon} />
                 ) : (

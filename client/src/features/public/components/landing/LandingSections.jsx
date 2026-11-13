@@ -8,18 +8,18 @@ import ctaGlass from '@/assets/landing/cta-glass.webp'
 import ctaPhoto from '@/assets/landing/cta-photo.webp'
 import faqGlowRed from '@/assets/landing/faq-glow-2.svg'
 import faqGlowViolet from '@/assets/landing/faq-glow-1.svg'
-import iconArrange from '@/assets/landing/icon-arrange-circle.svg'
-import iconBriefcase from '@/assets/landing/icon-briefcase.svg'
-import iconBuildings from '@/assets/landing/icon-buildings.svg'
-import iconClock from '@/assets/landing/icon-clock.svg'
-import iconGlobal from '@/assets/landing/icon-global.svg'
-import iconNote from '@/assets/landing/icon-note-text.svg'
+import iconArrange from '@/assets/landing/icon-arrange-circle.svg?raw'
+import iconBriefcase from '@/assets/landing/icon-briefcase.svg?raw'
+import iconBuildings from '@/assets/landing/icon-buildings.svg?raw'
+import iconClock from '@/assets/landing/icon-clock.svg?raw'
+import iconGlobal from '@/assets/landing/icon-global.svg?raw'
+import iconNote from '@/assets/landing/icon-note-text.svg?raw'
 import iconAdd from '@/assets/landing/icon-add.svg'
-import iconClipboard from '@/assets/landing/icon-clipboard-tick.svg'
+import iconClipboard from '@/assets/landing/icon-clipboard-tick.svg?raw'
 import iconClose from '@/assets/landing/icon-close.svg'
-import iconCloud from '@/assets/landing/icon-document-cloud.svg'
-import iconDocument from '@/assets/landing/icon-document-text.svg'
-import iconUserSearch from '@/assets/landing/icon-user-search.svg'
+import iconCloud from '@/assets/landing/icon-document-cloud.svg?raw'
+import iconDocument from '@/assets/landing/icon-document-text.svg?raw'
+import iconUserSearch from '@/assets/landing/icon-user-search.svg?raw'
 import abx from '@/assets/landing/logo-abx.svg'
 import aces from '@/assets/landing/logo-aces.svg'
 import ataMask from '@/assets/landing/logo-ata-mask.svg'
@@ -31,8 +31,9 @@ import viking from '@/assets/landing/logo-viking.svg'
 import westjet from '@/assets/landing/logo-westjet.svg'
 import jobsGlowBlue from '@/assets/landing/jobs-glow-blue.svg'
 import jobsGlowGreen from '@/assets/landing/jobs-glow-green.svg'
-import circuit from '@/assets/landing/pattern-circuit.svg'
-import contours from '@/assets/landing/pattern-contours.svg'
+import cardLines from '@/assets/landing/category-card-lines.svg'
+import circuit from '@/assets/landing/category-circuit.svg?raw'
+import contours from '@/assets/landing/pattern-contours.svg?raw'
 import stepsGlass from '@/assets/landing/steps-glass.webp'
 import stepsPhoto from '@/assets/landing/steps-photo.webp'
 import BrandLogo from '@/components/layout/BrandLogo.jsx'
@@ -42,6 +43,7 @@ import { useJobText } from '@/lib/jobText.js'
 import { useFormat } from '@/lib/preferences.js'
 import { useSubscribeNewsletterMutation } from '../../api.js'
 import { ArrowPill, AvatarStack } from './LandingHero.jsx'
+import InlineSvg from './InlineSvg.jsx'
 import { useCountUp } from './useLandingMotion.js'
 import styles from './Landing.module.css'
 
@@ -98,7 +100,7 @@ export function Categories({ counts }) {
   const { t } = useTranslation()
   return (
     <section className={`${styles.card} ${styles.section}`} aria-labelledby="categories-title">
-      <img src={circuit} alt="" className={styles.circuit} aria-hidden="true" />
+      <InlineSvg svg={circuit} className={styles.circuit} motion="circuit" />
       <div className={styles.sectionHead} data-reveal>
         <h2 id="categories-title" className={styles.sectionTitle}>
           {t('landing:categories.titleLead')} <span className={styles.accent}>{t('landing:categories.titleAccent')}</span>
@@ -108,7 +110,8 @@ export function Categories({ counts }) {
       <div className={styles.categories} data-stagger>
         {CATEGORIES.map(({ group, value, icon }, index) => (
           <Link key={value} to="/candidate/jobs" className={index === 0 ? `${styles.category} ${styles.categoryActive}` : styles.category}>
-            <span className={styles.categoryIcon} style={{ maskImage: `url("${icon}")`, WebkitMaskImage: `url("${icon}")` }} aria-hidden="true" />
+            <img src={cardLines} alt="" className={styles.categoryLines} aria-hidden="true" data-lines />
+            <InlineSvg svg={icon} className={styles.categoryIcon} motion="icon" currentColor />
             <span>
               <h3 className={styles.categoryName}>{t(`enums:${group}.${value}`)}</h3>
               <p className={styles.categoryText}>{t(`landing:categories.${value}`)}</p>
@@ -157,7 +160,7 @@ export function Steps() {
         <ol className={styles.stepList} data-stagger>
           {STEPS.map(({ key, icon }) => (
             <li key={key} className={styles.step}>
-              <img src={icon} alt="" />
+              <InlineSvg svg={icon} className={styles.stepIcon} motion="icon" />
               <div>
                 <h3 className={styles.stepTitle}>{t(`landing:steps.${key}Title`)}</h3>
                 <p className={styles.stepText}>{t(`landing:steps.${key}Text`)}</p>
@@ -212,9 +215,9 @@ export function Vacancies({ jobs }) {
   const { t } = useTranslation()
   return (
     <section id="jobs" className={`${styles.card} ${styles.section} ${styles.anchor}`} aria-labelledby="jobs-title">
-      <img src={contours} alt="" className={styles.contours} aria-hidden="true" />
-      <img src={jobsGlowGreen} alt="" className={styles.glow} style={{ left: -58, bottom: -472, width: 1113 }} aria-hidden="true" />
-      <img src={jobsGlowBlue} alt="" className={styles.glow} style={{ left: 218, bottom: -459, width: 1049 }} aria-hidden="true" />
+      <InlineSvg svg={contours} className={styles.contours} motion="pattern" />
+      <img src={jobsGlowGreen} alt="" className={styles.glow} style={{ left: -58, bottom: -472, width: 1113 }} aria-hidden="true" data-glow />
+      <img src={jobsGlowBlue} alt="" className={styles.glow} style={{ left: 218, bottom: -459, width: 1049 }} aria-hidden="true" data-glow />
       <div className={styles.sectionHead} data-reveal>
         <Title lead={t('landing:vacancies.titleLead')} accent={t('landing:vacancies.titleAccent')} />
         <p className={styles.sectionText}>{t('landing:vacancies.text')}</p>
@@ -273,8 +276,8 @@ export function Faq({ faqs }) {
   if (!faqs.length) return null
   return (
     <section id="faq" className={`${styles.card} ${styles.section} ${styles.anchor}`} aria-labelledby="faq-title">
-      <img src={faqGlowViolet} alt="" className={styles.glow} style={{ left: -59, bottom: -458, width: 1062 }} aria-hidden="true" />
-      <img src={faqGlowRed} alt="" className={styles.glow} style={{ left: 106, bottom: -458, width: 1062 }} aria-hidden="true" />
+      <img src={faqGlowViolet} alt="" className={styles.glow} style={{ left: -59, bottom: -458, width: 1062 }} aria-hidden="true" data-glow />
+      <img src={faqGlowRed} alt="" className={styles.glow} style={{ left: 106, bottom: -458, width: 1062 }} aria-hidden="true" data-glow />
       <div className={styles.sectionHead} data-reveal>
         <Title lead={t('landing:faq.titleLead')} accent={t('landing:faq.titleAccent')} />
         <p className={styles.sectionText}>{t('landing:faq.text')}</p>

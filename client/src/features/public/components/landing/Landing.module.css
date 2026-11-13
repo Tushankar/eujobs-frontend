@@ -122,12 +122,13 @@
   box-shadow: 0 8px 30px rgba(19, 31, 53, 0.02);
 }
 
+/* Figma 396:551 as it shows inside the hero: 813 × 582 from x 367 (31.1%). */
 .heroPattern {
   position: absolute;
-  top: -65px;
+  top: 0;
   left: 31.1%;
-  width: 817px;
-  height: 651px;
+  width: 813px;
+  height: 582px;
   pointer-events: none;
 }
 
@@ -506,6 +507,26 @@
     transform var(--transition);
 }
 
+/* Figma 396:980: the fan of fine lines over each card's right side, scaled to the card's height. */
+.categoryLines {
+  position: absolute;
+  top: 0;
+  right: 0;
+  height: 100%;
+  aspect-ratio: 240 / 115;
+  pointer-events: none;
+  transform-origin: 100% 0;
+  transition: transform 0.8s var(--ease-out);
+}
+
+.category:hover .categoryLines {
+  transform: scale(1.06);
+}
+
+.category > :not(.categoryLines) {
+  position: relative;
+}
+
 .category:hover {
   transform: translateY(-2px);
 }
@@ -518,20 +539,31 @@
 }
 
 /* A vuesax/linear outline icon painted in the text colour (blue, white on the active card). */
+/* The Figma icon inline (its strokes are currentColor), so the motion can draw it. */
 .categoryIcon {
+  display: block;
   flex-shrink: 0;
   width: 24px;
   height: 24px;
   margin-top: -2px;
-  background: var(--primary);
-  mask: center / contain no-repeat;
-  -webkit-mask: center / contain no-repeat;
-  transition: background-color var(--transition);
+  color: var(--primary);
+  transition: color var(--transition);
+}
+
+.categoryIcon svg,
+.stepIcon svg,
+.inlineArt svg,
+.heroPattern svg,
+.circuit svg,
+.contours svg {
+  display: block;
+  width: 100%;
+  height: 100%;
 }
 
 .categoryActive .categoryIcon,
 .category:hover .categoryIcon {
-  background: #fff;
+  color: #fff;
 }
 
 .categoryName {
@@ -636,7 +668,8 @@
   border-bottom: 0;
 }
 
-.step img {
+.stepIcon {
+  display: block;
   flex-shrink: 0;
   width: 20px;
   height: 20px;
