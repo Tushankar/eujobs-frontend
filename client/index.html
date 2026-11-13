@@ -6,6 +6,17 @@
     <link rel="icon" type="image/png" href="/favicon.png" sizes="192x192" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <title>EU Jobs · AI Powered Careers</title>
+    <script>
+      // Signed-out visitors on the landing page: fetch the hero photos (the LCP) in parallel with the app's JS.
+      try {
+        if (location.pathname === '/' && !localStorage.getItem('lwm-auth-token')) {
+          for (const href of ['/landing/hero-man.webp', '/landing/hero-woman.webp']) {
+            const link = Object.assign(document.createElement('link'), { rel: 'preload', as: 'image', href, fetchPriority: 'high' })
+            document.head.append(link)
+          }
+        }
+      } catch {}
+    </script>
   </head>
   <body>
     <div id="root"></div>

@@ -1,12 +1,11 @@
 import { createBrowserRouter, redirect } from 'react-router-dom'
-import WorkspaceLayout from '@/components/layout/WorkspaceLayout.jsx'
 import HydrateFallback from '@/components/layout/HydrateFallback.jsx'
 import { WORKSPACES } from './workspaces.js'
 import NotFoundPage from './NotFoundPage.jsx'
 import ScrollToTop from './ScrollToTop.jsx'
 import { setRouter } from './navigation.js'
 import { landingPath, loadMe, requiredPage } from './session.js'
-import { lazyPage } from './lazyPage.js'
+import LandingPage from '@/features/public/pages/LandingPage.jsx'
 import authRoutes from '@/features/auth/routes.jsx'
 import publicRoutes from '@/features/public/routes.jsx'
 import candidateRoutes from '@/features/candidate/routes.jsx'
@@ -39,7 +38,11 @@ function workspaceRoute(id, children) {
   return {
     path: workspace.basePath,
     loader: workspaceLoader(id),
-    element: <WorkspaceLayout workspaceId={id} />,
+    // Loaded on demand so the signed-out landing page doesn't download the workspace shell.
+    lazy: async () => {
+      const { default: WorkspaceLayout } = await import('@/components/layout/WorkspaceLayout.jsx')
+      return { element: <WorkspaceLayout workspaceId={id} /> }
+    },
     children: [...children, { path: '*', element: <NotFoundPage homePath={workspace.basePath} workspaceId={id} /> }],
   }
 }
@@ -57,7 +60,8 @@ const routes = [
       const me = await loadMe()
       return me ? redirect(landingPath(me)) : null
     },
-    lazy: lazyPage(() => import('@/features/public/pages/LandingPage.jsx')),
+    // Bundled with the app (not lazy) so the landing page doesn't wait for a second download.
+    Component: LandingPage,
   },
   ...authRoutes,
   ...publicRoutes,

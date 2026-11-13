@@ -1,7 +1,12 @@
 import { redirect } from 'react-router-dom'
 import { lazyPage } from '@/app/lazyPage.js'
 import { landingPath, loadMe, requiredPage } from '@/app/session.js'
-import SignInPage from './pages/SignInPage.jsx'
+
+/** The sign-in page for one workspace, loaded on demand (kept out of the landing page's first download). */
+const signIn = (workspace) => async () => {
+  const { default: SignInPage } = await import('./pages/SignInPage.jsx')
+  return { element: <SignInPage workspace={workspace} /> }
+}
 
 /** M-011: a signed-in visitor on a sign-in or sign-up page goes to their own landing page. */
 async function redirectSignedIn({ request }) {
@@ -25,16 +30,16 @@ async function onboardingLoader({ request }) {
  * workspace's catch-all route.
  */
 export default [
-  { path: '/sign-in', loader: redirectSignedIn, element: <SignInPage workspace="candidate" />, handle: { titleKey: 'titles.signIn' } },
+  { path: '/sign-in', loader: redirectSignedIn, lazy: signIn('candidate'), handle: { titleKey: 'titles.signIn' } },
   { path: '/sign-up', loader: redirectSignedIn, lazy: lazyPage(() => import('./pages/SignUpPage.jsx')), handle: { titleKey: 'titles.signUp' } },
-  { path: '/recruiter/sign-in', loader: redirectSignedIn, element: <SignInPage workspace="recruiter" />, handle: { titleKey: 'titles.signIn' } },
+  { path: '/recruiter/sign-in', loader: redirectSignedIn, lazy: signIn('recruiter'), handle: { titleKey: 'titles.signIn' } },
   {
     path: '/recruiter/sign-up',
     loader: redirectSignedIn,
     lazy: lazyPage(() => import('./pages/RecruiterSignUpPage.jsx')),
     handle: { titleKey: 'titles.signUp' },
   },
-  { path: '/admin/sign-in', loader: redirectSignedIn, element: <SignInPage workspace="admin" />, handle: { titleKey: 'titles.adminSignIn' } },
+  { path: '/admin/sign-in', loader: redirectSignedIn, lazy: signIn('admin'), handle: { titleKey: 'titles.adminSignIn' } },
   { path: '/sign-up/check-email', lazy: lazyPage(() => import('./pages/CheckEmailPage.jsx')), handle: { titleKey: 'titles.checkEmail' } },
   { path: '/verify-email', lazy: lazyPage(() => import('./pages/VerifyEmailPage.jsx')), handle: { titleKey: 'titles.verifyEmail' } },
   { path: '/forgot-password', lazy: lazyPage(() => import('./pages/ForgotPasswordPage.jsx')), handle: { titleKey: 'titles.forgotPassword' } },

@@ -12,12 +12,10 @@ import cardTop from '@/assets/landing/hero-card-top.svg'
 import cardWoman from '@/assets/landing/hero-card-woman.svg'
 import maskMan from '@/assets/landing/hero-mask-man.svg'
 import maskWoman from '@/assets/landing/hero-mask-woman.svg'
-import photoMan from '@/assets/landing/hero-man.webp'
 import orbit1 from '@/assets/landing/hero-orbit-1.svg?raw'
 import orbit2 from '@/assets/landing/hero-orbit-2.svg?raw'
 import orbit3 from '@/assets/landing/hero-orbit-3.svg'
 import sparkles from '@/assets/landing/hero-sparkles.svg'
-import photoWoman from '@/assets/landing/hero-woman.webp'
 import hexagons from '@/assets/landing/pattern-hexagons.svg?raw'
 import BrandLogo from '@/components/layout/BrandLogo.jsx'
 import { Icon } from '@/components/ui'
@@ -78,6 +76,10 @@ export function SiteHeader({ className = '' }) {
     </header>
   )
 }
+
+// The page's LCP photos live in public/ with fixed names so index.html can preload them before any JS runs.
+const photoMan = '/landing/hero-man.webp'
+const photoWoman = '/landing/hero-woman.webp'
 
 /** A box placed at Figma coordinates inside the 468 × 445 art frame. */
 const at = (left, top, width, height) => ({ left, top, width, height })
