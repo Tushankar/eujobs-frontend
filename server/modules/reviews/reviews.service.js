@@ -54,7 +54,7 @@ export async function saveOwn(user, { rating, text }) {
   const review = await Review.findOneAndUpdate(
     { userId: user._id },
     { $set: { rating, text, status: 'pending', submittedAt: new Date() }, $unset: { decision: 1 } },
-    { upsert: true, new: true },
+    { upsert: true, returnDocument: 'after' },
   )
   return { review: ownDto(review) }
 }
