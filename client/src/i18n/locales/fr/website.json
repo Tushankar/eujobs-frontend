@@ -112,5 +112,22 @@
       "saveDraft": "Enregistrer le brouillon",
       "save": "Enregistrer les modifications"
     }
+  },
+  "post": {
+    "eyebrow": "Blog {{brand}}",
+    "minutes_one": "{{count}} min de lecture",
+    "minutes_many": "{{count}} min de lecture",
+    "minutes_other": "{{count}} min de lecture",
+    "contents": "Sur cette page",
+    "share": "Partager cet article",
+    "copy": "Copier le lien",
+    "copied": "Lien copié",
+    "email": "Partager par e-mail",
+    "ctaTitle": "Trouvez un poste qui vous ressemble",
+    "ctaText": "Créez votre profil une fois, recevez des offres sélectionnées par l’IA auprès d’employeurs fiables dans l’UE et au Royaume-Uni, et postulez en quelques clics.",
+    "ctaJoin": "Créer un compte gratuit",
+    "ctaJobs": "Voir les offres",
+    "relatedLead": "À lire",
+    "relatedAccent": "aussi"
   }
 }

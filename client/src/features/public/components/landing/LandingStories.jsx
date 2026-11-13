@@ -1,3 +1,6 @@
+// The Figma blog cards use Montserrat (title) and Open Sans (author, date, button).
+import '@fontsource/montserrat/600.css'
+import '@fontsource/open-sans/400.css'
 import { ChevronLeft, ChevronRight } from 'lucide-react'
 import { useState } from 'react'
 import { useTranslation } from 'react-i18next'
@@ -11,7 +14,6 @@ import reviewsCircuit from '@/assets/landing/reviews-circuit.svg?raw'
 import { Icon } from '@/components/ui'
 import { useFormat } from '@/lib/preferences.js'
 import InlineSvg from './InlineSvg.jsx'
-import { ArrowPill } from './LandingHero.jsx'
 import styles from './Landing.module.css'
 
 const PER_PAGE = 2
@@ -129,9 +131,6 @@ export function Blogs({ posts }) {
         {posts.map((post, index) => (
           <BlogCard key={post.id} post={post} active={index === 0} />
         ))}
-      </div>
-      <div className={styles.jobsMore}>
-        <ArrowPill to="/blog">{t('landing:blog.all')}</ArrowPill>
       </div>
     </section>
   )

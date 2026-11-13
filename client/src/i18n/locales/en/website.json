@@ -112,5 +112,21 @@
       "saveDraft": "Save draft",
       "save": "Save changes"
     }
+  },
+  "post": {
+    "eyebrow": "{{brand}} Blog",
+    "minutes_one": "{{count}} min read",
+    "minutes_other": "{{count}} min read",
+    "contents": "On this page",
+    "share": "Share this article",
+    "copy": "Copy link",
+    "copied": "Link copied",
+    "email": "Share by email",
+    "ctaTitle": "Find a role that fits you",
+    "ctaText": "Build your profile once, get AI-matched jobs from trusted employers across the EU and the UK, and apply in a few clicks.",
+    "ctaJoin": "Create a free account",
+    "ctaJobs": "Browse open jobs",
+    "relatedLead": "Keep",
+    "relatedAccent": "Reading"
   }
 }
