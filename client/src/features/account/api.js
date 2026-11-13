@@ -7,7 +7,18 @@ export const accountApi = api.injectEndpoints({
     setNotifications: build.mutation({ query: (body) => ({ url: '/me/notifications', method: 'PATCH', body }), ...writesMe }),
     // M-188, M-189: erasure (candidate) or account deletion (recruiter), with the current password.
     deleteAccount: build.mutation({ query: (body) => ({ url: '/me', method: 'DELETE', body }) }),
+    // 2026-11-13: the user's review of the platform for the landing page (moderated).
+    getMyReview: build.query({ query: () => '/me/review', transformResponse: (response) => response.review, providesTags: ['MyReview'] }),
+    saveMyReview: build.mutation({ query: (body) => ({ url: '/me/review', method: 'PUT', body }), invalidatesTags: ['MyReview', 'AdminReviews'] }),
+    deleteMyReview: build.mutation({ query: () => ({ url: '/me/review', method: 'DELETE' }), invalidatesTags: ['MyReview', 'AdminReviews'] }),
   }),
 })
 
-export const { useChangePasswordMutation, useSetNotificationsMutation, useDeleteAccountMutation } = accountApi
+export const {
+  useChangePasswordMutation,
+  useSetNotificationsMutation,
+  useDeleteAccountMutation,
+  useGetMyReviewQuery,
+  useSaveMyReviewMutation,
+  useDeleteMyReviewMutation,
+} = accountApi

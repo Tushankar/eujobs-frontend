@@ -1,0 +1,136 @@
+.card {
+  max-width: 768px;
+}
+
+.title {
+  margin: 0;
+  font-family: var(--font-display);
+  font-size: 18px;
+  font-weight: 700;
+  color: var(--foreground);
+}
+
+.description {
+  margin: 6px 0 0;
+  font-size: 13px;
+  line-height: 19px;
+  color: var(--muted-foreground);
+}
+
+.form {
+  display: flex;
+  flex-direction: column;
+  gap: 18px;
+  margin-top: 20px;
+}
+
+.status {
+  display: flex;
+  flex-direction: column;
+  gap: 4px;
+  margin: 0;
+  padding: 12px 16px;
+  border-radius: var(--radius-xl);
+  font-size: 13px;
+  font-weight: 600;
+  line-height: 18px;
+}
+
+.pending {
+  background: var(--warning-bg);
+  color: var(--warning-fg);
+}
+
+.approved {
+  background: var(--success-bg);
+  color: var(--success-fg);
+}
+
+.rejected {
+  background: #fef2f2;
+  color: var(--destructive);
+}
+
+.reason {
+  font-weight: 400;
+}
+
+.stars {
+  margin: 0;
+  padding: 0;
+  border: 0;
+}
+
+.label {
+  margin-bottom: 8px;
+  font-size: 13px;
+  font-weight: 500;
+  color: var(--text-label);
+}
+
+.starRow {
+  display: flex;
+  gap: 4px;
+}
+
+.star {
+  display: grid;
+  place-items: center;
+  width: 36px;
+  height: 36px;
+  border-radius: 50%;
+  color: var(--border-strong);
+  cursor: pointer;
+  transition:
+    color var(--transition),
+    transform var(--transition);
+}
+
+.star:hover {
+  transform: scale(1.1);
+}
+
+.star input {
+  position: absolute;
+  opacity: 0;
+  pointer-events: none;
+}
+
+.star:has(input:focus-visible) {
+  outline: 2px solid var(--ring);
+}
+
+.starOn {
+  color: #ffc700;
+}
+
+.starOn svg {
+  fill: currentColor;
+}
+
+.srOnly {
+  position: absolute;
+  width: 1px;
+  height: 1px;
+  overflow: hidden;
+  clip-path: inset(50%);
+  white-space: nowrap;
+}
+
+.error {
+  margin: 6px 0 0;
+  font-size: 13px;
+  color: var(--destructive);
+}
+
+.saved {
+  margin: 0;
+  font-size: 13px;
+  color: var(--success-fg);
+}
+
+.actions {
+  display: flex;
+  justify-content: flex-end;
+  gap: 10px;
+}
