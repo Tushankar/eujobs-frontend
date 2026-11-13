@@ -957,7 +957,8 @@
 
 .cta {
   display: grid;
-  grid-template-columns: minmax(0, 621px) minmax(0, 1fr);
+  /* Figma 457:23184: the copy column is 671.5px (50px inset + 621.5px); the photo takes the rest (508.5px). */
+  grid-template-columns: minmax(0, 671.5px) minmax(0, 1fr);
   min-height: 360px;
   overflow: hidden;
   border-radius: 16px;
@@ -1010,18 +1011,33 @@
   color: #dce5ff;
 }
 
-/* Figma 457:23183: the portrait meeting photo fills the 360px band (it must not set the band's height). */
+/* Figma 457:23291: the portrait meeting photo, mirrored (scaleX on the frame, so the GSAP zoom keeps its own
+   transform), cover-fit at 959px tall and shifted up 229px inside the 360px band. */
+.ctaMedia {
+  position: relative;
+  min-height: 360px;
+  overflow: hidden;
+  transform: scaleX(-1);
+}
+
 .ctaPhoto {
+  position: absolute;
+  top: -229px;
+  left: 0;
   width: 100%;
-  height: 360px;
+  height: 959px;
+  max-width: none;
   object-fit: cover;
-  object-position: center 38%;
   opacity: 0.95;
 }
 
 @media (max-width: 899px) {
+  .ctaMedia {
+    min-height: 300px;
+  }
+
   .ctaPhoto {
-    height: 280px;
+    top: -260px;
   }
 }
 

@@ -53,7 +53,6 @@ export default {
     await ctx.screenshot(page, '1-upgrade')
     const checkout = await continueToStripe(page, '57.00')
     ctx.check(checkout.text.includes('Recruiter Plus'), 'Checkout names Recruiter Plus')
-    await page.waitForSelector('#cardNumber', { visible: true })
     await new Promise((resolve) => setTimeout(resolve, 1500))
     await ctx.screenshot(page, '2-checkout')
     await payOnCheckout(page)

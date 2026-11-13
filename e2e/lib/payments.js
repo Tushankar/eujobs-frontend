@@ -50,26 +50,75 @@ export async function openAs(ctx, handle, email, path, password = TEST_PASSWORD)
   await handle.page.goto(`${ctx.webUrl}${path}`, { waitUntil: 'networkidle0' })
 }
 
+/*
+ * Stripe's hosted Checkout renders its form one of two ways: on the page (#cardNumber, the hosted submit button) or,
+ * as this sandbox does since 2026-11-13, inside a Payment Element iframe (#payment-numberInput … with its own
+ * Subscribe / Pay button). checkoutForm finds whichever is shown.
+ */
+const FORMS = {
+  page: {
+    number: '#cardNumber',
+    expiry: '#cardExpiry',
+    cvc: '#cardCvc',
+    name: '#billingName',
+    country: '#billingCountry',
+    postal: '#billingPostalCode',
+    submit: '[data-testid="hosted-payment-submit-button"]',
+  },
+  element: {
+    number: '#payment-numberInput',
+    expiry: '#payment-expiryInput',
+    cvc: '#payment-cvcInput',
+    name: '#payment-nameInput',
+    country: '#payment-countryInput',
+    postal: '#payment-postalCodeInput',
+    submit: null,
+  },
+}
+
+async function checkoutForm(page, timeout = 45_000) {
+  const deadline = Date.now() + timeout
+  while (Date.now() < deadline) {
+    if (await page.$(FORMS.page.number)) return { target: page, fields: FORMS.page }
+    for (const frame of page.frames()) {
+      if (frame !== page.mainFrame() && (await frame.$(FORMS.element.number).catch(() => null))) return { target: frame, fields: FORMS.element }
+    }
+    await new Promise((resolve) => setTimeout(resolve, 500))
+  }
+  throw new Error('Stripe Checkout showed no card form')
+}
+
 /** Stripe's hosted Checkout: waits until it shows `amount` (it renders a skeleton first), then returns its text and language. */
 export async function checkoutPage(page, amount) {
   await page.waitForFunction(() => location.hostname === 'checkout.stripe.com', { timeout: 30_000 })
-  await page.waitForSelector('#cardNumber', { visible: true, timeout: 45_000 })
+  await checkoutForm(page)
   // Stripe puts a no-break space between the currency and the amount.
   await page.waitForFunction((text) => document.body.innerText.replace(/\s/g, ' ').includes(text), { timeout: 45_000 }, amount)
   return page.evaluate(() => ({ text: document.body.innerText.replace(/\s/g, ' '), lang: document.documentElement.lang }))
 }
 
+/** The Payment Element's own button, which reads "Subscribe" or "Pay …". */
+async function clickSubmit(frame) {
+  for (const button of await frame.$$('button')) {
+    const text = await button.evaluate((element) => element.textContent.trim())
+    if (/^(Subscribe|Pay\b)/.test(text) && (await button.isVisible())) return button.click()
+  }
+  throw new Error('Stripe Checkout showed no Subscribe or Pay button')
+}
+
 /** Pays on the hosted Checkout with a test card and waits until Stripe sends the browser back to the app. */
 export async function payOnCheckout(page, card = CARDS.visa) {
-  await page.waitForSelector('[data-testid="hosted-payment-submit-button"]', { visible: true, timeout: 45_000 })
-  await page.type('#cardNumber', card)
-  await page.type('#cardExpiry', '1234')
-  await page.type('#cardCvc', '123')
-  await page.type('#billingName', 'Test Buyer')
-  await page.select('#billingCountry', 'DE')
-  const postal = await page.$('#billingPostalCode')
-  if (postal && (await postal.isVisible())) await page.type('#billingPostalCode', '10115')
-  await page.click('[data-testid="hosted-payment-submit-button"]')
+  const { target, fields } = await checkoutForm(page)
+  await target.waitForSelector(fields.number, { visible: true, timeout: 45_000 })
+  await target.type(fields.number, card)
+  await target.type(fields.expiry, '1234')
+  await target.type(fields.cvc, '123')
+  await target.type(fields.name, 'Test Buyer')
+  await target.select(fields.country, 'DE')
+  const postal = await target.$(fields.postal)
+  if (postal && (await postal.isVisible())) await target.type(fields.postal, '10115')
+  if (fields.submit) await target.click(fields.submit)
+  else await clickSubmit(target)
   await page.waitForFunction((origin) => location.origin === origin, { timeout: 90_000 }, WEB_URL)
 }
 
