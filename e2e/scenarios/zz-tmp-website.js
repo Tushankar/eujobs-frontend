@@ -36,7 +36,7 @@ async function addContent(ctx, admin, title) {
   await waitForText(page, 'is published')
   await ctx.screenshot(page, 'admin-post-published')
 
-  await writeReview(ctx, ctx.seedCredentials.email('alex'), '/candidate/sign-in', '/candidate/settings/review', 5, REVIEW)
+  await writeReview(ctx, ctx.seedCredentials.email('alex'), '/sign-in', '/candidate/settings/review', 5, REVIEW)
   await writeReview(ctx, 'maya.brooks@example.com', '/recruiter/sign-in', '/recruiter/settings/review', 4, 'I had applicants from three countries within days. Clean tools for a small hiring team.')
 
   await page.goto(`${ctx.webUrl}/admin/moderation/reviews`, { waitUntil: 'networkidle0' })
@@ -73,8 +73,6 @@ export default {
     for (const wanted of ['What Our Users Are Saying', title, 'Join Our Newsletter to', 'Pricing Plan', 'Blog']) ctx.check(text.includes(wanted), `landing shows "${wanted}"`)
     const shown = await page.$$eval('[aria-labelledby="reviews-title"] article', (items) => items.length)
     ctx.check(shown === 2, `two reviews shown (${shown})`)
-    const covers = await page.$$eval('[aria-labelledby="blog-title"] article img', (images) => images.map((img) => img.complete && img.naturalWidth > 0))
-    ctx.check(covers.length === 3 && covers.every(Boolean), `three blog covers load (${covers})`)
     // The review arrows page through all six.
     await page.click('[aria-labelledby="reviews-title"] button[aria-label="Next reviews"]')
     await waitForText(page, '2 / 3')
@@ -87,6 +85,10 @@ export default {
       await new Promise((resolve) => setTimeout(resolve, 1600))
       await ctx.screenshot(page, name)
     }
+    // Covers load lazily, once the section is on screen.
+    await page.$eval('[aria-labelledby="blog-title"]', (element) => element.scrollIntoView({ block: 'center' }))
+    await page.waitForFunction(() => [...document.querySelectorAll('[aria-labelledby="blog-title"] article img')].every((img) => img.complete && img.naturalWidth > 0), { timeout: 15_000 })
+    ctx.check((await page.$$('[aria-labelledby="blog-title"] article img')).length === 3, 'three blog covers')
 
     // Newsletter double opt-in from the footer.
     const email = uniqueEmail(`news${ctx.viewport}`)
