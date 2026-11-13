@@ -23,17 +23,7 @@ import BrandLogo from '@/components/layout/BrandLogo.jsx'
 import { Icon } from '@/components/ui'
 import InlineSvg from './InlineSvg.jsx'
 import styles from './Landing.module.css'
-
-/** Figma nav order (Home, About Us, Jobs, Blog, Pricing Plan, Contact Us) plus the FAQ (owner 2026-11-11). */
-const NAV = [
-  ['/', 'home'],
-  ['/#about', 'about'],
-  ['/#jobs', 'jobs'],
-  ['/blog', 'blog'],
-  ['/pricing', 'pricing'],
-  ['/#faq', 'faq'],
-  ['/#contact', 'contact'],
-]
+import { NAV } from './siteNav.js'
 
 /** Pill with the round ↗ badge used across the Figma page. */
 export function ArrowPill({ to, children, white = false }) {

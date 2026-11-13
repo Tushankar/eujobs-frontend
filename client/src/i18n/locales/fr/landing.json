@@ -1,5 +1,6 @@
 {
   "nav": {
+    "sticky": "Navigation du site",
     "label": "Principal",
     "home": "Accueil",
     "about": "À propos",

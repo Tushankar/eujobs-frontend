@@ -7,6 +7,7 @@ import LandingHero from '../components/landing/LandingHero.jsx'
 import { CallToAction, CareerBanner, Categories, Faq, Footer, Steps, TrustedStrip, Vacancies } from '../components/landing/LandingSections.jsx'
 import { Blogs, Testimonials } from '../components/landing/LandingStories.jsx'
 import styles from '../components/landing/Landing.module.css'
+import StickyNav from '../components/StickyNav.jsx'
 import { useHiddenScrollbar } from '../components/useHiddenScrollbar.js'
 import { scrollToSection, useLandingMotion } from '../components/landing/useLandingMotion.js'
 
@@ -32,6 +33,7 @@ export default function LandingPage() {
 
   return (
     <div ref={root} className={styles.page}>
+      <StickyNav />
       <main className={styles.column}>
         <LandingHero />
         <TrustedStrip />

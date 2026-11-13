@@ -28,7 +28,7 @@
 }
 
 .anchor {
-  scroll-margin-top: 24px;
+  scroll-margin-top: 84px; /* clear of the floating navbar (StickyNav) */
 }
 
 /* ---------- Shared type ---------- */

@@ -106,12 +106,12 @@
 
 .sidebar {
   position: sticky;
-  top: 24px;
+  top: 84px; /* below the floating navbar */
   display: flex;
   flex-direction: column;
   gap: 32px;
   align-self: start;
-  max-height: calc(100vh - 48px);
+  max-height: calc(100vh - 108px);
   overflow-y: auto;
   scrollbar-width: none;
 }
@@ -284,7 +284,7 @@
   margin: 44px 0 14px;
   padding-top: 28px;
   border-top: 1px solid #eef0f3;
-  scroll-margin-top: 24px;
+  scroll-margin-top: 84px;
   font-size: 22px;
   font-weight: 600;
   line-height: 1.3;

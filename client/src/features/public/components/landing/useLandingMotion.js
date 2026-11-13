@@ -21,7 +21,7 @@ const ease = 'power3.out'
 /** Smooth scroll to a section (instant with reduce motion). */
 export function scrollToSection(target) {
   const reduce = window.matchMedia(CONDITIONS.reduce).matches
-  gsap.to(window, { duration: reduce ? 0 : 1, scrollTo: { y: target, offsetY: 24 }, ease: 'power3.inOut' })
+  gsap.to(window, { duration: reduce ? 0 : 1, scrollTo: { y: target, offsetY: 84 }, ease: 'power3.inOut' })
 }
 
 /** Hero entrance, parallax, ambient loops, the logo marquee and smooth in-page links: set up once. */

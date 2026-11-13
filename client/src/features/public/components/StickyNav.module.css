@@ -1,0 +1,105 @@
+/* The floating glass navbar of the public pages (2026-11-13); StickyNav.jsx animates it in and out. */
+.bar {
+  position: fixed;
+  top: 12px;
+  left: 50%;
+  z-index: 60;
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  width: max-content;
+  max-width: calc(100% - 32px);
+  padding: 6px 6px 6px 16px;
+  border: 1px solid rgba(233, 235, 239, 0.9);
+  border-radius: 999px;
+  background: rgba(255, 255, 255, 0.78);
+  box-shadow:
+    0 12px 32px rgba(19, 31, 53, 0.12),
+    0 1px 0 rgba(255, 255, 255, 0.9) inset;
+  translate: -50% 0;
+  visibility: hidden;
+  -webkit-backdrop-filter: saturate(180%) blur(18px);
+  backdrop-filter: saturate(180%) blur(18px);
+}
+
+.brand {
+  display: flex;
+  flex-shrink: 0;
+  align-items: center;
+}
+
+.track {
+  position: relative;
+  display: flex;
+  gap: 0;
+}
+
+/* The highlight that glides to the current item. */
+.marker {
+  position: absolute;
+  top: 0;
+  bottom: 0;
+  left: 0;
+  width: 0;
+  border-radius: 999px;
+  background: var(--brand-gradient);
+  box-shadow: 0 6px 16px rgba(2, 99, 220, 0.25);
+  opacity: 0;
+  visibility: hidden;
+}
+
+.item {
+  position: relative;
+  z-index: 1;
+  padding: 7px 12px;
+  border-radius: 999px;
+  font-size: 12.5px;
+  line-height: 18px;
+  color: #4f545b;
+  white-space: nowrap;
+  transition: color 0.35s var(--ease-out);
+}
+
+.item:hover {
+  color: var(--primary);
+}
+
+.itemActive,
+.itemActive:hover {
+  color: #fff;
+}
+
+.login {
+  flex-shrink: 0;
+}
+
+@media (max-width: 1099px) {
+  .item {
+    padding: 7px 9px;
+  }
+}
+
+/* Phones and small tablets: the logo and Login only, like the page header. */
+@media (max-width: 899px) {
+  .bar {
+    padding-left: 16px;
+  }
+
+  .track {
+    display: none;
+  }
+
+  .bar {
+    width: calc(100% - 32px);
+  }
+
+  .brand {
+    margin-right: auto;
+  }
+}
+
+@media print {
+  .bar {
+    display: none;
+  }
+}
