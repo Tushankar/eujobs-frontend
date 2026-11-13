@@ -1,4 +1,5 @@
 import assert from 'node:assert/strict'
+import { PERMISSIONS } from '../config/enums.js'
 import { before, describe, it } from 'node:test'
 import { AdminRole } from '../modules/admin/admin.model.js'
 import { LegalDocument } from '../modules/meta/meta.model.js'
@@ -41,7 +42,7 @@ describe('GET /me', () => {
     const admin = await createUser({ role: 'admin', isOwner: true })
     const adminMe = (await api().get('/api/v1/me').set(auth(admin))).body
     assert.equal(adminMe.isOwner, true)
-    assert.equal(adminMe.permissions.length, 21)
+    assert.equal(adminMe.permissions.length, PERMISSIONS.length)
     assert.equal(adminMe.adminRole, null)
     assert.equal(adminMe.emailSwitches.account_reviews, true)
 

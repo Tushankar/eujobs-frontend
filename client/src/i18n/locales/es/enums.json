@@ -109,6 +109,7 @@
     "cv_download": "CV descargado"
   },
   "planKey": { "free": "Gratis", "plus": "Plus", "recruiter_free": "Gratis", "recruiter_plus": "Recruiter Plus" },
+  "billingInterval": { "month": "Mensual", "year": "Anual" },
   "entitlement": { "interviews": "Entrevistas y solicitudes de documentos", "apply": "Postularse a ofertas", "message_send": "Mensajes", "job_alerts": "Alertas de empleo", "ai": "Funciones de IA", "jobs_unlimited": "Más de 1 oferta activa", "discovery": "Buscar candidatos", "outreach": "Iniciar conversaciones y solicitar CV" },
   "paymentKind": { "course": "Curso", "subscription": "Suscripción" },
   "paymentStatus": { "paid": "Pagado", "failed": "Fallido", "refunded": "Reembolsado" },
