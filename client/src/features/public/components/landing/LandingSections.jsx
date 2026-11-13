@@ -322,7 +322,10 @@ export function CallToAction() {
           </ArrowPill>
         </div>
       </div>
-      <img src={ctaPhoto} alt={t('landing:cta.imageAlt')} className={styles.ctaPhoto} data-zoom />
+      {/* Figma 457:23291: mirrored, 508 × 959 cover-fit, shifted up 229px in the 360px band. */}
+      <div className={styles.ctaMedia}>
+        <img src={ctaPhoto} alt={t('landing:cta.imageAlt')} className={styles.ctaPhoto} data-zoom />
+      </div>
     </section>
   )
 }
