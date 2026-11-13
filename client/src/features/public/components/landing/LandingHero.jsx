@@ -88,15 +88,17 @@ function HeroArt() {
   return (
     <div className={styles.art} aria-hidden="true" data-hero-art data-parallax="-70">
       <img src={cardWoman} alt="" style={{ ...at(0, 8, 261, 290.4) }} />
-      <div className={styles.maskedPhoto} style={{ ...at(24.1, 0, 210.67, 296), maskImage: `url("${maskWoman}")`, WebkitMaskImage: `url("${maskWoman}")`, maskPosition: '-24.098px 8px', WebkitMaskPosition: '-24.098px 8px', maskSize: '261px 290.445px', WebkitMaskSize: '261px 290.445px' }}>
-        <img src={photoWoman} alt="" style={{ height: '100%', left: '-94.49%', width: '210.81%' }} />
+      {/* Figma 457:9050: the cut-out photo mirrored (laptop on the left), clipped by the card shape. */}
+      <div className={styles.maskedPhoto} style={{ ...at(7, 8, 277, 277), maskImage: `url("${maskWoman}")`, WebkitMaskImage: `url("${maskWoman}")`, maskPosition: '-7px 0', WebkitMaskPosition: '-7px 0', maskSize: '261px 290.445px', WebkitMaskSize: '261px 290.445px' }}>
+        <img src={photoWoman} alt="" style={{ left: 0, width: '100%', height: '100%', objectFit: 'cover', transform: 'scaleX(-1)' }} />
       </div>
       <div className={styles.flipY} style={at(277, 151.5, 191, 288.5)}>
         <img src={cardMan} alt="" style={{ width: '100%', height: '97.02%' }} />
       </div>
       <img src={sparkles} alt="" style={{ ...at(292, 187, 48, 45.5), opacity: 0.5 }} data-twinkle data-sparkle />
-      <div className={styles.maskedPhoto} style={{ ...at(277, 208, 191, 237), maskImage: `url("${maskMan}")`, WebkitMaskImage: `url("${maskMan}")`, maskPosition: '0 -25.773px', WebkitMaskPosition: '0 -25.773px', maskSize: '191px 257.773px', WebkitMaskSize: '191px 257.773px' }}>
-        <img src={photoMan} alt="" style={{ height: '168.42%', left: '-112.22%', width: '312.6%' }} />
+      {/* Figma 457:23289: the cut-out photo, clipped by the card shape. */}
+      <div className={styles.maskedPhoto} style={{ ...at(225, 127, 274, 414), maskImage: `url("${maskMan}")`, WebkitMaskImage: `url("${maskMan}")`, maskPosition: '52px 55.227px', WebkitMaskPosition: '52px 55.227px', maskSize: '191px 257.773px', WebkitMaskSize: '191px 257.773px' }}>
+        <img src={photoMan} alt="" style={{ left: 0, width: '100%', height: '100%', objectFit: 'cover' }} />
       </div>
       <div className={styles.flipY} style={at(277, 8, 190, 164)}>
         <img src={cardTop} alt="" style={{ position: 'absolute', top: 0, left: 0, width: '99.61%', height: '94.89%' }} />
