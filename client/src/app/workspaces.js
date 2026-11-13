@@ -6,6 +6,7 @@ import {
   Clock,
   CreditCard,
   FileText,
+  Globe,
   GraduationCap,
   Layers,
   LayoutDashboard,
@@ -93,6 +94,8 @@ export const WORKSPACES = {
       { key: 'analytics', to: 'analytics', icon: TrendingUp, permission: 'reports.view' },
       { key: 'reports', to: 'reports', icon: FileText, permission: 'reports.view' },
       { key: 'moderation', to: 'moderation', icon: ShieldCheck, permission: 'moderation.manage' },
+      // 2026-11-13: the public website's blog and newsletter subscribers
+      { key: 'website', to: 'website', icon: Globe, permission: 'content.view' },
       { key: 'auditLogs', to: 'audit-logs', icon: Clock, permission: 'audit.view' },
     ],
   },
