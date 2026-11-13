@@ -4,7 +4,7 @@ import { interpolate, t } from '../i18n.js'
 /*
  * Renders an email from the recipient's dictionary through one shared layout (§2.8).
  * A template has subject, heading, body[], and optionally action (button to params.link),
- * secondary (a second link to params.secondaryLink) and note. params.code shows a code box; params.items (strings)
+ * secondary (a second link to params.secondaryLink), note, and reason (replaces the layout's account reason line). params.code shows a code box; params.items (strings)
  * shows a list after the body, such as the jobs of an alert; with params.moreLink, the template's `more` line and that
  * link follow the list (a shortened list).
  * Layout (full width): a navy band (#012B74, the logo's navy) with the white EU JOBS logo and an "Open EU Jobs" link,
@@ -46,6 +46,7 @@ ${content}
 export function renderEmail(type, language, params) {
   const template = t(language, `email.${type}`)
   const layout = t(language, 'email.layout')
+  const reason = template.reason ?? layout.reason
   const fill = (text) => interpolate(text, params)
   const fillHtml = (text) => interpolate(escapeHtml(text), Object.fromEntries(Object.entries(params).map(([k, v]) => [k, escapeHtml(v)])))
   // A line that is only an optional parameter (e.g. {{details}}) is left out when that parameter is empty.
@@ -61,7 +62,7 @@ export function renderEmail(type, language, params) {
     template.action ? `${template.action}: ${params.link}` : null,
     template.secondary ? `${template.secondary} ${params.secondaryLink}` : null,
     template.note ? `\n${template.note}` : null,
-    `\n${BRAND} · ${TAGLINE}\n${layout.footer}\n${layout.reason}`,
+    `\n${BRAND} · ${TAGLINE}\n${layout.footer}\n${reason}`,
   ]
     .filter((line) => line !== null)
     .join('\n')
@@ -125,7 +126,7 @@ ${template.note ? paragraph(escapeHtml(template.note), `margin:16px 0 0;font-siz
     '#F5F7FA',
     `<tr><td style="font-size:12px;line-height:1.6;color:${MUTED}">
 <p style="margin:0 0 6px;font-size:14px;font-weight:700;color:${NAVY}">${BRAND} <span style="font-weight:500;color:${MUTED}">· ${TAGLINE}</span></p>
-<p style="margin:0 0 4px">${escapeHtml(layout.footer)} ${escapeHtml(layout.reason)}</p>
+<p style="margin:0 0 4px">${escapeHtml(layout.footer)} ${escapeHtml(reason)}</p>
 <p style="margin:10px 0 0">${legal}</p>
 <p style="margin:10px 0 0">© ${new Date().getFullYear()} ${BRAND}</p>
 </td></tr>`,

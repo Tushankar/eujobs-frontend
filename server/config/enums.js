@@ -46,6 +46,8 @@ export const EMAIL_TYPES = {
   interview_reminder: 'non_critical',
   document_request: 'decision',
   documents_received: 'non_critical',
+  // 2026-11-13: the newsletter's double opt-in (EU), sent to an address that may have no account
+  newsletter_confirm: 'critical',
 }
 
 /** The email switch (category) of each non-critical type (P11b-Q12); critical and decision emails have none. */
@@ -138,6 +140,9 @@ export const PERMISSIONS = [
   { id: 'learning.view', group: 'governance' },
   { id: 'ai.view', group: 'governance' },
   { id: 'ai.manage', group: 'governance' },
+  // 2026-11-13: the public website's blog and newsletter subscribers (admin › Website)
+  { id: 'content.view', group: 'governance' },
+  { id: 'content.manage', group: 'governance' },
 ]
 
 export const ENUMS = {
@@ -221,7 +226,7 @@ export const ENUMS = {
   reportReason: ['spam', 'scam_or_fraud', 'discriminatory', 'offensive', 'misleading', 'other'],
   caseStatus: ['open', 'dismissed', 'restricted'],
   accountDecision: ['approved', 'rejected', 'suspended'],
-  auditCategory: ['workspace', 'policy', 'moderation', 'reports', 'access', 'learning', 'payments', 'jobs'],
+  auditCategory: ['workspace', 'policy', 'moderation', 'reports', 'access', 'learning', 'payments', 'jobs', 'content'],
   actorType: ['admin', 'user', 'system'],
   roleScope: ['organization', 'department', 'finance_department', 'team'],
   roleStatus: ['active', 'archived'],
@@ -264,11 +269,16 @@ export const ENUMS = {
     'interview_audio',
     'document_request',
     'document_attachment',
+    'blog_cover',
   ],
   reportType: ['marketplace_summary', 'skills_demand', 'platform_activity'],
   reportPeriod: ['this_week', 'last_week', 'last_month'],
   legalDoc: ['terms', 'privacy', 'imprint'],
   faqAudience: ['candidate', 'recruiter', 'admin'],
+  // 2026-11-13: landing page reviews (moderated), blog posts and newsletter subscribers
+  reviewStatus: ['pending', 'approved', 'rejected'],
+  blogStatus: ['draft', 'published'],
+  subscriberStatus: ['pending', 'confirmed', 'unsubscribed'],
   taskType: ['email.message', 'email.stage', 'email.new-applications', 'alerts.instant', 'matching.recompute', 'interview.reminder', 'interview.expire', 'interview.close', 'interview.notes'],
   permission: PERMISSIONS.map((permission) => permission.id),
   permissionGroup: ['people', 'roles', 'recruitment', 'finance', 'governance'],

@@ -131,6 +131,8 @@ export const LIMITS = {
     // §3.23 (P11d-Q7): the candidate's files in a request card and the recruiter's attachment
     document_request: { types: ['pdf', 'jpg', 'png'], maxBytes: 10 * MB },
     document_attachment: { types: ['pdf', 'jpg', 'png'], maxBytes: 10 * MB },
+    // 2026-11-13: blog post covers
+    blog_cover: { types: ['jpg', 'png', 'webp'], maxBytes: 5 * MB },
   },
   // §3.23, P11d-Q3 … Q26: slots 2–3, each pickable until `pickCutoffMs` before its start; join from `joinEarlyMs` before
   // the start until `joinLateMs` after the end; reminders 24 h and 1 h before; signaling tickets live 2 minutes; the audio
@@ -186,6 +188,10 @@ export const LIMITS = {
   },
   // M-157, M-158, A: admin §2.2; department is a descriptive label (P10-C1)
   adminRole: { name: { min: 2, max: 40 }, description: { max: 240 }, department: { max: 60 } },
+  // 2026-11-13: the landing page's moderated reviews, the blog and the newsletter double opt-in
+  review: { text: { min: 20, max: 400 }, landing: 6 },
+  blog: { title: { min: 5, max: 120 }, excerpt: { min: 20, max: 300 }, body: { min: 50, max: 50_000 }, landing: 3, pageSize: 9 },
+  newsletter: { perIp: { windowMs: HOUR, limit: 10 }, confirmTtlMs: 7 * 24 * HOUR },
   // M-206: the four paginated admin tables
   adminTable: { pageSize: 20, maxPageSize: 100 },
 }

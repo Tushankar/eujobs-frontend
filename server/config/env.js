@@ -36,6 +36,12 @@ const schema = z.object({
   // P11d-Q29: Cloudflare Realtime TURN; without both values interview calls use STUN only.
   CLOUDFLARE_TURN_KEY_ID: z.string().trim().optional(),
   CLOUDFLARE_TURN_API_TOKEN: z.string().trim().optional(),
+  // 2026-11-13: the public footer's contact details and social links; each is hidden while empty.
+  CONTACT_EMAIL: z.union([z.literal(''), z.email()]).optional(),
+  CONTACT_PHONE: z.string().trim().optional(),
+  SOCIAL_FACEBOOK_URL: z.union([z.literal(''), z.url()]).optional(),
+  SOCIAL_LINKEDIN_URL: z.union([z.literal(''), z.url()]).optional(),
+  SOCIAL_INSTAGRAM_URL: z.union([z.literal(''), z.url()]).optional(),
 })
 
 const result = schema.safeParse(process.env)
@@ -71,5 +77,11 @@ export const config = {
   googlePlacesApiKey: env.GOOGLE_PLACES_API_KEY,
   placesManual: env.PLACES_MANUAL === 'true',
   // Server only, like the Places key.
+  // Public: shown in the landing page footer (null while empty).
+  contact: {
+    email: env.CONTACT_EMAIL || null,
+    phone: env.CONTACT_PHONE || null,
+    social: { facebook: env.SOCIAL_FACEBOOK_URL || null, linkedin: env.SOCIAL_LINKEDIN_URL || null, instagram: env.SOCIAL_INSTAGRAM_URL || null },
+  },
   turn: env.CLOUDFLARE_TURN_KEY_ID && env.CLOUDFLARE_TURN_API_TOKEN ? { keyId: env.CLOUDFLARE_TURN_KEY_ID, apiToken: env.CLOUDFLARE_TURN_API_TOKEN } : null,
 }
