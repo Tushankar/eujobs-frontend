@@ -82,6 +82,7 @@ function ReviewForm({ review }) {
         label={t('account:review.text')}
         hint={limits && t('account:review.hint', { count: form.values.text.trim().length, max: limits.max })}
         rows={4}
+        name="text"
         maxLength={limits?.max}
         value={form.values.text}
         onChange={(event) => form.set('text', event.target.value)}
