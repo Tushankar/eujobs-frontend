@@ -331,7 +331,7 @@ export function CallToAction() {
 }
 
 const FOOTER_GROUPS = [
-  { title: 'explore', links: [['/#about', 'about'], ['/#jobs', 'jobs'], ['/blog', 'blog'], ['/pricing', 'pricing'], ['/#faq', 'faq']] },
+  { title: 'explore', links: [['/#about', 'about'], ['/#jobs', 'jobs'], ['/blog', 'blog'], ['/#pricing', 'pricing'], ['/#faq', 'faq']] },
   { title: 'account', links: [['/sign-in', 'signIn'], ['/sign-up', 'signUp'], ['/recruiter/sign-in', 'recruiters']] },
   { title: 'legal', links: [['/legal/privacy', 'privacy'], ['/legal/terms', 'terms'], ['/legal/imprint', 'imprint']] },
 ]

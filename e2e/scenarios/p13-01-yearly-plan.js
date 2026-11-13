@@ -79,7 +79,7 @@ export default {
     await page.click('a[href*="/update"]')
     // "Update your subscription": the Monthly tab, then Continue (Plus is already the selected plan).
     await waitForText(page, 'Update your subscription', 30_000)
-    await clickText(page, 'Monthly', 'button')
+    await clickText(page, 'Monthly', 'button, [role="tab"], label')
     await waitForText(page, 'per month')
     await clickText(page, 'Continue', 'button')
     await waitForText(page, 'Confirm', 30_000)

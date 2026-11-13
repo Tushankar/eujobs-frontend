@@ -117,9 +117,25 @@ export async function payOnCheckout(page, card = CARDS.visa) {
   await target.select(fields.country, 'DE')
   const postal = await target.$(fields.postal)
   if (postal && (await postal.isVisible())) await target.type(fields.postal, '10115')
-  if (fields.submit) await target.click(fields.submit)
-  else await clickSubmit(target)
-  await page.waitForFunction((origin) => location.origin === origin, { timeout: 90_000 }, WEB_URL)
+  const backInApp = (timeout) => page.waitForFunction((origin) => location.origin === origin, { timeout }, WEB_URL)
+  if (fields.submit) {
+    await target.click(fields.submit)
+    await backInApp(90_000)
+    return
+  }
+  // The Payment Element sometimes ignores a click made while it is still validating: click again if nothing happens.
+  for (let attempt = 1; ; attempt++) {
+    // A later click may find the form already gone (Stripe is redirecting): then only the wait matters.
+    await clickSubmit(target).catch((error) => {
+      if (attempt === 1) throw error
+    })
+    try {
+      await backInApp(attempt < 3 ? 20_000 : 90_000)
+      return
+    } catch (error) {
+      if (attempt >= 3 || !page.url().includes('checkout.stripe.com')) throw error
+    }
+  }
 }
 
 /** Opens the confirm step (M-124) from an upgrade button of the page content and returns its summary text. */
