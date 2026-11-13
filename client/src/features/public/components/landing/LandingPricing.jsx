@@ -114,8 +114,8 @@ export default function LandingPricing() {
   return (
     <section ref={scope} id="pricing" className={`${styles.card} ${styles.pricing} ${styles.anchor}`} aria-labelledby="pricing-title">
       <InlineSvg svg={contours} className={styles.pricingContours} motion="pattern" />
-      <img src={glowGreen} alt="" className={styles.glow} style={{ left: 120, top: 260, width: 1113 }} aria-hidden="true" data-glow />
-      <img src={glowBlue} alt="" className={styles.glow} style={{ left: 360, top: 240, width: 1049 }} aria-hidden="true" data-glow />
+      <img src={glowGreen} alt="" loading="lazy" className={styles.glow} style={{ left: 120, top: 260, width: 1113 }} aria-hidden="true" data-glow />
+      <img src={glowBlue} alt="" loading="lazy" className={styles.glow} style={{ left: 360, top: 240, width: 1049 }} aria-hidden="true" data-glow />
 
       <div className={styles.pricingIntro} data-reveal>
         <h2 id="pricing-title" className={styles.sectionTitle}>

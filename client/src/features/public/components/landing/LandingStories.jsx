@@ -49,8 +49,8 @@ export function Testimonials({ reviews }) {
   return (
     <section className={`${styles.card} ${styles.section} ${styles.reviews}`} aria-labelledby="reviews-title">
       <InlineSvg svg={reviewsCircuit} className={styles.reviewsCircuit} motion="circuit" />
-      <img src={jobsGlowGreen} alt="" className={styles.glow} style={{ left: -59, top: -48, width: 1113 }} aria-hidden="true" data-glow />
-      <img src={jobsGlowBlue} alt="" className={styles.glow} style={{ left: 217, top: -61, width: 1049 }} aria-hidden="true" data-glow />
+      <img src={jobsGlowGreen} alt="" loading="lazy" className={styles.glow} style={{ left: -59, top: -48, width: 1113 }} aria-hidden="true" data-glow />
+      <img src={jobsGlowBlue} alt="" loading="lazy" className={styles.glow} style={{ left: 217, top: -61, width: 1049 }} aria-hidden="true" data-glow />
       <div className={styles.sectionHead} data-reveal>
         <h2 id="reviews-title" className={styles.sectionTitle}>
           {t('landing:reviews.titleLead')} <span className={styles.accent}>{t('landing:reviews.titleAccent')}</span>
@@ -119,8 +119,8 @@ export function Blogs({ posts }) {
   return (
     <section id="blog" className={`${styles.card} ${styles.section} ${styles.blogSection} ${styles.anchor}`} aria-labelledby="blog-title">
       <InlineSvg svg={blogPattern} className={styles.blogPattern} motion="pattern" />
-      <img src={blogGlowOrange} alt="" className={styles.glow} style={{ left: -59, top: 192, width: 1062 }} aria-hidden="true" data-glow />
-      <img src={blogGlowGreen} alt="" className={styles.glow} style={{ left: 106, top: 192, width: 1062 }} aria-hidden="true" data-glow />
+      <img src={blogGlowOrange} alt="" loading="lazy" className={styles.glow} style={{ left: -59, top: 192, width: 1062 }} aria-hidden="true" data-glow />
+      <img src={blogGlowGreen} alt="" loading="lazy" className={styles.glow} style={{ left: 106, top: 192, width: 1062 }} aria-hidden="true" data-glow />
       <div className={styles.sectionHead} data-reveal>
         <h2 id="blog-title" className={styles.sectionTitle}>
           {t('landing:blog.titleLead')} <span className={styles.accent}>{t('landing:blog.titleAccent')}</span>

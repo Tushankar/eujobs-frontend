@@ -110,7 +110,7 @@ export function Categories({ counts }) {
       <div className={styles.categories} data-stagger>
         {CATEGORIES.map(({ group, value, icon }, index) => (
           <Link key={value} to="/candidate/jobs" className={index === 0 ? `${styles.category} ${styles.categoryActive}` : styles.category}>
-            <img src={cardLines} alt="" className={styles.categoryLines} aria-hidden="true" data-lines />
+            <img src={cardLines} alt="" loading="lazy" className={styles.categoryLines} aria-hidden="true" data-lines />
             <InlineSvg svg={icon} className={styles.categoryIcon} motion="icon" currentColor />
             <span>
               <h3 className={styles.categoryName}>{t(`enums:${group}.${value}`)}</h3>
@@ -148,7 +148,7 @@ export function Steps() {
   const { t } = useTranslation()
   return (
     <section id="about" className={`${styles.steps} ${styles.anchor}`} aria-labelledby="steps-title">
-      <img src={stepsGlass} alt="" className={styles.stepsGlass} aria-hidden="true" data-float />
+      <img src={stepsGlass} alt="" loading="lazy" className={styles.stepsGlass} aria-hidden="true" data-float />
       <div data-reveal>
         <h2 id="steps-title" className={styles.stepsTitle}>
           {t('landing:steps.titleLead')} <strong>{t('landing:steps.titleAccent')}</strong>
@@ -156,7 +156,7 @@ export function Steps() {
         <p className={styles.stepsText}>{t('landing:steps.text')}</p>
       </div>
       <div className={styles.stepsBody}>
-        <img src={stepsPhoto} alt={t('landing:steps.imageAlt')} className={styles.stepsPhoto} data-wipe />
+        <img src={stepsPhoto} alt={t('landing:steps.imageAlt')} loading="lazy" className={styles.stepsPhoto} data-wipe />
         <ol className={styles.stepList} data-stagger>
           {STEPS.map(({ key, icon }) => (
             <li key={key} className={styles.step}>
@@ -216,8 +216,8 @@ export function Vacancies({ jobs }) {
   return (
     <section id="jobs" className={`${styles.card} ${styles.section} ${styles.anchor}`} aria-labelledby="jobs-title">
       <InlineSvg svg={contours} className={styles.contours} motion="pattern" />
-      <img src={jobsGlowGreen} alt="" className={styles.glow} style={{ left: -58, bottom: -472, width: 1113 }} aria-hidden="true" data-glow />
-      <img src={jobsGlowBlue} alt="" className={styles.glow} style={{ left: 218, bottom: -459, width: 1049 }} aria-hidden="true" data-glow />
+      <img src={jobsGlowGreen} alt="" loading="lazy" className={styles.glow} style={{ left: -58, bottom: -472, width: 1113 }} aria-hidden="true" data-glow />
+      <img src={jobsGlowBlue} alt="" loading="lazy" className={styles.glow} style={{ left: 218, bottom: -459, width: 1049 }} aria-hidden="true" data-glow />
       <div className={styles.sectionHead} data-reveal>
         <Title lead={t('landing:vacancies.titleLead')} accent={t('landing:vacancies.titleAccent')} />
         <p className={styles.sectionText}>{t('landing:vacancies.text')}</p>
@@ -255,9 +255,9 @@ export function CareerBanner() {
   const { t } = useTranslation()
   return (
     <section className={`${styles.card} ${styles.career}`} aria-labelledby="career-title">
-      <img src={careerPhoto} alt={t('landing:career.imageAlt')} className={styles.careerPhoto} data-zoom />
+      <img src={careerPhoto} alt={t('landing:career.imageAlt')} loading="lazy" className={styles.careerPhoto} data-zoom />
       <div className={styles.careerPanel}>
-        <img src={careerGlass} alt="" className={styles.careerGlass} aria-hidden="true" data-float />
+        <img src={careerGlass} alt="" loading="lazy" className={styles.careerGlass} aria-hidden="true" data-float />
         <div data-reveal>
           <h2 id="career-title" className={styles.careerTitle}>
             {t('landing:career.title')}
@@ -276,8 +276,8 @@ export function Faq({ faqs }) {
   if (!faqs.length) return null
   return (
     <section id="faq" className={`${styles.card} ${styles.section} ${styles.anchor}`} aria-labelledby="faq-title">
-      <img src={faqGlowViolet} alt="" className={styles.glow} style={{ left: -59, bottom: -458, width: 1062 }} aria-hidden="true" data-glow />
-      <img src={faqGlowRed} alt="" className={styles.glow} style={{ left: 106, bottom: -458, width: 1062 }} aria-hidden="true" data-glow />
+      <img src={faqGlowViolet} alt="" loading="lazy" className={styles.glow} style={{ left: -59, bottom: -458, width: 1062 }} aria-hidden="true" data-glow />
+      <img src={faqGlowRed} alt="" loading="lazy" className={styles.glow} style={{ left: 106, bottom: -458, width: 1062 }} aria-hidden="true" data-glow />
       <div className={styles.sectionHead} data-reveal>
         <Title lead={t('landing:faq.titleLead')} accent={t('landing:faq.titleAccent')} />
         <p className={styles.sectionText}>{t('landing:faq.text')}</p>
@@ -311,7 +311,7 @@ export function CallToAction() {
   return (
     <section className={styles.cta} aria-labelledby="cta-title">
       <div className={styles.ctaBody}>
-        <img src={ctaGlass} alt="" className={styles.ctaGlass} aria-hidden="true" data-float />
+        <img src={ctaGlass} alt="" loading="lazy" className={styles.ctaGlass} aria-hidden="true" data-float />
         <div className={styles.ctaCopy} data-reveal>
           <h2 id="cta-title" className={styles.ctaTitle}>
             {t('landing:cta.title')}
@@ -324,7 +324,7 @@ export function CallToAction() {
       </div>
       {/* Figma 457:23291: mirrored, 508 × 959 cover-fit, shifted up 229px in the 360px band. */}
       <div className={styles.ctaMedia}>
-        <img src={ctaPhoto} alt={t('landing:cta.imageAlt')} className={styles.ctaPhoto} data-zoom />
+        <img src={ctaPhoto} alt={t('landing:cta.imageAlt')} loading="lazy" className={styles.ctaPhoto} data-zoom />
       </div>
     </section>
   )
