@@ -84,7 +84,10 @@ export default {
     await clickText(page, 'Continue', 'button, a, [role="button"]')
     // "Confirm your updates" loads the preview first; Confirm stays disabled until it has.
     const confirm = await page.waitForFunction(
-      () => [...document.querySelectorAll('button')].find((button) => button.textContent.trim() === 'Confirm' && !button.disabled),
+      () =>
+        [...document.querySelectorAll('[data-testid="confirm"], button, [role="button"]')].find(
+          (element) => element.textContent.trim() === 'Confirm' && !element.disabled && element.getAttribute('aria-disabled') !== 'true' && !element.closest('[aria-busy="true"]'),
+        ),
       { timeout: 30_000 },
     )
     await ctx.screenshot(page, '6-portal-confirm-monthly')
