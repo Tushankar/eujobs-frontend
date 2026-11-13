@@ -1792,3 +1792,303 @@
     font-size: 13px;
   }
 }
+
+/* ---------- Pricing (owner 2026-11-13): intro and controls left, the real plans right; quiet white cards ---------- */
+
+.pricing {
+  display: grid;
+  grid-template-columns: minmax(0, 330px) minmax(0, 1fr);
+  gap: 40px;
+  padding: 40px 48px;
+}
+
+.pricingContours {
+  position: absolute;
+  bottom: 0;
+  left: 0;
+  width: 617px;
+  height: 223px;
+  transform: rotate(180deg);
+  pointer-events: none;
+}
+
+.pricingContours svg {
+  display: block;
+  width: 100%;
+  height: 100%;
+}
+
+.pricingIntro {
+  position: relative;
+  z-index: 1;
+  display: flex;
+  flex-direction: column;
+  align-items: flex-start;
+}
+
+.pricingTabs {
+  position: relative;
+  display: inline-flex;
+  margin-top: 28px;
+  padding: 4px;
+  border: 1px solid #e9ebef;
+  border-radius: 999px;
+  background: #fff;
+}
+
+.pricingMarker {
+  position: absolute;
+  top: 4px;
+  bottom: 4px;
+  left: 0;
+  border-radius: 999px;
+  background: var(--brand-gradient);
+  box-shadow: 0 6px 16px rgba(1, 43, 116, 0.18);
+}
+
+.pricingTab {
+  position: relative;
+  z-index: 1;
+  min-height: 36px;
+  padding: 0 16px;
+  border: 0;
+  border-radius: 999px;
+  background: none;
+  font: inherit;
+  font-size: 13px;
+  font-weight: 500;
+  color: #5f646b;
+  cursor: pointer;
+  transition: color 0.3s var(--ease-out);
+}
+
+.pricingTab[aria-selected='true'] {
+  color: #fff;
+}
+
+.pricingTab:focus-visible {
+  outline: 2px solid var(--primary);
+  outline-offset: 2px;
+}
+
+.pricingSwitch {
+  margin-top: 12px;
+}
+
+.pricingTrust {
+  display: grid;
+  gap: 8px;
+  margin: 24px 0 0;
+  padding: 0;
+  list-style: none;
+  font-size: 13px;
+  color: #5f646b;
+}
+
+.pricingTrust li {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+}
+
+.pricingTrust svg {
+  color: var(--primary);
+}
+
+.pricingDetails {
+  margin-top: auto;
+  padding-top: 28px;
+}
+
+.priceCards {
+  position: relative;
+  z-index: 1;
+  display: grid;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  gap: 20px;
+}
+
+/* The lift on hover uses `translate`, so it never fights the GSAP entrance (which moves `transform`). */
+.priceCard {
+  position: relative;
+  display: flex;
+  flex-direction: column;
+  min-width: 0;
+  padding: 26px 28px 28px;
+  overflow: hidden;
+  border: 1px solid #e9ebef;
+  border-radius: 16px;
+  background: #fff;
+  transition:
+    translate 0.4s var(--ease-out),
+    box-shadow 0.4s var(--ease-out);
+}
+
+.priceCard:hover {
+  translate: 0 -4px;
+  box-shadow: 0 18px 40px rgba(19, 31, 53, 0.08);
+}
+
+.priceCardFeatured {
+  border-color: var(--brand-navy);
+  box-shadow:
+    inset 0 0 0 1px var(--brand-navy),
+    0 12px 32px rgba(1, 43, 116, 0.08);
+}
+
+.priceCardFeatured:hover {
+  box-shadow:
+    inset 0 0 0 1px var(--brand-navy),
+    0 22px 48px rgba(1, 43, 116, 0.14);
+}
+
+/* A soft band of light that sweeps across the recommended card now and then. */
+.priceSheen {
+  position: absolute;
+  top: 0;
+  bottom: 0;
+  left: 0;
+  width: 40%;
+  background: linear-gradient(90deg, transparent, rgba(10, 108, 240, 0.06), transparent);
+  transform: translateX(-140%);
+  pointer-events: none;
+}
+
+.priceHead {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 12px;
+  min-height: 26px;
+}
+
+.priceName {
+  margin: 0;
+  font-size: 18px;
+  font-weight: 600;
+  line-height: 26px;
+  color: #161719;
+}
+
+.priceBadge {
+  padding: 3px 10px;
+  border: 1px solid var(--brand-navy);
+  border-radius: 999px;
+  font-size: 12px;
+  font-weight: 600;
+  line-height: 16px;
+  color: var(--brand-navy);
+}
+
+.priceAmount {
+  padding-top: 12px;
+}
+
+.priceEverything {
+  margin: 18px 0 0;
+  padding-top: 16px;
+  border-top: 1px solid #eef0f3;
+  font-size: 13px;
+  font-weight: 600;
+  color: #161719;
+}
+
+.priceFeatures {
+  display: grid;
+  gap: 9px;
+  margin: 18px 0 24px; /* room above the button, which sits at the card bottom */
+  padding: 16px 0 0;
+  border-top: 1px solid #eef0f3;
+  list-style: none;
+}
+
+.priceEverything + .priceFeatures {
+  margin-top: 10px;
+  padding-top: 0;
+  border-top: 0;
+}
+
+.priceFeatures li {
+  display: flex;
+  align-items: flex-start;
+  gap: 10px;
+  font-size: 13px;
+  line-height: 19px;
+  color: #3d4249;
+}
+
+.priceFeatures svg {
+  flex-shrink: 0;
+  margin-top: 2px;
+  color: #98a2b3;
+}
+
+.priceCardFeatured .priceFeatures svg {
+  color: var(--primary);
+}
+
+.priceCta {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  min-height: 44px;
+  margin-top: auto;
+  padding: 0 20px;
+  border: 1px solid #d0d5dd;
+  border-radius: 999px;
+  background: #fff;
+  font-size: 14px;
+  font-weight: 600;
+  color: #161719;
+  text-decoration: none;
+  transition: background var(--transition);
+}
+
+.priceCta:hover {
+  background: #f5f6f8;
+}
+
+.priceCta:focus-visible {
+  outline: 2px solid var(--primary);
+  outline-offset: 2px;
+}
+
+.priceCtaPrimary {
+  border-color: transparent;
+  background: var(--brand-gradient);
+  color: #fff;
+}
+
+.priceCtaPrimary:hover {
+  background: var(--brand-gradient-hover);
+}
+
+@media (max-width: 1099px) {
+  .pricing {
+    grid-template-columns: minmax(0, 1fr);
+    gap: 28px;
+  }
+
+  .pricingDetails {
+    padding-top: 20px;
+  }
+}
+
+@media (max-width: 699px) {
+  .pricing {
+    padding: 28px 20px;
+  }
+
+  .priceCards {
+    grid-template-columns: minmax(0, 1fr);
+  }
+
+  /* The paid plan comes first on a phone. */
+  .priceCardFeatured {
+    order: -1;
+  }
+
+  .pricingContours {
+    display: none;
+  }
+}

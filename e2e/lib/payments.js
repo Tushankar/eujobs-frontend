@@ -97,11 +97,11 @@ export async function checkoutPage(page, amount) {
   return page.evaluate(() => ({ text: document.body.innerText.replace(/\s/g, ' '), lang: document.documentElement.lang }))
 }
 
-/** The Payment Element's own button, which reads "Subscribe" or "Pay …". */
+/** The Payment Element's own button, which reads "Subscribe" or "Pay …" (never Link's "Pay securely with Link"). */
 async function clickSubmit(frame) {
   for (const button of await frame.$$('button')) {
     const text = await button.evaluate((element) => element.textContent.trim())
-    if (/^(Subscribe|Pay\b)/.test(text) && (await button.isVisible())) return button.click()
+    if ((text === 'Subscribe' || /^Pay(\s|$)/.test(text)) && !/\bwith\b/i.test(text) && (await button.isVisible())) return button.click()
   }
   throw new Error('Stripe Checkout showed no Subscribe or Pay button')
 }
