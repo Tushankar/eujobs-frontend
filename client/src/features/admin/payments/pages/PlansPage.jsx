@@ -50,9 +50,7 @@ function PlanSummary({ plan, manage, onOpen }) {
           </p>
         </>
       ) : (
-        <p className={styles.prices}>
-          <strong>{t('plans.freePrice')}</strong>
-        </p>
+        <p className={styles.meta}>{t('plans.freePrice')}</p>
       )}
       <p className={styles.footnote}>
         {t('plans.features', { count: plan.features.length })} · {t('plans.updated', { date: format.date(plan.updatedAt) })}

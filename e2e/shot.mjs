@@ -6,7 +6,7 @@ const browser = await launchChrome()
 const page = await browser.newPage()
 await page.setViewport({ width: Number(width), height: Number(height) })
 if (token) {
-  await page.evaluateOnNewDocument((value) => localStorage.setItem('token', value), token)
+  await page.evaluateOnNewDocument((value) => localStorage.setItem('lwm-auth-token', value), token)
 }
 page.on('pageerror', (error) => console.log('pageerror', error.message))
 page.on('console', (message) => message.type() === 'error' && console.log('console', message.text()))

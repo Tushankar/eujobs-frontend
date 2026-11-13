@@ -93,7 +93,7 @@
     "view": "Voir",
     "monthly": "{{price}} / mois",
     "yearly": "{{price}} / an",
-    "freePrice": "Gratuit",
+    "freePrice": "Toujours gratuit, sans facturation",
     "discount": "{{percent}} % de remise à l’année",
     "yearlyOff": "Facturation annuelle désactivée",
     "currencies_one": "{{count}} devise",

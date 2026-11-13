@@ -244,7 +244,8 @@ export default function PlanEditor({ plan, manage, onClose, onSaved }) {
                     return (
                       <tr key={row.currency} data-price-row={row.currency}>
                         <th scope="row">
-                          {row.currency} <span className={styles.symbol}>{format.currencySymbol(row.currency)}</span>
+                          {row.currency}{' '}
+                          {format.currencySymbol(row.currency) !== row.currency && <span className={styles.symbol}>{format.currencySymbol(row.currency)}</span>}
                         </th>
                         <td>
                           <TextField

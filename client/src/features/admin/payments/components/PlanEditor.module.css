@@ -156,7 +156,7 @@
 }
 
 .table tbody th {
-  padding-top: 16px;
+  padding-top: 20px;
   font-weight: 600;
   white-space: nowrap;
   color: var(--foreground);
@@ -177,7 +177,7 @@
 }
 
 .saving {
-  padding-top: 16px !important;
+  padding-top: 20px !important;
   min-width: 64px !important;
   color: var(--text-label);
 }

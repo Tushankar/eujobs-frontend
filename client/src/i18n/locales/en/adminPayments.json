@@ -93,7 +93,7 @@
     "view": "View",
     "monthly": "{{price}} / month",
     "yearly": "{{price}} / year",
-    "freePrice": "Free",
+    "freePrice": "Always free, no billing",
     "discount": "{{percent}}% off yearly",
     "yearlyOff": "Yearly billing off",
     "currencies_one": "{{count}} currency",
