@@ -43,7 +43,7 @@ async function addContent(ctx, admin, title) {
   await waitForText(page, REVIEW)
   await ctx.screenshot(page, 'admin-reviews-pending')
   for (let index = 0; index < 2; index++) {
-    await clickText(page, 'Approve', 'button')
+    await clickText(page, 'Approve', 'li button')
     await waitForText(page, 'now shows on the home page')
     await waitForSettled(page)
   }
@@ -95,10 +95,12 @@ export default {
     await fill(page, 'footer input[type="email"]', email)
     await page.click('footer form button[type="submit"]')
     await waitForText(page, 'Check your inbox')
-    const token = await linkToken(email, 'newsletter_confirm')
-    await page.goto(`${ctx.webUrl}/newsletter/confirm?token=${token}`, { waitUntil: 'networkidle0' })
+    // The emailed link (the helper returns it as a URL), opened as the subscriber would.
+    const link = await linkToken(email, 'newsletter_confirm')
+    ctx.check(link.pathname === '/newsletter/confirm', `confirm link ${link.pathname}`)
+    await page.goto(`${ctx.webUrl}${link.pathname}${link.search}`, { waitUntil: 'networkidle0' })
     await clickText(page, 'Confirm subscription', 'button')
-    await waitForText(page, 'You’re subscribed')
+    await waitForText(page, 'Thanks for confirming')
     await ctx.screenshot(page, 'newsletter-confirmed')
 
     // A seeded post, the blog list and pricing.

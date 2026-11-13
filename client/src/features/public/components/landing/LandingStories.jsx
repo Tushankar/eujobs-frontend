@@ -49,26 +49,11 @@ export function Testimonials({ reviews }) {
       <InlineSvg svg={reviewsCircuit} className={styles.reviewsCircuit} motion="circuit" />
       <img src={jobsGlowGreen} alt="" className={styles.glow} style={{ left: -59, top: -48, width: 1113 }} aria-hidden="true" data-glow />
       <img src={jobsGlowBlue} alt="" className={styles.glow} style={{ left: 217, top: -61, width: 1049 }} aria-hidden="true" data-glow />
-      <div className={styles.reviewsHead}>
-        <div className={styles.sectionHead} data-reveal>
-          <h2 id="reviews-title" className={styles.sectionTitle}>
-            {t('landing:reviews.titleLead')} <span className={styles.accent}>{t('landing:reviews.titleAccent')}</span>
-          </h2>
-          <p className={styles.sectionText}>{t('landing:reviews.text')}</p>
-        </div>
-        {pages > 1 && (
-          <div className={styles.reviewsNav}>
-            <button type="button" className={styles.roundButton} onClick={() => setPage((page - 1 + pages) % pages)} aria-label={t('landing:reviews.previous')}>
-              <Icon as={ChevronLeft} size={18} />
-            </button>
-            <span className={styles.reviewsPage} aria-live="polite">
-              {t('landing:reviews.page', { page: page + 1, pages })}
-            </span>
-            <button type="button" className={styles.roundButton} onClick={() => setPage((page + 1) % pages)} aria-label={t('landing:reviews.next')}>
-              <Icon as={ChevronRight} size={18} />
-            </button>
-          </div>
-        )}
+      <div className={styles.sectionHead} data-reveal>
+        <h2 id="reviews-title" className={styles.sectionTitle}>
+          {t('landing:reviews.titleLead')} <span className={styles.accent}>{t('landing:reviews.titleAccent')}</span>
+        </h2>
+        <p className={styles.sectionText}>{t('landing:reviews.text')}</p>
       </div>
       <div key={page} className={styles.reviewGrid} data-stagger>
         {shown.map((review) => (
@@ -87,6 +72,19 @@ export function Testimonials({ reviews }) {
           </article>
         ))}
       </div>
+      {pages > 1 && (
+        <div className={styles.reviewsNav}>
+          <button type="button" className={styles.roundButton} onClick={() => setPage((page - 1 + pages) % pages)} aria-label={t('landing:reviews.previous')}>
+            <Icon as={ChevronLeft} size={18} />
+          </button>
+          <span className={styles.reviewsPage} aria-live="polite">
+            {t('landing:reviews.page', { page: page + 1, pages })}
+          </span>
+          <button type="button" className={styles.roundButton} onClick={() => setPage((page + 1) % pages)} aria-label={t('landing:reviews.next')}>
+            <Icon as={ChevronRight} size={18} />
+          </button>
+        </div>
+      )}
     </section>
   )
 }
