@@ -9,7 +9,8 @@
     "older": "Plus anciens",
     "page": "Page {{page}} sur {{pages}}",
     "back": "Tous les articles",
-    "missing": "Cet article n’existe pas ou n’est plus publié."
+    "missing": "Cet article n’existe pas ou n’est plus publié.",
+    "featured": "À la une"
   },
   "pricing": {
     "title": "Tarifs",

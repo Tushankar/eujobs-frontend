@@ -9,7 +9,8 @@
     "older": "Anteriores",
     "page": "Página {{page}} de {{pages}}",
     "back": "Todos los artículos",
-    "missing": "Este artículo no existe o ya no está publicado."
+    "missing": "Este artículo no existe o ya no está publicado.",
+    "featured": "Destacado"
   },
   "pricing": {
     "title": "Precios",

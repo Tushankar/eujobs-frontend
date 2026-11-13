@@ -34,6 +34,8 @@ function useArticle(html) {
       heading.id = `section-${index + 1}`
       return { id: heading.id, text: heading.textContent }
     })
+    // A list that continues the numbering ("8. …" after a heading) starts its counter there.
+    for (const list of doc.querySelectorAll('ol[start]')) list.style.counterReset = `item ${Number(list.getAttribute('start')) - 1}`
     const words = doc.body.textContent.trim().split(/\s+/).length
     return { html: doc.body.innerHTML, headings, minutes: Math.max(1, Math.round(words / WORDS_PER_MINUTE)) }
   }, [html])

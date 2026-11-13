@@ -1,12 +1,38 @@
 import { useTranslation } from 'react-i18next'
-import { useSearchParams } from 'react-router-dom'
+import { Link, useSearchParams } from 'react-router-dom'
 import { Button, Skeleton, SkeletonRegion } from '@/components/ui'
 import { useDocumentTitle } from '@/components/layout/useDocumentTitle.js'
+import { useFormat } from '@/lib/preferences.js'
 import { useGetBlogPostsQuery } from '../api.js'
 import PublicShell from '../components/PublicShell.jsx'
 import { BlogCard } from '../components/landing/LandingStories.jsx'
 import landing from '../components/landing/Landing.module.css'
 import styles from '../components/PublicShell.module.css'
+
+/** The newest post as a wide card: cover on the left; date, title, summary, author and a read link on the right. */
+function Featured({ post }) {
+  const { t } = useTranslation()
+  const format = useFormat()
+  return (
+    <article className={styles.featured}>
+      <div className={styles.featuredImage}>{post.coverUrl && <img src={post.coverUrl} alt="" />}</div>
+      <div className={styles.featuredBody}>
+        <p className={styles.featuredMeta}>
+          <span>{t('website:blog.featured')}</span>
+          {post.publishedAt && <time dateTime={post.publishedAt}>{format.date(post.publishedAt, { day: 'numeric', month: 'long', year: 'numeric' })}</time>}
+        </p>
+        <h2 className={styles.featuredTitle}>
+          <Link to={`/blog/${post.slug}`}>{post.title}</Link>
+        </h2>
+        <p className={styles.featuredExcerpt}>{post.excerpt}</p>
+        <p className={styles.featuredAuthor}>{post.author ?? t('landing:blog.team')}</p>
+        <span className={styles.featuredRead} aria-hidden="true">
+          {t('landing:blog.read')} →
+        </span>
+      </div>
+    </article>
+  )
+}
 
 /** /blog: published posts in the UI language (English when it has none), newest first, 9 a page (2026-11-13). */
 export default function BlogListPage() {
@@ -17,6 +43,10 @@ export default function BlogListPage() {
   useDocumentTitle(t('website:blog.title'))
   const pages = data ? Math.max(1, Math.ceil(data.total / data.pageSize)) : 1
   const goTo = (next) => setParams(next > 1 ? { page: String(next) } : {})
+  // The newest post leads the first page as a wide feature.
+  const items = data?.items ?? []
+  const featured = page === 1 ? items[0] : null
+  const rest = featured ? items.slice(1) : items
 
   return (
     <PublicShell>
@@ -36,9 +66,10 @@ export default function BlogListPage() {
           </SkeletonRegion>
         )}
         {data && !data.items.length && <p className={styles.empty}>{t('website:blog.empty')}</p>}
-        {data?.items.length > 0 && (
+        {featured && <Featured post={featured} />}
+        {rest.length > 0 && (
           <div className={styles.grid}>
-            {data.items.map((post) => (
+            {rest.map((post) => (
               <BlogCard key={post.id} post={post} />
             ))}
           </div>

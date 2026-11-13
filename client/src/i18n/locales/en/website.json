@@ -9,7 +9,8 @@
     "older": "Older",
     "page": "Page {{page}} of {{pages}}",
     "back": "All articles",
-    "missing": "This article does not exist or is no longer published."
+    "missing": "This article does not exist or is no longer published.",
+    "featured": "Featured"
   },
   "pricing": {
     "title": "Pricing",
