@@ -23,6 +23,8 @@ import { MatchingPolicy, MatchingPolicyVersion, MatchResult } from '../modules/m
 import { recomputeAll } from '../modules/matching/matching.service.js'
 import { Conversation, Message } from '../modules/messages/messages.model.js'
 import { ModerationCase } from '../modules/moderation/moderation.model.js'
+import { BlogPost } from '../modules/blog/blog.model.js'
+import { Review } from '../modules/reviews/reviews.model.js'
 import { Notification } from '../modules/notifications/notifications.model.js'
 import { Country } from '../modules/meta/meta.model.js'
 import { currentLegalVersions } from '../modules/meta/meta.service.js'
@@ -36,6 +38,7 @@ import { seedLearning } from './learning.js'
 import { seedInterviews } from './interviews.js'
 import { seedMessages } from './messages.js'
 import { seedModeration } from './moderation.js'
+import { seedWebsite } from './website.js'
 import { seedNotifications } from './notifications.js'
 import { CANDIDATES, CITY_TIME_ZONES } from './data/candidates.js'
 import { DEMO_ACCOUNTS } from './data/demo.js'
@@ -131,6 +134,8 @@ export async function seedDemo() {
     MatchResult.deleteMany({}),
     AiUsage.deleteMany({}),
     ModerationCase.deleteMany({}),
+    BlogPost.deleteMany({}),
+    Review.deleteMany({}),
     ReportExport.deleteMany({}),
     Notification.deleteMany({}),
     Interview.deleteMany({}),
@@ -166,6 +171,7 @@ export async function seedDemo() {
   await seedInterviews({ emailOf, now: now.getTime() })
   await seedModeration({ emailOf, owner, now: now.getTime() })
   await seedNotifications()
+  await seedWebsite({ owner, now: now.getTime() })
   // U6, U7: embeddings, scores and relevant counts of the seeded people and jobs.
   await recomputeAll()
 }
