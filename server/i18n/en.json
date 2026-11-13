@@ -428,6 +428,18 @@
         "{{wasBooked}}"
       ],
       "action": "Open applications"
+    },
+    "newsletter_confirm": {
+      "subject": "Confirm your EU Jobs newsletter subscription",
+      "heading": "Confirm your subscription",
+      "body": [
+        "Thanks for signing up for the EU Jobs newsletter.",
+        "Please confirm this email address to start receiving career tips, hiring trends and platform news. The link works for 7 days."
+      ],
+      "action": "Confirm subscription",
+      "secondary": "Changed your mind? Unsubscribe:",
+      "note": "If you did not sign up, ignore this email and you will not be subscribed.",
+      "reason": "You are receiving this email because this address was entered in the EU Jobs newsletter form."
     }
   },
   "verification": {
@@ -706,7 +718,12 @@
       "notifications": "Notifications",
       "exportedAt": "Exported at (UTC)",
       "interviews": "Interviews"
-    }
+    },
+    "subscribers": [
+      "Email",
+      "Language",
+      "Confirmed"
+    ]
   },
   "audit": {
     "moderation": {
@@ -722,7 +739,9 @@
       "case_opened": "Case opened from Jobs: {{name}} ({{reason}})",
       "content_dismissed": "Report dismissed: {{name}} ({{targetType}})",
       "content_restricted": "Content restricted: {{name}} ({{targetType}})",
-      "content_lifted": "Restriction lifted: {{name}} ({{targetType}})"
+      "content_lifted": "Restriction lifted: {{name}} ({{targetType}})",
+      "review_approved": "Review approved: {{name}}",
+      "review_rejected": "Review rejected: {{name}}"
     },
     "learning": {
       "course_created": "Course created: {{title}}",
@@ -762,7 +781,8 @@
       "overview_exported": "Platform overview exported ({{count}} rows)",
       "applications_exported": "Applications exported ({{count}} rows)",
       "report_generated": "Report generated: {{report}} ({{filename}})",
-      "report_downloaded": "Report downloaded again: {{report}} ({{filename}})"
+      "report_downloaded": "Report downloaded again: {{report}} ({{filename}})",
+      "subscribers_exported": "Newsletter subscribers exported ({{count}} rows)"
     },
     "jobs": {
       "status_changed": "Job status changed: {{title}} ({{company}}), {{from}} → {{to}}",
@@ -775,6 +795,13 @@
     },
     "workspace": {
       "initialized": "Workspace initialized"
+    },
+    "content": {
+      "blog_created": "Blog post created: {{title}}",
+      "blog_updated": "Blog post updated: {{title}}",
+      "blog_published": "Blog post published: {{title}}",
+      "blog_unpublished": "Blog post unpublished: {{title}}",
+      "blog_deleted": "Blog post deleted: {{title}}"
     }
   },
   "reports": {

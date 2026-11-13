@@ -6,6 +6,7 @@ import * as aiRoutes from '../modules/ai/ai.routes.js'
 import alertRoutes from '../modules/alerts/alerts.routes.js'
 import * as applicationRoutes from '../modules/applications/applications.routes.js'
 import authRoutes from '../modules/auth/auth.routes.js'
+import * as blogRoutes from '../modules/blog/blog.routes.js'
 import candidateRoutes from '../modules/candidates/candidates.routes.js'
 import * as companyRoutes from '../modules/companies/companies.routes.js'
 import cvRoutes from '../modules/cv/cv.routes.js'
@@ -20,9 +21,11 @@ import * as moderationRoutes from '../modules/moderation/moderation.routes.js'
 import notificationRoutes from '../modules/notifications/notifications.routes.js'
 import landingRoutes from '../modules/landing/landing.routes.js'
 import metaRoutes from '../modules/meta/meta.routes.js'
+import * as newsletterRoutes from '../modules/newsletter/newsletter.routes.js'
 import * as paymentRoutes from '../modules/payments/payments.routes.js'
 import placesRoutes from '../modules/places/places.routes.js'
 import privacyRoutes from '../modules/privacy/privacy.routes.js'
+import * as reviewRoutes from '../modules/reviews/reviews.routes.js'
 import usersRoutes from '../modules/users/users.routes.js'
 import * as verificationRoutes from '../modules/verification/verification.routes.js'
 
@@ -38,8 +41,11 @@ export const ADMIN_MOUNTS = [
   ['/admin/ai', matchingRoutes.adminAiRouter],
   ['/admin/moderation/verification', verificationRoutes.adminRouter],
   ['/admin/moderation/accounts', companyRoutes.adminRouter],
+  ['/admin/moderation/reviews', reviewRoutes.adminRouter],
   ['/admin/moderation', moderationRoutes.adminRouter],
   ['/admin/payments', paymentRoutes.adminRouter],
+  ['/admin/content/blog', blogRoutes.adminRouter],
+  ['/admin/content/subscribers', newsletterRoutes.adminRouter],
   ['/admin', adminRoutes],
 ]
 
@@ -49,9 +55,12 @@ router.get('/health', (req, res) => {
 
 router.use('/auth', authRoutes)
 router.use('/me/payments', paymentRoutes.myPaymentsRouter)
+router.use('/me/review', reviewRoutes.ownRouter)
 router.use('/me', privacyRoutes)
 router.use('/me', usersRoutes)
 router.use('/landing', landingRoutes)
+router.use('/blog', blogRoutes.publicRouter)
+router.use('/newsletter', newsletterRoutes.publicRouter)
 router.use(metaRoutes)
 router.use('/places', placesRoutes)
 router.use('/payments', paymentRoutes.paymentsRouter)

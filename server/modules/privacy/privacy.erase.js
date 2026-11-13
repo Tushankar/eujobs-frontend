@@ -27,8 +27,10 @@ import { scheduleRecompute } from '../matching/matching.service.js'
 import { Conversation, Message } from '../messages/messages.model.js'
 import { ModerationCase } from '../moderation/moderation.model.js'
 import { Notification } from '../notifications/notifications.model.js'
+import { NewsletterSubscriber } from '../newsletter/newsletter.model.js'
 import { companyRecruiter, notify } from '../notifications/notifications.service.js'
 import { Payment, Subscription } from '../payments/payments.model.js'
+import { Review } from '../reviews/reviews.model.js'
 import { User } from '../users/users.model.js'
 import { VerificationSubmission } from '../verification/verification.model.js'
 
@@ -77,6 +79,9 @@ export const COVERAGE = {
   EmailToken: 'deleted',
   VerificationCode: 'deleted',
   EmailLog: 'deleted',
+  Review: 'deleted (the landing page review)',
+  NewsletterSubscriber: 'deleted (the subscription of the account email)',
+  BlogPost: 'kept: written by admins, who are not erased through DELETE /me',
   ScheduledTask: 'pending tasks about the person\'s items deleted',
   Company: 'deleted recruiter: kept with the display name, logo and public profile; contact fields removed (M-189)',
   KycDocument: 'deleted with their files',
@@ -187,6 +192,8 @@ async function removeOwnRecords(user) {
     VerificationCode.deleteMany({ userId: user._id }),
     EmailLog.deleteMany({ $or: [{ userId: user._id }, { to: user.email }] }),
     AiUsage.deleteMany({ userId: user._id }),
+    Review.deleteMany({ userId: user._id }),
+    NewsletterSubscriber.deleteMany({ email: user.email }),
   ])
 }
 

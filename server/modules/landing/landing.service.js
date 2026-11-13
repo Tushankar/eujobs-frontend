@@ -1,14 +1,17 @@
+import { config } from '../../config/env.js'
 import { ENUMS } from '../../config/enums.js'
 import { signedUrl } from '../../lib/files.js'
+import { latestPosts } from '../blog/blog.service.js'
 import { Company } from '../companies/companies.model.js'
 import { File } from '../files/files.model.js'
 import { Job } from '../jobs/jobs.model.js'
 import { visibleFilter } from '../jobs/jobs.search.js'
 import { listFaqs } from '../meta/meta.service.js'
+import { landingReviews } from '../reviews/reviews.service.js'
 
 /*
- * The public landing page (no session): the newest visible jobs, live counts per work mode and employment type, and
- * the candidate FAQs. Only what a job card already shows candidates is exposed. Logo links are signed for the logo's
+ * The public landing page (no session): the newest visible jobs, live counts per work mode and employment type, the
+ * candidate FAQs, the newest approved reviews and blog posts, and the footer's contact details (2026-11-13). Only what a job card already shows candidates is exposed. Logo links are signed for the logo's
  * owner, since there is no viewer; logo files are not access-logged (files.routes.js).
  */
 const LATEST_JOBS = 6
@@ -30,7 +33,7 @@ export async function landing(language) {
   const jobs = await Job.find(await visibleFilter(), 'title companyId employmentType workPreference experienceYears country location salary publishedAt').sort({ publishedAt: -1 })
   const latest = jobs.slice(0, LATEST_JOBS)
   const companies = await Company.find({ _id: { $in: latest.map((job) => job.companyId) } }, 'displayName logoFileId')
-  const [logos, faqs] = await Promise.all([logoUrls(companies), listFaqs('candidate', language)])
+  const [logos, faqs, reviews, posts] = await Promise.all([logoUrls(companies), listFaqs('candidate', language), landingReviews(), latestPosts(language)])
   const companyById = new Map(companies.map((company) => [String(company._id), company]))
 
   return {
@@ -52,5 +55,8 @@ export async function landing(language) {
       }
     }),
     faqs,
+    reviews,
+    posts,
+    contact: config.contact,
   }
 }
