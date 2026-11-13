@@ -1,0 +1,44 @@
+{
+  "loadError": "We could not load this page. Please refresh.",
+  "blog": {
+    "title": "Blog",
+    "empty": "No articles yet. New posts appear here as soon as they are published.",
+    "englishOnly": "There are no articles in your language yet, so these are in English.",
+    "pages": "Blog pages",
+    "newer": "Newer",
+    "older": "Older",
+    "page": "Page {{page}} of {{pages}}",
+    "back": "All articles",
+    "missing": "This article does not exist or is no longer published."
+  },
+  "pricing": {
+    "title": "Pricing",
+    "titleLead": "Simple, Transparent",
+    "titleAccent": "Pricing",
+    "text": "Start free and upgrade when you need more. Prices are monthly and you can cancel at any time.",
+    "for": "Plans for",
+    "candidate": "For job seekers",
+    "recruiter": "For recruiters",
+    "perMonth": "/ month",
+    "startFree": "Start for free",
+    "startPaid": "Get started"
+  },
+  "newsletter": {
+    "title": "Newsletter",
+    "home": "Back to home",
+    "confirm": {
+      "title": "Confirm your subscription",
+      "text": "Press the button to confirm your email address for the EU Jobs newsletter.",
+      "button": "Confirm subscription",
+      "doneTitle": "You're subscribed",
+      "doneText": "Thanks for confirming. Career tips, hiring trends and platform news will reach your inbox."
+    },
+    "unsubscribe": {
+      "title": "Unsubscribe from the newsletter",
+      "text": "Press the button to stop receiving the EU Jobs newsletter.",
+      "button": "Unsubscribe",
+      "doneTitle": "You're unsubscribed",
+      "doneText": "You will not receive the newsletter any more. You can subscribe again at any time."
+    }
+  }
+}

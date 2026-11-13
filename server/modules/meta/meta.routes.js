@@ -26,12 +26,12 @@ router.get('/meta/languages', (req, res) => {
 
 /**
  * M-116, §3.22: the signed-in recruiter's plans (in the company country's currency) or the candidate plans (in the
- * requested currency, else the user's, else EUR, Remote's currency). Without a session, `role` picks the plans
- * (the public pricing page).
+ * requested currency, else the user's, else EUR, Remote's currency). `role` picks the plans (the public pricing
+ * page shows both); without it, the user's own.
  */
 router.get('/plans', optionalAuth, validate({ query: schemas.plansQuery }), async (req, res) => {
-  const recruiter = req.user ? req.user.role === 'recruiter' : req.query.role === 'recruiter'
-  const currency = req.query.currency ?? (req.user?.role === 'recruiter' ? await companyCurrency(req.user) : await meta.userCurrency(req.user)) ?? 'EUR'
+  const recruiter = (req.query.role ?? req.user?.role) === 'recruiter'
+  const currency = req.query.currency ?? (recruiter && req.user?.role === 'recruiter' ? await companyCurrency(req.user) : await meta.userCurrency(req.user)) ?? 'EUR'
   res.json(list(await meta.listPlans(currency, req.query.language ?? req.user?.language ?? 'en', recruiter ? 'recruiter' : 'candidate')))
 })
 

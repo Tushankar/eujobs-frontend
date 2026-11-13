@@ -1,0 +1,44 @@
+{
+  "loadError": "No hemos podido cargar esta página. Actualízala.",
+  "blog": {
+    "title": "Blog",
+    "empty": "Aún no hay artículos. Los nuevos aparecerán aquí en cuanto se publiquen.",
+    "englishOnly": "Todavía no hay artículos en tu idioma, por eso se muestran en inglés.",
+    "pages": "Páginas del blog",
+    "newer": "Más recientes",
+    "older": "Anteriores",
+    "page": "Página {{page}} de {{pages}}",
+    "back": "Todos los artículos",
+    "missing": "Este artículo no existe o ya no está publicado."
+  },
+  "pricing": {
+    "title": "Precios",
+    "titleLead": "Precios simples y",
+    "titleAccent": "transparentes",
+    "text": "Empieza gratis y mejora tu plan cuando lo necesites. Los precios son mensuales y puedes cancelar cuando quieras.",
+    "for": "Planes para",
+    "candidate": "Para candidatos",
+    "recruiter": "Para reclutadores",
+    "perMonth": "/ mes",
+    "startFree": "Empieza gratis",
+    "startPaid": "Empezar"
+  },
+  "newsletter": {
+    "title": "Boletín",
+    "home": "Volver al inicio",
+    "confirm": {
+      "title": "Confirma tu suscripción",
+      "text": "Pulsa el botón para confirmar tu correo electrónico para el boletín de EU Jobs.",
+      "button": "Confirmar suscripción",
+      "doneTitle": "Ya estás suscrito",
+      "doneText": "Gracias por confirmar. Recibirás consejos profesionales, tendencias de contratación y novedades de la plataforma."
+    },
+    "unsubscribe": {
+      "title": "Darse de baja del boletín",
+      "text": "Pulsa el botón para dejar de recibir el boletín de EU Jobs.",
+      "button": "Darme de baja",
+      "doneTitle": "Te has dado de baja",
+      "doneText": "Ya no recibirás el boletín. Puedes volver a suscribirte cuando quieras."
+    }
+  }
+}

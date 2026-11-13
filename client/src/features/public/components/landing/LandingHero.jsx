@@ -1,7 +1,7 @@
 import { MapPin, Search } from 'lucide-react'
 import { useState } from 'react'
 import { Trans, useTranslation } from 'react-i18next'
-import { Link, useNavigate } from 'react-router-dom'
+import { Link, useLocation, useNavigate } from 'react-router-dom'
 import { BRAND } from '@/app/brand.js'
 import avatar1 from '@/assets/landing/avatar-1.png'
 import avatar2 from '@/assets/landing/avatar-2.png'
@@ -23,7 +23,16 @@ import BrandLogo from '@/components/layout/BrandLogo.jsx'
 import { Icon } from '@/components/ui'
 import styles from './Landing.module.css'
 
-const SECTIONS = ['about', 'jobs', 'faq', 'contact']
+/** Figma nav order (Home, About Us, Jobs, Blog, Pricing Plan, Contact Us) plus the FAQ (owner 2026-11-11). */
+const NAV = [
+  ['/', 'home'],
+  ['/#about', 'about'],
+  ['/#jobs', 'jobs'],
+  ['/blog', 'blog'],
+  ['/pricing', 'pricing'],
+  ['/#faq', 'faq'],
+  ['/#contact', 'contact'],
+]
 
 /** Pill with the round ↗ badge used across the Figma page. */
 export function ArrowPill({ to, children, white = false }) {
@@ -52,6 +61,30 @@ export function AvatarStack({ to, label }) {
         </span>
       </span>
     </Link>
+  )
+}
+
+/** The pill nav and Login of every public page; the current page's item is filled. */
+export function SiteHeader({ className = '' }) {
+  const { t } = useTranslation()
+  const { pathname } = useLocation()
+  const current = pathname === '/' ? '/' : NAV.find(([to]) => to !== '/' && !to.includes('#') && pathname.startsWith(to))?.[0]
+  return (
+    <header className={`${styles.header} ${className}`} data-hero-header>
+      <Link to="/" className={styles.brandLink} aria-label={t('landing:nav.home_aria', { brand: BRAND.name })}>
+        <BrandLogo height={52} />
+      </Link>
+      <nav className={styles.navWrap} aria-label={t('landing:nav.label')}>
+        <div className={styles.nav}>
+          {NAV.map(([to, key]) => (
+            <Link key={key} to={to} className={to === current ? `${styles.navItem} ${styles.navItemActive}` : styles.navItem} aria-current={to === current ? 'page' : undefined}>
+              {t(`landing:nav.${key}`)}
+            </Link>
+          ))}
+        </div>
+      </nav>
+      <ArrowPill to="/sign-in">{t('landing:nav.signIn')}</ArrowPill>
+    </header>
   )
 }
 
@@ -113,24 +146,7 @@ export default function LandingHero() {
   return (
     <section className={styles.hero} id="home">
       <img src={hexagons} alt="" className={styles.heroPattern} aria-hidden="true" data-parallax="90" />
-      <header className={styles.header} data-hero-header>
-        <Link to="/" className={styles.brandLink} aria-label={t('landing:nav.home_aria', { brand: BRAND.name })}>
-          <BrandLogo height={52} />
-        </Link>
-        <nav className={styles.navWrap} aria-label={t('landing:nav.label')}>
-          <div className={styles.nav}>
-            <a href="#home" className={`${styles.navItem} ${styles.navItemActive}`} aria-current="page">
-              {t('landing:nav.home')}
-            </a>
-            {SECTIONS.map((id) => (
-              <a key={id} href={`#${id}`} className={styles.navItem}>
-                {t(`landing:nav.${id}`)}
-              </a>
-            ))}
-          </div>
-        </nav>
-        <ArrowPill to="/sign-in">{t('landing:nav.signIn')}</ArrowPill>
-      </header>
+      <SiteHeader />
 
       <div className={styles.heroBody}>
         <div className={styles.heroText}>

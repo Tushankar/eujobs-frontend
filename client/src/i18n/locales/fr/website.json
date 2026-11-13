@@ -1,0 +1,44 @@
+{
+  "loadError": "Impossible de charger cette page. Veuillez actualiser.",
+  "blog": {
+    "title": "Blog",
+    "empty": "Aucun article pour l’instant. Les nouveaux articles apparaîtront ici dès leur publication.",
+    "englishOnly": "Il n’y a pas encore d’articles dans votre langue : ceux-ci sont en anglais.",
+    "pages": "Pages du blog",
+    "newer": "Plus récents",
+    "older": "Plus anciens",
+    "page": "Page {{page}} sur {{pages}}",
+    "back": "Tous les articles",
+    "missing": "Cet article n’existe pas ou n’est plus publié."
+  },
+  "pricing": {
+    "title": "Tarifs",
+    "titleLead": "Des tarifs simples et",
+    "titleAccent": "transparents",
+    "text": "Commencez gratuitement et passez à l’offre supérieure quand vous en avez besoin. Les prix sont mensuels et résiliables à tout moment.",
+    "for": "Offres pour",
+    "candidate": "Pour les candidats",
+    "recruiter": "Pour les recruteurs",
+    "perMonth": "/ mois",
+    "startFree": "Commencer gratuitement",
+    "startPaid": "Commencer"
+  },
+  "newsletter": {
+    "title": "Newsletter",
+    "home": "Retour à l’accueil",
+    "confirm": {
+      "title": "Confirmez votre inscription",
+      "text": "Appuyez sur le bouton pour confirmer votre adresse e-mail pour la newsletter EU Jobs.",
+      "button": "Confirmer l’inscription",
+      "doneTitle": "Vous êtes inscrit",
+      "doneText": "Merci pour votre confirmation. Conseils de carrière, tendances du recrutement et nouveautés arriveront dans votre boîte de réception."
+    },
+    "unsubscribe": {
+      "title": "Se désinscrire de la newsletter",
+      "text": "Appuyez sur le bouton pour ne plus recevoir la newsletter EU Jobs.",
+      "button": "Se désinscrire",
+      "doneTitle": "Vous êtes désinscrit",
+      "doneText": "Vous ne recevrez plus la newsletter. Vous pouvez vous réinscrire à tout moment."
+    }
+  }
+}

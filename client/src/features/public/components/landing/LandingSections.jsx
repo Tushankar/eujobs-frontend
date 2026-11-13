@@ -37,8 +37,10 @@ import stepsGlass from '@/assets/landing/steps-glass.webp'
 import stepsPhoto from '@/assets/landing/steps-photo.webp'
 import BrandLogo from '@/components/layout/BrandLogo.jsx'
 import { CompanyLogo, Skeleton, SkeletonRegion } from '@/components/ui'
+import { check, useErrorText, useFormState } from '@/lib/forms.js'
 import { useJobText } from '@/lib/jobText.js'
 import { useFormat } from '@/lib/preferences.js'
+import { useSubscribeNewsletterMutation } from '../../api.js'
 import { ArrowPill, AvatarStack } from './LandingHero.jsx'
 import { useCountUp } from './useLandingMotion.js'
 import styles from './Landing.module.css'
@@ -323,21 +325,84 @@ export function CallToAction() {
 }
 
 const FOOTER_GROUPS = [
-  { title: 'explore', links: [['#about', 'about'], ['#jobs', 'jobs'], ['#faq', 'faq']] },
+  { title: 'explore', links: [['/#about', 'about'], ['/#jobs', 'jobs'], ['/blog', 'blog'], ['/pricing', 'pricing'], ['/#faq', 'faq']] },
   { title: 'account', links: [['/sign-in', 'signIn'], ['/sign-up', 'signUp'], ['/recruiter/sign-in', 'recruiters']] },
   { title: 'legal', links: [['/legal/privacy', 'privacy'], ['/legal/terms', 'terms'], ['/legal/imprint', 'imprint']] },
 ]
+const SOCIALS = ['facebook', 'linkedin', 'instagram']
+const toTop = () => window.scrollTo({ top: 0, behavior: window.matchMedia('(prefers-reduced-motion: reduce)').matches ? 'auto' : 'smooth' })
+
+/** Figma 396:14866: the newsletter double opt-in (2026-11-13); the answer never says whether the address was listed. */
+function Newsletter() {
+  const { t, i18n } = useTranslation()
+  const errorText = useErrorText()
+  const [subscribe, { isLoading, isSuccess }] = useSubscribeNewsletterMutation()
+  const form = useFormState({ email: '' })
+
+  function submit(event) {
+    event.preventDefault()
+    form.run({ email: check.email(form.values.email) }, () => subscribe({ email: form.values.email.trim(), language: i18n.language }).unwrap())
+  }
+
+  const error = form.errors.email ? errorText.field('email', form.errors.email) : form.failure && errorText.code(form.failure)
+  return (
+    <div className={styles.newsletter} data-reveal>
+      <h2 className={styles.sectionTitle}>
+        {t('landing:newsletter.titleLead')}
+        <br />
+        {t('landing:newsletter.titleRest')} <span className={styles.accent}>{t('landing:newsletter.titleAccent')}</span>
+      </h2>
+      {isSuccess ? (
+        <p className={styles.newsletterDone} role="status">
+          {t('landing:newsletter.sent')}
+        </p>
+      ) : (
+        <form className={styles.newsletterForm} onSubmit={submit} noValidate>
+          <div className={styles.newsletterField}>
+            <input
+              type="email"
+              autoComplete="email"
+              value={form.values.email}
+              onChange={(event) => form.set('email', event.target.value)}
+              placeholder={t('landing:newsletter.email')}
+              aria-label={t('landing:newsletter.email')}
+              aria-invalid={Boolean(error) || undefined}
+              aria-describedby={error ? 'newsletter-error' : 'newsletter-note'}
+            />
+            <button type="submit" className={styles.pill} disabled={isLoading}>
+              {t('landing:newsletter.subscribe')}
+              <span className={styles.arrow} aria-hidden="true">
+                ↗
+              </span>
+            </button>
+          </div>
+          {error ? (
+            <p id="newsletter-error" className={styles.newsletterError} role="alert">
+              {error}
+            </p>
+          ) : (
+            <p id="newsletter-note" className={styles.newsletterNote}>
+              {t('landing:newsletter.note')}
+            </p>
+          )}
+        </form>
+      )}
+    </div>
+  )
+}
 
 /**
- * Figma 396:14876 + 396:14910, filled out (owner 2026-11-11: no bare lists or empty space): brand column with the live
- * open-job count and a sign-up pill, three labelled link groups, copyright and back-to-top. Contact details and social
- * links stay out until real ones exist.
+ * Figma 396:14865, filled out (owner 2026-11-11: no bare lists or empty space): the newsletter, then a brand column
+ * with the live open-job count, the contact details and a sign-up pill, three labelled link groups, copyright, social
+ * links and back-to-top. Contact details and social links come from the server config and stay out while empty.
  */
-export function Footer({ total }) {
+export function Footer({ total, contact }) {
   const { t } = useTranslation()
   const [year] = useState(() => new Date().getFullYear())
+  const socials = SOCIALS.filter((key) => contact?.social[key])
   return (
     <footer id="contact" className={`${styles.card} ${styles.footer} ${styles.anchor}`}>
+      <Newsletter />
       <div className={styles.footerTop} data-reveal>
         <div className={styles.footerBrand}>
           <BrandLogo height={44} />
@@ -348,6 +413,26 @@ export function Footer({ total }) {
               {t('landing:footer.openJobs', { count: total })}
             </p>
           )}
+          {(contact?.email || contact?.phone) && (
+            <dl className={styles.footerContact}>
+              {contact.email && (
+                <div>
+                  <dt>{t('landing:footer.email')}</dt>
+                  <dd>
+                    <a href={`mailto:${contact.email}`}>{contact.email}</a>
+                  </dd>
+                </div>
+              )}
+              {contact.phone && (
+                <div>
+                  <dt>{t('landing:footer.phone')}</dt>
+                  <dd>
+                    <a href={`tel:${contact.phone.replace(/[^\d+]/g, '')}`}>{contact.phone}</a>
+                  </dd>
+                </div>
+              )}
+            </dl>
+          )}
           <ArrowPill to="/sign-up">{t('landing:footer.signUp')}</ArrowPill>
         </div>
         <nav className={styles.footerLinks} aria-label={t('landing:nav.label')}>
@@ -356,7 +441,9 @@ export function Footer({ total }) {
               <h3 className={styles.footerHeading}>{t(`landing:footer.${group.title}`)}</h3>
               <ul className={styles.footerColumn}>
                 {group.links.map(([to, key]) => (
-                  <li key={key}>{to.startsWith('#') ? <a href={to}>{t(`landing:footer.${key}`)}</a> : <Link to={to}>{t(`landing:footer.${key}`)}</Link>}</li>
+                  <li key={key}>
+                    <Link to={to}>{t(`landing:footer.${key}`)}</Link>
+                  </li>
                 ))}
               </ul>
             </div>
@@ -365,9 +452,20 @@ export function Footer({ total }) {
       </div>
       <div className={styles.footerBottom}>
         <span>{t('landing:footer.copyright', { year, brand: BRAND.name })}</span>
-        <a href="#home" className={styles.backToTop}>
+        {socials.length > 0 && (
+          <ul className={styles.socials} aria-label={t('landing:footer.social')}>
+            {socials.map((key) => (
+              <li key={key}>
+                <a href={contact.social[key]} target="_blank" rel="noopener noreferrer">
+                  {t(`landing:footer.${key}`)}
+                </a>
+              </li>
+            ))}
+          </ul>
+        )}
+        <button type="button" className={styles.backToTop} onClick={toTop}>
           {t('landing:footer.backToTop')} ↑
-        </a>
+        </button>
       </div>
     </footer>
   )

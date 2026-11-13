@@ -7,7 +7,9 @@
     "faq": "Preguntas",
     "contact": "Contacto",
     "signIn": "Iniciar sesión",
-    "home_aria": "Inicio de {{brand}}"
+    "home_aria": "Inicio de {{brand}}",
+    "blog": "Blog",
+    "pricing": "Planes y precios"
   },
   "hero": {
     "titleLead": "Encuentra el empleo de tus sueños",
@@ -100,7 +102,41 @@
     "openJobs_one": "{{count}} empleo abierto ahora",
     "openJobs_many": "{{count}} empleos abiertos ahora",
     "openJobs_other": "{{count}} empleos abiertos ahora",
-    "backToTop": "Volver arriba"
+    "backToTop": "Volver arriba",
+    "blog": "Blog",
+    "pricing": "Planes y precios",
+    "email": "Correo electrónico",
+    "phone": "Teléfono",
+    "social": "Redes sociales",
+    "facebook": "Facebook",
+    "linkedin": "LinkedIn",
+    "instagram": "Instagram"
   },
-  "loadError": "No hemos podido cargar los últimos empleos. Actualiza la página."
+  "loadError": "No hemos podido cargar los últimos empleos. Actualiza la página.",
+  "reviews": {
+    "titleLead": "Lo que dicen nuestros usuarios",
+    "titleAccent": "sobre nosotros",
+    "text": "Experiencias reales de candidatos y reclutadores que usan nuestra plataforma.",
+    "previous": "Reseñas anteriores",
+    "next": "Reseñas siguientes",
+    "page": "{{page}} / {{pages}}",
+    "rating": "Valoración: {{value}} de 5"
+  },
+  "blog": {
+    "titleLead": "Últimos",
+    "titleAccent": "artículos",
+    "text": "Descubre ideas, tendencias de RR. HH. y novedades del sector para orientar tu búsqueda de empleo.",
+    "read": "Seguir leyendo",
+    "all": "Todos los artículos",
+    "team": "Equipo de EU Jobs"
+  },
+  "newsletter": {
+    "titleLead": "Suscríbete a nuestro boletín",
+    "titleRest": "para estar al día",
+    "titleAccent": "con nosotros",
+    "email": "Correo electrónico",
+    "subscribe": "Suscribirme",
+    "note": "Primero te enviamos un enlace de confirmación. Puedes darte de baja cuando quieras.",
+    "sent": "¡Casi listo! Revisa tu bandeja de entrada y haz clic en el enlace para confirmar tu suscripción."
+  }
 }

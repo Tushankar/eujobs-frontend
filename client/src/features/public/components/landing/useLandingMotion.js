@@ -17,6 +17,12 @@ gsap.registerPlugin(useGSAP, ScrollTrigger, ScrollToPlugin)
 const CONDITIONS = { full: '(prefers-reduced-motion: no-preference)', reduce: '(prefers-reduced-motion: reduce)' }
 const ease = 'power3.out'
 
+/** Smooth scroll to a section (instant with reduce motion). */
+export function scrollToSection(target) {
+  const reduce = window.matchMedia(CONDITIONS.reduce).matches
+  gsap.to(window, { duration: reduce ? 0 : 1, scrollTo: { y: target, offsetY: 24 }, ease: 'power3.inOut' })
+}
+
 /** Hero entrance, parallax, ambient loops, the logo marquee and smooth in-page links: set up once. */
 function useHeroMotion(scope) {
   useGSAP(
@@ -52,14 +58,15 @@ function useHeroMotion(scope) {
       })
 
       const root = scope.current
+      // In-page links: "#jobs" and "/#jobs" (the footer's, shared with the other public pages).
       const onClick = (event) => {
-        const link = event.target.closest('a[href^="#"]')
-        const target = link && document.querySelector(link.getAttribute('href'))
+        const link = event.target.closest('a[href^="#"], a[href^="/#"]')
+        const hash = link?.getAttribute('href').replace(/^\//, '')
+        const target = hash && document.querySelector(hash)
         if (!target) return
         event.preventDefault()
-        const reduce = window.matchMedia(CONDITIONS.reduce).matches
-        gsap.to(window, { duration: reduce ? 0 : 1, scrollTo: { y: target, offsetY: 24 }, ease: 'power3.inOut' })
-        history.replaceState(null, '', link.getAttribute('href'))
+        scrollToSection(target)
+        history.replaceState(null, '', hash)
       }
       root.addEventListener('click', onClick)
       return () => root.removeEventListener('click', onClick)

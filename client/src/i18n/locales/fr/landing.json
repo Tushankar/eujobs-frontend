@@ -7,7 +7,9 @@
     "faq": "FAQ",
     "contact": "Contact",
     "signIn": "Connexion",
-    "home_aria": "Accueil {{brand}}"
+    "home_aria": "Accueil {{brand}}",
+    "blog": "Blog",
+    "pricing": "Tarifs"
   },
   "hero": {
     "titleLead": "Trouvez l’emploi de vos rêves",
@@ -100,7 +102,41 @@
     "openJobs_one": "{{count}} offre ouverte en ce moment",
     "openJobs_many": "{{count}} offres ouvertes en ce moment",
     "openJobs_other": "{{count}} offres ouvertes en ce moment",
-    "backToTop": "Retour en haut"
+    "backToTop": "Retour en haut",
+    "blog": "Blog",
+    "pricing": "Tarifs",
+    "email": "Adresse e-mail",
+    "phone": "Téléphone",
+    "social": "Réseaux sociaux",
+    "facebook": "Facebook",
+    "linkedin": "LinkedIn",
+    "instagram": "Instagram"
   },
-  "loadError": "Impossible de charger les dernières offres. Actualisez la page."
+  "loadError": "Impossible de charger les dernières offres. Actualisez la page.",
+  "reviews": {
+    "titleLead": "Ce que nos utilisateurs disent",
+    "titleAccent": "de nous",
+    "text": "Les expériences réelles de candidats et de recruteurs qui utilisent notre plateforme.",
+    "previous": "Avis précédents",
+    "next": "Avis suivants",
+    "page": "{{page}} / {{pages}}",
+    "rating": "Note : {{value}} sur 5"
+  },
+  "blog": {
+    "titleLead": "Derniers",
+    "titleAccent": "articles",
+    "text": "Découvrez des conseils, les tendances RH et l’actualité du secteur pour guider votre recherche d’emploi.",
+    "read": "Lire la suite",
+    "all": "Tous les articles",
+    "team": "L’équipe EU Jobs"
+  },
+  "newsletter": {
+    "titleLead": "Abonnez-vous à notre newsletter",
+    "titleRest": "pour rester informé",
+    "titleAccent": "avec nous",
+    "email": "Adresse e-mail",
+    "subscribe": "S’abonner",
+    "note": "Nous envoyons d’abord un lien de confirmation. Désabonnement possible à tout moment.",
+    "sent": "Presque terminé ! Consultez votre boîte de réception et cliquez sur le lien pour confirmer votre abonnement."
+  }
 }

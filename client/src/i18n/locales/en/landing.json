@@ -7,7 +7,9 @@
     "faq": "FAQ",
     "contact": "Contact Us",
     "signIn": "Login",
-    "home_aria": "{{brand}} home"
+    "home_aria": "{{brand}} home",
+    "blog": "Blog",
+    "pricing": "Pricing Plan"
   },
   "hero": {
     "titleLead": "Find a Dream Job",
@@ -97,7 +99,41 @@
     "legal": "Legal",
     "openJobs_one": "{{count}} open job right now",
     "openJobs_other": "{{count}} open jobs right now",
-    "backToTop": "Back to top"
+    "backToTop": "Back to top",
+    "blog": "Blog",
+    "pricing": "Pricing Plan",
+    "email": "Email Address",
+    "phone": "Phone Number",
+    "social": "Social media",
+    "facebook": "Facebook",
+    "linkedin": "LinkedIn",
+    "instagram": "Instagram"
   },
-  "loadError": "We could not load the latest jobs. Please refresh the page."
+  "loadError": "We could not load the latest jobs. Please refresh the page.",
+  "reviews": {
+    "titleLead": "What Our Users Are Saying",
+    "titleAccent": "About Us",
+    "text": "Real experiences from job seekers and recruiters who use our platform.",
+    "previous": "Previous reviews",
+    "next": "Next reviews",
+    "page": "{{page}} / {{pages}}",
+    "rating": "Rated {{value}} out of 5"
+  },
+  "blog": {
+    "titleLead": "Latest",
+    "titleAccent": "Blogs",
+    "text": "Explore insights, HR trends, and industry updates to help you navigate your job search.",
+    "read": "Keep reading",
+    "all": "All articles",
+    "team": "EU Jobs team"
+  },
+  "newsletter": {
+    "titleLead": "Join Our Newsletter to",
+    "titleRest": "Keep up to Date",
+    "titleAccent": "With Us",
+    "email": "Email Address",
+    "subscribe": "Subscribe",
+    "note": "We send a confirmation link first. Unsubscribe at any time.",
+    "sent": "Almost done! Check your inbox and click the link to confirm your subscription."
+  }
 }
