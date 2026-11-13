@@ -1,19 +1,18 @@
 // TEMPORARY (2026-11-13): the landing page's reviews, blog, newsletter and pricing, end to end through the UI.
+// Uses seeded demo accounts (no Google Places, whose key currently answers 403).
 import { join } from 'node:path'
 import { FIXTURES_DIR } from '../fixtures/make.js'
 import { openAsAdmin } from '../lib/admins.js'
-import { completeCandidate } from '../lib/applicants.js'
 import { bodyText, chooseFile, clickText, fill, signInWithForm, waitForSettled, waitForText } from '../lib/flows.js'
-import { approvedRecruiter } from '../lib/recruiters.js'
-import { linkToken, TEST_PASSWORD, uniqueEmail } from '../lib/testApi.js'
+import { linkToken, uniqueEmail } from '../lib/testApi.js'
 
-const REVIEW = 'The smart job recommendations saved me so much time. I did not even know some of these roles existed.'
+const REVIEW = 'The salary ranges on every job saved me so many awkward first calls. Clear, honest and quick to apply.'
 
-/** Writes a review in Settings › Review. */
-async function writeReview(ctx, user, signIn, path, stars, text) {
+/** Writes a review in Settings › Review as a seeded account. */
+async function writeReview(ctx, email, signIn, path, stars, text) {
   const handle = await ctx.newPage()
   const { page } = handle
-  await signInWithForm(page, ctx.webUrl, signIn, user.email, TEST_PASSWORD)
+  await signInWithForm(page, ctx.webUrl, signIn, email, ctx.seedCredentials.password)
   await page.goto(`${ctx.webUrl}${path}`, { waitUntil: 'networkidle0' })
   await page.click(`input[name="rating"][value="${stars}"]`)
   await fill(page, 'textarea[name="text"]', text)
@@ -24,42 +23,45 @@ async function writeReview(ctx, user, signIn, path, stars, text) {
   ctx.assertClean(handle.issues, `review ${stars}`)
 }
 
+/** Admin writes and publishes a post; a candidate and a recruiter review; the admin approves both. */
+async function addContent(ctx, admin, title) {
+  const { page } = admin
+  await page.goto(`${ctx.webUrl}/admin/website/blog/new`, { waitUntil: 'networkidle0' })
+  await fill(page, 'input[name="title"]', title)
+  await fill(page, 'textarea[name="excerpt"]', 'How to listen, learn and deliver an early win in your first three months.')
+  await fill(page, 'textarea[name="bodyMarkdown"]', '## Before the interview\n\nMeet your team and ask **what success looks like**.\n\n- Listen first\n- Ship one small win')
+  await chooseFile(page, '#blog-cover', join(FIXTURES_DIR, 'cover.jpg'))
+  await page.waitForSelector('img[class*="coverPreview"]')
+  await clickText(page, 'Publish', 'button')
+  await waitForText(page, 'is published')
+  await ctx.screenshot(page, 'admin-post-published')
+
+  await writeReview(ctx, ctx.seedCredentials.email('alex'), '/candidate/sign-in', '/candidate/settings/review', 5, REVIEW)
+  await writeReview(ctx, 'maya.brooks@example.com', '/recruiter/sign-in', '/recruiter/settings/review', 4, 'I had applicants from three countries within days. Clean tools for a small hiring team.')
+
+  await page.goto(`${ctx.webUrl}/admin/moderation/reviews`, { waitUntil: 'networkidle0' })
+  await waitForText(page, REVIEW)
+  await ctx.screenshot(page, 'admin-reviews-pending')
+  for (let index = 0; index < 2; index++) {
+    await clickText(page, 'Approve', 'button')
+    await waitForText(page, 'now shows on the home page')
+    await waitForSettled(page)
+  }
+  ctx.assertClean(admin.issues, 'admin')
+}
+
 export default {
   name: 'TMP Website sections',
   viewports: ['D', 'M'],
   async run(ctx) {
-    const tag = ctx.viewport
-    const candidate = await completeCandidate(`Review${tag}`)
-    const recruiter = await approvedRecruiter(`Review${tag}`)
-
-    // Admin › Website › New post, with a cover, published.
+    const desktop = ctx.viewport === 'D'
+    // seed:demo's posts and reviews are there from the start; the desktop run adds one post and two reviews.
+    const title = desktop ? 'Your First 90 Days in a New Role' : 'How to Land a Remote Job in the EU in 2026'
     const admin = await ctx.newPage()
     await openAsAdmin(ctx, admin, ctx.seedCredentials.email(), '/admin/website', ctx.seedCredentials.password)
-    await ctx.screenshot(admin.page, 'admin-website-empty')
-    await admin.page.goto(`${ctx.webUrl}/admin/website/blog/new`, { waitUntil: 'networkidle0' })
-    const title = `${tag} 21 Job Interview Tips: How To Make a Great Impression`
-    await fill(admin.page, 'input[name="title"]', title)
-    await fill(admin.page, 'textarea[name="excerpt"]', 'What to prepare before, during and after the interview.')
-    await fill(admin.page, 'textarea[name="bodyMarkdown"]', '## Before the interview\n\nResearch the company and prepare **two questions** of your own.\n\n- Arrive early\n- Bring your CV')
-    await chooseFile(admin.page, '#blog-cover', join(FIXTURES_DIR, 'cover.jpg'))
-    await admin.page.waitForSelector('img[class*="coverPreview"]')
-    await clickText(admin.page, 'Publish', 'button')
-    await waitForText(admin.page, 'is published')
-    await ctx.screenshot(admin.page, 'admin-post-published')
-
-    await writeReview(ctx, candidate, '/candidate/sign-in', '/candidate/settings/review', 5, REVIEW)
-    await writeReview(ctx, recruiter, '/recruiter/sign-in', '/recruiter/settings/review', 4, 'I had applicants from three countries within days. Clean tools for a small hiring team.')
-
-    // Moderation › Reviews: approve both.
-    await admin.page.goto(`${ctx.webUrl}/admin/moderation/reviews`, { waitUntil: 'networkidle0' })
-    await waitForText(admin.page, REVIEW)
-    await ctx.screenshot(admin.page, 'admin-reviews-pending')
-    for (let index = 0; index < 2; index++) {
-      await clickText(admin.page, 'Approve', 'button')
-      await waitForText(admin.page, 'now shows on the home page')
-      await waitForSettled(admin.page)
-    }
-    ctx.assertClean(admin.issues, 'admin')
+    await waitForText(admin.page, 'How to Land a Remote Job in the EU in 2026')
+    await ctx.screenshot(admin.page, 'admin-website')
+    if (desktop) await addContent(ctx, admin, title)
 
     // The visitor's landing page.
     const visitor = await ctx.newPage()
@@ -68,11 +70,14 @@ export default {
     await page.waitForSelector('[aria-labelledby="reviews-title"]')
     await page.waitForSelector('[aria-labelledby="blog-title"]')
     const text = await bodyText(page)
-    for (const wanted of ['What Our Users Are Saying', 'Latest', title, 'Join Our Newsletter to', 'Pricing Plan', 'Blog']) ctx.check(text.includes(wanted), `landing shows "${wanted}"`)
-    const reviewNames = await page.$$eval('[aria-labelledby="reviews-title"] article strong', (items) => items.map((item) => item.textContent))
-    ctx.check(reviewNames.length === 2, `two reviews shown (${reviewNames})`)
-    const cover = await page.$eval('[aria-labelledby="blog-title"] article img', (img) => img.complete && img.naturalWidth > 0)
-    ctx.check(cover, 'blog cover image loads')
+    for (const wanted of ['What Our Users Are Saying', title, 'Join Our Newsletter to', 'Pricing Plan', 'Blog']) ctx.check(text.includes(wanted), `landing shows "${wanted}"`)
+    const shown = await page.$$eval('[aria-labelledby="reviews-title"] article', (items) => items.length)
+    ctx.check(shown === 2, `two reviews shown (${shown})`)
+    const covers = await page.$$eval('[aria-labelledby="blog-title"] article img', (images) => images.map((img) => img.complete && img.naturalWidth > 0))
+    ctx.check(covers.length === 3 && covers.every(Boolean), `three blog covers load (${covers})`)
+    // The review arrows page through all six.
+    await page.click('[aria-labelledby="reviews-title"] button[aria-label="Next reviews"]')
+    await waitForText(page, '2 / 3')
     for (const [selector, name] of [
       ['[aria-labelledby="reviews-title"]', 'landing-reviews'],
       ['[aria-labelledby="blog-title"]', 'landing-blog'],
@@ -84,7 +89,7 @@ export default {
     }
 
     // Newsletter double opt-in from the footer.
-    const email = uniqueEmail(`news${tag}`)
+    const email = uniqueEmail(`news${ctx.viewport}`)
     await fill(page, 'footer input[type="email"]', email)
     await page.click('footer form button[type="submit"]')
     await waitForText(page, 'Check your inbox')
@@ -94,10 +99,8 @@ export default {
     await waitForText(page, 'You’re subscribed')
     await ctx.screenshot(page, 'newsletter-confirmed')
 
-    // Blog post, blog list and pricing.
-    await page.goto(`${ctx.webUrl}/`, { waitUntil: 'networkidle0' })
-    await page.$eval('[aria-labelledby="blog-title"] article h3 a', (link) => link.click())
-    await page.waitForFunction(() => location.pathname.startsWith('/blog/'))
+    // A seeded post, the blog list and pricing.
+    await page.goto(`${ctx.webUrl}/blog/21-job-interview-tips-how-to-make-a-great-impression`, { waitUntil: 'networkidle0' })
     await waitForText(page, 'Before the interview')
     ctx.check(!(await page.$('article script')), 'post body has no script')
     await ctx.screenshot(page, 'blog-post')
@@ -105,10 +108,10 @@ export default {
     await waitForText(page, title)
     await ctx.screenshot(page, 'blog-list')
     await page.goto(`${ctx.webUrl}/pricing`, { waitUntil: 'networkidle0' })
-    await waitForText(page, 'Plus')
+    await waitForText(page, '/ month')
     await ctx.screenshot(page, 'pricing-candidates')
     await clickText(page, 'For recruiters', 'button')
-    await waitForText(page, '/ month')
+    await waitForText(page, 'Recruiter')
     await ctx.screenshot(page, 'pricing-recruiters')
     ctx.assertClean(visitor.issues, 'visitor')
 
