@@ -31,10 +31,13 @@ after(async () => {
   for (const id of ids(changed).filter((id) => !ids(original).includes(id))) await stripe().prices.update(id, { active: false })
 })
 useTestDb([User, Subscription, Notification, AuditEvent])
+// Plus starts from the catalogue data, whatever an interrupted run left behind.
 before(async () => {
+  await Plan.deleteOne({ key: 'plus' })
   await seedCatalog()
   original = await Plan.findOne({ key: 'plus' }).lean()
   stripeConfig = (await AppConfig.findOne({ key: 'stripe' }).lean()).value
+  await stripe().products.update(stripeConfig.productIds.plus, { name: original.name.en })
 })
 
 describe('yearly prices (seed:catalog)', () => {

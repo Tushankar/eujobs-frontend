@@ -98,11 +98,14 @@
     "yearlyOff": "Facturación anual desactivada",
     "currencies_one": "{{count}} moneda",
     "currencies_other": "{{count}} monedas",
+    "currencies_many": "{{count}} monedas",
     "subscribers": "{{month}} mensuales · {{year}} anuales",
     "olderPrice_one": "{{count}} mantiene un precio anterior",
     "olderPrice_other": "{{count}} mantienen un precio anterior",
+    "olderPrice_many": "{{count}} mantienen un precio anterior",
     "features_one": "{{count}} función",
     "features_other": "{{count}} funciones",
+    "features_many": "{{count}} funciones",
     "updated": "Actualizado el {{date}}",
     "saved": "{{plan}} guardado. Los nuevos precios se aplican a partir de ahora a las nuevas suscripciones.",
     "editor": {
@@ -139,6 +142,7 @@
       "pricesNote": "Los precios incluyen el IVA. Un precio modificado se convierte en un nuevo precio de Stripe para las nuevas suscripciones. Deja un precio anual vacío para aplicar el descuento.",
       "impact_one": "{{count}} suscriptor actual mantiene el precio con el que se suscribió. Los nuevos precios solo se aplican a las nuevas suscripciones.",
       "impact_other": "{{count}} suscriptores actuales mantienen el precio con el que se suscribieron. Los nuevos precios solo se aplican a las nuevas suscripciones.",
+      "impact_many": "{{count}} suscriptores actuales mantienen el precio con el que se suscribieron. Los nuevos precios solo se aplican a las nuevas suscripciones.",
       "cancel": "Cancelar",
       "save": "Guardar cambios",
       "close": "Cerrar"

@@ -1,5 +1,6 @@
 import assert from 'node:assert/strict'
-import { before, describe, it } from 'node:test'
+import { after, before, describe, it } from 'node:test'
+import { config } from '../config/env.js'
 import { AuditEvent } from '../modules/admin/admin.model.js'
 import { BlogPost } from '../modules/blog/blog.model.js'
 import { CandidateProfile } from '../modules/candidates/candidates.model.js'
@@ -201,5 +202,25 @@ describe('public pricing and footer contact', () => {
     const { contact } = (await landing()).body
     assert.deepEqual(Object.keys(contact), ['email', 'phone', 'social'])
     assert.deepEqual(Object.keys(contact.social), ['facebook', 'linkedin', 'instagram'])
+  })
+})
+
+describe('legal texts with the company details (2026-11-13)', () => {
+  const saved = { ...config.company }
+  after(() => Object.assign(config.company, saved))
+
+  it('marks a missing detail as to be completed, never inventing one', async () => {
+    Object.assign(config.company, { name: null, privacyEmail: null })
+    const { body } = await api().get(`${v1}/legal/privacy?language=fr`)
+    assert.ok(body.html.includes('<mark data-pending>à compléter</mark>'))
+    assert.ok(!body.html.includes('{{company'))
+  })
+
+  it('fills the configured details, escaped, with emails as mailto links', async () => {
+    Object.assign(config.company, { name: 'Acme <Jobs> Ltd', privacyEmail: 'privacy@acme.example' })
+    const { body } = await api().get(`${v1}/legal/privacy?language=en`)
+    assert.ok(body.html.includes('Acme &lt;Jobs&gt; Ltd'))
+    assert.ok(body.html.includes('<a href="mailto:privacy@acme.example">privacy@acme.example</a>'))
+    assert.equal(body.company.privacyEmail, 'privacy@acme.example')
   })
 })

@@ -11,6 +11,16 @@ html {
   scrollbar-gutter: stable;
 }
 
+/* The public website hides the page scrollbar (useHiddenScrollbar, owner 2026-11-13); scrolling still works. */
+html.no-scrollbar {
+  scrollbar-gutter: auto;
+  scrollbar-width: none;
+}
+
+html.no-scrollbar::-webkit-scrollbar {
+  display: none;
+}
+
 body {
   margin: 0;
   background: var(--background);

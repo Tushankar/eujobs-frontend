@@ -7,6 +7,7 @@ import LandingHero from '../components/landing/LandingHero.jsx'
 import { CallToAction, CareerBanner, Categories, Faq, Footer, Steps, TrustedStrip, Vacancies } from '../components/landing/LandingSections.jsx'
 import { Blogs, Testimonials } from '../components/landing/LandingStories.jsx'
 import styles from '../components/landing/Landing.module.css'
+import { useHiddenScrollbar } from '../components/useHiddenScrollbar.js'
 import { scrollToSection, useLandingMotion } from '../components/landing/useLandingMotion.js'
 
 /**
@@ -19,6 +20,7 @@ export default function LandingPage() {
   const { data, isError } = useGetLandingQuery(i18n.language)
   const { hash } = useLocation()
   useDocumentTitle(null)
+  useHiddenScrollbar()
   const root = useRef(null)
   const ready = Boolean(data) || isError
   useLandingMotion(root, ready)

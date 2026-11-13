@@ -9,6 +9,14 @@
   gap: 20px;
 }
 
+/* Printing a public page (the legal texts) prints the page itself, not the site chrome. */
+@media print {
+  .header,
+  .footer {
+    display: none;
+  }
+}
+
 .panel {
   position: relative;
   padding: 44px 48px 48px;

@@ -1,6 +1,8 @@
 import ISO6391 from 'iso-639-1'
+import { config } from '../../config/env.js'
 import { ENUMS } from '../../config/enums.js'
 import { AppError, fieldError } from '../../lib/errors.js'
+import { t } from '../../lib/i18n.js'
 import { Plan } from '../payments/payments.model.js'
 import { savingPercent } from '../payments/plans.stripe.js'
 import { Country, Faq, LegalDocument } from './meta.model.js'
@@ -33,7 +35,22 @@ export async function currentLegalDocument(doc, language) {
   const texts = await LegalDocument.find({ doc, version: latest.version, language: { $in: [language, 'en'] } })
   const text = texts.find((entry) => entry.language === language) ?? texts[0]
   const { version, title, bodyHtml, isDraft, publishedAt } = text
-  return { doc, version, language: text.language, title, html: bodyHtml, isDraft, publishedAt }
+  return { doc, version, language: text.language, title, html: fillCompany(bodyHtml, text.language), isDraft, publishedAt, company: config.company }
+}
+
+const escapeHtml = (value) => value.replace(/[&<>"']/g, (char) => ({ '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;', "'": '&#39;' })[char])
+
+/**
+ * The `{{company.*}}` tokens of a legal text (seed/data/legal.js) filled from the server config: emails become mailto
+ * links, and an empty value shows a "to be completed" marker the page styles, never an invented detail (2026-11-13).
+ */
+function fillCompany(html, language) {
+  return html.replace(/\{\{company\.(\w+)\}\}/g, (token, key) => {
+    const value = config.company[key]
+    if (!value) return `<mark data-pending>${escapeHtml(t(language, 'labels.toBeCompleted'))}</mark>`
+    const safe = escapeHtml(value)
+    return key.toLowerCase().endsWith('email') ? `<a href="mailto:${safe}">${safe}</a>` : safe
+  })
 }
 
 /** FAQs for one audience in one language (M-200). */

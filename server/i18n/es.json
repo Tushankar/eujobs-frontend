@@ -549,6 +549,7 @@
     "other": "Otro fin de selección"
   },
   "labels": {
+    "toBeCompleted": "por completar",
     "workPreference": {
       "remote": "Remoto",
       "hybrid": "Híbrido",

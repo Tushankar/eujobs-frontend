@@ -7,10 +7,23 @@
   "nav": "Documentos legales",
   "unavailable": "No se ha podido cargar este documento. Inténtalo de nuevo en breve.",
   "draft": "Borrador: este texto no es definitivo y se sustituirá antes de que el servicio se ponga en marcha.",
-  "meta": "Versión {{version}} · Publicada el {{date}}",
   "reaccept": {
     "title": "Hemos actualizado nuestras condiciones",
     "text": "Lee las <terms>Condiciones del servicio</terms> y la <privacy>Política de privacidad</privacy> actualizadas. Acéptalas para seguir usando tu espacio de trabajo.",
     "accept": "Aceptar y continuar"
-  }
+  },
+  "hub": "Información legal de EU Jobs",
+  "effective": "En vigor desde el {{date}}",
+  "version": "Versión {{version}}",
+  "titles": {
+    "terms": "Condiciones del servicio",
+    "privacy": "Política de privacidad",
+    "imprint": "Aviso legal"
+  },
+  "contents": "En esta página",
+  "englishOnly": "Este documento se muestra en inglés porque aún no está disponible en tu idioma.",
+  "print": "Imprimir",
+  "contactTitle": "¿Tienes preguntas sobre este documento?",
+  "contactText": "Escríbenos a",
+  "contactPending": "Nuestros datos de contacto se añadirán aquí antes de la puesta en marcha del servicio."
 }

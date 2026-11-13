@@ -7,10 +7,23 @@
   "nav": "Legal documents",
   "unavailable": "This document couldn't be loaded. Try again shortly.",
   "draft": "Draft: this text is not final and will be replaced before the service goes live.",
-  "meta": "Version {{version}} · Published {{date}}",
   "reaccept": {
     "title": "We've updated our terms",
     "text": "Please read the updated <terms>Terms of Service</terms> and <privacy>Privacy Policy</privacy>. Accept them to keep using your workspace.",
     "accept": "Accept and continue"
-  }
+  },
+  "hub": "EU Jobs Legal",
+  "effective": "Effective {{date}}",
+  "version": "Version {{version}}",
+  "titles": {
+    "terms": "Terms of Service",
+    "privacy": "Privacy Policy",
+    "imprint": "Imprint"
+  },
+  "contents": "On this page",
+  "englishOnly": "This document is shown in English because it is not yet available in your language.",
+  "print": "Print",
+  "contactTitle": "Questions about this document?",
+  "contactText": "Write to us at",
+  "contactPending": "Our contact details will be added here before the service goes live."
 }

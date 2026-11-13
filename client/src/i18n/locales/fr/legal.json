@@ -7,10 +7,23 @@
   "nav": "Documents juridiques",
   "unavailable": "Impossible de charger ce document. Réessayez dans un instant.",
   "draft": "Brouillon : ce texte n’est pas définitif et sera remplacé avant la mise en service.",
-  "meta": "Version {{version}} · Publiée le {{date}}",
   "reaccept": {
     "title": "Nous avons mis à jour nos conditions",
     "text": "Veuillez lire les <terms>Conditions d’utilisation</terms> et la <privacy>Politique de confidentialité</privacy> mises à jour. Acceptez-les pour continuer à utiliser votre espace de travail.",
     "accept": "Accepter et continuer"
-  }
+  },
+  "hub": "Informations légales EU Jobs",
+  "effective": "En vigueur depuis le {{date}}",
+  "version": "Version {{version}}",
+  "titles": {
+    "terms": "Conditions d’utilisation",
+    "privacy": "Politique de confidentialité",
+    "imprint": "Mentions légales"
+  },
+  "contents": "Sur cette page",
+  "englishOnly": "Ce document est affiché en anglais car il n’est pas encore disponible dans votre langue.",
+  "print": "Imprimer",
+  "contactTitle": "Des questions sur ce document ?",
+  "contactText": "Écrivez-nous à",
+  "contactPending": "Nos coordonnées seront ajoutées ici avant la mise en service."
 }

@@ -42,6 +42,12 @@ const schema = z.object({
   SOCIAL_FACEBOOK_URL: z.union([z.literal(''), z.url()]).optional(),
   SOCIAL_LINKEDIN_URL: z.union([z.literal(''), z.url()]).optional(),
   SOCIAL_INSTAGRAM_URL: z.union([z.literal(''), z.url()]).optional(),
+  // 2026-11-13: the operator named in the legal texts (Terms, Privacy, Imprint); shown "to be completed" while empty.
+  COMPANY_NAME: z.string().trim().optional(),
+  COMPANY_ADDRESS: z.string().trim().optional(),
+  COMPANY_REGISTRATION: z.string().trim().optional(),
+  COMPANY_VAT: z.string().trim().optional(),
+  PRIVACY_EMAIL: z.union([z.literal(''), z.email()]).optional(),
 })
 
 const result = schema.safeParse(process.env)
@@ -82,6 +88,15 @@ export const config = {
     email: env.CONTACT_EMAIL || null,
     phone: env.CONTACT_PHONE || null,
     social: { facebook: env.SOCIAL_FACEBOOK_URL || null, linkedin: env.SOCIAL_LINKEDIN_URL || null, instagram: env.SOCIAL_INSTAGRAM_URL || null },
+  },
+  // Public: the company details the legal texts name (null while empty). `email` is the contact address above.
+  company: {
+    name: env.COMPANY_NAME || null,
+    address: env.COMPANY_ADDRESS || null,
+    registration: env.COMPANY_REGISTRATION || null,
+    vat: env.COMPANY_VAT || null,
+    email: env.CONTACT_EMAIL || null,
+    privacyEmail: env.PRIVACY_EMAIL || null,
   },
   turn: env.CLOUDFLARE_TURN_KEY_ID && env.CLOUDFLARE_TURN_API_TOKEN ? { keyId: env.CLOUDFLARE_TURN_KEY_ID, apiToken: env.CLOUDFLARE_TURN_API_TOKEN } : null,
 }

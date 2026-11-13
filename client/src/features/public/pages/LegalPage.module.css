@@ -1,112 +1,479 @@
-.page {
-  display: flex;
-  flex-direction: column;
-  min-height: 100vh;
-  background: var(--background);
+/* /legal/:doc: a legal centre in the public site's look (2026-11-13). */
+
+/* ---------- Title band ---------- */
+
+.hero {
+  position: relative;
+  padding: 32px 48px 28px;
+  background: linear-gradient(180deg, #fff 0%, #f3f7fe 100%);
 }
 
-.header {
-  display: flex;
-  align-items: center;
-  justify-content: space-between;
-  gap: 16px;
-  padding: 16px var(--content-padding);
-  border-bottom: 1px solid var(--border);
-  background: var(--card);
+.hero > :not(.heroArt) {
+  position: relative;
+  z-index: 1;
 }
 
-.main {
+/* The Figma circuit (reviews section) and a soft glow on the right of the band, animated by svgMotion.js. */
+.heroArt {
+  position: absolute;
+  inset: 0;
+  overflow: hidden;
+  border-radius: inherit;
+  pointer-events: none;
+}
+
+.heroCircuit {
+  position: absolute;
+  top: -33px;
+  right: -32px;
+  width: 364px;
+  height: 185px;
+}
+
+.heroCircuit svg {
+  display: block;
   width: 100%;
-  max-width: 808px;
-  margin: 0 auto;
-  padding: 32px 16px 48px;
+  height: 100%;
 }
 
-.tabs {
+.heroGlow {
+  position: absolute;
+  right: -260px;
+  bottom: -620px;
+  width: 1049px;
+  max-width: none;
+  height: 895px;
+}
+
+.heading {
   display: flex;
   flex-wrap: wrap;
-  gap: 8px;
-  margin-bottom: 20px;
+  align-items: baseline;
+  gap: 6px 20px;
+  margin-top: 8px;
 }
 
-.tabs a {
-  padding: 8px 14px;
-  border: 1px solid var(--border);
-  border-radius: var(--radius-xl);
-  background: var(--card);
+.eyebrow {
+  margin: 0;
   font-size: 12px;
-  font-weight: 600;
-  color: var(--muted-foreground);
-}
-
-.tabs a.active {
-  border-color: var(--primary);
-  color: var(--primary-hover);
-}
-
-.panel {
-  overflow-wrap: anywhere;
-}
-
-.draft {
-  margin-bottom: 20px;
-  padding: 12px 16px;
-  border: 1px solid #f1dcb5;
-  border-radius: var(--radius-xl);
-  background: #fff5e5;
-  font-size: 12px;
-  font-weight: 600;
-  line-height: 18px;
-  color: #8a5a16;
+  font-weight: 700;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+  color: var(--accent-foreground);
 }
 
 .title {
-  font-family: var(--font-display);
-  font-size: 30px;
-  font-weight: 800;
-  line-height: 38px;
-  color: var(--foreground);
+  margin: 0;
+  font-size: 36px;
+  font-weight: 600;
+  line-height: 1.15;
+  letter-spacing: -1.4px;
+  color: #0f1115;
 }
 
 .meta {
-  padding-top: 8px;
-  font-size: 12px;
-  color: var(--muted-foreground);
+  display: flex;
+  flex-wrap: wrap;
+  gap: 8px;
+  margin: 0;
+  font-size: 13px;
+  color: #5f646b;
 }
 
-.body {
-  padding-top: 8px;
+/* A compact pill under the title while the text is a draft. */
+.draft {
+  display: inline-flex;
+  margin: 14px 0 0;
+  padding: 5px 12px;
+  border: 1px solid #f1dcb5;
+  border-radius: 999px;
+  background: var(--warning-bg);
+  font-size: 12px;
+  font-weight: 500;
+  line-height: 16px;
+  color: var(--warning-fg);
+}
+
+/* ---------- Sidebar and document ---------- */
+
+.layout {
+  display: grid;
+  grid-template-columns: 260px minmax(0, 1fr);
+  gap: 56px;
+  padding: 44px 48px 56px;
+  overflow: visible;
+}
+
+.sidebar {
+  position: sticky;
+  top: 24px;
+  display: flex;
+  flex-direction: column;
+  gap: 32px;
+  align-self: start;
+  max-height: calc(100vh - 48px);
+  overflow-y: auto;
+  scrollbar-width: none;
+}
+
+.sidebar::-webkit-scrollbar {
+  display: none;
+}
+
+.sideTitle {
+  margin: 0 0 12px;
+  font-size: 12px;
+  font-weight: 700;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+  color: #8a8f97;
+}
+
+.docs {
+  display: grid;
+  gap: 4px;
+  margin: 0;
+  padding: 0;
+  list-style: none;
+}
+
+.docs a {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  padding: 10px 12px;
+  border-radius: 10px;
   font-size: 14px;
-  line-height: 1.65;
-  color: var(--foreground);
+  font-weight: 500;
+  color: #3d434b;
+  transition:
+    background var(--transition),
+    color var(--transition);
+}
+
+.docs a:hover {
+  background: var(--muted);
+  color: #0f1115;
+}
+
+.docs a.docActive {
+  background: var(--accent);
+  color: var(--accent-foreground);
+}
+
+.toc ol {
+  display: grid;
+  gap: 2px;
+  margin: 0;
+  padding: 0;
+  border-left: 1px solid #e9ebef;
+  list-style: none;
+  counter-reset: toc;
+}
+
+.toc li {
+  counter-increment: toc;
+}
+
+.toc a {
+  display: flex;
+  gap: 8px;
+  margin-left: -1px;
+  padding: 6px 0 6px 14px;
+  border-left: 2px solid transparent;
+  font-size: 13px;
+  line-height: 18px;
+  color: #5f646b;
+  transition:
+    color var(--transition),
+    border-color var(--transition);
+}
+
+.toc a::before {
+  flex-shrink: 0;
+  min-width: 24px;
+  font-variant-numeric: tabular-nums;
+  color: #a1a5ab;
+  content: counter(toc) '.';
+}
+
+.toc a:hover {
+  border-left-color: var(--primary);
+  color: var(--primary);
+}
+
+.main {
+  min-width: 0;
+  max-width: 760px;
+}
+
+.toolbar {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  justify-content: flex-end;
+  gap: 12px;
+  margin-bottom: 8px;
+}
+
+.note {
+  margin: 0 auto 0 0;
+  font-size: 13px;
+  color: #5f646b;
+}
+
+.print {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  padding: 7px 14px;
+  border: 1px solid #e9ebef;
+  border-radius: 999px;
+  background: #fff;
+  font: inherit;
+  font-size: 13px;
+  font-weight: 500;
+  color: #3d434b;
+  cursor: pointer;
+  transition: border-color var(--transition);
+}
+
+.print:hover {
+  border-color: var(--border-strong);
+}
+
+.error {
+  font-size: 15px;
+  color: var(--destructive);
+}
+
+.skeletonSection {
+  display: grid;
+  gap: 10px;
+  margin-bottom: 32px;
+}
+
+/* ---------- The document ---------- */
+
+.body {
+  font-size: 16px;
+  line-height: 1.75;
+  color: #2b3036;
+  counter-reset: section;
+}
+
+/* The opening summary. */
+.body > blockquote:first-child {
+  margin: 0 0 40px;
+  padding: 22px 26px;
+  border: 1px solid #dbe6fb;
+  border-radius: 16px;
+  background: #f5f8fe;
+  font-size: 16px;
+  line-height: 1.7;
+  color: #1f2a3d;
+}
+
+.body blockquote p {
+  margin: 0;
 }
 
 .body h2 {
-  margin: 24px 0 8px;
-  font-family: var(--font-display);
-  font-size: 18px;
-  font-weight: 800;
+  display: flex;
+  gap: 12px;
+  margin: 44px 0 14px;
+  padding-top: 28px;
+  border-top: 1px solid #eef0f3;
+  scroll-margin-top: 24px;
+  font-size: 22px;
+  font-weight: 600;
+  line-height: 1.3;
+  letter-spacing: -0.4px;
+  color: #0f1115;
+  counter-increment: section;
 }
 
-.body p,
-.body ul {
-  margin: 0 0 12px;
+.body > blockquote:first-child + h2 {
+  margin-top: 0;
+  padding-top: 0;
+  border-top: 0;
+}
+
+.body h2::before {
+  min-width: 28px;
+  font-variant-numeric: tabular-nums;
+  color: var(--primary);
+  content: counter(section) '.';
+}
+
+.body p {
+  margin: 0 0 16px;
 }
 
 .body ul {
-  padding-left: 20px;
-  list-style: disc;
+  display: grid;
+  gap: 8px;
+  margin: 0 0 18px;
+  padding: 0;
+  list-style: none;
+}
+
+.body li {
+  position: relative;
+  padding-left: 24px;
+}
+
+.body li::before {
+  position: absolute;
+  top: 0.72em;
+  left: 6px;
+  width: 6px;
+  height: 6px;
+  border-radius: 50%;
+  background: var(--primary);
+  content: '';
+}
+
+.body strong {
+  font-weight: 600;
+  color: #0f1115;
 }
 
 .body a {
-  color: var(--primary-hover);
+  color: var(--primary);
   text-decoration: underline;
+  text-underline-offset: 3px;
 }
 
-.footer {
-  margin-top: auto;
-  padding: 20px var(--content-padding);
-  border-top: 1px solid var(--border);
-  font-size: 10px;
-  color: var(--text-footer);
+/* A company detail not configured yet (server: {{company.*}} with an empty value). */
+.body mark[data-pending] {
+  padding: 1px 8px;
+  border: 1px dashed #e0b25b;
+  border-radius: 999px;
+  background: var(--warning-bg);
+  font-size: 0.85em;
+  font-weight: 500;
+  white-space: nowrap;
+  color: var(--warning-fg);
+}
+
+/* ---------- Contact ---------- */
+
+.contact {
+  display: flex;
+  gap: 16px;
+  align-items: flex-start;
+  margin-top: 48px;
+  padding: 24px;
+  border: 1px solid #e9ebef;
+  border-radius: 16px;
+  background: #fff;
+}
+
+.contactIcon {
+  display: grid;
+  flex-shrink: 0;
+  place-items: center;
+  width: 40px;
+  height: 40px;
+  border: 1px solid #e9ebef;
+  border-radius: 50%;
+  color: #3d434b;
+}
+
+.contactTitle {
+  margin: 0;
+  font-size: 16px;
+  font-weight: 600;
+  color: #0f1115;
+}
+
+.contactText {
+  margin: 4px 0 0;
+  font-size: 14px;
+  line-height: 1.6;
+  color: #5f646b;
+}
+
+.contactText a {
+  font-weight: 600;
+  color: var(--primary);
+}
+
+/* ---------- Narrower screens ---------- */
+
+@media (max-width: 899px) {
+  .hero {
+    padding: 24px 20px 20px;
+  }
+
+  .heroCircuit {
+    opacity: 0.5;
+  }
+
+  .title {
+    font-size: 28px;
+    letter-spacing: -1px;
+  }
+
+  .layout {
+    grid-template-columns: minmax(0, 1fr);
+    gap: 28px;
+    padding: 28px 24px 40px;
+  }
+
+  .sidebar {
+    position: static;
+    max-height: none;
+    gap: 24px;
+  }
+
+  .docs {
+    grid-auto-flow: column;
+    grid-auto-columns: minmax(0, 1fr);
+  }
+
+  /* On a phone the long contents list would push the text far down; the document switcher stays. */
+  .toc {
+    display: none;
+  }
+
+  .docs a {
+    justify-content: center;
+    padding: 9px 8px;
+    font-size: 13px;
+  }
+
+  .body h2 {
+    font-size: 19px;
+  }
+}
+
+/* ---------- Print: the document only ---------- */
+
+@media print {
+  .sidebar,
+  .toolbar,
+  .contact,
+  .draft,
+  .heroArt {
+    display: none;
+  }
+
+  .layout,
+  .hero {
+    display: block;
+    padding: 0 12px;
+    border: 0;
+    background: none;
+    box-shadow: none;
+  }
+
+  .main {
+    max-width: none;
+  }
+
+  .body {
+    font-size: 11pt;
+  }
 }
