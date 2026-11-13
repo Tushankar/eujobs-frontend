@@ -138,7 +138,8 @@
     "access": "Access",
     "learning": "Learning",
     "payments": "Payments",
-    "jobs": "Jobs"
+    "jobs": "Jobs",
+    "content": "Content"
   },
   "actorType": { "admin": "Admin", "user": "User", "system": "System" },
   "roleScope": { "organization": "Organisation", "department": "Department", "finance_department": "Finance department", "team": "Team" },
@@ -249,7 +250,8 @@
     "audit": { "view": "View audit log" },
     "learning": { "manage": "Manage learning", "view": "View learning" },
     "documents": { "view": "View documents" },
-    "ai": { "view": "View AI & matching", "manage": "Manage AI & matching" }
+    "ai": { "view": "View AI & matching", "manage": "Manage AI & matching" },
+    "content": { "view": "View website content", "manage": "Manage website content" }
   },
   "permissionGroup": {
     "people": "People",

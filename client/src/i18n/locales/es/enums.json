@@ -138,7 +138,8 @@
     "access": "Accesos",
     "learning": "Formación",
     "payments": "Pagos",
-    "jobs": "Ofertas"
+    "jobs": "Ofertas",
+    "content": "Contenido"
   },
   "actorType": { "admin": "Administración", "user": "Usuario", "system": "Sistema" },
   "roleScope": { "organization": "Organización", "department": "Departamento", "finance_department": "Departamento financiero", "team": "Equipo" },
@@ -249,7 +250,8 @@
     "audit": { "view": "Ver el registro de auditoría" },
     "learning": { "manage": "Gestionar la formación", "view": "Ver la formación" },
     "documents": { "view": "Ver documentos" },
-    "ai": { "view": "Ver IA y compatibilidad", "manage": "Gestionar IA y compatibilidad" }
+    "ai": { "view": "Ver IA y compatibilidad", "manage": "Gestionar IA y compatibilidad" },
+    "content": { "view": "Ver el contenido del sitio web", "manage": "Gestionar el contenido del sitio web" }
   },
   "permissionGroup": {
     "people": "Personas",

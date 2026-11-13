@@ -45,7 +45,9 @@
       "case_opened": "Case opened from Jobs: {{name}} ({{reason}})",
       "content_dismissed": "Report dismissed: {{name}} ({{targetType}})",
       "content_restricted": "Content restricted: {{name}} ({{targetType}})",
-      "content_lifted": "Restriction lifted: {{name}} ({{targetType}})"
+      "content_lifted": "Restriction lifted: {{name}} ({{targetType}})",
+      "review_approved": "Review approved: {{name}}",
+      "review_rejected": "Review rejected: {{name}}"
     },
     "learning": {
       "course_created": "Course created: {{title}}",
@@ -85,7 +87,8 @@
       "overview_exported": "Platform overview exported ({{count}} rows)",
       "applications_exported": "Applications exported ({{count}} rows)",
       "report_generated": "Report generated: {{report}} ({{filename}})",
-      "report_downloaded": "Report downloaded again: {{report}} ({{filename}})"
+      "report_downloaded": "Report downloaded again: {{report}} ({{filename}})",
+      "subscribers_exported": "Newsletter subscribers exported ({{count}} rows)"
     },
     "jobs": {
       "status_changed": "Job status changed: {{title}} ({{company}}), {{from}} → {{to}}",
@@ -98,6 +101,13 @@
     },
     "workspace": {
       "initialized": "Workspace initialized"
+    },
+    "content": {
+      "blog_created": "Blog post created: {{title}}",
+      "blog_updated": "Blog post updated: {{title}}",
+      "blog_published": "Blog post published: {{title}}",
+      "blog_unpublished": "Blog post unpublished: {{title}}",
+      "blog_deleted": "Blog post deleted: {{title}}"
     }
   }
 }

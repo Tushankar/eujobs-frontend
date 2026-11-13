@@ -29,7 +29,8 @@
     "auditLogs": "Audit logs",
     "aiBadge": "AI",
     "planLocked": "Part of {{plan}}",
-    "messages": "Messages"
+    "messages": "Messages",
+    "website": "Website"
   },
   "titles": {
     "settings": "Settings",

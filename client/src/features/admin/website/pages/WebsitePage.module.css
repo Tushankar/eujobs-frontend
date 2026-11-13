@@ -1,0 +1,140 @@
+/* Admin › Website (2026-11-13): blog posts, subscribers and the post editor. */
+.body {
+  display: flex;
+  flex-direction: column;
+  gap: 16px;
+  margin-top: 16px;
+}
+
+.toolbar {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  justify-content: space-between;
+  gap: 12px;
+}
+
+.toolbar:has(> :only-child) {
+  justify-content: flex-end;
+}
+
+.post {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+}
+
+.thumb {
+  display: grid;
+  flex-shrink: 0;
+  place-items: center;
+  width: 56px;
+  height: 40px;
+  border-radius: var(--radius-lg);
+  background: var(--muted);
+  object-fit: cover;
+  color: var(--muted-foreground);
+}
+
+.postTitle {
+  display: block;
+  font-weight: 600;
+  color: var(--foreground);
+}
+
+.postMeta {
+  display: block;
+  font-size: 12px;
+  color: var(--muted-foreground);
+}
+
+.actions {
+  display: inline-flex;
+  flex-wrap: wrap;
+  gap: 6px;
+}
+
+/* ---------- Editor ---------- */
+
+.back {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  margin-bottom: 12px;
+  font-size: 13px;
+  font-weight: 600;
+  color: var(--primary);
+}
+
+.editor {
+  display: grid;
+  grid-template-columns: minmax(0, 1fr) 320px;
+  gap: 20px;
+  align-items: start;
+  margin-top: 16px;
+}
+
+.editorMain,
+.sideCard {
+  display: flex;
+  flex-direction: column;
+  gap: 18px;
+}
+
+.markdown textarea {
+  font-family: ui-monospace, 'SFMono-Regular', Consolas, monospace;
+  font-size: 13px;
+  line-height: 1.6;
+}
+
+.sideLabel {
+  margin: 0 0 8px;
+  font-size: 13px;
+  font-weight: 500;
+  color: var(--text-label);
+}
+
+.coverPreview,
+.coverEmpty {
+  display: block;
+  width: 100%;
+  aspect-ratio: 16 / 9;
+  margin-bottom: 10px;
+  border-radius: var(--radius-xl);
+  object-fit: cover;
+}
+
+.coverEmpty {
+  display: grid;
+  place-items: center;
+  border: 1px dashed var(--border-strong);
+  font-size: 12px;
+  color: var(--muted-foreground);
+}
+
+.coverButton {
+  width: 100%;
+}
+
+.hint {
+  margin: 6px 0 0;
+  font-size: 12px;
+  color: var(--muted-foreground);
+}
+
+.error {
+  margin: 6px 0 0;
+  font-size: 13px;
+  color: var(--destructive);
+}
+
+.sideActions {
+  display: grid;
+  gap: 8px;
+}
+
+@media (max-width: 1023px) {
+  .editor {
+    grid-template-columns: minmax(0, 1fr);
+  }
+}

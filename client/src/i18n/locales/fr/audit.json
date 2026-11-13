@@ -45,7 +45,9 @@
       "case_opened": "Dossier ouvert depuis Offres : {{name}} ({{reason}})",
       "content_dismissed": "Signalement classé : {{name}} ({{targetType}})",
       "content_restricted": "Contenu restreint : {{name}} ({{targetType}})",
-      "content_lifted": "Restriction levée : {{name}} ({{targetType}})"
+      "content_lifted": "Restriction levée : {{name}} ({{targetType}})",
+      "review_approved": "Avis approuvé : {{name}}",
+      "review_rejected": "Avis refusé : {{name}}"
     },
     "learning": {
       "course_created": "Formation créée : {{title}}",
@@ -85,7 +87,8 @@
       "overview_exported": "Vue d’ensemble de la plateforme exportée ({{count}} lignes)",
       "applications_exported": "Candidatures exportées ({{count}} lignes)",
       "report_generated": "Rapport généré : {{report}} ({{filename}})",
-      "report_downloaded": "Rapport téléchargé à nouveau : {{report}} ({{filename}})"
+      "report_downloaded": "Rapport téléchargé à nouveau : {{report}} ({{filename}})",
+      "subscribers_exported": "Abonnés à la newsletter exportés ({{count}} lignes)"
     },
     "jobs": {
       "status_changed": "Statut de l’offre modifié : {{title}} ({{company}}), {{from}} → {{to}}",
@@ -98,6 +101,13 @@
     },
     "workspace": {
       "initialized": "Espace de travail initialisé"
+    },
+    "content": {
+      "blog_created": "Article de blog créé : {{title}}",
+      "blog_updated": "Article de blog modifié : {{title}}",
+      "blog_published": "Article de blog publié : {{title}}",
+      "blog_unpublished": "Article de blog dépublié : {{title}}",
+      "blog_deleted": "Article de blog supprimé : {{title}}"
     }
   }
 }

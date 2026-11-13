@@ -147,6 +147,10 @@
     "ai": {
       "view": "Ouvrir IA et correspondance : règles, supervision, retours et état de l’IA.",
       "manage": "Créer, modifier, activer et archiver des règles de correspondance."
+    },
+    "content": {
+      "view": "Ouvrir les articles du blog et la liste des abonnés à la newsletter.",
+      "manage": "Rédiger, publier, dépublier et supprimer des articles du blog."
     }
   },
   "errors": {

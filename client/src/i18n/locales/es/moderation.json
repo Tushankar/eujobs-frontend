@@ -218,5 +218,34 @@
     "reasonRequired": "Añade un motivo para que la decisión quede bien registrada.",
     "reasonTooLong": "El motivo no debe superar los {{max}} caracteres.",
     "back": "Volver"
+  },
+  "reviews": {
+    "tab": "Reseñas",
+    "title": "Reseñas de usuarios",
+    "description": "Reseñas que candidatos y reclutadores han escrito sobre EU Jobs. Las aprobadas aparecen en la página de inicio pública con el nombre y la inicial del apellido.",
+    "statusFilter": "Estado de la reseña",
+    "status": {
+      "pending": "Pendientes",
+      "approved": "Aprobadas",
+      "rejected": "Rechazadas"
+    },
+    "empty": {
+      "pending": "No hay reseñas pendientes de aprobación.",
+      "approved": "Aún no hay reseñas aprobadas.",
+      "rejected": "No hay reseñas rechazadas."
+    },
+    "submitted": "Enviada el {{date}}",
+    "reason": "Nota para el autor: {{reason}}",
+    "deleted": "Usuario eliminado",
+    "approve": "Aprobar",
+    "reject": "Rechazar",
+    "withdraw": "Retirar",
+    "rejectTitle": "¿Rechazar esta reseña?",
+    "reasonLabel": "Nota para el autor (opcional)",
+    "reasonHint": "El autor verá esta nota en Ajustes y podrá editar la reseña.",
+    "done": {
+      "approve": "Reseña de {{name}} aprobada. Ya se muestra en la página de inicio.",
+      "reject": "Reseña de {{name}} rechazada."
+    }
   }
 }

@@ -216,5 +216,34 @@
     "reasonRequired": "Add a reason so the decision has a clear record.",
     "reasonTooLong": "Keep the reason to {{max}} characters or fewer.",
     "back": "Back"
+  },
+  "reviews": {
+    "tab": "Reviews",
+    "title": "User reviews",
+    "description": "Reviews candidates and recruiters wrote about EU Jobs. Approved reviews appear on the public home page with the first name and last initial.",
+    "statusFilter": "Review status",
+    "status": {
+      "pending": "Pending",
+      "approved": "Approved",
+      "rejected": "Rejected"
+    },
+    "empty": {
+      "pending": "No reviews are waiting for approval.",
+      "approved": "No approved reviews yet.",
+      "rejected": "No rejected reviews."
+    },
+    "submitted": "Sent {{date}}",
+    "reason": "Note to the author: {{reason}}",
+    "deleted": "Deleted user",
+    "approve": "Approve",
+    "reject": "Reject",
+    "withdraw": "Withdraw",
+    "rejectTitle": "Reject this review?",
+    "reasonLabel": "Note to the author (optional)",
+    "reasonHint": "The author sees this note in Settings and can edit the review.",
+    "done": {
+      "approve": "Review by {{name}} approved. It now shows on the home page.",
+      "reject": "Review by {{name}} rejected."
+    }
   }
 }

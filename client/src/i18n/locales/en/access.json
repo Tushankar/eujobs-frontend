@@ -143,6 +143,10 @@
     "ai": {
       "view": "Open AI & matching: policies, oversight, feedback and AI status.",
       "manage": "Create, edit, activate and archive matching policies."
+    },
+    "content": {
+      "view": "Open the blog posts and the newsletter subscriber list.",
+      "manage": "Write, publish, unpublish and delete blog posts."
     }
   },
   "errors": {

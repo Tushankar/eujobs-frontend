@@ -29,7 +29,8 @@
     "auditLogs": "Registro de auditoría",
     "aiBadge": "IA",
     "planLocked": "Incluido en {{plan}}",
-    "messages": "Mensajes"
+    "messages": "Mensajes",
+    "website": "Sitio web"
   },
   "titles": {
     "settings": "Configuración",

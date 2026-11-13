@@ -87,9 +87,7 @@ export default function ReviewQueue({ status, onStatusChange, onDecided }) {
                 <p className={styles.author}>
                   <strong>{review.author?.name ?? t('moderation:reviews.deleted')}</strong>
                   {review.author && (
-                    <span>
-                      {[t(`enums:role.${review.author.role}`), review.author.title, review.author.email].filter(Boolean).join(' · ')}
-                    </span>
+                    <span>{[t(`enums:role.${review.author.role}`), review.author.title, review.author.email].filter(Boolean).join(' · ')}</span>
                   )}
                   <span>{t('moderation:reviews.submitted', { date: format.dateTime(review.submittedAt) })}</span>
                 </p>
@@ -127,7 +125,14 @@ export default function ReviewQueue({ status, onStatusChange, onDecided }) {
           </>
         }
       >
-        <TextareaField label={t('moderation:reviews.reasonLabel')} hint={t('moderation:reviews.reasonHint')} rows={3} maxLength={300} value={reason} onChange={(event) => setReason(event.target.value)} />
+        <TextareaField
+          label={t('moderation:reviews.reasonLabel')}
+          hint={t('moderation:reviews.reasonHint')}
+          rows={3}
+          maxLength={300}
+          value={reason}
+          onChange={(event) => setReason(event.target.value)}
+        />
         {failure && (
           <p className={styles.error} role="alert">
             {failure}

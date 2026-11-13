@@ -11,7 +11,10 @@ export const publicApi = api.injectEndpoints({
     acceptLegal: build.mutation({ query: () => ({ url: '/me/legal/accept', method: 'POST' }), ...writesMe }),
     getBlogPosts: build.query({ query: ({ language, page }) => ({ url: '/blog', params: { language, page } }) }),
     getBlogPost: build.query({ query: (slug) => `/blog/${slug}` }),
-    getPublicPlans: build.query({ query: ({ role, language }) => ({ url: '/plans', params: { role, language } }), transformResponse: (response) => response.items }),
+    getPublicPlans: build.query({
+      query: ({ role, language }) => ({ url: '/plans', params: { role, language } }),
+      transformResponse: (response) => response.items,
+    }),
     subscribeNewsletter: build.mutation({ query: (body) => ({ url: '/newsletter', method: 'POST', body }) }),
     confirmNewsletter: build.mutation({ query: (token) => ({ url: '/newsletter/confirm', method: 'POST', body: { token } }) }),
     unsubscribeNewsletter: build.mutation({ query: (token) => ({ url: '/newsletter/unsubscribe', method: 'POST', body: { token } }) }),

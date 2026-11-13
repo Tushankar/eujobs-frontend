@@ -218,5 +218,34 @@
     "reasonRequired": "Ajoutez un motif pour que la décision soit clairement tracée.",
     "reasonTooLong": "Le motif ne doit pas dépasser {{max}} caractères.",
     "back": "Retour"
+  },
+  "reviews": {
+    "tab": "Avis",
+    "title": "Avis des utilisateurs",
+    "description": "Les avis que les candidats et les recruteurs ont rédigés sur EU Jobs. Les avis approuvés apparaissent sur la page d’accueil publique avec le prénom et l’initiale du nom.",
+    "statusFilter": "Statut de l’avis",
+    "status": {
+      "pending": "En attente",
+      "approved": "Approuvés",
+      "rejected": "Refusés"
+    },
+    "empty": {
+      "pending": "Aucun avis en attente de validation.",
+      "approved": "Aucun avis approuvé pour l’instant.",
+      "rejected": "Aucun avis refusé."
+    },
+    "submitted": "Envoyé le {{date}}",
+    "reason": "Note à l’auteur : {{reason}}",
+    "deleted": "Utilisateur supprimé",
+    "approve": "Approuver",
+    "reject": "Refuser",
+    "withdraw": "Retirer",
+    "rejectTitle": "Refuser cet avis ?",
+    "reasonLabel": "Note à l’auteur (facultatif)",
+    "reasonHint": "L’auteur voit cette note dans ses paramètres et peut modifier son avis.",
+    "done": {
+      "approve": "Avis de {{name}} approuvé. Il est désormais affiché sur la page d’accueil.",
+      "reject": "Avis de {{name}} refusé."
+    }
   }
 }

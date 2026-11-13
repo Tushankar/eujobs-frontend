@@ -147,6 +147,10 @@
     "ai": {
       "view": "Abrir IA y compatibilidad: políticas, supervisión, valoraciones y estado de la IA.",
       "manage": "Crear, editar, activar y archivar políticas de compatibilidad."
+    },
+    "content": {
+      "view": "Abrir los artículos del blog y la lista de suscriptores del boletín.",
+      "manage": "Escribir, publicar, despublicar y eliminar artículos del blog."
     }
   },
   "errors": {

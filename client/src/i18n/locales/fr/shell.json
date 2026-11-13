@@ -29,7 +29,8 @@
     "auditLogs": "Journal d’audit",
     "aiBadge": "IA",
     "planLocked": "Inclus dans {{plan}}",
-    "messages": "Messages"
+    "messages": "Messages",
+    "website": "Site web"
   },
   "titles": {
     "settings": "Paramètres",

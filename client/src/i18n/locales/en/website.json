@@ -40,5 +40,77 @@
       "doneTitle": "You're unsubscribed",
       "doneText": "You will not receive the newsletter any more. You can subscribe again at any time."
     }
+  },
+  "admin": {
+    "title": "Website",
+    "description": "The public website’s blog and newsletter subscribers.",
+    "tabs": {
+      "blog": "Blog",
+      "subscribers": "Subscribers"
+    },
+    "blog": {
+      "new": "New post",
+      "empty": "No blog posts yet",
+      "emptyText": "Published posts appear on the home page and the public blog.",
+      "post": "Post",
+      "language": "Language",
+      "status": "Status",
+      "published": "Published",
+      "actions": "Actions",
+      "statuses": {
+        "draft": "Draft",
+        "published": "Published"
+      },
+      "edit": "Edit",
+      "publish": "Publish",
+      "unpublish": "Unpublish",
+      "delete": "Delete",
+      "deleteTitle": "Delete this post?",
+      "deleteText": "“{{title}}” and its cover image are removed for good.",
+      "caption": "Blog posts"
+    },
+    "subscribers": {
+      "email": "Email",
+      "since": "Date",
+      "filter": "Subscriber status",
+      "statuses": {
+        "confirmed": "Confirmed",
+        "pending": "Waiting for confirmation",
+        "unsubscribed": "Unsubscribed"
+      },
+      "empty": {
+        "confirmed": "No confirmed subscribers yet.",
+        "pending": "Nobody is waiting to confirm.",
+        "unsubscribed": "Nobody has unsubscribed."
+      },
+      "export": "Export confirmed (CSV)",
+      "caption": "Newsletter subscribers"
+    },
+    "notice": {
+      "published": "“{{title}}” is published.",
+      "draft": "“{{title}}” is back to draft.",
+      "deleted": "“{{title}}” was deleted.",
+      "saved": "“{{title}}” was saved.",
+      "needsCover": "Add a cover image before publishing."
+    },
+    "editor": {
+      "back": "Back to the blog",
+      "newTitle": "New blog post",
+      "editTitle": "Edit blog post",
+      "description": "Write in one language; visitors see posts in their language, or English ones when there are none.",
+      "view": "View on site",
+      "title": "Title",
+      "excerpt": "Summary",
+      "excerptHint": "One or two sentences shown under the title.",
+      "body": "Article",
+      "bodyHint": "Markdown: ## headings, **bold**, lists and [links](https://…).",
+      "cover": "Cover image",
+      "noCover": "No cover yet",
+      "chooseCover": "Choose image",
+      "replaceCover": "Replace image",
+      "coverRequired": "A cover image is needed to publish.",
+      "saveDraft": "Save draft",
+      "save": "Save changes"
+    }
   }
 }

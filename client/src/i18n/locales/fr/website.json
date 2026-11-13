@@ -40,5 +40,77 @@
       "doneTitle": "Vous êtes désinscrit",
       "doneText": "Vous ne recevrez plus la newsletter. Vous pouvez vous réinscrire à tout moment."
     }
+  },
+  "admin": {
+    "title": "Site web",
+    "description": "Le blog et les abonnés à la newsletter du site web public.",
+    "tabs": {
+      "blog": "Blog",
+      "subscribers": "Abonnés"
+    },
+    "blog": {
+      "new": "Nouvel article",
+      "empty": "Aucun article pour l’instant",
+      "emptyText": "Les articles publiés apparaissent sur la page d’accueil et sur le blog public.",
+      "post": "Article",
+      "language": "Langue",
+      "status": "Statut",
+      "published": "Publié le",
+      "actions": "Actions",
+      "statuses": {
+        "draft": "Brouillon",
+        "published": "Publié"
+      },
+      "edit": "Modifier",
+      "publish": "Publier",
+      "unpublish": "Dépublier",
+      "delete": "Supprimer",
+      "deleteTitle": "Supprimer cet article ?",
+      "deleteText": "« {{title}} » et son image de couverture seront définitivement supprimés.",
+      "caption": "Articles du blog"
+    },
+    "subscribers": {
+      "email": "E-mail",
+      "since": "Date",
+      "filter": "Statut de l’abonné",
+      "statuses": {
+        "confirmed": "Confirmés",
+        "pending": "En attente de confirmation",
+        "unsubscribed": "Désabonnés"
+      },
+      "empty": {
+        "confirmed": "Aucun abonné confirmé pour l’instant.",
+        "pending": "Personne n’est en attente de confirmation.",
+        "unsubscribed": "Personne ne s’est désabonné."
+      },
+      "export": "Exporter les confirmés (CSV)",
+      "caption": "Abonnés à la newsletter"
+    },
+    "notice": {
+      "published": "« {{title}} » est publié.",
+      "draft": "« {{title}} » est repassé en brouillon.",
+      "deleted": "« {{title}} » a été supprimé.",
+      "saved": "« {{title}} » a été enregistré.",
+      "needsCover": "Ajoutez une image de couverture avant de publier."
+    },
+    "editor": {
+      "back": "Retour au blog",
+      "newTitle": "Nouvel article de blog",
+      "editTitle": "Modifier l’article de blog",
+      "description": "Rédigez dans une langue ; les visiteurs voient les articles dans leur langue, ou en anglais s’il n’y en a pas.",
+      "view": "Voir sur le site",
+      "title": "Titre",
+      "excerpt": "Résumé",
+      "excerptHint": "Une ou deux phrases affichées sous le titre.",
+      "body": "Article",
+      "bodyHint": "Markdown : ## titres, **gras**, listes et [liens](https://…).",
+      "cover": "Image de couverture",
+      "noCover": "Pas encore de couverture",
+      "chooseCover": "Choisir une image",
+      "replaceCover": "Remplacer l’image",
+      "coverRequired": "Une image de couverture est nécessaire pour publier.",
+      "saveDraft": "Enregistrer le brouillon",
+      "save": "Enregistrer les modifications"
+    }
   }
 }

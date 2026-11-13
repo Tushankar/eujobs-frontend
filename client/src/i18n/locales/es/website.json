@@ -40,5 +40,77 @@
       "doneTitle": "Te has dado de baja",
       "doneText": "Ya no recibirás el boletín. Puedes volver a suscribirte cuando quieras."
     }
+  },
+  "admin": {
+    "title": "Sitio web",
+    "description": "El blog y los suscriptores del boletín del sitio web público.",
+    "tabs": {
+      "blog": "Blog",
+      "subscribers": "Suscriptores"
+    },
+    "blog": {
+      "new": "Nuevo artículo",
+      "empty": "Aún no hay artículos",
+      "emptyText": "Los artículos publicados aparecen en la página de inicio y en el blog público.",
+      "post": "Artículo",
+      "language": "Idioma",
+      "status": "Estado",
+      "published": "Publicado",
+      "actions": "Acciones",
+      "statuses": {
+        "draft": "Borrador",
+        "published": "Publicado"
+      },
+      "edit": "Editar",
+      "publish": "Publicar",
+      "unpublish": "Despublicar",
+      "delete": "Eliminar",
+      "deleteTitle": "¿Eliminar este artículo?",
+      "deleteText": "«{{title}}» y su imagen de portada se eliminarán definitivamente.",
+      "caption": "Artículos del blog"
+    },
+    "subscribers": {
+      "email": "Correo electrónico",
+      "since": "Fecha",
+      "filter": "Estado del suscriptor",
+      "statuses": {
+        "confirmed": "Confirmados",
+        "pending": "Pendientes de confirmar",
+        "unsubscribed": "Dados de baja"
+      },
+      "empty": {
+        "confirmed": "Aún no hay suscriptores confirmados.",
+        "pending": "Nadie está pendiente de confirmar.",
+        "unsubscribed": "Nadie se ha dado de baja."
+      },
+      "export": "Exportar confirmados (CSV)",
+      "caption": "Suscriptores del boletín"
+    },
+    "notice": {
+      "published": "«{{title}}» se ha publicado.",
+      "draft": "«{{title}}» vuelve a ser un borrador.",
+      "deleted": "«{{title}}» se ha eliminado.",
+      "saved": "«{{title}}» se ha guardado.",
+      "needsCover": "Añade una imagen de portada antes de publicar."
+    },
+    "editor": {
+      "back": "Volver al blog",
+      "newTitle": "Nuevo artículo del blog",
+      "editTitle": "Editar artículo del blog",
+      "description": "Escribe en un idioma; los visitantes ven los artículos en su idioma o, si no hay ninguno, en inglés.",
+      "view": "Ver en el sitio",
+      "title": "Título",
+      "excerpt": "Resumen",
+      "excerptHint": "Una o dos frases que se muestran bajo el título.",
+      "body": "Artículo",
+      "bodyHint": "Markdown: ## títulos, **negrita**, listas y [enlaces](https://…).",
+      "cover": "Imagen de portada",
+      "noCover": "Sin portada",
+      "chooseCover": "Elegir imagen",
+      "replaceCover": "Cambiar imagen",
+      "coverRequired": "Se necesita una imagen de portada para publicar.",
+      "saveDraft": "Guardar borrador",
+      "save": "Guardar cambios"
+    }
   }
 }
