@@ -82,9 +82,13 @@ export default {
     await clickText(page, 'Monthly', 'button, [role="tab"], label')
     await waitForText(page, 'per month')
     await clickText(page, 'Continue', 'button, a, [role="button"]')
-    await waitForText(page, 'Confirm', 30_000)
+    // "Confirm your updates" loads the preview first; Confirm stays disabled until it has.
+    const confirm = await page.waitForFunction(
+      () => [...document.querySelectorAll('button')].find((button) => button.textContent.trim() === 'Confirm' && !button.disabled),
+      { timeout: 30_000 },
+    )
     await ctx.screenshot(page, '6-portal-confirm-monthly')
-    await clickText(page, 'Confirm', 'button, a, [role="button"]')
+    await confirm.asElement().click()
     await page.waitForSelector('[data-testid="return-to-business-link"]', { visible: true, timeout: 30_000 })
     await page.click('[data-testid="return-to-business-link"]')
     await page.waitForFunction(() => location.pathname === '/candidate/settings/billing', { timeout: 30_000 })
