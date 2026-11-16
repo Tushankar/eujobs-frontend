@@ -172,13 +172,38 @@
   padding: 6px;
 }
 
-/* 29 countries: the list scrolls inside the sticky header instead of running off-screen. Short enough that the list
+/* The country search (worldwide since 2026-11-16: about 240 countries). */
+.menuSearch {
+  width: 100%;
+  height: 38px;
+  margin-bottom: 6px;
+  padding: 0 12px;
+  border: 1px solid var(--border);
+  border-radius: 999px;
+  background: var(--background);
+  font: inherit;
+  font-size: 14px;
+  color: var(--foreground);
+  outline: none;
+}
+
+.menuSearch:focus {
+  border-color: var(--primary);
+}
+
+.menuEmpty {
+  padding: 10px 12px;
+  font-size: 13px;
+  color: var(--muted-foreground);
+}
+
+/* The list scrolls inside the sticky header instead of running off-screen. Short enough that the search, the list
    and the note fit the dropdown panel (max 360px), so only this list scrolls. */
 .menuScroll {
   display: flex;
   flex-direction: column;
   gap: 2px;
-  max-height: min(250px, 50vh);
+  max-height: min(206px, 44vh);
   padding-right: 2px;
   overflow-y: auto;
   scrollbar-width: thin;

@@ -14,10 +14,10 @@ export async function findEnabledCountry(code, field = 'country') {
   return country
 }
 
-/** Enabled countries in catalogue order; names come from Intl.DisplayNames on the client (M-139). */
+/** Enabled countries in catalogue order (EU + UK, Remote, the world); names come from Intl.DisplayNames on the client (M-139). */
 export async function listCountries() {
-  const countries = await Country.find({ enabled: true }, 'code currency defaultLanguage isRemote order').sort({ order: 1 })
-  return countries.map(({ code, currency, defaultLanguage, isRemote }) => ({ code, currency, defaultLanguage, isRemote }))
+  const countries = await Country.find({ enabled: true }, 'code currency defaultLanguage isRemote isEu order').sort({ order: 1 })
+  return countries.map(({ code, currency, defaultLanguage, isRemote, isEu }) => ({ code, currency, defaultLanguage, isRemote, isEu }))
 }
 
 const latestVersion = (doc) => LegalDocument.findOne({ doc, publishedAt: { $ne: null } }, 'version').sort({ publishedAt: -1 })

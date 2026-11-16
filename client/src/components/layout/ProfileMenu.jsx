@@ -8,12 +8,37 @@ import { cx } from '@/utils/cx.js'
 import { Avatar, Dropdown, Icon } from '@/components/ui'
 import { workspacePath } from '@/app/workspaces.js'
 import { LANGUAGES, languageName } from '@/i18n/index.js'
-import { usePickerOptions } from '@/lib/countries.js'
+import { useCountrySearch, usePickerOptions } from '@/lib/countries.js'
 import { usePreferences, useFormat } from '@/lib/preferences.js'
 import { identitySubtitle } from './identity.js'
 import PlanBadge from './PlanBadge.jsx'
 import { isPaidPlan } from '@/lib/plans.js'
 import styles from './ProfileMenu.module.css'
+
+/** The country list with a search box (worldwide since 2026-11-16: about 240 countries); Enter picks the first match. */
+function CountryOptions({ countries, selected, onSelect }) {
+  const { t } = useTranslation()
+  const { query, setQuery, shown } = useCountrySearch(countries)
+  return (
+    <>
+      <input
+        className={styles.search}
+        type="search"
+        value={query}
+        onChange={(event) => setQuery(event.target.value)}
+        onKeyDown={(event) => event.key === 'Enter' && shown[0] && onSelect(shown[0].code)}
+        placeholder={t('shell:country.search')}
+        aria-label={t('shell:country.search')}
+        autoFocus
+      />
+      {shown.length ? (
+        <OptionList className={styles.scroll} options={shown.map((option) => ({ value: option.code, label: option.name }))} selected={selected} onSelect={onSelect} />
+      ) : (
+        <p className={styles.optionsNote}>{t('shell:country.none')}</p>
+      )}
+    </>
+  )
+}
 
 function OptionList({ options, selected, onSelect, className }) {
   return (
@@ -104,9 +129,8 @@ export default function ProfileMenu({ workspace }) {
                 </button>
                 {open === 'country' && (
                   <>
-                    <OptionList
-                      className={styles.scroll}
-                      options={countries.map((option) => ({ value: option.code, label: option.name }))}
+                    <CountryOptions
+                      countries={countries}
                       selected={country}
                       onSelect={(code) => {
                         setCountry(code)

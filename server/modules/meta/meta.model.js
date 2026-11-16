@@ -4,13 +4,15 @@ import { ENUMS } from '../../config/enums.js'
 const { Schema } = mongoose
 const localized = { en: String, es: String, fr: String }
 
-/* EU 27 + GB + REMOTE (M-139). Names come from Intl.DisplayNames on the client. */
+/* Every country (worldwide since 2026-11-16, EU 27 + GB first) and REMOTE (M-139). Names come from Intl.DisplayNames on the client. */
 const countrySchema = new Schema(
   {
     code: { type: String, required: true, unique: true },
     currency: { type: String, required: true },
     defaultLanguage: { type: String, enum: ENUMS.language, required: true },
     isRemote: { type: Boolean, default: false },
+    // The EU 27 (owner 2026-11-16): with GB they come first in every list.
+    isEu: { type: Boolean, default: false },
     order: { type: Number, required: true },
     enabled: { type: Boolean, default: true },
   },

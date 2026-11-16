@@ -1,4 +1,4 @@
-import { useMemo } from 'react'
+import { useMemo, useState } from 'react'
 import { useTranslation } from 'react-i18next'
 import { useGetCountriesQuery } from '@/app/api.js'
 import { usePreferences, useFormat } from './preferences.js'
@@ -28,7 +28,10 @@ export function usePickerOptions() {
   ]
 }
 
-/** The 29 countries (M-139) as { code, name }, sorted by name in the UI language with Remote last. */
+/** EU + UK first, then Remote, then the rest of the world (owner 2026-11-16: "EU Jobs" first, then worldwide). */
+const rankOf = (country) => (country.isEu || country.code === 'GB' ? 0 : country.isRemote ? 1 : 2)
+
+/** The countries (M-139, worldwide since 2026-11-16) as { code, name, isRemote, isEu }, each group A–Z in the UI language. */
 export function useCountryOptions() {
   const { data: countries = [] } = useGetCountriesQuery()
   const { language } = usePreferences()
@@ -36,8 +39,18 @@ export function useCountryOptions() {
   return useMemo(
     () =>
       countries
-        .map((country) => ({ code: country.code, name: format.country(country.code), isRemote: country.isRemote }))
-        .sort((a, b) => Number(a.isRemote) - Number(b.isRemote) || a.name.localeCompare(b.name, language)),
+        .map((country) => ({ code: country.code, name: format.country(country.code), isRemote: country.isRemote, isEu: country.isEu }))
+        .sort((a, b) => rankOf(a) - rankOf(b) || a.name.localeCompare(b.name, language)),
     [countries, format, language],
   )
+}
+
+const fold = (text) => text.normalize('NFD').replace(/\p{M}/gu, '').toLowerCase().trim()
+
+/** A search box over country options: by name (any case or accents) or by code ("US"). */
+export function useCountrySearch(options) {
+  const [query, setQuery] = useState('')
+  const term = fold(query)
+  const shown = term ? options.filter((option) => fold(option.name).includes(term) || option.code.toLowerCase() === term) : options
+  return { query, setQuery, shown }
 }

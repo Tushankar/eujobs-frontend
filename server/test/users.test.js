@@ -66,7 +66,7 @@ describe('PATCH /me (M-134, M-135)', () => {
 
   it('checks the country and the time zone', async () => {
     const user = await createUser()
-    assert.deepEqual((await patchMe(user, { pickerCountry: 'US' })).body.error.fields, { pickerCountry: 'invalid' })
+    assert.deepEqual((await patchMe(user, { pickerCountry: 'ZZ' })).body.error.fields, { pickerCountry: 'invalid' })
     assert.deepEqual((await patchMe(user, { timezone: 'Mars/Base' })).body.error.fields, { timezone: 'invalid' })
     const res = await patchMe(user, { timezone: 'Europe/Paris', fullName: 'Ana B. García', pickerCountry: 'remote' })
     assert.equal(res.status, 200)

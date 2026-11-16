@@ -11,15 +11,19 @@ useTestDb([User])
 before(() => seedCatalog())
 
 describe('GET /meta/countries (M-139)', () => {
-  it('lists 29 countries with currency and default language, Remote last', async () => {
+  it('lists every enabled country worldwide: EU 27 + UK first, then Remote, then the world (owner 2026-11-16)', async () => {
     const res = await api().get('/api/v1/meta/countries')
     assert.equal(res.status, 200)
-    assert.equal(res.body.total, 29)
+    assert.equal(res.body.total, 239)
     const byCode = Object.fromEntries(res.body.items.map((country) => [country.code, country]))
-    assert.equal(byCode.BG.currency, 'EUR')
-    assert.deepEqual(byCode.REMOTE, { code: 'REMOTE', currency: 'EUR', defaultLanguage: 'en', isRemote: true })
-    assert.equal(res.body.items.at(-1).code, 'REMOTE')
+    assert.deepEqual(byCode.BG, { code: 'BG', currency: 'EUR', defaultLanguage: 'en', isRemote: false, isEu: true })
+    assert.deepEqual(byCode.REMOTE, { code: 'REMOTE', currency: 'EUR', defaultLanguage: 'en', isRemote: true, isEu: false })
+    assert.ok(res.body.items.slice(0, 28).every((country) => country.isEu || country.code === 'GB'))
+    assert.equal(res.body.items[28].code, 'REMOTE')
+    assert.deepEqual([byCode.US.currency, byCode.US.isEu, byCode.JP.currency, byCode.MX.defaultLanguage, byCode.SN.defaultLanguage], ['USD', false, 'JPY', 'es', 'fr'])
     assert.equal(byCode.FR.defaultLanguage, 'fr')
+    // Disabled until the owner decides (possible sanctions; Stripe cannot charge there).
+    assert.equal(byCode.RU, undefined)
   })
 })
 

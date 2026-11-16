@@ -112,7 +112,9 @@
     "label": "País",
     "choose": "Elige un país",
     "note": "Tu país determina qué ofertas y candidatos ves, la moneda y el formato de fechas y números.",
-    "yours": "Tu país"
+    "yours": "Tu país",
+    "search": "Buscar países",
+    "none": "Ningún país coincide"
   },
   "language": {
     "label": "Idioma"

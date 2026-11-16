@@ -57,10 +57,11 @@ describe('candidate sign-up and the email link (M-001, U36)', () => {
   })
 
   it('requires the consent checkbox and an enabled country', async () => {
-    const res = await api().post('/api/v1/auth/candidate/register').send(candidate({ acceptTerms: false, country: 'US' }))
+    const res = await api().post('/api/v1/auth/candidate/register').send(candidate({ acceptTerms: false, country: 'ZZ' }))
     assert.equal(res.status, 422)
     assert.equal(res.body.error.fields.acceptTerms, 'invalid')
-    const res2 = await api().post('/api/v1/auth/candidate/register').send(candidate({ country: 'US' }))
+    // Worldwide since 2026-11-16: an unknown or a disabled country is refused.
+    const res2 = await api().post('/api/v1/auth/candidate/register').send(candidate({ country: 'KP' }))
     assert.deepEqual(res2.body.error.fields, { country: 'invalid' })
   })
 

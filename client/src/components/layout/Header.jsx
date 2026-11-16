@@ -5,7 +5,7 @@ import { Check, ChevronRight, Earth, Menu, MapPin, Search } from 'lucide-react'
 import { Dropdown, Icon, IconButton } from '@/components/ui'
 import { workspacePath } from '@/app/workspaces.js'
 import { LANGUAGES, languageName } from '@/i18n/index.js'
-import { usePickerOptions } from '@/lib/countries.js'
+import { useCountrySearch, usePickerOptions } from '@/lib/countries.js'
 import { usePreferences, useFormat } from '@/lib/preferences.js'
 import NotificationBell from '@/features/notifications/components/NotificationBell.jsx'
 import GlobalSearch from './GlobalSearch.jsx'
@@ -36,6 +36,37 @@ function MenuOption({ selected, onSelect, children }) {
   )
 }
 
+/** The country list with a search box (worldwide since 2026-11-16: about 240 countries); Enter picks the first match. */
+function CountryMenu({ options, selected, onPick }) {
+  const { t } = useTranslation()
+  const { query, setQuery, shown } = useCountrySearch(options)
+  return (
+    <div className={styles.menu}>
+      <input
+        className={styles.menuSearch}
+        type="search"
+        value={query}
+        onChange={(event) => setQuery(event.target.value)}
+        onKeyDown={(event) => event.key === 'Enter' && shown[0] && onPick(shown[0].code)}
+        placeholder={t('shell:country.search')}
+        aria-label={t('shell:country.search')}
+        autoFocus
+      />
+      <ul className={styles.menuScroll}>
+        {shown.map((option) => (
+          <li key={option.code}>
+            <MenuOption selected={option.code === selected} onSelect={() => onPick(option.code)}>
+              {option.name}
+            </MenuOption>
+          </li>
+        ))}
+        {shown.length === 0 && <li className={styles.menuEmpty}>{t('shell:country.none')}</li>}
+      </ul>
+      <p className={styles.menuNote}>{t('shell:country.note')}</p>
+    </div>
+  )
+}
+
 /** M-135, M-137: the header country sets discovery, currency and formats. */
 function CountryDropdown() {
   const { t } = useTranslation()
@@ -53,24 +84,14 @@ function CountryDropdown() {
       )}
     >
       {({ close }) => (
-        <div className={styles.menu}>
-          <ul className={styles.menuScroll}>
-            {options.map((option) => (
-              <li key={option.code}>
-                <MenuOption
-                  selected={option.code === country}
-                  onSelect={() => {
-                    setCountry(option.code)
-                    close()
-                  }}
-                >
-                  {option.name}
-                </MenuOption>
-              </li>
-            ))}
-          </ul>
-          <p className={styles.menuNote}>{t('shell:country.note')}</p>
-        </div>
+        <CountryMenu
+          options={options}
+          selected={country}
+          onPick={(code) => {
+            setCountry(code)
+            close()
+          }}
+        />
       )}
     </Dropdown>
   )

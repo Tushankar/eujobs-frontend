@@ -1,21 +1,24 @@
 /* Catalogue data for seed:catalog (U41). */
+import { COUNTRY_CURRENCIES, DISABLED, EU, defaultLanguageOf } from './countries.js'
 
-// EU 27 + GB + Remote (M-139). 21 countries use EUR, BG included since 2026 (D16).
-const EU = ['AT', 'BE', 'BG', 'CY', 'CZ', 'DE', 'DK', 'EE', 'ES', 'FI', 'FR', 'GR', 'HR', 'HU', 'IE', 'IT', 'LT', 'LU', 'LV', 'MT', 'NL', 'PL', 'PT', 'RO', 'SE', 'SI', 'SK']
-const OWN_CURRENCY = { CZ: 'CZK', DK: 'DKK', HU: 'HUF', PL: 'PLN', RO: 'RON', SE: 'SEK', GB: 'GBP' }
-// M-134: ES → es; FR, BE, LU → fr; every other country → en.
-const DEFAULT_LANGUAGE = { ES: 'es', FR: 'fr', BE: 'fr', LU: 'fr' }
+// M-139 widened worldwide (owner 2026-11-16): EU 27 + GB first (orders 1–28, 21 of them in EUR, BG included since
+// 2026, D16), Remote (29), then every other country by code.
+const FIRST = [...EU, 'GB'].sort()
+const REST = Object.keys(COUNTRY_CURRENCIES).filter((code) => !FIRST.includes(code)).sort()
+const country = (code, order) => ({
+  code,
+  currency: COUNTRY_CURRENCIES[code],
+  defaultLanguage: defaultLanguageOf(code),
+  isRemote: false,
+  isEu: EU.includes(code),
+  order,
+  enabled: !DISABLED.includes(code),
+})
 
 export const COUNTRIES = [
-  ...[...EU, 'GB'].sort().map((code, index) => ({
-    code,
-    currency: OWN_CURRENCY[code] ?? 'EUR',
-    defaultLanguage: DEFAULT_LANGUAGE[code] ?? 'en',
-    isRemote: false,
-    order: index + 1,
-    enabled: true,
-  })),
-  { code: 'REMOTE', currency: 'EUR', defaultLanguage: 'en', isRemote: true, order: 29, enabled: true },
+  ...FIRST.map((code, index) => country(code, index + 1)),
+  { code: 'REMOTE', currency: 'EUR', defaultLanguage: 'en', isRemote: true, isEu: false, order: 29, enabled: true },
+  ...REST.map((code, index) => country(code, 30 + index)),
 ]
 
 // OD1 plan prices in major units; stored as integer minor units (U24).

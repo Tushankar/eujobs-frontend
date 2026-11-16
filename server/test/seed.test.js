@@ -34,11 +34,11 @@ useTestUploads()
 const counts = async () => Promise.all([Country, Plan, Permission, AdminRole, Faq, LegalDocument].map((Model) => Model.countDocuments()))
 
 describe('seed:catalog (U41)', () => {
-  it('is idempotent: 29 countries, 4 plans, 24 permissions, 3 roles, the FAQs and 3 legal texts × 3 languages', async () => {
+  it('is idempotent: 245 countries (6 disabled), 4 plans, 24 permissions, 3 roles, the FAQs and 3 legal texts × 3 languages', async () => {
     await seedCatalog()
     const published = (await LegalDocument.findOne({ doc: 'terms', language: 'en' })).publishedAt
     await seedCatalog()
-    assert.deepEqual(await counts(), [29, 4, 24, 3, FAQS.length, 9])
+    assert.deepEqual(await counts(), [245, 4, 24, 3, FAQS.length, 9])
     assert.deepEqual((await LegalDocument.findOne({ doc: 'terms', language: 'en' })).publishedAt, published)
     assert.equal(await LegalDocument.countDocuments({ isDraft: true, version: LEGAL_VERSION }), 9)
   })
@@ -49,11 +49,11 @@ describe('seed:catalog (U41)', () => {
     assert.equal((await country('HU')).currency, 'HUF')
     assert.equal((await country('GB')).currency, 'GBP')
     assert.deepEqual([(await country('REMOTE')).currency, (await country('REMOTE')).isRemote], ['EUR', true])
-    assert.equal(await Country.countDocuments({ currency: 'EUR', isRemote: false }), 21)
-    assert.deepEqual(
-      (await Country.find({ defaultLanguage: { $ne: 'en' } }).sort({ code: 1 })).map((c) => `${c.code}:${c.defaultLanguage}`),
-      ['BE:fr', 'ES:es', 'FR:fr', 'LU:fr'],
-    )
+    assert.equal(await Country.countDocuments({ currency: 'EUR', isEu: true }), 21)
+    assert.equal(await Country.countDocuments({ isEu: true }), 27)
+    const languages = Object.fromEntries((await Country.find({ code: { $in: ['BE', 'ES', 'FR', 'LU', 'DE', 'MX', 'SN', 'US'] } })).map((c) => [c.code, c.defaultLanguage]))
+    assert.deepEqual(languages, { BE: 'fr', DE: 'en', ES: 'es', FR: 'fr', LU: 'fr', MX: 'es', SN: 'fr', US: 'en' })
+    assert.deepEqual((await Country.find({ enabled: false }).sort({ code: 1 })).map((c) => c.code), ['BY', 'CU', 'IR', 'KP', 'RU', 'SY'])
     const plus = await Plan.findOne({ key: 'plus' }).lean()
     assert.deepEqual(plus.entitlements, ['apply', 'message_send', 'job_alerts', 'ai'])
     assert.equal(plus.prices.find((price) => price.currency === 'HUF').amountMinor, 399000)
