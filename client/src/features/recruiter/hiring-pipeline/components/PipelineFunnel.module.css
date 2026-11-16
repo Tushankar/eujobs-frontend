@@ -156,9 +156,11 @@
     transition: opacity var(--transition);
   }
 
-  .selected .band,
-  .dropping .band {
-    box-shadow: inset 0 0 0 3px var(--primary);
+  /* The outline follows the slice's slanted sides (a border would be cut off by the clip-path). */
+  .selected .bandCell,
+  .dropping .bandCell {
+    filter: drop-shadow(2px 0 0 var(--primary)) drop-shadow(-2px 0 0 var(--primary)) drop-shadow(0 2px 0 var(--primary))
+      drop-shadow(0 -2px 0 var(--primary));
   }
 
   .uprightText {
