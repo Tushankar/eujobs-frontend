@@ -30,6 +30,7 @@
   --ring: #0263dc;
   --selection: #cddff9;
   --blue-light-100: #e3edfc;
+  --chart-2: #eaf1fd; /* the second data series of charts (applications, shortlists) */
 
   /* Neutrals read from screens (not exposed as Figma variables) */
   --text-label: #555b6d;
@@ -125,6 +126,7 @@
   --ring: #5b9dff;
   --selection: #1e3a66;
   --blue-light-100: #172a45;
+  --chart-2: #35588f;
 
   --text-label: #b4b9c3;
   --text-placeholder: #8a909c;

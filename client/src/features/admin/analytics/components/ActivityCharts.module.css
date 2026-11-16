@@ -15,7 +15,7 @@
 }
 
 .applications {
-  fill: var(--accent);
+  fill: var(--chart-2);
 }
 
 .barLabel {
@@ -40,7 +40,7 @@
 }
 
 .applicationsSeries {
-  --series: var(--accent);
+  --series: var(--chart-2);
 }
 
 .line {

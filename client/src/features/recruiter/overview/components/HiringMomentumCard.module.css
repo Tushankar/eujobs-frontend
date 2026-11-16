@@ -115,7 +115,7 @@
 
 .shortlistSwatch,
 .shortlistBar {
-  background: var(--accent);
+  background: var(--chart-2);
 }
 
 .chart {

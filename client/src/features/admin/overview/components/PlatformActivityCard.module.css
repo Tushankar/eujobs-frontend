@@ -102,7 +102,7 @@
 
 .applicationSwatch,
 .applicationBar {
-  background: var(--accent);
+  background: var(--chart-2);
 }
 
 .chart {
@@ -175,7 +175,7 @@
 }
 
 .grid {
-  stroke: #c9ccd4;
+  stroke: light-dark(#c9ccd4, var(--border-strong));
   stroke-width: 1;
   stroke-dasharray: 1.5 2.5;
 }
@@ -202,7 +202,7 @@
 }
 
 .applicationLine {
-  stroke: #e3effd;
+  stroke: light-dark(#e3effd, var(--chart-2));
 }
 
 .registrationHalo {
@@ -218,7 +218,7 @@
 }
 
 .applicationDot {
-  fill: #e3effd;
+  fill: light-dark(#e3effd, var(--chart-2));
 }
 
 @media (max-width: 639px) {
