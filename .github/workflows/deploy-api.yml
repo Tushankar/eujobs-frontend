@@ -1,0 +1,31 @@
+# Deploys the API to the VPS when main changes under server/ (or by hand: Actions > Deploy API > Run workflow).
+# The key in the VPS_DEPLOY_KEY secret can only run /usr/local/bin/eujobs-deploy on the server (deploy/eujobs-deploy.sh).
+name: Deploy API
+
+on:
+  push:
+    branches: [main]
+    paths: ['server/**']
+  workflow_dispatch:
+
+concurrency:
+  group: deploy-api
+  cancel-in-progress: false
+
+jobs:
+  deploy:
+    runs-on: ubuntu-latest
+    timeout-minutes: 10
+    steps:
+      - name: Deploy to www.eu-jobs.kyptronix.net
+        env:
+          SSH_KEY: ${{ secrets.VPS_DEPLOY_KEY }}
+        run: |
+          mkdir -p ~/.ssh
+          printf '%s\n' "$SSH_KEY" > ~/.ssh/deploy_key
+          chmod 600 ~/.ssh/deploy_key
+          echo '187.127.187.158 ssh-ed25519 AAAAC3NzaC1lZDI1NTE5AAAAILrhinCW+KoTpaSWM3M8nccenSS+nAyL/GsaxNuU2sk8' > ~/.ssh/known_hosts
+          ssh -i ~/.ssh/deploy_key -o StrictHostKeyChecking=yes root@187.127.187.158 deploy
+
+      - name: Check the public API
+        run: curl -fsS https://www.eu-jobs.kyptronix.net/api/v1/health
