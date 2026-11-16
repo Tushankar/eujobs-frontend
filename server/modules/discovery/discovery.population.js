@@ -15,7 +15,7 @@ export function validRightToWork(entry, on = today()) {
 
 /** OD4: "Has right to work in {country}": an entry for that country, or the EU group for an EU country (2026-11-16). */
 export function hasRightToWorkIn(profile, countryCode, on = today()) {
-  return profile.rightToWork.some((entry) => regionCovers(entry.region, countryCode) && validRightToWork(entry, on))
+  return (profile.rightToWork ?? []).some((entry) => regionCovers(entry.region, countryCode) && validRightToWork(entry, on))
 }
 
 /** M-055: lives in the country or has the right to work there; Remote = work preference remote (OQ-6a). */

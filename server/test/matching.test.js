@@ -97,6 +97,25 @@ describe('the score (U5, C23, OQ-6g)', () => {
     assert.equal(locationMismatch(remoteProfile, { ...remote, remoteCountries: ['IE'] }), true)
     assert.equal(locationMismatch(PROFILE, remote), true, 'a hybrid candidate and a remote job differ in work mode')
   })
+
+  it('lets a candidate abroad fit with a right to work there or a sponsoring job (worldwide, 2026-11-16)', () => {
+    const inIndia = { ...PROFILE, location: { countryCode: 'IN' } }
+    const withVisa = (permitExpiresOn) => ({ ...inIndia, rightToWork: [{ region: 'GB', status: 'visa_permit', permitExpiresOn }] })
+    assert.equal(locationMismatch(inIndia, JOB), true, 'no right to work in the UK and no sponsorship')
+    assert.equal(locationMismatch(withVisa('2099-01-31'), JOB), false, 'a valid UK visa')
+    assert.equal(locationMismatch(withVisa('2020-01-31'), JOB), true, 'an expired UK visa')
+    assert.equal(locationMismatch(inIndia, { ...JOB, visaSponsorship: true }), false, 'the job sponsors the visa')
+    assert.equal(locationMismatch({ ...inIndia, workPreference: 'on_site' }, { ...JOB, visaSponsorship: true }), true, 'the work mode still counts')
+    // The EU group covers an EU job, not a UK one; a remote job's eligible country counts by right to work too.
+    const euCitizen = { ...inIndia, rightToWork: [{ region: 'EU', status: 'citizen_settled' }] }
+    assert.equal(locationMismatch(euCitizen, { ...JOB, country: 'DE' }), false)
+    assert.equal(locationMismatch(euCitizen, JOB), true)
+    const remote = { ...JOB, workPreference: 'remote', country: 'REMOTE', remoteCountries: ['FR'] }
+    assert.equal(locationMismatch({ ...euCitizen, workPreference: 'remote' }, remote), false)
+    // A capped score lifts with the visa: the Indian candidate with a UK visa can reach Good and be recommended.
+    assert.equal(scoreMatch({ cos: 0.6, profile: inIndia, job: JOB, policy: POLICY }).score, 49)
+    assert.ok(scoreMatch({ cos: 0.6, profile: withVisa('2099-01-31'), job: JOB, policy: POLICY }).score > 49)
+  })
 })
 
 describe('embeddings (U6)', () => {
