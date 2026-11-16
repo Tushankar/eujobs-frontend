@@ -30,7 +30,8 @@ export function useFakePlaces() {
     near: null,
     async nearby(args) {
       calls.push({ kind: 'nearby', ...args })
-      return fake.near && { addressComponents: components(fake.near) }
+      // Like Google: the nearest place's street number comes first and has no types.
+      return fake.near && { addressComponents: [{ longText: '114', shortText: '114' }, ...components(fake.near)] }
     },
     async autocomplete(args) {
       calls.push({ kind: 'autocomplete', ...args })

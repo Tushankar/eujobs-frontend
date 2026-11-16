@@ -65,7 +65,10 @@ describe('admin Candidates and Recruiters (M-161, M-169, M-206)', () => {
     assert.deepEqual(await ids('country=DE'), [String(reviewing._id)])
     assert.deepEqual(await ids('plan=plus'), [String(reviewing._id)])
     assert.deepEqual(await ids('verification=partial'), [String(partial._id)])
+    assert.deepEqual(await ids('rightToWork=GB'), [String(partial._id)])
+    // An old link's region still filters (worldwide since 2026-11-16: 'uk' was the United Kingdom).
     assert.deepEqual(await ids('rightToWork=uk'), [String(partial._id)])
+    assert.deepEqual(await ids('rightToWork=US'), [])
     assert.equal((await ids('rightToWork=none')).length, 4)
     assert.equal((await ids('status=unverified')).length, 1)
     assert.equal((await ids('q=paula')).length, 1)

@@ -41,7 +41,10 @@ export const usersQuery = z.object({
   verification: z.enum(['not_started', 'in_review', 'partial', 'verified']).optional(),
   plan: z.enum(ENUMS.planKey).optional(),
   // 'none', the EU group or a country (worldwide since 2026-11-16).
-  rightToWork: z.union([z.literal('none'), z.string().trim().toUpperCase().regex(/^([A-Z]{2}|EU)$/)]).optional(),
+  // An old link's 'uk' is the United Kingdom ('eu' upper-cases to the EU group).
+  rightToWork: z
+    .union([z.literal('none'), z.string().trim().toUpperCase().regex(/^([A-Z]{2}|EU)$/).transform((region) => (region === 'UK' ? 'GB' : region))])
+    .optional(),
   ...pageQuery,
 })
 

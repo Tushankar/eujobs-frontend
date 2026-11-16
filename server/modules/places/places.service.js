@@ -88,7 +88,8 @@ export async function autocomplete({ input, language, sessionToken }) {
 
 /** A place's city and country code from its address components. */
 function cityOf(place) {
-  const component = (type) => place?.addressComponents?.find((part) => part.types.includes(type))
+  // Some parts (a street number) come without types.
+  const component = (type) => place?.addressComponents?.find((part) => part.types?.includes(type))
   return {
     countryCode: component('country')?.shortText,
     city: (component('locality') ?? component('postal_town') ?? component('administrative_area_level_3'))?.longText,
