@@ -96,7 +96,7 @@ const CATEGORIES = [
   { group: 'employmentType', value: 'contract', icon: iconNote },
 ]
 
-/** Figma 396:887. Every card opens the job list (it reads only `q` from the URL; its filters are on the page). */
+/** Figma 396:887. Every card opens the public job list on its own tab (/jobs, owner 2026-11-16). */
 export function Categories({ counts }) {
   const { t } = useTranslation()
   return (
@@ -110,7 +110,7 @@ export function Categories({ counts }) {
       </div>
       <div className={styles.categories} data-stagger>
         {CATEGORIES.map(({ group, value, icon }, index) => (
-          <Link key={value} to="/candidate/jobs" className={index === 0 ? `${styles.category} ${styles.categoryActive}` : styles.category}>
+          <Link key={value} to={`/jobs?${group}=${value}`} className={index === 0 ? `${styles.category} ${styles.categoryActive}` : styles.category}>
             <img src={cardLines} alt="" className={styles.categoryLines} aria-hidden="true" data-lines />
             <InlineSvg svg={icon} className={styles.categoryIcon} motion="icon" currentColor />
             <span>
@@ -187,7 +187,7 @@ function JobRow({ job }) {
         <CompanyLogo name={job.company.name} src={job.company.logoUrl} size={34} className={styles.jobLogo} />
         <div className={styles.jobHead}>
           <h3 className={styles.jobTitle}>
-            <Link to={`/candidate/jobs/${job.id}`}>{job.title}</Link>
+            <Link to={`/jobs?job=${job.id}`}>{job.title}</Link>
           </h3>
           <p className={styles.jobCompany}>{[job.company.name, place].filter(Boolean).join(' • ')}</p>
         </div>
@@ -199,10 +199,10 @@ function JobRow({ job }) {
         {job.experienceYears != null && <li>{t('landing:vacancies.years', { count: job.experienceYears })}</li>}
       </ul>
       <div className={styles.jobBottom}>
-        <AvatarStack to={`/candidate/jobs/${job.id}`} label={t('landing:vacancies.apply')} />
+        <AvatarStack to={`/jobs?job=${job.id}`} label={t('landing:vacancies.apply')} />
         <div className={styles.jobPay}>
           {salary && <span className={styles.jobSalary}>{salary}</span>}
-          <Link to={`/candidate/jobs/${job.id}`} className={styles.jobApply}>
+          <Link to={`/jobs?job=${job.id}`} className={styles.jobApply}>
             {t('landing:vacancies.apply')} ↗
           </Link>
         </div>
@@ -244,7 +244,7 @@ export function Vacancies({ jobs }) {
       )}
       {jobs?.length > 0 && (
         <div className={styles.jobsMore}>
-          <ArrowPill to="/candidate/jobs">{t('landing:vacancies.all')}</ArrowPill>
+          <ArrowPill to="/jobs">{t('landing:vacancies.all')}</ArrowPill>
         </div>
       )}
     </section>

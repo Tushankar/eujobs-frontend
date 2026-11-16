@@ -1,5 +1,3 @@
-import { MapPin, Search } from 'lucide-react'
-import { useState } from 'react'
 import { Trans, useTranslation } from 'react-i18next'
 import { Link, useLocation, useNavigate } from 'react-router-dom'
 import { BRAND } from '@/app/brand.js'
@@ -20,6 +18,7 @@ import hexagons from '@/assets/landing/pattern-hexagons.svg?raw'
 import BrandLogo from '@/components/layout/BrandLogo.jsx'
 import { Icon } from '@/components/ui'
 import InlineSvg from './InlineSvg.jsx'
+import JobSearchForm from './JobSearchForm.jsx'
 import styles from './Landing.module.css'
 import { NAV, navItemOf } from './siteNav.js'
 
@@ -125,17 +124,14 @@ function HeroArt() {
   )
 }
 
-/** Header, search and photo cards (Figma 396:549). The search sends signed-out visitors through sign-in to the job list. */
+/** Header, search and photo cards (Figma 396:549). The search opens the public job list (/jobs, owner 2026-11-16). */
 export default function LandingHero() {
   const { t } = useTranslation()
   const navigate = useNavigate()
-  const [what, setWhat] = useState('')
-  const [where, setWhere] = useState('')
 
-  function search(event) {
-    event.preventDefault()
-    const q = `${what} ${where}`.trim()
-    navigate(q ? `/candidate/jobs?q=${encodeURIComponent(q)}` : '/candidate/jobs')
+  function search({ q, location }) {
+    const query = new URLSearchParams(Object.entries({ q, location }).filter(([, value]) => value)).toString()
+    navigate(query ? `/jobs?${query}` : '/jobs')
   }
 
   return (
@@ -156,20 +152,7 @@ export default function LandingHero() {
             </span>
           </h1>
 
-          <form className={styles.search} data-hero-fade role="search" aria-label={t('landing:hero.searchLabel')} onSubmit={search}>
-            <label className={styles.searchField}>
-              <Icon as={Search} size={16} />
-              <input value={what} onChange={(event) => setWhat(event.target.value)} placeholder={t('landing:hero.what')} aria-label={t('landing:hero.what')} />
-            </label>
-            <label className={styles.searchField}>
-              <Icon as={MapPin} size={16} />
-              <input value={where} onChange={(event) => setWhere(event.target.value)} placeholder={t('landing:hero.where')} aria-label={t('landing:hero.where')} />
-            </label>
-            <button type="submit" className={styles.searchButton}>
-              <Icon as={Search} size={16} />
-              <span className={styles.searchLabel}>{t('landing:hero.search')}</span>
-            </button>
-          </form>
+          <JobSearchForm onSearch={search} data-hero-fade />
 
           <p className={styles.heroCopy} data-hero-fade>{t('landing:hero.text')}</p>
 

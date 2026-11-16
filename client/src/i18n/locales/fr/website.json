@@ -136,5 +136,24 @@
     "ctaJobs": "Voir les offres",
     "relatedLead": "À lire",
     "relatedAccent": "aussi"
+  },
+  "jobs": {
+    "title": "Offres d’emploi",
+    "titleLead": "Trouvez votre prochaine",
+    "titleAccent": "opportunité",
+    "text": "Parcourez toutes les offres d’EU Jobs sans compte. Connectez-vous seulement au moment de postuler.",
+    "categories": "Catégories d’emploi",
+    "all": "Toutes les offres",
+    "results_one": "{{count}} offre",
+    "results_many": "{{count}} offres",
+    "results_other": "{{count}} offres",
+    "emptyTitle": "Aucune offre ne correspond à votre recherche",
+    "emptyText": "Essayez d’autres mots-clés, un autre lieu ou une autre catégorie. Les nouvelles offres apparaissent ici dès que les entreprises les publient.",
+    "clear": "Effacer la recherche",
+    "back": "Retour aux offres",
+    "apply": "Postuler",
+    "signInNote": "Connectez-vous pour postuler ou enregistrer. Vous reviendrez directement à cette offre.",
+    "signUp": "Nouveau ? Créez un compte gratuit",
+    "requirements": "Exigences"
   }
 }

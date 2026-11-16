@@ -135,5 +135,23 @@
     "ctaJobs": "Browse open jobs",
     "relatedLead": "Keep",
     "relatedAccent": "Reading"
+  },
+  "jobs": {
+    "title": "Jobs",
+    "titleLead": "Find Your Next",
+    "titleAccent": "Opportunity",
+    "text": "Browse every open role on EU Jobs without an account. Sign in only when you are ready to apply.",
+    "categories": "Job categories",
+    "all": "All jobs",
+    "results_one": "{{count}} job",
+    "results_other": "{{count}} jobs",
+    "emptyTitle": "No jobs match your search",
+    "emptyText": "Try other keywords, another place or a different category. New roles appear here as soon as companies publish them.",
+    "clear": "Clear search",
+    "back": "Back to jobs",
+    "apply": "Apply now",
+    "signInNote": "Sign in to apply or save. You will come straight back to this job.",
+    "signUp": "New here? Create a free account",
+    "requirements": "Requirements"
   }
 }

@@ -136,5 +136,24 @@
     "ctaJobs": "Ver ofertas abiertas",
     "relatedLead": "Sigue",
     "relatedAccent": "leyendo"
+  },
+  "jobs": {
+    "title": "Empleos",
+    "titleLead": "Encuentra tu próxima",
+    "titleAccent": "oportunidad",
+    "text": "Explora todas las vacantes de EU Jobs sin crear una cuenta. Inicia sesión solo cuando quieras postularte.",
+    "categories": "Categorías de empleo",
+    "all": "Todos los empleos",
+    "results_one": "{{count}} empleo",
+    "results_many": "{{count}} empleos",
+    "results_other": "{{count}} empleos",
+    "emptyTitle": "Ningún empleo coincide con tu búsqueda",
+    "emptyText": "Prueba otras palabras clave, otro lugar u otra categoría. Los nuevos puestos aparecen aquí en cuanto las empresas los publican.",
+    "clear": "Borrar búsqueda",
+    "back": "Volver a los empleos",
+    "apply": "Postularme",
+    "signInNote": "Inicia sesión para postularte o guardar. Volverás directamente a este empleo.",
+    "signUp": "¿Eres nuevo? Crea una cuenta gratis",
+    "requirements": "Requisitos"
   }
 }
