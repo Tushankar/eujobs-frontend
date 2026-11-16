@@ -29,6 +29,11 @@ export const manualPlaces = {
     return [...suggestions.values()]
   },
 
+  /** No lookups in manual mode: nothing is found near a point. */
+  async nearby() {
+    return null
+  },
+
   async details({ placeId }) {
     const [, code, city] = ID.exec(placeId) ?? []
     if (!code) throw fieldError({ placeId: 'invalid' })

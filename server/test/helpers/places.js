@@ -14,12 +14,22 @@ export const suggestion = (placeId, main, secondary) => ({
 
 /**
  * Installs the fake for this test file. `calls` records every Google call; set `fake.suggestions` for
- * autocomplete. Details know the seed cities plus Toronto (outside EU 27 + UK).
+ * autocomplete and `fake.near` (a known place) for the nearby search. Details know the seed cities plus Toronto
+ * (outside EU 27 + UK).
  */
 export function useFakePlaces() {
   const calls = []
+  const components = (place) => [
+    { longText: place.city, shortText: place.city, types: ['locality', 'political'] },
+    { longText: place.countryCode, shortText: place.countryCode, types: ['country', 'political'] },
+  ]
   const fake = {
     suggestions: [],
+    near: null,
+    async nearby(args) {
+      calls.push({ kind: 'nearby', ...args })
+      return fake.near && { addressComponents: components(fake.near) }
+    },
     async autocomplete(args) {
       calls.push({ kind: 'autocomplete', ...args })
       return fake.suggestions
@@ -28,13 +38,7 @@ export function useFakePlaces() {
       calls.push({ kind: 'details', ...args })
       const place = KNOWN.find((known) => known.placeId === args.placeId)
       if (!place) throw fieldError({ placeId: 'invalid' })
-      return {
-        id: place.placeId,
-        addressComponents: [
-          { longText: place.city, shortText: place.city, types: ['locality', 'political'] },
-          { longText: place.countryCode, shortText: place.countryCode, types: ['country', 'political'] },
-        ],
-      }
+      return { id: place.placeId, addressComponents: components(place) }
     },
   }
   before(() => setPlacesClient(fake))
@@ -42,6 +46,7 @@ export function useFakePlaces() {
   beforeEach(() => {
     calls.length = 0
     fake.suggestions = []
+    fake.near = null
     clearPlacesCache()
   })
   return { calls, fake }

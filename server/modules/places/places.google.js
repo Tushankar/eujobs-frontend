@@ -38,6 +38,19 @@ export const googlePlaces = {
     return (await json(response, 'autocomplete')).suggestions ?? []
   },
 
+  /**
+   * The nearest place to a point, with its address components only: its locality is the city there (owner
+   * 2026-11-16). Places (New) has no reverse geocoding, so this is a one-result nearby search ranked by distance.
+   */
+  async nearby({ latitude, longitude, languageCode }) {
+    const response = await call(`${BASE_URL}/places:searchNearby`, {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json', 'X-Goog-FieldMask': 'places.addressComponents' },
+      body: JSON.stringify({ maxResultCount: 1, rankPreference: 'DISTANCE', languageCode, locationRestriction: { circle: { center: { latitude, longitude }, radius: 50000 } } }),
+    })
+    return (await json(response, 'nearby')).places?.[0] ?? null
+  },
+
   /** One place with its address components only (no coordinates are requested). */
   async details({ placeId, languageCode, sessionToken }) {
     const query = new URLSearchParams({ languageCode, ...(sessionToken && { sessionToken }) })

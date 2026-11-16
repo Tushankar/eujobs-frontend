@@ -170,6 +170,8 @@ export const LIMITS = {
   places: {
     input: { min: 2, max: 60 },
     perUser: { autocomplete: { windowMs: MINUTE, limit: 60 }, details: { windowMs: MINUTE, limit: 30 } },
+    // The public "Use my current location" of the job search (owner 2026-11-16).
+    nearPerIp: { windowMs: MINUTE, limit: 10 },
     cache: { autocompleteTtlMs: 10 * MINUTE, detailsTtlMs: 24 * HOUR, maxEntries: 1000 },
   },
   // OD13, U3: counted generations per user and UTC day. U6: embedding input ≈ 8,000 tokens at 4 characters a token.

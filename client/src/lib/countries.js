@@ -9,12 +9,23 @@ export function browserCountry(options) {
   return options.some((option) => option.code === region) ? region : 'REMOTE'
 }
 
-/** The header picker's choices: a candidate's start with Worldwide (owner 2026-11-16), then the countries and Remote. */
+/**
+ * The header picker's choices. A candidate's (owner 2026-11-16) are Worldwide, their own country ("Your country"),
+ * Remote, then the other countries A–Z; everyone else's are the countries with Remote last.
+ */
 export function usePickerOptions() {
   const { t } = useTranslation()
-  const { me } = usePreferences()
+  const { me, country } = usePreferences()
   const options = useCountryOptions()
-  return me?.role === 'candidate' ? [{ code: 'WORLDWIDE', name: t('common:worldwide'), isRemote: false }, ...options] : options
+  if (me?.role !== 'candidate') return options
+  const own = options.find((option) => option.code === country && !option.isRemote)
+  const remote = options.find((option) => option.isRemote)
+  return [
+    { code: 'WORLDWIDE', name: t('common:worldwide'), isRemote: false },
+    ...(own ? [{ ...own, name: `${own.name} · ${t('shell:country.yours')}` }] : []),
+    ...(remote ? [remote] : []),
+    ...options.filter((option) => option !== own && option !== remote),
+  ]
 }
 
 /** The 29 countries (M-139) as { code, name }, sorted by name in the UI language with Remote last. */

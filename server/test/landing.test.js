@@ -7,10 +7,11 @@ import { User } from '../modules/users/users.model.js'
 import { seedCatalog } from '../seed/catalog.js'
 import { api, auth, useTestDb } from './helpers/index.js'
 import { approvedRecruiter, jobBody } from './helpers/market.js'
-import { useFakePlaces } from './helpers/places.js'
+import { TORONTO, useFakePlaces } from './helpers/places.js'
+import { PLACES } from '../seed/data/places.js'
 
 useTestDb([User, Company, Job, Faq])
-useFakePlaces()
+const places = useFakePlaces()
 before(() => seedCatalog())
 
 async function publish(user, body) {
@@ -48,5 +49,40 @@ describe('GET /landing (public home page)', () => {
 
   it('refuses an unknown language', async () => {
     assert.equal((await api().get('/api/v1/landing?language=xx')).status, 422)
+  })
+})
+
+describe('GET /landing/jobs (public job list, owner 2026-11-16)', () => {
+  it('lists every visible job without a session, with tab counts that follow the keywords and the place', async () => {
+    const { user } = await approvedRecruiter()
+    const remote = await publish(user, { title: 'Remote Designer', workPreference: 'remote', placeId: null, remoteCountries: [] })
+    const london = await publish(user, { title: 'London Analyst', employmentType: 'contract', workPreference: 'on_site', placeId: PLACES.london.placeId })
+    await api().post('/api/v1/recruiter/jobs').set(auth(user)).send(jobBody({ title: 'Secret Draft' }))
+
+    const all = (await api().get('/api/v1/landing/jobs')).body
+    assert.deepEqual([all.total, all.items.length, all.counts.workPreference.remote, all.counts.employmentType.contract], [2, 2, 1, 1])
+    assert.ok(all.items[0].company.displayName && Array.isArray(all.items[0].requiredSkills))
+
+    const tab = (await api().get('/api/v1/landing/jobs?workPreference=remote')).body
+    assert.deepEqual([tab.total, tab.items.map((job) => job.id)], [2, [remote]])
+    const place = (await api().get('/api/v1/landing/jobs?location=royaume-uni&language=fr')).body
+    assert.deepEqual([place.total, place.items.map((job) => job.id), place.counts.workPreference.remote], [1, [london], 0])
+    assert.deepEqual((await api().get('/api/v1/landing/jobs?q=designer')).body.items.map((job) => job.id), [remote])
+    assert.equal((await api().get('/api/v1/landing/jobs?employmentType=nope')).status, 422)
+  })
+})
+
+describe('GET /landing/near ("Use my current location" in the job search)', () => {
+  it('answers the city at a point inside EU 27 + UK, and nulls outside it or when nothing is found', async () => {
+    places.fake.near = PLACES.london
+    const res = await api().get('/api/v1/landing/near?latitude=51.5&longitude=-0.12&language=fr')
+    assert.deepEqual([res.status, res.body], [200, { city: 'London', countryCode: 'GB' }])
+    assert.deepEqual(places.calls.at(-1), { kind: 'nearby', latitude: 51.5, longitude: -0.12, languageCode: 'fr' })
+
+    places.fake.near = TORONTO
+    assert.deepEqual((await api().get('/api/v1/landing/near?latitude=43.6&longitude=-79.4')).body, { city: null, countryCode: null })
+    places.fake.near = null
+    assert.deepEqual((await api().get('/api/v1/landing/near?latitude=0&longitude=0')).body, { city: null, countryCode: null })
+    assert.equal((await api().get('/api/v1/landing/near?latitude=91&longitude=0')).status, 422)
   })
 })

@@ -2,6 +2,8 @@ import { Router } from 'express'
 import { z } from 'zod'
 import { ENUMS } from '../../config/enums.js'
 import { validate } from '../../lib/validate.js'
+import { placesNearPerIp } from '../../middleware/rateLimit.js'
+import { cityNear } from '../places/places.service.js'
 import { landing, publicJobs } from './landing.service.js'
 
 const router = Router()
@@ -27,6 +29,22 @@ router.get(
   }),
   async (req, res) => {
     res.json(await publicJobs(req.query))
+  },
+)
+
+/** GET /landing/near: the city at the visitor's position, for the job search (owner 2026-11-16; no session needed). */
+router.get(
+  '/near',
+  placesNearPerIp,
+  validate({
+    query: z.object({
+      latitude: z.coerce.number().min(-90).max(90),
+      longitude: z.coerce.number().min(-180).max(180),
+      language: z.enum(ENUMS.language).default('en'),
+    }),
+  }),
+  async (req, res) => {
+    res.json(await cityNear(req.query))
   },
 )
 

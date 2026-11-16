@@ -111,7 +111,8 @@
   "country": {
     "label": "Pays",
     "choose": "Choisir un pays",
-    "note": "Votre pays détermine les offres et les candidats affichés, la devise et le format des dates et des nombres."
+    "note": "Votre pays détermine les offres et les candidats affichés, la devise et le format des dates et des nombres.",
+    "yours": "Votre pays"
   },
   "language": {
     "label": "Langue"

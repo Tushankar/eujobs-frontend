@@ -87,15 +87,31 @@ export async function autocomplete({ input, language, sessionToken }) {
   return items
 }
 
+/** A place's city and country code from its address components. */
+function cityOf(place) {
+  const component = (type) => place?.addressComponents?.find((part) => part.types.includes(type))
+  return {
+    countryCode: component('country')?.shortText,
+    city: (component('locality') ?? component('postal_town') ?? component('administrative_area_level_3'))?.longText,
+  }
+}
+
+/**
+ * The city at the visitor's position for the job search's "Use my current location" (owner 2026-11-16): { city,
+ * countryCode }, or nulls outside EU 27 + UK or when nothing is found. The point is sent to Google once and is never
+ * stored or logged.
+ */
+export async function cityNear({ latitude, longitude, language }) {
+  const { city, countryCode } = cityOf(await client.nearby({ latitude, longitude, languageCode: language }))
+  return city && (await allowedCountryCodes()).includes(countryCode) ? { city, countryCode } : { city: null, countryCode: null }
+}
+
 /** One city as { placeId, city, countryCode }; a place outside EU 27 + UK is `not_allowed`. */
 export async function placeDetails({ placeId, language, sessionToken }) {
   const key = `${language}|${placeId}`
   const cached = placeCache.get(key)
   if (cached) return cached
-  const place = await client.details({ placeId, languageCode: language, sessionToken })
-  const component = (type) => place.addressComponents?.find((part) => part.types.includes(type))
-  const countryCode = component('country')?.shortText
-  const city = (component('locality') ?? component('postal_town') ?? component('administrative_area_level_3'))?.longText
+  const { city, countryCode } = cityOf(await client.details({ placeId, languageCode: language, sessionToken }))
   if (!city || !(await allowedCountryCodes()).includes(countryCode)) throw fieldError({ placeId: 'not_allowed' })
   const result = { placeId, city, countryCode }
   placeCache.set(key, result)

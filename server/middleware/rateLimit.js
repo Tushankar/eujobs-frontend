@@ -41,6 +41,8 @@ export const signUpsPerIp = limiter(rateLimits.signUpsPerIp, byIp)
 export const certificateVerifyPerIp = limiter(LIMITS.certificate.verifyPerIp, byIp)
 // The public newsletter form
 export const newsletterPerIp = limiter(LIMITS.newsletter.perIp, byIp)
+// The public "Use my current location" (owner 2026-11-16)
+export const placesNearPerIp = limiter(LIMITS.places.nearPerIp, byIp)
 // After requireAuth (§2.16)
 export const placesAutocompletePerUser = limiter(LIMITS.places.perUser.autocomplete, byUser)
 export const placesDetailsPerUser = limiter(LIMITS.places.perUser.details, byUser)
