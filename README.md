@@ -71,3 +71,11 @@ There is one test database on purpose: the Atlas cluster is shared with other pr
 | [IMPLEMENTATION_PLAN.md](IMPLEMENTATION_PLAN.md) | the original frontend plan (history only) |
 
 Code paths in the docs (`src/...`) are relative to `client/`. On Vercel, set the project's **Root Directory** to `client` and `VITE_API_URL` to the API.
+
+## Production
+
+Local development is unchanged (no `VITE_API_URL`, Vite proxies `/api` to `localhost:5000`). Production:
+
+- **Frontend** https://eujobs-frontend.vercel.app (Vercel, Root Directory `client`, Production env `VITE_API_URL=https://www.eu-jobs.kyptronix.net`).
+- **API** https://www.eu-jobs.kyptronix.net (Ubuntu VPS, nginx + systemd unit `eujobs-api`). Its env is `/etc/eujobs/api.env`, made from the gitignored `server/.env.production` (`NODE_ENV=production`, `PUBLIC_API_URL` makes file URLs absolute). Stripe test-mode Dashboard webhook → `/api/v1/stripe/webhook`.
+- **Update the API**: push to `main`, then on the VPS `sudo bash setup-vps.sh` ([deploy/setup-vps.sh](deploy/setup-vps.sh)): pulls `main`, `npm ci`, restarts, checks health.
