@@ -4,7 +4,7 @@ import gsap from 'gsap'
 import { ArrowLeft, ArrowUpRight, Bookmark, BriefcaseBusiness, Globe, MapPin, Plane, SearchX } from 'lucide-react'
 import { useTranslation } from 'react-i18next'
 import { Link, useSearchParams } from 'react-router-dom'
-import { CompanyLogo, Icon, Skeleton, SkeletonRegion } from '@/components/ui'
+import { CompanyLogo, Icon, Skeleton, SkeletonRegion, Switch } from '@/components/ui'
 import SkillPills from '@/components/common/SkillPills.jsx'
 import VerifiedCompany from '@/components/common/VerifiedCompany.jsx'
 import { useDocumentTitle } from '@/components/layout/useDocumentTitle.js'
@@ -113,13 +113,21 @@ export default function PublicJobsPage() {
           <JobSearchForm key={`${q}|${location}`} q={q} location={location} onSearch={update} className={styles.search} data-intro />
           <div className={styles.filters} data-intro>
             <Tabs active={tab} counts={data && { all: data.total, ...data.counts }} onChange={(key) => update(Object.fromEntries(GROUPS.map((group) => [group, key.startsWith(`${group}:`) ? key.split(':')[1] : null])))} />
-            <button type="button" className={cx(styles.toggle, visa && styles.toggleOn)} aria-pressed={visa} onClick={() => update({ visa: visa ? null : '1' })}>
-              <Icon as={Plane} size={15} />
-              {t('common:visaSponsorship')}
-            </button>
           </div>
         </header>
 
+        {/* The count and "Visa sponsorship only" (2026-11-16): shown with no results too, so the switch can go off. */}
+        {data && !isError && (
+          <div className={styles.resultsBar}>
+            <p className={styles.results} aria-live="polite">
+              {t('website:jobs.results', { count: items.length })}
+            </p>
+            <label className={styles.visaSwitch}>
+              <Switch checked={visa} onChange={(on) => update({ visa: on ? '1' : null })} label={t('website:jobs.visaOnly')} />
+              <span aria-hidden="true">{t('website:jobs.visaOnly')}</span>
+            </label>
+          </div>
+        )}
         {isError ? (
           <p className={shell.empty}>{t('website:loadError')}</p>
         ) : !data ? (
@@ -136,9 +144,6 @@ export default function PublicJobsPage() {
         ) : (
           <div className={cx(styles.layout, openId && styles.layoutOpen)}>
             <div className={cx(styles.list, isFetching && styles.busy)} aria-busy={isFetching}>
-              <p className={styles.results} aria-live="polite">
-                {t('website:jobs.results', { count: items.length })}
-              </p>
               <ul className={styles.rows}>
                 {items.map((item) => (
                   <li key={item.id} data-row>

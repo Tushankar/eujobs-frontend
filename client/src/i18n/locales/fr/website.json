@@ -154,6 +154,7 @@
     "apply": "Postuler",
     "signInNote": "Connectez-vous pour postuler ou enregistrer. Vous reviendrez directement à cette offre.",
     "signUp": "Nouveau ? Créez un compte gratuit",
-    "requirements": "Exigences"
+    "requirements": "Exigences",
+    "visaOnly": "Uniquement avec parrainage de visa"
   }
 }

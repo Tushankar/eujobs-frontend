@@ -154,6 +154,7 @@
     "apply": "Postularme",
     "signInNote": "Inicia sesión para postularte o guardar. Volverás directamente a este empleo.",
     "signUp": "¿Eres nuevo? Crea una cuenta gratis",
-    "requirements": "Requisitos"
+    "requirements": "Requisitos",
+    "visaOnly": "Solo con patrocinio de visado"
   }
 }

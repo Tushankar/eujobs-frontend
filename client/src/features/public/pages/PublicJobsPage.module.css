@@ -3,7 +3,7 @@ section.panel {
   overflow: visible; /* the open job stays pinned while the page scrolls (the landing card clips) */
 }
 
-/* The lead and the search keep their own widths; the tabs and the visa toggle share the full row (2026-11-16). */
+/* The lead and the search keep their own widths; the tabs get the full row so all seven fit without scrolling. */
 .head {
   max-width: none;
 }
@@ -15,52 +15,13 @@ section.panel {
 
 /* ---------- Tabs ---------- */
 
-/* The category tabs and the "Visa sponsorship" toggle (2026-11-16) on one row; they wrap on narrow screens. */
+/* The category tabs (the visa switch sits on the results line, 2026-11-16). */
 .filters {
-  display: flex;
-  flex-wrap: wrap;
-  align-items: center;
-  gap: 12px;
   margin-top: 24px;
 }
 
 .filters .tabs {
   margin-top: 0;
-}
-
-.toggle {
-  display: inline-flex;
-  flex-shrink: 0;
-  align-items: center;
-  gap: 8px;
-  height: 46px;
-  padding: 0 18px;
-  border: 1px solid light-dark(#e9ebef, var(--border));
-  border-radius: 999px;
-  background: light-dark(#fff, var(--card));
-  font: inherit;
-  font-size: 14px;
-  font-weight: 500;
-  white-space: nowrap;
-  color: light-dark(#4f545b, var(--muted-foreground));
-  cursor: pointer;
-  transition:
-    border-color 0.2s ease,
-    background 0.2s ease,
-    color 0.2s ease;
-}
-
-.toggle:hover {
-  border-color: light-dark(#c9ced6, var(--border-strong));
-  color: light-dark(#161719, var(--foreground));
-}
-
-/* On: filled ink, like an applied toolbar filter. */
-.toggleOn,
-.toggleOn:hover {
-  border-color: light-dark(#161719, var(--foreground));
-  background: light-dark(#161719, var(--foreground));
-  color: light-dark(#fff, var(--background));
 }
 
 .tabs {
@@ -145,12 +106,33 @@ section.panel {
 
 /* ---------- Split view ---------- */
 
+/* The count and the "Visa sponsorship only" switch, above the split view. */
+.resultsBar {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  justify-content: space-between;
+  gap: 8px 16px;
+  margin-top: 28px;
+}
+
+.visaSwitch {
+  display: inline-flex;
+  align-items: center;
+  gap: 10px;
+  font-size: 13px;
+  font-weight: 600;
+  color: light-dark(#37404e, var(--foreground));
+  cursor: pointer;
+  user-select: none;
+}
+
 .layout {
   display: grid;
   grid-template-columns: minmax(0, 400px) minmax(0, 1fr);
   gap: 24px;
   align-items: start;
-  margin-top: 32px;
+  margin-top: 14px;
 }
 
 .list {
@@ -531,7 +513,7 @@ section.panel {
 @media (max-width: 899px) {
   .layout {
     grid-template-columns: minmax(0, 1fr);
-    margin-top: 24px;
+    margin-top: 14px;
   }
 
   .detail {
