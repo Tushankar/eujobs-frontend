@@ -9,9 +9,9 @@
   "city": {
     "label": "Ville",
     "placeholder": "Commencez à saisir une ville",
-    "hint": "Villes de l’UE et du Royaume-Uni.",
+    "hint": "Des villes du monde entier.",
     "searching": "Recherche…",
-    "noResults": "Aucune ville correspondante dans l’UE ou au Royaume-Uni.",
+    "noResults": "Aucune ville correspondante.",
     "retry": "Réessayer",
     "value": "{{city}}, {{country}}"
   },

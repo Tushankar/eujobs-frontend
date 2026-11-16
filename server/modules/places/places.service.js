@@ -4,15 +4,13 @@ import { Country } from '../meta/meta.model.js'
 import { googlePlaces } from './places.google.js'
 
 /*
- * Places proxy (G-1, §2.16): city suggestions and place details in the user's language, EU 27 + UK only.
- * A place is stored as { countryCode, city, placeId }, never with coordinates.
+ * Places proxy (G-1, §2.16): city suggestions and place details in the user's language, in every enabled country
+ * (worldwide since 2026-11-16). A place is stored as { countryCode, city, placeId }, never with coordinates.
  */
 
-// P3-Q1: Google takes at most 15 region codes, so a fixed Europe rectangle (Cyprus, Malta, the Canary
-// Islands, Madeira and the Azores included) fills the suggestions and the server keeps EU 27 + UK.
+// P3-Q1, owner 2026-11-16 ("EU Jobs" first, then worldwide): suggestions are biased to this Europe rectangle (Cyprus,
+// Malta, the Canary Islands, Madeira and the Azores included), not restricted to it.
 const EUROPE = { rectangle: { low: { latitude: 27.5, longitude: -31.5 }, high: { latitude: 71, longitude: 35 } } }
-// P3-D1: Google's own short names that Intl.DisplayNames does not use.
-const GOOGLE_COUNTRY_ALIASES = { en: { uk: 'GB' } }
 
 let client = googlePlaces
 
@@ -55,29 +53,30 @@ export async function allowedCountryCodes() {
 
 export const normalize = (text) => text.normalize('NFD').replace(/\p{M}/gu, '').toLowerCase().trim()
 
-/** Country name in `language` → code, for the allowed countries. */
-function countryCodesByName(codes, language) {
+/** The names, in `language`, of the countries the platform does not offer (enabled: false). */
+async function disabledCountryNames(language) {
   const names = new Intl.DisplayNames([language], { type: 'region' })
-  const byName = new Map(codes.map((code) => [normalize(names.of(code)), code]))
-  for (const [alias, code] of Object.entries(GOOGLE_COUNTRY_ALIASES[language] ?? {})) if (codes.includes(code)) byName.set(alias, code)
-  return byName
+  return new Set((await Country.find({ enabled: false, isRemote: false }, 'code')).map((country) => normalize(names.of(country.code))))
 }
 
-/** P3-D1: the last part of the secondary text names the country; a city-state has only its main text. */
-function suggestionCountry({ structuredFormat }, byName) {
+/**
+ * P3-D1: the last part of the secondary text names the country (a city-state has only its main text). A suggestion
+ * only drops out when that names a disabled country; the picked place's country code is checked in placeDetails.
+ */
+function inDisabledCountry({ structuredFormat }, disabled) {
   const text = structuredFormat.secondaryText?.text || structuredFormat.mainText.text
-  return byName.get(normalize(text.split(',').at(-1)))
+  return disabled.has(normalize(text.split(',').at(-1)))
 }
 
 export async function autocomplete({ input, language, sessionToken }) {
   const key = `${language}|${input.trim().toLowerCase()}`
   const cached = suggestionCache.get(key)
   if (cached) return cached
-  const suggestions = await client.autocomplete({ input, languageCode: language, sessionToken, locationRestriction: EUROPE })
-  const byName = countryCodesByName(await allowedCountryCodes(), language)
+  const suggestions = await client.autocomplete({ input, languageCode: language, sessionToken, locationBias: EUROPE })
+  const disabled = await disabledCountryNames(language)
   const items = suggestions
     .map((suggestion) => suggestion.placePrediction)
-    .filter((prediction) => prediction?.structuredFormat && suggestionCountry(prediction, byName))
+    .filter((prediction) => prediction?.structuredFormat && !inDisabledCountry(prediction, disabled))
     .map(({ placeId, structuredFormat }) => ({
       placeId,
       city: structuredFormat.mainText.text,

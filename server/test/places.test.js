@@ -26,6 +26,8 @@ describe('GET /places/autocomplete (G-1, §2.16)', () => {
       suggestion('ChIJY5PQNOTdX0gRL_NVxyr6Ib0', 'Londonderry', 'UK'),
       suggestion('ChIJRyEiyiZ0lUcR8_example', 'Luxembourg'),
       suggestion('ChIJbern', 'Bern', 'Switzerland'),
+      // A disabled country (owner decision pending) drops out.
+      suggestion(MOSCOW.placeId, 'Moscow', 'Russia'),
     ]
     const res = await autocomplete(await createUser(), 'Lond')
     assert.equal(res.status, 200)
@@ -39,22 +41,23 @@ describe('GET /places/autocomplete (G-1, §2.16)', () => {
     ])
   })
 
-  it('reads country names in the user language and passes language, session token and the Europe box', async () => {
+  it('reads country names in the user language and passes language, session token and the Europe bias (not a limit)', async () => {
     fake.suggestions = [
       suggestion(PLACES.london.placeId, 'Londres', 'Reino Unido'),
       suggestion('ChIJA8c2lxTNXIgRmMwHc-RRGWI', 'London', 'Kentucky, EE. UU.'),
       suggestion('ChIJpraga', 'Praga', 'Chequia'),
+      suggestion(MOSCOW.placeId, 'Moscú', 'Rusia'),
     ]
     const sessionToken = randomUUID()
     const res = await autocomplete(await createUser({ language: 'es' }), 'Lond', sessionToken)
-    assert.deepEqual(res.body.items.map((item) => item.city), ['Londres', 'Praga'])
+    assert.deepEqual(res.body.items.map((item) => item.city), ['Londres', 'London', 'Praga'])
     assert.deepEqual(calls, [
       {
         kind: 'autocomplete',
         input: 'Lond',
         languageCode: 'es',
         sessionToken,
-        locationRestriction: { rectangle: { low: { latitude: 27.5, longitude: -31.5 }, high: { latitude: 71, longitude: 35 } } },
+        locationBias: { rectangle: { low: { latitude: 27.5, longitude: -31.5 }, high: { latitude: 71, longitude: 35 } } },
       },
     ])
   })
@@ -141,7 +144,9 @@ describe('the real Google client (fetch stubbed)', () => {
     assert.ok(!url.includes(config.googlePlacesApiKey))
     const body = JSON.parse(init.body)
     assert.deepEqual(body.includedPrimaryTypes, ['(cities)'])
-    assert.equal(body.locationRestriction.rectangle.high.longitude, 35)
+    // Owner 2026-11-16: Europe first, worldwide allowed: a bias, never a restriction.
+    assert.equal(body.locationBias.rectangle.high.longitude, 35)
+    assert.equal(body.locationRestriction, undefined)
     assert.equal(body.includedRegionCodes, undefined)
   })
 

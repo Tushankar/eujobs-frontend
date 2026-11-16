@@ -38,6 +38,9 @@ export const viewFilter = (country) => {
   if (country === 'WORLDWIDE') return {}
   return country === 'REMOTE' ? { country: 'REMOTE' } : { country, workPreference: { $in: ['on_site', 'hybrid'] } }
 }
+/** Views whose jobs pay in different currencies (owner 2026-11-16): no single view currency, no minimum salary. */
+const MIXED_CURRENCIES = ['WORLDWIDE', 'REMOTE']
+
 /** A candidate browses Worldwide until they pick Remote or a country (owner 2026-11-16); others use their picker. */
 export const viewOf = (user) => (user.role === 'candidate' && user.jobsWorldwide !== false ? 'WORLDWIDE' : user.pickerCountry ?? 'REMOTE')
 
@@ -123,8 +126,8 @@ export async function searchJobs(user, query) {
     if (query.level.length && !query.level.includes(job.level)) return false
     if (query.placeId && job.location?.placeId !== query.placeId) return false
     if (query.eligible && view === 'REMOTE' && job.remoteCountries.length && !job.remoteCountries.includes(query.eligible)) return false
-    // Worldwide mixes currencies, so its list has no minimum salary (owner 2026-11-16).
-    if (query.salaryMin != null && view !== 'WORLDWIDE' && !(annualTop(job.salary) >= query.salaryMin)) return false
+    // Worldwide and Remote mix currencies (remote jobs pay in the recruiter's choice), so they have no minimum salary.
+    if (query.salaryMin != null && !MIXED_CURRENCIES.includes(view) && !(annualTop(job.salary) >= query.salaryMin)) return false
     return !query.q || matchesKeywords(query.q, haystack(job, context.company(job), user.language))
   })
   const sorters = {
@@ -133,7 +136,7 @@ export async function searchJobs(user, query) {
     salary: (a, b) => (annualTop(b.salary) ?? -1) - (annualTop(a.salary) ?? -1) || newest(a, b),
   }
   const items = kept.sort(sorters[query.sort]).map((job) => context.card(job))
-  const currency = (await Country.findOne({ code: view }, 'currency'))?.currency ?? null
+  const currency = MIXED_CURRENCIES.includes(view) ? null : ((await Country.findOne({ code: view }, 'currency'))?.currency ?? null)
   return { items, total: items.length, page: 1, pageSize: items.length, view: { country: view, currency } }
 }
 

@@ -9,9 +9,9 @@
   "city": {
     "label": "Ciudad",
     "placeholder": "Empieza a escribir una ciudad",
-    "hint": "Ciudades de la UE y el Reino Unido.",
+    "hint": "Ciudades de cualquier país.",
     "searching": "Buscando…",
-    "noResults": "No hay ninguna ciudad de la UE o el Reino Unido que coincida.",
+    "noResults": "No hay ninguna ciudad que coincida.",
     "retry": "Reintentar",
     "value": "{{city}}, {{country}}"
   },

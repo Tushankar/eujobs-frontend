@@ -21,6 +21,8 @@ export const EMPTY_VALUES = {
   salaryMin: '',
   salaryMax: '',
   salaryPeriod: 'year',
+  // A remote job's salary currency (recruiter's choice, 2026-11-16); other jobs pay in their country's currency.
+  salaryCurrency: 'EUR',
   visaSponsorship: false,
 }
 
@@ -50,6 +52,7 @@ export function jobToValues(job) {
     salaryMin: toText(job.salary?.min),
     salaryMax: toText(job.salary?.max),
     salaryPeriod: job.salary?.period ?? 'year',
+    salaryCurrency: (job.country === 'REMOTE' && job.salary?.currency) || 'EUR',
     visaSponsorship: job.visaSponsorship,
   }
 }
@@ -73,7 +76,7 @@ export function valuesToBody(values) {
     workPreference: values.workPreference || null,
     placeId: !remote && values.place ? values.place.placeId : null,
     remoteCountries: remote ? values.remoteCountries : [],
-    salary: min == null && max == null ? null : { min, max, period: values.salaryPeriod },
+    salary: min == null && max == null ? null : { min, max, period: values.salaryPeriod, ...(remote && { currency: values.salaryCurrency }) },
   }
 }
 
@@ -150,6 +153,6 @@ export function validateAll(values, limits) {
 
 /** A server VALIDATION_FAILED on the job body, as form errors (the body's names map back to the form's). */
 export function bodyErrorsToForm(fields) {
-  const renamed = { 'salary.min': 'salaryMin', 'salary.max': 'salaryMax', salary: 'salaryMin' }
+  const renamed = { 'salary.min': 'salaryMin', 'salary.max': 'salaryMax', 'salary.currency': 'salaryCurrency', salary: 'salaryMin' }
   return Object.fromEntries(Object.entries(fields).map(([field, error]) => [renamed[field] ?? field.split('.')[0], error]))
 }

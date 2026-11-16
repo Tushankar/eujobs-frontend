@@ -70,6 +70,8 @@ export const LIMITS = {
     experienceYears: { min: 0, max: 50 },
     salary: { min: 0, max: 100_000_000 },
     languages: { max: 10 },
+    // OQ-6i, worldwide since 2026-11-16: a remote job's eligible countries (none = open worldwide).
+    remoteCountries: { max: 60 },
   },
   // M-073, M-072, M-091, OD14
   application: { coverNote: { max: 2000 } },

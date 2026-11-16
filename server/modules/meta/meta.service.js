@@ -4,6 +4,7 @@ import { ENUMS } from '../../config/enums.js'
 import { AppError, fieldError } from '../../lib/errors.js'
 import { t } from '../../lib/i18n.js'
 import { Plan } from '../payments/payments.model.js'
+import { chargeCurrency } from '../payments/currencies.js'
 import { savingPercent } from '../payments/plans.stripe.js'
 import { Country, Faq, LegalDocument } from './meta.model.js'
 
@@ -64,10 +65,11 @@ export function listLanguageCodes() {
   return ISO6391.getAllCodes().sort()
 }
 
-/** The currency of the signed-in user's header country (M-130), or null when anonymous. */
+/** The charging currency of the signed-in user's header country (M-130; USD outside EU + UK, 2026-11-16), or null when anonymous. */
 export async function userCurrency(user) {
   if (!user?.pickerCountry) return null
-  return (await Country.findOne({ code: user.pickerCountry }, 'currency'))?.currency ?? null
+  const currency = (await Country.findOne({ code: user.pickerCountry }, 'currency'))?.currency
+  return currency ? chargeCurrency(currency) : null
 }
 
 /** M-116, §3.22: one role's plans (Free then Plus; Free then Recruiter Plus), in one language, priced in `currency` (Free is 0; null where none). */

@@ -1,6 +1,6 @@
 import { useTranslation } from 'react-i18next'
 import { CircleAlert, CircleCheck } from 'lucide-react'
-import { useGetConfigQuery } from '@/app/api.js'
+import { useGetConfigQuery, useGetCountriesQuery } from '@/app/api.js'
 import { Checkbox, Icon, SelectField, TextareaField, TextField } from '@/components/ui'
 import CityField from '@/components/common/CityField.jsx'
 import { useJobText } from '@/lib/jobText.js'
@@ -31,6 +31,17 @@ function QualityChecks({ values }) {
   )
 }
 
+/** Every currency an enabled country uses, as "EUR · Euro", for a remote job's salary (2026-11-16); EUR, GBP and USD first. */
+function useCurrencyOptions() {
+  const { i18n } = useTranslation()
+  const { data: countries = [] } = useGetCountriesQuery()
+  const names = new Intl.DisplayNames([i18n.language], { type: 'currency' })
+  const first = ['EUR', 'GBP', 'USD']
+  return [...new Set(countries.map((country) => country.currency))]
+    .sort((a, b) => (first.includes(a) ? first.indexOf(a) : 9) - (first.includes(b) ? first.indexOf(b) : 9) || a.localeCompare(b))
+    .map((code) => ({ value: code, label: `${code} · ${names.of(code)}` }))
+}
+
 /**
  * The fields (or read-only content) of one wizard step. `bind(name)` returns value/onChange/error props;
  * `errorOf(name)` the translated error of a field set with setValue.
@@ -41,6 +52,7 @@ export default function JobStepFields({ step, values, bind, errorOf, setValue, c
   const { data: config } = useGetConfigQuery()
   const { preview, currency, remote } = useJobPreview(values)
   const enumOptions = (name) => (config?.enums[name] ?? []).map((key) => ({ value: key, label: t(`enums:${name}.${key}`) }))
+  const currencies = useCurrencyOptions()
   const J = config?.limits.job
 
   switch (step) {
@@ -122,6 +134,7 @@ export default function JobStepFields({ step, values, bind, errorOf, setValue, c
           </div>
           <div className={styles.pair}>
             <SelectField label={t('jobs:fields.salaryPeriod')} options={enumOptions('salaryPeriod')} disabled={!currency} {...bind('salaryPeriod')} />
+            {remote && <SelectField label={t('jobs:fields.salaryCurrency')} hint={t('jobs:fields.salaryCurrencyHint')} options={currencies} {...bind('salaryCurrency')} />}
           </div>
           <p className={styles.note}>{t('jobs:fields.salaryNote')}</p>
           <Checkbox name="visaSponsorship" checked={values.visaSponsorship} onChange={(event) => setValue('visaSponsorship', event.target.checked)}>

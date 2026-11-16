@@ -59,7 +59,7 @@ export function LanguageRequirements({ value, onChange, max, error }) {
   )
 }
 
-/** OQ-6i: the eligible countries of a remote job (EU 27 + UK); empty means all of them. */
+/** OQ-6i: the eligible countries of a remote job (any enabled country); empty means open worldwide (2026-11-16). */
 export function EligibleCountries({ value, onChange, error }) {
   const { t } = useTranslation()
   const format = useFormat()

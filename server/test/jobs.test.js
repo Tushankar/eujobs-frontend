@@ -64,7 +64,7 @@ describe('recruiter jobs (§3.7, M-033 … M-041, P4-D6 … D8)', () => {
     }
   })
 
-  it('locks the salary currency to the job country, EUR for Remote (M-131, OD2, OQ-6i)', async () => {
+  it('locks the salary currency to the job country; Remote pays in the chosen currency, EUR by default (M-131, OD2, OQ-6i)', async () => {
     const { user } = await approvedRecruiter()
     const warsaw = await create(user, jobBody({ placeId: PLACES.warsaw.placeId, salary: { min: 9000, max: 12000, period: 'month' } }))
     assert.deepEqual([warsaw.body.country, warsaw.body.salary.currency, warsaw.body.salary.period], ['PL', 'PLN', 'month'])
@@ -72,6 +72,15 @@ describe('recruiter jobs (§3.7, M-033 … M-041, P4-D6 … D8)', () => {
     assert.deepEqual([remote.body.country, remote.body.location, remote.body.remoteCountries, remote.body.salary.currency], ['REMOTE', null, ['PL', 'DE'], 'EUR'])
     const bad = await create(user, jobBody({ workPreference: 'remote', remoteCountries: ['KP'] }))
     assert.deepEqual(bad.body.error.fields, { remoteCountries: 'invalid' })
+
+    // Worldwide since 2026-11-16: any enabled country is eligible, and a remote job pays in the recruiter's currency.
+    const world = await create(user, jobBody({ workPreference: 'remote', placeId: null, remoteCountries: ['US', 'IN'], salary: { min: 90000, max: 120000, period: 'year', currency: 'usd' } }))
+    assert.deepEqual([world.body.remoteCountries, world.body.salary.currency], [['US', 'IN'], 'USD'])
+    const unknown = await create(user, jobBody({ workPreference: 'remote', placeId: null, salary: { min: 1, max: 2, period: 'year', currency: 'XXX' } }))
+    assert.deepEqual(unknown.body.error.fields, { 'salary.currency': 'invalid' })
+    // A city job keeps its country's currency whatever is sent.
+    const london = await create(user, jobBody({ placeId: PLACES.london.placeId, salary: { min: 1, max: 2, period: 'year', currency: 'USD' } }))
+    assert.equal(london.body.salary.currency, 'GBP')
   })
 
   it('follows the status transitions, deletes drafts only and respects the restricted lock (M-038, M-040, M-167)', async () => {
@@ -169,7 +178,8 @@ describe('candidate job browsing (M-043, M-044, M-052, M-053, OD2, U8, U25, P4-Q
 
     const remoteViewer = await createUser({ pickerCountry: 'REMOTE', jobsWorldwide: false })
     const remoteView = (await findJobs(remoteViewer)).body
-    assert.deepEqual([remoteView.items.map((job) => job.id), remoteView.view.currency], [[remote.id], 'EUR'])
+    // Remote jobs pay in different currencies (2026-11-16), so the view has none.
+    assert.deepEqual([remoteView.items.map((job) => job.id), remoteView.view.currency], [[remote.id], null])
     assert.deepEqual((await findJobs(remoteViewer, '?eligible=PL')).body.items.map((job) => job.id), [remote.id])
     assert.deepEqual((await findJobs(remoteViewer, '?eligible=DE')).body.items, [])
 

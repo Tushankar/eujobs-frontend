@@ -116,7 +116,7 @@
     "city": "Ciudad del puesto",
     "cityHint": "La ciudad determina el país de la oferta y la moneda del salario.",
     "remoteCountries": "Países admitidos",
-    "remoteCountriesHint": "Opcional. Déjalo vacío para aceptar candidatos de cualquier lugar de la UE y el Reino Unido.",
+    "remoteCountriesHint": "Opcional. Déjalo vacío para aceptar candidatos de cualquier lugar del mundo.",
     "addCountry": "Añadir un país",
     "removeCountry": "Quitar {{country}}",
     "salaryMin": "Salario mínimo ({{currency}})",
@@ -124,6 +124,8 @@
     "salaryNoCurrency": "Salario",
     "salaryNeedsPlace": "Elige primero la modalidad de trabajo y la ciudad: determinan la moneda.",
     "salaryPeriod": "Periodo",
+    "salaryCurrency": "Moneda del salario",
+    "salaryCurrencyHint": "Las ofertas en remoto pueden pagar en cualquier moneda.",
     "salaryNote": "El salario es opcional, pero los puestos con una horquilla suelen atraer a candidatos más relevantes.",
     "visaSponsorship": "Patrocinio de visado disponible"
   },

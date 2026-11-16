@@ -4,6 +4,7 @@ import { LIMITS } from '../../config/limits.js'
 import { validate } from '../../lib/validate.js'
 import { optionalAuth, requireAuth } from '../../middleware/auth.js'
 import * as schemas from './meta.schemas.js'
+import { chargeCurrency } from '../payments/currencies.js'
 import { companyCurrency } from '../payments/payments.service.js'
 import * as meta from './meta.service.js'
 
@@ -31,7 +32,8 @@ router.get('/meta/languages', (req, res) => {
  */
 router.get('/plans', optionalAuth, validate({ query: schemas.plansQuery }), async (req, res) => {
   const recruiter = (req.query.role ?? req.user?.role) === 'recruiter'
-  const currency = req.query.currency ?? (recruiter && req.user?.role === 'recruiter' ? await companyCurrency(req.user) : await meta.userCurrency(req.user)) ?? 'EUR'
+  // A requested currency is charged as such: the 8 of EU + UK, or USD (worldwide since 2026-11-16).
+  const currency = (req.query.currency && chargeCurrency(req.query.currency)) ?? (recruiter && req.user?.role === 'recruiter' ? await companyCurrency(req.user) : await meta.userCurrency(req.user)) ?? 'EUR'
   res.json(list(await meta.listPlans(currency, req.query.language ?? req.user?.language ?? 'en', recruiter ? 'recruiter' : 'candidate')))
 })
 

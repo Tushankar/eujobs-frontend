@@ -9,7 +9,7 @@
     "filtersCount": "Filters · {{count}}",
     "hint": "Try “remote product design” or “Figma fintech”. Every word must appear in the role, company, skills, city, work mode, level or industry.",
     "viewCountry": "Jobs in {{country}}. Change the country in the header to see another market.",
-    "viewRemote": "Remote jobs open to candidates in the EU and the UK. Salaries are in EUR.",
+    "viewRemote": "Remote jobs you can do from anywhere they accept. Each job shows its eligible countries and pays in its own currency.",
     "viewWorldwide": "Jobs from every country, remote roles included. Salaries show in each job’s own currency. Pick a country or Remote in the header to narrow the list.",
     "count_one": "{{count}} opportunity",
     "count_other": "{{count}} opportunities",
@@ -36,7 +36,7 @@
     "salary": "Minimum salary per year ({{currency}})",
     "salaryHint": "Monthly salaries count twelve times. Jobs without a salary are left out.",
     "eligible": "Eligible in",
-    "anyCountry": "Any EU or UK country",
+    "anyCountry": "Any country",
     "clear": "Clear all",
     "show_one": "Show {{count}} job",
     "show_other": "Show {{count}} jobs"

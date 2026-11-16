@@ -16,6 +16,7 @@ import orbit3 from '@/assets/landing/hero-orbit-3.svg'
 import sparkles from '@/assets/landing/hero-sparkles.svg'
 import hexagons from '@/assets/landing/pattern-hexagons.svg?raw'
 import BrandLogo from '@/components/layout/BrandLogo.jsx'
+import ThemeToggle from '@/components/layout/ThemeToggle.jsx'
 import InlineSvg from './InlineSvg.jsx'
 import JobSearchForm from './JobSearchForm.jsx'
 import styles from './Landing.module.css'
@@ -70,7 +71,10 @@ export function SiteHeader({ className = '' }) {
           ))}
         </div>
       </nav>
-      <ArrowPill to="/sign-in">{t('landing:nav.signIn')}</ArrowPill>
+      <span className={styles.headerActions}>
+        <ThemeToggle className={styles.themeToggle} />
+        <ArrowPill to="/sign-in">{t('landing:nav.signIn')}</ArrowPill>
+      </span>
     </header>
   )
 }

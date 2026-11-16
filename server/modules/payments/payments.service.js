@@ -11,6 +11,7 @@ import { Course, Enrollment } from '../learning/learning.model.js'
 import { enroll } from '../learning/learning.service.js'
 import { Country } from '../meta/meta.model.js'
 import { userCurrency } from '../meta/meta.service.js'
+import { chargeCurrency } from './currencies.js'
 import { notify, notifyAdmins } from '../notifications/notifications.service.js'
 import { User } from '../users/users.model.js'
 import { AppConfig, Counter, Payment, Plan, StripeEvent, Subscription } from './payments.model.js'
@@ -45,11 +46,11 @@ export async function nextReference() {
 
 const formatAmount = (language, amountMinor, currency) => new Intl.NumberFormat(language, { style: 'currency', currency }).format(amountMinor / 100)
 
-/** A recruiter's plan is charged in the currency of the company's country (P11c-Q2; Remote = EUR). */
+/** A recruiter's plan is charged in the company country's currency (P11c-Q2; Remote = EUR; USD outside EU + UK, 2026-11-16). */
 export async function companyCurrency(user) {
   const company = await Company.findById(user.companyId, 'location')
   const code = company?.location?.countryCode
-  return (code && (await Country.findOne({ code }, 'currency'))?.currency) ?? 'EUR'
+  return chargeCurrency((code && (await Country.findOne({ code }, 'currency'))?.currency) ?? 'EUR')
 }
 
 /**
@@ -63,6 +64,8 @@ async function priceItem(user, kind, itemId, interval = 'month') {
     const plan = await Plan.findOne({ key: itemId })
     if (interval === 'year' && !plan.yearlyEnabled) throw fieldError({ interval: 'not_allowed' })
     const price = (interval === 'year' ? plan.yearlyPrices : plan.prices).find((entry) => entry.currency === currency)
+    // A plan without a price in this currency is refused, never a crash (2026-11-16).
+    if (!price) throw fieldError({ itemId: 'not_allowed' })
     return { kind, itemId, itemName: plan.name[user.language], amountMinor: price.amountMinor, currency, interval, stripePriceId: price.stripePriceId }
   }
   const course = /^[a-f\d]{24}$/i.test(itemId) ? await Course.findOne({ _id: itemId, status: 'published', audience: user.role }) : null

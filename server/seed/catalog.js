@@ -36,10 +36,11 @@ async function seedPlans() {
     if (plan.prices.length) {
       const productId = (productIds[plan.key] = await ensureProduct(plan))
       const percent = stored?.yearlyDiscountPercent ?? 15
-      const monthly = stored?.prices?.length ? stored.prices : plan.prices
-      const yearly = stored?.yearlyPrices?.length
-        ? stored.yearlyPrices
-        : monthly.map(({ currency, amountMinor }) => ({ currency, amountMinor: yearlyAmount(amountMinor, percent), override: false }))
+      // The admin's stored prices are kept; a currency the data has and the plan lacks (USD, 2026-11-16) is added.
+      const added = (stored?.prices ?? []).length ? plan.prices.filter((price) => !stored.prices.some((own) => own.currency === price.currency)) : []
+      const monthly = stored?.prices?.length ? [...stored.prices, ...added] : plan.prices
+      const toYearly = (prices) => prices.map(({ currency, amountMinor }) => ({ currency, amountMinor: yearlyAmount(amountMinor, percent), override: false }))
+      const yearly = stored?.yearlyPrices?.length ? [...stored.yearlyPrices, ...toYearly(added)] : toYearly(monthly)
       const withIds = async (interval, prices) => {
         const missing = prices.filter((price) => !price.stripePriceId)
         const ids = missing.length ? await ensurePlanPrices(productId, plan.key, interval, missing) : {}

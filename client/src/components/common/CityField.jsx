@@ -13,7 +13,7 @@ import styles from './CityField.module.css'
 const DEBOUNCE_MS = 250
 
 /**
- * A city picked through the Places proxy (G-1, §2.16): suggestions in the UI language, EU 27 + UK only, and
+ * A city picked through the Places proxy (G-1, §2.16): suggestions in the UI language, in every enabled country (worldwide since 2026-11-16), and
  * never a request to Google from the browser. One session token per typing session: created on focus and
  * ended by the details call when a city is picked. `value` is { countryCode, city, placeId } or null;
  * typing clears it, so a form only ever holds a picked city.

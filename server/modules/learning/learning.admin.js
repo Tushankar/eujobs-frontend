@@ -9,7 +9,7 @@ import { renderMarkdown } from '../../lib/markdown.js'
 import { skillEntries } from '../../lib/skills.js'
 import { effectivePermissions } from '../admin/admin.service.js'
 import { File } from '../files/files.model.js'
-import { Country } from '../meta/meta.model.js'
+import { CHARGING_CURRENCIES } from '../payments/currencies.js'
 import { userCurrency } from '../meta/meta.service.js'
 import { Payment } from '../payments/payments.model.js'
 import { User } from '../users/users.model.js'
@@ -24,10 +24,9 @@ import { Course, Enrollment } from './learning.model.js'
 const C = LIMITS.course
 const LESSON_FILES = { video: ['videoFileId', 'lesson_video'], document: ['documentFileId', 'lesson_document'] }
 
-/** The 8 charging currencies (M-130), in country order: the EU 27, GB and Remote rows (not the worldwide ones, 2026-11-16). */
+/** The charging currencies (M-130): the 8 of EU + UK and USD for the rest of the world (2026-11-16). */
 export async function courseCurrencies() {
-  const countries = await Country.find({ $or: [{ isEu: true }, { code: 'GB' }, { isRemote: true }] }, 'currency').sort({ order: 1 })
-  return [...new Set(countries.map((country) => country.currency))]
+  return CHARGING_CURRENCIES
 }
 
 async function findCourse(id) {

@@ -83,7 +83,7 @@ describe('PATCH /me (M-134, M-135)', () => {
       assert.equal((await api().get('/api/v1/me').set(auth(user))).body.theme, 'dark')
     }
     const user = await createUser()
-    assert.equal((await patchMe(user, { theme: 'sepia' })).status, 400)
+    assert.equal((await patchMe(user, { theme: 'sepia' })).status, 422)
   })
 
   it('gives admins no country picker (M-138)', async () => {

@@ -59,7 +59,7 @@
     "placeId": {
       "required": "Choose a city from the suggestions.",
       "invalid": "Choose a city from the suggestions.",
-      "not_allowed": "Choose a city in the EU or the UK."
+      "not_allowed": "We can’t accept a city in this country yet. Choose another city."
     },
     "headline": {
       "required": "Enter your current role or headline."

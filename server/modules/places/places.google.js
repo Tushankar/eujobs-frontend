@@ -29,11 +29,11 @@ async function json(response, label) {
 
 export const googlePlaces = {
   /** City suggestions; returns Google's `suggestions` array. */
-  async autocomplete({ input, languageCode, sessionToken, locationRestriction }) {
+  async autocomplete({ input, languageCode, sessionToken, locationBias }) {
     const response = await call(`${BASE_URL}/places:autocomplete`, {
       method: 'POST',
       headers: { 'Content-Type': 'application/json' },
-      body: JSON.stringify({ input, languageCode, sessionToken, includedPrimaryTypes: ['(cities)'], locationRestriction }),
+      body: JSON.stringify({ input, languageCode, sessionToken, includedPrimaryTypes: ['(cities)'], locationBias }),
     })
     return (await json(response, 'autocomplete')).suggestions ?? []
   },

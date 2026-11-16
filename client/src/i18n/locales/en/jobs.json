@@ -115,7 +115,7 @@
     "city": "Job city",
     "cityHint": "The city sets the job's country and its salary currency.",
     "remoteCountries": "Eligible countries",
-    "remoteCountriesHint": "Optional. Leave empty to accept candidates anywhere in the EU and the UK.",
+    "remoteCountriesHint": "Optional. Leave empty to accept candidates anywhere in the world.",
     "addCountry": "Add a country",
     "removeCountry": "Remove {{country}}",
     "salaryMin": "Minimum salary ({{currency}})",
@@ -123,6 +123,8 @@
     "salaryNoCurrency": "Salary",
     "salaryNeedsPlace": "Choose the work preference and city first: they set the currency.",
     "salaryPeriod": "Paid",
+    "salaryCurrency": "Salary currency",
+    "salaryCurrencyHint": "Remote jobs can pay in any currency.",
     "salaryNote": "Salary is optional, but roles with a range usually attract more relevant applicants.",
     "visaSponsorship": "Visa sponsorship available"
   },

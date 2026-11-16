@@ -77,7 +77,7 @@ async function jobFields(user, input, existing) {
   let location
   let remoteCountries = []
   if (input.workPreference === 'remote') {
-    // OD2, OQ-6i: remote jobs list in the Remote view; an empty eligible list means all EU 27 + UK.
+    // OD2, OQ-6i: remote jobs list in the Remote view; an empty eligible list means open worldwide (2026-11-16).
     country = 'REMOTE'
     remoteCountries = [...new Set(input.remoteCountries)]
     const allowed = await allowedCountryCodes()
@@ -88,11 +88,16 @@ async function jobFields(user, input, existing) {
   }
 
   let salary
-  const { min = null, max = null, period } = input.salary ?? {}
+  const { min = null, max = null, period, currency: chosen } = input.salary ?? {}
   if (min !== null || max !== null) {
     if (min !== null && max !== null && max < min) throw fieldError({ 'salary.max': 'below_min' })
-    // M-131: locked to the job country's currency; remote jobs use EUR (the REMOTE row's currency).
-    const currency = country ? (await Country.findOne({ code: country }, 'currency'))?.currency : undefined
+    // M-131: locked to the job country's currency. A remote job pays in the currency the recruiter picks (any
+    // enabled country's, 2026-11-16), EUR (the REMOTE row's) when none is picked.
+    let currency = country ? (await Country.findOne({ code: country }, 'currency'))?.currency : undefined
+    if (country === 'REMOTE' && chosen) {
+      if (!(await Country.exists({ currency: chosen, enabled: true }))) throw fieldError({ 'salary.currency': 'invalid' })
+      currency = chosen
+    }
     salary = { min: min ?? undefined, max: max ?? undefined, currency, period }
   }
 

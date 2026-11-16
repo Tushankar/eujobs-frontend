@@ -7,12 +7,12 @@ import { RECRUITER_COURSE_CONTENT } from './courseContent/recruiter.js'
  * stream (M-114); recruiter pipeline categories are P8-Q2. Covers are client assets (§6 Phase 8, task 4).
  */
 
-// OD1, verbatim: the course price per currency, keyed by the GBP price.
+// OD1, verbatim: the course price per currency, keyed by the GBP price; USD added for the rest of the world (2026-11-16).
 export const COURSE_PRICES = {
-  19: { GBP: 19, EUR: 22, PLN: 95, SEK: 249, DKK: 169, CZK: 549, HUF: 8490, RON: 115 },
-  29: { GBP: 29, EUR: 34, PLN: 145, SEK: 369, DKK: 249, CZK: 829, HUF: 12990, RON: 169 },
-  39: { GBP: 39, EUR: 45, PLN: 195, SEK: 499, DKK: 339, CZK: 1099, HUF: 17490, RON: 229 },
-  49: { GBP: 49, EUR: 57, PLN: 245, SEK: 629, DKK: 429, CZK: 1399, HUF: 21990, RON: 289 },
+  19: { GBP: 19, EUR: 22, PLN: 95, SEK: 249, DKK: 169, CZK: 549, HUF: 8490, RON: 115, USD: 25 },
+  29: { GBP: 29, EUR: 34, PLN: 145, SEK: 369, DKK: 249, CZK: 829, HUF: 12990, RON: 169, USD: 39 },
+  39: { GBP: 39, EUR: 45, PLN: 195, SEK: 499, DKK: 339, CZK: 1099, HUF: 17490, RON: 229, USD: 52 },
+  49: { GBP: 49, EUR: 57, PLN: 245, SEK: 629, DKK: 429, CZK: 1399, HUF: 21990, RON: 289, USD: 65 },
 }
 
 const IMAGES = 'client/src/assets/images'

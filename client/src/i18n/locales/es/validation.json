@@ -59,7 +59,7 @@
     "placeId": {
       "required": "Elige una ciudad de las sugerencias.",
       "invalid": "Elige una ciudad de las sugerencias.",
-      "not_allowed": "Elige una ciudad de la UE o el Reino Unido."
+      "not_allowed": "Aún no podemos aceptar ciudades de este país. Elige otra ciudad."
     },
     "headline": {
       "required": "Indica tu puesto actual o un titular."

@@ -9,9 +9,9 @@
   "city": {
     "label": "City",
     "placeholder": "Start typing a city",
-    "hint": "Cities in the EU and the UK.",
+    "hint": "Cities anywhere in the world.",
     "searching": "Searching…",
-    "noResults": "No matching city in the EU or the UK.",
+    "noResults": "No matching city.",
     "retry": "Try again",
     "value": "{{city}}, {{country}}"
   },

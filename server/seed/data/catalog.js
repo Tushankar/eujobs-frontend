@@ -22,9 +22,10 @@ export const COUNTRIES = [
 ]
 
 // OD1 plan prices in major units; stored as integer minor units (U24).
-export const PLUS_PRICES = { GBP: 9, EUR: 10, PLN: 45, SEK: 119, DKK: 79, CZK: 259, HUF: 3990, RON: 55 }
+// USD (owner 2026-11-16): every country outside EU + UK pays in USD.
+export const PLUS_PRICES = { GBP: 9, EUR: 10, PLN: 45, SEK: 119, DKK: 79, CZK: 259, HUF: 3990, RON: 55, USD: 11 }
 // P11c-Q2: Recruiter Plus uses the approved £49 row of §3.10.
-export const RECRUITER_PLUS_PRICES = { GBP: 49, EUR: 57, PLN: 245, SEK: 629, DKK: 429, CZK: 1399, HUF: 21990, RON: 289 }
+export const RECRUITER_PLUS_PRICES = { GBP: 49, EUR: 57, PLN: 245, SEK: 629, DKK: 429, CZK: 1399, HUF: 21990, RON: 289, USD: 65 }
 const minor = (prices) => Object.entries(prices).map(([currency, amount]) => ({ currency, amountMinor: amount * 100 }))
 
 // M-115, M-116, §3.3: what each plan unlocks; Free covers everything that is not gated. §3.22: Recruiter Plus (P11c-Q1 … Q4).

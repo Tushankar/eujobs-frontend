@@ -28,7 +28,7 @@ export async function ensureProduct({ key, name }) {
  * lookup key (Prices are immutable). Returns { currency: priceId }.
  */
 export async function ensurePlanPrices(productId, planKey, interval, prices) {
-  const { data: existing } = await stripe().prices.list({ lookup_keys: prices.map((price) => lookupKeyOf(planKey, interval, price.currency)), active: true, limit: 10 })
+  const { data: existing } = await stripe().prices.list({ lookup_keys: prices.map((price) => lookupKeyOf(planKey, interval, price.currency)), active: true, limit: 100 })
   const priceIds = {}
   for (const { currency, amountMinor } of prices) {
     const lookupKey = lookupKeyOf(planKey, interval, currency)

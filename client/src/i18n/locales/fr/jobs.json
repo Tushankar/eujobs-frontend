@@ -116,7 +116,7 @@
     "city": "Ville du poste",
     "cityHint": "La ville détermine le pays de l’offre et la devise du salaire.",
     "remoteCountries": "Pays éligibles",
-    "remoteCountriesHint": "Facultatif. Laissez vide pour accepter des candidats partout dans l’UE et au Royaume-Uni.",
+    "remoteCountriesHint": "Facultatif. Laissez vide pour accepter des candidats partout dans le monde.",
     "addCountry": "Ajouter un pays",
     "removeCountry": "Retirer {{country}}",
     "salaryMin": "Salaire minimum ({{currency}})",
@@ -124,6 +124,8 @@
     "salaryNoCurrency": "Salaire",
     "salaryNeedsPlace": "Choisissez d’abord le mode de travail et la ville : ils déterminent la devise.",
     "salaryPeriod": "Période",
+    "salaryCurrency": "Devise du salaire",
+    "salaryCurrencyHint": "Les offres à distance peuvent payer dans n’importe quelle devise.",
     "salaryNote": "Le salaire est facultatif, mais les postes avec une fourchette attirent généralement des candidats plus pertinents.",
     "visaSponsorship": "Parrainage de visa possible"
   },

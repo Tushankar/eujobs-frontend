@@ -31,9 +31,13 @@ export const jobBody = z.object({
   workPreference: z.enum(ENUMS.workPreference).nullable().default(null),
   // On-site and hybrid jobs: the city (G-1). Remote jobs: the eligible countries (OQ-6i).
   placeId: placeId.nullable().default(null),
-  remoteCountries: z.array(z.string().trim().toUpperCase().length(2)).max(28).default([]),
+  remoteCountries: z.array(z.string().trim().toUpperCase().length(2)).max(J.remoteCountries.max).default([]),
   // P4-D8: optional; the currency follows the job country (M-131).
-  salary: z.object({ min: salaryAmount, max: salaryAmount, period: z.enum(ENUMS.salaryPeriod) }).nullable().default(null),
+  // `currency` is the recruiter's choice for remote jobs only (2026-11-16); other jobs pay in their country's currency.
+  salary: z
+    .object({ min: salaryAmount, max: salaryAmount, period: z.enum(ENUMS.salaryPeriod), currency: z.string().trim().toUpperCase().length(3).optional() })
+    .nullable()
+    .default(null),
 })
 
 export const jobParams = z.object({ id: objectId })

@@ -9,7 +9,8 @@ import styles from './JobFiltersModal.module.css'
 /**
  * Filters of Find jobs (OD2, U25, P4-Q4, OQ-6i, G-1): work model (country views list hybrid and on-site jobs only),
  * level, city, minimum yearly salary in the view's currency, and the eligible country inside the Remote view. The
- * Worldwide view (owner 2026-11-16) offers every work model and no salary, since its jobs pay in different currencies.
+ * Worldwide view (owner 2026-11-16) offers every work model. Worldwide and Remote have no view currency (their jobs pay
+ * in different currencies), so they have no salary filter.
  * Filters apply live; the footer shows how many jobs match.
  */
 export default function JobFiltersModal({ open, onClose, filters, onChange, resultCount, remote, worldwide, currency }) {
@@ -67,7 +68,7 @@ export default function JobFiltersModal({ open, onClose, filters, onChange, resu
         ) : (
           <CityField label={t('findJobs:filters.city')} hint={t('findJobs:filters.cityHint')} name="jobsCity" value={filters.place} onChange={(place) => onChange({ ...filters, place })} />
         )}
-        {!worldwide && (
+        {currency && (
           <TextField
             label={t('findJobs:filters.salary', { currency })}
             name="salaryMin"
