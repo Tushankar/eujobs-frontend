@@ -271,10 +271,10 @@ export function CareerBanner() {
   )
 }
 
-/** Figma 396:14767: the candidate help FAQs, the first one open. */
+/** Figma 396:14767: the candidate help FAQs, all closed until one is opened (owner 2026-11-16). */
 export function Faq({ faqs }) {
   const { t } = useTranslation()
-  const [open, setOpen] = useState(0)
+  const [open, setOpen] = useState(-1)
   if (!faqs.length) return null
   return (
     <section id="faq" className={`${styles.card} ${styles.section} ${styles.anchor}`} aria-labelledby="faq-title">
