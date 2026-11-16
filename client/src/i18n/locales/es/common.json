@@ -64,5 +64,9 @@
   "theme": {
     "toDark": "Cambiar al modo oscuro",
     "toLight": "Cambiar al modo claro"
+  },
+  "countryGroups": {
+    "europe": "UE y Reino Unido",
+    "world": "Resto del mundo"
   }
 }
