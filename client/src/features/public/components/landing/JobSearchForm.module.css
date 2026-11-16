@@ -1,0 +1,149 @@
+/* The search suggestions (owner 2026-11-16): a list in a portal under the field, above the hero's clipping. */
+.form {
+  position: relative;
+}
+
+.panel {
+  position: fixed;
+  z-index: 70; /* above the floating navbar (StickyNav, 60) */
+  max-height: min(420px, 60vh);
+  padding: 6px;
+  overflow-y: auto;
+  overscroll-behavior: contain;
+  border: 1px solid #e9ebef;
+  border-radius: 18px;
+  background: #fff;
+  box-shadow: 0 18px 48px rgba(19, 31, 53, 0.14);
+  font-family: var(--font-body);
+  color: #161719;
+  animation: drop 0.2s cubic-bezier(0.22, 1, 0.36, 1);
+}
+
+@keyframes drop {
+  from {
+    opacity: 0;
+    transform: translateY(-6px);
+  }
+}
+
+.busy .option {
+  opacity: 0.6;
+}
+
+.option {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  padding: 10px 12px;
+  border-radius: 12px;
+  cursor: pointer;
+  transition:
+    background 0.15s ease,
+    opacity 0.15s ease;
+}
+
+.active {
+  background: #f3f7ff;
+}
+
+.text {
+  display: flex;
+  flex: 1;
+  flex-direction: column;
+  gap: 2px;
+  min-width: 0;
+}
+
+.title,
+.meta {
+  overflow: hidden;
+  white-space: nowrap;
+  text-overflow: ellipsis;
+}
+
+.title {
+  font-size: 14px;
+  font-weight: 600;
+}
+
+.meta {
+  font-size: 12px;
+  color: #5f646b;
+}
+
+.mark {
+  background: none;
+  color: var(--primary);
+}
+
+.go {
+  flex-shrink: 0;
+  color: var(--primary);
+  opacity: 0;
+  transform: translateX(-4px);
+  transition:
+    opacity 0.15s ease,
+    transform 0.15s ease;
+}
+
+.active .go {
+  opacity: 1;
+  transform: none;
+}
+
+.divider {
+  height: 1px;
+  margin: 4px 6px;
+  background: #eef0f3;
+}
+
+.all {
+  font-size: 13px;
+  font-weight: 600;
+  color: var(--primary);
+}
+
+.all .text {
+  color: var(--primary);
+}
+
+.placeIcon {
+  display: grid;
+  flex-shrink: 0;
+  place-items: center;
+  width: 32px;
+  height: 32px;
+  border-radius: 10px;
+  background: #f4f5f7;
+  color: #5f646b;
+}
+
+.count {
+  flex-shrink: 0;
+  font-size: 12px;
+  white-space: nowrap;
+  color: #777c84;
+}
+
+.status {
+  margin: 0;
+  padding: 14px 12px;
+  font-size: 13px;
+  color: #5f646b;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .panel {
+    animation-name: fade;
+  }
+
+  @keyframes fade {
+    from {
+      opacity: 0;
+    }
+  }
+
+  .go {
+    transition: none;
+  }
+}
