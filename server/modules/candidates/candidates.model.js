@@ -31,7 +31,8 @@ const profileSchema = new Schema(
     noFormalQualification: { type: Boolean, default: false },
     languages: [{ _id: false, code: String, level: { type: String, enum: ENUMS.languageLevel } }],
     rightToWork: [
-      { region: { type: String, enum: ENUMS.rtwRegion }, status: { type: String, enum: ENUMS.rtwStatus }, permitExpiresOn: String },
+      // 'EU' or a country code (config/regions.js; 'eu'/'uk' before 2026-11-16).
+      { region: String, status: { type: String, enum: ENUMS.rtwStatus }, permitExpiresOn: String },
     ],
     links: { linkedin: String, portfolio: String },
     photo: { fileId: ObjectId, smallFileId: ObjectId },

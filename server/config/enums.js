@@ -178,7 +178,8 @@ export const ENUMS = {
   companySize: ['1_10', '11_50', '51_200', '201_500', '501_1000', '1000_plus'],
   availability: ['available_now', 'within_2_weeks', 'within_1_month', 'open_to_opportunities', 'not_looking'],
   languageLevel: ['a1', 'a2', 'b1', 'b2', 'c1', 'c2', 'native'],
-  rtwRegion: ['eu', 'uk'],
+  // Right-to-work groups (worldwide since 2026-11-16): an entry is one of these or a country code (config/regions.js).
+  rtwRegion: ['EU'],
   rtwStatus: ['citizen_settled', 'visa_permit', 'needs_sponsorship'],
   verificationCategory: ['identity', 'academic', 'employment', 'right_to_work', 'certificate'],
   evidenceType: [

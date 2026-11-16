@@ -73,7 +73,7 @@ export default function UsersDirectory({ role }) {
     if (name === 'state') return t(`recruiterState.${value}`)
     if (name === 'verification') return value === 'partial' ? t('filters.partial') : t(`verificationState.${value}`)
     if (name === 'plan') return t(`enums:planKey.${value}`)
-    return value === 'none' ? t('filters.noRightToWork') : t('filters.rightToWorkIn', { region: t(`enums:rtwRegion.${value}`) })
+    return value === 'none' ? t('filters.noRightToWork') : t('filters.rightToWorkIn', { region: format.region(value) })
   }
   const allLabel = { status: 'allStatuses', state: 'allStatuses', country: 'allCountries', verification: 'allVerification', plan: 'allPlans', rightToWork: 'anyRightToWork' }
 
@@ -106,7 +106,7 @@ export default function UsersDirectory({ role }) {
   const rightToWork = (row) =>
     row.rightToWork
       .filter((entry) => entry.valid)
-      .map((entry) => `${t(`enums:rtwRegion.${entry.region}`)} · ${t(`enums:rtwStatus.${entry.status}`)}`)
+      .map((entry) => `${format.region(entry.region)} · ${t(`enums:rtwStatus.${entry.status}`)}`)
       .join(', ') || t('noRightToWork')
   const plan = { key: 'plan', header: t('columns.plan'), skeleton: 'pill', render: (row) => <PillBadge tone={row.plan === 'free' ? 'neutral' : 'accent'}>{t(`enums:planKey.${row.plan}`)}</PillBadge> }
   const columns = [

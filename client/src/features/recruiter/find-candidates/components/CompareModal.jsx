@@ -28,7 +28,7 @@ export default function CompareModal({ open, onClose, candidates, job }) {
       value: (candidate) =>
         jobCountry
           ? text.rightToWork(candidate, jobCountry)
-          : candidate.rightToWork.map((entry) => `${t(`enums:rtwRegion.${entry.region}`)} · ${t(`enums:rtwStatus.${entry.status}`)}`).join(', '),
+          : candidate.rightToWork.map((entry) => `${format.region(entry.region)} · ${t(`enums:rtwStatus.${entry.status}`)}`).join(', '),
     },
     { key: 'verification', value: (candidate) => text.verification(candidate) },
     {

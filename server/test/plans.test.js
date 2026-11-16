@@ -71,7 +71,8 @@ describe('yearly prices (seed:catalog)', () => {
     assert.deepEqual([price.unit_amount, price.currency, price.recurring.interval, price.active], [10200, 'eur', 'year', true])
     const recruiterPlus = await Plan.findOne({ key: 'recruiter_plus' }).lean()
     assert.equal(recruiterPlus.yearlyPrices.find((entry) => entry.currency === 'EUR').amountMinor, 58100)
-    assert.equal(new Set([...ids(plus), ...ids(recruiterPlus)]).size, 32)
+    // 2 plans × 9 currencies (USD since 2026-11-16) × monthly and yearly.
+    assert.equal(new Set([...ids(plus), ...ids(recruiterPlus)]).size, 36)
     assert.deepEqual((await Plan.findOne({ key: 'free' }).lean()).yearlyPrices, [])
   })
 

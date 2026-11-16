@@ -14,6 +14,7 @@ import PhoneVerification from '../components/PhoneVerification.jsx'
 import SubmitEvidenceModal from '../components/SubmitEvidenceModal.jsx'
 import styles from './VerificationPage.module.css'
 import { useMarkSeen } from '@/features/notifications/api.js'
+import { useFormat } from '@/lib/preferences.js'
 
 const CHECK_ICONS = { identity: ShieldCheck, academic: GraduationCap, employment: BriefcaseBusiness }
 // P3-D8: a new submission only when there is none yet or the last one was rejected.
@@ -24,6 +25,7 @@ export default function VerificationPage() {
   // P11b-Q10: opening this item marks its notifications read.
   useMarkSeen('page', 'verification')
   const { t } = useTranslation()
+  const format = useFormat()
   const { data: state, isLoading } = useGetVerificationQuery()
   // Each opening gets a new key, so the dialog starts empty.
   const [request, setRequest] = useState({ value: null, key: 0 })
@@ -117,7 +119,7 @@ export default function VerificationPage() {
             ) : (
               <ul className={styles.checks}>
                 {state.rightToWork.map((entry) => {
-                  const label = `${t(`enums:rtwRegion.${entry.region}`)} · ${t(`enums:rtwStatus.${entry.status}`)}`
+                  const label = `${format.region(entry.region)} · ${t(`enums:rtwStatus.${entry.status}`)}`
                   return (
                     <CheckRow
                       key={entry.id}

@@ -63,7 +63,7 @@ describe('seed:catalog (U41)', () => {
     assert.deepEqual([recruiterPlus.role, recruiterPlus.name.fr, recruiterPlus.entitlements], ['recruiter', 'Recruiter Plus', ['jobs_unlimited', 'discovery', 'outreach', 'ai', 'interviews']])
     assert.deepEqual(
       recruiterPlus.prices.map((price) => `${price.currency} ${price.amountMinor / 100}`),
-      ['GBP 49', 'EUR 57', 'PLN 245', 'SEK 629', 'DKK 429', 'CZK 1399', 'HUF 21990', 'RON 289'],
+      ['GBP 49', 'EUR 57', 'PLN 245', 'SEK 629', 'DKK 429', 'CZK 1399', 'HUF 21990', 'RON 289', 'USD 65'],
     )
     assert.ok(recruiterPlus.prices.every((price) => price.stripePriceId?.startsWith('price_') && !plus.prices.some((other) => other.stripePriceId === price.stripePriceId)))
     const manager = await AdminRole.findOne({ name: 'Manager' }).lean()

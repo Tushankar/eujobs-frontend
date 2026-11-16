@@ -1,5 +1,6 @@
 import { CandidateProfile } from '../candidates/candidates.model.js'
 import { User } from '../users/users.model.js'
+import { regionCovers } from '../../config/regions.js'
 
 /*
  * Who recruiters can discover (M-054, M-055, M-187, OQ-6a, U27). Shared by Find candidates, the shortlist,
@@ -12,12 +13,9 @@ export function validRightToWork(entry, on = today()) {
   return entry.status === 'citizen_settled' || (entry.status === 'visa_permit' && Boolean(entry.permitExpiresOn) && entry.permitExpiresOn >= on)
 }
 
-// Right-to-work entries are per region (M-021): GB is the UK, every other country is in the EU.
-const regionOf = (countryCode) => (countryCode === 'GB' ? 'uk' : 'eu')
-
-/** OD4: "Has right to work in {country}". */
+/** OD4: "Has right to work in {country}": an entry for that country, or the EU group for an EU country (2026-11-16). */
 export function hasRightToWorkIn(profile, countryCode, on = today()) {
-  return profile.rightToWork.some((entry) => entry.region === regionOf(countryCode) && validRightToWork(entry, on))
+  return profile.rightToWork.some((entry) => regionCovers(entry.region, countryCode) && validRightToWork(entry, on))
 }
 
 /** M-055: lives in the country or has the right to work there; Remote = work preference remote (OQ-6a). */

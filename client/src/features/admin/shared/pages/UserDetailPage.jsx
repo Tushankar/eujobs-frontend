@@ -151,7 +151,7 @@ function CandidateSections({ user, part }) {
             empty={t('noRightToWork')}
             render={(entry) => (
               <li key={entry.region} className={styles.item}>
-                {t(`enums:rtwRegion.${entry.region}`)} · {t(`enums:rtwStatus.${entry.status}`)}
+                {format.region(entry.region)} · {t(`enums:rtwStatus.${entry.status}`)}
               </li>
             )}
           />

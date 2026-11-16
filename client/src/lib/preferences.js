@@ -89,6 +89,11 @@ export function useFormat() {
       salary: (salary) => formatSalary(salary, locale),
       languageName: (code) => languageNameIn(code, language),
       country: (code) => (code === 'REMOTE' ? t('common:remote') : code === 'WORLDWIDE' ? t('common:worldwide') : countryName(code, language)),
+      // A right-to-work region: the EU group or a country (worldwide since 2026-11-16; 'eu' and 'uk' were the old regions).
+      region: (code) => {
+        const region = { eu: 'EU', uk: 'GB' }[code] ?? code
+        return region === 'EU' ? t('enums:rtwRegion.EU') : countryName(region, language)
+      },
     }),
     [locale, language, t],
   )

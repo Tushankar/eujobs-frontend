@@ -387,7 +387,7 @@ function ProfileView({ profile }) {
                   <li key={entry.id} className={styles.entry}>
                     <div className={styles.entryText}>
                       <p className={styles.entryTitle}>
-                        {t(`enums:rtwRegion.${entry.region}`)} · {t(`enums:rtwStatus.${entry.status}`)}
+                        {format.region(entry.region)} · {t(`enums:rtwStatus.${entry.status}`)}
                       </p>
                       {entry.permitExpiresOn && <p className={styles.entryMeta}>{t('profile:rightToWork.validUntil', { date: format.date(entry.permitExpiresOn) })}</p>}
                     </div>

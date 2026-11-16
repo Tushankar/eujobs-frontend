@@ -614,8 +614,7 @@
       "recruiter_plus": "Recruiter Plus"
     },
     "rtwRegion": {
-      "eu": "UE",
-      "uk": "Reino Unido"
+      "EU": "UE (los 27 países)"
     },
     "rtwStatus": {
       "citizen_settled": "Ciudadanía o residencia",

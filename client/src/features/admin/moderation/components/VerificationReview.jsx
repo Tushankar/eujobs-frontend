@@ -30,7 +30,7 @@ function Claim({ category, claim }) {
       return `${claim.title} · ${claim.employer} · ${period(claim.start, claim.end)}`
     case 'right_to_work':
       return [
-        t(`enums:rtwRegion.${claim.region}`),
+        format.region(claim.region),
         t(`enums:rtwStatus.${claim.status}`),
         claim.permitExpiresOn && t('moderation:verification.dialog.validUntil', { date: format.date(claim.permitExpiresOn) }),
       ]

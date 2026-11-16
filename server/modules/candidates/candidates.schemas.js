@@ -72,7 +72,8 @@ export const rightToWorkBody = z.object({
   rightToWork: z
     .array(
       z.object({
-        region: z.enum(ENUMS.rtwRegion),
+        // 'EU' or a country code; the service checks the country (worldwide since 2026-11-16).
+        region: z.string().trim().toUpperCase().regex(/^([A-Z]{2}|EU)$/),
         status: z.enum(ENUMS.rtwStatus),
         permitExpiresOn: z.iso.date().nullable().default(null),
       }),

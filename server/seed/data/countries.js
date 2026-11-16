@@ -33,7 +33,7 @@ export const COUNTRY_CURRENCIES = {
 }
 
 // The EU 27; with GB they come first in every list (owner 2026-11-16: "EU Jobs" first, then worldwide).
-export const EU = ['AT', 'BE', 'BG', 'CY', 'CZ', 'DE', 'DK', 'EE', 'ES', 'FI', 'FR', 'GR', 'HR', 'HU', 'IE', 'IT', 'LT', 'LU', 'LV', 'MT', 'NL', 'PL', 'PT', 'RO', 'SE', 'SI', 'SK']
+export { EU_COUNTRIES as EU } from '../../config/regions.js'
 
 // M-134: a country's default UI language. Spanish- and French-speaking countries get es and fr; every other one en.
 const SPANISH = ['AR', 'BO', 'CL', 'CO', 'CR', 'CU', 'DO', 'EC', 'ES', 'GQ', 'GT', 'HN', 'MX', 'NI', 'PA', 'PE', 'PR', 'PY', 'SV', 'UY', 'VE']

@@ -9,11 +9,12 @@ import { File } from '../files/files.model.js'
 import { reissueCertificates } from '../learning/learning.certificates.js'
 import { scheduleRecompute } from '../matching/matching.service.js'
 import { Country } from '../meta/meta.model.js'
-import { resolvePlace } from '../places/places.service.js'
+import { allowedCountryCodes, resolvePlace } from '../places/places.service.js'
 import { User } from '../users/users.model.js'
 import { VerificationSubmission } from '../verification/verification.model.js'
 import { computeCompleteness } from './candidates.completeness.js'
 import { CandidateProfile } from './candidates.model.js'
+import { normalizeRegion } from '../../config/regions.js'
 
 const P = LIMITS.profile
 
@@ -112,7 +113,7 @@ export async function profileDto(user, profile) {
     // U27: an expired permit shows "Permit expired"; completeness is unaffected.
     rightToWork: profile.rightToWork.map((entry) => ({
       id: String(entry._id),
-      region: entry.region,
+      region: normalizeRegion(entry.region),
       status: entry.status,
       permitExpiresOn: entry.permitExpiresOn ?? null,
       permitExpired: Boolean(entry.permitExpiresOn && entry.permitExpiresOn < today()),
@@ -270,9 +271,15 @@ export async function setLanguages(user, profile, { languages }) {
   await saveProfile(user, profile)
 }
 
-/** M-021, P3-D4: one entry per region; entries keep their id so a changed or removed one resets its check (U27). */
+/**
+ * M-021, P3-D4: one entry per region (the EU or a country, worldwide since 2026-11-16); entries keep their id so a
+ * changed or removed one resets its check (U27).
+ */
 export async function setRightToWork(user, profile, { rightToWork }) {
   if (firstDuplicate(rightToWork.map((entry) => entry.region))) throw fieldError({ rightToWork: 'duplicate' })
+  const countries = await allowedCountryCodes()
+  const unknown = rightToWork.findIndex((entry) => entry.region !== 'EU' && !countries.includes(entry.region))
+  if (unknown !== -1) throw fieldError({ [`rightToWork.${unknown}.region`]: 'invalid' })
   const next = rightToWork.map((entry, index) => {
     if (entry.status !== 'visa_permit') return { ...entry, permitExpiresOn: undefined }
     if (!entry.permitExpiresOn) throw fieldError({ [`rightToWork.${index}.permitExpiresOn`]: 'required' })
@@ -280,7 +287,7 @@ export async function setRightToWork(user, profile, { rightToWork }) {
   })
   // A copy: entries are removed while looping.
   for (const entry of profile.rightToWork.slice()) {
-    const update = next.find((item) => item.region === entry.region)
+    const update = next.find((item) => item.region === normalizeRegion(entry.region))
     if (!update) {
       entry.deleteOne()
       await resetSubmissions(user._id, { category: 'right_to_work', entryId: entry._id }, { withdraw: true })
@@ -289,7 +296,7 @@ export async function setRightToWork(user, profile, { rightToWork }) {
       await resetSubmissions(user._id, { category: 'right_to_work', entryId: entry._id })
     }
   }
-  for (const entry of next) if (!profile.rightToWork.some((item) => item.region === entry.region)) profile.rightToWork.push(entry)
+  for (const entry of next) if (!profile.rightToWork.some((item) => normalizeRegion(item.region) === entry.region)) profile.rightToWork.push(entry)
   await saveProfile(user, profile)
 }
 

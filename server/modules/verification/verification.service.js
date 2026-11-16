@@ -13,6 +13,7 @@ import { File } from '../files/files.model.js'
 import { notify, notifyAdmins } from '../notifications/notifications.service.js'
 import { User } from '../users/users.model.js'
 import { VerificationSubmission } from './verification.model.js'
+import { normalizeRegion } from '../../config/regions.js'
 
 /*
  * Phone codes (M-003, M-004, OD3), evidence submissions (M-166) and the admin verification queue.
@@ -152,7 +153,7 @@ export async function verificationState(user) {
     },
     rightToWork: profile.rightToWork.map((entry) => ({
       id: String(entry._id),
-      region: entry.region,
+      region: normalizeRegion(entry.region),
       status: entry.status,
       permitExpiresOn: entry.permitExpiresOn ?? null,
       ...summary(of('right_to_work', entry._id)),

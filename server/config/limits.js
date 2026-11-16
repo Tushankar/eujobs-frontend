@@ -42,7 +42,8 @@ export const LIMITS = {
     certificates: { max: 20 },
     salary: { min: 1, max: 100_000_000 },
     url: { max: 300 },
-    rightToWork: { max: 2 },
+    // One entry per country or the EU group (worldwide since 2026-11-16).
+    rightToWork: { max: 10 },
   },
   // M-031, U18, P3-D7
   cv: { maxVersions: 20, minReadableChars: 50 },

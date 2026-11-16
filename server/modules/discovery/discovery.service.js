@@ -18,6 +18,7 @@ import { User } from '../users/users.model.js'
 import { VerificationSubmission } from '../verification/verification.model.js'
 import { CandidateNote, ProfileView, RecruiterActivity, ShortlistEntry } from './discovery.model.js'
 import { hasRightToWorkIn, inMarket, listableCandidates, marketCandidates, validRightToWork } from './discovery.population.js'
+import { normalizeRegion } from '../../config/regions.js'
 
 /*
  * Recruiter discovery (§3.8): Find candidates with the M-055 country rule and the M-056 filters, the candidate
@@ -95,7 +96,7 @@ async function cardContext(viewer, company, entries, job) {
       availability: profile.availability,
       skills: profile.skills.map((skill) => skill.name),
       languages: profile.languages.map(({ code, level }) => ({ code, level })),
-      rightToWork: profile.rightToWork.map(({ region, status, permitExpiresOn }) => ({ region, status, permitExpiresOn: permitExpiresOn ?? null, valid: validRightToWork({ status, permitExpiresOn }) })),
+      rightToWork: profile.rightToWork.map(({ region, status, permitExpiresOn }) => ({ region: normalizeRegion(region), status, permitExpiresOn: permitExpiresOn ?? null, valid: validRightToWork({ status, permitExpiresOn }) })),
       currentRole: role ? { title: role.title, employer: role.employer, start: role.start, end: role.end ?? null, current: Boolean(role.current) } : null,
       latestEducation: study ? { degree: study.degree, institution: study.institution, end: study.end ?? null } : null,
       certificates: profile.certificates.map((certificate) => ({ name: certificate.name, issuer: certificate.issuer, verified: approved.certificates.has(String(certificate._id)) })),

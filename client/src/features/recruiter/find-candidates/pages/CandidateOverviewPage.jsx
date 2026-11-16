@@ -44,7 +44,7 @@ export default function CandidateOverviewPage() {
       <ul className={styles.rights}>
         {candidate.rightToWork.map((entry) => (
           <li key={entry.region}>
-            {t(`enums:rtwRegion.${entry.region}`)} · {entry.status === 'visa_permit' && !entry.valid ? t('discovery:card.permitExpired') : t(`enums:rtwStatus.${entry.status}`)}
+            {format.region(entry.region)} · {entry.status === 'visa_permit' && !entry.valid ? t('discovery:card.permitExpired') : t(`enums:rtwStatus.${entry.status}`)}
             {entry.permitExpiresOn && entry.valid && ` · ${t('discovery:overviewTab.validUntil', { date: format.date(entry.permitExpiresOn) })}`}
           </li>
         ))}

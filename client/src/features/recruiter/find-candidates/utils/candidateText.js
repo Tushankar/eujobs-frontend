@@ -1,10 +1,8 @@
 import { useTranslation } from 'react-i18next'
+import { useGetCountriesQuery } from '@/app/api.js'
 import { useFormat } from '@/lib/preferences.js'
 
 /* How candidate facts read on cards, the compare table and the profile (A: recruiter B2). */
-
-// Right to work is per region (M-021): GB is the UK, every other country is in the EU.
-export const regionOf = (countryCode) => (countryCode === 'GB' ? 'uk' : 'eu')
 
 /** The filters of Find candidates and Shortlists as API query parameters (empty values left out). */
 export function filterParams({ query, filters, sort, jobId }) {
@@ -34,17 +32,20 @@ export function countActiveFilters(filters) {
 export function useCandidateText() {
   const { t } = useTranslation()
   const format = useFormat()
+  const { data: countries = [] } = useGetCountriesQuery()
+  // Right to work is per country or for the whole EU (M-021, worldwide since 2026-11-16).
+  const covers = (region, countryCode) => (region === 'EU' ? Boolean(countries.find((country) => country.code === countryCode)?.isEu) : region === countryCode)
   const period = (start, end, ongoing) => t('discovery:period', { start: format.month(start), end: ongoing || !end ? t('discovery:present') : format.month(end) })
   return {
     location: (candidate) => (candidate.location ? t('common:city.value', { city: candidate.location.city, country: format.country(candidate.location.countryCode) }) : ''),
     role: (role) => (role ? t('discovery:card.role', { title: role.title, employer: role.employer }) : ''),
     period,
-    /** "Right to work: UK · Citizen or settled" for the region of `countryCode`, or null. */
+    /** "Right to work: United Kingdom · Citizen or settled" for `countryCode` (or the EU covering it), or null. */
     rightToWork(candidate, countryCode) {
-      const entry = candidate.rightToWork.find((item) => item.region === regionOf(countryCode))
+      const entry = candidate.rightToWork.find((item) => covers(item.region, countryCode))
       if (!entry) return null
       const status = entry.status === 'visa_permit' && !entry.valid ? t('discovery:card.permitExpired') : t(`enums:rtwStatus.${entry.status}`)
-      return t('discovery:card.rightToWork', { region: t(`enums:rtwRegion.${entry.region}`), status })
+      return t('discovery:card.rightToWork', { region: format.region(entry.region), status })
     },
     languages: (candidate, limit) =>
       candidate.languages

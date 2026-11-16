@@ -40,7 +40,8 @@ export const usersQuery = z.object({
   country: country.optional(),
   verification: z.enum(['not_started', 'in_review', 'partial', 'verified']).optional(),
   plan: z.enum(ENUMS.planKey).optional(),
-  rightToWork: z.enum([...ENUMS.rtwRegion, 'none']).optional(),
+  // 'none', the EU group or a country (worldwide since 2026-11-16).
+  rightToWork: z.union([z.literal('none'), z.string().trim().toUpperCase().regex(/^([A-Z]{2}|EU)$/)]).optional(),
   ...pageQuery,
 })
 

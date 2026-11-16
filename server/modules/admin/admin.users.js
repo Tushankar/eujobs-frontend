@@ -18,6 +18,7 @@ import { User } from '../users/users.model.js'
 import { VerificationSubmission } from '../verification/verification.model.js'
 import { AuditEvent } from './admin.model.js'
 import { searchText } from '../../lib/skills.js'
+import { normalizeRegion, regionCovers } from '../../config/regions.js'
 
 /*
  * Admin › Candidates and Recruiters (M-161, M-169, M-206): the tables with their filters, the detail pages and the
@@ -60,7 +61,7 @@ async function learningCounts(userIds) {
 }
 
 const percent = (completeness) => (completeness?.total ? Math.round((completeness.done / completeness.total) * 100) : 0)
-const rightToWorkOf = (profile) => (profile?.rightToWork ?? []).map((entry) => ({ region: entry.region, status: entry.status, valid: validRightToWork(entry) }))
+const rightToWorkOf = (profile) => (profile?.rightToWork ?? []).map((entry) => ({ region: normalizeRegion(entry.region), status: entry.status, valid: validRightToWork(entry) }))
 
 async function candidateRows() {
   const users = await User.find({ role: 'candidate' }).sort({ createdAt: -1 })
@@ -135,7 +136,7 @@ export async function filteredUsers(query) {
       (!query.verification || row.verification.state === query.verification) &&
       (!query.plan || row.plan === query.plan) &&
       (!query.rightToWork ||
-        (query.rightToWork === 'none' ? !row.rightToWork.some((entry) => entry.valid) : row.rightToWork.some((entry) => entry.valid && entry.region === query.rightToWork))),
+        (query.rightToWork === 'none' ? !row.rightToWork.some((entry) => entry.valid) : row.rightToWork.some((entry) => entry.valid && (query.rightToWork === 'EU' ? entry.region === 'EU' : regionCovers(entry.region, query.rightToWork))))),
   )
 }
 
@@ -153,6 +154,7 @@ export async function listUsers(admin, query) {
 /** OQ-6d: the export rows in the admin's language, headers first. */
 export function exportRows(role, rows, language) {
   const label = (key) => t(language, `labels.${key}`)
+  const countryNames = new Intl.DisplayNames([language], { type: 'region' })
   const day = (date) => date.toISOString().slice(0, 10)
   if (role === 'candidate') {
     return [
@@ -163,7 +165,7 @@ export function exportRows(role, rows, language) {
         day(row.joinedAt),
         label(`userStatus.${row.status}`),
         row.country ?? '',
-        row.rightToWork.filter((entry) => entry.valid).map((entry) => label(`rtwRegion.${entry.region}`)).join('; ') || label('none'),
+        row.rightToWork.filter((entry) => entry.valid).map((entry) => (entry.region === 'EU' ? label('rtwRegion.EU') : countryNames.of(entry.region))).join('; ') || label('none'),
         label(`verificationState.${row.verification.state}`).replace('{{count}}', row.verification.count),
         row.completeness,
         label(`plan.${row.plan}`),

@@ -1,5 +1,9 @@
 {
-  "role": { "candidate": "Candidato", "recruiter": "Reclutador", "admin": "Administración" },
+  "role": {
+    "candidate": "Candidato",
+    "recruiter": "Reclutador",
+    "admin": "Administración"
+  },
   "userStatus": {
     "unverified": "Correo sin confirmar",
     "onboarding": "En registro",
@@ -9,12 +13,38 @@
     "suspended": "Suspendida",
     "invited": "Invitada"
   },
-  "language": { "en": "Inglés", "es": "Español", "fr": "Francés" },
-  "workPreference": { "remote": "Remoto", "hybrid": "Híbrido", "on_site": "Presencial" },
-  "employmentType": { "full_time": "Jornada completa", "part_time": "Media jornada", "contract": "Contrato temporal", "internship": "Prácticas" },
-  "jobLevel": { "junior": "Junior", "mid": "Intermedio", "senior": "Sénior", "lead": "Líder" },
-  "jobStatus": { "draft": "Borrador", "published": "Publicada", "paused": "En pausa", "closed": "Cerrada" },
-  "salaryPeriod": { "year": "al año", "month": "al mes" },
+  "language": {
+    "en": "Inglés",
+    "es": "Español",
+    "fr": "Francés"
+  },
+  "workPreference": {
+    "remote": "Remoto",
+    "hybrid": "Híbrido",
+    "on_site": "Presencial"
+  },
+  "employmentType": {
+    "full_time": "Jornada completa",
+    "part_time": "Media jornada",
+    "contract": "Contrato temporal",
+    "internship": "Prácticas"
+  },
+  "jobLevel": {
+    "junior": "Junior",
+    "mid": "Intermedio",
+    "senior": "Sénior",
+    "lead": "Líder"
+  },
+  "jobStatus": {
+    "draft": "Borrador",
+    "published": "Publicada",
+    "paused": "En pausa",
+    "closed": "Cerrada"
+  },
+  "salaryPeriod": {
+    "year": "al año",
+    "month": "al mes"
+  },
   "companySize": {
     "1_10": "1–10 empleados",
     "11_50": "11–50 empleados",
@@ -39,8 +69,14 @@
     "c2": "C2 · Maestría",
     "native": "Nativo"
   },
-  "rtwRegion": { "eu": "UE", "uk": "Reino Unido" },
-  "rtwStatus": { "citizen_settled": "Ciudadanía o residencia permanente", "visa_permit": "Visado o permiso", "needs_sponsorship": "Necesita patrocinio" },
+  "rtwRegion": {
+    "EU": "UE (los 27 países)"
+  },
+  "rtwStatus": {
+    "citizen_settled": "Ciudadanía o residencia permanente",
+    "visa_permit": "Visado o permiso",
+    "needs_sponsorship": "Necesita patrocinio"
+  },
   "verificationCategory": {
     "identity": "Identidad",
     "academic": "Formación",
@@ -59,8 +95,16 @@
     "contract_page": "Página del contrato",
     "verified_reference": "Referencia verificada"
   },
-  "verificationStatus": { "in_review": "En revisión", "approved": "Aprobada", "rejected": "Rechazada" },
-  "kycDocType": { "identity": "Documento de identidad", "registration": "Registro de la empresa", "authorization": "Carta de autorización" },
+  "verificationStatus": {
+    "in_review": "En revisión",
+    "approved": "Aprobada",
+    "rejected": "Rechazada"
+  },
+  "kycDocType": {
+    "identity": "Documento de identidad",
+    "registration": "Registro de la empresa",
+    "authorization": "Carta de autorización"
+  },
   "applicationStatus": {
     "applied": "Enviada",
     "under_review": "En revisión",
@@ -78,15 +122,27 @@
     "offer": "Oferta",
     "hired": "Contratados"
   },
-  "stageTone": { "neutral": "Neutro", "primary": "Destacado", "success": "Éxito" },
-  "alertFrequency": { "instant": "Al momento", "daily": "Diaria", "weekly": "Semanal" },
+  "stageTone": {
+    "neutral": "Neutro",
+    "primary": "Destacado",
+    "success": "Éxito"
+  },
+  "alertFrequency": {
+    "instant": "Al momento",
+    "daily": "Diaria",
+    "weekly": "Semanal"
+  },
   "cvRequestReason": {
     "verify_employment": "Verificar el historial laboral",
     "earlier_role_cv": "Revisar un CV anterior para un puesto concreto",
     "compliance": "Control de cumplimiento o auditoría",
     "other": "Otro fin de selección"
   },
-  "cvRequestStatus": { "pending": "Pendiente", "approved": "Aprobada", "declined": "Rechazada" },
+  "cvRequestStatus": {
+    "pending": "Pendiente",
+    "approved": "Aprobada",
+    "declined": "Rechazada"
+  },
   "activityType": {
     "interview_confirmed": "Entrevista reservada",
     "interview_cancelled": "Entrevista cancelada",
@@ -108,19 +164,74 @@
     "cv_updated": "CV actualizado",
     "cv_download": "CV descargado"
   },
-  "planKey": { "free": "Gratis", "plus": "Plus", "recruiter_free": "Gratis", "recruiter_plus": "Recruiter Plus" },
-  "billingInterval": { "month": "Mensual", "year": "Anual" },
-  "entitlement": { "interviews": "Entrevistas y solicitudes de documentos", "apply": "Postularse a ofertas", "message_send": "Mensajes", "job_alerts": "Alertas de empleo", "ai": "Funciones de IA", "jobs_unlimited": "Más de 1 oferta activa", "discovery": "Buscar candidatos", "outreach": "Iniciar conversaciones y solicitar CV" },
-  "paymentKind": { "course": "Curso", "subscription": "Suscripción" },
-  "paymentStatus": { "paid": "Pagado", "failed": "Fallido", "refunded": "Reembolsado" },
-  "paymentSource": { "stripe": "Stripe", "seed": "Datos de ejemplo" },
-  "courseAudience": { "candidate": "Candidatos", "recruiter": "Reclutadores" },
-  "courseLevel": { "foundation": "Básico", "intermediate": "Intermedio", "advanced": "Avanzado" },
-  "courseStatus": { "draft": "Borrador", "published": "Publicado", "unpublished": "Retirado" },
-  "lessonType": { "video": "Vídeo", "text": "Texto", "document": "Documento", "link": "Enlace" },
-  "questionType": { "single": "Respuesta única", "multiple": "Respuesta múltiple" },
-  "certificateStatus": { "valid": "Válido", "revoked": "Revocado", "no_longer_valid": "Ya no es válido" },
-  "reportTargetType": { "job": "Oferta", "candidate_profile": "Perfil de candidato", "company": "Empresa", "message": "Mensaje" },
+  "planKey": {
+    "free": "Gratis",
+    "plus": "Plus",
+    "recruiter_free": "Gratis",
+    "recruiter_plus": "Recruiter Plus"
+  },
+  "billingInterval": {
+    "month": "Mensual",
+    "year": "Anual"
+  },
+  "entitlement": {
+    "interviews": "Entrevistas y solicitudes de documentos",
+    "apply": "Postularse a ofertas",
+    "message_send": "Mensajes",
+    "job_alerts": "Alertas de empleo",
+    "ai": "Funciones de IA",
+    "jobs_unlimited": "Más de 1 oferta activa",
+    "discovery": "Buscar candidatos",
+    "outreach": "Iniciar conversaciones y solicitar CV"
+  },
+  "paymentKind": {
+    "course": "Curso",
+    "subscription": "Suscripción"
+  },
+  "paymentStatus": {
+    "paid": "Pagado",
+    "failed": "Fallido",
+    "refunded": "Reembolsado"
+  },
+  "paymentSource": {
+    "stripe": "Stripe",
+    "seed": "Datos de ejemplo"
+  },
+  "courseAudience": {
+    "candidate": "Candidatos",
+    "recruiter": "Reclutadores"
+  },
+  "courseLevel": {
+    "foundation": "Básico",
+    "intermediate": "Intermedio",
+    "advanced": "Avanzado"
+  },
+  "courseStatus": {
+    "draft": "Borrador",
+    "published": "Publicado",
+    "unpublished": "Retirado"
+  },
+  "lessonType": {
+    "video": "Vídeo",
+    "text": "Texto",
+    "document": "Documento",
+    "link": "Enlace"
+  },
+  "questionType": {
+    "single": "Respuesta única",
+    "multiple": "Respuesta múltiple"
+  },
+  "certificateStatus": {
+    "valid": "Válido",
+    "revoked": "Revocado",
+    "no_longer_valid": "Ya no es válido"
+  },
+  "reportTargetType": {
+    "job": "Oferta",
+    "candidate_profile": "Perfil de candidato",
+    "company": "Empresa",
+    "message": "Mensaje"
+  },
   "reportReason": {
     "spam": "Spam",
     "scam_or_fraud": "Estafa o fraude",
@@ -129,8 +240,16 @@
     "misleading": "Engañoso",
     "other": "Otro"
   },
-  "caseStatus": { "open": "Abierto", "dismissed": "Desestimado", "restricted": "Restringido" },
-  "accountDecision": { "approved": "Aprobada", "rejected": "Rechazada", "suspended": "Suspendida" },
+  "caseStatus": {
+    "open": "Abierto",
+    "dismissed": "Desestimado",
+    "restricted": "Restringido"
+  },
+  "accountDecision": {
+    "approved": "Aprobada",
+    "rejected": "Rechazada",
+    "suspended": "Suspendida"
+  },
   "auditCategory": {
     "workspace": "Espacio de trabajo",
     "policy": "Política",
@@ -142,12 +261,35 @@
     "jobs": "Ofertas",
     "content": "Contenido"
   },
-  "actorType": { "admin": "Administración", "user": "Usuario", "system": "Sistema" },
-  "roleScope": { "organization": "Organización", "department": "Departamento", "finance_department": "Departamento financiero", "team": "Equipo" },
-  "roleStatus": { "active": "Activo", "archived": "Archivado" },
-  "policySignal": { "skills": "Habilidades", "experience": "Experiencia", "location": "Ubicación" },
-  "policyStatus": { "draft": "Borrador", "active": "Activa", "archived": "Archivada" },
-  "matchLabel": { "strong": "Muy compatible", "good": "Compatible" },
+  "actorType": {
+    "admin": "Administración",
+    "user": "Usuario",
+    "system": "Sistema"
+  },
+  "roleScope": {
+    "organization": "Organización",
+    "department": "Departamento",
+    "finance_department": "Departamento financiero",
+    "team": "Equipo"
+  },
+  "roleStatus": {
+    "active": "Activo",
+    "archived": "Archivado"
+  },
+  "policySignal": {
+    "skills": "Habilidades",
+    "experience": "Experiencia",
+    "location": "Ubicación"
+  },
+  "policyStatus": {
+    "draft": "Borrador",
+    "active": "Activa",
+    "archived": "Archivada"
+  },
+  "matchLabel": {
+    "strong": "Muy compatible",
+    "good": "Compatible"
+  },
   "aiKind": {
     "interview_notes": "Notas de entrevista",
     "job_summary": "Resumen de la oferta",
@@ -211,7 +353,11 @@
     "admin_renewal_failed": "Renovación fallida (administración)",
     "admin_joined": "Nuevo administrador"
   },
-  "emailClass": { "critical": "Crítico", "decision": "Decisión", "non_critical": "No crítico" },
+  "emailClass": {
+    "critical": "Crítico",
+    "decision": "Decisión",
+    "non_critical": "No crítico"
+  },
   "emailStatus": {
     "sent": "Enviado",
     "failed": "Fallido",
@@ -237,30 +383,96 @@
     "report_csv": "Informe CSV",
     "export_zip": "Exportación de datos"
   },
-  "reportType": { "marketplace_summary": "Resumen de la plataforma", "skills_demand": "Demanda de habilidades", "platform_activity": "Actividad de la plataforma" },
-  "reportPeriod": { "this_week": "Esta semana", "last_week": "La semana pasada", "last_month": "El mes pasado" },
-  "legalDoc": { "terms": "Condiciones del servicio", "privacy": "Política de privacidad", "imprint": "Aviso legal" },
-  "faqAudience": { "candidate": "Candidatos", "recruiter": "Reclutadores", "admin": "Administración" },
+  "reportType": {
+    "marketplace_summary": "Resumen de la plataforma",
+    "skills_demand": "Demanda de habilidades",
+    "platform_activity": "Actividad de la plataforma"
+  },
+  "reportPeriod": {
+    "this_week": "Esta semana",
+    "last_week": "La semana pasada",
+    "last_month": "El mes pasado"
+  },
+  "legalDoc": {
+    "terms": "Condiciones del servicio",
+    "privacy": "Política de privacidad",
+    "imprint": "Aviso legal"
+  },
+  "faqAudience": {
+    "candidate": "Candidatos",
+    "recruiter": "Reclutadores",
+    "admin": "Administración"
+  },
   "taskType": {
-    "interview": { "reminder": "Recordatorio de entrevista", "expire": "Caducidad de horarios", "close": "Cierre de la entrevista", "notes": "Notas de entrevista" },
-    "email": { "message": "Correo de mensaje", "stage": "Correo de fase", "new-applications": "Correo de nuevas candidaturas" },
-    "alerts": { "instant": "Alerta inmediata" },
-    "matching": { "recompute": "Recálculo de compatibilidad" }
+    "interview": {
+      "reminder": "Recordatorio de entrevista",
+      "expire": "Caducidad de horarios",
+      "close": "Cierre de la entrevista",
+      "notes": "Notas de entrevista"
+    },
+    "email": {
+      "message": "Correo de mensaje",
+      "stage": "Correo de fase",
+      "new-applications": "Correo de nuevas candidaturas"
+    },
+    "alerts": {
+      "instant": "Alerta inmediata"
+    },
+    "matching": {
+      "recompute": "Recálculo de compatibilidad"
+    }
   },
   "permission": {
-    "users": { "view": "Ver usuarios", "add": "Añadir usuarios", "deactivate": "Desactivar usuarios" },
-    "roles": { "view": "Ver roles", "create": "Crear roles", "edit": "Editar roles", "archive": "Archivar roles", "assign": "Asignar roles" },
-    "candidates": { "view": "Ver candidatos" },
-    "jobs": { "view": "Ver ofertas" },
-    "finance": { "view": "Ver finanzas", "manage": "Gestionar planes y precios" },
-    "reports": { "view": "Ver informes", "export": "Exportar informes" },
-    "dashboard": { "view": "Ver el panel" },
-    "moderation": { "manage": "Gestionar la moderación" },
-    "audit": { "view": "Ver el registro de auditoría" },
-    "learning": { "manage": "Gestionar la formación", "view": "Ver la formación" },
-    "documents": { "view": "Ver documentos" },
-    "ai": { "view": "Ver IA y compatibilidad", "manage": "Gestionar IA y compatibilidad" },
-    "content": { "view": "Ver el contenido del sitio web", "manage": "Gestionar el contenido del sitio web" }
+    "users": {
+      "view": "Ver usuarios",
+      "add": "Añadir usuarios",
+      "deactivate": "Desactivar usuarios"
+    },
+    "roles": {
+      "view": "Ver roles",
+      "create": "Crear roles",
+      "edit": "Editar roles",
+      "archive": "Archivar roles",
+      "assign": "Asignar roles"
+    },
+    "candidates": {
+      "view": "Ver candidatos"
+    },
+    "jobs": {
+      "view": "Ver ofertas"
+    },
+    "finance": {
+      "view": "Ver finanzas",
+      "manage": "Gestionar planes y precios"
+    },
+    "reports": {
+      "view": "Ver informes",
+      "export": "Exportar informes"
+    },
+    "dashboard": {
+      "view": "Ver el panel"
+    },
+    "moderation": {
+      "manage": "Gestionar la moderación"
+    },
+    "audit": {
+      "view": "Ver el registro de auditoría"
+    },
+    "learning": {
+      "manage": "Gestionar la formación",
+      "view": "Ver la formación"
+    },
+    "documents": {
+      "view": "Ver documentos"
+    },
+    "ai": {
+      "view": "Ver IA y compatibilidad",
+      "manage": "Gestionar IA y compatibilidad"
+    },
+    "content": {
+      "view": "Ver el contenido del sitio web",
+      "manage": "Gestionar el contenido del sitio web"
+    }
   },
   "permissionGroup": {
     "people": "Personas",
@@ -323,11 +535,48 @@
     "admin_renewal_failed": "Renovación fallida",
     "admin_joined": "Accesos"
   },
-  "interviewMode": { "video": "Videollamada", "phone": "Teléfono", "in_person": "En persona", "link": "Enlace externo" },
-  "interviewStatus": { "offered": "Horarios propuestos", "other_times": "Otros horarios pedidos", "confirmed": "Reservada", "cancelled": "Cancelada", "expired": "Caducada", "completed": "Completada" },
-  "interviewOutcome": { "offer": "Pasar a oferta", "another_round": "Otra ronda", "not_selected": "No seleccionada", "did_not_attend": "No se presentó" },
-  "recordingStatus": { "off": "Sin grabar", "recording": "Grabando", "processing": "Preparando notas", "ready": "Notas listas", "failed": "Error en las notas" },
-  "documentKind": { "id": "Documento de identidad", "right_to_work": "Permiso de trabajo", "degree": "Título o certificado", "references": "Referencias", "signed_offer": "Oferta firmada", "other": "Otro" },
-  "documentRequestStatus": { "open": "Abierta", "complete": "Completada" },
-  "messageKind": { "text": "Mensaje", "interview": "Entrevista", "document_request": "Solicitud de documentos" }
+  "interviewMode": {
+    "video": "Videollamada",
+    "phone": "Teléfono",
+    "in_person": "En persona",
+    "link": "Enlace externo"
+  },
+  "interviewStatus": {
+    "offered": "Horarios propuestos",
+    "other_times": "Otros horarios pedidos",
+    "confirmed": "Reservada",
+    "cancelled": "Cancelada",
+    "expired": "Caducada",
+    "completed": "Completada"
+  },
+  "interviewOutcome": {
+    "offer": "Pasar a oferta",
+    "another_round": "Otra ronda",
+    "not_selected": "No seleccionada",
+    "did_not_attend": "No se presentó"
+  },
+  "recordingStatus": {
+    "off": "Sin grabar",
+    "recording": "Grabando",
+    "processing": "Preparando notas",
+    "ready": "Notas listas",
+    "failed": "Error en las notas"
+  },
+  "documentKind": {
+    "id": "Documento de identidad",
+    "right_to_work": "Permiso de trabajo",
+    "degree": "Título o certificado",
+    "references": "Referencias",
+    "signed_offer": "Oferta firmada",
+    "other": "Otro"
+  },
+  "documentRequestStatus": {
+    "open": "Abierta",
+    "complete": "Completada"
+  },
+  "messageKind": {
+    "text": "Mensaje",
+    "interview": "Entrevista",
+    "document_request": "Solicitud de documentos"
+  }
 }
