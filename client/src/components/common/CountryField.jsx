@@ -9,6 +9,22 @@ import styles from './CountryField.module.css'
 
 const fold = (text) => text.normalize('NFD').replace(/\p{M}/gu, '').toLowerCase().trim()
 
+/** The options matching `term`, best first: the code ("us"), a name starting with it, a word starting with it, then the rest. */
+function search(options, term) {
+  const rank = (option) => {
+    const name = fold(option.label)
+    if (String(option.value).toLowerCase() === term) return 0
+    if (name.startsWith(term)) return 1
+    if (name.split(/[\s\-’'(]+/).some((word) => word.startsWith(term))) return 2
+    return name.includes(term) ? 3 : -1
+  }
+  return options
+    .map((option, index) => ({ option, index, score: rank(option) }))
+    .filter((entry) => entry.score >= 0)
+    .sort((a, b) => a.score - b.score || a.index - b.index)
+    .map((entry) => entry.option)
+}
+
 /**
  * A country picker that replaces the native <select> (worldwide since 2026-11-16: about 240 countries made the browser
  * list run off the page). The field opens a panel with a search box (name in any case or accents, or the code) and a
@@ -30,7 +46,7 @@ export default function CountryField({ label, hint, error, options, value, onCha
   const list = useRef(null)
 
   const term = fold(query)
-  const shown = term ? options.filter((option) => fold(option.label).includes(term) || String(option.value).toLowerCase() === term) : options
+  const shown = term ? search(options, term) : options
   const selected = options.find((option) => option.value === value)
   const filter = variant === 'filter'
   const applied = filter && value !== '' && value !== undefined && value !== options[0]?.value
