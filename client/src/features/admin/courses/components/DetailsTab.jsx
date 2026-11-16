@@ -234,11 +234,15 @@ export default function DetailsTab({ course, checklist }) {
             <h4 className={styles.label}>{t('details.outcomes')}</h4>
             {values.outcomes.map((outcome, index) => (
               <div key={index} className={styles.row}>
-                <TextField
-                  className={styles.grow}
+                {/* Wraps a long outcome over more lines instead of cutting it off; one line each, so Enter does nothing. */}
+                <TextareaField
+                  className={cx(styles.grow, styles.outcome)}
+                  rows={1}
                   aria-label={t('details.outcomeLabel', { number: index + 1 })}
                   value={outcome}
-                  onChange={(event) => setOutcome(index, event.target.value)}
+                  onKeyDown={(event) => event.key === 'Enter' && event.preventDefault()}
+                  onChange={(event) => setOutcome(index, event.target.value.replace(/\s*
+\s*/g, ' '))}
                   data-outcome={index}
                   error={errorText.field('outcomes', errors[`outcomes.${index}`])}
                 />

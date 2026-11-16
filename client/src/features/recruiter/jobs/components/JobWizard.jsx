@@ -2,7 +2,7 @@ import { useEffect, useRef, useState } from 'react'
 import { useTranslation } from 'react-i18next'
 import { ArrowLeft, ArrowRight, Check } from 'lucide-react'
 import { errorCode, useGetConfigQuery } from '@/app/api.js'
-import { scrollActiveIntoView } from '@/hooks/scrollActiveIntoView.js'
+import { scrollActiveIntoView, trackRowEdges } from '@/hooks/scrollActiveIntoView.js'
 import { cx } from '@/utils/cx.js'
 import { Button, Icon } from '@/components/ui'
 import PlanButton from '@/features/candidate/billing/components/PlanButton.jsx'
@@ -35,6 +35,7 @@ export default function JobWizard({ initialValues, initialStep = 0, reachable = 
   const stepsRef = useRef(null)
   // On a phone the step chips scroll sideways; keep the current step on screen.
   useEffect(() => scrollActiveIntoView(stepsRef.current), [step])
+  useEffect(() => (stepsRef.current ? trackRowEdges(stepsRef.current) : undefined), [])
 
   const current = JOB_STEPS[step]
   const isFirst = step === 0

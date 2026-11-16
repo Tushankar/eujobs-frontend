@@ -16,6 +16,20 @@
   white-space: nowrap;
 }
 
+/* A sideways-scrolling row (tabs, steps) fades the edge that has more to show, so it reads as swipeable
+   (hooks/scrollActiveIntoView.js: trackRowEdges). */
+[data-more-end] {
+  mask-image: linear-gradient(to right, #000 calc(100% - 40px), transparent);
+}
+
+[data-more-start] {
+  mask-image: linear-gradient(to left, #000 calc(100% - 40px), transparent);
+}
+
+[data-more-start][data-more-end] {
+  mask-image: linear-gradient(to right, transparent, #000 40px, #000 calc(100% - 40px), transparent);
+}
+
 /*
  * Both columns of a two-column page: the shorter one stays pinned under the header while the taller one scrolls
  * the page, so no empty area opens beside a long column. A pinned column taller than the window scrolls with the

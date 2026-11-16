@@ -28,6 +28,19 @@
   min-width: 0;
 }
 
+/* An outcome is one line that grows to fit its text (field-sizing); browsers without it show two lines. */
+.outcome textarea {
+  min-height: 0;
+  resize: none;
+  field-sizing: content;
+}
+
+@supports not (field-sizing: content) {
+  .outcome textarea {
+    height: 40px;
+  }
+}
+
 .heading {
   margin: 0;
   font-family: var(--font-display);

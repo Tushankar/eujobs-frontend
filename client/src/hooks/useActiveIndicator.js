@@ -1,5 +1,5 @@
 import { useLayoutEffect } from 'react'
-import { scrollActiveIntoView } from './scrollActiveIntoView.js'
+import { scrollActiveIntoView, trackRowEdges } from './scrollActiveIntoView.js'
 
 /**
  * Lets a CSS "pill" slide between the options of a switcher. Writes the active option's position to
@@ -23,10 +23,14 @@ export function useActiveIndicator(trayRef, activeKey) {
     }
 
     place()
-    // A tray that scrolls sideways on a phone shows its selected option, not just the first few.
+    // A tray that scrolls sideways on a phone shows its selected option, and fades the edge that has more.
     scrollActiveIntoView(tray)
+    const stopEdges = trackRowEdges(tray)
     const observer = new ResizeObserver(place)
     observer.observe(tray)
-    return () => observer.disconnect()
+    return () => {
+      observer.disconnect()
+      stopEdges()
+    }
   }, [trayRef, activeKey])
 }

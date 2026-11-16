@@ -1,7 +1,7 @@
 import { useTranslation } from 'react-i18next'
 import { NavLink, useLocation } from 'react-router-dom'
 import PageTitle from '@/components/common/PageTitle.jsx'
-import { scrollActiveIntoView } from '@/hooks/scrollActiveIntoView.js'
+import { tabRowRef } from '@/hooks/scrollActiveIntoView.js'
 import { cx } from '@/utils/cx.js'
 import sparkle from '@/assets/icons/ai-sparkle-blue.svg'
 import AiSafetyNotice from './AiSafetyNotice.jsx'
@@ -33,7 +33,7 @@ export default function AiPageShell({ eyebrow, title, description, children }) {
           </span>
         }
       />
-      <nav ref={scrollActiveIntoView} className={styles.tabs} aria-label={t('shell.tabsLabel')}>
+      <nav ref={tabRowRef} className={styles.tabs} aria-label={t('shell.tabsLabel')}>
         {TABS.map((tab) => (
           <NavLink key={tab.to} to={{ pathname: tab.to, search }} end={tab.end} className={({ isActive }) => cx(styles.tab, isActive && styles.active)}>
             {t(`shell.tabs.${tab.key}`)}

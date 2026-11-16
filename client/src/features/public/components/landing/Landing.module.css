@@ -1685,9 +1685,15 @@
     border-radius: 24px;
   }
 
+  /* Tighter gaps so the logo, theme button and Login fit inside the pill (Login ran past its right edge). */
   .header {
+    gap: 12px;
     height: 72px;
     padding: 0 16px;
+  }
+
+  .headerActions {
+    gap: 4px;
   }
 
   .heroBody,
@@ -2119,5 +2125,12 @@
 
   .pricingContours {
     display: none;
+  }
+}
+
+/* Small phones (320–399px): a smaller logo, so Login still fits in the header pill. */
+@media (max-width: 399px) {
+  .brandLink {
+    zoom: 0.72;
   }
 }
