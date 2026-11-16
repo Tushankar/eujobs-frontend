@@ -2,7 +2,7 @@ import { useState } from 'react'
 import { useTranslation } from 'react-i18next'
 import { useDispatch } from 'react-redux'
 import { Link } from 'react-router-dom'
-import { ArrowRight, ArrowUpRight, Bookmark, BriefcaseBusiness, ChartNoAxesColumnIncreasing, ChevronDown, Crown, Globe, MapPin } from 'lucide-react'
+import { ArrowRight, ArrowUpRight, Bookmark, BriefcaseBusiness, ChartNoAxesColumnIncreasing, ChevronDown, Crown, Globe, MapPin, Plane } from 'lucide-react'
 import { openUpgrade } from '@/app/upgrade.js'
 import { cx } from '@/utils/cx.js'
 import { Button, CompanyLogo, Icon, IconButton, Skeleton } from '@/components/ui'
@@ -98,6 +98,12 @@ export default function JobCard({ job, onToggleSave }) {
           <Icon as={BriefcaseBusiness} size={12} />
           {t(`enums:employmentType.${job.employmentType}`)}
         </span>
+        {job.visaSponsorship && (
+          <span className={styles.metaItem} data-visa-sponsorship>
+            <Icon as={Plane} size={12} />
+            {t('common:visaSponsorship')}
+          </span>
+        )}
         {job.level && (
           <span className={styles.metaItem}>
             <Icon as={ChartNoAxesColumnIncreasing} size={12} />

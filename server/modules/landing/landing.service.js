@@ -34,7 +34,7 @@ function countBy(jobs, field) {
 }
 
 export async function landing(language) {
-  const jobs = await Job.find(await visibleFilter(), 'title companyId employmentType workPreference experienceYears country location salary publishedAt').sort({ publishedAt: -1 })
+  const jobs = await Job.find(await visibleFilter(), 'title companyId employmentType workPreference experienceYears country location salary publishedAt visaSponsorship').sort({ publishedAt: -1 })
   const latest = jobs.slice(0, LATEST_JOBS)
   const companies = await Company.find({ _id: { $in: latest.map((job) => job.companyId) } }, 'displayName logoFileId')
   const [logos, faqs, reviews, posts] = await Promise.all([logoUrls(companies), listFaqs('candidate', language), landingReviews(), latestPosts(language)])
@@ -54,6 +54,7 @@ export async function landing(language) {
         employmentType: job.employmentType ?? null,
         workPreference: job.workPreference ?? null,
         experienceYears: job.experienceYears ?? null,
+        visaSponsorship: Boolean(job.visaSponsorship),
         salary: job.salary?.min != null || job.salary?.max != null ? job.salary.toObject() : null,
         publishedAt: job.publishedAt,
       }
@@ -77,12 +78,15 @@ function placeText(job, language) {
  * browse without signing in. Keywords and place narrow the list and its tab counts; one work mode or employment type
  * picks the tab. Every visible job is returned with the details a candidate reads (no saved, applied or match state).
  */
-export async function publicJobs({ language, q, location, workPreference, employmentType }) {
+export async function publicJobs({ language, q, location, workPreference, employmentType, visa }) {
   const jobs = await Job.find(await visibleFilter()).sort({ publishedAt: -1 })
   const companies = await Company.find({ _id: { $in: [...new Set(jobs.map((job) => String(job.companyId)))] } })
   const companyById = new Map(companies.map((company) => [String(company._id), company]))
   const company = (job) => companyById.get(String(job.companyId))
-  const searched = jobs.filter((job) => (!q || matchesKeywords(q, haystack(job, company(job), language))) && (!location || matchesKeywords(location, placeText(job, language))))
+  // Keywords, place and "sponsors a visa" narrow the list and its tab counts.
+  const searched = jobs.filter(
+    (job) => (!q || matchesKeywords(q, haystack(job, company(job), language))) && (!location || matchesKeywords(location, placeText(job, language))) && (!visa || job.visaSponsorship),
+  )
   const items = searched.filter((job) => (!workPreference || job.workPreference === workPreference) && (!employmentType || job.employmentType === employmentType))
   const logos = await logoUrls(companies)
   return {

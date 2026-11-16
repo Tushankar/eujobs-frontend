@@ -1,6 +1,6 @@
 import { useTranslation } from 'react-i18next'
 import { Link, useParams } from 'react-router-dom'
-import { ArrowLeft, ArrowUpRight, Bookmark, BriefcaseBusiness, Check, ChevronRight, Globe, MapPin, SearchX } from 'lucide-react'
+import { ArrowLeft, ArrowUpRight, Bookmark, BriefcaseBusiness, Check, ChevronRight, Globe, MapPin, Plane, SearchX } from 'lucide-react'
 import { cx } from '@/utils/cx.js'
 import { Button, CompanyLogo, Icon, Skeleton, SkeletonRegion } from '@/components/ui'
 import EmptyState from '@/components/common/EmptyState.jsx'
@@ -155,7 +155,6 @@ export default function JobDetailsPage() {
   const conditions = [
     ...job.requiredLanguages.map((language) => t('findJobs:details.languageLevel', { language: format.languageName(language.code), level: t(`enums:languageLevel.${language.minLevel}`) })),
     eligible && t('findJobs:details.eligible', { countries: eligible }),
-    job.visaSponsorship && t('findJobs:details.visa'),
   ].filter(Boolean)
 
   return (
@@ -195,6 +194,12 @@ export default function JobDetailsPage() {
               <Icon as={BriefcaseBusiness} size={14} />
               {t(`enums:employmentType.${job.employmentType}`)}
             </span>
+            {job.visaSponsorship && (
+              <span className={styles.metaItem} data-visa-sponsorship>
+                <Icon as={Plane} size={14} />
+                {t('findJobs:details.visa')}
+              </span>
+            )}
             {job.salary && <span className={styles.salary}>{jobText.salary(job)}</span>}
           </div>
 

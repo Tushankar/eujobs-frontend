@@ -77,10 +77,11 @@ export default function JobMatchPage() {
           {
             key: 'rtw',
             label: t('jobMatch.rows.rightToWork'),
-            aligned: evidence.rightToWork,
-            status: t(evidence.rightToWork ? 'jobMatch.aligned' : 'jobMatch.toReview'),
+            // 2026-11-16: without a right to work there, a sponsoring job is still open (the company sponsors the visa).
+            aligned: evidence.rightToWork || evidence.visaSponsorship,
+            status: t(evidence.rightToWork ? 'jobMatch.aligned' : evidence.visaSponsorship ? 'jobMatch.sponsored' : 'jobMatch.toReview'),
             profile: t(evidence.rightToWork ? 'jobMatch.rightToWorkYes' : 'jobMatch.rightToWorkNo'),
-            requirement: t('jobMatch.rightToWorkRequirement', { country: format.country(job.country) }),
+            requirement: evidence.visaSponsorship && !evidence.rightToWork ? t('jobMatch.sponsoredRequirement', { country: format.country(job.country) }) : t('jobMatch.rightToWorkRequirement', { country: format.country(job.country) }),
           },
         ]),
     ...evidence.languages.map((language) => ({

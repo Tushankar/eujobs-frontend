@@ -125,6 +125,7 @@ export async function searchJobs(user, query) {
     if (query.workPreference.length && !query.workPreference.includes(job.workPreference)) return false
     if (query.level.length && !query.level.includes(job.level)) return false
     if (query.placeId && job.location?.placeId !== query.placeId) return false
+    if (query.visaSponsorship && !job.visaSponsorship) return false
     if (query.eligible && view === 'REMOTE' && job.remoteCountries.length && !job.remoteCountries.includes(query.eligible)) return false
     // Worldwide and Remote mix currencies (remote jobs pay in the recruiter's choice), so they have no minimum salary.
     if (query.salaryMin != null && !MIXED_CURRENCIES.includes(view) && !(annualTop(job.salary) >= query.salaryMin)) return false

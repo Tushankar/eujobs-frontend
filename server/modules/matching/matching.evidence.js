@@ -25,5 +25,7 @@ export function matchEvidence(profile, job) {
     }),
     // OD4: null for a remote job, which has no single country.
     rightToWork: job.country && job.country !== 'REMOTE' ? hasRightToWorkIn(profile, job.country) : null,
+    // 2026-11-16: a sponsoring job is open to candidates without a right to work there.
+    visaSponsorship: Boolean(job.visaSponsorship),
   }
 }

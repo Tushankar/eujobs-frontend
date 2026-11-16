@@ -58,6 +58,14 @@ export default function JobFiltersModal({ open, onClose, filters, onChange, resu
             </div>
           </fieldset>
         ))}
+        <fieldset className={styles.group}>
+          <legend className={styles.legend}>{t('findJobs:filters.visa')}</legend>
+          <div className={styles.options}>
+            <Checkbox checked={filters.visaSponsorship} onChange={() => onChange({ ...filters, visaSponsorship: !filters.visaSponsorship })}>
+              {t('findJobs:filters.visaSponsorship')}
+            </Checkbox>
+          </div>
+        </fieldset>
         {remote ? (
           <CountryField
             label={t('findJobs:filters.eligible')}

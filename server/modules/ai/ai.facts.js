@@ -2,6 +2,8 @@ import { generate } from '../../lib/ai.js'
 import { CandidateProfile } from '../candidates/candidates.model.js'
 import { Company } from '../companies/companies.model.js'
 import { CvVersion } from '../cv/cv.model.js'
+import { normalizeRegion } from '../../config/regions.js'
+import { validRightToWork } from '../discovery/discovery.population.js'
 
 /*
  * The facts an AI text is written from. They are also the cache key (M-058, M-057: entity version + language +
@@ -18,6 +20,8 @@ export function candidateFacts(profile, cvText) {
     skills: profile.skills.map((skill) => skill.name),
     workPreference: profile.workPreference ?? null,
     country: profile.location?.countryCode ?? null,
+    // Where the candidate may work (2026-11-16): 'EU' or a country, only entries that are valid today.
+    rightToWork: (profile.rightToWork ?? []).filter((entry) => validRightToWork(entry)).map((entry) => ({ region: normalizeRegion(entry.region), status: entry.status })),
     workHistory: profile.workHistory.map(({ title, employer, start, end, current, description }) => ({ title, employer, start, end: current ? 'present' : (end ?? null), description: description ?? '' })),
     education: profile.education.map(({ degree, institution }) => ({ degree, institution })),
     languages: profile.languages.map(({ code, level }) => ({ code, level })),
@@ -49,6 +53,8 @@ export async function jobFacts(job) {
     country: job.country ?? null,
     city: job.location?.city ?? null,
     remoteCountries: job.remoteCountries,
+    // The company sponsors a work visa for this job (2026-11-16): candidates abroad can still fit.
+    visaSponsorship: Boolean(job.visaSponsorship),
     salary: job.salary?.min != null || job.salary?.max != null ? { min: job.salary.min ?? null, max: job.salary.max ?? null, currency: job.salary.currency, period: job.salary.period } : null,
     requiredLanguages: job.requiredLanguages.map(({ code, minLevel }) => ({ code, minLevel })),
   }

@@ -25,6 +25,7 @@ router.get(
       location: keywords,
       workPreference: z.enum(ENUMS.workPreference).optional(),
       employmentType: z.enum(ENUMS.employmentType).optional(),
+      visa: z.enum(['1']).optional(),
     }),
   }),
   async (req, res) => {

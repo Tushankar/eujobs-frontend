@@ -67,5 +67,7 @@ export const searchQuery = z.object({
   placeId: placeId.optional(),
   salaryMin: z.coerce.number().int().min(0).max(J.salary.max).optional(),
   eligible: z.string().trim().toUpperCase().length(2).optional(),
+  // Only jobs that sponsor a work visa (2026-11-16).
+  visaSponsorship: z.enum(['1']).optional(),
   sort: z.enum(['recommended', 'newest', 'salary']).default('recommended'),
 })
