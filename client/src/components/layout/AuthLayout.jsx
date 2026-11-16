@@ -6,7 +6,7 @@ import { BRAND } from '@/app/brand.js'
 import { Icon } from '@/components/ui'
 import { cx } from '@/utils/cx.js'
 import { arrivedByFlip } from '@/utils/pageFlip.js'
-import mark from '@/assets/images/logo-mark-white.png'
+import mark from '@/assets/images/logo-mark-white.svg'
 import aiSparkleWhite from '@/assets/icons/ai-sparkle-white.svg'
 import BrandLogo from './BrandLogo.jsx'
 import LanguagePicker from './LanguagePicker.jsx'
@@ -63,7 +63,7 @@ export default function AuthLayout({ children, hero, showLogo = true, logoTo = '
           <div className={styles.topBar}>
             {showLogo && (
               <Link to={logoTo} className={styles.logo} aria-label={t('shell:brandHome')}>
-                <BrandLogo height={50} />
+                <BrandLogo height={50} motion="intro" />
               </Link>
             )}
             <div className={styles.topActions}>

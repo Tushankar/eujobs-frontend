@@ -1,4 +1,5 @@
 import { useId, useMemo } from 'react'
+import { scopeSvgIds } from '@/lib/svg.js'
 
 /**
  * A bundled SVG file (imported with `?raw`) placed inline, so the landing motion can reach its shapes (stroke drawing,
@@ -9,10 +10,7 @@ import { useId, useMemo } from 'react'
 export default function InlineSvg({ svg, className, style, motion, currentColor = false, ...rest }) {
   const prefix = useId().replace(/:/g, '')
   const html = useMemo(() => {
-    const scoped = svg
-      .replace(/\sid="([^"]+)"/g, ` id="${prefix}-$1"`)
-      .replace(/url\(#([^)]+)\)/g, `url(#${prefix}-$1)`)
-      .replace(/href="#([^"]+)"/g, `href="#${prefix}-$1"`)
+    const scoped = scopeSvgIds(svg, prefix)
     return currentColor ? scoped.replace(/(stroke|fill)="white"/g, '$1="currentColor"') : scoped
   }, [svg, prefix, currentColor])
   return <span className={className} style={style} aria-hidden="true" data-svg={motion} dangerouslySetInnerHTML={{ __html: html }} {...rest} />

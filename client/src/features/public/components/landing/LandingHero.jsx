@@ -61,7 +61,7 @@ export function SiteHeader({ className = '' }) {
   return (
     <header className={`${styles.header} ${className}`} data-hero-header>
       <Link to="/" className={styles.brandLink} aria-label={t('landing:nav.home_aria', { brand: BRAND.name })}>
-        <BrandLogo height={52} />
+        <BrandLogo height={52} motion="intro" />
       </Link>
       <nav className={styles.navWrap} aria-label={t('landing:nav.label')}>
         <div className={styles.nav}>

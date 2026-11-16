@@ -1,5 +1,160 @@
 .logo {
+  position: relative;
   display: block;
-  width: auto;
   flex-shrink: 0;
+  aspect-ratio: 593.06 / 191.77;
+}
+
+.logo svg {
+  display: block;
+  width: 100%;
+  height: 100%;
+}
+
+/* A band of light, cut to the logo's shape; it rests off the left edge until an animation runs it across. */
+.intro::after,
+.shine::after {
+  content: '';
+  position: absolute;
+  inset: 0;
+  pointer-events: none;
+  background: linear-gradient(105deg, transparent 40%, rgb(255 255 255 / 0.85) 50%, transparent 60%) 100% 0 / 250% 100% no-repeat;
+  -webkit-mask: var(--logo-mask) center / 100% 100% no-repeat;
+  mask: var(--logo-mask) center / 100% 100% no-repeat;
+  opacity: 0;
+}
+
+@media (prefers-reduced-motion: no-preference) {
+  .intro path {
+    transform-box: fill-box;
+    animation: logo-fade 0.6s var(--ease-out) both;
+  }
+
+  /* 1. The E's three bars slide in from the left, one after another. */
+  .intro [data-part='bar'] {
+    animation-name: logo-slide;
+    animation-duration: 0.75s;
+    animation-delay: calc(0.1s + var(--i) * 0.09s);
+  }
+
+  /* 2. The U rises. */
+  .intro [data-part='u'] {
+    transform-origin: 50% 100%;
+    animation-name: logo-rise;
+    animation-duration: 0.75s;
+    animation-delay: 0.3s;
+  }
+
+  /* 3. The swoosh sweeps around the EU, left to right. */
+  .intro [data-part='swoosh'] {
+    transform-origin: 50% 50%;
+    animation-name: logo-sweep;
+    animation-duration: 1s;
+    animation-delay: 0.45s;
+    animation-timing-function: cubic-bezier(0.65, 0, 0.35, 1);
+  }
+
+  /* 4. The divider grows from its middle, then JOBS rises letter by letter. */
+  .intro [data-part='divider'] {
+    transform-origin: 50% 50%;
+    animation-name: logo-grow-y;
+    animation-delay: 0.7s;
+  }
+
+  .intro [data-part='jobs'] {
+    animation-name: logo-rise;
+    animation-duration: 0.75s;
+    animation-delay: calc(0.8s + var(--i) * 0.08s);
+  }
+
+  /* 5. The tagline's rules draw outwards from the words, which fade in letter by letter. */
+  .intro [data-part='rule-l'],
+  .intro [data-part='rule-r'] {
+    animation-name: logo-grow-x;
+    animation-duration: 0.8s;
+    animation-delay: 1.2s;
+  }
+
+  .intro [data-part='rule-l'] {
+    transform-origin: 100% 50%;
+  }
+
+  .intro [data-part='rule-r'] {
+    transform-origin: 0 50%;
+  }
+
+  .intro [data-part='tagline'] {
+    animation-name: logo-fade;
+    animation-duration: 0.5s;
+    animation-delay: calc(1.2s + var(--i) * 0.03s);
+  }
+
+  /* 6. One light sweep once it is built; the shell's logos get the same sweep on hover. */
+  .intro::after {
+    animation: logo-shine 1.1s ease-in-out 1.8s;
+  }
+
+  .shine:hover::after {
+    animation: logo-shine 0.9s ease-in-out;
+  }
+}
+
+@keyframes logo-fade {
+  from {
+    opacity: 0;
+  }
+}
+
+@keyframes logo-slide {
+  from {
+    opacity: 0;
+    transform: translateX(-45%);
+  }
+}
+
+@keyframes logo-rise {
+  from {
+    opacity: 0;
+    transform: translateY(40%);
+  }
+}
+
+@keyframes logo-sweep {
+  from {
+    opacity: 0;
+    clip-path: inset(0 100% 0 0);
+    transform: rotate(-24deg) scale(0.9);
+  }
+
+  30% {
+    opacity: 1;
+  }
+
+  to {
+    clip-path: inset(0 0 0 0);
+  }
+}
+
+@keyframes logo-grow-y {
+  from {
+    transform: scaleY(0);
+  }
+}
+
+@keyframes logo-grow-x {
+  from {
+    transform: scaleX(0);
+  }
+}
+
+@keyframes logo-shine {
+  from {
+    opacity: 1;
+    background-position: 100% 0;
+  }
+
+  to {
+    opacity: 1;
+    background-position: 0 0;
+  }
 }

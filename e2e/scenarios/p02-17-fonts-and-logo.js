@@ -1,6 +1,6 @@
 import { signInWithForm } from '../lib/flows.js'
 
-/** P2-17 (M-192, OD11): no Google Fonts request; the logo is the EU JOBS image (Figma 426:64) with the brand as alt text. */
+/** P2-17 (M-192, OD11): no Google Fonts request; the logo is the inline EU JOBS SVG (Figma 484:7863) labelled with the brand. */
 export default {
   name: 'P2-17 Fonts and logo',
   viewports: ['D'],
@@ -20,9 +20,9 @@ export default {
     })
     ctx.check(fonts.manrope && fonts.inter, `self-hosted fonts loaded: ${JSON.stringify(fonts)}`)
 
-    const logo = await page.$eval('aside a[aria-label] img', (img) => ({ src: img.getAttribute('src'), alt: img.alt, loaded: img.naturalWidth > 0 }))
-    ctx.check(/\/logo\.png/.test(logo.src) && logo.loaded, `logo image ${logo.src} loaded=${logo.loaded}`)
-    ctx.check(logo.alt === 'EU Jobs · AI Powered Careers', `logo alt "${logo.alt}"`)
+    const logo = await page.$eval('aside a[aria-label] [role="img"]', (el) => ({ label: el.getAttribute('aria-label'), shapes: el.querySelectorAll('svg path').length, width: el.getBoundingClientRect().width }))
+    ctx.check(logo.shapes === 29 && logo.width > 0, `logo svg: ${logo.shapes} shapes, ${logo.width}px wide`)
+    ctx.check(logo.label === 'EU Jobs · AI Powered Careers', `logo label "${logo.label}"`)
     await ctx.screenshot(page, 'logo-and-fonts')
     ctx.assertClean(handle.issues, 'fonts and logo')
   },

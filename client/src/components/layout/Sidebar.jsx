@@ -24,7 +24,7 @@ import NavIcon from './NavIcon.jsx'
 import { identitySubtitle } from './identity.js'
 import PlanBadge from './PlanBadge.jsx'
 import { isPaidPlan } from '@/lib/plans.js'
-import logoMark from '@/assets/images/logo-mark.png'
+import logoMark from '@/assets/images/logo-mark.svg'
 import styles from './Sidebar.module.css'
 
 /** A badge whose text a hook computes (e.g. the live count of active applications); none when the hook returns null (M-094). */
@@ -180,7 +180,7 @@ export default function Sidebar({ workspace, open, onClose }) {
         aria-label={t(`shell:workspaces.${workspace.id}.navigation`)}
       >
         <Link to={workspace.basePath} className={styles.brand} aria-label={t('shell:brandHome')}>
-          <BrandLogo height={45} />
+          <BrandLogo height={45} motion="shine" />
         </Link>
 
         <div className={styles.navArea}>

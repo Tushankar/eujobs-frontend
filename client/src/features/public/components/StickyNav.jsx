@@ -89,7 +89,7 @@ export default function StickyNav() {
   return (
     <div ref={bar} className={styles.bar} role="navigation" aria-label={t('landing:nav.sticky')}>
       <Link to="/" className={styles.brand} aria-label={t('landing:nav.home_aria', { brand: BRAND.name })} onClick={toHero}>
-        <BrandLogo height={30} />
+        <BrandLogo height={30} motion="shine" />
       </Link>
       <div ref={track} className={styles.track}>
         <span ref={marker} className={styles.marker} aria-hidden="true" />

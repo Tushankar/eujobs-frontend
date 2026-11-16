@@ -1,11 +1,15 @@
 import { config } from '../../config/env.js'
 import { ENUMS } from '../../config/enums.js'
 import { signedUrl } from '../../lib/files.js'
+import { t } from '../../lib/i18n.js'
+import { matchesKeywords, searchText } from '../../lib/skills.js'
 import { latestPosts } from '../blog/blog.service.js'
 import { Company } from '../companies/companies.model.js'
+import { publicCompanyDto } from '../companies/companies.service.js'
 import { File } from '../files/files.model.js'
 import { Job } from '../jobs/jobs.model.js'
-import { visibleFilter } from '../jobs/jobs.search.js'
+import { haystack, visibleFilter } from '../jobs/jobs.search.js'
+import { jobFieldsDto } from '../jobs/jobs.service.js'
 import { listFaqs } from '../meta/meta.service.js'
 import { landingReviews } from '../reviews/reviews.service.js'
 
@@ -58,5 +62,36 @@ export async function landing(language) {
     reviews,
     posts,
     contact: config.contact,
+  }
+}
+
+/** The words a location search matches: the city, the country in this language, or "Remote". */
+function placeText(job, language) {
+  const region = new Intl.DisplayNames([language], { type: 'region' })
+  const country = job.location?.countryCode
+  return searchText([job.location?.city, country, country && region.of(country), job.country === 'REMOTE' && t(language, 'labels.workPreference.remote')].filter(Boolean).join(' '))
+}
+
+/**
+ * GET /landing/jobs (owner 2026-11-16): the public job list behind the landing page's job links, so signed-out visitors
+ * browse without signing in. Keywords and place narrow the list and its tab counts; one work mode or employment type
+ * picks the tab. Every visible job is returned with the details a candidate reads (no saved, applied or match state).
+ */
+export async function publicJobs({ language, q, location, workPreference, employmentType }) {
+  const jobs = await Job.find(await visibleFilter()).sort({ publishedAt: -1 })
+  const companies = await Company.find({ _id: { $in: [...new Set(jobs.map((job) => String(job.companyId)))] } })
+  const companyById = new Map(companies.map((company) => [String(company._id), company]))
+  const company = (job) => companyById.get(String(job.companyId))
+  const searched = jobs.filter((job) => (!q || matchesKeywords(q, haystack(job, company(job), language))) && (!location || matchesKeywords(location, placeText(job, language))))
+  const items = searched.filter((job) => (!workPreference || job.workPreference === workPreference) && (!employmentType || job.employmentType === employmentType))
+  const logos = await logoUrls(companies)
+  return {
+    total: searched.length,
+    counts: { workPreference: countBy(searched, 'workPreference'), employmentType: countBy(searched, 'employmentType') },
+    items: items.map((job) => ({
+      ...jobFieldsDto(job),
+      // The list only holds jobs of approved, active recruiters, so a verified company is one with a verification date.
+      company: { ...publicCompanyDto(company(job), logos.get(String(job.companyId))), verified: Boolean(company(job).verifiedAt) },
+    })),
   }
 }

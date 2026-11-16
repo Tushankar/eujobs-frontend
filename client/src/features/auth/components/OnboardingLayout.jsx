@@ -53,7 +53,7 @@ export default function OnboardingLayout() {
       <header className={styles.header}>
         <div className={styles.headerInner}>
           <Link to="/recruiter/onboarding" aria-label={BRAND.name}>
-            <BrandLogo height={30} />
+            <BrandLogo height={30} motion="intro" />
           </Link>
           <div className={styles.headerAside}>
             <span>{t('auth:onboarding.signedInAs', { email: state.account.email })}</span>
