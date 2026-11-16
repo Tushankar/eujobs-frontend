@@ -38,7 +38,14 @@ function usePayers(currencies) {
     const remote = countries.some((country) => country.isRemote && country.currency === currency)
     if (!places.length) return null
     if (currency === 'USD') return t('plans.editor.payersWorld', { count: places.length })
-    const named = places.length <= 3 ? places.map((country) => format.country(country.code)).join(', ') : t('plans.editor.payersCount', { count: places.length })
+    // EU + UK first: a group led by one of them names it ("United Kingdom + 3 more"); bigger groups are counted.
+    const main = places.filter((country) => country.isEu || country.code === 'GB')
+    const named =
+      places.length <= 3
+        ? places.map((country) => format.country(country.code)).join(', ')
+        : main.length === 1
+          ? t('plans.editor.payersMore', { country: format.country(main[0].code), count: places.length - 1 })
+          : t('plans.editor.payersCount', { count: places.length })
     return remote ? `${named} · ${format.country('REMOTE')}` : named
   }
 }

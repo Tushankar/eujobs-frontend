@@ -154,7 +154,9 @@
       "payersWorld_one": "Rest of the world · {{count}} country",
       "payersWorld_other": "Rest of the world · {{count}} countries",
       "payersCount_one": "{{count}} country",
-      "payersCount_other": "{{count}} countries"
+      "payersCount_other": "{{count}} countries",
+      "payersMore_one": "{{country}} + {{count}} more",
+      "payersMore_other": "{{country}} + {{count}} more"
     },
     "errors": {
       "required": "Enter this text.",

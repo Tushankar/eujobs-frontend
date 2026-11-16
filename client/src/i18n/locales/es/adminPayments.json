@@ -160,7 +160,10 @@
       "payersWorld_other": "Resto del mundo · {{count}} países",
       "payersCount_one": "{{count}} país",
       "payersCount_many": "{{count}} países",
-      "payersCount_other": "{{count}} países"
+      "payersCount_other": "{{count}} países",
+      "payersMore_one": "{{country}} y {{count}} más",
+      "payersMore_many": "{{country}} y {{count}} más",
+      "payersMore_other": "{{country}} y {{count}} más"
     },
     "errors": {
       "required": "Escribe este texto.",
