@@ -10,6 +10,7 @@
     "hint": "Prueba “remote product design” o “Figma fintech”. Cada palabra debe aparecer en el puesto, la empresa, las habilidades, la ciudad, la modalidad de trabajo, el nivel o el sector.",
     "viewCountry": "Ofertas en {{country}}. Cambia el país en la cabecera para ver otro mercado.",
     "viewRemote": "Ofertas en remoto abiertas a candidatos de la UE y el Reino Unido. Los salarios están en EUR.",
+    "viewWorldwide": "Ofertas de todos los países, incluidas las de remoto. Los salarios se muestran en la moneda de cada oferta. Elige un país o Remoto en la cabecera para acotar la lista.",
     "count_one": "{{count}} oportunidad",
     "count_many": "{{count}} oportunidades",
     "count_other": "{{count}} oportunidades",

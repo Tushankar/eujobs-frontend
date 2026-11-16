@@ -5,7 +5,7 @@ import { Check, ChevronRight, Earth, Menu, MapPin, Search } from 'lucide-react'
 import { Dropdown, Icon, IconButton } from '@/components/ui'
 import { workspacePath } from '@/app/workspaces.js'
 import { LANGUAGES, languageName } from '@/i18n/index.js'
-import { useCountryOptions } from '@/lib/countries.js'
+import { usePickerOptions } from '@/lib/countries.js'
 import { usePreferences, useFormat } from '@/lib/preferences.js'
 import NotificationBell from '@/features/notifications/components/NotificationBell.jsx'
 import GlobalSearch from './GlobalSearch.jsx'
@@ -39,9 +39,9 @@ function MenuOption({ selected, onSelect, children }) {
 /** M-135, M-137: the header country sets discovery, currency and formats. */
 function CountryDropdown() {
   const { t } = useTranslation()
-  const { country, setCountry } = usePreferences()
+  const { view: country, setCountry } = usePreferences()
   const format = useFormat()
-  const options = useCountryOptions()
+  const options = usePickerOptions()
   return (
     <Dropdown
       className={styles.hideBelowWide}

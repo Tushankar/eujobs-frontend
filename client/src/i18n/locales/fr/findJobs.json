@@ -10,6 +10,7 @@
     "hint": "Essayez « remote product design » ou « Figma fintech ». Chaque mot doit figurer dans le poste, l’entreprise, les compétences, la ville, le mode de travail, le niveau ou le secteur.",
     "viewCountry": "Pays affiché : {{country}}. Changez de pays dans l’en-tête pour voir un autre marché.",
     "viewRemote": "Offres à distance ouvertes aux candidats de l’UE et du Royaume-Uni. Les salaires sont en EUR.",
+    "viewWorldwide": "Des offres de tous les pays, y compris à distance. Les salaires s’affichent dans la devise de chaque offre. Choisissez un pays ou « À distance » dans l’en-tête pour affiner la liste.",
     "count_one": "{{count}} opportunité",
     "count_many": "{{count}} opportunités",
     "count_other": "{{count}} opportunités",

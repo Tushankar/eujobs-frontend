@@ -44,6 +44,7 @@ export default function FindJobsPage() {
   const shown = results.slice(0, visible)
   const activeFilters = countActiveFilters(filters)
   const remote = data?.view.country === 'REMOTE'
+  const worldwide = data?.view.country === 'WORLDWIDE'
 
   useEffect(() => {
     const timer = window.setTimeout(() => {
@@ -90,7 +91,7 @@ export default function FindJobsPage() {
           {t('findJobs:page.hint')}
         </p>
         {data ? (
-          <p className={styles.hint}>{remote ? t('findJobs:page.viewRemote') : t('findJobs:page.viewCountry', { country: format.country(data.view.country) })}</p>
+          <p className={styles.hint}>{worldwide ? t('findJobs:page.viewWorldwide') : remote ? t('findJobs:page.viewRemote') : t('findJobs:page.viewCountry', { country: format.country(data.view.country) })}</p>
         ) : (
           search.isLoading && (
             <p className={styles.hint}>
@@ -166,6 +167,7 @@ export default function FindJobsPage() {
         onChange={change(setFilters)}
         resultCount={results.length}
         remote={remote}
+        worldwide={worldwide}
         currency={data?.view.currency}
       />
     </div>

@@ -58,5 +58,7 @@
     "already": "Vous avez déjà signalé ce contenu. Un administrateur va l’examiner.",
     "limit": "Vous pouvez envoyer jusqu’à {{count}} signalements par jour. Réessayez demain."
   },
-  "deletedUser": "Utilisateur supprimé"
+  "deletedUser": "Utilisateur supprimé",
+  "worldwide": "Monde entier",
+  "allCountries": "tous les pays"
 }

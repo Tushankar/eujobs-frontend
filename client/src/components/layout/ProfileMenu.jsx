@@ -8,7 +8,7 @@ import { cx } from '@/utils/cx.js'
 import { Avatar, Dropdown, Icon } from '@/components/ui'
 import { workspacePath } from '@/app/workspaces.js'
 import { LANGUAGES, languageName } from '@/i18n/index.js'
-import { useCountryOptions } from '@/lib/countries.js'
+import { usePickerOptions } from '@/lib/countries.js'
 import { usePreferences, useFormat } from '@/lib/preferences.js'
 import { identitySubtitle } from './identity.js'
 import PlanBadge from './PlanBadge.jsx'
@@ -41,9 +41,9 @@ function OptionList({ options, selected, onSelect, className }) {
 /** Avatar dropdown (Figma "Menu - Profile menu"): identity (M-195), profile link, country and language. */
 export default function ProfileMenu({ workspace }) {
   const { t } = useTranslation()
-  const { me, country, language, setCountry, setLanguage } = usePreferences()
+  const { me, view: country, language, setCountry, setLanguage } = usePreferences()
   const format = useFormat()
-  const countries = useCountryOptions()
+  const countries = usePickerOptions()
   const dispatch = useDispatch()
   const [open, setOpen] = useState(null)
   const toggle = (row) => setOpen((current) => (current === row ? null : row))

@@ -127,7 +127,7 @@ export default function ForYouEmpty({ onToggleSave }) {
   // The same request as the "Recently added" tab, so switching to it is instant.
   const { data: newest, isLoading } = useSearchJobsQuery({ sort: 'newest' })
   const country = newest?.view.country
-  const place = country === 'REMOTE' ? t('findJobs:forYou.remote') : country && format.country(country)
+  const place = country === 'REMOTE' ? t('findJobs:forYou.remote') : country === 'WORLDWIDE' ? t('common:allCountries') : country && format.country(country)
 
   return (
     <div className={styles.wrap}>

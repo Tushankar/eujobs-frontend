@@ -18,8 +18,9 @@ function AlertForm({ alert, onClose }) {
   const [createAlert] = useCreateJobAlertMutation()
   const [updateAlert] = useUpdateJobAlertMutation()
   const limits = config?.limits.jobAlert
-  // U35: a new alert takes the header country; an existing one keeps its own. Remote alerts have no city.
-  const country = alert?.country ?? me.pickerCountry ?? 'REMOTE'
+  // U35: a new alert takes the header view (Worldwide, Remote or a country); an existing one keeps its own. Remote
+  // alerts have no city; a Worldwide alert's city can be anywhere.
+  const country = alert?.country ?? view ?? 'REMOTE'
   const { values, set, errors, failure, run } = useFormState({
     name: alert?.name ?? '',
     keywords: alert?.keywords ?? '',
@@ -41,7 +42,7 @@ function AlertForm({ alert, onClose }) {
       open
       onClose={onClose}
       title={t(alert ? 'jobAlerts:form.editTitle' : 'jobAlerts:form.createTitle')}
-      description={t('jobAlerts:form.description', { country: format.country(country) })}
+      description={t('jobAlerts:form.description', { country: country === 'WORLDWIDE' ? t('common:allCountries') : format.country(country) })}
       width={480}
       footer={
         <>

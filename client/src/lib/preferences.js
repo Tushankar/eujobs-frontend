@@ -49,6 +49,9 @@ export function usePreferences() {
   const [updateMe] = useUpdateMeMutation()
   const language = i18n.language
   const country = me ? me.pickerCountry : readAnonymousPreference('country')
+  // What the header picker shows: a candidate browses Worldwide (owner 2026-11-16) until they pick Remote or a country;
+  // `country` stays their country for currency, formats and phone numbers.
+  const view = me?.role === 'candidate' && me.jobsWorldwide ? 'WORLDWIDE' : country
 
   async function setLanguage(next) {
     if (me) await updateMe({ language: next, languageExplicit: true }).unwrap()
@@ -56,13 +59,14 @@ export function usePreferences() {
     await i18n.changeLanguage(next)
   }
 
-  /** The server may also switch the language to the country's default (M-134). */
+  /** The server may also switch the language to the country's default (M-134). Worldwide keeps the country. */
   async function setCountry(code) {
-    const updated = await updateMe({ pickerCountry: code }).unwrap()
+    if (code === 'WORLDWIDE') return void (await updateMe({ jobsWorldwide: true }).unwrap())
+    const updated = await updateMe({ pickerCountry: code, ...(me?.role === 'candidate' && { jobsWorldwide: false }) }).unwrap()
     if (updated.language !== i18n.language) await i18n.changeLanguage(updated.language)
   }
 
-  return { me, language, country, locale: formatLocale(language, country), setLanguage, setCountry }
+  return { me, language, country, view, locale: formatLocale(language, country), setLanguage, setCountry }
 }
 
 /** Formatters bound to the current format locale. */
@@ -84,7 +88,7 @@ export function useFormat() {
       list: (items, type) => formatList(items, locale, type),
       salary: (salary) => formatSalary(salary, locale),
       languageName: (code) => languageNameIn(code, language),
-      country: (code) => (code === 'REMOTE' ? t('common:remote') : countryName(code, language)),
+      country: (code) => (code === 'REMOTE' ? t('common:remote') : code === 'WORLDWIDE' ? t('common:worldwide') : countryName(code, language)),
     }),
     [locale, language, t],
   )
