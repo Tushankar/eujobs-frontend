@@ -8,15 +8,16 @@ import styles from './JobFiltersModal.module.css'
 
 /**
  * Filters of Find jobs (OD2, U25, P4-Q4, OQ-6i, G-1): work model (country views list hybrid and on-site jobs only),
- * level, city, minimum yearly salary in the view's currency, and the eligible country inside the Remote view.
+ * level, city, minimum yearly salary in the view's currency, and the eligible country inside the Remote view. The
+ * Worldwide view (owner 2026-11-16) offers every work model and no salary, since its jobs pay in different currencies.
  * Filters apply live; the footer shows how many jobs match.
  */
-export default function JobFiltersModal({ open, onClose, filters, onChange, resultCount, remote, currency }) {
+export default function JobFiltersModal({ open, onClose, filters, onChange, resultCount, remote, worldwide, currency }) {
   const { t } = useTranslation()
   const { data: config } = useGetConfigQuery()
   const countries = useCountryOptions().filter((option) => !option.isRemote)
   const groups = [
-    ...(remote ? [] : [{ key: 'workPreference', options: (config?.enums.workPreference ?? []).filter((mode) => mode !== 'remote') }]),
+    ...(remote ? [] : [{ key: 'workPreference', options: (config?.enums.workPreference ?? []).filter((mode) => worldwide || mode !== 'remote') }]),
     { key: 'level', options: config?.enums.jobLevel ?? [] },
   ]
   const enumOf = { workPreference: 'workPreference', level: 'jobLevel' }
@@ -66,14 +67,16 @@ export default function JobFiltersModal({ open, onClose, filters, onChange, resu
         ) : (
           <CityField label={t('findJobs:filters.city')} hint={t('findJobs:filters.cityHint')} name="jobsCity" value={filters.place} onChange={(place) => onChange({ ...filters, place })} />
         )}
-        <TextField
-          label={t('findJobs:filters.salary', { currency })}
-          name="salaryMin"
-          inputMode="numeric"
-          hint={t('findJobs:filters.salaryHint')}
-          value={filters.salaryMin}
-          onChange={(event) => onChange({ ...filters, salaryMin: event.target.value.replace(/\D/g, '') })}
-        />
+        {!worldwide && (
+          <TextField
+            label={t('findJobs:filters.salary', { currency })}
+            name="salaryMin"
+            inputMode="numeric"
+            hint={t('findJobs:filters.salaryHint')}
+            value={filters.salaryMin}
+            onChange={(event) => onChange({ ...filters, salaryMin: event.target.value.replace(/\D/g, '') })}
+          />
+        )}
       </div>
     </Modal>
   )
