@@ -1,12 +1,12 @@
 import { useEffect, useId, useLayoutEffect, useRef, useState } from 'react'
 import { createPortal } from 'react-dom'
-import { ArrowRight, Globe, MapPin, Search } from 'lucide-react'
+import { ArrowRight, Globe, LocateFixed, MapPin, Search } from 'lucide-react'
 import { useTranslation } from 'react-i18next'
 import { useNavigate } from 'react-router-dom'
 import { CompanyLogo, Icon } from '@/components/ui'
 import { useJobText } from '@/lib/jobText.js'
 import { cx } from '@/utils/cx.js'
-import { useGetLandingQuery, useGetPublicJobsQuery } from '../../api.js'
+import { useGetLandingQuery, useGetPublicJobsQuery, useLazyGetCityNearQuery } from '../../api.js'
 import styles from './Landing.module.css'
 import own from './JobSearchForm.module.css'
 
@@ -16,6 +16,9 @@ const MAX_PLACES = 6
 const unique = (list) => [...new Set(list.filter(Boolean))]
 /** Case- and accent-free text for matching ("Málaga" ~ "malaga"); keeps the length of precomposed text. */
 const fold = (text) => text.toLowerCase().normalize('NFD').replace(/\p{M}/gu, '')
+/** About 1 km: enough to find the city, without sending a precise position (owner 2026-11-16). */
+const coarse = (degrees) => Math.round(degrees * 100) / 100
+const LOCATION_STATUS = { busy: 'locating', denied: 'locationDenied', outside: 'locationOutside', error: 'locationError' }
 
 function useDebounced(value, ms) {
   const [debounced, setDebounced] = useState(value)
@@ -123,6 +126,9 @@ export default function JobSearchForm({ q = '', location = '', onSearch, classNa
   const [focus, setFocus] = useState(null)
   const [closed, setClosed] = useState(false)
   const [active, setActive] = useState(-1)
+  const [locating, setLocating] = useState(null)
+  const [getCityNear] = useLazyGetCityNearQuery()
+  const canLocate = typeof navigator !== 'undefined' && 'geolocation' in navigator
   const form = useRef(null)
   const placeField = useRef(null)
   const listId = useId()
@@ -176,7 +182,24 @@ export default function JobSearchForm({ q = '', location = '', onSearch, classNa
     setClosed(true)
     setActive(-1)
   }
-  const picks = jobsOpen ? [...found.map((job) => () => openJob(job)), ...(found.length ? [search] : [])] : placeOptions.map((entry) => () => pickPlace(entry))
+  /** "Use my current location": the browser asks only now; the city near the point fills the field. */
+  function locate() {
+    setLocating('busy')
+    navigator.geolocation.getCurrentPosition(
+      async ({ coords }) => {
+        const { data: near } = await getCityNear({ latitude: coarse(coords.latitude), longitude: coarse(coords.longitude), language: i18n.language })
+        if (!near?.city) return setLocating(near ? 'outside' : 'error')
+        setLocating(null)
+        pickPlace({ value: near.city })
+        return undefined
+      },
+      (error) => setLocating(error.code === error.PERMISSION_DENIED ? 'denied' : 'error'),
+      { timeout: 10000, maximumAge: 600000 },
+    )
+  }
+  const placePicks = [...(canLocate ? [locate] : []), ...placeOptions.map((entry) => () => pickPlace(entry))]
+  const picks = jobsOpen ? [...found.map((job) => () => openJob(job)), ...(found.length ? [search] : [])] : placePicks
+  const open = jobsOpen || (placesOpen && placePicks.length > 0)
 
   function onKeyDown(event) {
     if (event.key === 'Escape') return setClosed(true)
@@ -202,15 +225,15 @@ export default function JobSearchForm({ q = '', location = '', onSearch, classNa
       setFocus(name)
       setClosed(false)
       setActive(-1)
+      setLocating(null)
     },
     onBlur: () => setFocus(null),
     onKeyDown,
-    'aria-expanded': focus === name && (jobsOpen || placeOptions.length > 0),
+    'aria-expanded': focus === name && open,
     'aria-controls': listId,
     'aria-activedescendant': focus === name && active >= 0 ? `${listId}-${active}` : undefined,
   })
 
-  const open = jobsOpen || placeOptions.length > 0
   const rect = useAnchorRect(jobsOpen ? form : placeField, open)
   const width = rect && (jobsOpen ? rect.width : Math.max(rect.width, 300))
   const option = (index, onPick) => ({
@@ -268,9 +291,25 @@ export default function JobSearchForm({ q = '', location = '', onSearch, classNa
                 </div>
               </>
             )}
+            {!jobsOpen && canLocate && (
+              <>
+                <div {...option(0, locate)}>
+                  <span className={own.placeIcon}>
+                    <Icon as={LocateFixed} size={15} />
+                  </span>
+                  <span className={cx(own.text, own.all)}>{t('landing:hero.useLocation')}</span>
+                </div>
+                {locating && (
+                  <p className={own.status} role="status">
+                    {t(`landing:hero.${LOCATION_STATUS[locating]}`)}
+                  </p>
+                )}
+                {placeOptions.length > 0 && <div className={own.divider} role="presentation" />}
+              </>
+            )}
             {!jobsOpen &&
               placeOptions.map((entry, index) => (
-                <div key={entry.label} {...option(index, () => pickPlace(entry))}>
+                <div key={entry.label} {...option(index + (canLocate ? 1 : 0), () => pickPlace(entry))}>
                   <span className={own.placeIcon}>
                     <Icon as={entry.remote ? Globe : MapPin} size={15} />
                   </span>
