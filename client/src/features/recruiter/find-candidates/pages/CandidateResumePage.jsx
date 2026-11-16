@@ -12,8 +12,6 @@ import EarlierVersionModal from '../components/EarlierVersionModal.jsx'
 import ProfileSection from '../components/ProfileSection.jsx'
 import styles from './CandidateResumePage.module.css'
 
-const fileUrl = (path) => `${import.meta.env.VITE_API_URL ?? ''}${path}`
-
 /** View and Download of one CV version through its signed URLs; the server logs each view (M-187). */
 function VersionFile({ version, title, meta, live = false }) {
   const { t } = useTranslation()
@@ -34,10 +32,10 @@ function VersionFile({ version, title, meta, live = false }) {
         )}
       </div>
       <div className={styles.fileActions}>
-        <Button as="a" href={fileUrl(version.url)} target="_blank" rel="noopener noreferrer" leftIcon={<Icon as={Eye} size={13} strokeWidth={2} />}>
+        <Button as="a" href={version.url} target="_blank" rel="noopener noreferrer" leftIcon={<Icon as={Eye} size={13} strokeWidth={2} />}>
           {t('discovery:resumeTab.view')}
         </Button>
-        <Button as="a" href={fileUrl(version.downloadUrl)} variant="outline" leftIcon={<Icon as={Download} size={13} strokeWidth={2} />}>
+        <Button as="a" href={version.downloadUrl} variant="outline" leftIcon={<Icon as={Download} size={13} strokeWidth={2} />}>
           {t('discovery:resumeTab.download')}
         </Button>
       </div>

@@ -128,7 +128,7 @@ export default function CvVersionsPage() {
   async function download(version) {
     await act(async () => {
       const { url } = await getDownloadUrl(version.id).unwrap()
-      window.location.assign(`${import.meta.env.VITE_API_URL ?? ''}${url}`)
+      window.location.assign(url)
     })
   }
 

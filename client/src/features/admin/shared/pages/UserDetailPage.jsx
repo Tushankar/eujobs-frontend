@@ -46,7 +46,7 @@ function FileLink({ fileId, name }) {
   const label = name ?? t('detail.openFile')
   if (isLoading) return <Skeleton shape="pill" width={120} height={28} />
   return data ? (
-    <a className={styles.file} href={`${import.meta.env.VITE_API_URL ?? ''}${data.url}`} target="_blank" rel="noopener noreferrer" title={label}>
+    <a className={styles.file} href={data.url} target="_blank" rel="noopener noreferrer" title={label}>
       <Icon as={FileText} size={14} />
       <span className={styles.fileName}>{label}</span>
     </a>

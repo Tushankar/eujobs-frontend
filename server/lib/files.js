@@ -123,7 +123,7 @@ export function signedUrl(file, userId, { download = false, ttlMs = LIMITS.signe
   const exp = Math.floor((Date.now() + ttlMs) / 1000 / URL_STEP_SECONDS) * URL_STEP_SECONDS
   const query = new URLSearchParams({ u: String(userId), exp: String(exp), sig: signature(file, userId, exp) })
   if (download) query.set('download', '1')
-  return `/api/v1/files/${file._id}?${query}`
+  return `${config.publicApiUrl}/api/v1/files/${file._id}?${query}`
 }
 
 /** True when `sig` was issued for this file, user and expiry, and the expiry has not passed. */

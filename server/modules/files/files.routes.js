@@ -55,6 +55,8 @@ router.get('/:fileId', validate({ params: z.object({ fileId: objectId }), query:
   if (req.query.download) res.attachment(file.originalName ?? file.path.split('/').pop())
   else res.set('Content-Disposition', 'inline')
   res.set('Cache-Control', 'private')
+  // The client may run on another domain (production); helmet's default same-origin would block its <img> and <video>.
+  res.set('Cross-Origin-Resource-Policy', 'cross-origin')
   res.sendFile(absolutePath(file), { cacheControl: false, headers: { 'Content-Type': file.mime } }, (error) => {
     // ECONNABORTED: the browser cancelled the request (a reload or a new Range request); nobody is listening.
     if (!error || error.code === 'ECONNABORTED' || res.headersSent) return

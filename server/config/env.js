@@ -8,9 +8,11 @@ import { z } from 'zod'
 const required = z.string().trim().min(1)
 
 const schema = z.object({
-  NODE_ENV: z.enum(['development', 'test']),
+  NODE_ENV: z.enum(['development', 'test', 'production']),
   PORT: z.coerce.number().int().positive(),
   CLIENT_ORIGIN: z.url(),
+  // Production only: the API's public origin, so file URLs work from a client on another domain (unset locally: relative URLs).
+  PUBLIC_API_URL: z.url().optional(),
   MONGODB_URI: required,
   JWT_SECRET: required,
   JWT_EXPIRES_IN: required,
@@ -63,6 +65,7 @@ export const config = {
   isTest,
   port: env.PORT,
   clientOrigin: env.CLIENT_ORIGIN.replace(/\/$/, ''),
+  publicApiUrl: (env.PUBLIC_API_URL ?? '').replace(/\/$/, ''),
   mongodbUri: env.MONGODB_URI,
   dbName: isTest ? 'eujobs_test' : 'eujobs',
   jwt: { secret: env.JWT_SECRET, expiresIn: env.JWT_EXPIRES_IN },

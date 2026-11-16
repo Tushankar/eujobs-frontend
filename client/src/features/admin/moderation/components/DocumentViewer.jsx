@@ -14,7 +14,7 @@ import styles from './DocumentViewer.module.css'
 export default function DocumentViewer({ file }) {
   const { t } = useTranslation()
   const { data, error } = useGetAdminFileUrlQuery(file.id)
-  const url = data && `${import.meta.env.VITE_API_URL ?? ''}${data.url}`
+  const url = data?.url
   const [local, setLocal] = useState({ url: null, failed: false })
   const image = file.mime.startsWith('image/')
   const pdf = file.mime === 'application/pdf'
