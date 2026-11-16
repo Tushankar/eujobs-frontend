@@ -11,6 +11,20 @@ import styles from './PipelineFunnel.module.css'
 export default function PipelineFunnel({ stages, selectedId, onSelect, move }) {
   const { t } = useTranslation()
   const { width, shapes, bands, cap } = funnelFor(stages.length)
+  // The share kept from the stage before, only once someone reached that stage.
+  const keptAt = (index) => (stages[index - 1]?.reached ? Math.round((stages[index].reached / stages[index - 1].reached) * 100) : null)
+  // What a stage does in either layout: show who is in it, and take a dragged candidate.
+  const stageProps = (stage) => ({
+    'aria-pressed': stage.id === selectedId,
+    'aria-label': t('applications:funnel.stage', { stage: stage.name, now: stage.now, reached: stage.reached }),
+    'data-funnel-stage': stage.name,
+    'data-now': stage.now,
+    'data-reached': stage.reached,
+    onClick: () => onSelect(stage.id),
+    onDragOver: (event) => move.over(event, stage.id),
+    onDragLeave: move.leave,
+    onDrop: (event) => move.drop(event, stage.id),
+  })
 
   return (
     <div className={styles.panel}>
@@ -26,9 +40,7 @@ export default function PipelineFunnel({ stages, selectedId, onSelect, move }) {
             const shape = shapes[index]
             const selected = stage.id === selectedId
             const dropping = move.dropStageId === stage.id
-            const previous = stages[index - 1]
-            // The share kept from the stage before, only once someone reached that stage.
-            const kept = previous?.reached ? Math.round((stage.reached / previous.reached) * 100) : null
+            const kept = keptAt(index)
             const [iconX, iconY, iconSize] = shape.iconBox
             const centerX = shape.x + shape.w / 2
             const centerY = shape.y + shape.h / 2
@@ -38,21 +50,13 @@ export default function PipelineFunnel({ stages, selectedId, onSelect, move }) {
                 className={cx(styles.stage, selected && styles.selected, dropping && styles.dropping)}
                 role="button"
                 tabIndex={0}
-                aria-pressed={selected}
-                aria-label={t('applications:funnel.stage', { stage: stage.name, now: stage.now, reached: stage.reached })}
-                data-funnel-stage={stage.name}
-                data-now={stage.now}
-                data-reached={stage.reached}
-                onClick={() => onSelect(stage.id)}
+                {...stageProps(stage)}
                 onKeyDown={(event) => {
                   if (event.key === 'Enter' || event.key === ' ') {
                     event.preventDefault()
                     onSelect(stage.id)
                   }
                 }}
-                onDragOver={(event) => move.over(event, stage.id)}
-                onDragLeave={move.leave}
-                onDrop={(event) => move.drop(event, stage.id)}
               >
                 <rect x={shape.x} y={shape.y} width={shape.w} height={470 - shape.y} fill="transparent" />
                 <line x1={shape.stemX} x2={shape.stemX} y1={shape.stemTop} y2={RING_Y - 5} className={styles.stem} />
@@ -79,6 +83,37 @@ export default function PipelineFunnel({ stages, selectedId, onSelect, move }) {
           })}
         </svg>
       </div>
+
+      {/* Phones: the same funnel turned upright, one band per stage narrowing downward (owner 2026-11-16). */}
+      <ol className={styles.upright} aria-label={t('applications:funnel.label')}>
+        {stages.map((stage, index) => {
+          const top = 100 - (55 * index) / stages.length
+          const bottom = 100 - (55 * (index + 1)) / stages.length
+          const kept = keptAt(index)
+          return (
+            <li key={stage.id}>
+              <button
+                type="button"
+                className={cx(styles.uprightStage, stage.id === selectedId && styles.selected, move.dropStageId === stage.id && styles.dropping)}
+                {...stageProps(stage)}
+              >
+                <span className={styles.bandCell}>
+                  <span className={styles.band} style={{ '--top': `${top}%`, '--inset': `${((top - bottom) / 2 / top) * 100}%`, '--fill': shapes[index].fill }}>
+                    <img src={CATEGORY_ICONS[stage.category]} alt="" width={22} height={22} />
+                  </span>
+                </span>
+                <span className={styles.uprightText}>
+                  <span className={styles.uprightName}>{stage.name}</span>
+                  <span className={styles.uprightCount}>{stage.now}</span>
+                  <span className={styles.uprightReached}>
+                    {[t('applications:funnel.reached', { count: stage.reached }), kept !== null && t('applications:funnel.kept', { percent: kept })].filter(Boolean).join(' · ')}
+                  </span>
+                </span>
+              </button>
+            </li>
+          )
+        })}
+      </ol>
     </div>
   )
 }
