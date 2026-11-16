@@ -11,7 +11,7 @@ import Pagination from '@/components/common/Pagination.jsx'
 import PillBadge from '@/components/common/PillBadge.jsx'
 import RowActionLink from '@/components/common/RowActionLink.jsx'
 import { Avatar, Button, Icon, SelectField, TextField } from '@/components/ui'
-import { useCountryOptions } from '@/lib/countries.js'
+import { countryChoices, useCountryOptions } from '@/lib/countries.js'
 import { downloadFromApi } from '@/lib/download.js'
 import { useErrorText } from '@/lib/forms.js'
 import { useUrlFilters } from '@/lib/useUrlFilters.js'
@@ -20,6 +20,7 @@ import { cx } from '@/utils/cx.js'
 import { useGetAdminUsersQuery } from '../api.js'
 import { STATE_TONES, STATUS_TONES, VERIFICATION_TONES } from '../tones.js'
 import styles from './UsersDirectory.module.css'
+import CountryField from '@/components/common/CountryField.jsx'
 
 const FILTERS = {
   candidate: ['status', 'country', 'verification', 'plan', 'rightToWork'],
@@ -196,20 +197,36 @@ export default function UsersDirectory({ role }) {
           value={search}
           onChange={(event) => setSearch(event.target.value)}
         />
-        {FILTERS[role].map((name) => (
-          <SelectField variant="filter"
-            key={name}
-            name={name}
-            aria-label={t(`filters.${name}`)}
-            className={styles.filter}
-            value={filters[name]}
-            onChange={(event) => setFilter(name, event.target.value)}
-            options={[
-              { value: '', label: t(`filters.${allLabel[name]}`) },
-              ...(name === 'country' ? countries.map((country) => ({ value: country.code, label: country.name })) : valuesOf(name).map((value) => ({ value, label: optionLabel(name, value) }))),
-            ]}
-          />
-        ))}
+        {FILTERS[role].map((name) => {
+          const all = { value: '', label: t(`filters.${allLabel[name]}`) }
+          // Country and right to work list every country (worldwide since 2026-11-16): the searchable picker.
+          if (name === 'country' || name === 'rightToWork') {
+            const choices = name === 'country' ? countryChoices(countries) : [...valuesOf(name).filter((value) => !countries.some((country) => country.code === value)).map((value) => ({ value, label: optionLabel(name, value) })), ...countryChoices(countries).map((choice) => ({ ...choice, label: optionLabel(name, choice.value) }))]
+            return (
+              <CountryField
+                key={name}
+                variant="filter"
+                name={name}
+                aria-label={t(`filters.${name}`)}
+                className={styles.filter}
+                value={filters[name]}
+                onChange={(value) => setFilter(name, value)}
+                options={[all, ...choices]}
+              />
+            )
+          }
+          return (
+            <SelectField variant="filter"
+              key={name}
+              name={name}
+              aria-label={t(`filters.${name}`)}
+              className={styles.filter}
+              value={filters[name]}
+              onChange={(event) => setFilter(name, event.target.value)}
+              options={[all, ...valuesOf(name).map((value) => ({ value, label: optionLabel(name, value) }))]}
+            />
+          )
+        })}
       </div>
 
       <div className={styles.results}>

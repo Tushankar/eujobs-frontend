@@ -14,12 +14,13 @@ import CompanyCell from '@/components/common/CompanyCell.jsx'
 import aiSparkle from '@/assets/icons/ai-sparkle-blue-16.svg'
 import JobSummaryDialog from '@/features/ai/components/JobSummaryDialog.jsx'
 import JobStatusBadge from '@/features/recruiter/jobs/components/JobStatusBadge.jsx'
-import { useCountryOptions } from '@/lib/countries.js'
+import { countryChoices, useCountryOptions } from '@/lib/countries.js'
 import { check, useErrorText, useFormState } from '@/lib/forms.js'
 import { useFormat, usePreferences } from '@/lib/preferences.js'
 import { useUrlFilters } from '@/lib/useUrlFilters.js'
 import { useGetAdminJobSummaryQuery, useGetAdminJobsQuery, useOpenJobCaseMutation, useRegenerateAdminJobSummaryMutation } from '../api.js'
 import styles from './JobsPage.module.css'
+import CountryField from '@/components/common/CountryField.jsx'
 
 const STATUSES = ['published', 'paused', 'draft', 'closed']
 const REASONS = ['spam', 'scam_or_fraud', 'discriminatory', 'offensive', 'misleading', 'other']
@@ -174,13 +175,14 @@ export default function JobsPage() {
           onChange={(event) => setFilter('status', event.target.value)}
           options={[{ value: '', label: t('filters.allStatuses') }, ...STATUSES.map((status) => ({ value: status, label: t(`enums:jobStatus.${status}`) }))]}
         />
-        <SelectField variant="filter"
+        <CountryField
+          variant="filter"
           name="country"
           className={styles.select}
           aria-label={t('filters.country')}
           value={filters.country}
-          onChange={(event) => setFilter('country', event.target.value)}
-          options={[{ value: '', label: t('filters.allCountries') }, ...countries.map((country) => ({ value: country.code, label: country.name }))]}
+          onChange={(code) => setFilter('country', code)}
+          options={[{ value: '', label: t('filters.allCountries') }, ...countryChoices(countries)]}
         />
       </div>
       <div className={styles.results}>

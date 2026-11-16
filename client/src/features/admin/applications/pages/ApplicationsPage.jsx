@@ -11,13 +11,14 @@ import Pagination from '@/components/common/Pagination.jsx'
 import PillBadge from '@/components/common/PillBadge.jsx'
 import { Button, Icon, SelectField, TextField } from '@/components/ui'
 import CompanyCell from '@/components/common/CompanyCell.jsx'
-import { useCountryOptions } from '@/lib/countries.js'
+import { countryChoices, useCountryOptions } from '@/lib/countries.js'
 import { downloadFromApi } from '@/lib/download.js'
 import { useErrorText } from '@/lib/forms.js'
 import { useFormat, usePreferences } from '@/lib/preferences.js'
 import { useUrlFilters } from '@/lib/useUrlFilters.js'
 import { useGetAdminApplicationsQuery } from '../api.js'
 import styles from './ApplicationsPage.module.css'
+import CountryField from '@/components/common/CountryField.jsx'
 
 const STATUSES = ['applied', 'under_review', 'interview', 'offer', 'hired', 'not_selected', 'withdrawn']
 const TONES = { applied: 'accent', under_review: 'accent', interview: 'success', offer: 'success', hired: 'success', not_selected: 'neutral', withdrawn: 'neutral' }
@@ -103,13 +104,14 @@ export default function ApplicationsPage() {
           onChange={(event) => setFilter('status', event.target.value)}
           options={[{ value: '', label: t('filters.allStatuses') }, ...STATUSES.map((status) => ({ value: status, label: t(`enums:applicationStatus.${status}`) }))]}
         />
-        <SelectField variant="filter"
+        <CountryField
+          variant="filter"
           name="country"
           className={styles.select}
           aria-label={t('filters.country')}
           value={filters.country}
-          onChange={(event) => setFilter('country', event.target.value)}
-          options={[{ value: '', label: t('filters.allCountries') }, ...countries.map((country) => ({ value: country.code, label: country.name }))]}
+          onChange={(code) => setFilter('country', code)}
+          options={[{ value: '', label: t('filters.allCountries') }, ...countryChoices(countries)]}
         />
       </div>
       <div className={styles.results}>

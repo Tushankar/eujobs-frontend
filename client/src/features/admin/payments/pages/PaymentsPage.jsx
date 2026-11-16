@@ -12,7 +12,7 @@ import PillBadge from '@/components/common/PillBadge.jsx'
 import StatCard from '@/components/common/StatCard.jsx'
 import { Button, Icon, Modal, SelectField, TextField } from '@/components/ui'
 import PaymentsTable from '@/features/payments/components/PaymentsTable.jsx'
-import { useCountryOptions } from '@/lib/countries.js'
+import { countryChoices, useCountryOptions } from '@/lib/countries.js'
 import { downloadFromApi } from '@/lib/download.js'
 import { useErrorText } from '@/lib/forms.js'
 import { useUrlFilters } from '@/lib/useUrlFilters.js'
@@ -21,6 +21,7 @@ import { useMarkSeen } from '@/features/notifications/api.js'
 import { useGetAdminPaymentQuery, useGetAdminPaymentsQuery, useGetAdminPlansQuery, useGetPaymentStatsQuery } from '../api.js'
 import PaymentsTabs from '../components/PaymentsTabs.jsx'
 import styles from './PaymentsPage.module.css'
+import CountryField from '@/components/common/CountryField.jsx'
 
 const STATUS_TONE = { paid: 'success', failed: 'danger', refunded: 'neutral' }
 const MONEY_LINES = 3
@@ -202,7 +203,7 @@ export default function PaymentsPage() {
           value={search}
           onChange={(event) => setSearch(event.target.value)}
         />
-        {[...Object.keys(FILTERS), 'country'].map((name) => (
+        {Object.keys(FILTERS).map((name) => (
           <SelectField variant="filter"
             key={name}
             name={name}
@@ -210,12 +211,18 @@ export default function PaymentsPage() {
             aria-label={t(`filters.${name}`)}
             value={filters[name]}
             onChange={(event) => setFilter(name, event.target.value)}
-            options={[
-              { value: '', label: t(`filters.${ALL[name]}`) },
-              ...(name === 'country' ? countries.map((country) => ({ value: country.code, label: country.name })) : FILTERS[name].map((value) => ({ value, label: optionLabel(name, value) }))),
-            ]}
+            options={[{ value: '', label: t(`filters.${ALL[name]}`) }, ...FILTERS[name].map((value) => ({ value, label: optionLabel(name, value) }))]}
           />
         ))}
+        <CountryField
+          variant="filter"
+          name="country"
+          className={styles.select}
+          aria-label={t('filters.country')}
+          value={filters.country}
+          onChange={(code) => setFilter('country', code)}
+          options={[{ value: '', label: t(`filters.${ALL.country}`) }, ...countryChoices(countries)]}
+        />
       </div>
 
       <div className={styles.results}>
