@@ -79,7 +79,8 @@ export default function JobSearchForm({ q = '', location = '', onSearch, classNa
   const [what, setWhat] = useState(q)
   const [where, setWhere] = useState(location)
   const jobs = data?.jobs ?? []
-  const titles = unique(jobs.map((job) => job.title)).join('\n')
+  // A title's trailing "(React, MongoDB, AWS)" would overflow the field; the role name alone reads as an example.
+  const titles = unique(jobs.map((job) => job.title.replace(/\s*\(.*\)\s*$/, ''))).join('\n')
   const places = unique(jobs.map((job) => (job.location ? job.location.city : t('common:remote')))).join('\n')
 
   function submit(event) {
