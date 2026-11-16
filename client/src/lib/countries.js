@@ -3,12 +3,6 @@ import { useTranslation } from 'react-i18next'
 import { useGetCountriesQuery } from '@/app/api.js'
 import { usePreferences, useFormat } from './preferences.js'
 
-/** M-135: the sign-up default — the browser's region when it is one of the options, else Remote. */
-export function browserCountry(options) {
-  const region = new Intl.Locale(navigator.language).maximize().region
-  return options.some((option) => option.code === region) ? region : 'REMOTE'
-}
-
 /**
  * The header picker's choices. A candidate's (owner 2026-11-16) are Worldwide, their own country ("Your country"),
  * Remote, then the other countries A–Z; everyone else's are the countries with Remote last.
@@ -28,8 +22,11 @@ export function usePickerOptions() {
   ]
 }
 
-/** EU + UK first, then Remote, then the rest of the world (owner 2026-11-16: "EU Jobs" first, then worldwide). */
-const rankOf = (country) => (country.isEu || country.code === 'GB' ? 0 : country.isRemote ? 1 : 2)
+/**
+ * EU + UK first, then Remote, then the rest of the world (owner 2026-11-16: "EU Jobs" first, then worldwide). Rows from
+ * before the worldwide catalogue have no `isEu` and are all EU + UK, so they count as the first group.
+ */
+const rankOf = (country) => (country.isRemote ? 1 : (country.isEu ?? true) || country.code === 'GB' ? 0 : 2)
 
 /** The countries (M-139, worldwide since 2026-11-16) as { code, name, isRemote, isEu }, each group A–Z in the UI language. */
 export function useCountryOptions() {

@@ -11,8 +11,9 @@ const countrySchema = new Schema(
     currency: { type: String, required: true },
     defaultLanguage: { type: String, enum: ENUMS.language, required: true },
     isRemote: { type: Boolean, default: false },
-    // The EU 27 (owner 2026-11-16): with GB they come first in every list.
-    isEu: { type: Boolean, default: false },
+    // The EU 27 (owner 2026-11-16): with GB they come first in every list. No default: rows seeded before then have
+    // none, and the client counts those (all EU + UK) as the first group.
+    isEu: Boolean,
     order: { type: Number, required: true },
     enabled: { type: Boolean, default: true },
   },
