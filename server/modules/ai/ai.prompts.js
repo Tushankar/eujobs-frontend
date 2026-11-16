@@ -10,6 +10,10 @@ const RULES = [
   'Write plainly and briefly. Evidence is not a hiring decision, and a missing field is missing evidence, not a missing ability.',
 ].join('\n')
 
+// 2026-11-16 (worldwide): where the candidate may work and whether the company sponsors a work visa.
+const VISA =
+  `Right to work: the candidate's rightToWork lists where they may already work ("EU" means all 27 EU countries) and the evidence says whether that covers the job's country. visaSponsorship true means the company sponsors a work visa, so a candidate without that right can still take the job: say so plainly. When it is false and the candidate cannot already work there, name it as a point to check. Never infer a nationality from where someone may work.`
+
 const text = { type: 'string' }
 const texts = { type: 'array', items: text }
 const object = (properties) => ({ type: 'object', properties, required: Object.keys(properties), additionalProperties: false })
@@ -20,19 +24,21 @@ export const PROMPTS = {
   jobSummary: {
     kind: 'job_summary',
     schema: object({ overview: text, highlights: texts, considerations: texts }),
-    instructions: `${RULES}\nSummarise the job posting: an overview of two or three sentences, up to four highlights and up to three points a reader should check (missing salary, unclear requirements, location limits).`,
+    instructions: `${RULES}\nSummarise the job posting: an overview of two or three sentences, up to four highlights and up to three points a reader should check (missing salary, unclear requirements, location limits). A job that sponsors a work visa (visaSponsorship) is a highlight.`,
   },
   // M-057: the narrative around the code evidence, for the candidate.
   candidateMatch: {
     kind: 'match_explanation',
     schema: object({ summary: text, strengths: texts, gaps: texts }),
-    instructions: `${RULES}\nExplain to the candidate, addressed as "you", how their profile relates to this job, using the evidence block: a two-sentence summary, up to three strengths and up to three gaps or open questions. Do not mention any score or percentage.`,
+    instructions: `${RULES}\nExplain to the candidate, addressed as "you", how their profile relates to this job, using the evidence block: a two-sentence summary, up to three strengths and up to three gaps or open questions. Do not mention any score or percentage.
+${VISA}`,
   },
   // M-057, C6: the same for a recruiter, never with a score or a ranking.
   recruiterMatch: {
     kind: 'match_explanation',
     schema: object({ summary: text, strengths: texts, openQuestions: texts }),
-    instructions: `${RULES}\nExplain to a recruiter how this candidate's profile relates to the job, using the evidence block: a two-sentence summary, up to three strengths and up to three open questions to ask in an interview. Never mention a score, a percentage or a ranking.`,
+    instructions: `${RULES}\nExplain to a recruiter how this candidate's profile relates to the job, using the evidence block: a two-sentence summary, up to three strengths and up to three open questions to ask in an interview. Never mention a score, a percentage or a ranking.
+${VISA}`,
   },
   // M-057, M-066: the "Make the evidence visible" card of AI insights.
   insightsOverview: {
@@ -56,7 +62,8 @@ export const PROMPTS = {
   whyRecommended: {
     kind: 'insights',
     schema: object({ reasons: { type: 'array', items: object({ title: text, text }) } }),
-    instructions: `${RULES}\nGive exactly three reasons, in this order: listed skills, experience, work preferences and location. Each has a short title and one or two sentences addressed to the candidate as "you", grounded on the evidence block. Do not mention any score or percentage.`,
+    instructions: `${RULES}\nGive exactly three reasons, in this order: listed skills, experience, work preferences and location. Each has a short title and one or two sentences addressed to the candidate as "you", grounded on the evidence block. Do not mention any score or percentage.
+${VISA}`,
   },
   // M-062: a recruiter-ready summary of the candidate's own profile and live CV.
   profileSummary: {

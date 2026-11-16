@@ -24,6 +24,8 @@ import { aiStub } from './helpers/ai.js'
 import { api, auth, createUser, useTestDb } from './helpers/index.js'
 import { approvedRecruiter, jobBody, listedCandidate } from './helpers/market.js'
 import { useFakePlaces } from './helpers/places.js'
+import { candidateFacts, jobFacts } from '../modules/ai/ai.facts.js'
+import { matchEvidence } from '../modules/matching/matching.evidence.js'
 
 useTestDb([
   User, Company, Job, CandidateProfile, CvVersion, File, Application, ShortlistEntry, Subscription, VerificationSubmission,
@@ -96,6 +98,28 @@ describe('the score (U5, C23, OQ-6g)', () => {
     assert.equal(locationMismatch(remoteProfile, { ...remote, remoteCountries: ['IE', 'GB'] }), false)
     assert.equal(locationMismatch(remoteProfile, { ...remote, remoteCountries: ['IE'] }), true)
     assert.equal(locationMismatch(PROFILE, remote), true, 'a hybrid candidate and a remote job differ in work mode')
+  })
+
+  it('gives the evidence and the AI the visa facts: sponsorship and valid rights to work only (2026-11-16)', async () => {
+    const profile = {
+      ...PROFILE,
+      location: { countryCode: 'IN' },
+      languages: [],
+      workHistory: [],
+      education: [],
+      rightToWork: [
+        { region: 'eu', status: 'citizen_settled' },
+        { region: 'GB', status: 'visa_permit', permitExpiresOn: '2020-01-31' },
+      ],
+    }
+    const sponsoring = { ...JOB, visaSponsorship: true, requiredLanguages: [] }
+    const evidence = matchEvidence(profile, sponsoring)
+    assert.deepEqual([evidence.rightToWork, evidence.visaSponsorship, evidence.location.met], [false, true, true])
+    // The AI hears of the old 'eu' entry as the EU group, and not of the expired UK permit.
+    assert.deepEqual(candidateFacts(profile, '').rightToWork, [{ region: 'EU', status: 'citizen_settled' }])
+    const company = await Company.create({ ownerUserId: (await createUser({ role: 'recruiter' }))._id, legalName: 'Visa Ltd', displayName: 'Visa Ltd' })
+    assert.equal((await jobFacts({ ...sponsoring, companyId: company._id, responsibilities: [] })).visaSponsorship, true)
+    assert.equal((await jobFacts({ ...JOB, companyId: company._id, responsibilities: [], requiredLanguages: [] })).visaSponsorship, false)
   })
 
   it('lets a candidate abroad fit with a right to work there or a sponsoring job (worldwide, 2026-11-16)', () => {

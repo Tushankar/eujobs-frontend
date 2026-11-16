@@ -194,7 +194,9 @@
     "saved": "Enregistrée dans vos offres",
     "why": "Pourquoi cette recommandation ?",
     "contextTitle": "Une correspondance utile a du contexte.",
-    "contextText": "Un score résume des éléments ; il ne peut pas expliquer un choix de carrière. Ces analyses ne vérifient pas vos compétences, ne déduisent aucune caractéristique protégée et ne garantissent pas d’entretien."
+    "contextText": "Un score résume des éléments ; il ne peut pas expliquer un choix de carrière. Ces analyses ne vérifient pas vos compétences, ne déduisent aucune caractéristique protégée et ne garantissent pas d’entretien.",
+    "sponsored": "Visa parrainé",
+    "sponsoredRequirement": "Droit au travail : {{country}}, ou l’entreprise parraine votre visa"
   },
   "why": {
     "eyebrow": "Explication de la recommandation IA",

@@ -195,7 +195,7 @@ describe('candidate job browsing (M-043, M-044, M-052, M-053, OD2, U8, U25, P4-Q
   it('filters by keywords, level, work mode, city and annual salary, and sorts (§3.6, U25, P4-Q4)', async () => {
     const { user } = await approvedRecruiter()
     const monthly = await published(user, { title: 'Brand Designer', level: 'mid', salary: { min: 5000, max: 6000, period: 'month' } })
-    const yearly = await published(user, { title: 'Design Lead', level: 'lead', workPreference: 'on_site', salary: { min: 65000, max: 70000, period: 'year' } })
+    const yearly = await published(user, { title: 'Design Lead', level: 'lead', workPreference: 'on_site', visaSponsorship: true, salary: { min: 65000, max: 70000, period: 'year' } })
     const unpaid = await published(user, { title: 'Junior Designer', level: 'junior', salary: null, placeId: PLACES.manchester.placeId })
     const candidate = await createUser({ pickerCountry: 'GB', language: 'es', jobsWorldwide: false })
     const ids = async (query) => (await findJobs(candidate, query)).body.items.map((job) => job.id)
@@ -212,6 +212,10 @@ describe('candidate job browsing (M-043, M-044, M-052, M-053, OD2, U8, U25, P4-Q
     assert.deepEqual(await ids('?q=presencial%20LEAD'), [yearly.id])
     assert.deepEqual(await ids('?q=figma%20brand'), [monthly.id])
     assert.deepEqual(await ids('?q=nothing'), [])
+    // Only jobs that sponsor a work visa (2026-11-16), and the card says so.
+    assert.deepEqual(await ids('?visaSponsorship=1'), [yearly.id])
+    assert.equal((await findJobs(candidate, '?visaSponsorship=1')).body.items[0].visaSponsorship, true)
+    assert.equal((await findJobs(candidate, '?visaSponsorship=yes')).status, 422)
   })
 
   it('shows the overlap label, the U8 recommendations and the saved-job states (M-043, M-065)', async () => {

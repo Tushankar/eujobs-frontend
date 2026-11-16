@@ -56,7 +56,7 @@ describe('GET /landing/jobs (public job list, owner 2026-11-16)', () => {
   it('lists every visible job without a session, with tab counts that follow the keywords and the place', async () => {
     const { user } = await approvedRecruiter()
     const remote = await publish(user, { title: 'Remote Designer', workPreference: 'remote', placeId: null, remoteCountries: [] })
-    const london = await publish(user, { title: 'London Analyst', employmentType: 'contract', workPreference: 'on_site', placeId: PLACES.london.placeId })
+    const london = await publish(user, { title: 'London Analyst', employmentType: 'contract', workPreference: 'on_site', placeId: PLACES.london.placeId, visaSponsorship: true })
     await api().post('/api/v1/recruiter/jobs').set(auth(user)).send(jobBody({ title: 'Secret Draft' }))
 
     const all = (await api().get('/api/v1/landing/jobs')).body
@@ -69,6 +69,12 @@ describe('GET /landing/jobs (public job list, owner 2026-11-16)', () => {
     assert.deepEqual([place.total, place.items.map((job) => job.id), place.counts.workPreference.remote], [1, [london], 0])
     assert.deepEqual((await api().get('/api/v1/landing/jobs?q=designer')).body.items.map((job) => job.id), [remote])
     assert.equal((await api().get('/api/v1/landing/jobs?employmentType=nope')).status, 422)
+
+    // "Visa sponsorship" (?visa=1, 2026-11-16) narrows the list and its counts; the home page cards carry the flag.
+    const visa = (await api().get('/api/v1/landing/jobs?visa=1')).body
+    assert.deepEqual([visa.total, visa.items.map((job) => job.id), visa.items[0].visaSponsorship, visa.counts.workPreference.remote], [1, [london], true, 0])
+    const home = (await api().get('/api/v1/landing')).body.jobs
+    assert.deepEqual(home.map((job) => [job.id, job.visaSponsorship]).sort(), [[london, true], [remote, false]].sort())
   })
 })
 

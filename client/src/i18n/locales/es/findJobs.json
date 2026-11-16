@@ -41,7 +41,9 @@
     "clear": "Borrar todo",
     "show_one": "Ver {{count}} oferta",
     "show_many": "Ver {{count}} ofertas",
-    "show_other": "Ver {{count}} ofertas"
+    "show_other": "Ver {{count}} ofertas",
+    "visa": "Visado",
+    "visaSponsorship": "Ofrece patrocinio de visado"
   },
   "card": {
     "save": "Guardar {{title}} en {{company}}",

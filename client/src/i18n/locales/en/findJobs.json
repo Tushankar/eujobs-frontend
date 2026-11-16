@@ -39,7 +39,9 @@
     "anyCountry": "Any country",
     "clear": "Clear all",
     "show_one": "Show {{count}} job",
-    "show_other": "Show {{count}} jobs"
+    "show_other": "Show {{count}} jobs",
+    "visa": "Visa",
+    "visaSponsorship": "Offers visa sponsorship"
   },
   "card": {
     "save": "Save {{title}} at {{company}}",

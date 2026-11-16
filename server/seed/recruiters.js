@@ -20,7 +20,7 @@ const HOUR_MS = 60 * 60 * 1000
 const DAY_MS = 24 * HOUR_MS
 const skills = (names) => names.map((name) => ({ name, key: name.toLocaleLowerCase() }))
 const ago = (now, ms) => new Date(now - ms)
-// Real-brand demo companies get their public logo (owner request 2026-11-11); fictional ones keep their initials.
+// Real-brand demo companies get their public logo (owner request 2026-11-11); fictional ones an original logo (2026-11-16).
 const logoPath = (key) => new URL(`./assets/logos/${key}.png`, import.meta.url)
 
 async function seedLogo(company, ownerId, key) {

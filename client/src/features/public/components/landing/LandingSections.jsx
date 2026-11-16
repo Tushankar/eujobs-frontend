@@ -197,6 +197,7 @@ function JobRow({ job }) {
         {job.employmentType && <li>{t(`enums:employmentType.${job.employmentType}`)}</li>}
         {job.workPreference && <li>{t(`enums:workPreference.${job.workPreference}`)}</li>}
         {job.experienceYears != null && <li>{t('landing:vacancies.years', { count: job.experienceYears })}</li>}
+        {job.visaSponsorship && <li data-visa-sponsorship>{t('common:visaSponsorship')}</li>}
       </ul>
       <div className={styles.jobBottom}>
         <AvatarStack to={`/jobs?job=${job.id}`} label={t('landing:vacancies.apply')} />

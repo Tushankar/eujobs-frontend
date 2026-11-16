@@ -1,7 +1,7 @@
 import { useLayoutEffect, useRef, useState } from 'react'
 import { useGSAP } from '@gsap/react'
 import gsap from 'gsap'
-import { ArrowLeft, ArrowUpRight, Bookmark, BriefcaseBusiness, Globe, MapPin, SearchX } from 'lucide-react'
+import { ArrowLeft, ArrowUpRight, Bookmark, BriefcaseBusiness, Globe, MapPin, Plane, SearchX } from 'lucide-react'
 import { useTranslation } from 'react-i18next'
 import { Link, useSearchParams } from 'react-router-dom'
 import { CompanyLogo, Icon, Skeleton, SkeletonRegion } from '@/components/ui'
@@ -45,7 +45,9 @@ export default function PublicJobsPage() {
   const q = params.get('q') ?? ''
   const location = params.get('location') ?? ''
   const tab = GROUPS.map((group) => params.get(group) && `${group}:${params.get(group)}`).find(Boolean) ?? 'all'
-  const query = { language: i18n.language, q, location, ...Object.fromEntries(GROUPS.map((group) => [group, params.get(group)]).filter(([, value]) => value)) }
+  // Only jobs that sponsor a work visa (?visa=1, 2026-11-16).
+  const visa = params.get('visa') === '1'
+  const query = { language: i18n.language, q, location, ...Object.fromEntries(GROUPS.map((group) => [group, params.get(group)]).filter(([, value]) => value)), ...(visa && { visa: '1' }) }
   const { data, isFetching, isError } = useGetPublicJobsQuery(query)
   useDocumentTitle(t('website:jobs.title'))
   const root = useRef(null)
@@ -109,8 +111,12 @@ export default function PublicJobsPage() {
             {t('website:jobs.text')}
           </p>
           <JobSearchForm key={`${q}|${location}`} q={q} location={location} onSearch={update} className={styles.search} data-intro />
-          <div data-intro>
+          <div className={styles.filters} data-intro>
             <Tabs active={tab} counts={data && { all: data.total, ...data.counts }} onChange={(key) => update(Object.fromEntries(GROUPS.map((group) => [group, key.startsWith(`${group}:`) ? key.split(':')[1] : null])))} />
+            <button type="button" className={cx(styles.toggle, visa && styles.toggleOn)} aria-pressed={visa} onClick={() => update({ visa: visa ? null : '1' })}>
+              <Icon as={Plane} size={15} />
+              {t('common:visaSponsorship')}
+            </button>
           </div>
         </header>
 
@@ -198,6 +204,7 @@ function JobRow({ job, active, onOpen }) {
         <span className={styles.rowTags}>
           {job.workPreference && <span>{t(`enums:workPreference.${job.workPreference}`)}</span>}
           {job.employmentType && <span>{t(`enums:employmentType.${job.employmentType}`)}</span>}
+          {job.visaSponsorship && <span data-visa-sponsorship>{t('common:visaSponsorship')}</span>}
         </span>
         {salary && <span className={styles.rowSalary}>{salary}</span>}
       </span>
@@ -221,7 +228,6 @@ function JobDetail({ job, onBack }) {
   const conditions = [
     ...job.requiredLanguages.map((language) => t('findJobs:details.languageLevel', { language: format.languageName(language.code), level: t(`enums:languageLevel.${language.minLevel}`) })),
     eligible && t('findJobs:details.eligible', { countries: eligible }),
-    job.visaSponsorship && t('findJobs:details.visa'),
   ].filter(Boolean)
 
   return (
@@ -257,6 +263,12 @@ function JobDetail({ job, onBack }) {
           <Icon as={BriefcaseBusiness} size={15} />
           {t(`enums:employmentType.${job.employmentType}`)}
         </li>
+        {job.visaSponsorship && (
+          <li data-visa-sponsorship>
+            <Icon as={Plane} size={15} />
+            {t('findJobs:details.visa')}
+          </li>
+        )}
         {salary && <li className={styles.factSalary}>{salary}</li>}
       </ul>
       <div className={styles.actions} data-part>

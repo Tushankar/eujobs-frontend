@@ -41,7 +41,9 @@
     "clear": "Tout effacer",
     "show_one": "Afficher {{count}} offre",
     "show_many": "Afficher {{count}} offres",
-    "show_other": "Afficher {{count}} offres"
+    "show_other": "Afficher {{count}} offres",
+    "visa": "Visa",
+    "visaSponsorship": "Propose un parrainage de visa"
   },
   "card": {
     "save": "Enregistrer {{title}} chez {{company}}",

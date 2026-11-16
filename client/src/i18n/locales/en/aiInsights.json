@@ -192,7 +192,9 @@
     "saved": "Saved to your jobs",
     "why": "Why was this recommended?",
     "contextTitle": "A useful match has context.",
-    "contextText": "A score summarises evidence; it can't explain a career decision. These insights don't verify your skills, infer protected characteristics or guarantee an interview."
+    "contextText": "A score summarises evidence; it can't explain a career decision. These insights don't verify your skills, infer protected characteristics or guarantee an interview.",
+    "sponsored": "Visa sponsored",
+    "sponsoredRequirement": "Right to work in {{country}}, or the company sponsors your visa"
   },
   "why": {
     "eyebrow": "AI Recommendation Explanation",

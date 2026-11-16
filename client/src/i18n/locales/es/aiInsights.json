@@ -194,7 +194,9 @@
     "saved": "Guardada en tus ofertas",
     "why": "¿Por qué se ha recomendado?",
     "contextTitle": "Una buena compatibilidad tiene contexto.",
-    "contextText": "Una puntuación resume pruebas; no puede explicar una decisión profesional. Estos análisis no verifican tus habilidades, no deducen características protegidas ni garantizan una entrevista."
+    "contextText": "Una puntuación resume pruebas; no puede explicar una decisión profesional. Estos análisis no verifican tus habilidades, no deducen características protegidas ni garantizan una entrevista.",
+    "sponsored": "Visado patrocinado",
+    "sponsoredRequirement": "Permiso de trabajo en {{country}}, o la empresa patrocina tu visado"
   },
   "why": {
     "eyebrow": "Explicación de la recomendación de la IA",
