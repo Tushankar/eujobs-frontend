@@ -31,7 +31,6 @@ const OPTIONS = {
   verification: ['not_started', 'in_review', 'partial', 'verified'],
   // The plan filter offers the role's plans (P11c-Q17).
   plan: { candidate: ['free', 'plus'], recruiter: ['free', 'recruiter_plus'] },
-  rightToWork: ['eu', 'uk', 'none'],
 }
 
 /**
@@ -74,6 +73,11 @@ export default function UsersDirectory({ role }) {
     if (name === 'verification') return value === 'partial' ? t('filters.partial') : t(`verificationState.${value}`)
     if (name === 'plan') return t(`enums:planKey.${value}`)
     return value === 'none' ? t('filters.noRightToWork') : t('filters.rightToWorkIn', { region: format.region(value) })
+  }
+  // Right to work (worldwide since 2026-11-16): the EU group, each country (EU + UK first), or none.
+  const valuesOf = (name) => {
+    if (name === 'rightToWork') return ['EU', ...countries.map((country) => country.code), 'none']
+    return name === 'plan' ? OPTIONS.plan[role] : OPTIONS[name]
   }
   const allLabel = { status: 'allStatuses', state: 'allStatuses', country: 'allCountries', verification: 'allVerification', plan: 'allPlans', rightToWork: 'anyRightToWork' }
 
@@ -202,7 +206,7 @@ export default function UsersDirectory({ role }) {
             onChange={(event) => setFilter(name, event.target.value)}
             options={[
               { value: '', label: t(`filters.${allLabel[name]}`) },
-              ...(name === 'country' ? countries.map((country) => ({ value: country.code, label: country.name })) : (name === 'plan' ? OPTIONS.plan[role] : OPTIONS[name]).map((value) => ({ value, label: optionLabel(name, value) }))),
+              ...(name === 'country' ? countries.map((country) => ({ value: country.code, label: country.name })) : valuesOf(name).map((value) => ({ value, label: optionLabel(name, value) }))),
             ]}
           />
         ))}

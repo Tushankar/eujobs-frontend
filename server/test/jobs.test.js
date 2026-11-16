@@ -120,7 +120,7 @@ describe('recruiter jobs (§3.7, M-033 … M-041, P4-D6 … D8)', () => {
   it('counts relevant candidates with the skill fallback (M-051, P4-D9) and refreshes nightly (U7)', async () => {
     const { user } = await approvedRecruiter()
     await listedCandidate({ profile: { skills: ['Figma'] } })
-    await listedCandidate({ city: 'berlin', profile: { skills: ['Figma'], rightToWork: [{ region: 'uk', status: 'citizen_settled' }] } })
+    await listedCandidate({ city: 'berlin', profile: { skills: ['Figma'], rightToWork: [{ region: 'GB', status: 'citizen_settled' }] } })
     await listedCandidate({ city: 'berlin', profile: { skills: ['Figma'] } })
     await listedCandidate({ profile: { skills: ['Excel'] } })
     await listedCandidate({ profile: { skills: ['Figma'] }, privacy: { discoverable: false, resumeVisible: false, matchingConsent: true } })

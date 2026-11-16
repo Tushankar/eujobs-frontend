@@ -22,7 +22,7 @@ export default {
     // Seeded people: Oliver lives in Berlin; James Chen, Sofia, Daniel and Aisha have an EU right to work; Emma (UK) and Alex (incomplete) do not qualify.
     const germany = await list()
     ctx.check(JSON.stringify(names(germany)) === JSON.stringify(['Aisha Patel', 'Daniel Kim', 'James Chen', 'Oliver Park', 'Sofia Martinez']), `the Germany population (got ${names(germany)})`)
-    ctx.check(germany.every((item) => item.location.countryCode === 'DE' || item.rightToWork.some((entry) => entry.region === 'eu' && entry.valid)), 'everyone lives in DE or may work in the EU')
+    ctx.check(germany.every((item) => item.location.countryCode === 'DE' || item.rightToWork.some((entry) => entry.region === 'EU' && entry.valid)), 'everyone lives in DE or may work in the EU')
 
     const handle = await ctx.newPage()
     const { page } = handle
@@ -48,7 +48,7 @@ export default {
     await page.click('label:has(input[name="verified"])')
     await byChecks
     const filtered = await list('?language=de&languageLevel=b2&rightToWork=1&verified=1')
-    ctx.check(filtered.every((item) => item.verification.verified && item.rightToWork.some((entry) => entry.region === 'eu' && entry.valid)), 'verified with an EU right to work')
+    ctx.check(filtered.every((item) => item.verification.verified && item.rightToWork.some((entry) => entry.region === 'EU' && entry.valid)), 'verified with an EU right to work')
     await waitForText(page, `${filtered.length} candidate`)
     await handle.checkOverflow()
 

@@ -42,7 +42,7 @@
   "rightToWork": {
     "title": "Right to work",
     "edit": "Edit right to work",
-    "empty": "Add your right to work in the EU, the UK or both.",
+    "empty": "Add where you can work: the whole EU, the UK or any other country.",
     "validUntil": "Valid until {{date}}",
     "expired": "Permit expired"
   },
@@ -147,11 +147,12 @@
     },
     "rightToWork": {
       "title": "Right to work",
-      "hint": "One entry for the EU, the UK, or both. Your nationality is never asked.",
+      "hint": "Add the whole EU or each country you can work in. Your nationality is never asked.",
       "status": "Status",
       "expires": "Permit valid until",
-      "add": "Add {{region}}",
-      "remove": "Remove {{region}}"
+      "remove": "Remove {{region}}",
+      "addLabel": "Add a country or the EU",
+      "addPlaceholder": "Choose where you can work"
     },
     "links": {
       "title": "Links",

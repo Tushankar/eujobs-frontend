@@ -1,24 +1,34 @@
 import { useTranslation } from 'react-i18next'
-import { Plus, X } from 'lucide-react'
+import { X } from 'lucide-react'
 import { useGetConfigQuery } from '@/app/api.js'
-import { Button, Icon, IconButton, SelectField, TextField } from '@/components/ui'
+import { IconButton, SelectField, TextField } from '@/components/ui'
+import { useCountryOptions } from '@/lib/countries.js'
 import { useErrorText, useFormState } from '@/lib/forms.js'
+import { useFormat } from '@/lib/preferences.js'
 import { useSetRightToWorkMutation } from '../api.js'
 import FormDialog from './FormDialog.jsx'
 import dialogStyles from './FormDialog.module.css'
 
-/** M-021, P3-D4: one entry per region (EU, UK); a visa or permit needs its expiry date. Nationality is never asked. */
+/**
+ * M-021, P3-D4: one entry per region, the whole EU or any country (worldwide since 2026-11-16); a visa or permit needs
+ * its expiry date. Nationality is never asked.
+ */
 export default function RightToWorkDialog({ open, rightToWork, onSaved, onClose }) {
   const { t } = useTranslation()
   const errorText = useErrorText()
+  const format = useFormat()
   const { data: config } = useGetConfigQuery()
+  const countries = useCountryOptions()
   const [setRightToWork, { isLoading }] = useSetRightToWorkMutation()
   const { values, set, errors, failure, run } = useFormState(() => ({
     rows: rightToWork.map(({ region, status, permitExpiresOn }) => ({ region, status, permitExpiresOn: permitExpiresOn ?? '' })),
   }))
-  const regions = config?.enums.rtwRegion ?? []
   const statusOptions = (config?.enums.rtwStatus ?? []).map((status) => ({ value: status, label: t(`enums:rtwStatus.${status}`) }))
-  const missing = regions.filter((region) => !values.rows.some((row) => row.region === region))
+  const max = config?.limits.profile.rightToWork.max ?? 0
+  // The EU group, then the countries (EU + UK first, then the world), less those already added.
+  const choices = [...(config?.enums.rtwRegion ?? []), ...countries.filter((country) => !country.isRemote).map((country) => country.code)]
+    .filter((region) => !values.rows.some((row) => row.region === region))
+    .map((region) => ({ value: region, label: format.region(region) }))
   const update = (index, change) => set('rows', values.rows.map((row, i) => (i === index ? { ...row, ...change } : row)))
 
   async function handleSubmit() {
@@ -37,7 +47,7 @@ export default function RightToWorkDialog({ open, rightToWork, onSaved, onClose 
       {values.rows.map((row, index) => (
         <div key={row.region} className={dialogStyles.listRow}>
           <SelectField
-            label={t(`enums:rtwRegion.${row.region}`)}
+            label={format.region(row.region)}
             name={`status-${row.region}`}
             placeholder={t('profile:form.rightToWork.status')}
             options={statusOptions}
@@ -60,26 +70,20 @@ export default function RightToWorkDialog({ open, rightToWork, onSaved, onClose 
           <IconButton
             icon={X}
             className={dialogStyles.remove}
-            label={t('profile:form.rightToWork.remove', { region: t(`enums:rtwRegion.${row.region}`) })}
+            label={t('profile:form.rightToWork.remove', { region: format.region(row.region) })}
             onClick={() => set('rows', values.rows.filter((_, i) => i !== index))}
           />
         </div>
       ))}
-      {missing.length > 0 && (
-        <div className={dialogStyles.row}>
-          {missing.map((region) => (
-            <div key={region}>
-              <Button
-                variant="secondary"
-                size="sm"
-                leftIcon={<Icon as={Plus} size={14} />}
-                onClick={() => set('rows', [...values.rows, { region, status: '', permitExpiresOn: '' }])}
-              >
-                {t('profile:form.rightToWork.add', { region: t(`enums:rtwRegion.${region}`) })}
-              </Button>
-            </div>
-          ))}
-        </div>
+      {values.rows.length < max && (
+        <SelectField
+          label={t('profile:form.rightToWork.addLabel')}
+          name="rightToWorkAdd"
+          placeholder={t('profile:form.rightToWork.addPlaceholder')}
+          options={choices}
+          value=""
+          onChange={(event) => event.target.value && set('rows', [...values.rows, { region: event.target.value, status: '', permitExpiresOn: '' }])}
+        />
       )}
     </FormDialog>
   )

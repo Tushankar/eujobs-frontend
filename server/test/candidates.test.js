@@ -184,18 +184,24 @@ describe('languages, right to work, links and certificates', () => {
 
   it('keeps one right-to-work entry per region with an expiry for permits (M-021, P3-D4, U27)', async () => {
     const user = await createUser()
-    const twice = [{ region: 'eu', status: 'citizen_settled' }, { region: 'eu', status: 'needs_sponsorship' }]
+    const twice = [{ region: 'EU', status: 'citizen_settled' }, { region: 'EU', status: 'needs_sponsorship' }]
     assert.deepEqual(fields(await put(user, 'profile/right-to-work', { rightToWork: twice })), { rightToWork: 'duplicate' })
-    const permit = [{ region: 'uk', status: 'visa_permit' }]
+    const permit = [{ region: 'GB', status: 'visa_permit' }]
     assert.deepEqual(fields(await put(user, 'profile/right-to-work', { rightToWork: permit })), { 'rightToWork.0.permitExpiresOn': 'required' })
     const res = await put(user, 'profile/right-to-work', {
-      rightToWork: [{ region: 'eu', status: 'citizen_settled' }, { region: 'uk', status: 'visa_permit', permitExpiresOn: '2020-01-31' }],
+      rightToWork: [{ region: 'EU', status: 'citizen_settled' }, { region: 'GB', status: 'visa_permit', permitExpiresOn: '2020-01-31' }],
     })
-    const uk = res.body.rightToWork.find((entry) => entry.region === 'uk')
+    const uk = res.body.rightToWork.find((entry) => entry.region === 'GB')
     assert.equal(uk.permitExpired, true)
     assert.equal(res.body.completeness.items.find((item) => item.key === 'right_to_work').done, true)
-    const again = await put(user, 'profile/right-to-work', { rightToWork: [{ region: 'uk', status: 'visa_permit', permitExpiresOn: '2031-01-31' }] })
+    const again = await put(user, 'profile/right-to-work', { rightToWork: [{ region: 'GB', status: 'visa_permit', permitExpiresOn: '2031-01-31' }] })
     assert.deepEqual(again.body.rightToWork.map((entry) => [entry.id, entry.permitExpired]), [[uk.id, false]])
+
+    // Worldwide since 2026-11-16: any enabled country (lower case is fine), not an unknown or disabled one.
+    const world = await put(user, 'profile/right-to-work', { rightToWork: [{ region: 'eu', status: 'citizen_settled' }, { region: 'us', status: 'needs_sponsorship' }] })
+    assert.deepEqual(world.body.rightToWork.map((entry) => entry.region), ['EU', 'US'])
+    assert.deepEqual(fields(await put(user, 'profile/right-to-work', { rightToWork: [{ region: 'KP', status: 'citizen_settled' }] })), { 'rightToWork.0.region': 'invalid' })
+    assert.deepEqual(fields(await put(user, 'profile/right-to-work', { rightToWork: [{ region: 'Europe', status: 'citizen_settled' }] })), { 'rightToWork.0.region': 'invalid' })
   })
 
   it('accepts a linkedin.com/in link and an https portfolio (M-022)', async () => {

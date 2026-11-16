@@ -36,7 +36,7 @@ export async function completeCandidate(label, { plus = true, language = 'en' } 
   const work = await post('/candidate/profile/work-history', { title: 'Product Designer', employer: 'Studio North', start: '2020-01', current: true })
   await post('/candidate/profile/education', { institution: 'Art School', degree: 'BA Design', start: '2014-09', end: '2018-06' })
   await put('/candidate/profile/languages', { languages: [{ code: 'en', level: 'native' }] })
-  await put('/candidate/profile/right-to-work', { rightToWork: [{ region: 'uk', status: 'citizen_settled' }] })
+  await put('/candidate/profile/right-to-work', { rightToWork: [{ region: 'GB', status: 'citizen_settled' }] })
   check(await uploadAs(token, '/candidate/profile/photo', fixture('photo.jpg'), 'image/jpeg'), 'photo')
   check(await uploadAs(token, '/candidate/cv/versions', fixture('cv-text.pdf'), 'application/pdf'), 'cv')
   const { code } = await post('/candidate/verification/phone/code', { phone: '+44 20 7946 0123' })

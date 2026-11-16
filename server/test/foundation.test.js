@@ -14,7 +14,7 @@ useTestDb()
 // BACKEND_PLAN §4.1: every enum and its number of keys.
 const CATALOGUE = {
   role: 3, userStatus: 7, language: 3, workPreference: 3, employmentType: 4, jobLevel: 4, jobStatus: 4,
-  salaryPeriod: 2, companySize: 6, availability: 5, languageLevel: 7, rtwRegion: 2, rtwStatus: 3,
+  salaryPeriod: 2, companySize: 6, availability: 5, languageLevel: 7, rtwRegion: 1, rtwStatus: 3,
   verificationCategory: 5, evidenceType: 9, verificationStatus: 3, kycDocType: 3, applicationStatus: 7,
   stageCategory: 6, stageTone: 3, alertFrequency: 3, cvRequestReason: 4, cvRequestStatus: 3, activityType: 19,
   planKey: 4, entitlement: 8, paymentKind: 2, paymentStatus: 3, paymentSource: 2, courseAudience: 2,

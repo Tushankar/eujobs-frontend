@@ -38,19 +38,23 @@ describe('Find candidates (M-054, M-055, M-056, OD4, OQ-6a, OQ-6f)', () => {
   it('lists only verified, discoverable, consenting, complete candidates in the picker country', async () => {
     const { user } = await approvedRecruiter({ pickerCountry: 'DE' })
     await listedCandidate({ fullName: 'Lives in Berlin', city: 'berlin' })
-    await listedCandidate({ fullName: 'EU citizen in London', profile: { rightToWork: [{ region: 'eu', status: 'citizen_settled' }] } })
-    await listedCandidate({ fullName: 'Valid EU permit', profile: { rightToWork: [{ region: 'eu', status: 'visa_permit', permitExpiresOn: isoDay(30) }] } })
-    await listedCandidate({ fullName: 'Expired EU permit', profile: { rightToWork: [{ region: 'eu', status: 'visa_permit', permitExpiresOn: isoDay(-1) }] } })
-    await listedCandidate({ fullName: 'Needs sponsorship', profile: { rightToWork: [{ region: 'eu', status: 'needs_sponsorship' }] } })
+    await listedCandidate({ fullName: 'EU citizen in London', profile: { rightToWork: [{ region: 'EU', status: 'citizen_settled' }] } })
+    await listedCandidate({ fullName: 'Valid EU permit', profile: { rightToWork: [{ region: 'EU', status: 'visa_permit', permitExpiresOn: isoDay(30) }] } })
+    await listedCandidate({ fullName: 'Expired EU permit', profile: { rightToWork: [{ region: 'EU', status: 'visa_permit', permitExpiresOn: isoDay(-1) }] } })
+    await listedCandidate({ fullName: 'Needs sponsorship', profile: { rightToWork: [{ region: 'EU', status: 'needs_sponsorship' }] } })
+    // Before scripts/migrateRightToWork.js runs, an old 'eu' entry still counts (2026-11-16).
+    await listedCandidate({ fullName: 'Old EU entry', profile: { rightToWork: [{ region: 'eu', status: 'citizen_settled' }] } })
+    // A right to work in another country does not reach Germany.
+    await listedCandidate({ fullName: 'US citizen', profile: { rightToWork: [{ region: 'US', status: 'citizen_settled' }] } })
     await listedCandidate({ fullName: 'Hidden', city: 'berlin', privacy: { discoverable: false, resumeVisible: false, matchingConsent: true } })
     await listedCandidate({ fullName: 'No consent', city: 'berlin', privacy: { discoverable: true, resumeVisible: false, matchingConsent: false } })
     await listedCandidate({ fullName: 'Incomplete', city: 'berlin', profile: { completeness: { complete: false, done: 9, total: 12, missing: ['phone'] } } })
     await listedCandidate({ fullName: 'Unverified email', city: 'berlin', emailVerifiedAt: null })
     await listedCandidate({ fullName: 'Restricted', city: 'berlin', profile: { restricted: { reason: 'x', at: new Date() } } })
-    assert.deepEqual(names(await find(user)), ['EU citizen in London', 'Lives in Berlin', 'Valid EU permit'])
+    assert.deepEqual(names(await find(user)), ['EU citizen in London', 'Lives in Berlin', 'Old EU entry', 'Valid EU permit'])
 
     // OD4: "Has right to work in Germany" leaves out residence-only candidates.
-    assert.deepEqual(names(await find(user, '?rightToWork=1')), ['EU citizen in London', 'Valid EU permit'])
+    assert.deepEqual(names(await find(user, '?rightToWork=1')), ['EU citizen in London', 'Old EU entry', 'Valid EU permit'])
     // OQ-6a: Remote = work preference remote, any country.
     await listedCandidate({ fullName: 'Remote in Lisbon', city: 'lisbon', profile: { workPreference: 'remote' } })
     user.pickerCountry = 'REMOTE'

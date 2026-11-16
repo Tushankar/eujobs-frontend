@@ -83,7 +83,7 @@ export async function applicantCandidate({ plus = true, profile = {}, ...fields 
     phone: { e164: '+442079460000', verifiedAt: new Date() },
     ...fields,
     profile: {
-      rightToWork: [{ region: 'uk', status: 'citizen_settled' }],
+      rightToWork: [{ region: 'GB', status: 'citizen_settled' }],
       links: { portfolio: 'https://portfolio.example.com' },
       photo: { fileId: new mongoose.Types.ObjectId() },
       ...profile,

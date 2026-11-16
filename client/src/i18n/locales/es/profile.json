@@ -43,7 +43,7 @@
   "rightToWork": {
     "title": "Permiso de trabajo",
     "edit": "Editar permiso de trabajo",
-    "empty": "Añade tu permiso de trabajo en la UE, el Reino Unido o ambos.",
+    "empty": "Añade dónde puedes trabajar: toda la UE, el Reino Unido o cualquier otro país.",
     "validUntil": "Válido hasta el {{date}}",
     "expired": "Permiso caducado"
   },
@@ -148,11 +148,12 @@
     },
     "rightToWork": {
       "title": "Permiso de trabajo",
-      "hint": "Una entrada para la UE, el Reino Unido o ambos. Nunca te pedimos tu nacionalidad.",
+      "hint": "Añade toda la UE o cada país en el que puedes trabajar. Nunca se pregunta tu nacionalidad.",
       "status": "Situación",
       "expires": "Permiso válido hasta",
-      "add": "Añadir {{region}}",
-      "remove": "Quitar {{region}}"
+      "remove": "Quitar {{region}}",
+      "addLabel": "Añadir un país o la UE",
+      "addPlaceholder": "Elige dónde puedes trabajar"
     },
     "links": {
       "title": "Enlaces",

@@ -43,7 +43,7 @@
   "rightToWork": {
     "title": "Droit au travail",
     "edit": "Modifier le droit au travail",
-    "empty": "Ajoutez votre droit au travail dans l’UE, au Royaume-Uni ou les deux.",
+    "empty": "Indiquez où vous pouvez travailler : toute l’UE, le Royaume-Uni ou tout autre pays.",
     "validUntil": "Valable jusqu’au {{date}}",
     "expired": "Permis expiré"
   },
@@ -148,11 +148,12 @@
     },
     "rightToWork": {
       "title": "Droit au travail",
-      "hint": "Une entrée pour l’UE, le Royaume-Uni ou les deux. Votre nationalité n’est jamais demandée.",
+      "hint": "Ajoutez toute l’UE ou chaque pays où vous pouvez travailler. Votre nationalité n’est jamais demandée.",
       "status": "Situation",
       "expires": "Permis valable jusqu’au",
-      "add": "Ajouter : {{region}}",
-      "remove": "Retirer : {{region}}"
+      "remove": "Retirer : {{region}}",
+      "addLabel": "Ajouter un pays ou l’UE",
+      "addPlaceholder": "Choisissez où vous pouvez travailler"
     },
     "links": {
       "title": "Liens",

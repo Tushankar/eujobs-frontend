@@ -74,7 +74,7 @@ describe('evidence submissions (M-166, P3-D8)', () => {
       userId: user._id,
       education: [{ institution: 'UCL', degree: 'BSc', start: '2015-09', end: '2018-06' }],
       certificates: [{ name: 'Cert', issuer: 'Org', issuedOn: '2024-01' }],
-      rightToWork: [{ region: 'eu', status: 'citizen_settled' }],
+      rightToWork: [{ region: 'EU', status: 'citizen_settled' }],
     })
     const education = String(profile.education[0]._id)
     const fields = async (...args) => (await submit(user, ...args)).body.error?.fields

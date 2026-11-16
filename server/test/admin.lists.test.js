@@ -33,7 +33,7 @@ const submit = (user, category, status) => VerificationSubmission.create({ userI
 async function candidates() {
   const verified = await listedCandidate({ fullName: 'Vera Verified' })
   for (const category of ['identity', 'academic', 'employment']) await submit(verified, category, 'approved')
-  const partial = await listedCandidate({ fullName: 'Paula Partial', profile: { rightToWork: [{ region: 'uk', status: 'citizen_settled' }] } })
+  const partial = await listedCandidate({ fullName: 'Paula Partial', profile: { rightToWork: [{ region: 'GB', status: 'citizen_settled' }] } })
   await submit(partial, 'identity', 'approved')
   await submit(partial, 'academic', 'approved')
   const reviewing = await listedCandidate({ fullName: 'Ivan Inreview', city: 'berlin' })
@@ -59,7 +59,7 @@ describe('admin Candidates and Recruiters (M-161, M-169, M-206)', () => {
     assert.deepEqual(byName['Nora New'].verification, { state: 'not_started', count: 0 })
     assert.deepEqual([byName['Rita Rejected'].completeness, byName['Vera Verified'].completeness, byName['Nora New'].completeness], [50, 100, 0])
     assert.deepEqual([byName['Ivan Inreview'].plan, byName['Ivan Inreview'].country], ['plus', 'DE'])
-    assert.deepEqual(byName['Paula Partial'].rightToWork, [{ region: 'uk', status: 'citizen_settled', valid: true }])
+    assert.deepEqual(byName['Paula Partial'].rightToWork, [{ region: 'GB', status: 'citizen_settled', valid: true }])
 
     const ids = async (query) => (await get(admin, `/admin/users?role=candidate&${query}`)).body.items.map((row) => row.id)
     assert.deepEqual(await ids('country=DE'), [String(reviewing._id)])
