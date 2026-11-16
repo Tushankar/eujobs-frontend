@@ -81,7 +81,7 @@
 .detail {
   margin-top: 16px;
   padding-top: 16px;
-  border-top: 1px solid rgba(2, 99, 220, 0.2);
+  border-top: 1px solid light-dark(rgba(2, 99, 220, 0.2), rgba(91, 157, 255, 0.28));
 }
 
 .eyebrow {
@@ -122,7 +122,7 @@
   background: var(--card);
   font-size: 11px;
   line-height: 20px;
-  color: #8b7859;
+  color: light-dark(#8b7859, var(--muted-foreground));
 }
 
 .gapTitle {
@@ -155,12 +155,12 @@
 }
 
 .card:hover {
-  border-color: #cdd0d9;
+  border-color: light-dark(#cdd0d9, var(--border-strong));
 }
 
 .cardSelected,
 .cardSelected:hover {
-  border-color: #bbdeff;
+  border-color: light-dark(#bbdeff, #264664);
 }
 
 .spaced {

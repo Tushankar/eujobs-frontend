@@ -63,11 +63,11 @@
   gap: 5px;
   padding: 3px 10px;
   border-radius: var(--radius-full);
-  background: #f3c656;
+  background: light-dark(#f3c656, #3b2f11);
   font-size: 12px;
   font-weight: 700;
   line-height: 16px;
-  color: #3d2c00;
+  color: light-dark(#3d2c00, #e2bc5a);
 }
 
 .price {

@@ -11,7 +11,7 @@
   margin: 10px 0 0;
   font-size: 15px;
   line-height: 24px;
-  color: #5f646b;
+  color: light-dark(#5f646b, var(--muted-foreground));
 }
 
 .controls {
@@ -41,9 +41,9 @@
   flex-direction: column;
   min-width: 0;
   padding: 32px;
-  border: 1px solid #e4e7ec;
+  border: 1px solid light-dark(#e4e7ec, var(--border-strong));
   border-radius: 20px;
-  background: #fff;
+  background: light-dark(#fff, var(--card));
 }
 
 .featured {
@@ -66,7 +66,7 @@
   font-size: 20px;
   font-weight: 600;
   line-height: 28px;
-  color: #161719;
+  color: light-dark(#161719, var(--foreground));
 }
 
 .recommended {
@@ -86,18 +86,18 @@
   min-height: 44px;
   margin-top: 24px;
   padding: 0 20px;
-  border: 1px solid #d0d5dd;
+  border: 1px solid light-dark(#d0d5dd, var(--border-strong));
   border-radius: 999px;
-  background: #fff;
+  background: light-dark(#fff, var(--card));
   font-size: 15px;
   font-weight: 600;
-  color: #161719;
+  color: light-dark(#161719, var(--foreground));
   text-decoration: none;
   transition: background var(--duration-base) var(--ease-out);
 }
 
 .cta:hover {
-  background: #f5f6f8;
+  background: light-dark(#f5f6f8, var(--muted));
 }
 
 .cta:focus-visible {
@@ -118,10 +118,10 @@
 .everything {
   margin: 28px 0 0;
   padding-top: 24px;
-  border-top: 1px solid #eef0f3;
+  border-top: 1px solid light-dark(#eef0f3, var(--border));
   font-size: 14px;
   font-weight: 600;
-  color: #161719;
+  color: light-dark(#161719, var(--foreground));
 }
 
 .features {
@@ -129,7 +129,7 @@
   gap: 12px;
   margin: 28px 0 0;
   padding: 24px 0 0;
-  border-top: 1px solid #eef0f3;
+  border-top: 1px solid light-dark(#eef0f3, var(--border));
   list-style: none;
 }
 
@@ -145,13 +145,13 @@
   gap: 10px;
   font-size: 14px;
   line-height: 20px;
-  color: #3d4249;
+  color: light-dark(#3d4249, var(--foreground));
 }
 
 .check {
   flex-shrink: 0;
   margin-top: 2px;
-  color: #667085;
+  color: light-dark(#667085, var(--muted-foreground));
 }
 
 .featured .check {
@@ -167,7 +167,7 @@
   padding: 0;
   list-style: none;
   font-size: 13px;
-  color: #5f646b;
+  color: light-dark(#5f646b, var(--muted-foreground));
 }
 
 .trust li {

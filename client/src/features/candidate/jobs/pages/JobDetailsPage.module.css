@@ -267,7 +267,7 @@
   width: 4px;
   height: 4px;
   border-radius: var(--radius-full);
-  background: rgba(2, 99, 220, 0.5);
+  background: light-dark(rgba(2, 99, 220, 0.5), rgba(91, 157, 255, 0.7));
 }
 
 .skills {
@@ -319,7 +319,7 @@
 }
 
 .saveButtonOn.saveButtonOn {
-  border-color: #bbdeff;
+  border-color: light-dark(#bbdeff, #264664);
   background: var(--accent);
   color: var(--primary);
 }
@@ -431,10 +431,10 @@
   margin-top: 16px;
   padding: 12px 16px;
   border-radius: var(--radius-xl);
-  background: #fdf5e6;
+  background: light-dark(#fdf5e6, #3b2d11);
   font-size: 13px;
   line-height: 20px;
-  color: #7a5a1c;
+  color: light-dark(#7a5a1c, #dbb161);
 }
 
 /* M-164: the Report link at the end of a rail card. */

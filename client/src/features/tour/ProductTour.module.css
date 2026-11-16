@@ -20,7 +20,7 @@
   position: fixed;
   border-radius: var(--radius-xl);
   box-shadow:
-    0 0 0 2px #fff,
+    0 0 0 2px light-dark(#fff, var(--card)),
     0 0 0 9999px var(--modal-backdrop);
   pointer-events: none;
 }

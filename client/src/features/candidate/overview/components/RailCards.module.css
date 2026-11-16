@@ -295,7 +295,7 @@ a.row:hover {
 .dismiss {
   width: 20px;
   height: 20px;
-  color: #7f8593;
+  color: light-dark(#7f8593, var(--muted-foreground));
 }
 .insightTitle {
   padding-top: 16px;

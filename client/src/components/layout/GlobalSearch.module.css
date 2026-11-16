@@ -48,7 +48,7 @@
   margin-top: 12px;
   overflow-y: auto;
   scrollbar-width: thin;
-  scrollbar-color: #d3d7e0 transparent;
+  scrollbar-color: light-dark(#d3d7e0, var(--border-strong)) transparent;
 }
 
 .result {
@@ -73,7 +73,7 @@
 
 .result:hover,
 .result:focus-visible {
-  background: #eceef2;
+  background: light-dark(#eceef2, var(--muted));
 }
 
 .customIcon {

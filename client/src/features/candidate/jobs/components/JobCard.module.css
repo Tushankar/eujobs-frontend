@@ -28,7 +28,7 @@
 .company {
   font-size: 11px;
   line-height: 16.5px;
-  color: #717789;
+  color: light-dark(#717789, var(--muted-foreground));
 }
 
 
@@ -49,7 +49,7 @@
 
 .card .bookmark {
   flex-shrink: 0;
-  color: #7f8593;
+  color: light-dark(#7f8593, var(--muted-foreground));
 }
 
 .card .bookmarkSaved,
@@ -148,9 +148,9 @@
   gap: 12px 20px;
   margin-top: 12px;
   padding: 14px 16px;
-  border: 1px solid #e3c878;
+  border: 1px solid light-dark(#e3c878, #645426);
   border-radius: var(--radius-lg);
-  background: #fffaec;
+  background: light-dark(#fffaec, #3b3011);
 }
 
 .unlockText {

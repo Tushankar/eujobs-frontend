@@ -12,7 +12,7 @@
   gap: 8px;
   font-size: 11px;
   line-height: 16.5px;
-  color: #818796;
+  color: light-dark(#818796, var(--muted-foreground));
 }
 
 
@@ -31,7 +31,7 @@
   gap: 6px;
   font-size: 13px;
   line-height: 19.5px;
-  color: #6e7687;
+  color: light-dark(#6e7687, var(--muted-foreground));
 }
 
 .title {
@@ -56,7 +56,7 @@
   padding-top: 16px;
   font-size: 12px;
   line-height: 24px;
-  color: #6e7687;
+  color: light-dark(#6e7687, var(--muted-foreground));
 }
 
 .stats {
@@ -72,7 +72,7 @@
 }
 
 .statLink:hover > section {
-  border-color: #cdd0d9;
+  border-color: light-dark(#cdd0d9, var(--border-strong));
 }
 
 .columns {
@@ -169,7 +169,7 @@
   padding-top: 24px;
   font-size: 10px;
   line-height: 15px;
-  color: #a0a4b1;
+  color: light-dark(#a0a4b1, var(--muted-foreground));
 }
 
 .rail {

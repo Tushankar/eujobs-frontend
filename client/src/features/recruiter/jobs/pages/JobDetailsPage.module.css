@@ -135,7 +135,7 @@ a.outlined:hover {
   margin-top: 12px;
   padding: 12px 16px;
   border-radius: var(--radius-xl);
-  background: #fdeceb;
+  background: light-dark(#fdeceb, #3b1411);
   font-size: 13px;
   line-height: 20px;
   color: var(--destructive);

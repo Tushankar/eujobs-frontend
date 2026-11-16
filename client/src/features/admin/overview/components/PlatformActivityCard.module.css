@@ -181,13 +181,13 @@
 }
 
 .axis {
-  stroke: #8d919c;
+  stroke: light-dark(#8d919c, var(--muted-foreground));
   stroke-width: 1;
 }
 
 .tick {
   font-size: 13px;
-  fill: #4b5162;
+  fill: light-dark(#4b5162, var(--muted-foreground));
 }
 
 .registrationLine,
@@ -206,7 +206,7 @@
 }
 
 .registrationHalo {
-  fill: rgba(2, 99, 220, 0.25);
+  fill: light-dark(rgba(2, 99, 220, 0.25), rgba(91, 157, 255, 0.35));
 }
 
 .registrationDot {
@@ -214,7 +214,7 @@
 }
 
 .applicationHalo {
-  fill: rgba(2, 99, 220, 0.04);
+  fill: light-dark(rgba(2, 99, 220, 0.04), rgba(91, 157, 255, 0.056));
 }
 
 .applicationDot {

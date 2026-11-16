@@ -55,7 +55,7 @@
 .error {
   margin: 0;
   font-size: 13px;
-  color: var(--destructive, #c0392b);
+  color: var(--destructive, light-dark(#c0392b, #dc6c61));
 }
 
 .kinds {

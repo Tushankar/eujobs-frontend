@@ -27,7 +27,7 @@
 }
 
 .error {
-  background: #fbeaea;
+  background: light-dark(#fbeaea, #3b1111);
   color: var(--destructive);
 }
 

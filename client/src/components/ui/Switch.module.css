@@ -6,7 +6,7 @@
   padding: 0;
   border: 0;
   border-radius: var(--radius-full);
-  background: #d5d9e3;
+  background: light-dark(#d5d9e3, var(--border-strong));
   transition: background-color var(--transition);
 }
 
@@ -25,7 +25,7 @@
   width: 16px;
   height: 16px;
   border-radius: var(--radius-full);
-  background: #fff;
+  background: light-dark(#fff, var(--card));
   box-shadow: var(--shadow-segment);
   transition: transform var(--duration-base) var(--ease-spring);
 }

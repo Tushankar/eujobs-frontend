@@ -13,7 +13,7 @@
   justify-content: center;
   padding: 82px 64px 64px;
   overflow: hidden;
-  background: #fff url('@/assets/images/auth-hero.jpg') 35.8% 0 / cover no-repeat;
+  background: light-dark(#fff, var(--card)) url('@/assets/images/auth-hero.jpg') 35.8% 0 / cover no-repeat;
 }
 
 /* First auth screen of the session: the hero copy rises in, one line at a time. */
@@ -125,7 +125,7 @@
   border-top: 1px solid rgba(255, 255, 255, 0.1);
   font-size: 12px;
   line-height: 28px;
-  color: #acaebe;
+  color: light-dark(#acaebe, var(--muted-foreground));
 }
 
 .heroFooter {
@@ -134,7 +134,7 @@
   left: 64px;
   font-size: 10px;
   line-height: 15px;
-  color: #858a9f;
+  color: light-dark(#858a9f, var(--muted-foreground));
 }
 
 /* Form column (right half) */

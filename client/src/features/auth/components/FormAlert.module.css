@@ -10,8 +10,8 @@
 }
 
 .error {
-  border-color: #f3d4d4;
-  background: #fdf3f3;
+  border-color: light-dark(#f3d4d4, #642626);
+  background: light-dark(#fdf3f3, #3b1111);
   color: var(--destructive);
 }
 
@@ -22,9 +22,9 @@
 }
 
 .success {
-  border-color: #cfe7d8;
-  background: #edf7f0;
-  color: #28734b;
+  border-color: light-dark(#cfe7d8, #2e5c3f);
+  background: light-dark(#edf7f0, #183520);
+  color: light-dark(#28734b, #6fcd9b);
 }
 
 /* A message from a control inside the alert (e.g. resend) reads as plain text, not a second box. */

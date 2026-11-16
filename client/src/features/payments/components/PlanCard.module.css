@@ -33,7 +33,7 @@
   margin: 8px 0 0;
   font-size: 13px;
   line-height: 20px;
-  color: var(--warning-fg, #8a5a00);
+  color: var(--warning-fg, light-dark(#8a5a00, #e2b35a));
 }
 
 .failure {

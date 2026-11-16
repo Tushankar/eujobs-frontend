@@ -154,7 +154,7 @@
   font-weight: 600;
   line-height: 18px;
   text-align: left;
-  color: #737989;
+  color: light-dark(#737989, var(--muted-foreground));
 }
 
 .option:hover {

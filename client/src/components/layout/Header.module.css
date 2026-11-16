@@ -8,7 +8,7 @@
   height: var(--header-height);
   padding: 0 var(--content-padding);
   border-bottom: 1px solid var(--border);
-  background: rgba(255, 255, 255, 0.95);
+  background: light-dark(rgba(255, 255, 255, 0.95), rgba(19, 22, 27, 0.95));
   backdrop-filter: blur(8px);
 }
 
@@ -100,7 +100,7 @@
 }
 
 .search:hover {
-  border-color: #d3d7e0;
+  border-color: light-dark(#d3d7e0, var(--border-strong));
   background: var(--card);
 }
 
@@ -207,7 +207,7 @@
   padding-right: 2px;
   overflow-y: auto;
   scrollbar-width: thin;
-  scrollbar-color: #d3d7e0 transparent;
+  scrollbar-color: light-dark(#d3d7e0, var(--border-strong)) transparent;
 }
 
 .menuItem {
@@ -232,7 +232,7 @@
 }
 
 .menuItem:hover {
-  background: #eceef2;
+  background: light-dark(#eceef2, var(--muted));
 }
 
 .menuItem[aria-current] {

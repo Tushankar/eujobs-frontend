@@ -22,7 +22,7 @@
   justify-content: center;
   width: 16px;
   height: 16px;
-  border: 1px solid #c9ceda;
+  border: 1px solid light-dark(#c9ceda, var(--border-strong));
   border-radius: 4px;
   background: var(--card);
   color: transparent;

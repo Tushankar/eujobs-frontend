@@ -9,21 +9,21 @@
 }
 
 .peach {
-  background: #f6e7dc;
-  color: #9a5b2e;
+  background: light-dark(#f6e7dc, #3b2311);
+  color: light-dark(#9a5b2e, #d2956a);
 }
 
 .mint {
-  background: #e1f1e8;
-  color: #2c6b46;
+  background: light-dark(#e1f1e8, #183425);
+  color: light-dark(#2c6b46, #76c797);
 }
 
 .lilac {
-  background: #ebe7f8;
-  color: #5b4ba8;
+  background: light-dark(#ebe7f8, #1b113b);
+  color: light-dark(#5b4ba8, #8679c3);
 }
 
 .sky {
-  background: #e3f0fd;
-  color: #1f5fa8;
+  background: light-dark(#e3f0fd, #11263b);
+  color: light-dark(#1f5fa8, #5b9ae1);
 }

@@ -112,7 +112,7 @@
   overscroll-behavior: contain;
   padding: 20px 24px 24px;
   scrollbar-width: thin;
-  scrollbar-color: #c9ced8 transparent;
+  scrollbar-color: light-dark(#c9ced8, var(--border-strong)) transparent;
 }
 
 .footer {

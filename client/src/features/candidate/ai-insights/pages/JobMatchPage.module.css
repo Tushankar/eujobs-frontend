@@ -71,7 +71,7 @@
 }
 
 .quiet {
-  color: #737989;
+  color: light-dark(#737989, var(--muted-foreground));
 }
 
 .rows {
@@ -152,7 +152,7 @@
 }
 
 .gapIconOk {
-  color: #008236;
+  color: light-dark(#008236, #5ae293);
 }
 
 .link {

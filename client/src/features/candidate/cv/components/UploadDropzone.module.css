@@ -55,5 +55,5 @@
   padding-top: 20px;
   font-size: 10px;
   line-height: 15px;
-  color: #a1a0af;
+  color: light-dark(#a1a0af, var(--muted-foreground));
 }

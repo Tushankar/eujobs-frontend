@@ -46,7 +46,7 @@
 }
 
 .row:hover {
-  border-color: rgba(2, 99, 220, 0.4);
+  border-color: light-dark(rgba(2, 99, 220, 0.4), rgba(91, 157, 255, 0.56));
   background: var(--muted);
 }
 
@@ -55,8 +55,8 @@
 
 
 .sky {
-  background: #dfe8f4;
-  color: #5a7b9e;
+  background: light-dark(#dfe8f4, #142439);
+  color: light-dark(#5a7b9e, var(--muted-foreground));
 }
 
 .text {

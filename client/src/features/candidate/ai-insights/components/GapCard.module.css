@@ -72,7 +72,7 @@
 }
 
 .card .quiet {
-  color: #737989;
+  color: light-dark(#737989, var(--muted-foreground));
 }
 
 .card .quiet:hover {

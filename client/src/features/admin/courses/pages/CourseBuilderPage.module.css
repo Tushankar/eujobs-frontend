@@ -94,7 +94,7 @@
   gap: 2px;
   padding: 4px;
   border-radius: var(--radius-full);
-  background: #f0f2f5;
+  background: light-dark(#f0f2f5, var(--muted));
   box-shadow: none;
 }
 
@@ -251,7 +251,7 @@
 }
 
 .problemItem:hover {
-  border-color: #c9cede;
+  border-color: light-dark(#c9cede, var(--border-strong));
   background: var(--muted);
   box-shadow: 0 1px 2px rgba(32, 37, 52, 0.06);
 }
@@ -260,7 +260,7 @@
 .problemCheck {
   width: 18px;
   height: 18px;
-  border: 1.6px dashed #b4b9c6;
+  border: 1.6px dashed light-dark(#b4b9c6, var(--border-strong));
   border-radius: var(--radius-full);
   transition: border-color var(--transition);
 }

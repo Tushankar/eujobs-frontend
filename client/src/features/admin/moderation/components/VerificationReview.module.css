@@ -173,7 +173,7 @@
 }
 
 .confirmReject {
-  border-color: #ffc9c9;
+  border-color: light-dark(#ffc9c9, #642626);
 }
 
 .confirmTitle {

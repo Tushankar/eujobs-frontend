@@ -23,9 +23,9 @@ section.panel {
   margin-top: 24px;
   padding: 5px;
   overflow-x: auto;
-  border: 1px solid #e9ebef;
+  border: 1px solid light-dark(#e9ebef, var(--border));
   border-radius: 999px;
-  background: #fff;
+  background: light-dark(#fff, var(--card));
   scrollbar-width: none;
 }
 
@@ -61,13 +61,13 @@ section.panel {
   font-size: 14px;
   font-weight: 500;
   white-space: nowrap;
-  color: #4f545b;
+  color: light-dark(#4f545b, var(--muted-foreground));
   cursor: pointer;
   transition: color 0.3s ease;
 }
 
 .tab:hover {
-  color: #161719;
+  color: light-dark(#161719, var(--foreground));
 }
 
 .tabActive,
@@ -79,11 +79,11 @@ section.panel {
   min-width: 22px;
   padding: 1px 7px;
   border-radius: 999px;
-  background: #f0f2f5;
+  background: light-dark(#f0f2f5, var(--muted));
   font-size: 12px;
   font-weight: 600;
   text-align: center;
-  color: #4f545b;
+  color: light-dark(#4f545b, var(--muted-foreground));
   transition:
     background 0.3s ease,
     color 0.3s ease;
@@ -119,7 +119,7 @@ section.panel {
   margin: 0;
   font-size: 13px;
   font-weight: 600;
-  color: #5f646b;
+  color: light-dark(#5f646b, var(--muted-foreground));
 }
 
 .rows {
@@ -138,9 +138,9 @@ section.panel {
   gap: 14px;
   width: 100%;
   padding: 16px 18px;
-  border: 1px solid #eef0f3;
+  border: 1px solid light-dark(#eef0f3, var(--border));
   border-radius: 16px;
-  background: #fff;
+  background: light-dark(#fff, var(--card));
   font: inherit;
   text-align: left;
   color: inherit;
@@ -166,15 +166,15 @@ section.panel {
 }
 
 .row:hover {
-  border-color: #dbe5f5;
+  border-color: light-dark(#dbe5f5, #263e64);
   box-shadow: 0 10px 28px rgba(19, 31, 53, 0.07);
   transform: translateY(-2px);
 }
 
 .rowActive,
 .rowActive:hover {
-  border-color: #c7dafa;
-  background: #f6f9ff;
+  border-color: light-dark(#c7dafa, #263d64);
+  background: light-dark(#f6f9ff, #111f3b);
   box-shadow: 0 10px 28px rgba(19, 31, 53, 0.06);
 }
 
@@ -193,7 +193,7 @@ section.panel {
   font-size: 15px;
   font-weight: 600;
   line-height: 1.35;
-  color: #161719;
+  color: light-dark(#161719, var(--foreground));
   transition: color 0.2s ease;
 }
 
@@ -204,7 +204,7 @@ section.panel {
 
 .rowCompany {
   font-size: 13px;
-  color: #5f646b;
+  color: light-dark(#5f646b, var(--muted-foreground));
 }
 
 .rowTags {
@@ -216,24 +216,24 @@ section.panel {
 
 .rowTags span {
   padding: 3px 10px;
-  border: 1px solid #e9ebef;
+  border: 1px solid light-dark(#e9ebef, var(--border));
   border-radius: 999px;
-  background: #fff;
+  background: light-dark(#fff, var(--card));
   font-size: 12px;
-  color: #37404e;
+  color: light-dark(#37404e, var(--foreground));
 }
 
 .rowSalary {
   margin-top: 4px;
   font-size: 13px;
   font-weight: 600;
-  color: #161719;
+  color: light-dark(#161719, var(--foreground));
 }
 
 .rowAgo {
   font-size: 12px;
   white-space: nowrap;
-  color: #777c84;
+  color: light-dark(#777c84, var(--muted-foreground));
 }
 
 /* ---------- The open job ---------- */
@@ -279,13 +279,13 @@ section.panel {
 .detailCompany {
   font-size: 15px;
   font-weight: 600;
-  color: #161719;
+  color: light-dark(#161719, var(--foreground));
 }
 
 .detailPosted {
   margin: 3px 0 0;
   font-size: 13px;
-  color: #5f646b;
+  color: light-dark(#5f646b, var(--muted-foreground));
 }
 
 .detailTitle {
@@ -294,7 +294,7 @@ section.panel {
   font-weight: 600;
   line-height: 1.2;
   letter-spacing: -0.8px;
-  color: #0f1115;
+  color: light-dark(#0f1115, var(--foreground));
   text-wrap: balance;
 }
 
@@ -312,16 +312,16 @@ section.panel {
   align-items: center;
   gap: 6px;
   padding: 6px 12px;
-  border: 1px solid #e9ebef;
+  border: 1px solid light-dark(#e9ebef, var(--border));
   border-radius: 999px;
-  background: #fff;
+  background: light-dark(#fff, var(--card));
   font-size: 13px;
-  color: #37404e;
+  color: light-dark(#37404e, var(--foreground));
 }
 
 .facts .factSalary {
   font-weight: 600;
-  color: #161719;
+  color: light-dark(#161719, var(--foreground));
 }
 
 .actions {
@@ -369,20 +369,20 @@ section.panel {
 }
 
 .outline {
-  border: 1px solid #d5d9e0;
-  background: #fff;
-  color: #161719;
+  border: 1px solid light-dark(#d5d9e0, var(--border-strong));
+  background: light-dark(#fff, var(--card));
+  color: light-dark(#161719, var(--foreground));
 }
 
 .outline:hover {
-  border-color: #161719;
+  border-color: light-dark(#161719, var(--foreground));
   transform: translateY(-1px);
 }
 
 .signInNote {
   margin: -6px 0 0;
   font-size: 13px;
-  color: #5f646b;
+  color: light-dark(#5f646b, var(--muted-foreground));
 }
 
 .signInNote a {
@@ -396,14 +396,14 @@ section.panel {
   flex-direction: column;
   gap: 10px;
   padding-top: 20px;
-  border-top: 1px solid #eef0f3;
+  border-top: 1px solid light-dark(#eef0f3, var(--border));
 }
 
 .sectionTitle {
   margin: 0;
   font-size: 16px;
   font-weight: 600;
-  color: #161719;
+  color: light-dark(#161719, var(--foreground));
 }
 
 .prose {
@@ -411,7 +411,7 @@ section.panel {
   font-size: 14px;
   line-height: 1.7;
   white-space: pre-line;
-  color: #37404e;
+  color: light-dark(#37404e, var(--foreground));
 }
 
 .bullets {
@@ -422,7 +422,7 @@ section.panel {
   padding-left: 20px;
   font-size: 14px;
   line-height: 1.6;
-  color: #37404e;
+  color: light-dark(#37404e, var(--foreground));
 }
 
 .bullets li::marker {
@@ -432,7 +432,7 @@ section.panel {
 .companyName {
   font-size: 14px;
   font-weight: 600;
-  color: #161719;
+  color: light-dark(#161719, var(--foreground));
 }
 
 .website {
@@ -458,17 +458,17 @@ section.panel {
   gap: 8px;
   margin-top: 32px;
   padding: 48px 24px;
-  border: 1px solid #eef0f3;
+  border: 1px solid light-dark(#eef0f3, var(--border));
   border-radius: 20px;
   text-align: center;
-  color: #777c84;
+  color: light-dark(#777c84, var(--muted-foreground));
 }
 
 .emptyTitle {
   margin: 6px 0 0;
   font-size: 18px;
   font-weight: 600;
-  color: #161719;
+  color: light-dark(#161719, var(--foreground));
 }
 
 .emptyText {

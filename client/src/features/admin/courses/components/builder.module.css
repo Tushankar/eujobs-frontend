@@ -367,7 +367,7 @@
   justify-content: center;
   gap: 8px;
   aspect-ratio: 16 / 9;
-  background: #eef0f5;
+  background: light-dark(#eef0f5, var(--muted));
   font-size: 12px;
   font-weight: 600;
   color: var(--muted-foreground);
@@ -402,7 +402,7 @@
 .previewLines span {
   display: block;
   border-radius: 6px;
-  background: #f0f2f5;
+  background: light-dark(#f0f2f5, var(--muted));
 }
 
 .previewChip {

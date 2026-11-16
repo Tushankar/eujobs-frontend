@@ -49,13 +49,13 @@
 }
 
 .stem {
-  stroke: #48648f;
+  stroke: light-dark(#48648f, #7e97be);
   stroke-width: 3;
 }
 
 .ring {
   fill: none;
-  stroke: #48648f;
+  stroke: light-dark(#48648f, #7e97be);
   stroke-width: 3;
 }
 

@@ -29,12 +29,12 @@
 }
 
 .policy:hover {
-  border-color: #cdd0d9;
+  border-color: light-dark(#cdd0d9, var(--border-strong));
 }
 
 .selected,
 .selected:hover {
-  border-color: #bbdeff;
+  border-color: light-dark(#bbdeff, #264664);
 }
 
 .policyText {

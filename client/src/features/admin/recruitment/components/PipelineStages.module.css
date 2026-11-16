@@ -19,12 +19,12 @@
 }
 
 .card:hover {
-  border-color: #cdd0d9;
+  border-color: light-dark(#cdd0d9, var(--border-strong));
 }
 
 .active,
 .active:hover {
-  border-color: #bbdeff;
+  border-color: light-dark(#bbdeff, #264664);
   background: var(--accent);
 }
 

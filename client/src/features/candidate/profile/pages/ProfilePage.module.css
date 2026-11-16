@@ -132,7 +132,7 @@
 
 /* Section actions: a quiet outlined pill with a grey icon (LinkedIn-style), ink on hover. */
 .sectionHead button.sectionAction {
-  border-color: #cfd4dd;
+  border-color: light-dark(#cfd4dd, var(--border-strong));
   border-radius: var(--radius-full);
   background: var(--card);
   color: var(--foreground);
@@ -156,7 +156,7 @@
   gap: 12px;
   margin-top: 14px;
   padding: 14px 16px;
-  border: 1px dashed #d5dae4;
+  border: 1px dashed light-dark(#d5dae4, var(--border-strong));
   border-radius: var(--radius-xl);
   background: var(--card);
 }
@@ -399,7 +399,7 @@
 
 .control {
   padding: 24px;
-  border: 1px solid #bbdeff;
+  border: 1px solid light-dark(#bbdeff, #264664);
   border-radius: var(--radius-xl);
   background: var(--accent);
 }

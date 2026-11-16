@@ -17,12 +17,12 @@
 }
 
 .limit {
-  background: #fdf6e7;
-  color: #8b6a1f;
+  background: light-dark(#fdf6e7, #3b2e11);
+  color: light-dark(#8b6a1f, #dcb661);
 }
 
 .error {
-  background: #fdf0f0;
+  background: light-dark(#fdf0f0, #3b1111);
   color: var(--destructive);
 }
 

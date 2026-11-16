@@ -74,7 +74,7 @@
   gap: 8px;
   margin: 12px 0 0;
   padding-top: 12px;
-  border-top: 1px solid rgba(2, 99, 220, 0.15);
+  border-top: 1px solid light-dark(rgba(2, 99, 220, 0.15), rgba(91, 157, 255, 0.21));
 }
 
 .detail[hidden] {

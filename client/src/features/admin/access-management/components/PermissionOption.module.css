@@ -59,7 +59,7 @@
 }
 
 .tile.checked {
-  border-color: rgba(2, 99, 220, 0.2);
+  border-color: light-dark(rgba(2, 99, 220, 0.2), rgba(91, 157, 255, 0.28));
   background: var(--accent);
 }
 

@@ -23,7 +23,7 @@
 
 .icon {
   display: inline-flex;
-  color: #9ca1b1;
+  color: light-dark(#9ca1b1, var(--muted-foreground));
 }
 
 .valueRow {
@@ -53,7 +53,7 @@
   padding-top: 12px;
   font-size: 10px;
   line-height: 15px;
-  color: #767d8c;
+  color: light-dark(#767d8c, var(--muted-foreground));
 }
 
 /* Same height as the value row and caption it stands in for. */
@@ -75,7 +75,7 @@
 @media (hover: hover) and (prefers-reduced-motion: no-preference) {
   .card:hover {
     transform: translateY(-3px);
-    border-color: rgba(2, 99, 220, 0.25);
+    border-color: light-dark(rgba(2, 99, 220, 0.25), rgba(91, 157, 255, 0.35));
     box-shadow: 0 12px 24px -12px rgba(1, 43, 116, 0.25);
   }
 }

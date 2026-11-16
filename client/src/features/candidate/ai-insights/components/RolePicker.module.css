@@ -123,7 +123,7 @@
 }
 
 .option:hover {
-  background: #eceef2;
+  background: light-dark(#eceef2, var(--muted));
 }
 
 .option[aria-current] {

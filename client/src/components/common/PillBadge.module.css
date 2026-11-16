@@ -18,18 +18,18 @@
 }
 
 .success {
-  background: #edf7f1;
-  color: #398460;
+  background: light-dark(#edf7f1, #183523);
+  color: light-dark(#398460, #78c5a0);
 }
 
 .warning {
-  background: #fdf5e6;
+  background: light-dark(#fdf5e6, #3b2d11);
   color: #a47d2e;
 }
 
 .neutral {
-  background: #f3f4f6;
-  color: #727888;
+  background: light-dark(#f3f4f6, var(--muted));
+  color: light-dark(#727888, var(--muted-foreground));
 }
 
 .accent {
@@ -43,16 +43,16 @@
 }
 
 .info {
-  background: #edf2fd;
-  color: #577fba;
+  background: light-dark(#edf2fd, #111e3b);
+  color: light-dark(#577fba, #7696c7);
 }
 
 .violet {
-  background: #f0edfd;
-  color: #7364bd;
+  background: light-dark(#f0edfd, #19113b);
+  color: light-dark(#7364bd, #8477c5);
 }
 
 .danger {
-  background: #fef2f2;
-  color: #c10007;
+  background: light-dark(#fef2f2, #3b1111);
+  color: light-dark(#c10007, #e25a5f);
 }

@@ -54,7 +54,7 @@
   border-radius: 999px;
   font-size: 13px;
   font-weight: 700;
-  color: var(--destructive, #c0392b);
+  color: var(--destructive, light-dark(#c0392b, #dc6c61));
 }
 
 .dot {
@@ -137,7 +137,7 @@
   aspect-ratio: 16 / 9;
   max-height: 62vh;
   border-radius: var(--radius-lg);
-  background: #11141b;
+  background: light-dark(#11141b, var(--foreground));
   overflow: hidden;
 }
 
@@ -154,7 +154,7 @@
   aspect-ratio: 16 / 9;
   border: 1px solid rgb(255 255 255 / 0.25);
   border-radius: var(--radius-md, 8px);
-  background: #1d212b;
+  background: light-dark(#1d212b, var(--foreground));
   overflow: hidden;
 }
 

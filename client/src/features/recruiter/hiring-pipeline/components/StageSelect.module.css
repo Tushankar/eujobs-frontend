@@ -15,7 +15,7 @@
 }
 
 .select:hover {
-  border-color: #cdd0d9;
+  border-color: light-dark(#cdd0d9, var(--border-strong));
 }
 
 .chevron {

@@ -5,15 +5,15 @@
   gap: 5px;
   margin-top: 8px;
   padding: 3px 10px 3px 8px;
-  border: 1px solid #e3c878;
+  border: 1px solid light-dark(#e3c878, #645426);
   border-radius: var(--radius-full);
-  background: #fbf4df;
+  background: light-dark(#fbf4df, #3b3111);
   font-size: 11px;
   font-weight: 600;
   line-height: 16px;
   letter-spacing: 0.01em;
   white-space: nowrap;
-  color: #6b4e0e;
+  color: light-dark(#6b4e0e, #e2b85a);
 }
 
 .badge svg {

@@ -45,7 +45,7 @@
 
 /* Doubled selector: wins over the Button variant colour regardless of stylesheet order. */
 .manage.manage {
-  color: #737989;
+  color: light-dark(#737989, var(--muted-foreground));
 }
 
 /* Recruiter courses frame: Manage and Unpublish are both primary blue. */

@@ -37,8 +37,8 @@
 }
 
 .circle.done {
-  background: #edf7f1;
-  color: #398460;
+  background: light-dark(#edf7f1, #183523);
+  color: light-dark(#398460, #78c5a0);
 }
 
 .text {
@@ -72,5 +72,5 @@
 }
 
 .stateDone {
-  color: #398460;
+  color: light-dark(#398460, #78c5a0);
 }

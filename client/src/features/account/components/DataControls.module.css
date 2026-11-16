@@ -3,13 +3,13 @@
 }
 
 .button.dangerButton {
-  border-color: #ffc9c9;
-  background: #fef2f2;
-  color: #c10007;
+  border-color: light-dark(#ffc9c9, #642626);
+  background: light-dark(#fef2f2, #3b1111);
+  color: light-dark(#c10007, #e25a5f);
 }
 
 .button.dangerButton:hover {
-  background: #fde4e4;
+  background: light-dark(#fde4e4, #3b1111);
 }
 
 .status {

@@ -47,7 +47,7 @@
 }
 
 .rejected {
-  background: #fef2f2;
+  background: light-dark(#fef2f2, #3b1111);
   color: var(--destructive);
 }
 

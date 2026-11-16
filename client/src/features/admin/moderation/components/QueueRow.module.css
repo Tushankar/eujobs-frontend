@@ -17,12 +17,12 @@
   padding: 12px;
   border-radius: var(--radius-xl);
   background: var(--muted);
-  color: #6e7687;
+  color: light-dark(#6e7687, var(--muted-foreground));
 }
 
 .alert {
-  background: #fef2f2;
-  color: #e7000b;
+  background: light-dark(#fef2f2, #3b1111);
+  color: light-dark(#e7000b, #e25a61);
 }
 
 .body {

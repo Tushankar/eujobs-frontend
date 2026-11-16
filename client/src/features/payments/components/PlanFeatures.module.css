@@ -26,5 +26,5 @@
 .check {
   flex: none;
   margin-top: 2px;
-  color: var(--success, #1e8e3e);
+  color: var(--success, light-dark(#1e8e3e, #5fdd83));
 }

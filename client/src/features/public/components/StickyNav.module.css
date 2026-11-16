@@ -12,7 +12,7 @@
   padding: 6px 6px 6px 16px;
   border: 1px solid rgba(233, 235, 239, 0.9);
   border-radius: 999px;
-  background: rgba(255, 255, 255, 0.78);
+  background: light-dark(rgba(255, 255, 255, 0.78), rgba(19, 22, 27, 0.78));
   box-shadow:
     0 12px 32px rgba(19, 31, 53, 0.12),
     0 1px 0 rgba(255, 255, 255, 0.9) inset;
@@ -55,7 +55,7 @@
   border-radius: 999px;
   font-size: 12.5px;
   line-height: 18px;
-  color: #4f545b;
+  color: light-dark(#4f545b, var(--muted-foreground));
   white-space: nowrap;
   transition: color 0.35s var(--ease-out);
 }

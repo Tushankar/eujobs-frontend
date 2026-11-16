@@ -219,7 +219,7 @@
 }
 
 .status-approved {
-  color: #398460;
+  color: light-dark(#398460, #78c5a0);
 }
 
 .status-rejected {

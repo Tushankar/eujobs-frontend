@@ -68,9 +68,9 @@
   gap: 8px;
   margin-top: 10px;
   padding: 10px 12px;
-  border: 1px solid #efc9c9;
+  border: 1px solid light-dark(#efc9c9, #642626);
   border-radius: var(--radius-lg);
-  background: #fdf4f4;
+  background: light-dark(#fdf4f4, #3b1111);
 }
 
 .rejectionIcon {
