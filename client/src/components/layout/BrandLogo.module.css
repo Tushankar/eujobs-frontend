@@ -11,6 +11,15 @@
   height: 100%;
 }
 
+/* Dark theme: the logo's blues lift so the mark reads on the near-black ground. */
+:global(:root[data-theme='dark']) .logo stop:first-child {
+  stop-color: #3d86ff;
+}
+
+:global(:root[data-theme='dark']) .logo stop:last-child {
+  stop-color: #7cbcff;
+}
+
 /* A band of light, cut to the logo's shape; it rests off the left edge until an animation runs it across. */
 .intro::after,
 .shine::after {
