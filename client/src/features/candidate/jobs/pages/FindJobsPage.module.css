@@ -20,6 +20,12 @@
   min-width: 192px;
 }
 
+/* A pill search bar, matching the pill Filters button beside it. */
+.query > div:has(> input) {
+  padding-inline: 18px;
+  border-radius: var(--radius-full);
+}
+
 .filtersButton.filtersButton {
   min-height: 44px;
   border-color: var(--border);
