@@ -82,15 +82,16 @@ export default {
     await clickText(page, 'Monthly', 'button, [role="tab"], label')
     await waitForText(page, 'per month')
     await clickText(page, 'Continue', 'button, a, [role="button"]')
-    // "Confirm your updates" loads the preview first; Confirm stays disabled until it has.
-    const confirm = await page.waitForFunction(
-      () =>
-        [...document.querySelectorAll('[data-testid="confirm"], button, [role="button"]')].find(
-          (element) => element.textContent.trim() === 'Confirm' && !element.disabled && element.getAttribute('aria-disabled') !== 'true' && !element.closest('[aria-busy="true"]'),
-        ),
-      { timeout: 30_000 },
-    )
+    // "Confirm your updates" loads its preview ("What you'll pay …") first. Its Confirm is a styled span; the other
+    // "Confirm" is the breadcrumb above it, so the lowest one is the button.
+    await waitForText(page, 'What you', 30_000)
+    await new Promise((resolve) => setTimeout(resolve, 1000))
     await ctx.screenshot(page, '6-portal-confirm-monthly')
+    const confirm = await page.evaluateHandle(() =>
+      [...document.querySelectorAll('span, button')]
+        .filter((element) => element.children.length === 0 && element.textContent.trim() === 'Confirm')
+        .sort((a, b) => b.getBoundingClientRect().top - a.getBoundingClientRect().top)[0],
+    )
     await confirm.asElement().click()
     await page.waitForSelector('[data-testid="return-to-business-link"]', { visible: true, timeout: 30_000 })
     await page.click('[data-testid="return-to-business-link"]')
@@ -107,8 +108,11 @@ export default {
     await page.waitForFunction(() => location.hostname === 'billing.stripe.com', { timeout: 30_000 })
     await page.waitForSelector('a[href*="/cancel"]', { visible: true, timeout: 30_000 })
     await page.click('a[href*="/cancel"]')
-    await page.waitForSelector('[data-testid="confirm"]', { visible: true })
+    // The cancel page loads its summary first; a click before that is ignored, so wait, click, and wait to leave it.
+    await page.waitForSelector('[data-testid="confirm"]:not([disabled]):not([aria-disabled="true"])', { visible: true, timeout: 30_000 })
+    await new Promise((resolve) => setTimeout(resolve, 1000))
     await page.click('[data-testid="confirm"]')
+    await page.waitForFunction(() => !location.pathname.includes('/cancel'), { timeout: 30_000 })
     await page.waitForSelector('[data-testid="return-to-business-link"]', { visible: true, timeout: 30_000 })
     await page.click('[data-testid="return-to-business-link"]')
     await page.waitForFunction(() => location.pathname === '/candidate/settings/billing', { timeout: 30_000 })

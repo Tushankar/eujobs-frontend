@@ -1,12 +1,13 @@
 import { useGSAP } from '@gsap/react'
 import gsap from 'gsap'
-import { useRef } from 'react'
+import { useRef, useState } from 'react'
 import { useTranslation } from 'react-i18next'
 import { useDispatch } from 'react-redux'
 import { Link, NavLink, useLocation, useNavigate } from 'react-router-dom'
 import { ArrowRight, ArrowUpRight, Crown, LogOut } from 'lucide-react'
 import { cx } from '@/utils/cx.js'
 import { Avatar, Icon, IconButton } from '@/components/ui'
+import ConfirmDialog from '@/components/common/ConfirmDialog.jsx'
 import { can } from '@/app/permissions.js'
 import { workspacePath } from '@/app/workspaces.js'
 import { signOut } from '@/app/session.js'
@@ -161,8 +162,10 @@ export default function Sidebar({ workspace, open, onClose }) {
   const navRef = useRef(null)
   const indicatorRef = useRef(null)
   useNavIndicator(navRef, indicatorRef, pathname, navItems.length)
+  const [confirmingSignOut, setConfirmingSignOut] = useState(false)
 
   function handleSignOut() {
+    setConfirmingSignOut(false)
     signOut()
     navigate(workspace.signInPath)
   }
@@ -218,11 +221,19 @@ export default function Sidebar({ workspace, open, onClose }) {
                 {!(me.role === 'candidate' && isPaidPlan(me)) && <p className={styles.userSubtitle}>{identitySubtitle(me, t)}</p>}
                 <PlanBadge me={me} small />
               </div>
-              <IconButton icon={LogOut} label={t('shell:signOut')} onClick={handleSignOut} />
+              <IconButton icon={LogOut} label={t('shell:signOut')} onClick={() => setConfirmingSignOut(true)} />
             </div>
           )}
         </div>
       </aside>
+      <ConfirmDialog
+        open={confirmingSignOut}
+        title={t('shell:signOutConfirm.title')}
+        description={t('shell:signOutConfirm.description')}
+        confirmLabel={t('shell:signOut')}
+        onClose={() => setConfirmingSignOut(false)}
+        onConfirm={handleSignOut}
+      />
     </>
   )
 }

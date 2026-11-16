@@ -89,6 +89,10 @@
     "upsellLink": "Pasar a {{plan}}"
   },
   "signOut": "Cerrar sesión",
+  "signOutConfirm": {
+    "title": "¿Cerrar sesión?",
+    "description": "Tendrás que volver a iniciar sesión para acceder a tu espacio de trabajo."
+  },
   "identity": {
     "owner": "Propietario",
     "noRole": "Sin rol asignado"

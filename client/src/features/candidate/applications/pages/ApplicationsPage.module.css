@@ -42,19 +42,28 @@
   color: var(--muted-foreground);
 }
 
+/* A text link under the next step, flush with it (no pill padding pushing it right). */
 .activity.activity {
+  gap: 4px;
+  min-height: 0;
+  padding: 0;
+  border: 0;
+  font-size: 12px;
+  line-height: 16px;
   color: #737989;
 }
 
-.activity.activity:hover {
+.activity.activity:hover,
+.activity.activity:active {
+  background: transparent;
   color: var(--foreground);
 }
 
 .next {
   display: flex;
-  flex-wrap: wrap;
-  align-items: center;
-  gap: 4px 12px;
+  flex-direction: column;
+  align-items: flex-start;
+  gap: 4px;
 }
 
 .nextText {

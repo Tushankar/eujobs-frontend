@@ -1,4 +1,4 @@
-import { signInWithForm, waitForPath } from '../lib/flows.js'
+import { clickText, signInWithForm, waitForPath } from '../lib/flows.js'
 
 const ROLES = [
   { role: 'recruiter', account: 'sarah', signIn: '/recruiter/sign-in', overview: '/recruiter' },
@@ -25,6 +25,7 @@ export default {
       if (ctx.viewport === 'M') await page.click('[aria-controls="workspace-sidebar"]')
       await page.waitForSelector('[aria-label="Sign out"]', { visible: true })
       await page.click('[aria-label="Sign out"]')
+      await clickText(page, 'Sign out', '[role="dialog"] button')
       await waitForPath(page, signIn)
       // Longer than one counters poll would take to fire after a reset.
       await new Promise((resolve) => setTimeout(resolve, 3000))

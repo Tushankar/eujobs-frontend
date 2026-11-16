@@ -1,7 +1,9 @@
 import { useEffect, useState } from 'react'
 import { Trans, useTranslation } from 'react-i18next'
 import { Link, useMatches } from 'react-router-dom'
+import { ArrowLeft } from 'lucide-react'
 import { BRAND } from '@/app/brand.js'
+import { Icon } from '@/components/ui'
 import { cx } from '@/utils/cx.js'
 import { arrivedByFlip } from '@/utils/pageFlip.js'
 import mark from '@/assets/images/logo-mark-white.png'
@@ -64,7 +66,13 @@ export default function AuthLayout({ children, hero, showLogo = true, logoTo = '
                 <BrandLogo height={50} />
               </Link>
             )}
-            <LanguagePicker />
+            <div className={styles.topActions}>
+              <Link to="/" className={styles.backHome} title={t('auth:intro.backHome')}>
+                <Icon as={ArrowLeft} size={14} />
+                <span className={styles.backHomeLabel}>{t('auth:intro.backHome')}</span>
+              </Link>
+              <LanguagePicker />
+            </div>
           </div>
           {children}
         </div>

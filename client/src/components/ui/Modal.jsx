@@ -37,7 +37,7 @@ const DialogContent = memo(
           </div>
           {dismissible && <IconButton icon={X} label={t('common:closeDialog')} onClick={onClose} />}
         </header>
-        <div className={styles.body}>{children}</div>
+        {children && <div className={styles.body}>{children}</div>}
         {footer && <footer className={styles.footer}>{footer}</footer>}
       </>
     )

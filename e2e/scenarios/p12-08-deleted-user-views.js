@@ -1,5 +1,5 @@
 import { applyApi, completeCandidate, recruiterWithJob } from '../lib/applicants.js'
-import { signInWithForm, waitForPath, waitForText } from '../lib/flows.js'
+import { clickText, signInWithForm, waitForPath, waitForText } from '../lib/flows.js'
 import { openBell, rowsOf } from '../lib/notifications.js'
 import { api, db, TEST_PASSWORD } from '../lib/testApi.js'
 
@@ -45,6 +45,7 @@ export default {
     if (ctx.viewport === 'M') await page.click('[aria-controls="workspace-sidebar"]')
     await page.waitForSelector('[aria-label="Sign out"]', { visible: true })
     await page.click('[aria-label="Sign out"]')
+    await clickText(page, 'Sign out', '[role="dialog"] button')
     await waitForPath(page, '/recruiter/sign-in')
     await new Promise((resolve) => setTimeout(resolve, 2000))
     ctx.assertClean(recruiterPage.issues, 'recruiter and sign-out')

@@ -29,7 +29,144 @@
 }
 
 .field {
+  display: flex;
+  flex-direction: column;
   grid-column: span 5;
+  gap: 8px;
+  min-width: 0;
+}
+
+.fieldLabel {
+  font-size: 13px;
+  font-weight: 600;
+  line-height: 18px;
+  color: var(--foreground);
+}
+
+/* The closed picker: the DS field shell (as SelectField draws it), with the chosen role in one line. */
+.trigger {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  width: 100%;
+  min-height: 44px;
+  padding: 11px 14px;
+  border: 1px solid var(--border-strong);
+  border-radius: var(--radius-lg);
+  background: var(--card);
+  font-size: 14px;
+  line-height: 20px;
+  text-align: left;
+  color: var(--foreground);
+  cursor: pointer;
+  transition:
+    border-color var(--transition),
+    box-shadow var(--transition);
+}
+
+.trigger:hover {
+  border-color: var(--text-faint);
+}
+
+.trigger:focus-visible,
+.trigger[aria-expanded='true'] {
+  border-color: var(--ring);
+  outline: 0;
+  box-shadow: inset 0 0 0 1px var(--ring);
+}
+
+.triggerText {
+  flex: 1;
+  min-width: 0;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+.chevron {
+  flex-shrink: 0;
+  color: var(--text-placeholder);
+  transition: transform var(--transition);
+}
+
+.trigger[aria-expanded='true'] .chevron {
+  transform: rotate(180deg);
+}
+
+/* The open list: as wide as the field, the header menus' look (rounded rows, check on the chosen one). */
+.dropdown {
+  width: 100%;
+}
+
+.panel {
+  width: 100%;
+  padding: 6px;
+}
+
+.options {
+  display: flex;
+  flex-direction: column;
+  gap: 2px;
+}
+
+.option {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  width: 100%;
+  padding: 8px 10px;
+  border: 0;
+  border-radius: var(--radius-lg);
+  background: transparent;
+  text-align: left;
+  transition: background-color var(--transition);
+}
+
+.option:hover {
+  background: #eceef2;
+}
+
+.option[aria-current] {
+  background: var(--accent);
+}
+
+.optionText {
+  display: flex;
+  flex: 1;
+  flex-direction: column;
+  gap: 2px;
+  min-width: 0;
+}
+
+.optionTitle,
+.optionMeta {
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+.optionTitle {
+  font-size: 13px;
+  font-weight: 600;
+  line-height: 18px;
+  color: var(--foreground);
+}
+
+.option[aria-current] .optionTitle {
+  color: var(--primary);
+}
+
+.optionMeta {
+  font-size: 12px;
+  line-height: 16px;
+  color: var(--muted-foreground);
+}
+
+.optionCheck {
+  display: inline-flex;
+  flex-shrink: 0;
+  width: 14px;
+  color: var(--primary);
 }
 
 .skeletonField {

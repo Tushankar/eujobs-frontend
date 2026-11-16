@@ -37,8 +37,8 @@ export default {
         await ctx.screenshot(page, '1-overview')
 
         await page.goto(`${ctx.webUrl}/candidate/ai-insights/skill-gap`, { waitUntil: 'networkidle0' })
-        await page.waitForSelector('select[name="role"]')
-        ctx.check((await page.$eval('select[name="role"]', (select) => select.value)) === roles[0].id, 'the picker defaults to the top-ranked job')
+        await page.waitForSelector('[data-role-picker]')
+        ctx.check((await page.$eval('[data-role-picker]', (button) => button.dataset.rolePicker)) === roles[0].id, 'the picker defaults to the top-ranked job')
         // A role with a gap: the first one whose evidence lists a missing required skill.
         let gapJob = null
         for (const role of roles) {
@@ -49,7 +49,8 @@ export default {
           }
         }
         ctx.check(gapJob, 'a role with a missing required skill')
-        await page.select('select[name="role"]', gapJob.id)
+        await page.click('[data-role-picker]')
+        await page.click(`[data-role-option="${gapJob.id}"]`)
         const card = `[data-gap="${gapJob.skill}"]`
         await page.waitForSelector(card, { visible: true })
 

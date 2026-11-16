@@ -37,8 +37,7 @@ function useHeroMotion(scope) {
           .from(q('[data-hero-header]'), { y: -24 * move, opacity: 0, duration: 0.7 })
           .from(q('[data-hero-line]'), move ? { yPercent: 110, stagger: 0.12, duration: 1 } : { opacity: 0, stagger: 0.12 }, '-=0.35')
           .from(q('[data-hero-fade]'), { y: 24 * move, opacity: 0, stagger: 0.1 }, '-=0.6')
-          // No opacity fade on the photo cards: they paint on the first frame (the hero photo is the page's LCP).
-          .from(q('[data-hero-art] > *'), { y: 40 * move, scale: move ? 0.96 : 1, stagger: 0.06, duration: 0.8 }, 0)
+          .from(q('[data-hero-art] > *'), { y: 40 * move, opacity: 0, scale: move ? 0.96 : 1, stagger: 0.06, duration: 0.8 }, 0.35)
         if (!move) return
 
         q('[data-parallax]').forEach((element) => {

@@ -89,6 +89,10 @@
     "upsellLink": "Upgrade to {{plan}}"
   },
   "signOut": "Sign out",
+  "signOutConfirm": {
+    "title": "Sign out?",
+    "description": "You'll need to sign in again to get back to your workspace."
+  },
   "identity": {
     "owner": "Owner",
     "noRole": "No role assigned"

@@ -186,6 +186,83 @@
   padding: 20px 0;
 }
 
+.topActions {
+  display: flex;
+  align-items: center;
+  gap: 16px;
+}
+
+/* Back to the landing page: an outlined pill, as tall as the language picker beside it. */
+.backHome {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  height: 32px;
+  padding: 0 14px 0 12px;
+  border: 1px solid var(--border-strong);
+  border-radius: var(--radius-full);
+  background: var(--card);
+  font-size: 13px;
+  font-weight: 600;
+  line-height: 18px;
+  white-space: nowrap;
+  color: var(--foreground);
+  transition:
+    border-color var(--transition),
+    background-color var(--transition);
+}
+
+.backHome:hover {
+  border-color: var(--foreground);
+  background: var(--muted);
+}
+
+.backHome:focus-visible {
+  outline: 2px solid var(--ring);
+  outline-offset: 2px;
+}
+
+.backHome svg {
+  flex-shrink: 0;
+  color: var(--muted-foreground);
+  transition:
+    color var(--transition),
+    transform var(--duration-base) var(--ease-out);
+}
+
+.backHome:hover svg {
+  color: var(--foreground);
+}
+
+/* The arrow leans toward where the link goes, like the app's trailing arrows. */
+@media (hover: hover) and (prefers-reduced-motion: no-preference) {
+  .backHome:hover svg {
+    transform: translateX(-2px);
+  }
+}
+
+/* Phones: the arrow alone in a round pill, so the row fits next to the logo. */
+@media (max-width: 479px) {
+  .topActions {
+    gap: 8px;
+  }
+
+  .backHome {
+    justify-content: center;
+    width: 32px;
+    padding: 0;
+  }
+
+  .backHomeLabel {
+    position: absolute;
+    width: 1px;
+    height: 1px;
+    overflow: hidden;
+    clip-path: inset(50%);
+    white-space: nowrap;
+  }
+}
+
 @media (max-width: 1023px) {
   .layout {
     grid-template-columns: 1fr;

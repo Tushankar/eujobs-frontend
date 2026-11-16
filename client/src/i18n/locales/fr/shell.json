@@ -89,6 +89,10 @@
     "upsellLink": "Passer à {{plan}}"
   },
   "signOut": "Se déconnecter",
+  "signOutConfirm": {
+    "title": "Se déconnecter ?",
+    "description": "Vous devrez vous reconnecter pour retrouver votre espace de travail."
+  },
   "identity": {
     "owner": "Propriétaire",
     "noRole": "Aucun rôle attribué"
