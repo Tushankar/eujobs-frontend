@@ -19,6 +19,8 @@ const userSchema = new Schema(
     language: { type: String, enum: ENUMS.language, default: 'en' },
     languageExplicit: { type: Boolean, default: false },
     pickerCountry: String,
+    // Candidates (owner 2026-11-16): false once they pick Remote or a country to browse; unset or true = Worldwide.
+    jobsWorldwide: Boolean,
     timezone: String,
     tokenVersion: { type: Number, default: 0 },
     legal: { termsVersion: String, privacyVersion: String, acceptedAt: Date },

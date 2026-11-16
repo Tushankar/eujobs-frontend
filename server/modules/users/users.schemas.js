@@ -7,6 +7,7 @@ export const mePatchBody = z.object({
   language: z.enum(ENUMS.language).optional(),
   languageExplicit: z.boolean().optional(),
   pickerCountry: z.string().trim().toUpperCase().optional(),
+  jobsWorldwide: z.boolean().optional(),
   timezone: timezone.optional(),
 })
 

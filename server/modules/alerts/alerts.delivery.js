@@ -22,9 +22,12 @@ import { AlertMatch, JobAlert } from './alerts.model.js'
  */
 const DIGEST_HOUR = 8
 
-/** M-098, U35: the alert's country (Remote included) and city, and every keyword in the job's fields and labels. */
+/**
+ * M-098, U35: the alert's country (Remote included; a Worldwide alert, owner 2026-11-16, takes every country) and city,
+ * and every keyword in the job's fields and labels.
+ */
 export function alertMatches(alert, job, company) {
-  if (job.country !== alert.country) return false
+  if (alert.country !== 'WORLDWIDE' && job.country !== alert.country) return false
   if (alert.location?.placeId && job.location?.placeId !== alert.location.placeId) return false
   return matchesKeywords(alert.keywords, haystack(job, company, alert.language))
 }
@@ -58,7 +61,7 @@ async function claimMatches(alert, jobs, mode, now) {
 async function sendInstantAlerts({ jobId }, task, now) {
   const job = await Job.findOne({ _id: jobId, ...(await visibleFilter()) })
   if (!job) return
-  const alerts = await JobAlert.find({ active: true, country: job.country })
+  const alerts = await JobAlert.find({ active: true, country: { $in: [job.country, 'WORLDWIDE'] } })
   const entitled = await entitledIds(alerts.map((alert) => alert.candidateId))
   const company = await Company.findById(job.companyId, 'displayName industry')
   const notified = new Set()
@@ -112,7 +115,7 @@ async function sendDigests(now) {
   const visible = await visibleFilter()
   for (const alert of due.filter((item) => entitled.has(String(item.candidateId)))) {
     const user = users.get(String(alert.candidateId))
-    const jobs = await Job.find({ ...visible, country: alert.country, firstPublishedAt: { $gt: alert.lastDigestAt ?? alert.createdAt, $lte: now } }).sort({ firstPublishedAt: -1 })
+    const jobs = await Job.find({ ...visible, ...(alert.country !== 'WORLDWIDE' && { country: alert.country }), firstPublishedAt: { $gt: alert.lastDigestAt ?? alert.createdAt, $lte: now } }).sort({ firstPublishedAt: -1 })
     const companies = new Map((await Company.find({ _id: { $in: jobs.map((job) => job.companyId) } }, 'displayName industry')).map((company) => [String(company._id), company]))
     const matching = jobs.filter((job) => alertMatches(alert, job, companies.get(String(job.companyId))))
     const unsent = await unsentJobs(alert, matching)

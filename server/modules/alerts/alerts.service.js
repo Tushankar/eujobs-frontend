@@ -1,6 +1,7 @@
 import { LIMITS } from '../../config/limits.js'
 import { AppError, fieldError } from '../../lib/errors.js'
 import { planState } from '../payments/payments.service.js'
+import { viewOf } from '../jobs/jobs.search.js'
 import { resolvePlace } from '../places/places.service.js'
 import { AlertMatch, JobAlert } from './alerts.model.js'
 
@@ -29,13 +30,13 @@ async function ownAlert(user, id) {
   return alert
 }
 
-/** G-1: an optional city inside the alert's country; a Remote alert has none. An unchanged city keeps its name. */
+/** G-1: an optional city inside the alert's country (any city for Worldwide); a Remote alert has none. An unchanged city keeps its name. */
 async function alertLocation(user, placeId, country, existing) {
   if (!placeId) return null
   if (placeId === existing?.placeId) return existing
   if (country === 'REMOTE') throw fieldError({ placeId: 'invalid' })
   const location = await resolvePlace(placeId, user.language)
-  if (location.countryCode !== country) throw fieldError({ placeId: 'other_country' }, { country })
+  if (country !== 'WORLDWIDE' && location.countryCode !== country) throw fieldError({ placeId: 'other_country' }, { country })
   return location
 }
 
@@ -45,10 +46,10 @@ export async function listAlerts(user) {
   return { items: alerts.map(alertDto), total: alerts.length, page: 1, pageSize: alerts.length, planPaused: !entitlements.includes('job_alerts') }
 }
 
-/** U35: the alert keeps the picker country (Remote allowed) and the language it was created in. */
+/** U35: the alert keeps the candidate's view (Worldwide, Remote or a country) and the language it was created in. */
 export async function createAlert(user, { name, keywords, placeId, frequency }) {
   if ((await JobAlert.countDocuments({ candidateId: user._id })) >= A.max) throw fieldError({ alerts: 'too_many' }, { max: A.max })
-  const country = user.pickerCountry ?? 'REMOTE'
+  const country = viewOf(user)
   const location = await alertLocation(user, placeId, country)
   return alertDto(await JobAlert.create({ candidateId: user._id, name, keywords, location, country, language: user.language, frequency }))
 }

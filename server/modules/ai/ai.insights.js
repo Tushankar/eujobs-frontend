@@ -5,7 +5,7 @@ import { skillKey, skillOverlap, skillSet } from '../../lib/skills.js'
 import { Application } from '../applications/applications.model.js'
 import { candidateSummary, loadProfile, saveProfile } from '../candidates/candidates.service.js'
 import { Job, SavedJob } from '../jobs/jobs.model.js'
-import { jobCards, jobDetails, recommendedJobs, viewFilter, visibleFilter } from '../jobs/jobs.search.js'
+import { jobCards, jobDetails, recommendedJobs, viewFilter, viewOf, visibleFilter } from '../jobs/jobs.search.js'
 import { matchEvidence } from '../matching/matching.evidence.js'
 import { ExplanationFeedback } from './ai.model.js'
 import { candidateSubject, jobFacts, write } from './ai.facts.js'
@@ -41,10 +41,10 @@ async function chosenJob(user, jobId) {
 
 /* ---------- pages ---------- */
 
-/** M-066: the denominator is every visible published job of the candidate's picker country. */
+/** M-066: the denominator is every visible published job of the candidate's view (Worldwide, Remote or a country). */
 export async function overview(user) {
   const profile = await loadProfile(user._id)
-  const jobs = await Job.find({ ...(await visibleFilter()), ...viewFilter(user.pickerCountry ?? 'REMOTE') })
+  const jobs = await Job.find({ ...(await visibleFilter()), ...viewFilter(viewOf(user)) })
   const skillDemand = profile.skills
     .map((skill) => ({ skill: skill.name, jobCount: jobs.filter((job) => skillSet([...job.requiredSkills, ...job.preferredSkills]).has(skill)).length }))
     .sort((a, b) => b.jobCount - a.jobCount)

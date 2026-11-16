@@ -62,7 +62,7 @@ describe('job alert CRUD and limits (§3.6, M-031, P7-Q2)', () => {
     const other = await create(user, { name: 'Berlin', keywords: 'designer', placeId: PLACES.berlin.placeId })
     assert.deepEqual([other.status, other.body.error.fields.placeId], [422, 'other_country'])
 
-    const remote = await candidate({ pickerCountry: 'REMOTE' })
+    const remote = await candidate({ pickerCountry: 'REMOTE', jobsWorldwide: false })
     assert.equal((await create(remote, { name: 'Remote', keywords: 'designer' })).body.country, 'REMOTE')
     assert.equal((await create(remote, { name: 'Remote', keywords: 'designer', placeId: PLACES.london.placeId })).status, 422)
   })

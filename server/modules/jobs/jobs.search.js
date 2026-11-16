@@ -30,9 +30,16 @@ export async function visibleFilter() {
   return { status: 'published', 'restricted.at': null, companyId: { $in: await visibleCompanyIds() } }
 }
 
-/** OD2: the Remote view lists remote jobs; a country view lists the on-site and hybrid jobs located there. */
-export const viewFilter = (country) => (country === 'REMOTE' ? { country: 'REMOTE' } : { country, workPreference: { $in: ['on_site', 'hybrid'] } })
-const viewOf = (user) => user.pickerCountry ?? 'REMOTE'
+/**
+ * OD2: the Remote view lists remote jobs; a country view lists the on-site and hybrid jobs located there. Worldwide
+ * (owner 2026-11-16) lists every visible job.
+ */
+export const viewFilter = (country) => {
+  if (country === 'WORLDWIDE') return {}
+  return country === 'REMOTE' ? { country: 'REMOTE' } : { country, workPreference: { $in: ['on_site', 'hybrid'] } }
+}
+/** A candidate browses Worldwide until they pick Remote or a country (owner 2026-11-16); others use their picker. */
+export const viewOf = (user) => (user.role === 'candidate' && user.jobsWorldwide !== false ? 'WORLDWIDE' : user.pickerCountry ?? 'REMOTE')
 
 /** U25: a monthly salary counts ×12; P4-Q4: the top end of the range (the minimum when there is no maximum). */
 const annualTop = (salary) => {
@@ -116,7 +123,8 @@ export async function searchJobs(user, query) {
     if (query.level.length && !query.level.includes(job.level)) return false
     if (query.placeId && job.location?.placeId !== query.placeId) return false
     if (query.eligible && view === 'REMOTE' && job.remoteCountries.length && !job.remoteCountries.includes(query.eligible)) return false
-    if (query.salaryMin != null && !(annualTop(job.salary) >= query.salaryMin)) return false
+    // Worldwide mixes currencies, so its list has no minimum salary (owner 2026-11-16).
+    if (query.salaryMin != null && view !== 'WORLDWIDE' && !(annualTop(job.salary) >= query.salaryMin)) return false
     return !query.q || matchesKeywords(query.q, haystack(job, context.company(job), user.language))
   })
   const sorters = {

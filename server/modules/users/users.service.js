@@ -34,6 +34,8 @@ export async function meDto(user) {
     language: user.language,
     languageExplicit: user.languageExplicit,
     pickerCountry: user.pickerCountry ?? null,
+    // Owner 2026-11-16: candidates browse jobs worldwide until they pick Remote or a country.
+    ...(user.role === 'candidate' && { jobsWorldwide: user.jobsWorldwide !== false }),
     timezone: user.timezone ?? null,
     emailVerified: Boolean(user.emailVerifiedAt),
     legal: {
@@ -117,6 +119,10 @@ export async function updateMe(user, patch) {
     const country = await findEnabledCountry(patch.pickerCountry, 'pickerCountry')
     user.pickerCountry = country.code
     if (!user.languageExplicit && patch.language === undefined) user.language = country.defaultLanguage
+  }
+  if (patch.jobsWorldwide !== undefined) {
+    if (user.role !== 'candidate') throw fieldError({ jobsWorldwide: 'not_allowed' })
+    user.jobsWorldwide = patch.jobsWorldwide
   }
   await user.save()
   if (nameChanged && user.role === 'candidate') await fullNameChanged(user._id)

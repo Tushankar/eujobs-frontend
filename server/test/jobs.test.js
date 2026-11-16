@@ -161,17 +161,23 @@ describe('candidate job browsing (M-043, M-044, M-052, M-053, OD2, U8, U25, P4-Q
     const remote = await published(acme.user, { workPreference: 'remote', placeId: null, remoteCountries: ['PL'] })
     await published(acme.user, { placeId: PLACES.berlin.placeId, title: 'Berlin role' })
 
-    const candidate = await createUser({ pickerCountry: 'GB' })
+    const candidate = await createUser({ pickerCountry: 'GB', jobsWorldwide: false })
     const gb = (await findJobs(candidate)).body
     assert.deepEqual(gb.items.map((job) => job.id), [visible.id])
     assert.deepEqual(gb.view, { country: 'GB', currency: 'GBP' })
     assert.deepEqual(gb.items[0].company.displayName, `${acme.user.fullName} Studio`)
 
-    const remoteViewer = await createUser({ pickerCountry: 'REMOTE' })
+    const remoteViewer = await createUser({ pickerCountry: 'REMOTE', jobsWorldwide: false })
     const remoteView = (await findJobs(remoteViewer)).body
     assert.deepEqual([remoteView.items.map((job) => job.id), remoteView.view.currency], [[remote.id], 'EUR'])
     assert.deepEqual((await findJobs(remoteViewer, '?eligible=PL')).body.items.map((job) => job.id), [remote.id])
     assert.deepEqual((await findJobs(remoteViewer, '?eligible=DE')).body.items, [])
+
+    // Owner 2026-11-16: a candidate who has not picked Remote or a country browses every visible job.
+    const worldwide = (await findJobs(await createUser({ pickerCountry: 'GB' }))).body
+    assert.equal(worldwide.items.length, 3)
+    assert.deepEqual(new Set(worldwide.items.map((job) => job.id)).has(remote.id) && new Set(worldwide.items.map((job) => job.id)).has(visible.id), true)
+    assert.deepEqual(worldwide.view, { country: 'WORLDWIDE', currency: null })
   })
 
   it('filters by keywords, level, work mode, city and annual salary, and sorts (§3.6, U25, P4-Q4)', async () => {
@@ -179,8 +185,10 @@ describe('candidate job browsing (M-043, M-044, M-052, M-053, OD2, U8, U25, P4-Q
     const monthly = await published(user, { title: 'Brand Designer', level: 'mid', salary: { min: 5000, max: 6000, period: 'month' } })
     const yearly = await published(user, { title: 'Design Lead', level: 'lead', workPreference: 'on_site', salary: { min: 65000, max: 70000, period: 'year' } })
     const unpaid = await published(user, { title: 'Junior Designer', level: 'junior', salary: null, placeId: PLACES.manchester.placeId })
-    const candidate = await createUser({ pickerCountry: 'GB', language: 'es' })
+    const candidate = await createUser({ pickerCountry: 'GB', language: 'es', jobsWorldwide: false })
     const ids = async (query) => (await findJobs(candidate, query)).body.items.map((job) => job.id)
+    // Worldwide mixes currencies, so it ignores the minimum salary (owner 2026-11-16).
+    assert.equal((await findJobs(await createUser({ pickerCountry: 'GB' }), '?salaryMin=71000')).body.items.length, 3)
 
     // 6,000 a month = 72,000 a year.
     assert.deepEqual(await ids('?salaryMin=71000'), [monthly.id])
