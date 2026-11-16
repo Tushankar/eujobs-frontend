@@ -528,6 +528,21 @@ section.panel {
     display: none;
   }
 
+  /* Only the list shows until a job is tapped, so the first job (open beside the list on wide screens) is not marked. */
+  .layout:not(.layoutOpen) .rowActive {
+    border-color: light-dark(#eef0f3, var(--border));
+    background: light-dark(#fff, var(--card));
+    box-shadow: none;
+  }
+
+  .layout:not(.layoutOpen) .rowActive::before {
+    transform: scaleY(0);
+  }
+
+  .layout:not(.layoutOpen) .rowActive .rowTitle {
+    color: light-dark(#161719, var(--foreground));
+  }
+
   .back {
     display: inline-flex;
   }
@@ -542,6 +557,17 @@ section.panel {
 
   .rowAgo {
     grid-column: 2;
+  }
+}
+
+/* Phones: the open job is the panel's content, not a card inside it (no second frame or side padding). */
+@media (max-width: 599px) {
+  .detail {
+    padding: 0;
+    border: 0;
+    border-radius: 0;
+    background: none;
+    box-shadow: none;
   }
 }
 

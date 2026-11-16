@@ -1680,8 +1680,9 @@
 }
 
 @media (max-width: 599px) {
+  /* Phones (owner 2026-11-16): a slight 8 px gap around the rounded panels, 16 px inside them. */
   .page {
-    padding: 16px 12px 32px;
+    padding: 16px 8px 32px;
   }
 
   .hero {
@@ -2135,5 +2136,21 @@
 @media (max-width: 399px) {
   .brandLink {
     zoom: 0.72;
+  }
+}
+
+/* Phones (owner 2026-11-16): every panel keeps 16 px inside on the left and right. Last in the file so it wins. */
+@media (max-width: 599px) {
+  .heroBody,
+  .trusted,
+  .section,
+  .steps,
+  .careerPanel,
+  .ctaBody,
+  .footer,
+  .blogCard,
+  .priceCard {
+    padding-right: 16px;
+    padding-left: 16px;
   }
 }

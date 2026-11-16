@@ -90,6 +90,13 @@
   }
 }
 
+/* Phones (owner 2026-11-16): 16 px side space everywhere; cards inside the page use 16 px too. */
+@media (max-width: 599px) {
+  :root {
+    --content-padding: 16px;
+  }
+}
+
 :root {
   color-scheme: light;
 }

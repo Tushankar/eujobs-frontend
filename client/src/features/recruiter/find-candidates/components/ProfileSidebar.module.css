@@ -89,3 +89,12 @@
   border: 1px solid var(--border);
   border-radius: var(--radius-xl);
 }
+
+/* Phones (owner 2026-11-16): 16 px side padding, so nested boxes do not stack wide gaps. */
+@media (max-width: 599px) {
+  .applications,
+  .evidence {
+    padding-right: 16px;
+    padding-left: 16px;
+  }
+}

@@ -28,6 +28,16 @@
   min-width: 0;
 }
 
+/* The remove button stays beside its outcome, level with the first line, however many lines the outcome takes. */
+.outcomeRow {
+  flex-wrap: nowrap;
+  align-items: flex-start;
+}
+
+.outcomeRow > button {
+  margin-top: 4px;
+}
+
 /* An outcome is one line that grows to fit its text (field-sizing); browsers without it show two lines. */
 .outcome textarea {
   min-height: 0;
@@ -523,5 +533,14 @@
 
   .lessonPanel {
     flex-wrap: wrap;
+  }
+}
+
+/* Phones (owner 2026-11-16): 16 px side padding, so nested boxes do not stack wide gaps. */
+@media (max-width: 599px) {
+  .section,
+  .previewBody {
+    padding-right: 16px;
+    padding-left: 16px;
   }
 }

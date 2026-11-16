@@ -251,3 +251,11 @@
   gap: 4px 12px;
   min-height: 19px;
 }
+
+/* Phones (owner 2026-11-16): 16 px side padding, so nested boxes do not stack wide gaps. */
+@media (max-width: 599px) {
+  .feedback {
+    padding-right: 16px;
+    padding-left: 16px;
+  }
+}

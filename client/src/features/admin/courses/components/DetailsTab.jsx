@@ -233,7 +233,7 @@ export default function DetailsTab({ course, checklist }) {
           <div className={styles.stack}>
             <h4 className={styles.label}>{t('details.outcomes')}</h4>
             {values.outcomes.map((outcome, index) => (
-              <div key={index} className={styles.row}>
+              <div key={index} className={cx(styles.row, styles.outcomeRow)}>
                 {/* Wraps a long outcome over more lines instead of cutting it off; one line each, so Enter does nothing. */}
                 <TextareaField
                   className={cx(styles.grow, styles.outcome)}

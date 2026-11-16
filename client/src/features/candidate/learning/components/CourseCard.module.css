@@ -128,3 +128,11 @@
   min-width: max-content;
   max-width: 100%;
 }
+
+/* Phones (owner 2026-11-16): 16 px side padding, so nested boxes do not stack wide gaps. */
+@media (max-width: 599px) {
+  .card {
+    padding-right: 16px;
+    padding-left: 16px;
+  }
+}

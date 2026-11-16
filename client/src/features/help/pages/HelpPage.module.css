@@ -67,3 +67,11 @@
     line-height: 36px;
   }
 }
+
+/* Phones (owner 2026-11-16): 16 px side padding, so nested boxes do not stack wide gaps. */
+@media (max-width: 599px) {
+  .faqs {
+    padding-right: 16px;
+    padding-left: 16px;
+  }
+}
