@@ -235,7 +235,7 @@ export default function JobSearchForm({ q = '', location = '', onSearch, classNa
   })
 
   const rect = useAnchorRect(jobsOpen ? form : placeField, open)
-  const width = rect && (jobsOpen ? rect.width : Math.max(rect.width, 300))
+  const width = rect && (jobsOpen ? rect.width : Math.max(rect.width, 340))
   const option = (index, onPick) => ({
     id: `${listId}-${index}`,
     role: 'option',
