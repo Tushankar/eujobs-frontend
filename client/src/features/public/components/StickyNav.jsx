@@ -7,7 +7,6 @@ import { useTranslation } from 'react-i18next'
 import { Link, useLocation } from 'react-router-dom'
 import { BRAND } from '@/app/brand.js'
 import BrandLogo from '@/components/layout/BrandLogo.jsx'
-import ThemeToggle from '@/components/layout/ThemeToggle.jsx'
 import { ArrowPill } from './landing/LandingHero.jsx'
 import { NAV, navItemOf } from './landing/siteNav.js'
 import styles from './StickyNav.module.css'
@@ -112,7 +111,6 @@ export default function StickyNav() {
         ))}
       </div>
       <span className={styles.login}>
-        <ThemeToggle className={styles.theme} />
         <ArrowPill to="/sign-in">{t('landing:nav.signIn')}</ArrowPill>
       </span>
     </div>

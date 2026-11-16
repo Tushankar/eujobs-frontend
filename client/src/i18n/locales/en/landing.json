@@ -34,11 +34,10 @@
     "text": "Discover thousands of opportunities tailored to your skills. Apply with ease, track your progress, and take the next step in your career — all in one place.",
     "start": "Let’s Get Started",
     "join": "Create an account",
-    "eyebrowTag": "New",
-    "eyebrow": "AI-matched jobs across the EU and the UK",
-    "latest": "Latest roles:",
-    "liveNote": "From trusted employers across the EU and the UK",
-    "imageAlt": "A professional smiling on a phone call outside a modern glass building"
+    "talentTitle": "“Find Agile Remote Talent in Minutes”",
+    "talentText": "Connect with skilled, flexible professionals who are ready to jump in.",
+    "remoteTitle": "“Remote Talent. Ready When You Are.”",
+    "remoteText": "Access a curated pool of adaptable professionals from around the globe."
   },
   "trusted": {
     "title": "Trusted by leading companies"
@@ -54,8 +53,7 @@
     "on_site": "Join the team in person at their workplace.",
     "full_time": "Permanent roles with a full working week.",
     "part_time": "Flexible hours that fit around the rest of your life.",
-    "contract": "Fixed-term projects for specialists and freelancers.",
-    "eyebrow": "Categories"
+    "contract": "Fixed-term projects for specialists and freelancers."
   },
   "steps": {
     "titleLead": "Easy Step to Get Your",
@@ -69,10 +67,7 @@
     "resumeTitle": "Upload Resume",
     "resumeText": "Upload the latest resume to let recruiters know about work experience.",
     "applyTitle": "Apply For Job",
-    "applyText": "Fill necessary details according to the job requirement and apply.",
-    "eyebrow": "How it works",
-    "cvTitle": "CV read by AI",
-    "cvText": "Your skills and experience fill in your profile"
+    "applyText": "Fill necessary details according to the job requirement and apply."
   },
   "vacancies": {
     "titleLead": "Explore All Latest",
@@ -82,28 +77,17 @@
     "years_one": "{{count}} year",
     "years_other": "{{count}} years",
     "empty": "No open jobs right now. New roles appear here as soon as companies publish them.",
-    "all": "See all jobs",
-    "eyebrow": "Latest jobs",
-    "filter": "Work type",
-    "allTypes": "All"
+    "all": "See all jobs"
   },
   "career": {
     "title": "Launch Your Career With Opportunities Made for You",
     "text": "Search roles across industries with real-time listings, personalized job alerts, and companies that you can trust.",
-    "liveTitle": "Real-time listings",
-    "liveText": "New roles appear the moment companies publish them.",
-    "alertsTitle": "Personalized job alerts",
-    "alertsText": "Save a search and hear about matching jobs first.",
-    "trustTitle": "Companies you can trust",
-    "trustText": "Verified employers carry a check next to their name."
+    "imageAlt": "A professional woman working at a computer"
   },
   "faq": {
     "titleLead": "Need Help? Start With These",
     "titleAccent": "Answers",
-    "text": "We’re here to help you every step of the way.",
-    "eyebrow": "FAQ",
-    "contactTitle": "Still have questions?",
-    "contactText": "Our team is happy to help."
+    "text": "We’re here to help you every step of the way."
   },
   "cta": {
     "title": "Where Your Career Goals Meet Real Opportunity",
@@ -131,11 +115,12 @@
     "backToTop": "Back to top",
     "blog": "Blog",
     "pricing": "Pricing Plan",
+    "email": "Email Address",
+    "phone": "Phone Number",
     "social": "Social media",
     "facebook": "Facebook",
     "linkedin": "LinkedIn",
-    "instagram": "Instagram",
-    "contact": "Contact"
+    "instagram": "Instagram"
   },
   "loadError": "We could not load the latest jobs. Please refresh the page.",
   "reviews": {
@@ -145,16 +130,14 @@
     "previous": "Previous reviews",
     "next": "Next reviews",
     "page": "{{page}} / {{pages}}",
-    "rating": "Rated {{value}} out of 5",
-    "eyebrow": "Reviews"
+    "rating": "Rated {{value}} out of 5"
   },
   "blog": {
     "titleLead": "Latest",
     "titleAccent": "Blogs",
     "text": "Explore insights, HR trends, and industry updates to help you navigate your job search.",
     "read": "Keep reading",
-    "team": "EU Jobs team",
-    "all": "All posts"
+    "team": "EU Jobs team"
   },
   "newsletter": {
     "titleLead": "Join Our Newsletter to",
@@ -163,11 +146,9 @@
     "email": "Email Address",
     "subscribe": "Subscribe",
     "note": "We send a confirmation link first. Unsubscribe at any time.",
-    "sent": "Almost done! Check your inbox and click the link to confirm your subscription.",
-    "label": "Newsletter"
+    "sent": "Almost done! Check your inbox and click the link to confirm your subscription."
   },
   "pricing": {
-    "details": "See full plan details",
-    "eyebrow": "Pricing"
+    "details": "See full plan details"
   }
 }

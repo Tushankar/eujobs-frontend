@@ -6,27 +6,32 @@ import { Check } from 'lucide-react'
 import { useLayoutEffect, useRef, useState } from 'react'
 import { useTranslation } from 'react-i18next'
 import { Link } from 'react-router-dom'
+import glowBlue from '@/assets/landing/jobs-glow-blue.svg'
+import glowGreen from '@/assets/landing/jobs-glow-green.svg'
+import contours from '@/assets/landing/pattern-contours.svg?raw'
 import { Icon, Skeleton, SkeletonRegion } from '@/components/ui'
 import { bestSaving } from '@/features/payments/bestSaving.js'
 import IntervalSwitch from '@/features/payments/components/IntervalSwitch.jsx'
 import PlanPrice from '@/features/payments/components/PlanPrice.jsx'
 import { cx } from '@/utils/cx.js'
 import { useGetPublicPlansQuery } from '../../api.js'
+import InlineSvg from './InlineSvg.jsx'
 import styles from './Landing.module.css'
-import { SectionHead } from './LandingSections.jsx'
+import { ArrowPill } from './LandingHero.jsx'
 
 gsap.registerPlugin(useGSAP, ScrollTrigger, DrawSVGPlugin)
 
 const ROLES = ['candidate', 'recruiter']
 const SIGN_UP = { candidate: '/sign-up', recruiter: '/recruiter/sign-up' }
+const TRUST = ['vat', 'stripe', 'cancel']
 const REDUCE = '(prefers-reduced-motion: reduce)'
 const ease = 'power3.out'
 
 /**
  * Pricing on the landing page (owner 2026-11-13): the real plans of GET /plans (the same as /pricing) for job seekers
- * or recruiters, monthly or yearly: centred title and controls, then the plan cards, the paid one in gold.
- * Motion: the cards rise in once on scroll while their prices settle and the ticks draw themselves; switching role or
- * period re-animates only what changed. Reduce motion: fades only.
+ * or recruiters, monthly or yearly, in a compact split: intro and controls on the left, the plan cards on the right.
+ * Motion: the cards rise in once on scroll while their prices settle and the ticks draw themselves; the recommended
+ * card catches a slow light sweep; switching role or period re-animates only what changed. Reduce motion: fades only.
  */
 export default function LandingPricing() {
   const { t, i18n } = useTranslation()
@@ -54,6 +59,10 @@ export default function LandingPricing() {
         .from(q('[data-plan-feature]'), { x: -10 * move, opacity: 0, duration: 0.5, stagger: 0.035 }, 0.4)
       if (move) {
         timeline.fromTo(q('[data-plan-feature] svg path'), { drawSVG: '0%' }, { drawSVG: '100%', duration: 0.45, stagger: 0.035, ease: 'power2.inOut' }, 0.5)
+        const sheen = q('[data-sheen]')
+        gsap.set(sheen, { xPercent: -140, skewX: -14 })
+        const sweep = gsap.to(sheen, { xPercent: 340, duration: 1.6, ease: 'power2.inOut', repeat: -1, repeatDelay: 5, paused: true })
+        timeline.add(() => sweep.play(), '-=0.2')
       }
       if (seen.current) timeline.play()
       else {
@@ -103,63 +112,72 @@ export default function LandingPricing() {
   if (isError) return null
 
   return (
-    <section ref={scope} id="pricing" className={`${styles.band} ${styles.anchor}`} aria-labelledby="pricing-title">
-      <div className={`${styles.container} ${styles.section} ${styles.pricing}`}>
-        <SectionHead id="pricing-title" center eyebrow={t('landing:pricing.eyebrow')} lead={t('website:pricing.titleLead')} accent={t('website:pricing.titleAccent')} text={t('website:pricing.text')} />
-        <div className={styles.pricingControls} data-reveal>
-          <div ref={tabs} className={styles.segments} role="tablist" aria-label={t('website:pricing.for')}>
-            <span ref={marker} className={styles.segmentMarker} aria-hidden="true" />
-            {ROLES.map((entry) => (
-              <button key={entry} type="button" role="tab" aria-selected={entry === role} className={styles.segment} onClick={() => setRole(entry)}>
-                {t(`website:pricing.${entry}`)}
-              </button>
-            ))}
-          </div>
-          {saving > 0 && <IntervalSwitch value={interval} onChange={setInterval} saving={saving} className={styles.interval} />}
-        </div>
+    <section ref={scope} id="pricing" className={`${styles.card} ${styles.pricing} ${styles.anchor}`} aria-labelledby="pricing-title">
+      <InlineSvg svg={contours} className={styles.pricingContours} motion="pattern" />
+      <img src={glowGreen} alt="" className={styles.glow} style={{ left: 120, top: 260, width: 1113 }} aria-hidden="true" data-glow />
+      <img src={glowBlue} alt="" className={styles.glow} style={{ left: 360, top: 240, width: 1049 }} aria-hidden="true" data-glow />
 
-        {plans ? (
-          <div className={styles.priceCards} role="tabpanel">
-            {plans.map((plan) => {
-              const paid = plan.price?.amountMinor > 0
-              return (
-                <article key={plan.key} className={cx(styles.priceCard, paid && styles.priceCardFeatured)} data-plan-card data-plan={plan.key}>
-                  <div className={styles.priceHead}>
-                    <h3 className={styles.priceName}>{plan.name}</h3>
-                    {paid && <span className={styles.priceBadge}>{t('website:pricing.recommended')}</span>}
-                  </div>
-                  <PlanPrice plan={plan} interval={interval} className={styles.priceAmount} />
-                  <Link to={SIGN_UP[role]} className={cx(styles.priceCta, paid && styles.priceCtaGold)}>
-                    {t(paid ? 'website:pricing.startPaid' : 'website:pricing.startFree')}
-                  </Link>
-                  <ul className={styles.priceFeatures}>
-                    {paid && free && (
-                      <li className={styles.priceEverything} data-plan-feature>
-                        <Icon as={Check} size={16} strokeWidth={2.4} />
-                        {t('website:pricing.everything', { plan: free.name })}
-                      </li>
-                    )}
-                    {plan.features.map((feature) => (
-                      <li key={feature} data-plan-feature>
-                        <Icon as={Check} size={16} strokeWidth={2.4} />
-                        {feature}
-                      </li>
-                    ))}
-                  </ul>
-                </article>
-              )
-            })}
-          </div>
-        ) : (
-          <SkeletonRegion className={styles.priceCards}>
-            <Skeleton height={460} />
-            <Skeleton height={460} />
-          </SkeletonRegion>
-        )}
-        <Link to={role === 'recruiter' ? '/pricing?for=recruiter' : '/pricing'} className={styles.pricingDetails}>
-          {t('landing:pricing.details')}
-        </Link>
+      <div className={styles.pricingIntro} data-reveal>
+        <h2 id="pricing-title" className={styles.sectionTitle}>
+          {t('website:pricing.titleLead')} <span className={styles.accent}>{t('website:pricing.titleAccent')}</span>
+        </h2>
+        <p className={styles.sectionText}>{t('website:pricing.text')}</p>
+        <div ref={tabs} className={styles.pricingTabs} role="tablist" aria-label={t('website:pricing.for')}>
+          <span ref={marker} className={styles.pricingMarker} aria-hidden="true" />
+          {ROLES.map((entry) => (
+            <button key={entry} type="button" role="tab" aria-selected={entry === role} className={styles.pricingTab} onClick={() => setRole(entry)}>
+              {t(`website:pricing.${entry}`)}
+            </button>
+          ))}
+        </div>
+        <div className={styles.pricingSwitch}>{saving > 0 && <IntervalSwitch value={interval} onChange={setInterval} saving={saving} />}</div>
+        <ul className={styles.pricingTrust}>
+          {TRUST.map((key) => (
+            <li key={key}>
+              <Icon as={Check} size={14} strokeWidth={2.4} />
+              {t(`website:pricing.trust.${key}`)}
+            </li>
+          ))}
+        </ul>
+        <div className={styles.pricingDetails}>
+          <ArrowPill to={role === 'recruiter' ? '/pricing?for=recruiter' : '/pricing'}>{t('landing:pricing.details')}</ArrowPill>
+        </div>
       </div>
+
+      {plans ? (
+        <div className={styles.priceCards} role="tabpanel">
+          {plans.map((plan) => {
+            const paid = plan.price?.amountMinor > 0
+            return (
+              <article key={plan.key} className={cx(styles.priceCard, paid && styles.priceCardFeatured)} data-plan-card data-plan={plan.key}>
+                {paid && <span className={styles.priceSheen} aria-hidden="true" data-sheen />}
+                <div className={styles.priceHead}>
+                  <h3 className={styles.priceName}>{plan.name}</h3>
+                  {paid && <span className={styles.priceBadge}>{t('website:pricing.recommended')}</span>}
+                </div>
+                <PlanPrice plan={plan} interval={interval} className={styles.priceAmount} />
+                {paid && free && <p className={styles.priceEverything}>{t('website:pricing.everything', { plan: free.name })}</p>}
+                <ul className={styles.priceFeatures}>
+                  {plan.features.map((feature) => (
+                    <li key={feature} data-plan-feature>
+                      <Icon as={Check} size={15} strokeWidth={2.4} />
+                      {feature}
+                    </li>
+                  ))}
+                </ul>
+                <Link to={SIGN_UP[role]} className={cx(styles.priceCta, paid && styles.priceCtaPrimary)}>
+                  {t(paid ? 'website:pricing.startPaid' : 'website:pricing.startFree')}
+                </Link>
+              </article>
+            )
+          })}
+        </div>
+      ) : (
+        <SkeletonRegion className={styles.priceCards}>
+          <Skeleton height={500} />
+          <Skeleton height={500} />
+        </SkeletonRegion>
+      )}
     </section>
   )
 }

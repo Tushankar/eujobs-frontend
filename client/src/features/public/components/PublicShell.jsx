@@ -15,12 +15,14 @@ export default function PublicShell({ children }) {
   return (
     <div className={landing.page}>
       <StickyNav />
-      <SiteHeader className={styles.header} />
       <div className={landing.column}>
+        <div className={`${landing.card} ${styles.header}`}>
+          <SiteHeader />
+        </div>
         <main className={styles.main}>{children}</main>
-      </div>
-      <div className={styles.footer}>
-        <Footer total={data?.total} contact={data?.contact} />
+        <div className={styles.footer}>
+          <Footer total={data?.total} contact={data?.contact} />
+        </div>
       </div>
     </div>
   )

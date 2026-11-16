@@ -9,9 +9,9 @@ gsap.registerPlugin(useGSAP, ScrollTrigger, ScrollToPlugin)
 /*
  * Landing page motion (owner 2026-11-11: GSAP, premium and restrained). Targets are marked in the markup:
  *   data-hero-header, data-hero-line (inside an overflow-hidden line), data-hero-fade, data-hero-art (its children
- *   are the photo and its cards), data-parallax="<px>" (drifts while its section scrolls away), data-reveal (children
- *   rise in once on scroll), data-stagger (children rise in as a batch), data-wipe (image unveils), data-zoom (photo
- *   settles from a slight zoom).
+ *   are the photo cards), data-parallax="<px>" (drifts while the hero scrolls away), data-twinkle, data-float,
+ *   data-marquee (a track holding its items twice), data-reveal (children rise in once on scroll), data-stagger
+ *   (children rise in as a batch), data-wipe (image unveils), data-zoom (photo settles from a slight zoom).
  * With "reduce motion" on (phones often switch it on in battery saver) elements still fade in, but nothing moves,
  * drifts, zooms or loops: the accessible version of the same page.
  */
@@ -24,7 +24,7 @@ export function scrollToSection(target) {
   gsap.to(window, { duration: reduce ? 0 : 1, scrollTo: { y: target, offsetY: 84 }, ease: 'power3.inOut' })
 }
 
-/** Hero entrance, parallax and smooth in-page links: set up once. */
+/** Hero entrance, parallax, ambient loops, the logo marquee and smooth in-page links: set up once. */
 function useHeroMotion(scope) {
   useGSAP(
     () => {
@@ -40,14 +40,21 @@ function useHeroMotion(scope) {
           .from(q('[data-hero-art] > *'), { y: 40 * move, opacity: 0, scale: move ? 0.96 : 1, stagger: 0.06, duration: 0.8 }, 0.35)
         if (!move) return
 
-        // The hero's drift starts at the top of the page; a later section's while it crosses the screen.
         q('[data-parallax]').forEach((element) => {
-          const section = element.closest('section')
           gsap.to(element, {
             y: Number(element.dataset.parallax),
             ease: 'none',
-            scrollTrigger: { trigger: section, start: section.id === 'home' ? 'top top' : 'top bottom', end: 'bottom top', scrub: 0.6 },
+            scrollTrigger: { trigger: element.closest('section'), start: 'top top', end: 'bottom top', scrub: 0.6 },
           })
+        })
+        q('[data-twinkle]').forEach((element, index) => gsap.to(element, { opacity: 0.15, duration: 1.4, repeat: -1, yoyo: true, ease: 'sine.inOut', delay: 1.6 + index * 0.3 }))
+        q('[data-float]').forEach((element, index) =>
+          gsap.to(element, { y: index % 2 ? 10 : -10, rotation: index % 2 ? -6 : 6, duration: 5 + index, repeat: -1, yoyo: true, ease: 'sine.inOut' }),
+        )
+        q('[data-marquee]').forEach((track) => {
+          const loop = gsap.to(track, { xPercent: -50, duration: 32, ease: 'none', repeat: -1 })
+          track.addEventListener('mouseenter', () => loop.timeScale(0.15))
+          track.addEventListener('mouseleave', () => loop.timeScale(1))
         })
       })
 
@@ -93,7 +100,7 @@ function useScrollReveals(scope, ready) {
         q('[data-wipe]').forEach((element) => {
           const trigger = { trigger: element, start: 'top 85%', once: true }
           if (move) {
-            gsap.fromTo(element, { clipPath: 'inset(0% 0% 100% 0% round 28px)' }, { clipPath: 'inset(0% 0% 0% 0% round 28px)', duration: 1.2, ease: 'power4.out', scrollTrigger: trigger })
+            gsap.fromTo(element, { clipPath: 'inset(0% 0% 100% 0% round 14px)' }, { clipPath: 'inset(0% 0% 0% 0% round 14px)', duration: 1.2, ease: 'power4.out', scrollTrigger: trigger })
           } else {
             gsap.from(element, { opacity: 0, duration: 0.8, scrollTrigger: trigger })
           }
@@ -103,7 +110,7 @@ function useScrollReveals(scope, ready) {
           q('[data-zoom]').forEach((element) => {
             gsap.from(element, { scale: 1.12, duration: 1.6, ease: 'power2.out', scrollTrigger: { trigger: element, start: 'top 90%', once: true } })
           })
-          // 2026-11-13: the line icons draw themselves in (svgMotion.js).
+          // 2026-11-13: the decorative SVGs draw in, pulse and drift (svgMotion.js).
           removePulses = animateSvgs(scope)
         }
         ScrollTrigger.refresh()

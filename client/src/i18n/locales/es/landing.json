@@ -36,11 +36,10 @@
     "text": "Descubre miles de oportunidades adaptadas a tus habilidades. Postúlate con facilidad, sigue tu progreso y da el siguiente paso en tu carrera, todo en un solo lugar.",
     "start": "Empecemos",
     "join": "Crear una cuenta",
-    "eyebrowTag": "Nuevo",
-    "eyebrow": "Empleos emparejados por IA en la UE y el Reino Unido",
-    "latest": "Últimos puestos:",
-    "liveNote": "De empleadores de confianza en la UE y el Reino Unido",
-    "imageAlt": "Un profesional sonriente hablando por teléfono frente a un edificio de cristal moderno"
+    "talentTitle": "«Encuentra talento remoto ágil en minutos»",
+    "talentText": "Conecta con profesionales cualificados y flexibles listos para incorporarse.",
+    "remoteTitle": "«Talento remoto, listo cuando tú lo estés»",
+    "remoteText": "Accede a una selección de profesionales versátiles de todo el mundo."
   },
   "trusted": {
     "title": "Empresas líderes confían en nosotros"
@@ -57,8 +56,7 @@
     "on_site": "Únete al equipo en persona en su lugar de trabajo.",
     "full_time": "Puestos estables con jornada completa.",
     "part_time": "Horarios flexibles que encajan con el resto de tu vida.",
-    "contract": "Proyectos de duración determinada para especialistas y freelancers.",
-    "eyebrow": "Categorías"
+    "contract": "Proyectos de duración determinada para especialistas y freelancers."
   },
   "steps": {
     "titleLead": "Pasos sencillos para conseguir el",
@@ -72,10 +70,7 @@
     "resumeTitle": "Sube tu currículum",
     "resumeText": "Sube tu currículum más reciente para que los reclutadores conozcan tu experiencia.",
     "applyTitle": "Postúlate",
-    "applyText": "Completa los datos que pide cada oferta y envía tu candidatura.",
-    "eyebrow": "Cómo funciona",
-    "cvTitle": "CV leído por IA",
-    "cvText": "Tus habilidades y tu experiencia completan tu perfil"
+    "applyText": "Completa los datos que pide cada oferta y envía tu candidatura."
   },
   "vacancies": {
     "titleLead": "Explora las últimas",
@@ -86,28 +81,17 @@
     "years_many": "{{count}} años",
     "years_other": "{{count}} años",
     "empty": "Ahora mismo no hay empleos abiertos. Los nuevos puestos aparecen aquí en cuanto las empresas los publican.",
-    "all": "Ver todos los empleos",
-    "eyebrow": "Últimas ofertas",
-    "filter": "Modalidad de trabajo",
-    "allTypes": "Todas"
+    "all": "Ver todos los empleos"
   },
   "career": {
     "title": "Impulsa tu carrera con oportunidades hechas para ti",
     "text": "Busca puestos de todos los sectores con ofertas en tiempo real, alertas de empleo personalizadas y empresas de confianza.",
-    "liveTitle": "Ofertas en tiempo real",
-    "liveText": "Los nuevos puestos aparecen en cuanto las empresas los publican.",
-    "alertsTitle": "Alertas de empleo personalizadas",
-    "alertsText": "Guarda una búsqueda y entérate primero de las ofertas que encajan.",
-    "trustTitle": "Empresas de confianza",
-    "trustText": "Los empleadores verificados llevan una marca junto a su nombre."
+    "imageAlt": "Una profesional trabajando en un ordenador"
   },
   "faq": {
     "titleLead": "¿Necesitas ayuda? Empieza por estas",
     "titleAccent": "respuestas",
-    "text": "Estamos aquí para ayudarte en cada paso.",
-    "eyebrow": "Preguntas frecuentes",
-    "contactTitle": "¿Aún tienes preguntas?",
-    "contactText": "Nuestro equipo te ayuda con gusto."
+    "text": "Estamos aquí para ayudarte en cada paso."
   },
   "cta": {
     "title": "Donde tus metas profesionales encuentran oportunidades reales",
@@ -136,11 +120,12 @@
     "backToTop": "Volver arriba",
     "blog": "Blog",
     "pricing": "Planes y precios",
+    "email": "Correo electrónico",
+    "phone": "Teléfono",
     "social": "Redes sociales",
     "facebook": "Facebook",
     "linkedin": "LinkedIn",
-    "instagram": "Instagram",
-    "contact": "Contacto"
+    "instagram": "Instagram"
   },
   "loadError": "No hemos podido cargar los últimos empleos. Actualiza la página.",
   "reviews": {
@@ -150,16 +135,14 @@
     "previous": "Reseñas anteriores",
     "next": "Reseñas siguientes",
     "page": "{{page}} / {{pages}}",
-    "rating": "Valoración: {{value}} de 5",
-    "eyebrow": "Opiniones"
+    "rating": "Valoración: {{value}} de 5"
   },
   "blog": {
     "titleLead": "Últimos",
     "titleAccent": "artículos",
     "text": "Descubre ideas, tendencias de RR. HH. y novedades del sector para orientar tu búsqueda de empleo.",
     "read": "Seguir leyendo",
-    "team": "Equipo de EU Jobs",
-    "all": "Todas las entradas"
+    "team": "Equipo de EU Jobs"
   },
   "newsletter": {
     "titleLead": "Suscríbete a nuestro boletín",
@@ -168,11 +151,9 @@
     "email": "Correo electrónico",
     "subscribe": "Suscribirme",
     "note": "Primero te enviamos un enlace de confirmación. Puedes darte de baja cuando quieras.",
-    "sent": "¡Casi listo! Revisa tu bandeja de entrada y haz clic en el enlace para confirmar tu suscripción.",
-    "label": "Boletín"
+    "sent": "¡Casi listo! Revisa tu bandeja de entrada y haz clic en el enlace para confirmar tu suscripción."
   },
   "pricing": {
-    "details": "Ver todos los detalles de los planes",
-    "eyebrow": "Precios"
+    "details": "Ver todos los detalles de los planes"
   }
 }

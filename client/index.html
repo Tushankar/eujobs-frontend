@@ -13,10 +13,10 @@
       } catch {}
     </script>
     <script>
-      // Signed-out visitors on the landing page: fetch the hero photo (the LCP) in parallel with the app's JS.
+      // Signed-out visitors on the landing page: fetch the hero photos (the LCP) in parallel with the app's JS.
       try {
         if (location.pathname === '/' && !localStorage.getItem('lwm-auth-token')) {
-          for (const href of ['/landing/hero-career.webp']) {
+          for (const href of ['/landing/hero-man.webp', '/landing/hero-woman.webp']) {
             const link = Object.assign(document.createElement('link'), { rel: 'preload', as: 'image', href, fetchPriority: 'high' })
             document.head.append(link)
           }
