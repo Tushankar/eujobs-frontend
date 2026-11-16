@@ -151,6 +151,11 @@
     color var(--transition);
 }
 
+/* The icon keeps its 16px when the title wraps onto two lines on a phone (it was squeezed to about 8px). */
+.docs a svg {
+  flex-shrink: 0;
+}
+
 .docs a:hover {
   background: var(--muted);
   color: light-dark(#0f1115, var(--foreground));

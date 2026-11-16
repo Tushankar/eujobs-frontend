@@ -45,7 +45,8 @@
   max-width: 718px;
   padding-bottom: 20px;
   font-size: 12px;
-  line-height: 28px;
+  /* Normal paragraph spacing for 12px text (28px read as double-spaced). */
+  line-height: 20px;
   color: var(--muted-foreground);
 }
 

@@ -1649,10 +1649,13 @@
     padding: 40px 24px;
   }
 
+  /* Below 900px the line patterns would run through the text (worst in dark mode), so they go. */
   .ctaGlass,
   .circuit,
   .reviewsCircuit,
-  .contours {
+  .contours,
+  .blogPattern,
+  .pricingContours {
     display: none;
   }
 
