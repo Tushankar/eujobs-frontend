@@ -2,12 +2,13 @@ import { api, writesMe } from '@/app/api.js'
 
 /*
  * Legal texts (M-191, OD12) and their acceptance (U22); the public landing page's live data; the public blog, pricing
- * and newsletter double opt-in (2026-11-13).
+ * and newsletter double opt-in (2026-11-13); the public job list (2026-11-16).
  */
 export const publicApi = api.injectEndpoints({
   endpoints: (build) => ({
     getLegal: build.query({ query: ({ doc, language }) => `/legal/${doc}?language=${language}`, providesTags: ['Legal'] }),
     getLanding: build.query({ query: (language) => `/landing?language=${language}` }),
+    getPublicJobs: build.query({ query: (params) => ({ url: '/landing/jobs', params }) }),
     acceptLegal: build.mutation({ query: () => ({ url: '/me/legal/accept', method: 'POST' }), ...writesMe }),
     getBlogPosts: build.query({ query: ({ language, page }) => ({ url: '/blog', params: { language, page } }) }),
     getBlogPost: build.query({ query: (slug) => `/blog/${slug}` }),
@@ -24,6 +25,7 @@ export const publicApi = api.injectEndpoints({
 export const {
   useGetLegalQuery,
   useGetLandingQuery,
+  useGetPublicJobsQuery,
   useAcceptLegalMutation,
   useGetBlogPostsQuery,
   useGetBlogPostQuery,

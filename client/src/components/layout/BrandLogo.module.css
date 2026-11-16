@@ -18,61 +18,76 @@
   position: absolute;
   inset: 0;
   pointer-events: none;
-  background: linear-gradient(105deg, transparent 40%, rgb(255 255 255 / 0.85) 50%, transparent 60%) 100% 0 / 250% 100% no-repeat;
+  background: linear-gradient(105deg, transparent 32%, rgb(255 255 255 / 0.35) 44%, rgb(255 255 255 / 0.9) 50%, rgb(255 255 255 / 0.35) 56%, transparent 68%) 100% 0 / 300% 100% no-repeat;
   -webkit-mask: var(--logo-mask) center / 100% 100% no-repeat;
   mask: var(--logo-mask) center / 100% 100% no-repeat;
   opacity: 0;
 }
 
 @media (prefers-reduced-motion: no-preference) {
+  .intro {
+    --ease: cubic-bezier(0.16, 1, 0.3, 1);
+  }
+
+  /* The whole logo comes into focus while its parts assemble. */
+  .intro svg {
+    animation: logo-focus 1.6s var(--ease) both;
+  }
+
   .intro path {
     transform-box: fill-box;
-    animation: logo-fade 0.6s var(--ease-out) both;
+    animation: logo-fade 0.9s var(--ease) both;
   }
 
-  /* 1. The E's three bars slide in from the left, one after another. */
+  /* 1. The E's three bars glide in from the left, stretched by their speed, one after another. */
   .intro [data-part='bar'] {
-    animation-name: logo-slide;
-    animation-duration: 0.75s;
-    animation-delay: calc(0.1s + var(--i) * 0.09s);
+    transform-origin: 100% 50%;
+    animation-name: logo-glide;
+    animation-duration: 1.1s;
+    animation-delay: calc(0.05s + var(--i) * 0.11s);
   }
 
-  /* 2. The U rises. */
+  /* 2. The U rises out of a line and settles. */
   .intro [data-part='u'] {
-    transform-origin: 50% 100%;
-    animation-name: logo-rise;
-    animation-duration: 0.75s;
-    animation-delay: 0.3s;
+    animation-name: logo-emerge;
+    animation-duration: 1.1s;
+    animation-delay: 0.25s;
   }
 
-  /* 3. The swoosh sweeps around the EU, left to right. */
+  /* 3. The swoosh swings round the U into its orbit, opening from its tail. */
   .intro [data-part='swoosh'] {
-    transform-origin: 50% 50%;
-    animation-name: logo-sweep;
-    animation-duration: 1s;
-    animation-delay: 0.45s;
-    animation-timing-function: cubic-bezier(0.65, 0, 0.35, 1);
+    transform-origin: 77% 56%;
+    animation-name: logo-orbit;
+    animation-duration: 1.5s;
+    animation-delay: 0.4s;
   }
 
-  /* 4. The divider grows from its middle, then JOBS rises letter by letter. */
+  /* 4. The divider draws from its middle with a short glow, then JOBS rises letter by letter. */
   .intro [data-part='divider'] {
     transform-origin: 50% 50%;
-    animation-name: logo-grow-y;
+    animation-name: logo-draw-y;
+    animation-duration: 1s;
     animation-delay: 0.7s;
   }
 
   .intro [data-part='jobs'] {
-    animation-name: logo-rise;
-    animation-duration: 0.75s;
-    animation-delay: calc(0.8s + var(--i) * 0.08s);
+    animation-name: logo-emerge;
+    animation-duration: 1.1s;
+    animation-delay: calc(0.8s + var(--i) * 0.09s);
   }
 
-  /* 5. The tagline's rules draw outwards from the words, which fade in letter by letter. */
+  /* 5. The tagline's letters close in from wide tracking while its rules draw outwards. */
+  .intro [data-part='tagline'] {
+    animation-name: logo-track;
+    animation-duration: 1.3s;
+    animation-delay: calc(1.15s + var(--i) * 0.02s);
+  }
+
   .intro [data-part='rule-l'],
   .intro [data-part='rule-r'] {
-    animation-name: logo-grow-x;
-    animation-duration: 0.8s;
-    animation-delay: 1.2s;
+    animation-name: logo-draw-x;
+    animation-duration: 1.2s;
+    animation-delay: 1.35s;
   }
 
   .intro [data-part='rule-l'] {
@@ -83,19 +98,19 @@
     transform-origin: 0 50%;
   }
 
-  .intro [data-part='tagline'] {
-    animation-name: logo-fade;
-    animation-duration: 0.5s;
-    animation-delay: calc(1.2s + var(--i) * 0.03s);
-  }
-
-  /* 6. One light sweep once it is built; the shell's logos get the same sweep on hover. */
+  /* 6. One slow light sweep once it is built; the shell's logos get the same sweep on hover. */
   .intro::after {
-    animation: logo-shine 1.1s ease-in-out 1.8s;
+    animation: logo-shine 1.6s cubic-bezier(0.45, 0, 0.2, 1) 2.2s;
   }
 
   .shine:hover::after {
-    animation: logo-shine 0.9s ease-in-out;
+    animation: logo-shine 1.2s cubic-bezier(0.45, 0, 0.2, 1);
+  }
+}
+
+@keyframes logo-focus {
+  from {
+    filter: blur(6px);
   }
 }
 
@@ -105,45 +120,65 @@
   }
 }
 
-@keyframes logo-slide {
+@keyframes logo-glide {
   from {
     opacity: 0;
-    transform: translateX(-45%);
+    transform: translateX(-70%) scaleX(1.35);
+  }
+
+  40% {
+    opacity: 1;
   }
 }
 
-@keyframes logo-rise {
+@keyframes logo-emerge {
   from {
     opacity: 0;
-    transform: translateY(40%);
+    clip-path: inset(0 0 100% 0);
+    transform: translateY(55%);
+  }
+
+  to {
+    clip-path: inset(0 0 -10% 0);
   }
 }
 
-@keyframes logo-sweep {
+@keyframes logo-orbit {
   from {
     opacity: 0;
     clip-path: inset(0 100% 0 0);
-    transform: rotate(-24deg) scale(0.9);
+    transform: rotate(-75deg) scale(0.82);
   }
 
-  30% {
+  35% {
     opacity: 1;
   }
 
   to {
-    clip-path: inset(0 0 0 0);
+    clip-path: inset(-5% -5% -5% -5%);
   }
 }
 
-@keyframes logo-grow-y {
+@keyframes logo-draw-y {
   from {
     transform: scaleY(0);
   }
+
+  60% {
+    filter: drop-shadow(0 0 4px #0084ff);
+  }
 }
 
-@keyframes logo-grow-x {
+@keyframes logo-draw-x {
   from {
     transform: scaleX(0);
+  }
+}
+
+@keyframes logo-track {
+  from {
+    opacity: 0;
+    transform: translateX(calc((var(--i) - 7.5) * 7px));
   }
 }
 
