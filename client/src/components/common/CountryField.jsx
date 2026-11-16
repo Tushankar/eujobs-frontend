@@ -9,14 +9,6 @@ import styles from './CountryField.module.css'
 
 const fold = (text) => text.normalize('NFD').replace(/\p{M}/gu, '').toLowerCase().trim()
 
-/** useCountryOptions() rows as CountryField options, grouped EU + UK, Remote, then the rest of the world. */
-export const countryChoices = (countries) =>
-  countries.map((country) => ({
-    value: country.code,
-    label: country.name,
-    group: country.isRemote ? undefined : (country.isEu ?? true) || country.code === 'GB' ? 'europe' : 'world',
-  }))
-
 /**
  * A country picker that replaces the native <select> (worldwide since 2026-11-16: about 240 countries made the browser
  * list run off the page). The field opens a panel with a search box (name in any case or accents, or the code) and a
@@ -24,7 +16,7 @@ export const countryChoices = (countries) =>
  * there is no room below. `options` = [{ value, label, group? }]; `onChange` gets the value. variant="filter" is the pill
  * of a list toolbar, like SelectField's.
  */
-export default function CountryField({ label, hint, error, options, value, onChange, placeholder, name, variant, disabled, className, id }) {
+export default function CountryField({ label, hint, error, options, value, onChange, placeholder, name, variant, disabled, className, id, 'aria-label': ariaLabel }) {
   const { t } = useTranslation()
   const generatedId = useId()
   const fieldId = id ?? generatedId
@@ -110,6 +102,7 @@ export default function CountryField({ label, hint, error, options, value, onCha
             className={cx(fieldStyles.control, styles.trigger, filter && fieldStyles.filter, applied && fieldStyles.applied, invalid && fieldStyles.invalid)}
             aria-haspopup="listbox"
             aria-expanded={open}
+            aria-label={ariaLabel}
             aria-invalid={invalid || undefined}
             aria-describedby={describedBy}
             onClick={() => (open ? close(false) : show())}
@@ -141,7 +134,7 @@ export default function CountryField({ label, hint, error, options, value, onCha
                   onKeyDown={onKeyDown}
                 />
               </label>
-              <ul ref={list} id={listId} role="listbox" aria-label={label} className={styles.list}>
+              <ul ref={list} id={listId} role="listbox" aria-label={label ?? ariaLabel} className={styles.list}>
                 {shown.map((option, index) => [
                   heading(option, index),
                   <li

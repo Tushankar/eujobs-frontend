@@ -51,3 +51,11 @@ export function useCountrySearch(options) {
   const shown = term ? options.filter((option) => fold(option.name).includes(term) || option.code.toLowerCase() === term) : options
   return { query, setQuery, shown }
 }
+
+/** useCountryOptions() rows as CountryField options, grouped EU + UK, Remote, then the rest of the world. */
+export const countryChoices = (countries) =>
+  countries.map((country) => ({
+    value: country.code,
+    label: country.name,
+    group: country.isRemote ? undefined : (country.isEu ?? true) || country.code === 'GB' ? 'europe' : 'world',
+  }))

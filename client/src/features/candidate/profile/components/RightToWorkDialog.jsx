@@ -2,12 +2,13 @@ import { useTranslation } from 'react-i18next'
 import { X } from 'lucide-react'
 import { useGetConfigQuery } from '@/app/api.js'
 import { IconButton, SelectField, TextField } from '@/components/ui'
-import { useCountryOptions } from '@/lib/countries.js'
+import { countryChoices, useCountryOptions } from '@/lib/countries.js'
 import { useErrorText, useFormState } from '@/lib/forms.js'
 import { useFormat } from '@/lib/preferences.js'
 import { useSetRightToWorkMutation } from '../api.js'
 import FormDialog from './FormDialog.jsx'
 import dialogStyles from './FormDialog.module.css'
+import CountryField from '@/components/common/CountryField.jsx'
 
 /**
  * M-021, P3-D4: one entry per region, the whole EU or any country (worldwide since 2026-11-16); a visa or permit needs
@@ -26,9 +27,10 @@ export default function RightToWorkDialog({ open, rightToWork, onSaved, onClose 
   const statusOptions = (config?.enums.rtwStatus ?? []).map((status) => ({ value: status, label: t(`enums:rtwStatus.${status}`) }))
   const max = config?.limits.profile.rightToWork.max ?? 0
   // The EU group, then the countries (EU + UK first, then the world), less those already added.
-  const choices = [...(config?.enums.rtwRegion ?? []), ...countries.filter((country) => !country.isRemote).map((country) => country.code)]
-    .filter((region) => !values.rows.some((row) => row.region === region))
-    .map((region) => ({ value: region, label: format.region(region) }))
+  const choices = [
+    ...(config?.enums.rtwRegion ?? []).map((region) => ({ value: region, label: format.region(region) })),
+    ...countryChoices(countries.filter((country) => !country.isRemote)),
+  ].filter((choice) => !values.rows.some((row) => row.region === choice.value))
   const update = (index, change) => set('rows', values.rows.map((row, i) => (i === index ? { ...row, ...change } : row)))
 
   async function handleSubmit() {
@@ -76,13 +78,13 @@ export default function RightToWorkDialog({ open, rightToWork, onSaved, onClose 
         </div>
       ))}
       {values.rows.length < max && (
-        <SelectField
+        <CountryField
           label={t('profile:form.rightToWork.addLabel')}
           name="rightToWorkAdd"
           placeholder={t('profile:form.rightToWork.addPlaceholder')}
           options={choices}
           value=""
-          onChange={(event) => event.target.value && set('rows', [...values.rows, { region: event.target.value, status: '', permitExpiresOn: '' }])}
+          onChange={(region) => region && set('rows', [...values.rows, { region, status: '', permitExpiresOn: '' }])}
         />
       )}
     </FormDialog>

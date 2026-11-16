@@ -2,8 +2,8 @@ import { useTranslation } from 'react-i18next'
 import { useNavigate } from 'react-router-dom'
 import { Users } from 'lucide-react'
 import { useGetConfigQuery } from '@/app/api.js'
-import { SelectField, TextField } from '@/components/ui'
-import { useCountryOptions } from '@/lib/countries.js'
+import { TextField } from '@/components/ui'
+import { countryChoices, useCountryOptions } from '@/lib/countries.js'
 import { check, useErrorText, useFormState } from '@/lib/forms.js'
 import { usePreferences } from '@/lib/preferences.js'
 import { useUpdateOnboardingAccountMutation } from '../api.js'
@@ -14,6 +14,7 @@ import StepHeading from '../components/StepHeading.jsx'
 import { stepPath } from '../data/onboarding.js'
 import { useOnboarding } from '../utils/useOnboarding.js'
 import styles from './OnboardingStepPage.module.css'
+import CountryField from '@/components/common/CountryField.jsx'
 
 /** Onboarding step 1 of 5 (M-153, P4-D1): who manages the account; sign-up filled it, the email cannot change. */
 export default function AccountRegistrationPage() {
@@ -81,14 +82,14 @@ export default function AccountRegistrationPage() {
               readOnly
               disabled
             />
-            <SelectField
+            <CountryField
               label={t('auth:onboarding.account.phoneCountry')}
               name="phoneCountry"
               placeholder={t('auth:onboarding.account.phoneCountry')}
               disabled={!editable}
-              options={countries.map((option) => ({ value: option.code, label: option.name }))}
+              options={countryChoices(countries)}
               value={values.country}
-              onChange={(event) => set('country', event.target.value)}
+              onChange={(code) => set('country', code)}
             />
             <TextField
               className={hintStyles.compactHint}

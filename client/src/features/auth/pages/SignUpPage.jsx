@@ -1,11 +1,11 @@
 import { useState } from 'react'
 import { useTranslation } from 'react-i18next'
 import { useNavigate } from 'react-router-dom'
-import { PasswordField, SelectField, TextField } from '@/components/ui'
+import { PasswordField, TextField } from '@/components/ui'
 import AuthLayout from '@/components/layout/AuthLayout.jsx'
 import { errorCode, useGetConfigQuery } from '@/app/api.js'
 import { browserCountry } from '@/lib/browserCountry.js'
-import { useCountryOptions } from '@/lib/countries.js'
+import { countryChoices, useCountryOptions } from '@/lib/countries.js'
 import { browserTimeZone, check, compact, serverFieldErrors, useErrorText } from '@/lib/forms.js'
 import { readAnonymousPreference } from '@/lib/preferences.js'
 import { useRegisterCandidateMutation } from '../api.js'
@@ -19,6 +19,7 @@ import { SIGN_UP_CHOICES } from '../data/workspaceChoices.js'
 import hintStyles from '../components/compactHint.module.css'
 import { useFormState } from '../utils/useFormState.js'
 import styles from './SignUpPage.module.css'
+import CountryField from '@/components/common/CountryField.jsx'
 
 /** M-001: no account is signed in here; the email link must be opened first. */
 export default function SignUpPage() {
@@ -95,13 +96,13 @@ export default function SignUpPage() {
           onChange={field('email')}
           error={errorText.field('email', errors.email)}
         />
-        <SelectField
+        <CountryField
           label={t('auth:fields.country')}
           name="country"
           hint={t('auth:fields.countryHint')}
-          options={countries.map((option) => ({ value: option.code, label: option.name }))}
+          options={countryChoices(countries)}
           value={country}
-          onChange={field('country')}
+          onChange={(code) => field('country')({ target: { value: code } })}
           error={errorText.field('country', errors.country)}
         />
         <PasswordField

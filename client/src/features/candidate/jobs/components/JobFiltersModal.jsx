@@ -1,10 +1,11 @@
 import { useTranslation } from 'react-i18next'
 import { useGetConfigQuery } from '@/app/api.js'
-import { Button, Checkbox, Modal, SelectField, TextField } from '@/components/ui'
+import { Button, Checkbox, Modal, TextField } from '@/components/ui'
 import CityField from '@/components/common/CityField.jsx'
-import { useCountryOptions } from '@/lib/countries.js'
+import { countryChoices, useCountryOptions } from '@/lib/countries.js'
 import { EMPTY_FILTERS } from '../utils/jobSearch.js'
 import styles from './JobFiltersModal.module.css'
+import CountryField from '@/components/common/CountryField.jsx'
 
 /**
  * Filters of Find jobs (OD2, U25, P4-Q4, OQ-6i, G-1): work model (country views list hybrid and on-site jobs only),
@@ -58,12 +59,12 @@ export default function JobFiltersModal({ open, onClose, filters, onChange, resu
           </fieldset>
         ))}
         {remote ? (
-          <SelectField
+          <CountryField
             label={t('findJobs:filters.eligible')}
             name="eligible"
-            options={[{ value: '', label: t('findJobs:filters.anyCountry') }, ...countries.map((option) => ({ value: option.code, label: option.name }))]}
+            options={[{ value: '', label: t('findJobs:filters.anyCountry') }, ...countryChoices(countries)]}
             value={filters.eligible}
-            onChange={(event) => onChange({ ...filters, eligible: event.target.value })}
+            onChange={(code) => onChange({ ...filters, eligible: code })}
           />
         ) : (
           <CityField label={t('findJobs:filters.city')} hint={t('findJobs:filters.cityHint')} name="jobsCity" value={filters.place} onChange={(place) => onChange({ ...filters, place })} />

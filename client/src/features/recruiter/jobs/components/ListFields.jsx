@@ -3,9 +3,10 @@ import { useTranslation } from 'react-i18next'
 import { Plus, X } from 'lucide-react'
 import { useGetConfigQuery, useGetLanguageCodesQuery } from '@/app/api.js'
 import { Button, Icon, IconButton, SelectField } from '@/components/ui'
-import { useCountryOptions } from '@/lib/countries.js'
+import { countryChoices, useCountryOptions } from '@/lib/countries.js'
 import { useFormat, usePreferences } from '@/lib/preferences.js'
 import styles from './JobStepFields.module.css'
+import CountryField from '@/components/common/CountryField.jsx'
 
 /** M-035, P4-D6: required languages, each with a minimum level; unique codes, at most `max`. */
 export function LanguageRequirements({ value, onChange, max, error }) {
@@ -67,14 +68,14 @@ export function EligibleCountries({ value, onChange, error }) {
 
   return (
     <div className={styles.listField}>
-      <SelectField
+      <CountryField
         label={t('jobs:fields.remoteCountries')}
         name="remoteCountry"
         hint={t('jobs:fields.remoteCountriesHint')}
         placeholder={t('jobs:fields.addCountry')}
-        options={options.map((option) => ({ value: option.code, label: option.name }))}
+        options={countryChoices(options)}
         value=""
-        onChange={(event) => event.target.value && onChange([...value, event.target.value])}
+        onChange={(code) => code && onChange([...value, code])}
         error={error}
       />
       {value.length > 0 && (

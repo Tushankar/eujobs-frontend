@@ -2,15 +2,16 @@ import { useState } from 'react'
 import { Trans, useTranslation } from 'react-i18next'
 import { Check, KeyRound, RotateCw, Send, ShieldCheck } from 'lucide-react'
 import { errorCode, useGetConfigQuery } from '@/app/api.js'
-import { Button, Icon, SelectField, TextField } from '@/components/ui'
+import { Button, Icon, TextField } from '@/components/ui'
 import PillBadge from '@/components/common/PillBadge.jsx'
-import { useCountryOptions } from '@/lib/countries.js'
+import { countryChoices, useCountryOptions } from '@/lib/countries.js'
 import { serverFieldErrors, useCooldown, useErrorText } from '@/lib/forms.js'
 import { usePreferences } from '@/lib/preferences.js'
 import { cx } from '@/utils/cx.js'
 import { useConfirmPhoneMutation, useRequestPhoneCodeMutation } from '../api.js'
 import pageStyles from '../pages/VerificationPage.module.css'
 import styles from './PhoneVerification.module.css'
+import CountryField from '@/components/common/CountryField.jsx'
 
 /**
  * Phone check (M-003, M-004, OD3): a country plus the number (national numbers are read in that country, stored
@@ -80,13 +81,13 @@ export default function PhoneVerification({ phone }) {
         ) : (
           <div className={styles.well}>
             <div className={styles.numberRow}>
-              <SelectField
+              <CountryField
                 label={t('verification:phone.country')}
                 name="phoneCountry"
                 placeholder={t('verification:phone.country')}
-                options={countries.map((option) => ({ value: option.code, label: option.name }))}
+                options={countryChoices(countries)}
                 value={country}
-                onChange={(event) => setCountry(event.target.value)}
+                onChange={setCountry}
               />
               <TextField
                 label={t('verification:phone.number')}
