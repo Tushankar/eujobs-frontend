@@ -31,7 +31,7 @@
   height: 18px;
   padding: 0 5px;
   border-radius: var(--radius-full);
-  background: var(--primary);
+  background: var(--primary-strong);
   font-size: 10px;
   line-height: 18px;
   color: var(--primary-foreground);

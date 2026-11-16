@@ -26,7 +26,7 @@
   width: var(--indicator-w, 0);
   height: 2px;
   border-radius: 2px 2px 0 0;
-  background: var(--primary);
+  background: var(--primary-strong);
   opacity: 0;
   transform: translateX(var(--indicator-x, 0));
   pointer-events: none;

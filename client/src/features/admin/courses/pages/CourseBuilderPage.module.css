@@ -472,7 +472,7 @@
 
 .newStepCurrent .newStepNumber {
   border-color: var(--primary);
-  background: var(--primary);
+  background: var(--primary-strong);
   color: var(--primary-foreground);
   box-shadow: 0 0 0 4px var(--accent);
 }

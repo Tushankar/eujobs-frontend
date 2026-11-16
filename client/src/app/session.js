@@ -1,4 +1,5 @@
 import i18n from '@/i18n/index.js'
+import { applyTheme } from '@/lib/theme.js'
 import { api, setAuthRequiredHandler } from './api.js'
 import { navigateTo } from './navigation.js'
 import { adminHome } from './permissions.js'
@@ -44,11 +45,12 @@ export function landingPath(me, next) {
   return target?.startsWith(WORKSPACE_PATH[me.role]) ? target : home
 }
 
-/** GET /me for the stored token (cached by RTK Query), switching the UI to the account's language. */
+/** GET /me for the stored token (cached by RTK Query), switching the UI to the account's language and theme. */
 export async function loadMe() {
   if (!getToken()) return null
   const { data } = await store.dispatch(api.endpoints.getMe.initiate(undefined, { subscribe: false }))
   if (!data) return null
+  if (data.theme) applyTheme(data.theme)
   if (i18n.language !== data.language) await i18n.changeLanguage(data.language)
   return data
 }
@@ -65,6 +67,8 @@ export async function signIn(token, me) {
   store.dispatch(signedIn())
   // Awaited, so the next route loader reads this /me instead of a pending cache entry.
   await store.dispatch(api.util.upsertQueryData('getMe', undefined, me))
+  // The account's saved theme wins; an account without one keeps this device's theme.
+  if (me.theme) applyTheme(me.theme)
   if (i18n.language !== me.language) await i18n.changeLanguage(me.language)
 }
 

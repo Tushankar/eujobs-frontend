@@ -7,7 +7,7 @@ import { User } from '../modules/users/users.model.js'
 import { seedCatalog } from '../seed/catalog.js'
 import { PLACES } from '../seed/data/places.js'
 import { api, auth, createUser, useTestDb } from './helpers/index.js'
-import { suggestion, TORONTO, useFakePlaces } from './helpers/places.js'
+import { MOSCOW, suggestion, TORONTO, useFakePlaces } from './helpers/places.js'
 
 useTestDb([User])
 before(() => seedCatalog())
@@ -18,7 +18,7 @@ const autocomplete = (user, input, sessionToken = randomUUID()) =>
 const details = (user, placeId, sessionToken) => api().get(`/api/v1/places/${placeId}`).query(sessionToken ? { sessionToken } : {}).set(auth(user))
 
 describe('GET /places/autocomplete (G-1, §2.16)', () => {
-  it('keeps only EU 27 + UK suggestions, reading the country from the secondary text (P3-D1)', async () => {
+  it('keeps suggestions in enabled countries (worldwide since 2026-11-16), reading the country from the secondary text (P3-D1)', async () => {
     fake.suggestions = [
       suggestion(PLACES.london.placeId, 'London', 'UK'),
       suggestion('ChIJC5uNqA7yLogRlWsFmmnXxyg', 'London', 'ON, Canada'),
@@ -31,8 +31,11 @@ describe('GET /places/autocomplete (G-1, §2.16)', () => {
     assert.equal(res.status, 200)
     assert.deepEqual(res.body.items, [
       { placeId: PLACES.london.placeId, city: 'London', secondary: 'UK' },
+      { placeId: 'ChIJC5uNqA7yLogRlWsFmmnXxyg', city: 'London', secondary: 'ON, Canada' },
+      { placeId: 'ChIJbVivV1pD65QRcfkUxqURrCM', city: 'Londrina', secondary: 'Paraná, Brazil' },
       { placeId: 'ChIJY5PQNOTdX0gRL_NVxyr6Ib0', city: 'Londonderry', secondary: 'UK' },
       { placeId: 'ChIJRyEiyiZ0lUcR8_example', city: 'Luxembourg', secondary: '' },
+      { placeId: 'ChIJbern', city: 'Bern', secondary: 'Switzerland' },
     ])
   })
 
@@ -99,8 +102,10 @@ describe('GET /places/:placeId (G-1)', () => {
     assert.deepEqual(calls, [{ kind: 'details', placeId: PLACES.warsaw.placeId, languageCode: 'en', sessionToken }])
   })
 
-  it('refuses a place outside EU 27 + UK', async () => {
-    const res = await details(await createUser(), TORONTO.placeId)
+  it('accepts a city anywhere and refuses one in a disabled country (worldwide since 2026-11-16)', async () => {
+    const user = await createUser()
+    assert.deepEqual((await details(user, TORONTO.placeId)).body, TORONTO)
+    const res = await details(user, MOSCOW.placeId)
     assert.equal(res.status, 422)
     assert.deepEqual(res.body.error.fields, { placeId: 'not_allowed' })
   })

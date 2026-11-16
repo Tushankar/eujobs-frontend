@@ -60,5 +60,9 @@
   },
   "deletedUser": "Usuario eliminado",
   "worldwide": "Todo el mundo",
-  "allCountries": "todos los países"
+  "allCountries": "todos los países",
+  "theme": {
+    "toDark": "Cambiar al modo oscuro",
+    "toLight": "Cambiar al modo claro"
+  }
 }

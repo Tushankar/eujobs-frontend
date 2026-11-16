@@ -7,7 +7,7 @@ import { User } from '../modules/users/users.model.js'
 import { seedCatalog } from '../seed/catalog.js'
 import { api, auth, useTestDb } from './helpers/index.js'
 import { approvedRecruiter, jobBody } from './helpers/market.js'
-import { TORONTO, useFakePlaces } from './helpers/places.js'
+import { MOSCOW, TORONTO, useFakePlaces } from './helpers/places.js'
 import { PLACES } from '../seed/data/places.js'
 
 useTestDb([User, Company, Job, Faq])
@@ -73,14 +73,16 @@ describe('GET /landing/jobs (public job list, owner 2026-11-16)', () => {
 })
 
 describe('GET /landing/near ("Use my current location" in the job search)', () => {
-  it('answers the city at a point inside EU 27 + UK, and nulls outside it or when nothing is found', async () => {
+  it('answers the city at a point in an enabled country, and nulls in a disabled one or when nothing is found', async () => {
     places.fake.near = PLACES.london
     const res = await api().get('/api/v1/landing/near?latitude=51.5&longitude=-0.12&language=fr')
     assert.deepEqual([res.status, res.body], [200, { city: 'London', countryCode: 'GB' }])
     assert.deepEqual(places.calls.at(-1), { kind: 'nearby', latitude: 51.5, longitude: -0.12, languageCode: 'fr' })
 
     places.fake.near = TORONTO
-    assert.deepEqual((await api().get('/api/v1/landing/near?latitude=43.6&longitude=-79.4')).body, { city: null, countryCode: null })
+    assert.deepEqual((await api().get('/api/v1/landing/near?latitude=43.6&longitude=-79.4')).body, { city: 'Toronto', countryCode: 'CA' })
+    places.fake.near = MOSCOW
+    assert.deepEqual((await api().get('/api/v1/landing/near?latitude=55.7&longitude=37.6')).body, { city: null, countryCode: null })
     places.fake.near = null
     assert.deepEqual((await api().get('/api/v1/landing/near?latitude=0&longitude=0')).body, { city: null, countryCode: null })
     assert.equal((await api().get('/api/v1/landing/near?latitude=91&longitude=0')).status, 422)

@@ -33,7 +33,7 @@
   display: block;
   height: 8px;
   border-radius: 4px;
-  background: var(--primary);
+  background: var(--primary-strong);
 }
 
 .track .skeletonFill {

@@ -103,7 +103,7 @@ input:checked + .tile .icon {
 
 input:checked + .tile .radio {
   border-color: var(--primary);
-  background: var(--primary);
+  background: var(--primary-strong);
   color: #fff;
 }
 

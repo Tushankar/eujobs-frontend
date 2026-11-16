@@ -75,6 +75,17 @@ describe('PATCH /me (M-134, M-135)', () => {
     assert.equal(res.body.pickerCountry, 'REMOTE')
   })
 
+  it('saves the colour theme for every role, none until one is picked', async () => {
+    for (const role of ['candidate', 'recruiter', 'admin']) {
+      const user = await createUser({ role })
+      assert.equal((await api().get('/api/v1/me').set(auth(user))).body.theme, null)
+      assert.equal((await patchMe(user, { theme: 'dark' })).body.theme, 'dark')
+      assert.equal((await api().get('/api/v1/me').set(auth(user))).body.theme, 'dark')
+    }
+    const user = await createUser()
+    assert.equal((await patchMe(user, { theme: 'sepia' })).status, 400)
+  })
+
   it('gives admins no country picker (M-138)', async () => {
     const admin = await createUser({ role: 'admin' })
     assert.deepEqual((await patchMe(admin, { pickerCountry: 'DE' })).body.error.fields, { pickerCountry: 'not_allowed' })

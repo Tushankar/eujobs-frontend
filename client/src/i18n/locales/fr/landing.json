@@ -21,7 +21,7 @@
     "useLocation": "Utiliser ma position actuelle",
     "locating": "Recherche de votre position…",
     "locationDenied": "L’accès à la position est bloqué. Autorisez-le dans les réglages du navigateur pour utiliser cette option.",
-    "locationOutside": "Nous n’avons pas trouvé de ville près de vous dans l’UE ou au Royaume-Uni.",
+    "locationOutside": "Nous n’avons pas trouvé de ville près de votre position. Saisissez-en une.",
     "locationError": "Votre position n’est pas disponible pour le moment. Saisissez une ville.",
     "try": "Essayez « {{example}} »",
     "searching": "Recherche…",

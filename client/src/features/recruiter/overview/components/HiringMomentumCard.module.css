@@ -48,7 +48,7 @@
 .toggleActive,
 .toggleActive:hover {
   padding: 3px 9px;
-  background: var(--primary);
+  background: var(--primary-strong);
   box-shadow: var(--shadow-segment);
   color: var(--primary-foreground);
 }
@@ -110,7 +110,7 @@
 .applicationSwatch,
 .applicationBar,
 .applicationDot {
-  background: var(--primary);
+  background: var(--primary-strong);
 }
 
 .shortlistSwatch,

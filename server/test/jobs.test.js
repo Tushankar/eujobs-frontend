@@ -70,7 +70,7 @@ describe('recruiter jobs (§3.7, M-033 … M-041, P4-D6 … D8)', () => {
     assert.deepEqual([warsaw.body.country, warsaw.body.salary.currency, warsaw.body.salary.period], ['PL', 'PLN', 'month'])
     const remote = await create(user, jobBody({ workPreference: 'remote', placeId: null, remoteCountries: ['pl', 'DE'] }))
     assert.deepEqual([remote.body.country, remote.body.location, remote.body.remoteCountries, remote.body.salary.currency], ['REMOTE', null, ['PL', 'DE'], 'EUR'])
-    const bad = await create(user, jobBody({ workPreference: 'remote', remoteCountries: ['US'] }))
+    const bad = await create(user, jobBody({ workPreference: 'remote', remoteCountries: ['KP'] }))
     assert.deepEqual(bad.body.error.fields, { remoteCountries: 'invalid' })
   })
 

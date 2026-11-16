@@ -12,6 +12,7 @@
   --primary: #0263dc; /* logo blue (EU JOBS mark, 2026-11-11) */
   --primary-foreground: #ffffff;
   --primary-hover: #0247c1;
+  --primary-strong: #0263dc; /* solid blue fills that carry white text; same as --primary in light */
   --brand-navy: #012b74; /* the logo navy ("JOBS") */
   /* Owner choice (2026-11-11): primary buttons use the EU JOBS logo gradient (bright blue to navy, sampled from the logo). */
   --brand-gradient: linear-gradient(135deg, #0a6cf0 0%, #0247c1 55%, #012b74 100%);
@@ -86,4 +87,61 @@
   :root {
     --content-padding: 20px;
   }
+}
+
+:root {
+  color-scheme: light;
+}
+
+/*
+ * Dark theme (owner 2026-11-16, canvas "EU Jobs Dark Mode"): near-black ground, layered cards, hairline borders,
+ * blue only for actions. Set by lib/theme.js on <html data-theme="dark">; light stays the default.
+ * Body text is at least 4.5:1 on --card. --primary is a lighter blue that reads as text; solid fills with white
+ * text use --primary-strong (4.8:1).
+ */
+:root[data-theme='dark'] {
+  color-scheme: dark;
+  --background: #0a0b0e;
+  --foreground: #eceef2;
+  --card: #13161b;
+  --card-foreground: #eceef2;
+  --primary: #5b9dff;
+  --primary-foreground: #ffffff;
+  --primary-hover: #7ab0ff;
+  --primary-strong: #1a6ce8;
+  --brand-navy: #9cc4ff;
+  --brand-gradient: linear-gradient(135deg, #1a6ce8 0%, #0b52c9 55%, #083c9c 100%);
+  --brand-gradient-hover: linear-gradient(135deg, #2a78ef 0%, #135dd4 55%, #0c47aa 100%);
+  --brand-gradient-active: linear-gradient(135deg, #1560d2 0%, #0947b3 55%, #07348a 100%);
+  --secondary: #1f2329;
+  --secondary-foreground: #eceef2;
+  --muted: #191c22;
+  --muted-foreground: #a3a9b5;
+  --accent: #172a45;
+  --accent-foreground: #9cc4ff;
+  --border: #262a31;
+  --border-strong: #3a3f48;
+  --destructive: #f07272;
+  --ring: #5b9dff;
+  --selection: #1e3a66;
+  --blue-light-100: #172a45;
+
+  --text-label: #b4b9c3;
+  --text-placeholder: #8a909c;
+  --text-nav: #a3a9b5;
+  --text-nav-heading: #868c98;
+  --text-breadcrumb: #9aa0ab;
+  --text-faint: #8a909c;
+  --text-footer: #9aa0ab;
+
+  --success-bg: #11291c;
+  --success-fg: #6fcf97;
+  --warning-bg: #2d2312;
+  --warning-fg: #f0b860;
+
+  --shadow-button: 0 1px 2px rgba(0, 0, 0, 0.4);
+  --shadow-segment: 0 1px 2px rgba(0, 0, 0, 0.5);
+  --shadow-popover: 0 20px 40px -8px rgba(0, 0, 0, 0.6), 0 8px 16px -8px rgba(0, 0, 0, 0.5);
+  --backdrop: rgba(0, 0, 0, 0.7);
+  --modal-backdrop: rgba(0, 0, 0, 0.65);
 }

@@ -33,6 +33,7 @@ export async function meDto(user) {
     fullName: user.fullName,
     language: user.language,
     languageExplicit: user.languageExplicit,
+    theme: user.theme ?? null,
     pickerCountry: user.pickerCountry ?? null,
     // Owner 2026-11-16: candidates browse jobs worldwide until they pick Remote or a country.
     ...(user.role === 'candidate' && { jobsWorldwide: user.jobsWorldwide !== false }),
@@ -113,6 +114,7 @@ export async function updateMe(user, patch) {
   if (patch.timezone !== undefined) user.timezone = patch.timezone
   if (patch.languageExplicit !== undefined) user.languageExplicit = patch.languageExplicit
   if (patch.language !== undefined) user.language = patch.language
+  if (patch.theme !== undefined) user.theme = patch.theme
   if (patch.pickerCountry !== undefined) {
     // Admins have no country picker (M-138).
     if (user.role === 'admin') throw fieldError({ pickerCountry: 'not_allowed' })

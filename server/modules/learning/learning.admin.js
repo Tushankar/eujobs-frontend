@@ -24,9 +24,9 @@ import { Course, Enrollment } from './learning.model.js'
 const C = LIMITS.course
 const LESSON_FILES = { video: ['videoFileId', 'lesson_video'], document: ['documentFileId', 'lesson_document'] }
 
-/** The 8 charging currencies (M-130), in country order. */
+/** The 8 charging currencies (M-130), in country order: the EU 27, GB and Remote rows (not the worldwide ones, 2026-11-16). */
 export async function courseCurrencies() {
-  const countries = await Country.find({}, 'currency').sort({ order: 1 })
+  const countries = await Country.find({ $or: [{ isEu: true }, { code: 'GB' }, { isRemote: true }] }, 'currency').sort({ order: 1 })
   return [...new Set(countries.map((country) => country.currency))]
 }
 

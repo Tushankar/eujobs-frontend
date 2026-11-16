@@ -7,6 +7,12 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <title>EU Jobs · AI Powered Careers</title>
     <script>
+      // The colour theme picked on this device (lib/theme.js), set before the first paint so dark pages never flash white.
+      try {
+        document.documentElement.dataset.theme = localStorage.getItem('lwm-pref-theme') === 'dark' ? 'dark' : 'light'
+      } catch {}
+    </script>
+    <script>
       // Signed-out visitors on the landing page: fetch the hero photos (the LCP) in parallel with the app's JS.
       try {
         if (location.pathname === '/' && !localStorage.getItem('lwm-auth-token')) {

@@ -11,7 +11,7 @@
 }
 
 .on {
-  background: var(--primary);
+  background: var(--primary-strong);
 }
 
 .switch:disabled {

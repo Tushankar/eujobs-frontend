@@ -167,6 +167,8 @@ export const ENUMS = {
   role: ['candidate', 'recruiter', 'admin'],
   userStatus: ['unverified', 'onboarding', 'pending_review', 'active', 'rejected', 'suspended', 'invited'],
   language: ['en', 'es', 'fr'],
+  // Owner 2026-11-16: the colour theme an account picked (light is the default when none is saved).
+  theme: ['light', 'dark'],
   workPreference: ['remote', 'hybrid', 'on_site'],
   employmentType: ['full_time', 'part_time', 'contract', 'internship'],
   jobLevel: ['junior', 'mid', 'senior', 'lead'],

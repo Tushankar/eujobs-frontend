@@ -12,7 +12,7 @@ import { seedCatalog } from '../seed/catalog.js'
 import { PLACES } from '../seed/data/places.js'
 import { image, MB, padded } from './helpers/fixtures.js'
 import { api, attach, auth, createUser, useTestDb, useTestUploads } from './helpers/index.js'
-import { TORONTO, useFakePlaces } from './helpers/places.js'
+import { MOSCOW, useFakePlaces } from './helpers/places.js'
 
 useTestDb([User, CandidateProfile, VerificationSubmission, File])
 useTestUploads()
@@ -119,7 +119,7 @@ describe('PUT /candidate/profile (P3-D9)', () => {
       [{ skills: ['Figma', 'figma'] }, { skills: 'duplicate' }],
       [{ salaryMin: { amount: 100, currency: 'EUR', period: 'year' } }, { 'salaryMin.currency': 'not_allowed' }],
       [{ salaryMin: { amount: 100_000_001, currency: 'PLN', period: 'year' } }, { 'salaryMin.amount': 'too_big' }],
-      [{ placeId: TORONTO.placeId }, { placeId: 'not_allowed' }],
+      [{ placeId: MOSCOW.placeId }, { placeId: 'not_allowed' }],
     ]
     for (const [change, expected] of cases) {
       const res = await put(user, 'profile', { ...BASICS, ...change })

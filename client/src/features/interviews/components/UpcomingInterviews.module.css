@@ -68,7 +68,7 @@
   gap: 6px;
   padding: 6px 12px;
   border-radius: 999px;
-  background: var(--primary);
+  background: var(--primary-strong);
   font-size: 12px;
   font-weight: 600;
   color: var(--primary-foreground);

@@ -60,5 +60,9 @@
   },
   "deletedUser": "Utilisateur supprimé",
   "worldwide": "Monde entier",
-  "allCountries": "tous les pays"
+  "allCountries": "tous les pays",
+  "theme": {
+    "toDark": "Passer en mode sombre",
+    "toLight": "Passer en mode clair"
+  }
 }

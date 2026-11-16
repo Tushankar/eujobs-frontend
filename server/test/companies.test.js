@@ -101,9 +101,9 @@ describe('recruiter onboarding (M-151 … M-153, P4-D1 … D3)', () => {
     assert.deepEqual(res.body.error.fields, { legalName: 'too_short', website: 'invalid', size: 'invalid', businessAddress: 'too_short' })
     const noDot = await saveCompany(user, { ...COMPANY, website: 'https://localhost' })
     assert.deepEqual(noDot.body.error.fields, { website: 'invalid' })
-    // A city outside EU 27 + UK cannot be the company city (M-149).
-    const toronto = await saveCompany(user, { ...COMPANY, placeId: 'ChIJpTvG15DL1IkRd8S0KlBVNTI' })
-    assert.deepEqual(toronto.body.error.fields, { placeId: 'not_allowed' })
+    // A city in a disabled country cannot be the company city (M-149; worldwide since 2026-11-16).
+    const moscow = await saveCompany(user, { ...COMPANY, placeId: 'ChIJybDUc_xKtUYRTM9XV8zWRD0' })
+    assert.deepEqual(moscow.body.error.fields, { placeId: 'not_allowed' })
   })
 
   it('applies the KYC upload rules and locks the files after submit (M-185)', async () => {

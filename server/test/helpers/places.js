@@ -5,7 +5,9 @@ import { PLACES } from '../../seed/data/places.js'
 
 /* A fake Google Places client (§2.16: API tests never call Google). */
 export const TORONTO = { countryCode: 'CA', city: 'Toronto', placeId: 'ChIJpTvG15DL1IkRd8S0KlBVNTI' }
-const KNOWN = [...Object.values(PLACES), TORONTO]
+// Worldwide since 2026-11-16, so "outside the platform" is a disabled country (owner decision pending on sanctions).
+export const MOSCOW = { countryCode: 'RU', city: 'Moscow', placeId: 'ChIJybDUc_xKtUYRTM9XV8zWRD0' }
+const KNOWN = [...Object.values(PLACES), TORONTO, MOSCOW]
 
 /** Google's suggestion shape. */
 export const suggestion = (placeId, main, secondary) => ({
@@ -14,8 +16,8 @@ export const suggestion = (placeId, main, secondary) => ({
 
 /**
  * Installs the fake for this test file. `calls` records every Google call; set `fake.suggestions` for
- * autocomplete and `fake.near` (a known place) for the nearby search. Details know the seed cities plus Toronto
- * (outside EU 27 + UK).
+ * autocomplete and `fake.near` (a known place) for the nearby search. Details know the seed cities, Toronto and
+ * Moscow (a disabled country).
  */
 export function useFakePlaces() {
   const calls = []

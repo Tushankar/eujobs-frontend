@@ -32,7 +32,7 @@
 }
 
 .primary {
-  background: var(--primary);
+  background: var(--primary-strong);
 }
 
 .success {

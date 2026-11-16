@@ -10,6 +10,7 @@ import { usePreferences, useFormat } from '@/lib/preferences.js'
 import NotificationBell from '@/features/notifications/components/NotificationBell.jsx'
 import GlobalSearch from './GlobalSearch.jsx'
 import ProfileMenu from './ProfileMenu.jsx'
+import ThemeToggle from './ThemeToggle.jsx'
 import { useDocumentTitle } from './useDocumentTitle.js'
 import styles from './Header.module.css'
 
@@ -169,6 +170,7 @@ export default function Header({ workspace, onOpenMenu }) {
         {workspace.showLocation && <CountryDropdown />}
 
         <div className={styles.identity}>
+          <ThemeToggle />
           {/* P11b-Q2 (supersedes M-093, OD6): the unread count and the latest notifications. */}
           <NotificationBell workspace={workspace} />
         </div>

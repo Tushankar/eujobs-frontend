@@ -18,6 +18,8 @@ const userSchema = new Schema(
     phone: { e164: String, verifiedAt: Date },
     language: { type: String, enum: ENUMS.language, default: 'en' },
     languageExplicit: { type: Boolean, default: false },
+    // Owner 2026-11-16: unset until the account picks one with the theme button.
+    theme: { type: String, enum: ENUMS.theme },
     pickerCountry: String,
     // Candidates (owner 2026-11-16): false once they pick Remote or a country to browse; unset or true = Worldwide.
     jobsWorldwide: Boolean,
