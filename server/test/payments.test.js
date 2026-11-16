@@ -77,7 +77,7 @@ describe('reference sequence (M-128)', () => {
 
 describe('quotes and currencies (M-124, M-130, OD1)', () => {
   const quote = (user, kind = 'subscription', itemId = 'plus') => api().get('/api/v1/payments/quote').query({ kind, itemId }).set(auth(user))
-  const COUNTRY_OF = { GBP: 'GB', EUR: 'DE', PLN: 'PL', SEK: 'SE', DKK: 'DK', CZK: 'CZ', HUF: 'HU', RON: 'RO' }
+  const COUNTRY_OF = { GBP: 'GB', EUR: 'DE', PLN: 'PL', SEK: 'SE', DKK: 'DK', CZK: 'CZ', HUF: 'HU', RON: 'RO', USD: 'US' }
 
   it('equals OD1 in every currency, from the header country', async () => {
     for (const [currency, amount] of Object.entries(PLUS_PRICES)) {
@@ -90,6 +90,16 @@ describe('quotes and currencies (M-124, M-130, OD1)', () => {
   it('uses EUR for Remote', async () => {
     const user = await createUser({ pickerCountry: 'REMOTE' })
     assert.equal((await quote(user)).body.currency, 'EUR')
+  })
+
+  it('charges every country outside EU + UK in USD (worldwide, 2026-11-16)', async () => {
+    for (const country of ['JP', 'IN', 'BR']) {
+      const { body } = await quote(await createUser({ pickerCountry: country }))
+      assert.deepEqual([body.currency, body.amountMinor], ['USD', 1100])
+    }
+    // The plan cards follow: a JPY request is priced in USD, never left without a price.
+    const plans = (await api().get('/api/v1/plans?currency=JPY&role=candidate')).body.items
+    assert.deepEqual(plans.find((plan) => plan.key === 'plus').price, { amountMinor: 1100, currency: 'USD' })
   })
 
   it('prices a published course of the buyer audience; free, draft and other-audience courses are refused', async () => {

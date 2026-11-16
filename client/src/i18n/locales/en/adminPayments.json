@@ -12,7 +12,10 @@
     "failedRenewals": "Failed renewals",
     "failedRenewalsCaption": "Plus renewals that did not go through · All time",
     "byRole": "Candidates {{candidates}} · Recruiters {{recruiters}}",
-    "role": { "candidate": "Candidates", "recruiter": "Recruiters" },
+    "role": {
+      "candidate": "Candidates",
+      "recruiter": "Recruiters"
+    },
     "none": "None",
     "more": "+{{count}} more"
   },
@@ -22,10 +25,16 @@
     "allStatuses": "All statuses",
     "payer": "Filter by payer",
     "allPayers": "All payers",
-    "payers": { "candidate": "Candidates", "recruiter": "Recruiters" },
+    "payers": {
+      "candidate": "Candidates",
+      "recruiter": "Recruiters"
+    },
     "kind": "Filter by type",
     "allKinds": "All types",
-    "kinds": { "course": "Courses", "subscription": "Subscriptions" },
+    "kinds": {
+      "course": "Courses",
+      "subscription": "Subscriptions"
+    },
     "source": "Filter by source",
     "allSources": "All sources",
     "country": "Filter by payer country",
@@ -136,12 +145,16 @@
       "yearlyFor": "Yearly price in {{currency}}",
       "auto": "Auto",
       "useAuto": "Use the automatic yearly price in {{currency}}",
-      "pricesNote": "Prices include VAT. A changed price becomes a new Stripe price for new subscribers. Leave a yearly price empty to use the discount.",
+      "pricesNote": "Prices include VAT. A changed price becomes a new Stripe price for new subscribers. Leave a yearly price empty to use the discount. Every country outside the EU and the UK pays in USD.",
       "impact_one": "{{count}} current subscriber keeps the price they signed up with. The new prices apply to new subscribers only.",
       "impact_other": "{{count}} current subscribers keep the price they signed up with. The new prices apply to new subscribers only.",
       "cancel": "Cancel",
       "save": "Save changes",
-      "close": "Close"
+      "close": "Close",
+      "payersWorld_one": "Rest of the world · {{count}} country",
+      "payersWorld_other": "Rest of the world · {{count}} countries",
+      "payersCount_one": "{{count}} country",
+      "payersCount_other": "{{count}} countries"
     },
     "errors": {
       "required": "Enter this text.",

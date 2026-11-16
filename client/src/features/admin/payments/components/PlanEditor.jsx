@@ -1,4 +1,5 @@
 import { useState } from 'react'
+import { useGetCountriesQuery } from '@/app/api.js'
 import { useTranslation } from 'react-i18next'
 import { ArrowDown, ArrowUp, Plus, RotateCcw, Trash2 } from 'lucide-react'
 import { Button, Icon, IconButton, Modal, Switch, TextField } from '@/components/ui'
@@ -24,6 +25,24 @@ function toMinor(text) {
   return text.trim() && Number.isFinite(value) && value > 0 ? Math.round(value * 100) : null
 }
 
+/**
+ * Who pays in each of the plan's currencies (worldwide since 2026-11-16): a country is charged in its own currency
+ * when the plan has it, else in USD. Up to 3 countries are named; more are counted.
+ */
+function usePayers(currencies) {
+  const { t } = useTranslation('adminPayments')
+  const format = useFormat()
+  const { data: countries = [] } = useGetCountriesQuery()
+  return (currency) => {
+    const places = countries.filter((country) => !country.isRemote && (country.currency === currency || (currency === 'USD' && !currencies.includes(country.currency))))
+    const remote = countries.some((country) => country.isRemote && country.currency === currency)
+    if (!places.length) return null
+    if (currency === 'USD') return t('plans.editor.payersWorld', { count: places.length })
+    const named = places.length <= 3 ? places.map((country) => format.country(country.code)).join(', ') : t('plans.editor.payersCount', { count: places.length })
+    return remote ? `${named} · ${format.country('REMOTE')}` : named
+  }
+}
+
 /** The draft of `plan` (amounts as typed text; an empty yearly amount = automatic). */
 const draftOf = (plan) => ({
   name: { ...plan.name },
@@ -43,6 +62,7 @@ export default function PlanEditor({ plan, manage, onClose, onSaved }) {
   const format = useFormat()
   const errorText = useErrorText()
   const [draft, setDraft] = useState(() => draftOf(plan))
+  const payersOf = usePayers(plan.prices.map((row) => row.currency))
   const [language, setLanguage] = useState('en')
   const [checked, setChecked] = useState(false)
   const [updatePlan, { isLoading: saving, error: saveError }] = useUpdatePlanMutation()
@@ -246,6 +266,7 @@ export default function PlanEditor({ plan, manage, onClose, onSaved }) {
                         <th scope="row">
                           {row.currency}{' '}
                           {format.currencySymbol(row.currency) !== row.currency && <span className={styles.symbol}>{format.currencySymbol(row.currency)}</span>}
+                          {payersOf(row.currency) && <span className={styles.payers}>{payersOf(row.currency)}</span>}
                         </th>
                         <td>
                           <TextField

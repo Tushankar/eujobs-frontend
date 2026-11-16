@@ -12,7 +12,10 @@
     "failedRenewals": "Renovaciones fallidas",
     "failedRenewalsCaption": "Renovaciones de Plus que no se completaron · Todo el periodo",
     "byRole": "Candidatos {{candidates}} · Reclutadores {{recruiters}}",
-    "role": { "candidate": "Candidatos", "recruiter": "Reclutadores" },
+    "role": {
+      "candidate": "Candidatos",
+      "recruiter": "Reclutadores"
+    },
     "none": "Ninguna",
     "more": "+{{count}} más"
   },
@@ -22,10 +25,16 @@
     "allStatuses": "Todos los estados",
     "payer": "Filtrar por pagador",
     "allPayers": "Todos los pagadores",
-    "payers": { "candidate": "Candidatos", "recruiter": "Reclutadores" },
+    "payers": {
+      "candidate": "Candidatos",
+      "recruiter": "Reclutadores"
+    },
     "kind": "Filtrar por tipo",
     "allKinds": "Todos los tipos",
-    "kinds": { "course": "Cursos", "subscription": "Suscripciones" },
+    "kinds": {
+      "course": "Cursos",
+      "subscription": "Suscripciones"
+    },
     "source": "Filtrar por origen",
     "allSources": "Todos los orígenes",
     "country": "Filtrar por país del pagador",
@@ -139,13 +148,19 @@
       "yearlyFor": "Precio anual en {{currency}}",
       "auto": "Auto",
       "useAuto": "Usar el precio anual automático en {{currency}}",
-      "pricesNote": "Los precios incluyen el IVA. Un precio modificado se convierte en un nuevo precio de Stripe para las nuevas suscripciones. Deja un precio anual vacío para aplicar el descuento.",
+      "pricesNote": "Los precios incluyen el IVA. Un precio modificado se convierte en un nuevo precio de Stripe para las nuevas suscripciones. Deja un precio anual vacío para aplicar el descuento. Todos los países fuera de la UE y el Reino Unido pagan en USD.",
       "impact_one": "{{count}} suscriptor actual mantiene el precio con el que se suscribió. Los nuevos precios solo se aplican a las nuevas suscripciones.",
       "impact_other": "{{count}} suscriptores actuales mantienen el precio con el que se suscribieron. Los nuevos precios solo se aplican a las nuevas suscripciones.",
       "impact_many": "{{count}} suscriptores actuales mantienen el precio con el que se suscribieron. Los nuevos precios solo se aplican a las nuevas suscripciones.",
       "cancel": "Cancelar",
       "save": "Guardar cambios",
-      "close": "Cerrar"
+      "close": "Cerrar",
+      "payersWorld_one": "Resto del mundo · {{count}} país",
+      "payersWorld_many": "Resto del mundo · {{count}} países",
+      "payersWorld_other": "Resto del mundo · {{count}} países",
+      "payersCount_one": "{{count}} país",
+      "payersCount_many": "{{count}} países",
+      "payersCount_other": "{{count}} países"
     },
     "errors": {
       "required": "Escribe este texto.",

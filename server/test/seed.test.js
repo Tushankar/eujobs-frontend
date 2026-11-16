@@ -57,7 +57,7 @@ describe('seed:catalog (U41)', () => {
     const plus = await Plan.findOne({ key: 'plus' }).lean()
     assert.deepEqual(plus.entitlements, ['apply', 'message_send', 'job_alerts', 'ai'])
     assert.equal(plus.prices.find((price) => price.currency === 'HUF').amountMinor, 399000)
-    assert.equal(plus.prices.length, 8)
+    assert.equal(plus.prices.length, 9)
     // P11c-Q2: Recruiter Plus, the £49 row, with its own Stripe prices.
     const recruiterPlus = await Plan.findOne({ key: 'recruiter_plus' }).lean()
     assert.deepEqual([recruiterPlus.role, recruiterPlus.name.fr, recruiterPlus.entitlements], ['recruiter', 'Recruiter Plus', ['jobs_unlimited', 'discovery', 'outreach', 'ai', 'interviews']])
@@ -317,7 +317,7 @@ describe('seed:demo (§3.20, OD9, P12)', () => {
       assert.equal(course.lessons.length, 3)
       assert.equal(course.quiz.questions.length, 5)
       assert.ok(course.quiz.questions.every((question) => question.correctOptionIds.length === 1))
-      assert.equal(course.prices.length, 8)
+      assert.equal(course.prices.length, 9)
       assert.ok(course.lessons.every((lesson) => lesson.textHtml.includes('<h2>') && lesson.durationSec >= 60))
       assert.ok(existsSync(absolutePath(await File.findById(course.coverFileId))))
     }

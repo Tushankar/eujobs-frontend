@@ -12,7 +12,10 @@
     "failedRenewals": "Renouvellements échoués",
     "failedRenewalsCaption": "Renouvellements Plus qui n’ont pas abouti · Depuis le début",
     "byRole": "Candidats {{candidates}} · Recruteurs {{recruiters}}",
-    "role": { "candidate": "Candidats", "recruiter": "Recruteurs" },
+    "role": {
+      "candidate": "Candidats",
+      "recruiter": "Recruteurs"
+    },
     "none": "Aucun",
     "more": "+{{count}} de plus"
   },
@@ -22,10 +25,16 @@
     "allStatuses": "Tous les statuts",
     "payer": "Filtrer par payeur",
     "allPayers": "Tous les payeurs",
-    "payers": { "candidate": "Candidats", "recruiter": "Recruteurs" },
+    "payers": {
+      "candidate": "Candidats",
+      "recruiter": "Recruteurs"
+    },
     "kind": "Filtrer par type",
     "allKinds": "Tous les types",
-    "kinds": { "course": "Formations", "subscription": "Abonnements" },
+    "kinds": {
+      "course": "Formations",
+      "subscription": "Abonnements"
+    },
     "source": "Filtrer par source",
     "allSources": "Toutes les sources",
     "country": "Filtrer par pays du payeur",
@@ -139,13 +148,19 @@
       "yearlyFor": "Prix annuel en {{currency}}",
       "auto": "Auto",
       "useAuto": "Utiliser le prix annuel automatique en {{currency}}",
-      "pricesNote": "Les prix incluent la TVA. Un prix modifié devient un nouveau prix Stripe pour les nouveaux abonnés. Laissez un prix annuel vide pour appliquer la remise.",
+      "pricesNote": "Les prix incluent la TVA. Un prix modifié devient un nouveau prix Stripe pour les nouveaux abonnés. Laissez un prix annuel vide pour appliquer la remise. Tous les pays hors UE et Royaume-Uni paient en USD.",
       "impact_one": "{{count}} abonné actuel garde le prix de sa souscription. Les nouveaux prix ne s’appliquent qu’aux nouveaux abonnés.",
       "impact_other": "{{count}} abonnés actuels gardent le prix de leur souscription. Les nouveaux prix ne s’appliquent qu’aux nouveaux abonnés.",
       "impact_many": "{{count}} abonnés actuels gardent le prix de leur souscription. Les nouveaux prix ne s’appliquent qu’aux nouveaux abonnés.",
       "cancel": "Annuler",
       "save": "Enregistrer",
-      "close": "Fermer"
+      "close": "Fermer",
+      "payersWorld_one": "Reste du monde · {{count}} pays",
+      "payersWorld_many": "Reste du monde · {{count}} pays",
+      "payersWorld_other": "Reste du monde · {{count}} pays",
+      "payersCount_one": "{{count}} pays",
+      "payersCount_many": "{{count}} pays",
+      "payersCount_other": "{{count}} pays"
     },
     "errors": {
       "required": "Saisissez ce texte.",

@@ -41,6 +41,19 @@ before(async () => {
 })
 
 describe('yearly prices (seed:catalog)', () => {
+  it('adds a currency the data has and a stored plan lacks (USD, 2026-11-16), keeping the stored prices', async () => {
+    const plus = await Plan.findOne({ key: 'plus' }).lean()
+    const withoutUsd = (prices) => prices.filter((price) => price.currency !== 'USD')
+    await Plan.updateOne({ key: 'plus' }, { $set: { prices: withoutUsd(plus.prices), yearlyPrices: withoutUsd(plus.yearlyPrices) } })
+    await seedCatalog()
+    const after = await Plan.findOne({ key: 'plus' }).lean()
+    assert.deepEqual(after.prices.map((price) => price.currency), [...withoutUsd(plus.prices).map((price) => price.currency), 'USD'])
+    assert.deepEqual(withoutUsd(after.prices), withoutUsd(plus.prices))
+    const usd = after.prices.find((price) => price.currency === 'USD')
+    assert.deepEqual([usd.amountMinor, Boolean(usd.stripePriceId)], [1100, true])
+    assert.equal(after.yearlyPrices.find((price) => price.currency === 'USD').amountMinor, yearlyAmount(1100, 15))
+  })
+
   it('rounds 12 months less the discount to whole units, tens from 1,000 up', () => {
     assert.equal(yearlyAmount(1000, 15), 10200)
     assert.equal(yearlyAmount(900, 15), 9200)
@@ -51,7 +64,7 @@ describe('yearly prices (seed:catalog)', () => {
 
   it('gives every paid plan a yearly Stripe Price per currency at 15% off', async () => {
     const plus = await Plan.findOne({ key: 'plus' }).lean()
-    assert.deepEqual([plus.yearlyEnabled, plus.yearlyDiscountPercent, plus.yearlyPrices.length], [true, 15, 8])
+    assert.deepEqual([plus.yearlyEnabled, plus.yearlyDiscountPercent, plus.yearlyPrices.length], [true, 15, 9])
     const eur = plus.yearlyPrices.find((price) => price.currency === 'EUR')
     assert.deepEqual([eur.amountMinor, eur.override], [10200, false])
     const price = await stripe().prices.retrieve(eur.stripePriceId)

@@ -113,7 +113,7 @@
   },
   "details": {
     "euroPrice": "Prix en euros",
-    "euroHint": "Prix unique, TVA incluse. Les 7 autres devises sont calculées à partir de celui-ci.",
+    "euroHint": "Prix unique, TVA incluse. Les autres devises en sont converties, dont l’USD pour tous les pays hors UE et Royaume-Uni.",
     "convertedAt": "Converti au taux de la BCE du {{date}}, arrondi aux prix locaux.",
     "convertedManual": "Saisis à la main. Un nouveau prix en euros recalcule les autres au taux BCE du jour.",
     "autosave": {
@@ -149,7 +149,7 @@
     "cover": "Image de couverture",
     "price": "Prix",
     "free": "Formation gratuite",
-    "priceHint": "Prix unique dans chaque devise, TVA comprise. Les 8 sont nécessaires pour publier une formation payante.",
+    "priceHint": "Prix unique dans chaque devise, TVA incluse. Un cours payant a besoin d’un prix dans chaque devise pour être publié.",
     "save": "Enregistrer les détails"
   },
   "upload": {

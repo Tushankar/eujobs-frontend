@@ -22,7 +22,7 @@ before(() => seedCatalog())
 const v1 = '/api/v1'
 const code = (res) => res.body.error?.code
 // OD1: the £19 course in the 8 currencies.
-const PRICES = { GBP: 1900, EUR: 2200, PLN: 9500, SEK: 24900, DKK: 16900, CZK: 54900, HUF: 849000, RON: 11500 }
+const PRICES = { GBP: 1900, EUR: 2200, PLN: 9500, SEK: 24900, DKK: 16900, CZK: 54900, HUF: 849000, RON: 11500, USD: 2500 }
 const prices = (skip) => Object.entries(PRICES).filter(([currency]) => currency !== skip).map(([currency, amountMinor]) => ({ currency, amountMinor }))
 
 const owner = () => createUser({ role: 'admin', isOwner: true })
@@ -68,7 +68,7 @@ describe('course builder (M-101, M-102, M-106, U16, U24)', () => {
     const user = await owner()
     const created = await admin.create(user, { audience: 'candidate', title: 'Interaction design foundations' })
     assert.equal(created.status, 201)
-    assert.deepEqual([created.body.status, created.body.locked, created.body.currencies.length], ['draft', false, 8])
+    assert.deepEqual([created.body.status, created.body.locked, created.body.currencies.length], ['draft', false, 9])
     const refused = await admin.status(user, created.body.id, 'published')
     assert.equal(refused.status, 422)
     assert.equal(refused.body.error.params.tab, 'details')
@@ -271,12 +271,12 @@ describe('course prices from one EUR price (ECB rates)', () => {
     assert.deepEqual([2.4, 18.7, 94, 242, 550, 8910, 21_960].map(nicePrice), [2, 19, 99, 239, 549, 8890, 21_990])
   })
 
-  it('sets all 8 prices from the EUR price, so the course can publish', async () => {
+  it('sets all 9 prices (USD included, 2026-11-16) from the EUR price, so the course can publish', async () => {
     const user = await owner()
     const { id } = await readyCourse(user, { publish: false, prices: undefined, euroPrice: 2200 })
     const course = (await api().get(`${v1}/admin/courses/${id}`).set(auth(user))).body
     const byCurrency = Object.fromEntries(course.prices.map((price) => [price.currency, price.amountMinor]))
-    assert.deepEqual(byCurrency, { EUR: 2200, GBP: 1900, PLN: 9900, SEK: 23900, DKK: 16900, CZK: 53900, HUF: 799000, RON: 11900 })
+    assert.deepEqual(byCurrency, { EUR: 2200, GBP: 1900, PLN: 9900, SEK: 23900, DKK: 16900, CZK: 53900, HUF: 799000, RON: 11900, USD: 2900 })
     assert.equal(course.priceRatesDate, FX_STUB.date)
     assert.equal((await admin.status(user, id, 'published')).body.status, 'published')
 

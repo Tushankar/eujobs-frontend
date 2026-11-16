@@ -113,7 +113,7 @@
   },
   "details": {
     "euroPrice": "Precio en euros",
-    "euroHint": "Precio único, IVA incluido. Las otras 7 monedas se calculan a partir de él.",
+    "euroHint": "Precio único, IVA incluido. Las demás monedas se convierten a partir de él, incluido el USD para todos los países fuera de la UE y el Reino Unido.",
     "convertedAt": "Convertido al tipo del BCE del {{date}} y redondeado a precios locales.",
     "convertedManual": "Fijados a mano. Un nuevo precio en euros recalcula los demás al tipo del BCE de hoy.",
     "autosave": {
@@ -149,7 +149,7 @@
     "cover": "Imagen de portada",
     "price": "Precio",
     "free": "Curso gratuito",
-    "priceHint": "Precio único en cada moneda, IVA incluido. Se necesitan los 8 para publicar un curso de pago.",
+    "priceHint": "Precio único en cada moneda, IVA incluido. Un curso de pago necesita un precio en cada moneda para publicarse.",
     "save": "Guardar detalles"
   },
   "upload": {

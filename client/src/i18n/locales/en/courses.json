@@ -111,7 +111,7 @@
   },
   "details": {
     "euroPrice": "Price in euro",
-    "euroHint": "One-time price, VAT included. The other 7 currencies are converted from it.",
+    "euroHint": "One-time price, VAT included. The other currencies are converted from it, including USD for every country outside the EU and the UK.",
     "convertedAt": "Converted at the ECB rate of {{date}}, rounded to local price points.",
     "convertedManual": "Set by hand. A new euro price converts the others at today’s ECB rate.",
     "autosave": {
@@ -147,7 +147,7 @@
     "cover": "Cover image",
     "price": "Price",
     "free": "Free course",
-    "priceHint": "One-time price in every currency, VAT included. All 8 are needed to publish a paid course.",
+    "priceHint": "One-time price in every currency, VAT included. A paid course needs a price in each currency to publish.",
     "save": "Save details"
   },
   "upload": {

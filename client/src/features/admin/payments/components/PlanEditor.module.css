@@ -171,6 +171,17 @@
   color: var(--muted-foreground);
 }
 
+/* Who pays in this currency (worldwide since 2026-11-16). */
+.payers {
+  display: block;
+  max-width: 180px;
+  margin-top: 2px;
+  font-size: 12px;
+  font-weight: 400;
+  line-height: 16px;
+  color: var(--muted-foreground);
+}
+
 .auto {
   font-size: 12px;
   color: var(--text-faint);
