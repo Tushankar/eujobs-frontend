@@ -31,3 +31,6 @@ e2e/artifacts/
 .env.*
 !.env.example
 server/uploads/
+
+# Video walkthrough with live demo credentials (local only, never commit)
+VIDEO_WALKTHROUGH.md
