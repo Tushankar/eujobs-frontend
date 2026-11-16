@@ -31,6 +31,8 @@ export default function StickyNav() {
   const track = useRef(null)
   const marker = useRef(null)
   const [section, setSection] = useState(null)
+  // Bumped each time the bar slides in: the logo remounts under the new key, so its intro plays again.
+  const [reveals, setReveals] = useState(0)
   // The home page's blog section belongs to the Blog item, which opens the /blog page.
   const current = home ? (section ? (section === 'blog' ? '/blog' : `/#${section}`) : '/') : navItemOf(pathname)
 
@@ -55,7 +57,10 @@ export default function StickyNav() {
       ScrollTrigger.create({
         start: SHOW_AFTER,
         end: 'max',
-        onEnter: () => reveal.timeScale(1).play(),
+        onEnter: () => {
+          reveal.timeScale(1).play()
+          setReveals((count) => count + 1)
+        },
         onLeaveBack: () => reveal.timeScale(1.4).reverse(),
         onUpdate: readSection,
       })
@@ -89,7 +94,7 @@ export default function StickyNav() {
   return (
     <div ref={bar} className={styles.bar} role="navigation" aria-label={t('landing:nav.sticky')}>
       <Link to="/" className={styles.brand} aria-label={t('landing:nav.home_aria', { brand: BRAND.name })} onClick={toHero}>
-        <BrandLogo height={30} motion="shine" />
+        <BrandLogo key={reveals} height={30} motion="intro" />
       </Link>
       <div ref={track} className={styles.track}>
         <span ref={marker} className={styles.marker} aria-hidden="true" />

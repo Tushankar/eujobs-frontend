@@ -98,12 +98,13 @@
     transform-origin: 0 50%;
   }
 
-  /* 6. One slow light sweep once it is built; the shell's logos get the same sweep on hover. */
+  /* 6. One slow light sweep once it is built; the same sweep plays on hover. */
   .intro::after {
     animation: logo-shine 1.6s cubic-bezier(0.45, 0, 0.2, 1) 2.2s;
   }
 
-  .shine:hover::after {
+  .shine:hover::after,
+  .intro:hover::after {
     animation: logo-shine 1.2s cubic-bezier(0.45, 0, 0.2, 1);
   }
 }

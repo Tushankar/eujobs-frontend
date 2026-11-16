@@ -1,7 +1,7 @@
 import { useLayoutEffect, useRef, useState } from 'react'
 import { useGSAP } from '@gsap/react'
 import gsap from 'gsap'
-import { ArrowLeft, ArrowUpRight, Bookmark, BriefcaseBusiness, Globe, MapPin, Search, SearchX } from 'lucide-react'
+import { ArrowLeft, ArrowUpRight, Bookmark, BriefcaseBusiness, Globe, MapPin, SearchX } from 'lucide-react'
 import { useTranslation } from 'react-i18next'
 import { Link, useSearchParams } from 'react-router-dom'
 import { CompanyLogo, Icon, Skeleton, SkeletonRegion } from '@/components/ui'
@@ -13,6 +13,7 @@ import { useFormat } from '@/lib/preferences.js'
 import { cx } from '@/utils/cx.js'
 import { useGetPublicJobsQuery } from '../api.js'
 import PublicShell from '../components/PublicShell.jsx'
+import JobSearchForm from '../components/landing/JobSearchForm.jsx'
 import landing from '../components/landing/Landing.module.css'
 import shell from '../components/PublicShell.module.css'
 import styles from './PublicJobsPage.module.css'
@@ -107,7 +108,7 @@ export default function PublicJobsPage() {
           <p className={shell.lead} data-intro>
             {t('website:jobs.text')}
           </p>
-          <SearchForm key={`${q}|${location}`} q={q} location={location} onSearch={update} />
+          <JobSearchForm key={`${q}|${location}`} q={q} location={location} onSearch={update} className={styles.search} data-intro />
           <div data-intro>
             <Tabs active={tab} counts={data && { all: data.total, ...data.counts }} onChange={(key) => update(Object.fromEntries(GROUPS.map((group) => [group, key.startsWith(`${group}:`) ? key.split(':')[1] : null])))} />
           </div>
@@ -145,33 +146,6 @@ export default function PublicJobsPage() {
         )}
       </section>
     </PublicShell>
-  )
-}
-
-/** The landing hero's search pill: keywords and place. */
-function SearchForm({ q, location, onSearch }) {
-  const { t } = useTranslation()
-  const [what, setWhat] = useState(q)
-  const [where, setWhere] = useState(location)
-  function submit(event) {
-    event.preventDefault()
-    onSearch({ q: what.trim(), location: where.trim() })
-  }
-  return (
-    <form className={`${landing.search} ${styles.search}`} role="search" aria-label={t('landing:hero.searchLabel')} onSubmit={submit} data-intro>
-      <label className={landing.searchField}>
-        <Icon as={Search} size={16} />
-        <input value={what} onChange={(event) => setWhat(event.target.value)} placeholder={t('landing:hero.what')} aria-label={t('landing:hero.what')} />
-      </label>
-      <label className={landing.searchField}>
-        <Icon as={MapPin} size={16} />
-        <input value={where} onChange={(event) => setWhere(event.target.value)} placeholder={t('landing:hero.where')} aria-label={t('landing:hero.where')} />
-      </label>
-      <button type="submit" className={landing.searchButton}>
-        <Icon as={Search} size={16} />
-        <span className={landing.searchLabel}>{t('landing:hero.search')}</span>
-      </button>
-    </form>
   )
 }
 

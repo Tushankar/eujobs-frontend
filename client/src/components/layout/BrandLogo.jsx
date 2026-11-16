@@ -12,8 +12,8 @@ const TAGS = PARTS.flatMap(([part, count]) => Array.from({ length: count }, (_, 
 
 /**
  * The EU JOBS logo from Figma (node 484:7863), name and tagline included, inline so its parts can animate. `height` in
- * px. `motion`: "intro" builds the logo in once (public pages), "shine" sweeps a light across it on hover (app shell);
- * both stay still under reduced motion.
+ * px. `motion`: "intro" builds the logo in on mount (public pages; remount it to replay) and shines on hover, "shine"
+ * only sweeps a light across it on hover (app shell); both stay still under reduced motion.
  */
 export default function BrandLogo({ height = 45, motion }) {
   const prefix = useId().replace(/:/g, '')
