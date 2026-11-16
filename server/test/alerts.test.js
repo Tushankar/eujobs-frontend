@@ -54,7 +54,7 @@ async function publishJob(recruiter, overrides = {}) {
 
 describe('job alert CRUD and limits (§3.6, M-031, P7-Q2)', () => {
   it('creates alerts in the picker country and language, with an optional city in that country', async () => {
-    const user = await candidate({ language: 'es' })
+    const user = await candidate({ language: 'es', jobsWorldwide: false })
     const res = await create(user, { name: 'Diseño', keywords: 'designer', placeId: PLACES.london.placeId, frequency: 'daily' })
     assert.equal(res.status, 201)
     assert.deepEqual([res.body.country, res.body.location.city, res.body.frequency, res.body.active], ['GB', 'London', 'daily', true])
@@ -65,6 +65,10 @@ describe('job alert CRUD and limits (§3.6, M-031, P7-Q2)', () => {
     const remote = await candidate({ pickerCountry: 'REMOTE', jobsWorldwide: false })
     assert.equal((await create(remote, { name: 'Remote', keywords: 'designer' })).body.country, 'REMOTE')
     assert.equal((await create(remote, { name: 'Remote', keywords: 'designer', placeId: PLACES.london.placeId })).status, 422)
+
+    // Owner 2026-11-16: a candidate browsing Worldwide gets a Worldwide alert, whose city may be in any country.
+    const worldwide = await create(await candidate(), { name: 'Berlin', keywords: 'designer', placeId: PLACES.berlin.placeId })
+    assert.deepEqual([worldwide.status, worldwide.body.country, worldwide.body.location.city], [201, 'WORLDWIDE', 'Berlin'])
   })
 
   it('allows 10 alerts, names up to 80 and keywords up to 120 characters', async () => {

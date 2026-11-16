@@ -13,7 +13,7 @@ function AlertForm({ alert, onClose }) {
   const { t } = useTranslation()
   const format = useFormat()
   const errorText = useErrorText()
-  const { me } = usePreferences()
+  const { view } = usePreferences()
   const { data: config } = useGetConfigQuery()
   const [createAlert] = useCreateJobAlertMutation()
   const [updateAlert] = useUpdateJobAlertMutation()
