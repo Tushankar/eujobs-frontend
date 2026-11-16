@@ -223,8 +223,15 @@
 }
 
 @media (max-width: 767px) {
+  /* The text keeps a usable width beside the avatar, so the button wraps onto its own line below them
+     instead of squeezing the name and headline into a one-word column. */
   .profile {
     flex-wrap: wrap;
+    gap: 16px;
+  }
+
+  .profileText {
+    flex: 1 1 180px;
   }
 
   .stats,

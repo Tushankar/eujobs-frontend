@@ -53,3 +53,24 @@
 .cell {
   color: var(--foreground);
 }
+
+/* Phones: a narrow label column and tighter cells give the candidates room, and words wrap whole
+   ("experience", not "experienc / e"); only a single word too long for its column still breaks. */
+@media (max-width: 599px) {
+  .table {
+    overflow-wrap: break-word;
+  }
+
+  .label {
+    width: 84px;
+    padding: 10px 8px 10px 0;
+  }
+
+  .cell {
+    padding: 10px 8px;
+  }
+
+  .person {
+    padding: 0 8px 12px;
+  }
+}

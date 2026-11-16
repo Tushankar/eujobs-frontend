@@ -207,6 +207,26 @@
   color: var(--primary-hover);
 }
 
+/* Phones: the actions wrap unevenly when right-aligned, so lay them out in two clean rows across the card:
+   posted date | AI job summary, then View job | Apply. A long title wraps instead of overlapping the meta row. */
+@media (max-width: 599px) {
+  .title {
+    height: auto;
+  }
+
+  .actions {
+    display: grid;
+    grid-template-columns: 1fr auto;
+    align-items: center;
+    width: 100%;
+    margin-left: 0;
+  }
+
+  .actions > :nth-child(even) {
+    justify-self: end;
+  }
+}
+
 /* OQ-6i: the countries a remote job accepts */
 .eligible {
   padding-top: 8px;

@@ -2,7 +2,13 @@
   display: flex;
   gap: 20px;
   overflow-x: auto;
+  scrollbar-width: none;
   border-bottom: 1px solid var(--border);
+}
+
+/* Narrow screens scroll the tab row sideways; hide its scrollbar like TabBar does. */
+.tabs::-webkit-scrollbar {
+  display: none;
 }
 
 .tab {

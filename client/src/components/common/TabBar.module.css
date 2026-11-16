@@ -65,9 +65,12 @@
     color var(--transition);
 }
 
-.tab:hover {
-  background: var(--muted);
-  color: var(--foreground);
+/* Pointer devices only: on a phone a tapped tab keeps :hover, leaving a grey tab behind after switching. */
+@media (hover: hover) {
+  .tab:hover {
+    background: var(--muted);
+    color: var(--foreground);
+  }
 }
 
 .tab:focus-visible {

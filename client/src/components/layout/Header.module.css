@@ -318,6 +318,19 @@
     padding-left: 8px;
   }
 
+  /* Tighter spacing so the page name keeps whole words ("Applications", not "Application / s"). */
+  .header {
+    gap: 8px;
+  }
+
+  .actions {
+    gap: 6px;
+  }
+
+  .crumbCurrent {
+    overflow-wrap: break-word;
+  }
+
   /* Icon-only search on a phone: a 40px circle. */
   .search {
     justify-content: center;

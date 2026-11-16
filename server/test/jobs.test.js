@@ -128,7 +128,9 @@ describe('recruiter jobs (§3.7, M-033 … M-041, P4-D6 … D8)', () => {
     assert.equal(job.relevantCount, 2)
     await listedCandidate({ profile: { skills: ['Design Systems'] } })
     await api().post('/api/v1/_test/scheduler/tick').send({ now: new Date().toISOString() })
-    assert.equal((await Job.findById(job.id)).relevantCount, 3)
+    // Scored: the Berlin candidate with a UK right to work is no longer capped for this London job (owner 2026-11-16:
+    // a right to work there counts like living there), so they stay relevant next to the new one.
+    assert.equal((await Job.findById(job.id)).relevantCount, 4)
   })
 
   it('runs the quality checks and suggests skills of the company market (M-060, P4-D5)', async () => {

@@ -98,9 +98,16 @@
 @media (max-width: 639px) {
   .card {
     flex-wrap: wrap;
+    align-items: flex-start;
+    padding: 20px;
   }
 
   .text {
     flex-basis: calc(100% - 80px);
+  }
+
+  /* The bell sits beside the alert's name, and the wrapped actions start under the text (18px icon + 16px gap). */
+  .text + * {
+    margin-left: 34px;
   }
 }

@@ -322,6 +322,31 @@
   gap: 4px;
 }
 
+/* Phones: edit/delete sit beside the title only; the dates and description below use the card's full width
+   instead of a narrow column next to the icons. */
+@media (max-width: 599px) {
+  .entry {
+    display: grid;
+    grid-template-columns: minmax(0, 1fr) auto;
+    column-gap: 8px;
+  }
+
+  .entryText {
+    display: contents;
+  }
+
+  .entryText > :not(:first-child) {
+    grid-column: 1 / -1;
+  }
+
+  .entryActions {
+    grid-column: 2;
+    grid-row: 1;
+    margin-top: -6px;
+    margin-right: -8px;
+  }
+}
+
 .none {
   padding-top: 12px;
   border-top: 1px solid var(--border);

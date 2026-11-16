@@ -63,6 +63,16 @@ textarea {
   color: inherit;
 }
 
+/* iOS (Safari and Chrome, both WebKit) zooms into any field under 16px on focus and never zooms back
+   out. iOS-only query, so desktop and Android keep the designed 13–14px; pinch-zoom still works. */
+@supports (-webkit-touch-callout: none) {
+  input,
+  select,
+  textarea {
+    font-size: 16px !important;
+  }
+}
+
 button {
   cursor: pointer;
 }

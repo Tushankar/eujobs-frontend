@@ -122,6 +122,7 @@ export default function ApplicationsPage() {
       header: <span className="sr-only">{t('applications:recruiter.profile')}</span>,
       render: (row) => (
         <Link to={profilePath(row.candidate.id)} className={styles.profileLink} aria-label={t('applications:recruiter.viewProfile', { name: row.candidate.fullName })}>
+          <span className={styles.profileText}>{t('applications:panel.profile')}</span>
           <Icon as={ArrowUpRight} size={15} />
         </Link>
       ),

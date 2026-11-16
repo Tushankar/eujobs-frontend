@@ -217,8 +217,9 @@ select.input {
   color: var(--card);
 }
 
-/* The open list keeps normal colours. */
-.applied option {
+/* The open list uses the theme's colours. The field's background is transparent, so without this Chrome opens a
+   white list with the dark theme's light text on it (and an applied filter's inverted colours). */
+select.input option {
   background: var(--card);
   color: var(--foreground);
 }

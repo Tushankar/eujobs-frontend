@@ -62,6 +62,25 @@
   background: var(--accent);
 }
 
+/* The arrow alone in the table; when the rows stack into cards (DataTable's container query) it gets its words. */
+.profileText {
+  display: none;
+}
+
+@container (max-width: 760px) {
+  .profileLink {
+    align-items: center;
+    gap: 6px;
+    font-size: 12px;
+    font-weight: 600;
+    line-height: 16px;
+  }
+
+  .profileText {
+    display: inline;
+  }
+}
+
 .name,
 .headline {
   display: block;

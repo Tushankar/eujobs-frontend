@@ -71,9 +71,11 @@
     flex-wrap: wrap;
   }
 
+  /* Under the version's text, so they start at its left edge instead of wrapping ragged against the right. */
   .actions {
     flex-basis: 100%;
     flex-wrap: wrap;
+    justify-content: flex-start;
   }
 }
 

@@ -271,6 +271,15 @@
   .hero {
     display: none;
   }
+
+  /* No hero beside the form: start the logo row near the top instead of 68px down. */
+  .formSection {
+    padding-top: 16px;
+  }
+
+  .logo {
+    padding: 8px 0;
+  }
 }
 
 /* Desktop: the split is exactly one screen tall, so the hero image always fits and only the

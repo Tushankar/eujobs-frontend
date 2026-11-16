@@ -102,8 +102,7 @@ function BlogTab({ manage, onNotice }) {
     { key: 'published', header: t('website:admin.blog.published'), render: (post) => (post.publishedAt ? format.date(post.publishedAt) : '—') },
     {
       key: 'actions',
-      header: '',
-      label: t('website:admin.blog.actions'),
+      header: <span className="sr-only">{t('website:admin.blog.actions')}</span>,
       render: (post) =>
         manage && (
           <span className={styles.actions}>

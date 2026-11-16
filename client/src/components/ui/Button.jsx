@@ -30,6 +30,7 @@ export default function Button({
   return (
     <Component
       className={cx(styles.button, styles[variant], styles[size], fullWidth && styles.fullWidth, className)}
+      data-variant={variant}
       aria-busy={loading || undefined}
       {...nativeProps}
       {...rest}

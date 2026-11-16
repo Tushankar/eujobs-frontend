@@ -79,3 +79,12 @@
 .row .skeletonTile {
   border-radius: var(--radius-xl);
 }
+
+/* Phones: the status and the review button wrap under the text, so they start at its edge (44px tile + 16px gap)
+   instead of under the icon, and the badge centres on the button. */
+@media (max-width: 599px) {
+  .body + * {
+    align-self: center;
+    margin-left: 60px;
+  }
+}

@@ -108,9 +108,21 @@ export function useWorkspaceMotion(content, pathname) {
           if (queued.length && !frame) frame = requestAnimationFrame(flush)
         })
         observer.observe(root, { childList: true, subtree: true })
+
+        // Scroll triggers measure their position once. When the page's height changes (three skeleton cards
+        // replaced by one real card on a phone), the blocks below move but their triggers stay put, and a block
+        // whose trigger is now past the end of the page never reveals (an empty card frame). Re-measure them.
+        let refreshFrame = 0
+        const resize = new ResizeObserver(() => {
+          cancelAnimationFrame(refreshFrame)
+          refreshFrame = requestAnimationFrame(() => ScrollTrigger.refresh())
+        })
+        resize.observe(root)
         return () => {
           observer.disconnect()
+          resize.disconnect()
           cancelAnimationFrame(frame)
+          cancelAnimationFrame(refreshFrame)
         }
       })
     },

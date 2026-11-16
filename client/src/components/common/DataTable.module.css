@@ -9,6 +9,8 @@
 .scroll {
   position: relative; /* contains the absolutely-positioned .sr-only caption / header text so it can't widen the page */
   overflow-x: auto; /* last resort only: the table fits its container, and stacks when that is narrow */
+  /* Rows waiting to rise in on scroll sit 30px low; that must not give the table its own vertical scrollbar. */
+  overflow-y: hidden;
 }
 
 .table {
@@ -95,7 +97,9 @@
   .row:last-child .td {
     display: grid;
     grid-template-columns: minmax(96px, 34%) minmax(0, 1fr);
-    align-items: center;
+    /* The label lines up with the value's first line, not the middle of a tall value (a stage menu with
+       "Schedule interview" under it, a next step with its link). */
+    align-items: baseline;
     gap: 12px;
     height: auto;
     padding: 5px 0;
@@ -109,8 +113,10 @@
     color: var(--muted-foreground);
   }
 
-  /* The first column (the name, the job) is the card's title, without a label. */
-  .td:first-child {
+  /* The first column (the name, the job) is the card's title, without a label. The .row:last-child selectors
+     out-rank the grid rule above, which otherwise squeezed the last row's title into the label column. */
+  .td:first-child,
+  .row:last-child .td:first-child {
     display: block;
     padding: 0 0 8px;
   }
@@ -120,7 +126,8 @@
   }
 
   /* A cell without a label (the row's actions) uses the full width. */
-  .td:not([data-label]) {
+  .td:not([data-label]),
+  .row:last-child .td:not([data-label]) {
     display: flex;
     flex-wrap: wrap;
     gap: 8px;
@@ -129,6 +136,11 @@
 
   .td:not([data-label])::before {
     content: none;
+  }
+
+  /* A leading ghost action ("Manage →") starts at the card's text edge instead of indented by its padding. */
+  .td:not([data-label]) > [data-variant='ghost']:first-child {
+    padding-left: 0;
   }
 
   .td > * {
