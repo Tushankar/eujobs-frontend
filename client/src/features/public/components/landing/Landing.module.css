@@ -541,7 +541,9 @@
 /* A vuesax/linear outline icon painted in the text colour (blue, white on the active card). */
 /* The Figma icon inline (its strokes are currentColor), so the motion can draw it. */
 .categoryIcon {
-  display: block;
+  display: flex;
+  align-items: center;
+  justify-content: center;
   flex-shrink: 0;
   width: 24px;
   height: 24px;
@@ -559,6 +561,12 @@
   display: block;
   width: 100%;
   height: 100%;
+}
+
+/* Icons keep their own size, centred in the 24px slot (the office icon is 24 × 20.76, not square). */
+.categoryIcon svg {
+  width: auto;
+  height: auto;
 }
 
 .categoryActive .categoryIcon,

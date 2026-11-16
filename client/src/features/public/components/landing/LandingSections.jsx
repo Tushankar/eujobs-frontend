@@ -8,11 +8,11 @@ import ctaGlass from '@/assets/landing/cta-glass.webp'
 import ctaPhoto from '@/assets/landing/cta-photo.webp'
 import faqGlowRed from '@/assets/landing/faq-glow-2.svg'
 import faqGlowViolet from '@/assets/landing/faq-glow-1.svg'
-import iconArrange from '@/assets/landing/icon-arrange-circle.svg?raw'
 import iconBriefcase from '@/assets/landing/icon-briefcase.svg?raw'
-import iconBuildings from '@/assets/landing/icon-buildings.svg?raw'
 import iconClock from '@/assets/landing/icon-clock.svg?raw'
-import iconGlobal from '@/assets/landing/icon-global.svg?raw'
+import iconHybrid from '@/assets/landing/icon-hybrid.svg?raw'
+import iconOffice from '@/assets/landing/icon-office.svg?raw'
+import iconRemote from '@/assets/landing/icon-remote.svg?raw'
 import iconNote from '@/assets/landing/icon-note-text.svg?raw'
 import iconAdd from '@/assets/landing/icon-add.svg'
 import iconClipboard from '@/assets/landing/icon-clipboard-tick.svg?raw'
@@ -84,12 +84,13 @@ export function TrustedStrip() {
   )
 }
 
-/* The six cards: the three work modes and three employment types, with live open-job counts. Icons are the
-   Figma file's vuesax/linear set (D S › Outlined), like the steps section, tinted through a CSS mask. */
+/* The six cards: the three work modes and three employment types, with live open-job counts. The work-mode icons are
+   Figma 478:7735 / 478:7760 / 478:7748 (filled); the employment ones are the file's vuesax/linear set (D S › Outlined),
+   like the steps section. All are tinted through currentColor. */
 const CATEGORIES = [
-  { group: 'workPreference', value: 'remote', icon: iconGlobal },
-  { group: 'workPreference', value: 'hybrid', icon: iconArrange },
-  { group: 'workPreference', value: 'on_site', icon: iconBuildings },
+  { group: 'workPreference', value: 'remote', icon: iconRemote },
+  { group: 'workPreference', value: 'hybrid', icon: iconHybrid },
+  { group: 'workPreference', value: 'on_site', icon: iconOffice },
   { group: 'employmentType', value: 'full_time', icon: iconBriefcase },
   { group: 'employmentType', value: 'part_time', icon: iconClock },
   { group: 'employmentType', value: 'contract', icon: iconNote },
