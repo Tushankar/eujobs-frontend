@@ -36,10 +36,11 @@
     "text": "Découvrez des milliers d’opportunités adaptées à vos compétences. Postulez facilement, suivez vos démarches et passez à l’étape suivante de votre carrière, le tout au même endroit.",
     "start": "C’est parti",
     "join": "Créer un compte",
-    "talentTitle": "« Trouvez des talents à distance en quelques minutes »",
-    "talentText": "Échangez avec des professionnels qualifiés et flexibles, prêts à démarrer.",
-    "remoteTitle": "« Des talents à distance, prêts quand vous l’êtes »",
-    "remoteText": "Accédez à une sélection de professionnels polyvalents du monde entier."
+    "eyebrowTag": "Nouveau",
+    "eyebrow": "Des offres associées par l’IA dans l’UE et au Royaume-Uni",
+    "latest": "Derniers postes :",
+    "liveNote": "Chez des employeurs de confiance dans l’UE et au Royaume-Uni",
+    "imageAlt": "Un professionnel souriant au téléphone devant un immeuble de verre moderne"
   },
   "trusted": {
     "title": "Ils nous font confiance"
@@ -56,7 +57,8 @@
     "on_site": "Rejoignez l’équipe en personne sur son lieu de travail.",
     "full_time": "Des postes durables à temps plein.",
     "part_time": "Des horaires flexibles qui s’adaptent à votre vie.",
-    "contract": "Des missions à durée déterminée pour spécialistes et freelances."
+    "contract": "Des missions à durée déterminée pour spécialistes et freelances.",
+    "eyebrow": "Catégories"
   },
   "steps": {
     "titleLead": "Des étapes simples pour décrocher",
@@ -70,7 +72,10 @@
     "resumeTitle": "Ajoutez votre CV",
     "resumeText": "Ajoutez votre CV le plus récent pour présenter votre expérience aux recruteurs.",
     "applyTitle": "Postulez",
-    "applyText": "Renseignez les informations demandées par l’offre et envoyez votre candidature."
+    "applyText": "Renseignez les informations demandées par l’offre et envoyez votre candidature.",
+    "eyebrow": "Comment ça marche",
+    "cvTitle": "CV lu par l’IA",
+    "cvText": "Vos compétences et votre expérience remplissent votre profil"
   },
   "vacancies": {
     "titleLead": "Découvrez les dernières",
@@ -81,17 +86,28 @@
     "years_many": "{{count}} ans",
     "years_other": "{{count}} ans",
     "empty": "Aucune offre ouverte pour le moment. Les nouveaux postes apparaissent ici dès leur publication.",
-    "all": "Voir toutes les offres"
+    "all": "Voir toutes les offres",
+    "eyebrow": "Dernières offres",
+    "filter": "Mode de travail",
+    "allTypes": "Toutes"
   },
   "career": {
     "title": "Lancez votre carrière avec des opportunités faites pour vous",
     "text": "Trouvez des postes dans tous les secteurs grâce aux offres en temps réel, aux alertes personnalisées et à des entreprises de confiance.",
-    "imageAlt": "Une professionnelle travaillant sur un ordinateur"
+    "liveTitle": "Des offres en temps réel",
+    "liveText": "Les nouveaux postes apparaissent dès que les entreprises les publient.",
+    "alertsTitle": "Des alertes emploi personnalisées",
+    "alertsText": "Enregistrez une recherche et soyez informé en premier des offres qui correspondent.",
+    "trustTitle": "Des entreprises de confiance",
+    "trustText": "Les employeurs vérifiés portent une coche à côté de leur nom."
   },
   "faq": {
     "titleLead": "Besoin d’aide ? Commencez par ces",
     "titleAccent": "réponses",
-    "text": "Nous sommes là pour vous accompagner à chaque étape."
+    "text": "Nous sommes là pour vous accompagner à chaque étape.",
+    "eyebrow": "FAQ",
+    "contactTitle": "Vous avez encore des questions ?",
+    "contactText": "Notre équipe se fera un plaisir de vous aider."
   },
   "cta": {
     "title": "Là où vos ambitions rencontrent de vraies opportunités",
@@ -120,12 +136,11 @@
     "backToTop": "Retour en haut",
     "blog": "Blog",
     "pricing": "Tarifs",
-    "email": "Adresse e-mail",
-    "phone": "Téléphone",
     "social": "Réseaux sociaux",
     "facebook": "Facebook",
     "linkedin": "LinkedIn",
-    "instagram": "Instagram"
+    "instagram": "Instagram",
+    "contact": "Contact"
   },
   "loadError": "Impossible de charger les dernières offres. Actualisez la page.",
   "reviews": {
@@ -135,14 +150,16 @@
     "previous": "Avis précédents",
     "next": "Avis suivants",
     "page": "{{page}} / {{pages}}",
-    "rating": "Note : {{value}} sur 5"
+    "rating": "Note : {{value}} sur 5",
+    "eyebrow": "Avis"
   },
   "blog": {
     "titleLead": "Derniers",
     "titleAccent": "articles",
     "text": "Découvrez des conseils, les tendances RH et l’actualité du secteur pour guider votre recherche d’emploi.",
     "read": "Lire la suite",
-    "team": "L’équipe EU Jobs"
+    "team": "L’équipe EU Jobs",
+    "all": "Tous les articles"
   },
   "newsletter": {
     "titleLead": "Abonnez-vous à notre newsletter",
@@ -151,9 +168,11 @@
     "email": "Adresse e-mail",
     "subscribe": "S’abonner",
     "note": "Nous envoyons d’abord un lien de confirmation. Désabonnement possible à tout moment.",
-    "sent": "Presque terminé ! Consultez votre boîte de réception et cliquez sur le lien pour confirmer votre abonnement."
+    "sent": "Presque terminé ! Consultez votre boîte de réception et cliquez sur le lien pour confirmer votre abonnement.",
+    "label": "Newsletter"
   },
   "pricing": {
-    "details": "Voir le détail des offres"
+    "details": "Voir le détail des offres",
+    "eyebrow": "Tarifs"
   }
 }
