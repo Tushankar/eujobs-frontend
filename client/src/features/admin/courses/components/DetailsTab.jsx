@@ -241,8 +241,7 @@ export default function DetailsTab({ course, checklist }) {
                   aria-label={t('details.outcomeLabel', { number: index + 1 })}
                   value={outcome}
                   onKeyDown={(event) => event.key === 'Enter' && event.preventDefault()}
-                  onChange={(event) => setOutcome(index, event.target.value.replace(/\s*
-\s*/g, ' '))}
+                  onChange={(event) => setOutcome(index, event.target.value.replace(/\s*\n\s*/g, ' '))}
                   data-outcome={index}
                   error={errorText.field('outcomes', errors[`outcomes.${index}`])}
                 />
