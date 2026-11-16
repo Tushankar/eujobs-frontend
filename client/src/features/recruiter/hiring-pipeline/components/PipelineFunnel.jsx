@@ -1,5 +1,6 @@
 import { useTranslation } from 'react-i18next'
 import { bandPath, CATEGORY_ICONS, funnelFor, HEIGHT, RING_Y } from '@/features/admin/recruitment/funnelGeometry.js'
+import UprightFunnel from '@/features/admin/recruitment/components/UprightFunnel.jsx'
 import { cx } from '@/utils/cx.js'
 import styles from './PipelineFunnel.module.css'
 
@@ -84,36 +85,24 @@ export default function PipelineFunnel({ stages, selectedId, onSelect, move }) {
         </svg>
       </div>
 
-      {/* Phones: the same funnel turned upright, one band per stage narrowing downward (owner 2026-11-16). */}
-      <ol className={styles.upright} aria-label={t('applications:funnel.label')}>
-        {stages.map((stage, index) => {
-          const top = 100 - (55 * index) / stages.length
-          const bottom = 100 - (55 * (index + 1)) / stages.length
+      {/* Phones: the same funnel turned upright (owner 2026-11-16). */}
+      <UprightFunnel
+        label={t('applications:funnel.label')}
+        stages={stages.map((stage, index) => {
           const kept = keptAt(index)
-          return (
-            <li key={stage.id}>
-              <button
-                type="button"
-                className={cx(styles.uprightStage, stage.id === selectedId && styles.selected, move.dropStageId === stage.id && styles.dropping)}
-                {...stageProps(stage)}
-              >
-                <span className={styles.bandCell}>
-                  <span className={styles.band} style={{ '--top': `${top}%`, '--inset': `${((top - bottom) / 2 / top) * 100}%`, '--fill': shapes[index].fill }}>
-                    <img src={CATEGORY_ICONS[stage.category]} alt="" width={22} height={22} />
-                  </span>
-                </span>
-                <span className={styles.uprightText}>
-                  <span className={styles.uprightName}>{stage.name}</span>
-                  <span className={styles.uprightCount}>{stage.now}</span>
-                  <span className={styles.uprightReached}>
-                    {[t('applications:funnel.reached', { count: stage.reached }), kept !== null && t('applications:funnel.kept', { percent: kept })].filter(Boolean).join(' · ')}
-                  </span>
-                </span>
-              </button>
-            </li>
-          )
+          return {
+            key: stage.id,
+            name: stage.name,
+            count: stage.now,
+            detail: [t('applications:funnel.reached', { count: stage.reached }), kept !== null && t('applications:funnel.kept', { percent: kept })].filter(Boolean).join(' · '),
+            fill: shapes[index].fill,
+            icon: CATEGORY_ICONS[stage.category],
+            selected: stage.id === selectedId,
+            dropping: move.dropStageId === stage.id,
+            props: stageProps(stage),
+          }
         })}
-      </ol>
+      />
     </div>
   )
 }

@@ -7,6 +7,7 @@ import { WORKSPACES, workspacePath } from '@/app/workspaces.js'
 import EmptyState from '@/components/common/EmptyState.jsx'
 import PillBadge from '@/components/common/PillBadge.jsx'
 import { Avatar, Icon, Panel, Skeleton, SkeletonRegion } from '@/components/ui'
+import EmailText from '@/components/common/EmailText.jsx'
 import { useAuditText } from '@/features/admin/audit-logs/useAuditText.js'
 import { useGetAdminFileUrlQuery } from '@/features/admin/moderation/api.js'
 import { useFormat, usePreferences } from '@/lib/preferences.js'
@@ -267,7 +268,7 @@ function RecruiterSections({ user, part }) {
             [t('detail.size'), company.size && t(`enums:companySize.${company.size}`)],
             [t('detail.location'), company.location && `${company.location.city}, ${format.country(company.location.countryCode)}`],
             [t('detail.website'), company.website],
-            [t('detail.businessEmail'), company.businessEmail],
+            [t('detail.businessEmail'), company.businessEmail && <EmailText email={company.businessEmail} />],
             [t('detail.businessAddress'), company.businessAddress],
             [t('detail.registration'), company.registrationDetails],
           ]

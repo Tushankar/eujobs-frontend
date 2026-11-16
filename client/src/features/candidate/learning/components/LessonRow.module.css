@@ -74,3 +74,22 @@
 .stateDone {
   color: light-dark(#398460, #78c5a0);
 }
+
+/* Phones: the title keeps the row's width and "Completed" / "Open lesson" (and the preview badge) move under it,
+   starting at the text's edge; the circle hangs in the indent (16px padding + 36px circle + 8px gap). */
+@media (max-width: 599px) {
+  .row {
+    flex-wrap: wrap;
+    row-gap: 4px;
+    padding-left: 60px;
+  }
+
+  .circle {
+    align-self: flex-start;
+    margin-left: -44px;
+  }
+
+  .text {
+    flex-basis: 100%;
+  }
+}

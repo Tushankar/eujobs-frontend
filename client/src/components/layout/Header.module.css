@@ -311,6 +311,8 @@
     font-size: 14px;
     line-height: 18px;
     overflow-wrap: anywhere;
+    /* Safari (iPhone) only hyphenates with the prefix. */
+    -webkit-hyphens: auto;
     hyphens: auto;
   }
 

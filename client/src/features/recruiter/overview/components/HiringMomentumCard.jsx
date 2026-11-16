@@ -160,6 +160,8 @@ export default function HiringMomentumCard() {
               </div>
             ))}
             {view === 'line' && days.length > 0 && <LineChart applications={applications} shortlisted={shortlisted} scale={scale} />}
+            {/* A quiet week: say so, rather than leave an empty plot that looks broken. */}
+            {days.length > 0 && !busy && [...applications, ...shortlisted].every((count) => count === 0) && <p className={styles.empty}>{t('applications:overview.momentumEmpty')}</p>}
           </div>
         </div>
         <div className={cx(styles.labels, view === 'line' && styles.labelsLine)} aria-hidden="true">

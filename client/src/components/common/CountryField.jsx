@@ -124,7 +124,7 @@ export default function CountryField({ label, hint, error, options, value, onCha
             onClick={() => (open ? close(false) : show())}
             onKeyDown={(event) => !open && ['ArrowDown', 'ArrowUp'].includes(event.key) && (event.preventDefault(), show())}
           >
-            <span className={cx(styles.value, !selected && styles.placeholder)}>{selected?.label ?? placeholder ?? ''}</span>
+            <span className={cx(styles.value, !selected && styles.placeholder, filter && styles.filterValue, applied && styles.appliedValue)}>{selected?.label ?? placeholder ?? ''}</span>
             <span className={fieldStyles.trailing}>
               <Icon as={ChevronDown} size={14} className={cx(styles.chevron, open && styles.flipped)} />
             </span>

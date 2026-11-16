@@ -119,6 +119,9 @@
   font-weight: 500;
   line-height: 15px;
   color: var(--primary);
+  /* Beside a long heading on a phone it stays one line, its arrow beside it. */
+  flex-shrink: 0;
+  white-space: nowrap;
 }
 
 /* Tabs plus "Preferences": the link drops under the tabs when long translations need the width (Phase 11 task 7). */

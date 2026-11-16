@@ -190,6 +190,13 @@
   display: flex;
   align-items: center;
   gap: 16px;
+  margin-left: auto;
+}
+
+@media (min-width: 1024px) {
+  .logoNarrowOnly {
+    display: none;
+  }
 }
 
 /* Back to the landing page: an outlined pill, as tall as the language picker beside it. */

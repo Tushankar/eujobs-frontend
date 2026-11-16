@@ -61,11 +61,10 @@ export default function AuthLayout({ children, hero, showLogo = true, logoTo = '
       <section className={styles.formSection}>
         <div className={cx(styles.formColumn, 'page-flip', !flippedIn && 'stagger')}>
           <div className={styles.topBar}>
-            {showLogo && (
-              <Link to={logoTo} className={styles.logo} aria-label={t('shell:brandHome')}>
-                <BrandLogo height={50} motion="intro" />
-              </Link>
-            )}
+            {/* Without showLogo the wordmark sits in the hero, which phones and tablets don't show, so there the logo shows here. */}
+            <Link to={logoTo} className={cx(styles.logo, !showLogo && styles.logoNarrowOnly)} aria-label={t('shell:brandHome')}>
+              <BrandLogo height={50} motion="intro" />
+            </Link>
             <div className={styles.topActions}>
               <Link to="/" className={styles.backHome} title={t('auth:intro.backHome')}>
                 <Icon as={ArrowLeft} size={14} />

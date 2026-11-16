@@ -2,6 +2,7 @@ import { useState } from 'react'
 import { useTranslation } from 'react-i18next'
 import { CircleCheck, KeyRound, Mail } from 'lucide-react'
 import { Icon } from '@/components/ui'
+import EmailText from '@/components/common/EmailText.jsx'
 import { usePreferences } from '@/lib/preferences.js'
 import ChangePasswordForm from './ChangePasswordForm.jsx'
 import SettingRow, { SettingsSection } from './SettingRow.jsx'
@@ -20,7 +21,9 @@ export default function AccountSecurity() {
         label={t('auth:fields.email')}
         value={
           <span className={styles.email}>
-            {me.email}
+            <span>
+              <EmailText email={me.email} />
+            </span>
             {me.emailVerified && (
               <span className={styles.verified}>
                 <Icon as={CircleCheck} size={14} /> {t('account:security.verified')}

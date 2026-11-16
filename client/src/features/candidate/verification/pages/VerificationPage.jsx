@@ -5,6 +5,7 @@ import { useGetConfigQuery } from '@/app/api.js'
 import { Button, Icon, Panel, Skeleton, SkeletonRegion } from '@/components/ui'
 import PageTitle from '@/components/common/PageTitle.jsx'
 import PillBadge from '@/components/common/PillBadge.jsx'
+import EmailText from '@/components/common/EmailText.jsx'
 import { checkUpload, useErrorText, useUploadText } from '@/lib/forms.js'
 import { useSetCertificateFileMutation } from '../../profile/api.js'
 import { cx } from '@/utils/cx.js'
@@ -61,7 +62,9 @@ export default function VerificationPage() {
                 </span>
                 <div className={styles.contactBody}>
                   <p className={styles.contactLabel}>{t('verification:basic.email')}</p>
-                  <p className={styles.contactValue}>{state.email.address}</p>
+                  <p className={styles.contactValue}>
+                    <EmailText email={state.email.address} />
+                  </p>
                 </div>
                 <PillBadge tone="success" dot>
                   {t('verification:verified')}

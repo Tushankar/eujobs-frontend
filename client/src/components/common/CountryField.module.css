@@ -29,6 +29,15 @@
   color: var(--text-placeholder);
 }
 
+/* As a toolbar filter it reads like the select filters beside it (Field.module.css: .filter, .applied). */
+.filterValue {
+  font-weight: 600;
+}
+
+.appliedValue {
+  color: var(--card);
+}
+
 .chevron {
   transition: transform var(--duration-base) var(--ease-out);
 }

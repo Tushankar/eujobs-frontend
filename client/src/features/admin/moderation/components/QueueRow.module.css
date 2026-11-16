@@ -45,6 +45,8 @@
 }
 
 .sub {
+  /* An email in the line wraps inside the box rather than running past it. */
+  overflow-wrap: anywhere;
   padding-top: 8px;
   font-size: 12px;
   line-height: 16px;
@@ -80,11 +82,20 @@
   border-radius: var(--radius-xl);
 }
 
-/* Phones: the status and the review button wrap under the text, so they start at its edge (44px tile + 16px gap)
-   instead of under the icon, and the badge centres on the button. */
+/* Phones: everything that wraps under the text (the status, the review button) starts at the text's edge, not under
+   the icon: the row is indented by the 44px tile + 16px gap and the tile hangs back into that indent. */
 @media (max-width: 599px) {
-  .body + * {
-    align-self: center;
-    margin-left: 60px;
+  .row {
+    align-items: center;
+    padding-left: 84px;
+  }
+
+  .row > :first-child {
+    align-self: flex-start;
+    margin-left: -60px;
+  }
+
+  .body {
+    flex-basis: 100%;
   }
 }

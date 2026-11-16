@@ -1,5 +1,6 @@
+/* Space above it, off the page intro; what follows (filters, tabs) brings its own space below. */
 .panel {
-  margin-bottom: 20px;
+  margin-top: 24px;
   overflow: hidden;
 }
 

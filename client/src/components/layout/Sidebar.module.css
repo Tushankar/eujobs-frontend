@@ -382,12 +382,15 @@
 @media (max-width: 1023px) {
   .sidebar {
     transform: translateX(-100%);
-    transition: transform var(--duration-base) var(--ease-out);
-    box-shadow: var(--shadow-popover);
+    transition:
+      transform var(--duration-base) var(--ease-out),
+      box-shadow var(--duration-base) var(--ease-out);
   }
 
+  /* Shadow only while open: on the closed drawer it spilled a grey band down the page's left edge. */
   .open {
     transform: translateX(0);
+    box-shadow: var(--shadow-popover);
   }
 
   /* Always mounted so it can fade out with the drawer; inert while closed. */

@@ -79,6 +79,11 @@
   .profileText {
     display: inline;
   }
+
+  /* "Schedule interview" under the stage menu starts at the menu's edge, not indented by the ghost padding. */
+  .stageCell > [data-variant='ghost'] {
+    padding-left: 0;
+  }
 }
 
 .name,

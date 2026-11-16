@@ -165,3 +165,15 @@
     margin-left: 88px;
   }
 }
+
+/* Phones: category and date on two lines, without a "·" left dangling at the end of the first. */
+@media (max-width: 599px) {
+  .meta {
+    flex-direction: column;
+    gap: 0;
+  }
+
+  .dot {
+    display: none;
+  }
+}

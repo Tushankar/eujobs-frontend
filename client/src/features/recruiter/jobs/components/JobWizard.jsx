@@ -2,6 +2,7 @@ import { useEffect, useRef, useState } from 'react'
 import { useTranslation } from 'react-i18next'
 import { ArrowLeft, ArrowRight, Check } from 'lucide-react'
 import { errorCode, useGetConfigQuery } from '@/app/api.js'
+import { scrollActiveIntoView } from '@/hooks/scrollActiveIntoView.js'
 import { cx } from '@/utils/cx.js'
 import { Button, Icon } from '@/components/ui'
 import PlanButton from '@/features/candidate/billing/components/PlanButton.jsx'
@@ -31,6 +32,9 @@ export default function JobWizard({ initialValues, initialStep = 0, reachable = 
   const [busy, setBusy] = useState(false)
   const headingRef = useRef(null)
   const changedStep = useRef(false)
+  const stepsRef = useRef(null)
+  // On a phone the step chips scroll sideways; keep the current step on screen.
+  useEffect(() => scrollActiveIntoView(stepsRef.current), [step])
 
   const current = JOB_STEPS[step]
   const isFirst = step === 0
@@ -122,7 +126,7 @@ export default function JobWizard({ initialValues, initialStep = 0, reachable = 
               <span style={{ width: `${(doneCount / sections) * 100}%` }} />
             </div>
           </div>
-          <ol className={styles.steps}>
+          <ol ref={stepsRef} className={styles.steps}>
             {JOB_STEPS.map((id, index) => {
               const active = index === step
               const done = doneSteps[index]

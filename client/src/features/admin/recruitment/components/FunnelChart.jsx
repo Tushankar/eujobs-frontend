@@ -2,6 +2,7 @@ import { useTranslation } from 'react-i18next'
 import { cx } from '@/utils/cx.js'
 import { BANDS, bandPath, CAP, HEIGHT, RING_Y, STAGE_SHAPES, WIDTH } from '../funnelGeometry.js'
 import styles from './FunnelChart.module.css'
+import UprightFunnel from './UprightFunnel.jsx'
 
 /**
  * Funnel view of the hiring pipeline as an inline SVG: fixed Figma shapes with real numbers (M-179), each the
@@ -75,6 +76,25 @@ export default function FunnelChart({ funnel, selectedStage, onSelectStage }) {
           })}
         </svg>
       </div>
+
+      {/* Phones: the same funnel turned upright (owner 2026-11-16). */}
+      <UprightFunnel
+        label={t('funnel.label')}
+        stages={funnel.map((stage, index) => ({
+          key: stage.category,
+          name: t(`enums:stageCategory.${stage.category}`),
+          count: stage.count,
+          fill: STAGE_SHAPES[index].fill,
+          icon: STAGE_SHAPES[index].icon,
+          selected: selectedStage === stage.category,
+          props: {
+            'aria-pressed': selectedStage === stage.category,
+            'aria-label': t('funnel.stage', { stage: t(`enums:stageCategory.${stage.category}`), count: stage.count }),
+            'data-funnel': stage.category,
+            onClick: () => onSelectStage(stage.category),
+          },
+        }))}
+      />
     </div>
   )
 }

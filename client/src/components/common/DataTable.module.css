@@ -146,6 +146,12 @@
   .td > * {
     justify-self: start;
   }
+
+  /* A value made of several parts (an item and its type, a card under an amount) stays in the value column,
+     each part on its own line, instead of the second part dropping into the label column. */
+  .td[data-label] > * {
+    grid-column: 2;
+  }
 }
 
 /* Loading: placeholder rows under the real header; a refetch dims the current rows until the new ones arrive. */

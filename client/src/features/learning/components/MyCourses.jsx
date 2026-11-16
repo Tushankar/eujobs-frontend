@@ -58,7 +58,7 @@ export default function MyCourses({ items, loading, showPayment = false }) {
               </Link>
               <p className={styles.meta}>
                 <span>{item.course.category}</span>
-                <span aria-hidden="true">·</span>
+                <span className={styles.dot} aria-hidden="true">·</span>
                 <span data-my-course-source={item.source}>
                   {t(item.source === 'purchase' || item.payment ? 'myCourses.purchasedOn' : 'myCourses.enrolledOn', { date: format.date(item.payment?.paidAt ?? item.enrolledAt) })}
                 </span>

@@ -2,6 +2,7 @@ import { useState } from 'react'
 import { useTranslation } from 'react-i18next'
 import { Globe, KeyRound, Mail, UserRound } from 'lucide-react'
 import { Avatar, Button, Panel, SelectField, TextField } from '@/components/ui'
+import EmailText from '@/components/common/EmailText.jsx'
 import NoticeBanner from '@/components/common/NoticeBanner.jsx'
 import PageTitle from '@/components/common/PageTitle.jsx'
 import { useUpdateMeMutation } from '@/app/api.js'
@@ -60,7 +61,7 @@ export default function AdminSettingsPage() {
             <div className={styles.identityText}>
               <h2 className={styles.name}>{me.fullName}</h2>
               <p className={styles.meta}>
-                {me.email} · {identitySubtitle(me, t)}
+                <EmailText email={me.email} /> · {identitySubtitle(me, t)}
               </p>
             </div>
           </Panel>
@@ -93,7 +94,7 @@ export default function AdminSettingsPage() {
                 </form>
               </SettingRow>
 
-              <SettingRow id="email" icon={Mail} label={t('auth:fields.email')} value={<>{me.email}<span className={styles.hint}>{t('account:admin.emailNote')}</span></>} />
+              <SettingRow id="email" icon={Mail} label={t('auth:fields.email')} value={<><EmailText email={me.email} /><span className={styles.hint}>{t('account:admin.emailNote')}</span></>} />
 
               <SettingRow id="language" icon={Globe} label={t('account:admin.language')} value={languageName(language)} open={open === 'language'} onToggle={() => toggle('language')}>
                 <div className={styles.form}>

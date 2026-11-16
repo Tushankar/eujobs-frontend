@@ -235,6 +235,7 @@
     "funnelLink": "Ouvrir le processus de recrutement",
     "momentumTitle": "Dynamique de recrutement",
     "momentumDescription": "Candidatures reçues et ajouts à la short-list par jour",
+    "momentumEmpty": "Aucune candidature ni ajout à la short-list sur cette période pour l’instant.",
     "chartView": "Type de graphique",
     "bars": "Barres",
     "line": "Courbe",

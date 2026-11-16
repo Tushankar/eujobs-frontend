@@ -1,5 +1,6 @@
 import { useTranslation } from 'react-i18next'
 import { NavLink, useLocation } from 'react-router-dom'
+import { scrollActiveIntoView } from '@/hooks/scrollActiveIntoView.js'
 import { cx } from '@/utils/cx.js'
 import styles from './ProfileTabs.module.css'
 
@@ -18,7 +19,7 @@ export default function ProfileTabs({ basePath }) {
   const { t } = useTranslation()
   const { search } = useLocation()
   return (
-    <nav className={styles.tabs} aria-label={t('discovery:profile.tabsLabel')}>
+    <nav ref={scrollActiveIntoView} className={styles.tabs} aria-label={t('discovery:profile.tabsLabel')}>
       {TABS.map((tab) => (
         <NavLink key={tab.key} to={`${tab.to ? `${basePath}/${tab.to}` : basePath}${search}`} end className={({ isActive }) => cx(styles.tab, isActive && styles.active)}>
           {t(`discovery:profile.tabs.${tab.key}`)}

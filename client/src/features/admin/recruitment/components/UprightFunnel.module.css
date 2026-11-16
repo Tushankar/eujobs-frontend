@@ -1,0 +1,85 @@
+.upright {
+  display: none;
+}
+
+@media (max-width: 639px) {
+  .upright {
+    display: block;
+    padding: 0 20px 20px;
+  }
+
+  .stage {
+    display: grid;
+    grid-template-columns: minmax(0, 46%) minmax(0, 1fr);
+    align-items: center;
+    gap: 16px;
+    width: 100%;
+    padding: 0;
+    border: 0;
+    background: none;
+    font: inherit;
+    text-align: left;
+    color: inherit;
+    cursor: pointer;
+  }
+
+  .stage:focus-visible {
+    outline: 2px solid var(--ring);
+    outline-offset: 2px;
+  }
+
+  /* One slice of the funnel: as wide as the funnel at this stage's top, its lower corners cut in to the next. */
+  .bandCell {
+    display: flex;
+    justify-content: center;
+  }
+
+  .band {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    width: var(--top);
+    height: 64px;
+    background: var(--fill);
+    clip-path: polygon(0 0, 100% 0, calc(100% - var(--inset)) 100%, var(--inset) 100%);
+  }
+
+  /* The outline follows the slice's slanted sides (a border would be cut off by the clip-path). */
+  .selected .bandCell,
+  .dropping .bandCell {
+    filter: drop-shadow(2px 0 0 var(--primary)) drop-shadow(-2px 0 0 var(--primary)) drop-shadow(0 2px 0 var(--primary))
+      drop-shadow(0 -2px 0 var(--primary));
+  }
+
+  .text {
+    display: flex;
+    flex-direction: column;
+    gap: 1px;
+    padding: 8px 0;
+  }
+
+  .name {
+    font-size: 13px;
+    font-weight: 500;
+    line-height: 18px;
+    color: var(--card-foreground);
+  }
+
+  .count {
+    font-size: 16px;
+    font-weight: 700;
+    line-height: 22px;
+    color: var(--card-foreground);
+  }
+
+  .detail {
+    font-size: 11px;
+    line-height: 15px;
+    color: var(--muted-foreground);
+  }
+
+  .selected .name,
+  .selected .count {
+    color: var(--primary);
+  }
+}

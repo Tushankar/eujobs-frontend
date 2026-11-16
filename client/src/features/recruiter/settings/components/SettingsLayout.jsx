@@ -1,5 +1,6 @@
 import { useTranslation } from 'react-i18next'
 import { NavLink } from 'react-router-dom'
+import { scrollActiveIntoView } from '@/hooks/scrollActiveIntoView.js'
 import { cx } from '@/utils/cx.js'
 import styles from './SettingsLayout.module.css'
 
@@ -20,7 +21,7 @@ export default function SettingsLayout({ children }) {
         <h1 className={styles.title}>{t('layout.title')}</h1>
         <p className={styles.lead}>{t('layout.description')}</p>
       </header>
-      <nav className={styles.tabs} aria-label={t('layout.sections')}>
+      <nav ref={scrollActiveIntoView} className={styles.tabs} aria-label={t('layout.sections')}>
         {TABS.map((tab) => (
           <NavLink key={tab.to} to={tab.to} className={({ isActive }) => cx(styles.tab, isActive && styles.tabActive)}>
             {t(`layout.tabs.${tab.key}`)}

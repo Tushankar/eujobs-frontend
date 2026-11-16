@@ -90,3 +90,15 @@
     top: 20px;
   }
 }
+
+/* Phones: the drawing gives way to the upright funnel (UprightFunnel). */
+@media (max-width: 639px) {
+  .title {
+    position: static;
+    padding: 20px 20px 12px;
+  }
+
+  .scroll {
+    display: none;
+  }
+}

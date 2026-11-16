@@ -129,11 +129,17 @@
   color: var(--foreground);
 }
 
+/* Bulleted, with a little space between points: without them the strengths and questions read as one block. */
 .narrativeList {
   padding-left: 18px;
+  list-style: disc;
   font-size: 12px;
   line-height: 20px;
   color: var(--foreground);
+}
+
+.narrativeList li + li {
+  margin-top: 4px;
 }
 
 /* Card version: one clickable row that opens the side panel, so the card grid keeps an even height. */

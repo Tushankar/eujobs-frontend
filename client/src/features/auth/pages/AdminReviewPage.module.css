@@ -194,6 +194,19 @@
   font-size: 12px;
 }
 
+/* Phones: the file name goes under its document type, so neither wraps nor gets cut short beside the other. */
+@media (max-width: 599px) {
+  .documents li {
+    display: grid;
+    grid-template-columns: 14px minmax(0, 1fr);
+    column-gap: 8px;
+  }
+
+  .fileName {
+    grid-column: 2;
+  }
+}
+
 .access {
   display: inline-flex;
   align-items: center;

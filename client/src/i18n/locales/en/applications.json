@@ -228,6 +228,7 @@
     "funnelLink": "Open hiring pipeline",
     "momentumTitle": "Hiring momentum",
     "momentumDescription": "Applications received and shortlist additions per day",
+    "momentumEmpty": "No applications or shortlist additions in this period yet.",
     "chartView": "Chart view",
     "bars": "Bar view",
     "line": "Line view",

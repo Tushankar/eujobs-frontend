@@ -95,13 +95,21 @@
   gap: 8px;
 }
 
+/* Narrow: the icon sits by the title, and the status and action wrap under the text, starting at its edge
+   (18px icon + 16px gap), not under the icon. */
 @media (max-width: 767px) {
   .row {
     flex-wrap: wrap;
+    align-items: flex-start;
+  }
+
+  .tile {
+    padding-top: 1px;
   }
 
   .action {
-    flex-basis: 100%;
+    flex-basis: calc(100% - 34px);
     align-items: flex-start;
+    margin-left: 34px;
   }
 }

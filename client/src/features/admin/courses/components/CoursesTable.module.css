@@ -53,3 +53,16 @@
 .accent .toggle.toggle {
   color: var(--primary);
 }
+
+/* Rows stacked as cards (DataTable's container query): the actions wrap inside the card instead of Unpublish running
+   past its edge, and Manage starts at the card's text edge. */
+@container (max-width: 760px) {
+  .actions {
+    flex-wrap: wrap;
+    margin-right: 0;
+  }
+
+  .actions > :first-child {
+    padding-left: 0;
+  }
+}

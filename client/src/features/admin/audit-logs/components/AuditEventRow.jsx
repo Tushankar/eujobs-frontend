@@ -50,7 +50,7 @@ export default function AuditEventRow({ event, open, onToggle }) {
           <Icon as={Clock} size={16} />
         </span>
         <span className={styles.summary}>
-          {auditText(event)} · {format.date(event.at)}
+          {auditText(event)} · <span className={styles.when}>{format.date(event.at)}</span>
         </span>
         <PillBadge tone={ACTOR_TONES[event.actor.type]}>{actorType}</PillBadge>
         <Icon as={ChevronDown} size={14} className={cx(styles.chevron, open && styles.open)} />

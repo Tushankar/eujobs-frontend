@@ -1,8 +1,19 @@
+/* The logo sits in the cell's left padding, out of the flow, so the name's text gives the cell its baseline: a label
+   lined up on the baseline (DataTable's stacked rows) meets the name, not the bottom of the logo image. */
 .cell {
+  position: relative;
   display: inline-flex;
   align-items: center;
-  gap: 8px;
   min-width: 0;
+  min-height: 24px;
+  padding-left: 32px;
+}
+
+.cell > :first-child {
+  position: absolute;
+  top: 50%;
+  left: 0;
+  translate: 0 -50%;
 }
 
 .name {

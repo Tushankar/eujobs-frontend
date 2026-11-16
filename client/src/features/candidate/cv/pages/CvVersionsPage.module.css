@@ -68,7 +68,10 @@
   color: var(--muted-foreground);
 }
 
+/* One column below 1024px: the versions and the Compare panel stack with the page's card gap, not touching. */
 .historyBody {
+  display: grid;
+  gap: 24px;
   margin-top: 20px;
 }
 
@@ -78,9 +81,7 @@
 
 @media (min-width: 1024px) {
   .historyBody {
-    display: grid;
     grid-template-columns: minmax(0, 1fr) 340px;
-    gap: 24px;
     align-items: start;
   }
 }

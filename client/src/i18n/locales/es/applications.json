@@ -235,6 +235,7 @@
     "funnelLink": "Abrir proceso de selección",
     "momentumTitle": "Ritmo de selección",
     "momentumDescription": "Candidaturas recibidas y candidatos preseleccionados por día",
+    "momentumEmpty": "Todavía no hay candidaturas ni preselecciones en este periodo.",
     "chartView": "Vista del gráfico",
     "bars": "Vista de barras",
     "line": "Vista de líneas",

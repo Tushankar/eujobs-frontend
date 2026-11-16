@@ -49,6 +49,9 @@
   font-size: 12px;
   line-height: 16px;
   color: var(--primary);
+  /* Beside a long heading on a phone it stays one line, its arrow beside it. */
+  flex-shrink: 0;
+  white-space: nowrap;
 }
 
 .sectionLink:hover {
