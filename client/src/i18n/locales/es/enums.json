@@ -311,7 +311,12 @@
     "policy_suggestion": "Sugerencia de política",
     "report_summary": "Resumen del informe",
     "skill_name": "Nombre de habilidad",
-    "reply_suggestions": "Respuestas sugeridas"
+    "reply_suggestions": "Respuestas sugeridas",
+    "course_details": "Detalles del curso",
+    "quiz_questions": "Preguntas del cuestionario",
+    "report_triage": "Clasificación de denuncia",
+    "blog_draft": "Borrador del blog",
+    "account_review_summary": "Resumen de revisión de cuenta"
   },
   "emailType": {
     "interview_invitation": "Invitación a entrevista",

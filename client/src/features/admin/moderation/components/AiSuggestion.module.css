@@ -1,0 +1,134 @@
+/* 2026-11-17 (phase 4): the AI suggestion cards of a content case and an account review: bordered, hairline rows. */
+.card {
+  margin-top: 20px;
+  border: 1px solid var(--border);
+  border-radius: var(--radius-xl);
+  background: var(--card);
+}
+
+.head {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  justify-content: space-between;
+  gap: 8px 12px;
+  padding: 12px 16px;
+}
+
+.headText {
+  display: flex;
+  flex: 1 1 220px;
+  flex-direction: column;
+  gap: 2px;
+  min-width: 0;
+}
+
+.label {
+  margin: 0;
+  font-size: 13px;
+  font-weight: 600;
+  line-height: 18px;
+  color: var(--foreground);
+}
+
+.muted {
+  margin: 0;
+  font-size: 12px;
+  line-height: 18px;
+  color: var(--muted-foreground);
+}
+
+.body {
+  padding: 0 16px 12px;
+}
+
+.rows {
+  margin: 0;
+  border-top: 1px solid var(--border);
+}
+
+.rows > div {
+  display: grid;
+  grid-template-columns: 132px minmax(0, 1fr);
+  gap: 12px;
+  align-items: center;
+  padding: 9px 0;
+  border-bottom: 1px solid var(--border);
+  font-size: 13px;
+  line-height: 18px;
+}
+
+.rows dt {
+  color: var(--muted-foreground);
+}
+
+.rows dd {
+  margin: 0;
+  font-weight: 500;
+  color: var(--foreground);
+  overflow-wrap: anywhere;
+}
+
+.text {
+  margin: 0;
+  padding-top: 12px;
+  font-size: 13px;
+  line-height: 20px;
+  color: var(--foreground);
+  overflow-wrap: anywhere;
+}
+
+.sub {
+  margin: 0;
+  padding-top: 14px;
+  font-size: 12px;
+  font-weight: 600;
+  line-height: 16px;
+  color: var(--foreground);
+}
+
+.flags {
+  margin: 8px 0 0;
+  padding: 0;
+  border-top: 1px solid var(--border);
+  list-style: none;
+}
+
+.flags li {
+  display: flex;
+  align-items: flex-start;
+  gap: 8px;
+  padding: 8px 0;
+  border-bottom: 1px solid var(--border);
+  font-size: 13px;
+  line-height: 18px;
+  color: var(--foreground);
+  overflow-wrap: anywhere;
+}
+
+.flags li svg {
+  flex-shrink: 0;
+  margin-top: 2px;
+  color: var(--muted-foreground);
+}
+
+.note {
+  margin: 0;
+  padding-top: 10px;
+  font-size: 12px;
+  line-height: 18px;
+  color: var(--muted-foreground);
+}
+
+.skeleton {
+  display: grid;
+  gap: 10px;
+  padding: 0 16px 14px;
+}
+
+@media (max-width: 479px) {
+  .rows > div {
+    grid-template-columns: minmax(0, 1fr);
+    gap: 2px;
+  }
+}

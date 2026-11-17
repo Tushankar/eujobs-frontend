@@ -2,6 +2,7 @@ import { configureStore, createSlice } from '@reduxjs/toolkit'
 import { api } from './api.js'
 import { getToken } from './token.js'
 import { tourReducer } from './tour.js'
+import { celebrateReducer } from './celebrate.js'
 import { upgradeReducer } from './upgrade.js'
 
 /* The session slice mirrors whether a token exists, so components re-render on sign-in and sign-out. */
@@ -21,6 +22,6 @@ const sessionSlice = createSlice({
 export const { signedIn, signedOut } = sessionSlice.actions
 
 export const store = configureStore({
-  reducer: { [api.reducerPath]: api.reducer, session: sessionSlice.reducer, upgrade: upgradeReducer, tour: tourReducer },
+  reducer: { [api.reducerPath]: api.reducer, session: sessionSlice.reducer, upgrade: upgradeReducer, tour: tourReducer, celebrate: celebrateReducer },
   middleware: (getDefaultMiddleware) => getDefaultMiddleware().concat(api.middleware),
 })

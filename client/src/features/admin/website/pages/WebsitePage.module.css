@@ -138,3 +138,13 @@
     grid-template-columns: minmax(0, 1fr);
   }
 }
+
+/* 2026-11-17 (phase 4): the AI article writer: the admin's points and the button, in a quiet bordered box. */
+.aiDraft {
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+  padding: 16px;
+  border: 1px solid var(--border);
+  border-radius: var(--radius-xl);
+}

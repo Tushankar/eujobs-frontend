@@ -9,6 +9,7 @@ import { useFormat } from '@/lib/preferences.js'
 import { cx } from '@/utils/cx.js'
 import { useDecideContentCaseMutation, useGetContentCaseQuery } from '../api.js'
 import { CASE_TONES } from '../tones.js'
+import AiTriage from './AiTriage.jsx'
 import ReviewDialog from './ReviewDialog.jsx'
 import styles from './ReviewDetails.module.css'
 import own from './ContentReview.module.css'
@@ -204,6 +205,9 @@ export default function ContentReview({ id, onDecided, onClose }) {
         <p className={styles.eyebrow}>{item.targetType === 'message' ? t('content.excerpt') : kind}</p>
         <Target item={item} />
       </section>
+
+      {/* 2026-11-17 (phase 4): an AI triage suggestion for an open case; the admin decides. */}
+      {item.status === 'open' && <AiTriage caseId={id} />}
 
       {item.history.length > 1 && (
         <section className={styles.context} aria-label={t('content.history')}>

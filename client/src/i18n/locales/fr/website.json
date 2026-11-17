@@ -117,7 +117,13 @@
       "replaceCover": "Remplacer l’image",
       "coverRequired": "Une image de couverture est nécessaire pour publier.",
       "saveDraft": "Enregistrer le brouillon",
-      "save": "Enregistrer les modifications"
+      "save": "Enregistrer les modifications",
+      "ai": {
+        "points": "Points à aborder (pour l’IA)",
+        "pointsHint": "Nécessite un titre. Un point par ligne ; l’article n’utilise que le titre et ces points. Non enregistré avec l’article.",
+        "action": "Rédiger l’article avec l’IA",
+        "done": "Résumé et article remplis. Vérifiez chaque fait avant de publier."
+      }
     }
   },
   "post": {

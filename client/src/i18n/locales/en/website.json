@@ -117,7 +117,13 @@
       "replaceCover": "Replace image",
       "coverRequired": "A cover image is needed to publish.",
       "saveDraft": "Save draft",
-      "save": "Save changes"
+      "save": "Save changes",
+      "ai": {
+        "points": "Points to cover (for AI)",
+        "pointsHint": "Needs a title. One point per line; the article uses only the title and these points. Not saved with the post.",
+        "action": "Write article with AI",
+        "done": "Summary and article filled in. Check every fact before publishing."
+      }
     }
   },
   "post": {

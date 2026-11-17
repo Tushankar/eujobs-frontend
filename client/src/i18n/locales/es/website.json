@@ -117,7 +117,13 @@
       "replaceCover": "Cambiar imagen",
       "coverRequired": "Se necesita una imagen de portada para publicar.",
       "saveDraft": "Guardar borrador",
-      "save": "Guardar cambios"
+      "save": "Guardar cambios",
+      "ai": {
+        "points": "Puntos a tratar (para la IA)",
+        "pointsHint": "Necesita un título. Un punto por línea; el artículo usa solo el título y estos puntos. No se guarda con la entrada.",
+        "action": "Escribir artículo con IA",
+        "done": "Resumen y artículo completados. Comprueba cada dato antes de publicar."
+      }
     }
   },
   "post": {

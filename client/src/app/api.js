@@ -114,6 +114,8 @@ export const api = createApi({
     updateMe: build.mutation({ query: (body) => ({ url: '/me', method: 'PATCH', body }), ...writesMe }),
     // The first-login product tour was finished or skipped (me.tourPending turns false).
     finishTour: build.mutation({ query: () => ({ url: '/me/tour', method: 'POST' }), ...writesMe }),
+    // 2026-11-17: a success modal was seen (CelebrationHost); /me refreshes without it.
+    markCelebrationSeen: build.mutation({ query: (id) => ({ url: `/me/celebrations/${id}/seen`, method: 'POST' }), invalidatesTags: ['Me'] }),
     getConfig: build.query({ query: () => '/meta/config', providesTags: ['Config'] }),
     getCountries: build.query({ query: () => '/meta/countries', transformResponse: (response) => response.items, providesTags: ['Countries'] }),
     // ISO 639-1 codes (M-020) for profile and job language fields; names come from Intl.DisplayNames.
@@ -131,6 +133,7 @@ export const {
   useGetMeQuery,
   useUpdateMeMutation,
   useFinishTourMutation,
+  useMarkCelebrationSeenMutation,
   useGetConfigQuery,
   useGetCountriesQuery,
   useGetLanguageCodesQuery,

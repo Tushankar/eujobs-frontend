@@ -150,7 +150,12 @@
     "price": "Precio",
     "free": "Curso gratuito",
     "priceHint": "Precio único en cada moneda, IVA incluido. Un curso de pago necesita un precio en cada moneda para publicarse.",
-    "save": "Guardar detalles"
+    "save": "Guardar detalles",
+    "ai": {
+      "hint": "Redacta el resumen, la descripción, los resultados y las etiquetas de habilidades a partir del título, el nivel, la categoría y el texto de las lecciones. Revísalo antes de publicarlo.",
+      "action": "Escribir detalles con IA",
+      "done": "Detalles completados. Edita lo que quieras."
+    }
   },
   "upload": {
     "choose": "Elegir archivo",
@@ -203,7 +208,18 @@
     "removeOption": "Quitar la opción {{number}}",
     "addOption": "Añadir opción",
     "addQuestion": "Añadir pregunta",
-    "save": "Guardar cuestionario"
+    "save": "Guardar cuestionario",
+    "ai": {
+      "title": "Sugerir preguntas con IA",
+      "hint": "Redacta preguntas de opción múltiple a partir del texto de las lecciones y las añade al final. Revisa cada respuesta correcta antes de guardar el cuestionario.",
+      "count": "Preguntas",
+      "action": "Sugerir preguntas",
+      "done_one": "{{count}} pregunta añadida al final. Revísala y guarda el cuestionario.",
+      "done_many": "{{count}} preguntas añadidas al final. Revísalas y guarda el cuestionario.",
+      "done_other": "{{count}} preguntas añadidas al final. Revísalas y guarda el cuestionario.",
+      "undo": "Deshacer",
+      "noText": "Añade texto a al menos una lección: las preguntas se escriben a partir del texto de las lecciones."
+    }
   },
   "preview": {
     "designedFor": "Dirigido a: {{text}}",

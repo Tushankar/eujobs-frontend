@@ -148,7 +148,12 @@
     "price": "Price",
     "free": "Free course",
     "priceHint": "One-time price in every currency, VAT included. A paid course needs a price in each currency to publish.",
-    "save": "Save details"
+    "save": "Save details",
+    "ai": {
+      "hint": "Drafts the summary, description, outcomes and skill tags from the title, level, category and lesson text. Check it before it goes live.",
+      "action": "Write details with AI",
+      "done": "Details filled in. Edit anything you like."
+    }
   },
   "upload": {
     "choose": "Choose file",
@@ -201,7 +206,17 @@
     "removeOption": "Remove option {{number}}",
     "addOption": "Add option",
     "addQuestion": "Add question",
-    "save": "Save quiz"
+    "save": "Save quiz",
+    "ai": {
+      "title": "Suggest questions with AI",
+      "hint": "Drafts multiple-choice questions from the lesson text and adds them at the end. Check every correct answer before you save the quiz.",
+      "count": "Questions",
+      "action": "Suggest questions",
+      "done_one": "{{count}} question added at the end. Check it, then save the quiz.",
+      "done_other": "{{count}} questions added at the end. Check them, then save the quiz.",
+      "undo": "Undo",
+      "noText": "Add text to at least one lesson first: the questions are written from the lesson text."
+    }
   },
   "preview": {
     "designedFor": "Designed for: {{text}}",

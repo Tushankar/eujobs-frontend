@@ -8,6 +8,7 @@ import { WORKSPACES } from '@/app/workspaces.js'
 import { usePreferences } from '@/lib/preferences.js'
 import NoticeBanner from '@/components/common/NoticeBanner.jsx'
 import UpgradeDialog from '@/features/candidate/billing/components/UpgradeDialog.jsx'
+import CelebrationHost from '@/features/celebrations/CelebrationHost.jsx'
 import InterviewMovePrompts from '@/features/interviews/components/InterviewMovePrompts.jsx'
 import LegalAcceptDialog from '@/features/public/components/LegalAcceptDialog.jsx'
 import ProductTour from '@/features/tour/ProductTour.jsx'
@@ -75,6 +76,8 @@ export default function WorkspaceLayout({ workspaceId }) {
       {['candidate', 'recruiter'].includes(workspaceId) && (
         <>
           <UpgradeDialog />
+          {/* 2026-11-17: success modals for big moments. */}
+          <CelebrationHost />
           {/* P11d-A6: the interview prompts of a stage move, outside the row that moved. */}
           {workspaceId === 'recruiter' && <InterviewMovePrompts />}
           <ProductTour workspace={workspace} />

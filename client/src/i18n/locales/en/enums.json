@@ -311,7 +311,12 @@
     "policy_suggestion": "Policy suggestion",
     "report_summary": "Report summary",
     "skill_name": "Skill name",
-    "reply_suggestions": "Suggested replies"
+    "reply_suggestions": "Suggested replies",
+    "course_details": "Course details",
+    "quiz_questions": "Quiz questions",
+    "report_triage": "Report triage",
+    "blog_draft": "Blog draft",
+    "account_review_summary": "Account review summary"
   },
   "emailType": {
     "interview_invitation": "Interview invitation",

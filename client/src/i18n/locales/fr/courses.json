@@ -150,7 +150,12 @@
     "price": "Prix",
     "free": "Formation gratuite",
     "priceHint": "Prix unique dans chaque devise, TVA incluse. Un cours payant a besoin d’un prix dans chaque devise pour être publié.",
-    "save": "Enregistrer les détails"
+    "save": "Enregistrer les détails",
+    "ai": {
+      "hint": "Rédige le résumé, la description, les acquis et les compétences à partir du titre, du niveau, de la catégorie et du texte des leçons. Vérifiez-le avant la mise en ligne.",
+      "action": "Rédiger les détails avec l’IA",
+      "done": "Détails remplis. Modifiez ce que vous voulez."
+    }
   },
   "upload": {
     "choose": "Choisir un fichier",
@@ -203,7 +208,18 @@
     "removeOption": "Retirer l’option {{number}}",
     "addOption": "Ajouter une option",
     "addQuestion": "Ajouter une question",
-    "save": "Enregistrer le quiz"
+    "save": "Enregistrer le quiz",
+    "ai": {
+      "title": "Suggérer des questions avec l’IA",
+      "hint": "Rédige des questions à choix multiples à partir du texte des leçons et les ajoute à la fin. Vérifiez chaque bonne réponse avant d’enregistrer le quiz.",
+      "count": "Questions",
+      "action": "Suggérer des questions",
+      "done_one": "{{count}} question ajoutée à la fin. Vérifiez-la, puis enregistrez le quiz.",
+      "done_many": "{{count}} questions ajoutées à la fin. Vérifiez-les, puis enregistrez le quiz.",
+      "done_other": "{{count}} questions ajoutées à la fin. Vérifiez-les, puis enregistrez le quiz.",
+      "undo": "Annuler",
+      "noText": "Ajoutez d’abord du texte à au moins une leçon : les questions sont rédigées à partir du texte des leçons."
+    }
   },
   "preview": {
     "designedFor": "Public visé : {{text}}",

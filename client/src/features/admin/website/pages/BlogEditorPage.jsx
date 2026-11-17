@@ -9,6 +9,8 @@ import { Button, Icon, Panel, SelectField, Skeleton, SkeletonRegion, TextareaFie
 import { checkUpload, useErrorText, useFormState, useUploadText } from '@/lib/forms.js'
 import { useFormat } from '@/lib/preferences.js'
 import { useCreatePostMutation, useGetAdminPostQuery, useSetPostStatusMutation, useUpdatePostMutation, useUploadBlogCoverMutation } from '../api.js'
+import AiFillButton from '@/features/ai/components/AiFillButton.jsx'
+import { useDraftBlogPostMutation } from '../../ai/api.js'
 import styles from './WebsitePage.module.css'
 
 const LANGUAGES = ['en', 'es', 'fr']
@@ -50,6 +52,13 @@ function Editor({ post }) {
     bodyMarkdown: post?.bodyMarkdown ?? '',
   })
   const { values } = form
+  // 2026-11-17 (phase 4): the points the AI writes the article from; never saved with the post.
+  const [points, setPoints] = useState('')
+  const [draftBlogPost] = useDraftBlogPostMutation()
+  const fillDraft = ({ bodyMarkdown, excerpt }) => {
+    form.set('bodyMarkdown', bodyMarkdown)
+    form.set('excerpt', excerpt)
+  }
 
   const length = (value, { min, max }) => {
     const text = value.trim()
@@ -138,6 +147,27 @@ function Editor({ post }) {
             onChange={(event) => form.set('title', event.target.value)}
             error={fieldError('title')}
           />
+          <div className={styles.aiDraft} data-blog-ai>
+            <TextareaField
+              name="aiPoints"
+              label={t('website:admin.editor.ai.points')}
+              hint={t('website:admin.editor.ai.pointsHint')}
+              rows={4}
+              maxLength={2000}
+              value={points}
+              onChange={(event) => setPoints(event.target.value)}
+            />
+            <AiFillButton
+              label={t('website:admin.editor.ai.action')}
+              done={t('website:admin.editor.ai.done')}
+              disabled={values.title.trim().length < (B?.title.min ?? 1) || points.trim().length < 3}
+              request={() => draftBlogPost({ title: values.title.trim(), points: points.trim() }).unwrap()}
+              apply={fillDraft}
+              snapshot={() => ({ bodyMarkdown: values.bodyMarkdown, excerpt: values.excerpt })}
+              restore={fillDraft}
+              data-blog-ai-run
+            />
+          </div>
           <TextareaField
             name="excerpt"
             label={t('website:admin.editor.excerpt')}

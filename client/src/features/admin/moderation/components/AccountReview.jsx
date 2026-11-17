@@ -9,6 +9,7 @@ import { useFormat } from '@/lib/preferences.js'
 import { cx } from '@/utils/cx.js'
 import { useDecideAccountMutation, useGetAccountQuery } from '../api.js'
 import { ACCOUNT_TONES } from '../tones.js'
+import AccountAiSummary from './AccountAiSummary.jsx'
 import DocumentViewer from './DocumentViewer.jsx'
 import dialogStyles from './ReviewDialog.module.css'
 import detailStyles from './ReviewDetails.module.css'
@@ -238,6 +239,9 @@ export default function AccountReview({ userId, onDecided, onClose }) {
               </dl>
             </section>
           )}
+
+          {/* 2026-11-17 (phase 4): an AI summary of the submitted details with points to check; the admin decides. */}
+          {company && <AccountAiSummary userId={userId} />}
 
           <div>
             <p className={styles.sectionLabel}>{dialog('documents')}</p>

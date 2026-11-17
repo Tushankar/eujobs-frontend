@@ -140,7 +140,16 @@
       "reasonOptional": "Motivo (opcional)",
       "reasonHint": "Hasta {{max}} caracteres. Se registra con la decisión y en el registro de auditoría.",
       "back": "Volver",
-      "decidedNow": "Decisión guardada y enviada por correo al reclutador."
+      "decidedNow": "Decisión guardada y enviada por correo al reclutador.",
+      "ai": {
+        "label": "Resumen con IA",
+        "suggestion": "Resumen: tú decides",
+        "hint": "Un breve resumen de los datos de la empresa y los puntos que conviene comprobar. Los documentos nunca se comparten con la IA.",
+        "action": "Resumir con IA",
+        "flags": "Conviene comprobar",
+        "noFlags": "No hay nada que destaque en los datos.",
+        "note": "La IA puede equivocarse. Comprueba los documentos y los datos antes de decidir."
+      }
     }
   },
   "title": "La confianza es una práctica continua.",
@@ -217,7 +226,26 @@
     "reasonHint": "Se registra con la decisión y en el registro de auditoría.",
     "reasonRequired": "Añade un motivo para que la decisión quede bien registrada.",
     "reasonTooLong": "El motivo no debe superar los {{max}} caracteres.",
-    "back": "Volver"
+    "back": "Volver",
+    "ai": {
+      "label": "Clasificación con IA",
+      "suggestion": "Sugerencia: tú decides",
+      "hint": "Una gravedad, un motivo y una acción sugeridos a partir de las denuncias y del contenido. Nunca se comparte quién denunció.",
+      "action": "Clasificar con IA",
+      "severity": "Gravedad",
+      "severities": {
+        "low": "Baja",
+        "medium": "Media",
+        "high": "Alta"
+      },
+      "reason": "Motivo más adecuado",
+      "suggestedAction": "Acción sugerida",
+      "actions": {
+        "dismiss": "Descartar",
+        "restrict": "Restringir"
+      },
+      "note": "La IA puede equivocarse. Lee las denuncias y el contenido antes de decidir."
+    }
   },
   "reviews": {
     "tab": "Reseñas",

@@ -311,7 +311,12 @@
     "policy_suggestion": "Suggestion de règles",
     "report_summary": "Résumé du rapport",
     "skill_name": "Nom de compétence",
-    "reply_suggestions": "Réponses suggérées"
+    "reply_suggestions": "Réponses suggérées",
+    "course_details": "Détails du cours",
+    "quiz_questions": "Questions du quiz",
+    "report_triage": "Tri des signalements",
+    "blog_draft": "Brouillon de blog",
+    "account_review_summary": "Résumé de vérification de compte"
   },
   "emailType": {
     "interview_invitation": "Invitation à un entretien",

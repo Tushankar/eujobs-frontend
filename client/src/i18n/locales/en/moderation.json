@@ -139,7 +139,16 @@
       "reasonOptional": "Reason (optional)",
       "reasonHint": "Up to {{max}} characters. Recorded with the decision and in the audit log.",
       "back": "Back",
-      "decidedNow": "Decision saved and emailed to the recruiter."
+      "decidedNow": "Decision saved and emailed to the recruiter.",
+      "ai": {
+        "label": "AI summary",
+        "suggestion": "Summary — you decide",
+        "hint": "A short summary of the company details and the points worth checking. Documents are never shared with the AI.",
+        "action": "Summarise with AI",
+        "flags": "Worth checking",
+        "noFlags": "Nothing stands out in the details.",
+        "note": "AI can be wrong. Check the documents and details before you decide."
+      }
     }
   },
   "title": "Trust is an ongoing practice.",
@@ -215,7 +224,26 @@
     "reasonHint": "Recorded with the decision and in the audit log.",
     "reasonRequired": "Add a reason so the decision has a clear record.",
     "reasonTooLong": "Keep the reason to {{max}} characters or fewer.",
-    "back": "Back"
+    "back": "Back",
+    "ai": {
+      "label": "AI triage",
+      "suggestion": "Suggestion — you decide",
+      "hint": "A suggested severity, reason and action from the reports and the content. Reporters are never shared.",
+      "action": "Triage with AI",
+      "severity": "Severity",
+      "severities": {
+        "low": "Low",
+        "medium": "Medium",
+        "high": "High"
+      },
+      "reason": "Best-fitting reason",
+      "suggestedAction": "Suggested action",
+      "actions": {
+        "dismiss": "Dismiss",
+        "restrict": "Restrict"
+      },
+      "note": "AI can be wrong. Read the reports and the content before you decide."
+    }
   },
   "reviews": {
     "tab": "Reviews",

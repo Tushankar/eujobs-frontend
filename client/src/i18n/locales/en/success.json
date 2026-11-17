@@ -1,0 +1,149 @@
+{
+  "nextTitle": "What happens next",
+  "close": "Close",
+  "done": "Done",
+  "applied": {
+    "title": "Application sent!",
+    "message": "Your application for {{job}} at {{company}} is with their team.",
+    "steps": [
+      "{{company}} reviews your profile and CV",
+      "You hear back in Messages and by email",
+      "Follow its progress any time in Applications"
+    ],
+    "primary": "View my applications"
+  },
+  "plan_started": {
+    "title": "Welcome to {{plan}}",
+    "message": "Everything in {{plan}} is unlocked now.",
+    "steps": {
+      "candidate": [
+        "Apply to jobs and message recruiters",
+        "Use AI insights, cover notes and interview prep",
+        "Get new jobs by email with job alerts"
+      ],
+      "recruiter": [
+        "Post your jobs and reach more candidates",
+        "Find and message candidates",
+        "Use AI drafts and the AI shortlist"
+      ]
+    },
+    "primary": "Get started"
+  },
+  "certificate": {
+    "title": "Course complete!",
+    "message": "You passed {{course}} and earned your certificate.",
+    "steps": {
+      "candidate": [
+        "Recruiters see your certificate on your profile",
+        "Anyone can check it with its code {{code}}"
+      ],
+      "recruiter": [
+        "Your certificate is in Recruiter learning",
+        "Anyone can check it with its code {{code}}"
+      ]
+    },
+    "primary": "View the course"
+  },
+  "course_purchased": {
+    "title": "Course unlocked",
+    "message": "{{course}} is yours. Start whenever you like.",
+    "steps": [
+      "Lessons save your progress as you go",
+      "Pass the final quiz to earn your certificate"
+    ],
+    "primary": "Start learning"
+  },
+  "job_published": {
+    "title": "Your job is live!",
+    "message": "{{job}} is open to candidates now.",
+    "steps": [
+      "Candidates can find it and apply",
+      "We suggest candidates who match it",
+      "New applications arrive in Applications"
+    ],
+    "primary": "Discover candidates"
+  },
+  "interview_confirmed": {
+    "title": "Interview confirmed",
+    "message": "{{when}} · {{job}} at {{company}}.",
+    "steps": [
+      "Add it to your calendar from the interview card",
+      "Prepare with AI from the same card",
+      "Join from the card when it opens"
+    ],
+    "primary": "View interview"
+  },
+  "hired": {
+    "title": "Congratulations, you got the role!",
+    "message": "{{company}} hired you as {{job}}.",
+    "steps": [
+      "Check Messages for next steps from {{company}}",
+      "Your application shows Hired in Applications"
+    ],
+    "primary": "View application"
+  },
+  "profile_complete": {
+    "title": "Your profile is complete!",
+    "message": "Great work. Your profile is ready for recruiters.",
+    "steps": [
+      "You can apply to jobs",
+      "Recruiters can find you in their searches",
+      "Your match scores use your full profile"
+    ],
+    "primary": "Find jobs"
+  },
+  "verification_approved": {
+    "title": "Check approved",
+    "message": "Your {{category}} check is verified.",
+    "steps": [
+      "Recruiters see it as verified on your profile"
+    ],
+    "primary": "View verification"
+  },
+  "onboarding_done": {
+    "title": "You're all set!",
+    "message": "Your account is ready.",
+    "steps": [
+      "Find jobs that match your profile",
+      "Keep your CV and profile up to date",
+      "Turn on job alerts for new jobs by email"
+    ],
+    "primary": "Find jobs"
+  },
+  "account_approved": {
+    "title": "Your company is approved!",
+    "message": "Welcome to EU Jobs. You can start hiring now.",
+    "steps": [
+      "Post your first job",
+      "Find candidates who match it",
+      "Track applicants in your hiring pipeline"
+    ],
+    "primary": "Post a job"
+  },
+  "candidate_hired": {
+    "title": "Great hire!",
+    "message": "{{name}} is hired for {{job}}.",
+    "steps": [
+      "Close the job if the role is filled",
+      "Let the other applicants know where they stand"
+    ],
+    "primary": "View the job"
+  },
+  "company_submitted": {
+    "title": "Details sent for review",
+    "message": "Thank you. Our team is checking your company.",
+    "steps": [
+      "We review your company details",
+      "You get an email when it is approved",
+      "Then you can post jobs and find candidates"
+    ]
+  },
+  "first_alert": {
+    "title": "Job alert created",
+    "message": "We will email you new jobs that match “{{name}}”.",
+    "steps": [
+      "New matching jobs arrive by email ({{frequency}})",
+      "Edit or pause it any time in Job alerts"
+    ]
+  }
+}

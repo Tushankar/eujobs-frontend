@@ -1,0 +1,149 @@
+{
+  "nextTitle": "La suite",
+  "close": "Fermer",
+  "done": "Terminé",
+  "applied": {
+    "title": "Candidature envoyée !",
+    "message": "Votre candidature pour {{job}} chez {{company}} est entre les mains de leur équipe.",
+    "steps": [
+      "{{company}} examine votre profil et votre CV",
+      "Vous recevez la réponse dans Messages et par e-mail",
+      "Suivez son avancement à tout moment dans Candidatures"
+    ],
+    "primary": "Voir mes candidatures"
+  },
+  "plan_started": {
+    "title": "Bienvenue dans {{plan}}",
+    "message": "Tout ce qu’offre {{plan}} est débloqué.",
+    "steps": {
+      "candidate": [
+        "Postulez et écrivez aux recruteurs",
+        "Utilisez l’IA : analyses, lettres et préparation d’entretien",
+        "Recevez les nouvelles offres par e-mail avec les alertes"
+      ],
+      "recruiter": [
+        "Publiez vos offres et touchez plus de candidats",
+        "Trouvez des candidats et écrivez-leur",
+        "Utilisez les brouillons IA et la présélection IA"
+      ]
+    },
+    "primary": "Commencer"
+  },
+  "certificate": {
+    "title": "Cours terminé !",
+    "message": "Vous avez réussi {{course}} et obtenu votre certificat.",
+    "steps": {
+      "candidate": [
+        "Les recruteurs voient votre certificat sur votre profil",
+        "Tout le monde peut le vérifier avec son code {{code}}"
+      ],
+      "recruiter": [
+        "Votre certificat est dans Formation recruteurs",
+        "Tout le monde peut le vérifier avec son code {{code}}"
+      ]
+    },
+    "primary": "Voir le cours"
+  },
+  "course_purchased": {
+    "title": "Cours débloqué",
+    "message": "{{course}} est à vous. Commencez quand vous voulez.",
+    "steps": [
+      "Les leçons enregistrent votre progression",
+      "Réussissez le quiz final pour obtenir votre certificat"
+    ],
+    "primary": "Commencer"
+  },
+  "job_published": {
+    "title": "Votre offre est en ligne !",
+    "message": "{{job}} est ouverte aux candidats.",
+    "steps": [
+      "Les candidats peuvent la trouver et postuler",
+      "Nous vous suggérons des candidats qui correspondent",
+      "Les nouvelles candidatures arrivent dans Candidatures"
+    ],
+    "primary": "Découvrir des candidats"
+  },
+  "interview_confirmed": {
+    "title": "Entretien confirmé",
+    "message": "{{when}} · {{job}} chez {{company}}.",
+    "steps": [
+      "Ajoutez-le à votre agenda depuis la carte de l’entretien",
+      "Préparez-vous avec l’IA depuis la même carte",
+      "Rejoignez depuis la carte à son ouverture"
+    ],
+    "primary": "Voir l’entretien"
+  },
+  "hired": {
+    "title": "Félicitations, le poste est à vous !",
+    "message": "{{company}} vous a recruté comme {{job}}.",
+    "steps": [
+      "Consultez Messages pour la suite avec {{company}}",
+      "Votre candidature indique Recruté dans Candidatures"
+    ],
+    "primary": "Voir la candidature"
+  },
+  "profile_complete": {
+    "title": "Votre profil est complet !",
+    "message": "Bravo. Votre profil est prêt pour les recruteurs.",
+    "steps": [
+      "Vous pouvez postuler aux offres",
+      "Les recruteurs peuvent vous trouver dans leurs recherches",
+      "Vos scores de correspondance utilisent tout votre profil"
+    ],
+    "primary": "Trouver des offres"
+  },
+  "verification_approved": {
+    "title": "Vérification approuvée",
+    "message": "Votre vérification ({{category}}) est approuvée.",
+    "steps": [
+      "Les recruteurs la voient vérifiée sur votre profil"
+    ],
+    "primary": "Voir la vérification"
+  },
+  "onboarding_done": {
+    "title": "Tout est prêt !",
+    "message": "Votre compte est prêt.",
+    "steps": [
+      "Trouvez des offres adaptées à votre profil",
+      "Gardez votre CV et votre profil à jour",
+      "Activez les alertes pour recevoir les nouvelles offres par e-mail"
+    ],
+    "primary": "Trouver des offres"
+  },
+  "account_approved": {
+    "title": "Votre entreprise est approuvée !",
+    "message": "Bienvenue sur EU Jobs. Vous pouvez commencer à recruter.",
+    "steps": [
+      "Publiez votre première offre",
+      "Trouvez des candidats qui correspondent",
+      "Suivez les candidats dans votre pipeline de recrutement"
+    ],
+    "primary": "Publier une offre"
+  },
+  "candidate_hired": {
+    "title": "Beau recrutement !",
+    "message": "{{name}} est recruté pour {{job}}.",
+    "steps": [
+      "Clôturez l’offre si le poste est pourvu",
+      "Indiquez aux autres candidats où ils en sont"
+    ],
+    "primary": "Voir l’offre"
+  },
+  "company_submitted": {
+    "title": "Informations envoyées pour vérification",
+    "message": "Merci. Notre équipe vérifie votre entreprise.",
+    "steps": [
+      "Nous examinons les informations de votre entreprise",
+      "Vous recevez un e-mail dès qu’elle est approuvée",
+      "Vous pourrez alors publier des offres et trouver des candidats"
+    ]
+  },
+  "first_alert": {
+    "title": "Alerte créée",
+    "message": "Nous vous enverrons par e-mail les nouvelles offres correspondant à « {{name}} ».",
+    "steps": [
+      "Les nouvelles offres arrivent par e-mail ({{frequency}})",
+      "Modifiez-la ou mettez-la en pause à tout moment dans Alertes emploi"
+    ]
+  }
+}

@@ -4,6 +4,7 @@ import { useDispatch } from 'react-redux'
 import { Link } from 'react-router-dom'
 import { ChevronRight, Lock } from 'lucide-react'
 import { useGetConfigQuery, useGetMeQuery } from '@/app/api.js'
+import { celebrate } from '@/app/celebrate.js'
 import { openUpgrade } from '@/app/upgrade.js'
 import { Button, Checkbox, Icon, Modal, SelectField, TextareaField } from '@/components/ui'
 import { useWriteCoverNoteMutation } from '@/features/ai/api.js'
@@ -135,6 +136,7 @@ function ApplyDialog({ job, onClose, onApplied }) {
   const max = config?.limits.application.coverNote.max
   const [writeCoverNote] = useWriteCoverNoteMutation()
   const company = job.company.displayName
+  const dispatch = useDispatch()
   const cvVersionId = values.cvVersionId || cv?.liveVersionId || ''
 
   async function handleSubmit(event) {
@@ -143,7 +145,11 @@ function ApplyDialog({ job, onClose, onApplied }) {
       // Before the CV list has loaded no version is sent, and the server uses the live one (M-073).
       apply({ jobId: job.id, cvVersionId: cvVersionId || undefined, coverNote: values.coverNote.trim(), consent: values.consent }).unwrap(),
     )
-    if (sent) onApplied()
+    if (sent) {
+      onApplied()
+      // 2026-11-17: the "Application sent" success modal.
+      dispatch(celebrate({ kind: 'applied', params: { job: job.title, company } }))
+    }
   }
 
   return (

@@ -140,7 +140,16 @@
       "reasonOptional": "Motif (facultatif)",
       "reasonHint": "Jusqu’à {{max}} caractères. Enregistré avec la décision et dans le journal d’audit.",
       "back": "Retour",
-      "decidedNow": "Décision enregistrée et envoyée par e-mail au recruteur."
+      "decidedNow": "Décision enregistrée et envoyée par e-mail au recruteur.",
+      "ai": {
+        "label": "Résumé par l’IA",
+        "suggestion": "Résumé — vous décidez",
+        "hint": "Un bref résumé des informations de l’entreprise et des points à vérifier. Les documents ne sont jamais partagés avec l’IA.",
+        "action": "Résumer avec l’IA",
+        "flags": "À vérifier",
+        "noFlags": "Rien de particulier dans les informations.",
+        "note": "L’IA peut se tromper. Vérifiez les documents et les informations avant de décider."
+      }
     }
   },
   "title": "La confiance se construit au quotidien.",
@@ -217,7 +226,26 @@
     "reasonHint": "Enregistré avec la décision et dans le journal d’audit.",
     "reasonRequired": "Ajoutez un motif pour que la décision soit clairement tracée.",
     "reasonTooLong": "Le motif ne doit pas dépasser {{max}} caractères.",
-    "back": "Retour"
+    "back": "Retour",
+    "ai": {
+      "label": "Tri par l’IA",
+      "suggestion": "Suggestion — vous décidez",
+      "hint": "Une gravité, un motif et une action suggérés à partir des signalements et du contenu. Les auteurs des signalements ne sont jamais partagés.",
+      "action": "Trier avec l’IA",
+      "severity": "Gravité",
+      "severities": {
+        "low": "Faible",
+        "medium": "Moyenne",
+        "high": "Élevée"
+      },
+      "reason": "Motif le plus adapté",
+      "suggestedAction": "Action suggérée",
+      "actions": {
+        "dismiss": "Classer",
+        "restrict": "Restreindre"
+      },
+      "note": "L’IA peut se tromper. Lisez les signalements et le contenu avant de décider."
+    }
   },
   "reviews": {
     "tab": "Avis",

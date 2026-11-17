@@ -1,0 +1,149 @@
+{
+  "nextTitle": "Qué pasa ahora",
+  "close": "Cerrar",
+  "done": "Listo",
+  "applied": {
+    "title": "¡Candidatura enviada!",
+    "message": "Tu candidatura para {{job}} en {{company}} ya está con su equipo.",
+    "steps": [
+      "{{company}} revisa tu perfil y tu CV",
+      "Recibirás respuesta en Mensajes y por correo",
+      "Sigue su progreso cuando quieras en Candidaturas"
+    ],
+    "primary": "Ver mis candidaturas"
+  },
+  "plan_started": {
+    "title": "Te damos la bienvenida a {{plan}}",
+    "message": "Todo lo de {{plan}} ya está desbloqueado.",
+    "steps": {
+      "candidate": [
+        "Postúlate a empleos y escribe a reclutadores",
+        "Usa la IA: análisis, cartas y preparación de entrevistas",
+        "Recibe empleos nuevos por correo con alertas"
+      ],
+      "recruiter": [
+        "Publica tus empleos y llega a más candidatos",
+        "Encuentra candidatos y escríbeles",
+        "Usa los borradores de IA y la preselección con IA"
+      ]
+    },
+    "primary": "Empezar"
+  },
+  "certificate": {
+    "title": "¡Curso completado!",
+    "message": "Has aprobado {{course}} y has conseguido tu certificado.",
+    "steps": {
+      "candidate": [
+        "Los reclutadores ven tu certificado en tu perfil",
+        "Cualquiera puede comprobarlo con su código {{code}}"
+      ],
+      "recruiter": [
+        "Tu certificado está en Formación para reclutadores",
+        "Cualquiera puede comprobarlo con su código {{code}}"
+      ]
+    },
+    "primary": "Ver el curso"
+  },
+  "course_purchased": {
+    "title": "Curso desbloqueado",
+    "message": "{{course}} ya es tuyo. Empieza cuando quieras.",
+    "steps": [
+      "Las lecciones guardan tu progreso",
+      "Aprueba el examen final para conseguir tu certificado"
+    ],
+    "primary": "Empezar a aprender"
+  },
+  "job_published": {
+    "title": "¡Tu empleo está publicado!",
+    "message": "{{job}} ya está abierto a candidatos.",
+    "steps": [
+      "Los candidatos pueden encontrarlo y postularse",
+      "Te sugerimos candidatos que encajan",
+      "Las candidaturas nuevas llegan a Candidaturas"
+    ],
+    "primary": "Descubrir candidatos"
+  },
+  "interview_confirmed": {
+    "title": "Entrevista confirmada",
+    "message": "{{when}} · {{job}} en {{company}}.",
+    "steps": [
+      "Añádela a tu calendario desde la tarjeta de la entrevista",
+      "Prepárate con IA desde la misma tarjeta",
+      "Únete desde la tarjeta cuando se abra"
+    ],
+    "primary": "Ver la entrevista"
+  },
+  "hired": {
+    "title": "¡Enhorabuena, el puesto es tuyo!",
+    "message": "{{company}} te ha contratado como {{job}}.",
+    "steps": [
+      "Mira en Mensajes los próximos pasos de {{company}}",
+      "Tu candidatura aparece como Contratado en Candidaturas"
+    ],
+    "primary": "Ver la candidatura"
+  },
+  "profile_complete": {
+    "title": "¡Tu perfil está completo!",
+    "message": "Buen trabajo. Tu perfil está listo para los reclutadores.",
+    "steps": [
+      "Ya puedes postularte a empleos",
+      "Los reclutadores pueden encontrarte en sus búsquedas",
+      "Tus puntuaciones de coincidencia usan tu perfil completo"
+    ],
+    "primary": "Buscar empleos"
+  },
+  "verification_approved": {
+    "title": "Verificación aprobada",
+    "message": "Tu verificación de {{category}} está aprobada.",
+    "steps": [
+      "Los reclutadores la ven como verificada en tu perfil"
+    ],
+    "primary": "Ver verificación"
+  },
+  "onboarding_done": {
+    "title": "¡Todo listo!",
+    "message": "Tu cuenta está preparada.",
+    "steps": [
+      "Busca empleos que encajan con tu perfil",
+      "Mantén al día tu CV y tu perfil",
+      "Activa alertas para recibir empleos nuevos por correo"
+    ],
+    "primary": "Buscar empleos"
+  },
+  "account_approved": {
+    "title": "¡Tu empresa está aprobada!",
+    "message": "Te damos la bienvenida a EU Jobs. Ya puedes empezar a contratar.",
+    "steps": [
+      "Publica tu primer empleo",
+      "Encuentra candidatos que encajan",
+      "Sigue a los candidatos en tu proceso de selección"
+    ],
+    "primary": "Publicar un empleo"
+  },
+  "candidate_hired": {
+    "title": "¡Gran contratación!",
+    "message": "{{name}} está contratado para {{job}}.",
+    "steps": [
+      "Cierra el empleo si el puesto está cubierto",
+      "Informa a los demás candidatos de en qué punto están"
+    ],
+    "primary": "Ver el empleo"
+  },
+  "company_submitted": {
+    "title": "Datos enviados para revisión",
+    "message": "Gracias. Nuestro equipo está revisando tu empresa.",
+    "steps": [
+      "Revisamos los datos de tu empresa",
+      "Recibirás un correo cuando esté aprobada",
+      "Después podrás publicar empleos y buscar candidatos"
+    ]
+  },
+  "first_alert": {
+    "title": "Alerta creada",
+    "message": "Te enviaremos por correo los empleos nuevos que encajen con «{{name}}».",
+    "steps": [
+      "Los empleos nuevos llegan por correo ({{frequency}})",
+      "Edítala o páusala cuando quieras en Alertas de empleo"
+    ]
+  }
+}
