@@ -186,7 +186,7 @@ export const LIMITS = {
     embeddingMaxChars: 32_000,
     skillNamesTimeoutMs: 8_000,
     usage: {
-      caps: { plus: { month: 40, year: 80 }, recruiter_plus: { month: 80, year: 150 } },
+      caps: { plus: { month: 40, year: 60 }, recruiter_plus: { month: 80, year: 120 } },
       burstPerMinute: 10,
       skillNamesPerDay: 100,
       capRange: { min: 1, max: 10_000 },

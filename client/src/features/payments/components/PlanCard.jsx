@@ -91,6 +91,8 @@ export default function PlanCard() {
   const saving = paid ? 0 : bestSaving(plans)
   return (
     <>
+      {/* Today's AI uses first, above the plans (owner 2026-11-17). */}
+      <AiUsageToday />
       {saving > 0 && <IntervalSwitch value={interval} onChange={setInterval} saving={saving} className={styles.interval} />}
       <div className={styles.plans} data-billing-state={state}>
         {free && (
@@ -139,7 +141,6 @@ export default function PlanCard() {
         )}
       </div>
       <div role="alert">{portalError && <p className={styles.failure}>{errorText.code(portalError)}</p>}</div>
-      <AiUsageToday />
       <CheckoutDialog item={checkingOut ? { ...item, interval } : null} plan={plus} onClose={() => setCheckingOut(false)} />
     </>
   )

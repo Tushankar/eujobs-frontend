@@ -42,7 +42,7 @@ beforeEach(async () => {
 
 const v1 = '/api/v1'
 const SETTINGS = {
-  caps: { plus: { month: 40, year: 80 }, recruiter_plus: { month: 80, year: 150 } },
+  caps: { plus: { month: 40, year: 60 }, recruiter_plus: { month: 80, year: 120 } },
   burstPerMinute: 10,
   skillNamesPerDay: 100,
   budgets: { openai: null, places: null },
@@ -75,17 +75,17 @@ async function jobs(count) {
 describe('daily AI caps by plan and billing interval', () => {
   it('gives yearly plans more than monthly ones, and free users the monthly cap', async () => {
     assert.equal((await usageLeft(await candidate('month'))).limit, 40)
-    assert.equal((await usageLeft(await candidate('year'))).limit, 80)
+    assert.equal((await usageLeft(await candidate('year'))).limit, 60)
     const { user: recruiter } = await approvedRecruiter({ plus: false })
     await Subscription.create({ userId: recruiter._id, planKey: 'recruiter_plus', status: 'active', interval: 'year' })
-    assert.equal((await usageLeft(recruiter)).limit, 150)
+    assert.equal((await usageLeft(recruiter)).limit, 120)
     const free = await usageLeft(await createUser({ role: 'candidate' }))
     assert.deepEqual([free.limit, free.used, free.remaining], [40, 0, 40])
     assert.ok(free.resetAt)
     assert.equal((await api().get(`${v1}/ai/usage`).set(auth(await owner()))).status, 403)
   })
 
-  it('stops a monthly plan at 40 while a yearly plan goes on', async () => {
+  it('stops a monthly plan at 40 while a yearly plan (60) goes on', async () => {
     const [job] = await jobs(1)
     const monthly = await candidate('month')
     const yearly = await candidate('year')
@@ -95,7 +95,7 @@ describe('daily AI caps by plan and billing interval', () => {
     assert.equal(limited.status, 429)
     assert.deepEqual([limited.body.error.code, limited.body.error.params.limit], ['AI_DAILY_LIMIT', 40])
     assert.equal((await summary(yearly, job)).status, 200)
-    assert.deepEqual(await usageLeft(yearly).then(({ used, limit, remaining }) => [used, limit, remaining]), [41, 80, 39])
+    assert.deepEqual(await usageLeft(yearly).then(({ used, limit, remaining }) => [used, limit, remaining]), [41, 60, 19])
   })
 
   it('follows the caps the admin saves', async () => {
