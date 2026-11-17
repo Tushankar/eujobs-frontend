@@ -189,3 +189,37 @@
     padding: 14px;
   }
 }
+
+/* "Add to calendar" menu */
+.menuPanel {
+  min-width: 220px;
+}
+
+.menu {
+  padding: 6px;
+}
+
+.menuItem {
+  display: block;
+  width: 100%;
+  padding: 9px 10px;
+  border: 0;
+  border-radius: var(--radius-lg);
+  background: transparent;
+  color: inherit;
+  font: inherit;
+  font-size: 13px;
+  line-height: 16px;
+  text-align: left;
+  text-decoration: none;
+  cursor: pointer;
+}
+
+.menuItem:hover {
+  background: var(--muted);
+}
+
+.menuItem[aria-disabled='true'] {
+  opacity: 0.5;
+  pointer-events: none;
+}

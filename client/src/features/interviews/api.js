@@ -21,6 +21,7 @@ export const interviewsApi = api.injectEndpoints({
   endpoints: (build) => ({
     getInterview: build.query({ query: (id) => `/interviews/${id}`, providesTags: ['Interviews'] }),
     getUpcomingInterviews: build.query({ query: () => '/interviews/upcoming', providesTags: ['Interviews'] }),
+    getCalendarLinks: build.query({ query: (id) => `/interviews/${id}/calendar-links`, providesTags: ['Interviews'] }),
     getInterviewNotes: build.query({ query: (id) => `/interviews/${id}/notes`, providesTags: ['Interviews'] }),
     offerInterview: build.mutation({ query: (body) => post('/interviews', body), invalidatesTags: CHANGES }),
     rescheduleInterview: build.mutation({ query: ({ id, ...body }) => post(`/interviews/${id}/reschedule`, body), invalidatesTags: CHANGES }),
@@ -44,6 +45,7 @@ export const interviewsApi = api.injectEndpoints({
 export const {
   useGetInterviewQuery,
   useGetInterviewNotesQuery,
+  useGetCalendarLinksQuery,
   useOfferInterviewMutation,
   useRescheduleInterviewMutation,
   useCancelInterviewMutation,

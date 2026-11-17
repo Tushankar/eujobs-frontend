@@ -169,6 +169,11 @@
     "candidate": "Entrevistador: {{time}}",
     "recruiter": "Candidato: {{time}}"
   },
+  "calendar": {
+    "google": "Google Calendar",
+    "outlook": "Outlook.com",
+    "ics": "Descargar .ics (Apple, Outlook)"
+  },
   "call": {
     "back": "Volver a la conversación",
     "cannotJoin": "Ahora no puedes unirte a esta entrevista",

@@ -168,6 +168,11 @@
     "candidate": "Interviewer: {{time}}",
     "recruiter": "Candidate: {{time}}"
   },
+  "calendar": {
+    "google": "Google Calendar",
+    "outlook": "Outlook.com",
+    "ics": "Download .ics (Apple, Outlook)"
+  },
   "call": {
     "back": "Back to the conversation",
     "cannotJoin": "You cannot join this interview now",

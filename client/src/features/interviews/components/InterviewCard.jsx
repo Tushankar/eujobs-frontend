@@ -2,18 +2,18 @@ import { useEffect, useState } from 'react'
 import { useTranslation } from 'react-i18next'
 import { useDispatch } from 'react-redux'
 import { Link } from 'react-router-dom'
-import { CalendarClock, CalendarPlus, Link2, MapPin, Mic, Phone, Sparkles, Video } from 'lucide-react'
+import { CalendarClock, Link2, MapPin, Mic, Phone, Sparkles, Video } from 'lucide-react'
 import { useGetConfigQuery } from '@/app/api.js'
 import { celebrate } from '@/app/celebrate.js'
 import { Button, Icon } from '@/components/ui'
 import StatusBadge from '@/components/common/StatusBadge.jsx'
 import PlanButton from '@/features/candidate/billing/components/PlanButton.jsx'
 import { useMarkSeen } from '@/features/notifications/api.js'
-import { downloadFromApi } from '@/lib/download.js'
 import { usePreferences } from '@/lib/preferences.js'
 import { cx } from '@/utils/cx.js'
 import { joinOpen, useAskOtherTimesMutation, useCancelInterviewMutation, usePickSlotMutation, useRequestRescheduleMutation } from '../api.js'
 import { useWhen } from '../useWhen.js'
+import AddToCalendar from './AddToCalendar.jsx'
 import InterviewPrep from './InterviewPrep.jsx'
 import OfferDialog from './OfferDialog.jsx'
 import { NoShowDialog, NoteDialog, NotesDialog, OutcomeDialog } from './SmallDialogs.jsx'
@@ -204,9 +204,7 @@ export default function InterviewCard({ interview, counterpartName }) {
           </Button>
         )}
         {interview.status === 'confirmed' && (
-          <Button variant="outline" leftIcon={<Icon as={CalendarPlus} size={14} />} onClick={() => downloadFromApi(`/interviews/${interview.id}/calendar`)} data-add-calendar>
-            {t('interviews:card.addToCalendar')}
-          </Button>
+          <AddToCalendar interviewId={interview.id} />
         )}
         {!recruiter && interview.status === 'confirmed' && !started && !interview.rescheduleRequest && (
           <Button variant="ghost" onClick={() => setDialog('askReschedule')} data-ask-reschedule>
