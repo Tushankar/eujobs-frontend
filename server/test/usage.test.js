@@ -1,6 +1,7 @@
 import assert from 'node:assert/strict'
 import { after, before, beforeEach, describe, it } from 'node:test'
 import { ScheduledTask } from '../jobs/models.js'
+import { generate } from '../lib/ai.js'
 import { clearUsageCache } from '../lib/usage.js'
 import { AuditEvent } from '../modules/admin/admin.model.js'
 import { AiCache, AiUsage, ApiUsage } from '../modules/ai/ai.model.js'
@@ -43,6 +44,7 @@ beforeEach(async () => {
 const v1 = '/api/v1'
 const SETTINGS = {
   caps: { plus: { month: 40, year: 60 }, recruiter_plus: { month: 80, year: 120 } },
+  featureLimits: { cv_draft: 5, cv_snapshot: 5 },
   burstPerMinute: 10,
   skillNamesPerDay: 100,
   budgets: { openai: null, places: null },
@@ -107,7 +109,27 @@ describe('daily AI caps by plan and billing interval', () => {
   })
 })
 
-describe('burst and skill-name limits', () => {
+describe('burst, feature and skill-name limits', () => {
+  it('stops CV drafts at their own daily limit, each still counting once toward the cap', async () => {
+    await saveSettings(await owner(), { featureLimits: { cv_draft: 2, cv_snapshot: 5 } })
+    const user = await candidate()
+    const schema = { type: 'object', properties: { text: { type: 'string' } }, required: ['text'], additionalProperties: false }
+    const write = (kind) => generate({ kind, user, language: 'en', instructions: 'Write.', input: 'cv text', schema })
+    await write('cv_draft')
+    await write('cv_draft')
+    await assert.rejects(write('cv_draft'), (error) => error.code === 'AI_FEATURE_LIMIT' && error.params.limit === 2 && error.params.feature === 'cv_draft')
+    await write('job_summary')
+    const row = await AiUsage.findOne({ userId: user._id })
+    assert.deepEqual([row.count, row.features.get('cv_draft')], [3, 2], 'the refused draft is not counted')
+
+    // OpenAI failing releases the feature's use too.
+    await saveSettings(await owner(), { featureLimits: { cv_draft: 5, cv_snapshot: 5 } })
+    await api().post(`${v1}/_test/ai/fail-next`)
+    await assert.rejects(write('cv_draft'), (error) => error.code === 'AI_UNAVAILABLE')
+    assert.equal((await AiUsage.findOne({ userId: user._id })).features.get('cv_draft'), 2)
+  })
+
+
   it('allows only the per-minute burst of uncached generations', async () => {
     await saveSettings(await owner(), { burstPerMinute: 2 })
     const user = await candidate()
