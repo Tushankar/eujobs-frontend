@@ -40,6 +40,10 @@ interviewsRouter.get('/:id/calendar', idParams, async (req, res) => {
   res.set('Content-Type', 'text/calendar; charset=utf-8').attachment('interview.ics').send(content)
 })
 
+interviewsRouter.get('/:id/calendar-links', idParams, async (req, res) => {
+  res.json(await interviews.calendarLinksFor(req.user, req.params.id))
+})
+
 interviewsRouter.post('/:id/pick', idParams, candidate, validate({ body: schemas.pickBody }), async (req, res) => {
   res.json(await interviews.pick(req.user, req.params.id, req.body))
 })

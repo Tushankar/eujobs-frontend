@@ -11,7 +11,7 @@ import { addEvent, threadFor } from '../messages/messages.service.js'
 import { companyRecruiter, notify } from '../notifications/notifications.service.js'
 import { User } from '../users/users.model.js'
 import { interviewDtos, joinWindow } from './interviews.cards.js'
-import { calendarInvite, formatWhen, itemLink, sendInterviewEmail } from './interviews.emails.js'
+import { calendarInvite, calendarLinks, formatWhen, itemLink, sendInterviewEmail } from './interviews.emails.js'
 import { Interview } from './interviews.model.js'
 
 /*
@@ -344,6 +344,14 @@ export async function calendarFile(user, id) {
   if (interview.status !== 'confirmed') throw conflict(interview.status)
   const { candidate, company, job } = await partiesOf(interview)
   return calendarInvite(user, interview, 'PUBLISH', { company, job, candidateName: candidate?.fullName, phone: phoneOf(candidate) })
+}
+
+/** GET /interviews/:id/calendar-links: the booked time as Google Calendar and Outlook.com links. */
+export async function calendarLinksFor(user, id) {
+  const interview = await ownInterview(user, id)
+  if (interview.status !== 'confirmed') throw conflict(interview.status)
+  const { candidate, company, job } = await partiesOf(interview)
+  return calendarLinks(user, interview, { company, job, candidateName: candidate?.fullName, phone: phoneOf(candidate) })
 }
 
 /** GET /interviews/upcoming: booked interviews whose join window has not closed, soonest first (P11d-Q16). */

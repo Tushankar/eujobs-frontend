@@ -32,9 +32,19 @@ export function detailsLine(user, interview, { phone, candidateName } = {}) {
 export const itemLink = (role, kind, id) => `${config.clientOrigin}/${role}/${kind}/${id}`
 
 /** The calendar entry of the booked time for this reader: `{ method, content }` (REQUEST, CANCEL or PUBLISH). */
-export function calendarInvite(user, interview, method, { company, job, candidateName, phone, details = detailsLine(user, interview, { phone, candidateName }) }) {
-  const language = user.language ?? 'en'
+/** The event text of the booked time, in the reader's language: the .ics file and the calendar links share it. */
+function calendarEvent(user, interview, { company, job, candidateName, phone, details = detailsLine(user, interview, { phone, candidateName }) }) {
   const link = itemLink(user.role, 'interviews', interview._id)
+  return {
+    link,
+    summary: label(user.language ?? 'en', 'summary', { job, company }),
+    description: `${details}\n${link}`,
+    location: interview.mode === 'in_person' ? interview.address : interview.mode === 'link' ? interview.link : link,
+  }
+}
+
+export function calendarInvite(user, interview, method, parties) {
+  const { link, summary, description, location } = calendarEvent(user, interview, parties)
   return {
     method,
     content: buildIcs({
@@ -43,13 +53,27 @@ export function calendarInvite(user, interview, method, { company, job, candidat
       sequence: interview.sequence,
       startAt: interview.startAt,
       minutes: interview.minutes,
-      summary: label(language, 'summary', { job, company }),
-      description: `${details}\n${link}`,
-      location: interview.mode === 'in_person' ? interview.address : interview.mode === 'link' ? interview.link : link,
+      summary,
+      description,
+      location,
       url: link,
       organizer: addressOf(config.mailFrom),
       attendee: method === 'PUBLISH' ? null : user.email,
     }),
+  }
+}
+
+/** "Add to calendar" links that open Google Calendar or Outlook.com with the booked time filled in (owner 2026-11-17). */
+export function calendarLinks(user, interview, parties) {
+  const { summary, description, location } = calendarEvent(user, interview, parties)
+  const start = interview.startAt
+  const end = new Date(start.getTime() + interview.minutes * 60_000)
+  const compact = (date) => date.toISOString().replace(/[-:]|\.\d{3}/g, '')
+  const google = new URLSearchParams({ action: 'TEMPLATE', text: summary, dates: `${compact(start)}/${compact(end)}`, details: description, location: location ?? '' })
+  const outlook = new URLSearchParams({ path: '/calendar/action/compose', rru: 'addevent', subject: summary, startdt: start.toISOString(), enddt: end.toISOString(), body: description, location: location ?? '' })
+  return {
+    google: `https://calendar.google.com/calendar/render?${google}`,
+    outlook: `https://outlook.live.com/calendar/0/action/compose?${outlook}`,
   }
 }
 
