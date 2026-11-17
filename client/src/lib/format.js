@@ -42,7 +42,8 @@ export function formatDate(value, locale, options = { dateStyle: 'medium' }) {
 const DEVICE_HOUR12 = ['h11', 'h12'].includes(new Intl.DateTimeFormat(undefined, { hour: 'numeric' }).resolvedOptions().hourCycle)
 
 export function formatDateTime(value, locale) {
-  return new Intl.DateTimeFormat(locale, { dateStyle: 'medium', timeStyle: 'short', hour12: DEVICE_HOUR12 }).format(new Date(value))
+  // Explicit parts, not dateStyle/timeStyle: those pad 12-hour times in some locales ("02:30 pm").
+  return new Intl.DateTimeFormat(locale, { day: 'numeric', month: 'short', year: 'numeric', hour: 'numeric', minute: '2-digit', hour12: DEVICE_HOUR12 }).format(new Date(value))
 }
 
 /**
