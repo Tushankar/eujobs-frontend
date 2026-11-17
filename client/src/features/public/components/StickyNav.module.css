@@ -2,13 +2,17 @@
 .bar {
   position: fixed;
   top: 12px;
-  left: 50%;
+  /* Centred with auto margins, not translate: GSAP folds a CSS translate into its own transform in px at mount,
+     so a -50% measured before the bar's styles or width settle left it starting at the middle of the screen. */
+  right: 0;
+  left: 0;
   z-index: 60;
   display: flex;
   align-items: center;
   gap: 10px;
   width: max-content;
   max-width: calc(100% - 32px);
+  margin-inline: auto;
   padding: 6px 6px 6px 16px;
   border: 1px solid light-dark(rgba(233, 235, 239, 0.9), rgba(255, 255, 255, 0.1));
   border-radius: 999px;
@@ -16,7 +20,6 @@
   box-shadow:
     0 12px 32px rgba(19, 31, 53, 0.12),
     0 1px 0 rgba(255, 255, 255, 0.9) inset;
-  translate: -50% 0;
   visibility: hidden;
   -webkit-backdrop-filter: saturate(180%) blur(18px);
   backdrop-filter: saturate(180%) blur(18px);
