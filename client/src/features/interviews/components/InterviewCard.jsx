@@ -1,8 +1,10 @@
 import { useEffect, useState } from 'react'
 import { useTranslation } from 'react-i18next'
+import { useDispatch } from 'react-redux'
 import { Link } from 'react-router-dom'
 import { CalendarClock, CalendarPlus, Link2, MapPin, Mic, Phone, Sparkles, Video } from 'lucide-react'
 import { useGetConfigQuery } from '@/app/api.js'
+import { celebrate } from '@/app/celebrate.js'
 import { Button, Icon } from '@/components/ui'
 import StatusBadge from '@/components/common/StatusBadge.jsx'
 import PlanButton from '@/features/candidate/billing/components/PlanButton.jsx'
@@ -76,6 +78,12 @@ export default function InterviewCard({ interview, counterpartName }) {
   const [dialog, setDialog] = useState(null)
   const [choice, setChoice] = useState(null)
   const [pick, { isLoading: picking }] = usePickSlotMutation()
+  const dispatch = useDispatch()
+  // 2026-11-17: the candidate's "Interview confirmed" success modal once the picked time is saved.
+  async function pickAndCelebrate(startAt) {
+    const result = await pick({ id: interview.id, startAt })
+    if (!result.error) dispatch(celebrate({ kind: 'interview_confirmed', params: { job: interview.job.title, company: counterpartName, startAt, interviewId: interview.id } }))
+  }
   const [askOtherTimes] = useAskOtherTimesMutation()
   const [requestReschedule] = useRequestRescheduleMutation()
   const [cancel] = useCancelInterviewMutation()
@@ -136,7 +144,7 @@ export default function InterviewCard({ interview, counterpartName }) {
               ))}
             </ul>
             <div className={styles.actions}>
-              <Button disabled={!choice} loading={picking} onClick={() => pick({ id: interview.id, startAt: choice })} data-pick-slot>
+              <Button disabled={!choice} loading={picking} onClick={() => pickAndCelebrate(choice)} data-pick-slot>
                 {t('interviews:card.confirm')}
               </Button>
               <Button variant="outline" onClick={() => setDialog('otherTimes')} data-other-times>

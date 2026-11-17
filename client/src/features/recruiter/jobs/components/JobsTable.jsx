@@ -1,6 +1,7 @@
 import { useState } from 'react'
 import { useTranslation } from 'react-i18next'
 import { useDispatch } from 'react-redux'
+import { celebrate } from '@/app/celebrate.js'
 import { Link, useNavigate } from 'react-router-dom'
 import { ArrowDown, ArrowUp, Eye, Lock, Settings2 } from 'lucide-react'
 import { errorCode } from '@/app/api.js'
@@ -135,6 +136,8 @@ export default function JobsTable({ jobs, sort, onSort, caption, loading = false
     if (status === 'published' && publishLocked(job.id)) return dispatch(openUpgrade('jobs_unlimited'))
     try {
       await setJobStatus({ id: job.id, status }).unwrap()
+      // 2026-11-17: the first publish of a draft gets the "Your job is live" success modal.
+      if (status === 'published' && job.status === 'draft') dispatch(celebrate({ kind: 'job_published', params: { job: job.title, jobId: job.id } }))
     } catch (error) {
       const step = error.data?.error?.params?.step
       if (errorCode(error) === 'VALIDATION_FAILED' && step) navigate(`/recruiter/jobs/${job.id}/edit?step=${JOB_STEPS.indexOf(step)}&publish=1`)

@@ -2,6 +2,7 @@ import { createBrowserRouter, redirect } from 'react-router-dom'
 import HydrateFallback from '@/components/layout/HydrateFallback.jsx'
 import { WORKSPACES } from './workspaces.js'
 import NotFoundPage from './NotFoundPage.jsx'
+import CelebrationHost from '@/features/celebrations/CelebrationHost.jsx'
 import ScrollToTop from './ScrollToTop.jsx'
 import { setRouter } from './navigation.js'
 import { landingPath, loadMe, requiredPage } from './session.js'
@@ -72,5 +73,13 @@ const routes = [
 ]
 
 // The first render waits for the loaders (GET /me), so it shows a loading state meanwhile.
-export const router = createBrowserRouter([{ element: <ScrollToTop />, children: routes.map((route) => ({ ...route, HydrateFallback })) }])
+// 2026-11-17: success modals can follow any page (onboarding pages sit outside the workspace layout).
+const Root = () => (
+  <>
+    <ScrollToTop />
+    <CelebrationHost />
+  </>
+)
+
+export const router = createBrowserRouter([{ element: <Root />, children: routes.map((route) => ({ ...route, HydrateFallback })) }])
 setRouter(router)

@@ -1,7 +1,9 @@
 import { useState } from 'react'
 import { useTranslation } from 'react-i18next'
+import { useDispatch } from 'react-redux'
 import { Link, useNavigate } from 'react-router-dom'
 import { ArrowLeft, Check, Crown } from 'lucide-react'
+import { celebrate } from '@/app/celebrate.js'
 import { Button, Icon, Panel } from '@/components/ui'
 import { usePlan } from '@/features/candidate/billing/usePlan.js'
 import CheckoutDialog from '@/features/payments/components/CheckoutDialog.jsx'
@@ -27,6 +29,7 @@ export default function PlanStepPage() {
   const errorText = useErrorText()
   const { isPlus, plans, plus, item } = usePlan()
   const [completeOnboarding, { isLoading }] = useCompleteOnboardingMutation()
+  const dispatch = useDispatch()
   const [checkingOut, setCheckingOut] = useState(false)
   const [interval, setInterval] = useState('month')
   const saving = bestSaving(plans)
@@ -36,6 +39,8 @@ export default function PlanStepPage() {
     try {
       await completeOnboarding().unwrap()
       navigate(path)
+      // 2026-11-17: "You're all set" success modal.
+      dispatch(celebrate({ kind: 'onboarding_done' }))
     } catch (error) {
       setFailure(error)
     }

@@ -1,5 +1,7 @@
 import { useState } from 'react'
 import { useTranslation } from 'react-i18next'
+import { useDispatch } from 'react-redux'
+import { celebrate } from '@/app/celebrate.js'
 import { useGetConfigQuery } from '@/app/api.js'
 import { Button, Modal, SelectField, TextField } from '@/components/ui'
 import CityField from '@/components/common/CityField.jsx'
@@ -7,7 +9,7 @@ import { useDraftJobAlertMutation } from '@/features/ai/api.js'
 import AiFillButton from '@/features/ai/components/AiFillButton.jsx'
 import { check, useErrorText, useFormState } from '@/lib/forms.js'
 import { useFormat, usePreferences } from '@/lib/preferences.js'
-import { useCreateJobAlertMutation, useUpdateJobAlertMutation } from '../api.js'
+import { useGetJobAlertsQuery, useCreateJobAlertMutation, useUpdateJobAlertMutation } from '../api.js'
 import styles from './JobAlertModal.module.css'
 
 const FORM_ID = 'job-alert-form'
@@ -21,6 +23,10 @@ function AlertForm({ alert, onClose }) {
   const [createAlert] = useCreateJobAlertMutation()
   const [updateAlert] = useUpdateJobAlertMutation()
   const [draftJobAlert] = useDraftJobAlertMutation()
+  const dispatch = useDispatch()
+  // 2026-11-17: the first alert ever gets the "Job alert created" success modal.
+  const { data: existing } = useGetJobAlertsQuery()
+  const firstAlert = !alert && existing && (existing.items ?? existing).length === 0
   // 2026-11-17: "Describe it in a sentence" (Plus) fills the fields below.
   const [sentence, setSentence] = useState('')
   const limits = config?.limits.jobAlert
@@ -40,7 +46,9 @@ function AlertForm({ alert, onClose }) {
     const saved = await run({ name: check.text(values.name, limits.name.max), keywords: check.text(values.keywords, limits.keywords.max) }, () =>
       (alert ? updateAlert({ id: alert.id, ...body }) : createAlert(body)).unwrap(),
     )
-    if (saved) onClose()
+    if (!saved) return
+    onClose()
+    if (firstAlert) dispatch(celebrate({ kind: 'first_alert', params: { name: body.name, frequency: body.frequency } }))
   }
 
   return (

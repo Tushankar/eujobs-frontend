@@ -1,8 +1,10 @@
 import { useState } from 'react'
 import { useTranslation } from 'react-i18next'
+import { useDispatch } from 'react-redux'
 import { Link, useNavigate } from 'react-router-dom'
 import { CircleCheck } from 'lucide-react'
 import { errorCode, useGetConfigQuery } from '@/app/api.js'
+import { celebrate } from '@/app/celebrate.js'
 import { refreshMe } from '@/app/session.js'
 import { Button, Icon, TextField } from '@/components/ui'
 import PillBadge from '@/components/common/PillBadge.jsx'
@@ -30,6 +32,7 @@ export default function VerifyAccountPage() {
   const [requestCode, { isLoading: sending }] = useRequestOnboardingPhoneCodeMutation()
   const [confirmPhone, { isLoading: confirming }] = useConfirmOnboardingPhoneMutation()
   const [submit, { isLoading: submitting }] = useSubmitOnboardingMutation()
+  const dispatch = useDispatch()
   const [sent, setSent] = useState(null)
   const [code, setCode] = useState('')
   const [errors, setErrors] = useState({})
@@ -74,6 +77,8 @@ export default function VerifyAccountPage() {
       await submit().unwrap()
       await refreshMe()
       navigate(stepPath('review'))
+      // 2026-11-17: "Details sent for review" success modal.
+      dispatch(celebrate({ kind: 'company_submitted' }))
     } catch (failure) {
       setErrors({ submit: errorText.code(failure) })
     }

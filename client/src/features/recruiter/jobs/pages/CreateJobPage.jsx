@@ -1,5 +1,7 @@
 import { useTranslation } from 'react-i18next'
+import { useDispatch } from 'react-redux'
 import { useNavigate, useParams, useSearchParams } from 'react-router-dom'
+import { celebrate } from '@/app/celebrate.js'
 import { useGetConfigQuery, useGetMeQuery } from '@/app/api.js'
 import PageTitle from '@/components/common/PageTitle.jsx'
 import { useCreateJobMutation, useGetRecruiterJobQuery, usePublishLock, useSetJobStatusMutation, useUpdateJobMutation } from '../api.js'
@@ -57,6 +59,7 @@ function EditJob({ jobId }) {
   const { data: job, error } = useGetRecruiterJobQuery(jobId)
   const [updateJob] = useUpdateJobMutation()
   const [setJobStatus] = useSetJobStatusMutation()
+  const dispatch = useDispatch()
   const publishLocked = usePublishLock()
   if (error) return <JobNotFound />
   if (!job || !config) return null
@@ -71,6 +74,8 @@ function EditJob({ jobId }) {
   async function finish(values, action) {
     await save(values)
     if (action.status === 'published') await setJobStatus({ id: jobId, status: 'published' }).unwrap()
+    // 2026-11-17: the first publish of a draft gets the "Your job is live" success modal.
+    if (draft && action.status === 'published') dispatch(celebrate({ kind: 'job_published', params: { job: values.title.trim(), jobId } }))
     const notice = !draft ? 'saved' : action.status === 'published' ? 'published' : 'draft'
     navigate(`/recruiter/jobs/${jobId}`, { state: { notice } })
   }
