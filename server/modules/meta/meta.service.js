@@ -2,7 +2,8 @@ import ISO6391 from 'iso-639-1'
 import { config } from '../../config/env.js'
 import { ENUMS } from '../../config/enums.js'
 import { AppError, fieldError } from '../../lib/errors.js'
-import { t } from '../../lib/i18n.js'
+import { interpolate, t } from '../../lib/i18n.js'
+import { usageSettings } from '../../lib/usage.js'
 import { Plan } from '../payments/payments.model.js'
 import { chargeCurrency } from '../payments/currencies.js'
 import { savingPercent } from '../payments/plans.stripe.js'
@@ -75,6 +76,12 @@ export async function userCurrency(user) {
 /** M-116, §3.22: one role's plans (Free then Plus; Free then Recruiter Plus), in one language, priced in `currency` (Free is 0; null where none). */
 export async function listPlans(currency, language, role) {
   const plans = await Plan.find({ role })
+  const { caps } = await usageSettings()
+  // 2026-11-17: a plan with AI lists its daily AI uses from the admin's Usage settings (yearly billing gets more).
+  const aiUses = (plan) => {
+    const cap = plan.entitlements.includes('ai') && caps[plan.key]
+    return cap ? [interpolate(t(language, 'labels.aiUses'), cap)] : []
+  }
   return plans
     .sort((a, b) => ENUMS.planKey.indexOf(a.key) - ENUMS.planKey.indexOf(b.key))
     .map((plan) => {
@@ -84,7 +91,8 @@ export async function listPlans(currency, language, role) {
       return {
         key: plan.key,
         name: plan.name[language],
-        features: plan.features.map((feature) => feature[language]),
+        features: [...plan.features.map((feature) => feature[language]), ...aiUses(plan)],
+        aiDailyUses: plan.entitlements.includes('ai') ? (caps[plan.key] ?? null) : null,
         interval: plan.interval,
         price: price ? { amountMinor: price.amountMinor, currency } : null,
         yearlyPrice: yearly ? { amountMinor: yearly.amountMinor, currency, savingPercent: savingPercent(price.amountMinor, yearly.amountMinor) } : null,

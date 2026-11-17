@@ -59,5 +59,10 @@
     "strengths": "Points forts",
     "gaps": "Écarts et questions ouvertes",
     "openQuestions": "Questions à poser"
+  },
+  "usage": {
+    "title": "Utilisations IA du jour",
+    "count": "{{used}} sur {{limit}} utilisées",
+    "note": "Il vous en reste {{remaining}}. Elles repartent le {{time}}. Rouvrir un texte déjà rédigé n’en consomme pas."
   }
 }

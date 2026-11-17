@@ -10,6 +10,7 @@ import { usePlan } from '@/features/candidate/billing/usePlan.js'
 import { useErrorText } from '@/lib/forms.js'
 import { useFormat, usePreferences } from '@/lib/preferences.js'
 import { cx } from '@/utils/cx.js'
+import AiUsageToday from '@/features/ai/components/AiUsageToday.jsx'
 import CheckoutDialog from './CheckoutDialog.jsx'
 import IntervalSwitch from './IntervalSwitch.jsx'
 import { bestSaving } from '../bestSaving.js'
@@ -138,6 +139,7 @@ export default function PlanCard() {
         )}
       </div>
       <div role="alert">{portalError && <p className={styles.failure}>{errorText.code(portalError)}</p>}</div>
+      <AiUsageToday />
       <CheckoutDialog item={checkingOut ? { ...item, interval } : null} plan={plus} onClose={() => setCheckingOut(false)} />
     </>
   )

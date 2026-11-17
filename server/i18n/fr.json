@@ -736,7 +736,8 @@
     "billingInterval": {
       "month": "mensuelle",
       "year": "annuelle"
-    }
+    },
+    "aiUses": "{{month}} utilisations IA par jour ({{year}} avec la facturation annuelle)"
   },
   "certificate": {
     "title": "Certificat de réussite",

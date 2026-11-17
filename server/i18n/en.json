@@ -736,7 +736,8 @@
     "billingInterval": {
       "month": "monthly",
       "year": "yearly"
-    }
+    },
+    "aiUses": "{{month}} AI uses a day ({{year}} with yearly billing)"
   },
   "certificate": {
     "title": "Certificate of completion",

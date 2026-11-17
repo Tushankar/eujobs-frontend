@@ -11,6 +11,7 @@ import { ensureDefaultPolicy } from '../modules/matching/matching.admin.js'
 import { Embedding, MatchingPolicy, MatchingPolicyVersion, MatchResult } from '../modules/matching/matching.model.js'
 import { Notification } from '../modules/notifications/notifications.model.js'
 import { AppConfig, Subscription } from '../modules/payments/payments.model.js'
+import { anonymiseApiUsage } from '../modules/privacy/privacy.erase.js'
 import { User } from '../modules/users/users.model.js'
 import { seedCatalog } from '../seed/catalog.js'
 import { aiStub } from './helpers/ai.js'
@@ -217,5 +218,22 @@ describe('Usage tab (ai.view reads, ai.manage saves)', () => {
     assert.match(manual.placeId, /^manual-DE-/)
     const picked = await api().get(`${v1}/places/${manual.placeId}`).set(auth(user))
     assert.deepEqual([picked.body.city, picked.body.countryCode], ['Berlin', 'DE'])
+  })
+})
+
+describe('erasure (M-188)', () => {
+  it('merges the counts of an erased user into the no-user row, so the totals stay', async () => {
+    const user = await candidate()
+    const row = { day: '2026-11-17', provider: 'openai', model: 'stub-fast', kind: 'job_summary' }
+    await ApiUsage.create([
+      { ...row, userId: user._id, calls: 2, inputTokens: 2000, outputTokens: 400 },
+      { ...row, userId: null, calls: 1, inputTokens: 1000, outputTokens: 200 },
+      { ...row, kind: 'translation', userId: user._id, calls: 1, inputTokens: 300, outputTokens: 50 },
+    ])
+    await anonymiseApiUsage(user._id)
+    assert.equal(await ApiUsage.countDocuments({ userId: user._id }), 0)
+    const merged = await ApiUsage.findOne({ ...row, userId: null })
+    assert.deepEqual([merged.calls, merged.inputTokens, merged.outputTokens], [3, 3000, 600])
+    assert.equal((await ApiUsage.findOne({ ...row, kind: 'translation', userId: null })).calls, 1)
   })
 })

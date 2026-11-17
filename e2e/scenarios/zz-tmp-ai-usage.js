@@ -45,6 +45,15 @@ export default {
       await page.goto(`${ctx.webUrl}/candidate/ai-insights`, { waitUntil: 'networkidle0' })
       await page.waitForSelector('[data-ai-uses-left]', { visible: true })
       await ctx.screenshot(page, '2-insights-uses-left')
+      // Billing: the plan lists its daily AI uses, and today's count sits under the plans.
+      await page.goto(`${ctx.webUrl}/candidate/settings/billing`, { waitUntil: 'networkidle0' })
+      await page.waitForSelector('[data-ai-usage-today]', { visible: true })
+      const billing = await page.$eval('[data-ai-usage-today]', (element) => element.innerText)
+      ctx.check(/1 of 40 used/.test(billing), `Billing shows today's AI uses (${billing.replace(/\n/g, ' | ')})`)
+      const features = await page.$eval('[data-plan-features="plus"]', (element) => element.innerText)
+      ctx.check(features.includes('40 AI uses a day (80 with yearly billing)'), 'the Plus card lists its daily AI uses')
+      await page.evaluate(() => document.querySelector('[data-ai-usage-today]').scrollIntoView({ block: 'center' }))
+      await ctx.screenshot(page, '2b-billing-ai-uses')
       await handle.checkOverflow()
       ctx.assertClean(handle.issues, 'candidate uses left')
 

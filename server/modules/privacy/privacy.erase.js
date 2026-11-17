@@ -6,7 +6,7 @@ import { callStripe } from '../../lib/stripe.js'
 import { EmailLog } from '../../lib/mail/emailLog.model.js'
 import { ScheduledTask } from '../../jobs/models.js'
 import { AuditEvent } from '../admin/admin.model.js'
-import { AiCache, AiUsage, ExplanationFeedback } from '../ai/ai.model.js'
+import { AiCache, AiUsage, ApiUsage, ExplanationFeedback } from '../ai/ai.model.js'
 import { AlertMatch, JobAlert } from '../alerts/alerts.model.js'
 import { Application } from '../applications/applications.model.js'
 import { EmailToken, VerificationCode } from '../auth/auth.model.js'
@@ -58,6 +58,7 @@ export const COVERAGE = {
   AlertMatch: 'deleted with the alerts',
   ExplanationFeedback: 'deleted',
   AiUsage: 'deleted',
+  ApiUsage: 'anonymised (the counts merge into the no-user row, so the Usage tab keeps its totals)',
   AiCache: 'deleted (rows about the person: subjectId)',
   Embedding: 'deleted (the candidate\'s vector)',
   MatchResult: 'deleted (the candidate\'s scores)',
@@ -192,9 +193,18 @@ async function removeOwnRecords(user) {
     VerificationCode.deleteMany({ userId: user._id }),
     EmailLog.deleteMany({ $or: [{ userId: user._id }, { to: user.email }] }),
     AiUsage.deleteMany({ userId: user._id }),
+    anonymiseApiUsage(user._id),
     Review.deleteMany({ userId: user._id }),
     NewsletterSubscriber.deleteMany({ email: user.email }),
   ])
+}
+
+/** 2026-11-17: the person's API usage counts move to the no-user row of the same day, provider, model and kind. */
+export async function anonymiseApiUsage(userId) {
+  for (const { day, provider, model, kind, calls, inputTokens, outputTokens, seconds } of await ApiUsage.find({ userId })) {
+    await ApiUsage.updateOne({ day, provider, model, kind, userId: null }, { $inc: { calls, inputTokens, outputTokens, seconds } }, { upsert: true })
+  }
+  await ApiUsage.deleteMany({ userId })
 }
 
 async function eraseCandidate(user) {

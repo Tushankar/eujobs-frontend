@@ -59,5 +59,10 @@
     "strengths": "Strengths",
     "gaps": "Gaps and open questions",
     "openQuestions": "Questions to ask"
+  },
+  "usage": {
+    "title": "AI uses today",
+    "count": "{{used}} of {{limit}} used",
+    "note": "{{remaining}} left. They start again at {{time}}. Opening a text that was already written doesn’t use one."
   }
 }

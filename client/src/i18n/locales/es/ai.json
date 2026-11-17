@@ -59,5 +59,10 @@
     "strengths": "Puntos fuertes",
     "gaps": "Carencias y dudas",
     "openQuestions": "Preguntas que hacer"
+  },
+  "usage": {
+    "title": "Usos de IA de hoy",
+    "count": "{{used}} de {{limit}} usados",
+    "note": "Te quedan {{remaining}}. Vuelven a empezar el {{time}}. Abrir un texto ya redactado no gasta ninguno."
   }
 }
