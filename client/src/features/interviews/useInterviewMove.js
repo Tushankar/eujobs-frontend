@@ -1,3 +1,5 @@
+import { useDispatch } from 'react-redux'
+import { celebrate } from '@/app/celebrate.js'
 import { lacksEntitlement } from '@/features/candidate/billing/usePlan.js'
 import { useMoveApplicationMutation } from '@/features/recruiter/applications/api.js'
 import { usePreferences } from '@/lib/preferences.js'
@@ -24,25 +26,34 @@ export const subscribe = (listener) => {
   return () => listeners.delete(listener)
 }
 
-/** Moves an application and, when it enters an Interview stage with nothing under way, opens the schedule dialog. */
+/**
+ * Moves an application and, when it enters an Interview stage with nothing under way, opens the schedule dialog; when
+ * it enters a Hired stage, the recruiter's "Great hire!" success modal (2026-11-17). `candidateName` is for rows
+ * without the candidate (the profile's application list).
+ */
 export function useMoveTo() {
   const { me } = usePreferences()
+  const dispatch = useDispatch()
   const [move] = useMoveApplicationMutation()
   const canSchedule = !lacksEntitlement(me, 'interviews', ['recruiter'])
-  return async (application, stageId, to) => {
+  return async (application, stageId, to, candidateName) => {
     await move({ id: application.id, stageId }).unwrap()
     setPrompt(to === 'interview' && !application.interview?.active && canSchedule ? { kind: 'schedule', application } : null)
+    if (to === 'hired' && application.stage?.category !== 'hired') {
+      const name = application.candidate?.fullName ?? candidateName
+      dispatch(celebrate({ kind: 'candidate_hired', params: { name, job: application.job?.title ?? '', jobId: application.job?.id ?? application.jobId } }))
+    }
   }
 }
 
-/** `request(application, stageId, stages)`: the interview-aware stage move. */
+/** `request(application, stageId, stages, candidateName?)`: the interview-aware stage move. */
 export function useInterviewMove() {
   const moveTo = useMoveTo()
-  function request(application, stageId, stages) {
+  function request(application, stageId, stages, candidateName) {
     const from = application.stage?.category
     const to = stages.find((stage) => stage.id === stageId)?.category
     if (from === 'interview' && to !== 'interview' && application.interview?.active) return setPrompt({ kind: 'leave', application, stageId, to })
-    return moveTo(application, stageId, from === 'interview' && to === 'interview' ? null : to)
+    return moveTo(application, stageId, from === 'interview' && to === 'interview' ? null : to, candidateName)
   }
   return { request }
 }

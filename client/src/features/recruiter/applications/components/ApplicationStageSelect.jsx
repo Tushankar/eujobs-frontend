@@ -63,7 +63,7 @@ export default function ApplicationStageSelect({ application, candidateName, job
               setAlsoCancel(true)
               setMessage('')
               setRejecting(true)
-            } else interviewMove.request(application, next, stages)
+            } else interviewMove.request(application, next, stages, candidateName)
           }}
         />
         {canMessage && (

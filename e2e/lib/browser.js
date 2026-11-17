@@ -17,9 +17,22 @@ export function launchChrome() {
   return puppeteer.launch({ executablePath: CHROME, headless: true, args: ['--no-first-run', '--no-default-browser-check'] })
 }
 
-export async function openPage(context, viewport) {
+/**
+ * A checked page. Success modals (2026-11-17) are off unless `celebrations`: they cover the page after applying,
+ * publishing and so on, which the older scenarios do not expect.
+ */
+export async function openPage(context, viewport, { celebrations = false } = {}) {
   const page = await context.newPage()
   await page.setViewport(VIEWPORTS[viewport])
+  if (!celebrations) {
+    await page.evaluateOnNewDocument(() => {
+      try {
+        localStorage.setItem('eujobs.e2e.celebrations', 'off')
+      } catch {
+        // about:blank has no storage.
+      }
+    })
+  }
   const issues = []
   const allowed = []
   const isAllowed = (status, url = '') => allowed.some((rule) => rule.status === status && url.includes(rule.urlPart))

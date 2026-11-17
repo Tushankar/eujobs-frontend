@@ -68,12 +68,12 @@ try {
          * A page with the standard checks attached: in a fresh browser context (own storage), or as
          * another tab of `context` (same session).
          */
-        async newPage(context) {
+        async newPage(context, options) {
           if (!context) {
             context = await browser.createBrowserContext()
             contexts.push(context)
           }
-          return openPage(context, viewport)
+          return openPage(context, viewport, options)
         },
         screenshot: (page, name) => screenshot(page, shotsDir, name),
         note: (text) => result.notes.push(text),

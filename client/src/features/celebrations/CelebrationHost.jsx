@@ -6,6 +6,15 @@ import { dismissCelebration } from '@/app/celebrate.js'
 import SuccessModal from '@/components/common/SuccessModal.jsx'
 import { useFormat, usePreferences } from '@/lib/preferences.js'
 
+/** The browser checks turn the modals off for older scenarios (e2e/lib/browser.js); real users never set this. */
+function celebrationsOff() {
+  try {
+    return localStorage.getItem('eujobs.e2e.celebrations') === 'off'
+  } catch {
+    return false
+  }
+}
+
 /** Where each moment's main button goes; null: no main button (close only). */
 const PRIMARY = {
   applied: () => '/candidate/applications',
@@ -65,7 +74,7 @@ export default function CelebrationHost() {
   const content = useContent()
   const server = (me?.celebrations ?? []).filter((item) => !seen.includes(item.id))
   const current = local[0] ?? server[0]
-  if (!current) return null
+  if (!current || celebrationsOff()) return null
 
   function close() {
     if (local[0]) dispatch(dismissCelebration(current.id))
