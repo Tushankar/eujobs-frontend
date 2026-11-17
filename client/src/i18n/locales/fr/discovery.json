@@ -49,6 +49,7 @@
     "selected": "Sélectionnés : {{count}}",
     "needMore": " · Sélectionnez-en au moins un autre pour comparer",
     "upTo": " · Jusqu’à {{max}} candidats",
+    "limit": "Vous ne pouvez pas comparer plus de {{max}} candidats. Retirez-en un pour en ajouter un autre.",
     "clear": "Effacer",
     "open": "Comparer les candidats",
     "title": "Comparer les candidats",

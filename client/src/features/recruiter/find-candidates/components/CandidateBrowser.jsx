@@ -37,6 +37,7 @@ export default function CandidateBrowser({ useList, notice, extra, empty }) {
   const [sort, setSort] = useState('recommended')
   const [comparedIds, setComparedIds] = useState([])
   const [compareOpen, setCompareOpen] = useState(false)
+  const [limitHit, setLimitHit] = useState(false)
   const { jobs, job, setJobId, ready, loading: jobsLoading } = useMatchJob()
   const toggleShortlist = useShortlistToggle()
   const params = locked ? { query: '', filters: EMPTY_FILTERS, sort: 'recommended' } : { query: debounced, filters, sort, jobId: job?.id }
@@ -48,6 +49,8 @@ export default function CandidateBrowser({ useList, notice, extra, empty }) {
   const loading = jobsLoading || listLoading
   // On Free the server matches the cards to the newest live job.
   const matchJob = locked ? data?.matchJob : job
+  // The "no more than 3" message stays until the selection changes.
+  useEffect(() => setLimitHit(false), [comparedIds])
   const compared = comparedIds.map((id) => items.find((candidate) => candidate.id === id)).filter(Boolean)
 
   useEffect(() => {
@@ -55,8 +58,11 @@ export default function CandidateBrowser({ useList, notice, extra, empty }) {
     return () => window.clearTimeout(timer)
   }, [query])
 
+  /** A fourth pick is refused with a message in the compare bar instead of a silently disabled checkbox. */
   function toggleCompare(id) {
-    setComparedIds((current) => (current.includes(id) ? current.filter((value) => value !== id) : [...current, id]))
+    if (comparedIds.includes(id)) return setComparedIds(comparedIds.filter((value) => value !== id))
+    if (comparedIds.length >= MAX_COMPARED) return setLimitHit(true)
+    setComparedIds([...comparedIds, id])
   }
 
   function clear() {
@@ -86,23 +92,6 @@ export default function CandidateBrowser({ useList, notice, extra, empty }) {
       {locked && <p className={styles.view}>{t('discovery:find.applicantsOnly')}</p>}
       {data && notice?.(data)}
 
-      {compared.length > 0 && (
-        <div className={styles.compareBar}>
-          <p>
-            <strong>{t('discovery:compare.selected', { count: compared.length })}</strong>
-            {compared.length < 2 ? t('discovery:compare.needMore') : t('discovery:compare.upTo', { max: MAX_COMPARED })}
-          </p>
-          <div className={styles.compareActions}>
-            <Button variant="ghost" size="sm" onClick={() => setComparedIds([])}>
-              {t('discovery:compare.clear')}
-            </Button>
-            <Button size="sm" disabled={compared.length < 2} onClick={() => setCompareOpen(true)}>
-              {t('discovery:compare.open')}
-            </Button>
-          </div>
-        </div>
-      )}
-
       {loading ? (
         <SkeletonRegion className={styles.grid}>
           {Array.from({ length: SKELETON_CARDS }, (_, index) => (
@@ -124,11 +113,36 @@ export default function CandidateBrowser({ useList, notice, extra, empty }) {
               locked={locked}
               onToggleShortlist={() => toggleShortlist(candidate)}
               compared={comparedIds.includes(candidate.id)}
-              compareDisabled={comparedIds.length >= MAX_COMPARED}
               onToggleCompare={() => toggleCompare(candidate.id)}
               extra={extra?.(candidate)}
             />
           ))}
+        </div>
+      )}
+
+      {compared.length > 0 && (
+        // Floats at the bottom of the screen while the cards scroll under it (owner 2026-11-17).
+        <div className={styles.compareBar} data-compare-bar>
+          <p aria-live="polite">
+            <strong>{t('discovery:compare.selected', { count: compared.length })}</strong>
+            {limitHit ? (
+              <span className={styles.compareLimit} data-compare-limit>
+                {t('discovery:compare.limit', { max: MAX_COMPARED })}
+              </span>
+            ) : compared.length < 2 ? (
+              t('discovery:compare.needMore')
+            ) : (
+              t('discovery:compare.upTo', { max: MAX_COMPARED })
+            )}
+          </p>
+          <div className={styles.compareActions}>
+            <Button variant="ghost" size="sm" onClick={() => setComparedIds([])}>
+              {t('discovery:compare.clear')}
+            </Button>
+            <Button size="sm" disabled={compared.length < 2} onClick={() => setCompareOpen(true)}>
+              {t('discovery:compare.open')}
+            </Button>
+          </div>
         </div>
       )}
 

@@ -16,7 +16,7 @@ import styles from './CandidateCard.module.css'
  * One Find candidates or Shortlists result (A: recruiter B2): photo, listed facts, availability, verification,
  * right to work in the picker country, languages, match evidence and actions. `extra` adds a line (shortlist date).
  */
-export default function CandidateCard({ candidate, hasJob, jobId, locked, onToggleShortlist, compared, compareDisabled, onToggleCompare, extra }) {
+export default function CandidateCard({ candidate, hasJob, jobId, locked, onToggleShortlist, compared, onToggleCompare, extra }) {
   const dispatch = useDispatch()
   const { t } = useTranslation()
   const { country } = usePreferences()
@@ -92,7 +92,6 @@ export default function CandidateCard({ candidate, hasJob, jobId, locked, onTogg
         <Checkbox
           className={styles.compare}
           checked={compared}
-          disabled={compareDisabled && !compared}
           onChange={onToggleCompare}
           aria-label={t('discovery:compare.toggle', { name: candidate.fullName })}
         >

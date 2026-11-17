@@ -48,6 +48,7 @@
     "selected": "{{count}} selected",
     "needMore": " · Select at least one more to compare",
     "upTo": " · Up to {{max}} candidates",
+    "limit": "You can’t compare more than {{max}} candidates. Remove one to add another.",
     "clear": "Clear",
     "open": "Compare candidates",
     "title": "Compare candidates",

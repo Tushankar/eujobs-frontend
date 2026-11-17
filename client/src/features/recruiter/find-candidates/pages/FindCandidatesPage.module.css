@@ -21,7 +21,11 @@
   color: var(--foreground);
 }
 
+/* Floats at the bottom of the screen over the cards, in the content column (owner 2026-11-17). */
 .compareBar {
+  position: sticky;
+  bottom: 16px;
+  z-index: 20;
   display: flex;
   align-items: center;
   justify-content: space-between;
@@ -32,9 +36,19 @@
   border: 1px solid var(--border);
   border-radius: var(--radius-xl);
   background: var(--card);
+  box-shadow: var(--shadow-popover);
   font-size: 12px;
   line-height: 18px;
   color: var(--foreground);
+}
+
+.compareLimit {
+  margin-left: 8px;
+  padding: 2px 8px;
+  border-radius: 999px;
+  background: var(--warning-bg);
+  color: var(--warning-fg);
+  font-weight: 500;
 }
 
 .compareActions {
@@ -66,6 +80,29 @@
 
   .resultsBar {
     flex-wrap: wrap;
+  }
+
+  /* Phones: the bar spans the column, the text above and the two buttons side by side below. */
+  .compareBar {
+    bottom: 8px;
+    padding: 12px;
+  }
+
+  .compareBar p {
+    flex-basis: 100%;
+  }
+
+  .compareLimit {
+    display: inline-block;
+    margin: 6px 0 0;
+  }
+
+  .compareActions {
+    flex: 1;
+  }
+
+  .compareActions > * {
+    flex: 1;
   }
 }
 
