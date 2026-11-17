@@ -41,9 +41,18 @@ export function formatDate(value, locale, options = { dateStyle: 'medium' }) {
 /** 12 or 24 hours as the viewer's own browser/device uses, whatever the format locale (owner 2026-11-17). */
 const DEVICE_HOUR12 = ['h11', 'h12'].includes(new Intl.DateTimeFormat(undefined, { hour: 'numeric' }).resolvedOptions().hourCycle)
 
-export function formatDateTime(value, locale) {
+/** `zone` adds the viewer's time zone ("10:00 am GMT+5:30"), for times two people in different places share. */
+export function formatDateTime(value, locale, { zone = false } = {}) {
   // Explicit parts, not dateStyle/timeStyle: those pad 12-hour times in some locales ("02:30 pm").
-  return new Intl.DateTimeFormat(locale, { day: 'numeric', month: 'short', year: 'numeric', hour: 'numeric', minute: '2-digit', hour12: DEVICE_HOUR12 }).format(new Date(value))
+  return new Intl.DateTimeFormat(locale, {
+    day: 'numeric',
+    month: 'short',
+    year: 'numeric',
+    hour: 'numeric',
+    minute: '2-digit',
+    hour12: DEVICE_HOUR12,
+    ...(zone && { timeZoneName: 'short' }),
+  }).format(new Date(value))
 }
 
 /**

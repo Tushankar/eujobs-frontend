@@ -81,7 +81,7 @@ export function useFormat() {
       money: (amountMinor, currency) => formatMoney(amountMinor, currency, locale),
       currencySymbol: (currency) => currencySymbol(currency, locale),
       date: (value, options) => formatDate(value, locale, options),
-      dateTime: (value) => formatDateTime(value, locale),
+      dateTime: (value, options) => formatDateTime(value, locale, options),
       otherZone: (value, timeZone) => formatOtherZone(value, locale, timeZone),
       month: (value) => formatMonth(value, locale),
       relative: (value) => formatRelative(value, locale),
