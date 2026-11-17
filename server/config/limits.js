@@ -132,7 +132,8 @@ export const LIMITS = {
     // M-182
     report_voice: { types: ['mp3', 'm4a', 'wav', 'webm', 'ogg'], maxBytes: 25 * MB, toDisk: true },
     // 2026-11-17: the candidate's voice profile (up to 3 minutes), transcribed and deleted, never stored
-    voice_profile: { types: ['mp3', 'm4a', 'mp4', 'wav', 'webm', 'ogg'], maxBytes: 10 * MB, toDisk: true },
+    // 3 minutes at the recorder's 32 kb/s is about 0.7 MB (Safari's MP4 about 1.4 MB): the cap bounds the length server-side.
+    voice_profile: { types: ['mp3', 'm4a', 'mp4', 'wav', 'webm', 'ogg'], maxBytes: 3 * MB, toDisk: true },
     // §3.23 (P11d-Q7): the candidate's files in a request card and the recruiter's attachment
     document_request: { types: ['pdf', 'jpg', 'png'], maxBytes: 10 * MB },
     document_attachment: { types: ['pdf', 'jpg', 'png'], maxBytes: 10 * MB },

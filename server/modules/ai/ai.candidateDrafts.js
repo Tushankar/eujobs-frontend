@@ -2,7 +2,7 @@ import { randomUUID } from 'node:crypto'
 import { rename, unlink } from 'node:fs/promises'
 import ISO6391 from 'iso-639-1'
 import { LIMITS } from '../../config/limits.js'
-import { assertCredits, transcribe } from '../../lib/ai.js'
+import { releaseCredits, reserveCredits, transcribe } from '../../lib/ai.js'
 import { AppError, fieldError } from '../../lib/errors.js'
 import { skillKey } from '../../lib/skills.js'
 import { loadProfile, saveProfile } from '../candidates/candidates.service.js'
@@ -63,13 +63,17 @@ async function findCity(user, city, countryCode) {
   return null
 }
 
-/** POST /candidate/ai/job-alert: a job alert's name, keywords, frequency and city from one sentence. */
-export async function jobAlertDraft(user, { text }) {
-  const draft = await write(PROMPTS.jobAlertDraft, { user, input: { sentence: text } })
+/**
+ * POST /candidate/ai/job-alert: a job alert's name, keywords, frequency and city from one sentence. The city must be
+ * in the view the alert is made in (`country`): none for Remote, any country for Worldwide, otherwise that country
+ * (an alert cannot be saved with a city elsewhere).
+ */
+export async function jobAlertDraft(user, { text, country }) {
+  const draft = await write(PROMPTS.jobAlertDraft, { user, input: { sentence: text }, subjectId: user._id })
   const A = LIMITS.jobAlert
   let place = null
   try {
-    place = await findCity(user, draft.city.trim(), draft.countryCode.trim())
+    if (country !== 'REMOTE') place = await findCity(user, draft.city.trim(), country && country !== 'WORLDWIDE' ? country : draft.countryCode.trim())
   } catch {
     // Places unavailable: the candidate picks the city.
   }
@@ -134,23 +138,34 @@ export function cleanVoiceProfile(draft) {
 /**
  * POST /candidate/ai/voice-profile (multipart `file`, up to 3 minutes): the recording is transcribed and deleted at
  * once (never stored), and the transcript becomes a profile proposal the candidate reviews. Returns the proposal and
- * the transcript, so they can see what was heard.
+ * the transcript, so they can see what was heard. The voice credits (and a burst slot) are reserved BEFORE the paid
+ * transcription; they are given back only when OpenAI fails. A recording with too little speech keeps them: the
+ * transcription was paid, and free retries would make the cap pointless. The upload size cap (LIMITS.uploads) bounds
+ * the length on the server; the client stops at LIMITS.ai.voice.maxSeconds.
  */
 export async function voiceProfile(user, file) {
-  let transcript
   // OpenAI reads the audio format from the file name, and multer's temp file has none.
   const path = `${file.path}.${file.ext}`
+  let reserved = null
+  let transcript
   try {
-    // Transcription is paid before the text is counted: refuse first when the credits cannot cover it.
-    await assertCredits(user, 'voice_profile')
+    reserved = await reserveCredits(user, PROMPTS.voiceProfile.kind)
     await rename(file.path, path)
     transcript = (await transcribe(path, user)).trim()
+  } catch (error) {
+    if (reserved) await releaseCredits(user, reserved)
+    throw error
   } finally {
     await Promise.all([unlink(file.path).catch(() => {}), unlink(path).catch(() => {})])
   }
   if (transcript.length < LIMITS.ai.voice.minTranscriptChars) throw fieldError({ file: 'too_short' })
-  const draft = await write(PROMPTS.voiceProfile, { user, input: { transcript: transcript.slice(0, LIMITS.ai.voice.maxTranscriptChars) }, subjectId: user._id, cache: false })
-  return { profile: cleanVoiceProfile(draft), transcript }
+  try {
+    const draft = await write(PROMPTS.voiceProfile, { user, input: { transcript: transcript.slice(0, LIMITS.ai.voice.maxTranscriptChars) }, subjectId: user._id, cache: false, charge: false })
+    return { profile: cleanVoiceProfile(draft), transcript }
+  } catch (error) {
+    await releaseCredits(user, reserved)
+    throw error
+  }
 }
 
 const sameEntry = (a, b, fields) => fields.every((field) => (a[field] ?? '').trim().toLowerCase() === (b[field] ?? '').trim().toLowerCase())

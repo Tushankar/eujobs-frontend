@@ -23,7 +23,8 @@ export default function AiFillButton({ request, apply, snapshot, restore, label,
     try {
       const before = snapshot()
       apply(await request())
-      setPrevious({ value: before })
+      // Undo always returns to the person's own text, also after several AI drafts in a row.
+      setPrevious((kept) => kept ?? { value: before })
     } catch (failure) {
       setError(failure)
     } finally {

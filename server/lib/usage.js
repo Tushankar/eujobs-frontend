@@ -209,12 +209,13 @@ export async function takeBurst(userId) {
 export async function takeSkillNames(userId, count) {
   const { skillNamesPerDay } = await usageSettings()
   if (count > skillNamesPerDay) return false
+  const filter = { userId, day: utcDay(), skillNames: { $not: { $gt: skillNamesPerDay - count } } }
   try {
-    const result = await AiUsage.updateOne({ userId, day: utcDay(), skillNames: { $not: { $gt: skillNamesPerDay - count } } }, { $inc: { skillNames: count } }, { upsert: true })
+    const result = await AiUsage.updateOne(filter, { $inc: { skillNames: count } }, { upsert: true })
     return Boolean(result.modifiedCount || result.upsertedCount)
   } catch (error) {
-    // At the cap the upsert collides with today's row.
-    if (error.code === 11000) return false
-    throw error
+    if (error.code !== 11000) throw error
+    // Today's row exists (at the cap, or made by a racing request): take the names only if it still has room.
+    return Boolean((await AiUsage.updateOne(filter, { $inc: { skillNames: count } })).modifiedCount)
   }
 }

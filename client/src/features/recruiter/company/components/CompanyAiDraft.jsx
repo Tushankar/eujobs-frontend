@@ -30,7 +30,8 @@ export default function CompanyAiDraft({ values, onChange }) {
         city: values.place?.city ?? '',
         notes: notes.trim(),
       }).unwrap()
-      setPrevious(values.description)
+      // Undo always returns to the recruiter's own text, also after several AI drafts in a row.
+      setPrevious((kept) => kept ?? values.description)
       onChange(description)
     } catch {
       // AiStatus shows the failure.

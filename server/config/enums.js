@@ -283,6 +283,12 @@ export const ENUMS = {
     'profile_text',
     'interview_prep',
     'voice_profile',
+    // 2026-11-17 (phase 4): admin helpers (never counted toward credits)
+    'course_details',
+    'quiz_questions',
+    'report_triage',
+    'blog_draft',
+    'account_review_summary',
   ],
   emailType: Object.keys(EMAIL_TYPES),
   emailCategory: [...new Set(Object.values(EMAIL_CATEGORY))],

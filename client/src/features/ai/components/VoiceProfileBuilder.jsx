@@ -121,8 +121,12 @@ export default function VoiceProfileBuilder({ variant = 'outline', fullWidth }) 
   const [propose, proposing] = useProposeVoiceProfileMutation()
   const [apply, applying] = useApplyVoiceProfileMutation()
   const clock = (value) => `${Math.floor(value / 60)}:${String(value % 60).padStart(2, '0')}`
+  // Cancel / close / leaving the page stop the recorder too; such a recording must never be uploaded (paid, 3 credits).
+  const cancelled = useRef(false)
+  useEffect(() => () => (cancelled.current = true), [])
 
   function close() {
+    cancelled.current = true
     if (recorder.recording) recorder.stop()
     setOpen(false)
     setProposal(null)
@@ -133,6 +137,7 @@ export default function VoiceProfileBuilder({ variant = 'outline', fullWidth }) 
 
   async function record() {
     setMicError(null)
+    cancelled.current = false
     let file
     try {
       // Resolves with the recording once it stops (Stop, or the time limit).
@@ -141,6 +146,7 @@ export default function VoiceProfileBuilder({ variant = 'outline', fullWidth }) 
       setMicError(t('voice.micBlocked'))
       return
     }
+    if (cancelled.current) return
     try {
       const answer = await propose(formData(file)).unwrap()
       setProposal(answer.profile)

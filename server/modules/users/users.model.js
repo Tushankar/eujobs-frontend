@@ -37,6 +37,8 @@ const userSchema = new Schema(
     onboardingCompletedAt: Date,
     // The first-login product tour (candidates, recruiters): set when it is finished or skipped.
     tourFinishedAt: Date,
+    // 2026-11-17: success modals waiting to be seen once (modules/users/celebrations.js).
+    celebrations: [{ kind: { type: String, required: true }, params: Schema.Types.Mixed, at: Date }],
     // Recruiters (M-145)
     companyId: { type: Schema.Types.ObjectId, ref: 'Company' },
     adminAccess: {

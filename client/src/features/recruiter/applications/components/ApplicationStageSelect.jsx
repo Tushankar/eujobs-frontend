@@ -9,6 +9,7 @@ import AiDraftButton from '@/features/ai/components/AiDraftButton.jsx'
 import { useCancelInterviewMutation } from '@/features/interviews/api.js'
 import { useInterviewMove } from '@/features/interviews/useInterviewMove.js'
 import StageSelect from '@/features/recruiter/hiring-pipeline/components/StageSelect.jsx'
+import { useErrorText } from '@/lib/forms.js'
 import { usePreferences } from '@/lib/preferences.js'
 import { useMessageApplicantMutation, useRejectApplicationMutation } from '../api.js'
 import StatusMessageDialog from './StatusMessageDialog.jsx'
@@ -33,6 +34,8 @@ export default function ApplicationStageSelect({ application, candidateName, job
   const [alsoCancel, setAlsoCancel] = useState(true)
   const [message, setMessage] = useState('')
   const [updating, setUpdating] = useState(false)
+  const [failure, setFailure] = useState(null)
+  const errorText = useErrorText()
   const [messageApplicant] = useMessageApplicantMutation()
   const { me } = usePreferences()
   const { data: config } = useGetConfigQuery()
@@ -67,6 +70,11 @@ export default function ApplicationStageSelect({ application, candidateName, job
           <IconButton icon={MessageSquareText} label={t('applications:statusMessage.open', { name: candidateName ?? '' })} onClick={() => setUpdating(true)} data-status-update={application.id} />
         )}
       </span>
+      {failure && (
+        <p className={styles.failure} role="alert">
+          {errorText.code(failure)}
+        </p>
+      )}
       {updating && <StatusMessageDialog application={application} candidateName={candidateName} jobTitle={jobTitle} onClose={() => setUpdating(false)} />}
       <ConfirmDialog
         open={rejecting}
@@ -78,8 +86,14 @@ export default function ApplicationStageSelect({ application, candidateName, job
         onConfirm={async () => {
           setRejecting(false)
           if (activeInterview && alsoCancel) await cancelInterview({ id: activeInterview.id })
-          await reject({ id: application.id, notify })
-          if (message.trim()) await messageApplicant({ id: application.id, body: message.trim() })
+          setFailure(null)
+          try {
+            // The personal message goes only with a rejection that went through; either failure is shown.
+            await reject({ id: application.id, notify }).unwrap()
+            if (message.trim()) await messageApplicant({ id: application.id, body: message.trim() }).unwrap()
+          } catch (error) {
+            setFailure(error)
+          }
         }}
       >
         <Checkbox name="notify" checked={notify} onChange={(event) => setNotify(event.target.checked)}>

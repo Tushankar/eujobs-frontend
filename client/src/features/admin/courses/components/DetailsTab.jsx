@@ -7,6 +7,8 @@ import { useGetConfigQuery } from '@/app/api.js'
 import { useErrorText, useFormState } from '@/lib/forms.js'
 import { useFormat } from '@/lib/preferences.js'
 import { cx } from '@/utils/cx.js'
+import AiFillButton from '@/features/ai/components/AiFillButton.jsx'
+import { useDraftCourseDetailsMutation } from '../../ai/api.js'
 import { useUpdateCourseMutation } from '../api.js'
 import FileUpload from './FileUpload.jsx'
 import styles from './builder.module.css'
@@ -196,6 +198,14 @@ export default function DetailsTab({ course, checklist }) {
   const setOutcome = (index, text) => set('outcomes', values.outcomes.map((outcome, at) => (at === index ? text : outcome)))
   const outcomeLimit = config?.limits.course.outcomes.max ?? 0
 
+  // 2026-11-17 (phase 4): "Write details with AI" replaces the pitch fields; Undo brings the previous ones back.
+  const [draftDetails] = useDraftCourseDetailsMutation()
+  const pitchFields = ['summary', recruiter ? 'lead' : 'about', ...(recruiter ? ['tagline', 'designedFor'] : []), 'outcomes', 'skillTags']
+  const fillPitch = (patch) => {
+    reset()
+    form.setValues((current) => ({ ...current, ...patch }))
+  }
+
   return (
     <form onSubmit={handleSave} noValidate className={styles.detailsLayout} data-details-form>
       <div className={styles.detailsMain}>
@@ -216,6 +226,25 @@ export default function DetailsTab({ course, checklist }) {
 
         <Panel padding={24} className={styles.section}>
           <h3 className={styles.sectionTitle}>{t('details.sectionPitch')}</h3>
+          <div className={styles.aiFill}>
+            <p className={styles.muted}>{t('details.ai.hint')}</p>
+            <AiFillButton
+              label={t('details.ai.action')}
+              done={t('details.ai.done')}
+              request={() => draftDetails({ id: course.id, title: values.title, category: values.category, level: values.level || null }).unwrap()}
+              apply={(draft) =>
+                fillPitch({
+                  summary: draft.summary,
+                  ...(recruiter ? { lead: draft.about, tagline: draft.tagline, designedFor: draft.designedFor } : { about: draft.about }),
+                  outcomes: draft.outcomes.length ? draft.outcomes : [''],
+                  skillTags: draft.skillTags.join(', '),
+                })
+              }
+              snapshot={() => Object.fromEntries(pitchFields.map((name) => [name, values[name]]))}
+              restore={fillPitch}
+              data-course-details-ai
+            />
+          </div>
           <div className={styles.grid}>
             <TextareaField className={styles.wide} label={t('details.summary')} rows={2} {...field('summary')} />
             {recruiter ? (

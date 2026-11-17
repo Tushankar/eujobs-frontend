@@ -43,7 +43,7 @@ function toBody(form, { models, placesSkus, creditKinds = [] }) {
       openai: models
         .map(({ model, use }) => {
           const fields = PRICE_FIELDS[use]
-          const value = (field) => (fields.includes(field) ? numberOrNull(form.openai[model][field]) : null)
+          const value = (field) => (fields.includes(field) ? numberOrNull(form.openai[model]?.[field] ?? '') : null)
           return { model, input: value('input'), output: value('output'), minute: value('minute') }
         })
         .filter((price) => price.input !== null || price.output !== null || price.minute !== null),
@@ -69,7 +69,7 @@ export default function UsageSettings({ data, readOnly }) {
     setForm((current) => {
       const next = structuredClone(current)
       let target = next
-      for (const key of path.slice(0, -1)) target = target[key]
+      for (const key of path.slice(0, -1)) target = target[key] ??= {}
       target[path.at(-1)] = value
       return next
     })
@@ -81,7 +81,8 @@ export default function UsageSettings({ data, readOnly }) {
       inputMode="decimal"
       min={0}
       step="any"
-      value={path.reduce((value, key) => value[key], form)}
+      // A model first seen in another month has no field yet: it starts empty instead of crashing the page.
+      value={path.reduce((value, key) => value?.[key], form) ?? ''}
       onChange={(event) => set(path, event.target.value)}
       disabled={readOnly}
       error={invalid(path.join('.'))}

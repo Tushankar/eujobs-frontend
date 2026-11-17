@@ -64,6 +64,8 @@ export default function Modal({
   dismissible = true,
   placement = 'center',
   className,
+  // The id of a heading inside the body that names the dialog when there is no `title` (the success modal).
+  labelledBy,
 }) {
   const dialogRef = useRef(null)
   const titleId = useId()
@@ -124,7 +126,7 @@ export default function Modal({
         ref={dialogRef}
         role="dialog"
         aria-modal="true"
-        aria-labelledby={title ? titleId : undefined}
+        aria-labelledby={title ? titleId : labelledBy}
         aria-describedby={description ? descriptionId : undefined}
         tabIndex={-1}
         className={cx(styles.dialog, divided && styles.divided, className)}

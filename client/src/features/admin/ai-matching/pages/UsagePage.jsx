@@ -181,7 +181,8 @@ export default function UsagePage() {
 
           <section className={styles.section} aria-labelledby="usage-settings">
             <SectionTitle id="usage-settings" title={t('usage.settings.title')} description={t('usage.settings.description')} />
-            <UsageSettings data={data} readOnly={!can(me, 'ai.manage')} />
+            {/* Re-made per month: another month lists other models to price. */}
+            <UsageSettings key={month} data={data} readOnly={!can(me, 'ai.manage')} />
           </section>
         </div>
       )}

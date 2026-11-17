@@ -15,6 +15,7 @@ import { VerificationSubmission } from '../verification/verification.model.js'
 import { computeCompleteness } from './candidates.completeness.js'
 import { CandidateProfile } from './candidates.model.js'
 import { normalizeRegion } from '../../config/regions.js'
+import { celebrate } from '../users/celebrations.js'
 
 const P = LIMITS.profile
 
@@ -35,8 +36,11 @@ export async function saveProfile(user, profile) {
   // Standard names, so "React js" and a misspelt skill still match jobs (lib/skills.js).
   await addStandardNames(profile.skills, user)
   const { complete, done, total, items } = await completenessOf(user, profile)
+  const wasComplete = Boolean(profile.completeness?.complete)
   profile.completeness = { complete, done, total, missing: items.filter((item) => !item.done).map((item) => item.key) }
   await profile.save()
+  // 2026-11-17: the success modal the first time the checklist turns complete.
+  if (complete && !wasComplete) await celebrate(user, 'profile_complete')
   await scheduleRecompute('candidate', user._id)
 }
 

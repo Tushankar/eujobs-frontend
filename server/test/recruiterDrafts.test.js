@@ -96,7 +96,7 @@ describe('AI shortlist', () => {
     const first = await applicantCandidate({ fullName: 'Ada First' })
     const second = await applicantCandidate({ fullName: 'Bo Second' })
     for (const candidate of [first, second]) {
-      assert.equal((await api().post(`${v1}/candidate/applications`).set(auth(candidate)).send({ jobId: job.id, consent: true, coverNote: 'Keen to join.' })).status, 201)
+      assert.equal((await api().post(`${v1}/candidate/applications`).set(auth(candidate)).send({ jobId: job.id, consent: true, coverNote: `Keen to join. Best, ${candidate.fullName.split(' ')[0]}` })).status, 201)
     }
     const applications = await Application.find({ jobId: job.id }).sort({ appliedAt: 1 })
     aiStub.reply = (request) =>
@@ -115,7 +115,7 @@ describe('AI shortlist', () => {
     assert.deepEqual(body.items.map((item) => [item.candidate.fullName, item.reason]), [['Bo Second', 'All required skills.'], ['Ada First', 'Missing one skill.']])
     const input = requests('applicant_shortlist')[0].input
     assert.ok(!input.includes('Ada First') && !input.includes('Bo Second'), 'names never reach OpenAI')
-    assert.equal(JSON.parse(input).applicants[0].coverNote, 'Keen to join.')
+    assert.equal(JSON.parse(input).applicants[0].coverNote, 'Keen to join. Best, the candidate', 'the signature name is taken out')
 
     await draft(recruiter, `jobs/${job.id}/shortlist`)
     assert.equal(requests('applicant_shortlist').length, 1, 'cached while nothing changed')

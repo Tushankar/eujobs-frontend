@@ -15,6 +15,7 @@ import { chargeCurrency } from './currencies.js'
 import { notify, notifyAdmins } from '../notifications/notifications.service.js'
 import { User } from '../users/users.model.js'
 import { AppConfig, Counter, Payment, Plan, StripeEvent, Subscription } from './payments.model.js'
+import { celebrate } from '../users/celebrations.js'
 
 /*
  * Plan, Checkout, Portal and the Stripe webhook (§2.10, §3.3, §3.10). Rows change only through webhooks (and the
@@ -304,6 +305,8 @@ const formatDate = (language, date) => new Intl.DateTimeFormat(language, { dateS
 async function planMessage(user, type, { planKey, amountMinor, currency, interval, date, invoice, notification = true }) {
   const plan = await Plan.findOne({ key: planKey }, 'name')
   if (notification) await notify(user, type, { params: { planKey, amountMinor, currency, interval, date }, target: BILLING })
+  // 2026-11-17: the welcome success modal of a new plan.
+  if (type === 'plan_started') await celebrate(user, 'plan_started', { planKey, interval })
   await sendEmail({
     type,
     to: user.email,
@@ -521,6 +524,8 @@ async function onCheckoutCompleted(object) {
     // P11b-Q11: a candidate is told about the course; a recruiter's course purchase is their "payment paid".
     if (user.role === 'candidate') await notify(user, 'course_purchased', { params: { course: course.title }, target: { kind: 'course', id: course._id } })
     else await notify(user, 'payment_paid', { params: { item: course.title, amountMinor: payment.amountMinor, currency: payment.currency }, target: BILLING })
+    // 2026-11-17: the "course unlocked" success modal, for both roles.
+    await celebrate(user, 'course_purchased', { course: course.title, courseId: String(course._id) })
   }
   await enroll({ userId: user._id, courseId: course._id, source: 'purchase', paymentId: payment._id })
 }

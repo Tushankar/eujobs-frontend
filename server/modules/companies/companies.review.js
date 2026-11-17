@@ -10,6 +10,7 @@ import { notify } from '../notifications/notifications.service.js'
 import { User } from '../users/users.model.js'
 import { Company, KycDocument } from './companies.model.js'
 import { companyDto, logoUrls } from './companies.service.js'
+import { celebrate } from '../users/celebrations.js'
 
 /*
  * Moderation › Account review (§3.12, M-165, OQ-2, P4-Q2): recruiters by status, the review detail and the
@@ -145,6 +146,7 @@ export async function decideAccount(admin, userId, { decision, reason }) {
   const link = decision === 'approved' ? `${config.clientOrigin}/recruiter/sign-in` : `${config.clientOrigin}/recruiter/onboarding/review`
   // P11b-Q1, Q14: approved opens the Overview; rejected and suspended the review page (shown once the account is active again).
   await notify(user, 'account_decided', { params: { decision }, target: { kind: 'page', id: decision === 'approved' ? 'overview' : 'review' } })
+  if (decision === 'approved') await celebrate(user, 'account_approved')
   await sendEmail({
     type: `recruiter_${decision}`,
     to: user.email,

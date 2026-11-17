@@ -9,6 +9,7 @@ import { notify } from '../notifications/notifications.service.js'
 import { Job } from '../jobs/jobs.model.js'
 import { User } from '../users/users.model.js'
 import { Application } from './applications.model.js'
+import { celebrate } from '../users/celebrations.js'
 
 /*
  * Application emails (§3.4, §3.17). Status emails wait 10 minutes after the last move and go out only when the
@@ -56,6 +57,8 @@ async function sendStatusEmail({ applicationId }) {
     target: { kind: 'application', id: application._id },
     groupKey: `application:${application._id}`,
   })
+  // 2026-11-17: the candidate's congratulations modal (sent with the delayed status, so an undone move never shows).
+  if (application.status === 'hired') await celebrate(candidate, 'hired', { job: job.title, company: company.displayName, applicationId: String(application._id) })
   await sendEmail({
     type: rejected ? 'application_rejected' : 'application_status',
     to: candidate.email,

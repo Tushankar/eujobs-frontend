@@ -1,0 +1,139 @@
+/* The success modal (owner 2026-11-17): centred, quiet white card; colour only in the check and the stars. */
+.modal {
+  overflow: hidden;
+}
+
+.success {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 12px;
+  padding: 36px 32px 28px;
+  text-align: center;
+}
+
+/* The check and its stars share one centre point; stars start there and fly out (GSAP). */
+.badge {
+  position: relative;
+  display: grid;
+  place-items: center;
+  width: 160px;
+  height: 120px;
+  margin-bottom: 4px;
+}
+
+.ring {
+  display: grid;
+  place-items: center;
+  width: 72px;
+  height: 72px;
+  border: 1px solid light-dark(#cfe8d8, #275a3b);
+  border-radius: var(--radius-full);
+  background: var(--success-bg);
+  color: var(--success-fg);
+  box-shadow: 0 0 0 8px light-dark(#f4fbf6, #102016);
+}
+
+.star {
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  display: block;
+  line-height: 0;
+  translate: -50% -50%;
+  pointer-events: none;
+}
+
+.gold {
+  color: light-dark(#d9a21b, #f0c34d);
+}
+
+.navy {
+  color: var(--brand-navy);
+}
+
+.title {
+  margin: 0;
+  font-family: var(--font-display);
+  font-size: 24px;
+  font-weight: 800;
+  line-height: 30px;
+  color: var(--foreground);
+}
+
+.message {
+  max-width: 360px;
+  margin: 0;
+  font-size: 14px;
+  line-height: 22px;
+  color: var(--text-label);
+}
+
+.next {
+  align-self: stretch;
+  margin-top: 8px;
+  padding: 16px;
+  border: 1px solid var(--border);
+  border-radius: var(--radius-lg);
+  text-align: left;
+}
+
+.nextTitle {
+  margin: 0 0 10px;
+  font-size: 13px;
+  font-weight: 700;
+  color: var(--foreground);
+}
+
+.steps {
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+  margin: 0;
+  padding: 0;
+  list-style: none;
+}
+
+.steps li {
+  display: flex;
+  align-items: flex-start;
+  gap: 10px;
+  font-size: 13px;
+  line-height: 20px;
+  color: var(--text-label);
+}
+
+.stepNumber {
+  flex: 0 0 22px;
+  height: 22px;
+  border: 1px solid var(--border);
+  border-radius: var(--radius-full);
+  font-size: 11px;
+  font-weight: 700;
+  line-height: 20px;
+  text-align: center;
+  color: var(--foreground);
+}
+
+.actions {
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: center;
+  gap: 10px;
+  margin-top: 12px;
+}
+
+@media (max-width: 480px) {
+  .success {
+    padding: 28px 16px 20px;
+  }
+
+  .actions {
+    flex-direction: column-reverse;
+    align-self: stretch;
+  }
+
+  .actions > * {
+    width: 100%;
+  }
+}

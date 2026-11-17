@@ -2,6 +2,7 @@ import { Router } from 'express'
 import { config } from '../config/env.js'
 import { dbStatus } from '../lib/db.js'
 import adminRoutes from '../modules/admin/admin.routes.js'
+import { adminDraftsRouter } from '../modules/ai/ai.adminDrafts.routes.js'
 import * as aiRoutes from '../modules/ai/ai.routes.js'
 import alertRoutes from '../modules/alerts/alerts.routes.js'
 import * as applicationRoutes from '../modules/applications/applications.routes.js'
@@ -33,6 +34,7 @@ const router = Router()
 
 /** Every admin router, in mount order. The permission matrix test (M-155) walks this table. */
 export const ADMIN_MOUNTS = [
+  ['/admin/ai-drafts', adminDraftsRouter],
   ['/admin/courses', learningRoutes.adminCoursesRouter],
   ['/admin', learningRoutes.adminToolsRouter],
   ['/admin/matching', matchingRoutes.adminMatchingRouter],

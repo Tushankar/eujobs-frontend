@@ -5,7 +5,7 @@ import { WebSocketServer } from 'ws'
 import { config } from '../../config/env.js'
 import { LIMITS } from '../../config/limits.js'
 import { scheduleTask, taskHandlers } from '../../jobs/scheduler.js'
-import { transcribe } from '../../lib/ai.js'
+import { releaseCredits, reserveCredits, transcribe } from '../../lib/ai.js'
 import { AppError } from '../../lib/errors.js'
 import { absolutePath, removeFiles, storeFile } from '../../lib/files.js'
 import { hasEntitlement, planRequired } from '../../middleware/entitlements.js'
@@ -285,8 +285,21 @@ taskHandlers['interview.notes'] = async (payload, task) => {
   if (!file) return fail()
   try {
     const recruiter = (await User.findById(interview.createdBy)) ?? (await companyRecruiter(interview.companyId))
-    const transcript = (await transcribe(absolutePath(file), recruiter)).trim()
-    const notes = await write(PROMPTS.interviewNotes, { user: recruiter, input: { transcript }, subjectId: interview.candidateId, model: 'main', cache: false })
+    // 2026-11-17: the notes' credits are taken before the paid transcription (a recruiter without credits costs
+    // nothing), a background job is never burst-limited, and a transcript from an earlier attempt is reused.
+    const reserved = recruiter.role === 'admin' ? null : await reserveCredits(recruiter, PROMPTS.interviewNotes.kind, { burst: false })
+    let notes
+    let transcript = interview.transcript
+    try {
+      if (!transcript) {
+        transcript = (await transcribe(absolutePath(file), recruiter)).trim()
+        await Interview.updateOne({ _id: interview._id }, { $set: { transcript } })
+      }
+      notes = await write(PROMPTS.interviewNotes, { user: recruiter, input: { transcript }, subjectId: interview.candidateId, model: 'main', cache: false, charge: false })
+    } catch (error) {
+      if (reserved) await releaseCredits(recruiter, reserved)
+      throw error
+    }
     await Interview.updateOne(
       { _id: interview._id },
       { $set: { transcript, notes: { ...notes, language: recruiter.language, generatedAt: new Date() }, 'recording.status': 'ready', 'recording.fileId': null } },

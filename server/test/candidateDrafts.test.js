@@ -77,6 +77,10 @@ describe('job alert from a sentence', () => {
     assert.deepEqual([body.place?.city, body.place?.countryCode], ['London', 'GB'])
     assert.ok(await ApiUsage.exists({ provider: 'places', userId: candidate._id }), 'the city lookup counts as Places usage')
 
+    // Made in the France view, a city in another country is not filled in (the alert could not be saved).
+    const french = (await draft(candidate, 'job-alert', { text: 'Product design jobs in London, weekly', country: 'FR' })).body
+    assert.equal(french.place, null)
+
     // No city named: no place and no Places call.
     aiStub.reply = (request) => (request.text.format.name === 'job_alert_draft' ? { name: 'Remote React', keywords: 'react', city: '', countryCode: '', frequency: 'daily' } : null)
     const calls = places.calls.length
@@ -196,6 +200,30 @@ describe('voice profile builder', () => {
     // Applying the same proposal again adds nothing new.
     const again = await api().post(`${v1}/candidate/ai/voice-profile/apply`).set(auth(candidate)).send(proposed.body.profile)
     assert.deepEqual(again.body.added, { skills: 0, workHistory: 0, education: 0 })
+  })
+
+  it('takes the voice credits before the paid transcription: kept when too short, given back when OpenAI fails', async () => {
+    const candidate = await plus(await listedCandidate())
+    const credits = async () => (await AiUsage.findOne({ userId: candidate._id }))?.count ?? 0
+    await hearing('Hi.', () => record(candidate))
+    assert.equal(await credits(), 3, 'too short: the transcription was paid, so the 3 credits stay')
+    const failed = await hearing('I am a nurse with eight years of experience in emergency care.', async () => {
+      const original = aiStub.audio.transcriptions.create
+      aiStub.audio.transcriptions.create = async ({ file }) => {
+        file.destroy()
+        throw new Error('openai down')
+      }
+      try {
+        return await record(candidate)
+      } finally {
+        aiStub.audio.transcriptions.create = original
+      }
+    })
+    assert.equal(failed.status, 503)
+    assert.equal(await credits(), 3, 'a failed transcription gives its credits back')
+    await AiUsage.updateOne({ userId: candidate._id }, { count: 39 })
+    const broke = await hearing('I am a nurse with eight years of experience in emergency care.', () => record(candidate))
+    assert.equal(broke.status, 429, 'not enough credits: refused before anything is transcribed')
   })
 
   it('refuses a recording with too little speech, and Free candidates', async () => {

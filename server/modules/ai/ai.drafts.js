@@ -66,6 +66,17 @@ export async function companyDescription(user, { name, industry, size, city, not
   return { description: clip(description, LIMITS.company.description.max) }
 }
 
+const escape = (text) => text.replace(/[.*+?^${}()|[\]\\]/g, '\\$&')
+
+/**
+ * A cover note with the candidate's own name parts (as signed, "Ada", "Lovelace") taken out, so names never reach
+ * OpenAI. Letter-aware boundaries, so accented names ("José") are matched too.
+ */
+function withoutName(note, fullName) {
+  const parts = (fullName ?? '').split(/\s+/).filter((part) => part.length >= 2)
+  return parts.reduce((text, part) => text.replace(new RegExp(`(?<![\\p{L}\\p{N}])${escape(part)}(?![\\p{L}\\p{N}])`, 'giu'), 'the candidate'), note)
+}
+
 /**
  * POST /recruiter/ai/jobs/:id/shortlist: the job's newest unreviewed applicants (status applied) ranked for a first
  * read, at most LIMITS.ai.shortlist.size with a one-line reason each. The AI sees only evidence under the application
@@ -86,6 +97,7 @@ export async function applicantShortlist(user, id) {
   ])
   const profileOf = new Map(profiles.map((profile) => [String(profile.userId), profile]))
   const scoreOf = new Map(results.map((result) => [String(result.candidateId), result.score]))
+  const nameOf = new Map(users.map((candidate) => [String(candidate._id), candidate.fullName ?? '']))
   const applicants = applications.map((application) => {
     const profile = profileOf.get(String(application.candidateId))
     const overlap = profile ? skillOverlap(profile.skills, job) : { matched: [], missing: job.requiredSkills.map((skill) => skill.name) }
@@ -98,7 +110,7 @@ export async function applicantShortlist(user, id) {
       country: profile?.location?.countryCode ?? null,
       workPreference: profile?.workPreference ?? null,
       matchScore: scoreOf.get(String(application.candidateId)) ?? null,
-      coverNote: (application.coverNote ?? '').slice(0, 400),
+      coverNote: withoutName(application.coverNote ?? '', nameOf.get(String(application.candidateId))).slice(0, 400),
     }
   })
   const facts = await jobFacts(job)

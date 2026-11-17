@@ -9,6 +9,7 @@ import { File } from '../files/files.model.js'
 import { notify } from '../notifications/notifications.service.js'
 import { User } from '../users/users.model.js'
 import { Certificate } from './learning.model.js'
+import { celebrate } from '../users/celebrations.js'
 
 /*
  * Certificates (M-105, U17, C18): issued once, when the final quiz is first passed; the PDF is a stored snapshot in
@@ -51,6 +52,7 @@ export async function issueCertificate(user, course) {
   await certificate.save()
   // P11b-Q1: opens the course page, which shows the certificate (as the email's main link).
   await notify(user, 'certificate_issued', { params: { course: course.title, code: certificate.code }, target: { kind: 'course', id: course._id } })
+  await celebrate(user, 'certificate', { course: course.title, courseId: String(course._id), code: certificate.code })
   await sendEmail({
     type: 'certificate_issued',
     to: user.email,

@@ -1,7 +1,7 @@
 import assert from 'node:assert/strict'
 import { after, before, beforeEach, describe, it } from 'node:test'
 import { ScheduledTask } from '../jobs/models.js'
-import { generate } from '../lib/ai.js'
+import { generate, releaseCredits, reserveCredits } from '../lib/ai.js'
 import { clearUsageCache, usageLeft } from '../lib/usage.js'
 import { AuditEvent } from '../modules/admin/admin.model.js'
 import { AiCache, AiUsage, ApiUsage } from '../modules/ai/ai.model.js'
@@ -147,6 +147,27 @@ describe('weighted credits (owner 2026-11-17)', () => {
     await assert.rejects(write(fresh, 'cv_draft'), (error) => error.code === 'AI_DAILY_LIMIT')
     assert.equal(await AiUsage.countDocuments({ userId: fresh._id, count: { $gt: 0 } }), 0)
     assert.equal((await saveSettings(admin, { creditCosts: { cv_draft: 0 } })).status, 422)
+  })
+})
+
+describe('review fixes (2026-11-17)', () => {
+  const schema = { type: 'object', properties: { text: { type: 'string' } }, required: ['text'], additionalProperties: false }
+  const write = (user, kind) => generate({ kind, user, language: 'en', instructions: 'Write.', input: `facts ${Math.random()}`, schema })
+
+  it('lets requests racing to open the day both through (no false daily limit)', async () => {
+    const user = await candidate()
+    const results = await Promise.allSettled(Array.from({ length: 5 }, () => write(user, 'job_summary')))
+    assert.deepEqual(results.map((result) => result.status), Array(5).fill('fulfilled'))
+    assert.equal((await AiUsage.findOne({ userId: user._id })).count, 5)
+  })
+
+  it('gives credits back to the day they were taken from', async () => {
+    const user = await candidate()
+    const reserved = await reserveCredits(user, 'cv_draft')
+    await AiUsage.updateOne({ userId: user._id }, { day: '2000-01-01' })
+    await releaseCredits(user, { ...reserved, day: '2000-01-01' })
+    assert.equal((await AiUsage.findOne({ userId: user._id, day: '2000-01-01' })).count, 0)
+    assert.equal(await AiUsage.countDocuments({ userId: user._id, day: new Date().toISOString().slice(0, 10) }), 0, 'today untouched')
   })
 })
 

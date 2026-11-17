@@ -61,7 +61,7 @@ export async function jobFacts(job) {
 }
 
 /** One AI text from a prompt of ai.prompts.js, cached by its facts and the reader's language. */
-export function write(prompt, { user, input, subjectId = null, model = 'fast', regenerate = false, cache = true }) {
+export function write(prompt, { user, input, subjectId = null, model = 'fast', regenerate = false, cache = true, charge = true, burst = true }) {
   return generate({
     kind: prompt.kind,
     user,
@@ -73,5 +73,7 @@ export function write(prompt, { user, input, subjectId = null, model = 'fast', r
     input,
     schema: prompt.schema,
     regenerate,
+    charge,
+    burst,
   })
 }

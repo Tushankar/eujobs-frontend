@@ -75,7 +75,7 @@ function AlertForm({ alert, onClose }) {
             <AiFillButton
               label={t('jobAlerts:form.sentenceAction')}
               disabled={sentence.trim().length < 3}
-              request={() => draftJobAlert({ text: sentence.trim() }).unwrap()}
+              request={() => draftJobAlert({ text: sentence.trim(), country }).unwrap()}
               apply={(draft) => {
                 set('name', draft.name)
                 set('keywords', draft.keywords)

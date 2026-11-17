@@ -67,7 +67,8 @@ export const messageDraftBody = z.discriminatedUnion('purpose', [
 
 /* 2026-11-17 (phase 3): candidate drafts. */
 export const coverNoteBody = z.object({ jobId: objectId, notes })
-export const jobAlertDraftBody = z.object({ text: z.string().trim().min(3).max(LIMITS.ai.notes.max) })
+// `country`: the view the alert is made in (a country code, REMOTE or WORLDWIDE); the city must be in it.
+export const jobAlertDraftBody = z.object({ text: z.string().trim().min(3).max(LIMITS.ai.notes.max), country: z.string().trim().toUpperCase().min(2).max(12).optional() })
 // The reviewed voice proposal; the server cuts it to the profile limits again before applying.
 const voiceText = (max) => z.string().trim().max(max)
 export const voiceProfileBody = z.object({

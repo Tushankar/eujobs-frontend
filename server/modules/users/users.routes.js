@@ -1,9 +1,11 @@
 import { Router } from 'express'
 import { requireApprovedRecruiter, requireAuth, requireVerifiedEmail } from '../../middleware/auth.js'
-import { validate } from '../../lib/validate.js'
+import { z } from 'zod'
+import { objectId, validate } from '../../lib/validate.js'
 import { switchesBody } from '../notifications/notifications.schemas.js'
 import { setEmailSwitches } from '../notifications/notifications.service.js'
 import * as schemas from './users.schemas.js'
+import { markCelebrationSeen } from './celebrations.js'
 import * as users from './users.service.js'
 
 const router = Router()
@@ -37,6 +39,12 @@ router.post('/password', requireVerifiedEmail, validate({ body: schemas.password
 router.post('/legal/accept', requireVerifiedEmail, async (req, res) => {
   await users.acceptLegal(req.user)
   res.json(await users.meDto(req.user))
+})
+
+// 2026-11-17: a success modal was seen; it is not shown again.
+router.post('/celebrations/:id/seen', validate({ params: z.object({ id: objectId }) }), async (req, res) => {
+  await markCelebrationSeen(req.user, req.params.id)
+  res.status(204).end()
 })
 
 router.post('/tour', async (req, res) => {

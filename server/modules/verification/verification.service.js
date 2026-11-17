@@ -14,6 +14,7 @@ import { notify, notifyAdmins } from '../notifications/notifications.service.js'
 import { User } from '../users/users.model.js'
 import { VerificationSubmission } from './verification.model.js'
 import { normalizeRegion } from '../../config/regions.js'
+import { celebrate } from '../users/celebrations.js'
 
 /*
  * Phone codes (M-003, M-004, OD3), evidence submissions (M-166) and the admin verification queue.
@@ -248,6 +249,7 @@ export async function decide(admin, id, { decision, reason }) {
 
   const user = await User.findById(submission.userId)
   await notify(user, 'verification_decided', { params: { decision, category: submission.category }, target: { kind: 'page', id: 'verification' } })
+  if (decision === 'approved') await celebrate(user, 'verification_approved', { category: submission.category })
   await sendEmail({
     type: `verification_${decision}`,
     to: user.email,

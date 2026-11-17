@@ -114,8 +114,13 @@ export async function notifyAdmins(type, { params, target, groupKey, emailParams
   const { permission, email } = NOTIFICATION_TYPES[type]
   for (const admin of await User.find({ role: 'admin', status: 'active', ...(exclude && { _id: { $ne: exclude } }) })) {
     if (!(await effectivePermissions(admin)).has(permission)) continue
-    await notify(admin, type, { params, target, groupKey, permission })
-    await sendEmail({ type: email, to: admin.email, userId: admin._id, language: admin.language, params: { name: admin.fullName, ...emailParams(admin.language) } })
+    // 2026-11-17: one admin's failing email must not stop the others' notice (e.g. a budget alert, sent only once).
+    try {
+      await notify(admin, type, { params, target, groupKey, permission })
+      await sendEmail({ type: email, to: admin.email, userId: admin._id, language: admin.language, params: { name: admin.fullName, ...emailParams(admin.language) } })
+    } catch (error) {
+      console.error(`Admin notice ${type} failed for one admin: ${error.message}`)
+    }
   }
 }
 

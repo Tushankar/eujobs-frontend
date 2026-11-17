@@ -16,7 +16,7 @@ import { AiUsage } from './ai.model.js'
  */
 
 // The kinds a candidate or recruiter pays credits for (admins and skill names are never counted).
-const CREDIT_KINDS = ENUMS.aiKind.filter((kind) => !['policy_suggestion', 'report_summary', 'skill_name'].includes(kind))
+const CREDIT_KINDS = ENUMS.aiKind.filter((kind) => !['policy_suggestion', 'report_summary', 'skill_name', 'course_details', 'quiz_questions', 'report_triage', 'blog_draft', 'account_review_summary'].includes(kind))
 
 const sum = (rows, field) => rows.reduce((total, row) => total + row[field], 0)
 

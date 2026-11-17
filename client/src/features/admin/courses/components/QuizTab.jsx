@@ -5,6 +5,7 @@ import { Button, Icon, IconButton, Panel, SelectField, TextField } from '@/compo
 import { useGetConfigQuery } from '@/app/api.js'
 import { useErrorText, useFormState } from '@/lib/forms.js'
 import { useSaveQuizMutation } from '../api.js'
+import QuizAiSuggest from './QuizAiSuggest.jsx'
 import styles from './builder.module.css'
 
 const blankQuestion = () => ({ text: '', type: 'single', options: [{ text: '' }, { text: '' }], correct: [] })
@@ -133,6 +134,23 @@ export default function QuizTab({ course }) {
           {t('quiz.addQuestion')}
         </Button>
       </div>
+
+      {/* 2026-11-17 (phase 4): AI questions from the lesson text, added at the end; saved with the quiz. Not once locked. */}
+      {!locked && (
+        <QuizAiSuggest
+          courseId={course.id}
+          questions={values.questions}
+          room={(limits?.questions.max ?? 0) - values.questions.length}
+          onAppend={(added) => {
+            reset()
+            form.setValues((current) => ({ ...current, questions: [...current.questions, ...added] }))
+          }}
+          onRestore={(questions) => {
+            reset()
+            set('questions', questions)
+          }}
+        />
+      )}
 
       {errors.questions && <p className={styles.error}>{errorText.field('questions', errors.questions)}</p>}
       {form.failure && <NoticeBanner>{errorText.code(form.failure)}</NoticeBanner>}
