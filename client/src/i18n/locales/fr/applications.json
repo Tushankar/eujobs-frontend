@@ -245,6 +245,7 @@
     "title": "Présélection IA",
     "close": "Fermer la présélection IA",
     "from_one": "Classé parmi {{count}} nouvelle candidature.",
+    "from_many": "Classé parmi {{count}} nouvelles candidatures.",
     "from_other": "Classé parmi {{count}} nouvelles candidatures.",
     "none": "Aucune nouvelle candidature à classer.",
     "disclaimer": "Qui lire en premier, d’après le profil ; ce n’est pas une décision d’embauche."

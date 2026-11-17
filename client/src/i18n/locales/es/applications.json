@@ -245,6 +245,7 @@
     "title": "Preselección con IA",
     "close": "Cerrar la preselección con IA",
     "from_one": "Ordenado entre {{count}} candidatura nueva.",
+    "from_many": "Ordenado entre {{count}} candidaturas nuevas.",
     "from_other": "Ordenado entre {{count}} candidaturas nuevas.",
     "none": "No hay candidaturas nuevas que ordenar.",
     "disclaimer": "A quién leer primero según su perfil; no es una decisión de contratación."
