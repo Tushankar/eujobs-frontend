@@ -198,7 +198,6 @@
       "lifted": "Restriction levée par {{by}} · {{date}}"
     },
     "photoRemoved": "photo supprimée",
-    "notice": "Aucun verdict automatique n’est disponible. Examinez le contenu dans son contexte. Restreindre une offre la met en pause et la verrouille ; restreindre un profil le masque dans la recherche des recruteurs. Le propriétaire est averti par e-mail.",
     "noticeDismissOnly": "Les signalements d’entreprises et de messages peuvent uniquement être classés. Pour agir, suspendez le recruteur dans Examen des comptes ou restreignez le profil du candidat.",
     "restrict": "Restreindre le contenu",
     "restrictTitle": "Restreindre ce contenu ?",
@@ -245,7 +244,8 @@
         "restrict": "Restreindre"
       },
       "note": "L’IA peut se tromper. Lisez les signalements et le contenu avant de décider."
-    }
+    },
+    "notice": "Toute suggestion de l’IA ci-dessus n’est qu’un conseil : examinez le contenu dans son contexte et décidez vous-même. Restreindre une offre la met en pause et la verrouille ; restreindre un profil le masque dans la recherche des recruteurs. Le propriétaire est averti par e-mail."
   },
   "reviews": {
     "tab": "Avis",

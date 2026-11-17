@@ -1,5 +1,6 @@
 /* The success modal (owner 2026-11-17): centred, quiet white card; colour only in the check and the stars. */
 .modal {
+  position: relative;
   overflow: hidden;
 }
 
@@ -136,4 +137,14 @@
   .actions > * {
     width: 100%;
   }
+}
+
+/* No title bar: the close button floats in the corner, so the check is the first thing seen. */
+.modal header {
+  position: absolute;
+  top: 0;
+  right: 0;
+  z-index: 1;
+  padding: 12px;
+  border-bottom: 0;
 }

@@ -196,7 +196,6 @@
       "lifted": "Restriction lifted by {{by}} · {{date}}"
     },
     "photoRemoved": "photo removed",
-    "notice": "No automated verdict is available. Review the content in context. Restricting a job pauses and locks it; restricting a profile hides it from recruiter search. The owner is emailed.",
     "noticeDismissOnly": "Company and message reports can only be dismissed. To act, suspend the recruiter in Account review or restrict the candidate’s profile.",
     "restrict": "Restrict content",
     "restrictTitle": "Restrict this content?",
@@ -243,7 +242,8 @@
         "restrict": "Restrict"
       },
       "note": "AI can be wrong. Read the reports and the content before you decide."
-    }
+    },
+    "notice": "Any AI suggestion above is advice only: review the content in context and decide yourself. Restricting a job pauses and locks it; restricting a profile hides it from recruiter search. The owner is emailed."
   },
   "reviews": {
     "tab": "Reviews",

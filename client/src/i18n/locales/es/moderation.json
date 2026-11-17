@@ -198,7 +198,6 @@
       "lifted": "Restricción levantada por {{by}} · {{date}}"
     },
     "photoRemoved": "foto eliminada",
-    "notice": "No hay ningún veredicto automático. Revisa el contenido en su contexto. Restringir una oferta la pone en pausa y la bloquea; restringir un perfil lo oculta en la búsqueda de reclutadores. Se avisa al propietario por correo.",
     "noticeDismissOnly": "Las denuncias de empresas y mensajes solo se pueden desestimar. Para actuar, suspende al reclutador en Revisión de cuentas o restringe el perfil del candidato.",
     "restrict": "Restringir contenido",
     "restrictTitle": "¿Restringir este contenido?",
@@ -245,7 +244,8 @@
         "restrict": "Restringir"
       },
       "note": "La IA puede equivocarse. Lee las denuncias y el contenido antes de decidir."
-    }
+    },
+    "notice": "Cualquier sugerencia de IA de arriba es solo orientativa: revisa el contenido en su contexto y decide tú. Restringir una oferta la pone en pausa y la bloquea; restringir un perfil lo oculta en la búsqueda de reclutadores. Se avisa al propietario por correo."
   },
   "reviews": {
     "tab": "Reseñas",
