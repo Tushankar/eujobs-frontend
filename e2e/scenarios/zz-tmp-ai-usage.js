@@ -103,7 +103,27 @@ export default {
       ctx.check(/[1-9]/.test(spend), `OpenAI spend shown after pricing (${spend})`)
       await settle(adminPage, 'h1')
       await ctx.screenshot(adminPage, '4-usage-priced')
-      await settle(adminPage, '[data-usage-settings]')
+      // Like a person: wheel down to the settings, then check they faded in.
+      for (let step = 0; step < 30; step += 1) {
+        await adminPage.mouse.move(800, 500)
+        await adminPage.mouse.wheel({ deltaY: 300 })
+        await new Promise((resolve) => setTimeout(resolve, 60))
+      }
+      await new Promise((resolve) => setTimeout(resolve, 1200))
+      const opacities = await adminPage.evaluate(() =>
+        [...document.querySelectorAll('[data-usage-settings], [data-usage-settings] fieldset, section')].map((element) => {
+          let opacity = 1
+          for (let node = element; node; node = node.parentElement) opacity *= Number(getComputedStyle(node).opacity)
+          return `${element.tagName}${element.id ? '#' + element.id : ''}:${opacity.toFixed(2)}`
+        }),
+      )
+      console.log('opacities after wheel', opacities.join(' '))
+      const settingsVisible = await adminPage.evaluate(() => {
+        let opacity = 1
+        for (let node = document.querySelector('[data-usage-settings]'); node; node = node.parentElement) opacity *= Number(getComputedStyle(node).opacity)
+        return opacity
+      })
+      ctx.check(settingsVisible > 0.95, `the settings fade in when scrolled to (opacity ${settingsVisible})`)
       await ctx.screenshot(adminPage, '4b-usage-settings')
       await adminHandle.checkOverflow()
 
