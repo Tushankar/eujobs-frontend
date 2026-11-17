@@ -133,6 +133,20 @@ describe('Offer and pick (P11d-Q3, Q4, Q13)', () => {
     assert.equal(new Date(picked.body.startAt).toISOString(), new Date(offered.body.slots[1].startAt).toISOString())
     assert.equal(code(await post(candidate, `/interviews/${id}/pick`, { startAt: offered.body.slots[0].startAt })), 'CONFLICT')
 
+    // "Add to calendar": Google Calendar and Outlook.com links with the booked time, in the reader's language.
+    const links = await get(candidate, `/interviews/${id}/calendar-links`)
+    assert.equal(links.status, 200)
+    const start = new Date(offered.body.slots[1].startAt)
+    const end = new Date(start.getTime() + 45 * MINUTE)
+    const google = new URL(links.body.google)
+    assert.equal(google.host, 'calendar.google.com')
+    assert.equal(google.searchParams.get('dates'), [start, end].map((date) => date.toISOString().replace(/[-:]|\.\d{3}/g, '')).join('/'))
+    assert.match(google.searchParams.get('text'), /Senior Product Designer/)
+    const outlook = new URL(links.body.outlook)
+    assert.equal(outlook.host, 'outlook.live.com')
+    assert.equal(outlook.searchParams.get('startdt'), start.toISOString())
+    assert.equal(outlook.searchParams.get('enddt'), end.toISOString())
+
     for (const person of [candidate, recruiter]) {
       const [mail] = mailTo(person.email, 'interview_confirmed')
       assert.equal(mail.ical.method, 'REQUEST')
