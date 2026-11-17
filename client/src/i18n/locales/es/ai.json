@@ -7,6 +7,10 @@
     "plan": "Los textos con IA forman parte de Plus.",
     "upgrade": "Ver Plus",
     "limit": "Has usado las {{count}} generaciones con IA de hoy. Vuelven a estar disponibles a partir del {{time}}. Los textos redactados antes siguen visibles.",
+    "featureLimit": {
+      "cv_draft": "Ya has creado los {{count}} borradores de CV con IA de hoy. Podrás crear más a partir del {{time}}.",
+      "cv_snapshot": "Hoy ya has rellenado tu perfil desde un CV {{count}} veces. Podrás hacerlo de nuevo a partir del {{time}}."
+    },
     "paused": "Las funciones de IA están en pausa por ahora y vuelven el {{time}}. Los textos redactados antes siguen visibles.",
     "busy": "Demasiadas solicitudes de IA en un minuto. Inténtalo de nuevo en {{count}} s.",
     "usesLeft": "Te quedan {{remaining}} de {{limit}} usos de IA hoy"

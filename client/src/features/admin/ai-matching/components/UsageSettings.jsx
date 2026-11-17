@@ -8,6 +8,8 @@ import styles from '../pages/UsagePage.module.css'
 
 const PLANS = ['plus', 'recruiter_plus']
 const INTERVALS = ['month', 'year']
+// The expensive features with their own daily limit per user (2026-11-17).
+const FEATURES = ['cv_draft', 'cv_snapshot']
 // Which prices apply to a model, by its use: chat models bill input and output tokens, embeddings only input, the
 // whisper-1 fallback per minute of audio.
 const PRICE_FIELDS = { fast: ['input', 'output'], main: ['input', 'output'], other: ['input', 'output'], embedding: ['input'], transcribe: ['input', 'output'], transcribeFallback: ['minute'] }
@@ -19,6 +21,7 @@ function initialForm({ settings, models, placesSkus }) {
   const openaiPrice = (model) => settings.prices.openai.find((price) => price.model === model) ?? {}
   return {
     caps: Object.fromEntries(PLANS.map((plan) => [plan, Object.fromEntries(INTERVALS.map((interval) => [interval, text(settings.caps[plan]?.[interval])]))])),
+    featureLimits: Object.fromEntries(FEATURES.map((kind) => [kind, text(settings.featureLimits?.[kind])])),
     burstPerMinute: text(settings.burstPerMinute),
     skillNamesPerDay: text(settings.skillNamesPerDay),
     budgets: { openai: text(settings.budgets.openai), places: text(settings.budgets.places) },
@@ -30,6 +33,7 @@ function initialForm({ settings, models, placesSkus }) {
 function toBody(form, { models, placesSkus }) {
   return {
     caps: Object.fromEntries(PLANS.map((plan) => [plan, Object.fromEntries(INTERVALS.map((interval) => [interval, Number(form.caps[plan][interval])]))])),
+    featureLimits: Object.fromEntries(FEATURES.map((kind) => [kind, Number(form.featureLimits[kind])])),
     burstPerMinute: Number(form.burstPerMinute),
     skillNamesPerDay: Number(form.skillNamesPerDay),
     budgets: { openai: numberOrNull(form.budgets.openai), places: numberOrNull(form.budgets.places) },
@@ -110,6 +114,9 @@ export default function UsageSettings({ data, readOnly }) {
         <fieldset className={styles.group}>
           <legend className={styles.groupTitle}>{t('usage.settings.limits')}</legend>
           <div className={styles.fields}>
+            {FEATURES.map((kind) =>
+              input(['featureLimits', kind], { key: kind, label: t(`usage.settings.featureLimit.${kind}`), hint: t('usage.settings.featureLimitHint'), min: 1, step: 1, inputMode: 'numeric', 'data-feature-limit': kind }),
+            )}
             {input(['burstPerMinute'], { label: t('usage.settings.burst'), hint: t('usage.settings.burstHint'), min: 1, step: 1, inputMode: 'numeric' })}
             {input(['skillNamesPerDay'], { label: t('usage.settings.skillNames'), hint: t('usage.settings.skillNamesHint'), min: 1, step: 1, inputMode: 'numeric' })}
           </div>

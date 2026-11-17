@@ -49,9 +49,11 @@ export default {
       await page.goto(`${ctx.webUrl}/candidate/settings/billing`, { waitUntil: 'networkidle0' })
       await page.waitForSelector('[data-ai-usage-today]', { visible: true })
       const billing = await page.$eval('[data-ai-usage-today]', (element) => element.innerText)
-      ctx.check(/1 of 40 used/.test(billing), `Billing shows today's AI uses (${billing.replace(/\n/g, ' | ')})`)
-      const features = await page.$eval('[data-plan-features="plus"]', (element) => element.innerText)
-      ctx.check(features.includes('40 AI uses a day (60 with yearly billing)'), 'the Plus card lists its daily AI uses')
+      // The insights page wrote its own text too, so the count is whatever the API says, out of 40.
+      const used = (await api('/ai/usage', { token })).body
+      ctx.check(used.used >= 1 && billing.includes(`${used.used} of 40 used`), `Billing shows today's AI uses (${billing.replace(/\n/g, ' | ')})`)
+      const features = await page.$$eval('[data-plan-features="plus"]', (lists) => lists.map((list) => list.innerText).join(' | '))
+      ctx.check(features.includes('40 AI uses a day (60 with yearly billing)'), `the Plus card lists its daily AI uses (${features.replace(/\n/g, ' · ')})`)
       await page.evaluate(() => document.querySelector('[data-ai-usage-today]').scrollIntoView({ block: 'center' }))
       await ctx.screenshot(page, '2b-billing-ai-uses')
       await handle.checkOverflow()

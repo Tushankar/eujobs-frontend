@@ -33,6 +33,7 @@
   "RATE_LIMITED_other": "Trop de tentatives. Réessayez dans {{count}} secondes.",
   "AI_DAILY_LIMIT": "Vous avez atteint la limite quotidienne des fonctions d’IA. Elle sera réinitialisée demain.",
   "AI_PAUSED": "Les fonctions IA sont en pause pour le moment. Elles reprennent le mois prochain.",
+  "AI_FEATURE_LIMIT": "Vous avez atteint la limite du jour pour cette fonction IA. Elle sera réinitialisée demain.",
   "AI_UNAVAILABLE": "Le service d’IA est indisponible pour le moment. Réessayez dans un instant.",
   "PAYMENT_PROVIDER_ERROR": "Le service de paiement est indisponible pour le moment. Réessayez dans un instant.",
   "PLACES_UNAVAILABLE": "La recherche de villes n’est pas disponible pour le moment. Réessayez dans quelques instants.",

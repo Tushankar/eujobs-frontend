@@ -38,6 +38,14 @@ export default function AiStatus({ isLoading, error, onRetry, children }) {
       </p>
     )
   }
+  // 2026-11-17: CV drafts and CV to profile have their own daily limit.
+  if (code === 'AI_FEATURE_LIMIT') {
+    return (
+      <p className={styles.limit} role="alert" data-ai-state="feature-limit">
+        {t(`status.featureLimit.${params.feature}`, { count: params.limit, time: params.resetAt ? format.dateTime(params.resetAt) : '' })}
+      </p>
+    )
+  }
   if (code === 'AI_PAUSED') {
     return (
       <p className={styles.limit} role="alert" data-ai-state="paused">

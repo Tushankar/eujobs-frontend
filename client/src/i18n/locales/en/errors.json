@@ -31,6 +31,7 @@
   "RATE_LIMITED_other": "Too many attempts. Try again in {{count}} seconds.",
   "AI_DAILY_LIMIT": "You've reached today's limit for AI features. It resets tomorrow.",
   "AI_PAUSED": "AI features are paused for now. They start again next month.",
+  "AI_FEATURE_LIMIT": "You've reached today's limit for this AI feature. It resets tomorrow.",
   "AI_UNAVAILABLE": "The AI service is unavailable right now. Try again shortly.",
   "PAYMENT_PROVIDER_ERROR": "The payment service is unavailable right now. Try again shortly.",
   "PLACES_UNAVAILABLE": "City search isn't available right now. Try again shortly.",

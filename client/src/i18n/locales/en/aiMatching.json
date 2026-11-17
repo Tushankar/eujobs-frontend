@@ -223,6 +223,11 @@
       "capsHint": "Each new AI text counts once; texts already written are free. Yearly plans get more.",
       "capLabel": "{{plan}} · {{interval}}",
       "limits": "Other limits",
+      "featureLimit": {
+        "cv_draft": "AI CV drafts per day",
+        "cv_snapshot": "CV to profile per day"
+      },
+      "featureLimitHint": "Per user. These use the expensive model; each one still counts as one AI use.",
       "burst": "AI requests per minute",
       "burstHint": "Per user, stops bursts.",
       "skillNames": "New skill names per day",

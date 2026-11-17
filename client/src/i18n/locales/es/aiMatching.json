@@ -223,6 +223,11 @@
       "capsHint": "Cada texto de IA nuevo cuenta una vez; los textos ya escritos son gratis. Los planes anuales tienen más.",
       "capLabel": "{{plan}} · {{interval}}",
       "limits": "Otros límites",
+      "featureLimit": {
+        "cv_draft": "Borradores de CV con IA al día",
+        "cv_snapshot": "CV a perfil al día"
+      },
+      "featureLimitHint": "Por usuario. Usan el modelo caro; cada uno sigue contando como un uso de IA.",
       "burst": "Solicitudes de IA por minuto",
       "burstHint": "Por usuario, frena las ráfagas.",
       "skillNames": "Nombres de habilidades nuevos al día",
