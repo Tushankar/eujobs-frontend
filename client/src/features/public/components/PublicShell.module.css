@@ -42,8 +42,30 @@
 .grid {
   display: grid;
   grid-template-columns: repeat(3, minmax(0, 1fr));
-  gap: 36px;
-  margin-top: 32px;
+  gap: 24px;
+  margin-top: 24px;
+}
+
+/* Compact blog index (owner 2026-11-17): a smaller header, and the landing's blog cards without their fixed height. */
+@media (min-width: 900px) {
+  .blogPanel {
+    padding-top: 30px;
+  }
+}
+
+.blogPanel > h1 {
+  font-size: 30px;
+  line-height: 1.25;
+  letter-spacing: -1.2px;
+}
+
+.blogPanel > .lead {
+  margin-top: 4px;
+}
+
+.grid > article {
+  min-height: 0;
+  padding: 20px 20px 22px;
 }
 
 /* ---------- Blog index: the featured post ---------- */
@@ -51,11 +73,11 @@
 .featured {
   position: relative;
   display: grid;
-  grid-template-columns: minmax(0, 1.25fr) minmax(0, 1fr);
-  gap: 48px;
+  grid-template-columns: minmax(0, 1.1fr) minmax(0, 1fr);
+  gap: 36px;
   align-items: center;
-  margin-top: 36px;
-  padding: 20px;
+  margin-top: 24px;
+  padding: 16px;
   border: 1px solid light-dark(#e8eaf0, var(--border));
   border-radius: 30px;
   background: light-dark(#fff, var(--card));
@@ -69,7 +91,7 @@
 
 .featuredImage {
   overflow: hidden;
-  aspect-ratio: 16 / 10;
+  aspect-ratio: 16 / 9;
   border-radius: 20px;
   background: light-dark(#eef1f5, var(--muted));
 }
@@ -111,11 +133,11 @@
 }
 
 .featuredTitle {
-  margin: 18px 0 0;
-  font-size: 34px;
+  margin: 12px 0 0;
+  font-size: 26px;
   font-weight: 600;
-  line-height: 1.15;
-  letter-spacing: -1.2px;
+  line-height: 1.2;
+  letter-spacing: -0.8px;
   color: light-dark(#0f1115, var(--foreground));
   text-wrap: balance;
 }
@@ -137,14 +159,14 @@
 }
 
 .featuredExcerpt {
-  margin: 16px 0 0;
-  font-size: 16px;
-  line-height: 1.65;
+  margin: 10px 0 0;
+  font-size: 15px;
+  line-height: 1.6;
   color: light-dark(#5b616b, var(--muted-foreground));
 }
 
 .featuredAuthor {
-  margin: 20px 0 0;
+  margin: 14px 0 0;
   font-size: 14px;
   font-weight: 600;
   color: light-dark(#161719, var(--foreground));
@@ -152,7 +174,7 @@
 
 .featuredRead {
   display: inline-block;
-  margin-top: 22px;
+  margin-top: 14px;
   font-size: 15px;
   font-weight: 600;
   color: var(--primary);

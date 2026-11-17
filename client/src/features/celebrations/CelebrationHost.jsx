@@ -35,7 +35,7 @@ const PRIMARY = {
 
 /** The texts of one moment: role-specific steps where the moment differs per role. */
 function useContent() {
-  const { t } = useTranslation('success')
+  const { t, i18n } = useTranslation('success')
   const format = useFormat()
   const { me } = usePreferences()
   return ({ kind, params }) => {
@@ -47,12 +47,13 @@ function useContent() {
       when: params.startAt ? format.dateTime(params.startAt) : '',
       frequency: params.frequency ? t(`jobAlerts:frequency.${params.frequency}`).toLowerCase() : '',
     }
-    const byRole = t(`${kind}.steps.${role}`, { ...values, returnObjects: true, defaultValue: null })
-    const steps = Array.isArray(byRole) ? byRole : t(`${kind}.steps`, { ...values, returnObjects: true })
+    // Some moments word their steps per role; asking for a key that does not exist would log a missing-key error.
+    const roleKey = `${kind}.steps.${role}`
+    const steps = t(i18n.exists(roleKey, { ns: 'success' }) ? roleKey : `${kind}.steps`, { ...values, returnObjects: true })
     const to = PRIMARY[kind]?.(role, params)
     return {
       title: t(`${kind}.title`, values),
-      message: t(`${kind}.message`, { ...values, defaultValue: '' }),
+      message: i18n.exists(`${kind}.message`, { ns: 'success' }) ? t(`${kind}.message`, values) : '',
       steps: Array.isArray(steps) ? steps : [],
       primary: to ? { label: t(`${kind}.primary`, values), to } : null,
     }

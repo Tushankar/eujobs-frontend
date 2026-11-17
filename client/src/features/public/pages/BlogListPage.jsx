@@ -50,7 +50,7 @@ export default function BlogListPage() {
 
   return (
     <PublicShell>
-      <section className={`${landing.card} ${styles.panel}`} aria-labelledby="blog-title">
+      <section className={`${landing.card} ${styles.panel} ${styles.blogPanel}`} aria-labelledby="blog-title">
         <h1 id="blog-title" className={styles.title}>
           {t('landing:blog.titleLead')} <span className={landing.accent}>{t('landing:blog.titleAccent')}</span>
         </h1>

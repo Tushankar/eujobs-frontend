@@ -80,7 +80,10 @@ export default {
     await closeModal(page)
     ctx.assertClean(handle.issues, 'candidate success modals')
 
-    // 5. Recruiter: marking the applicant Hired.
+    // 5. Recruiter: marking a second applicant (no interview under way) Hired.
+    const hiree = await completeCandidate('Hiree')
+    await applyApi(hiree.token, job.id)
+    const hireeApplication = (await api(`/recruiter/applications?jobId=${job.id}`, { token: recruiter.token })).body.items.find((item) => item.candidate.id === hiree.id)
     const recruiterHandle = await ctx.newPage(undefined, { celebrations: true })
     const rp = recruiterHandle.page
     await signInWithForm(rp, ctx.webUrl, '/recruiter/sign-in', recruiter.email, TEST_PASSWORD)
@@ -91,19 +94,32 @@ export default {
     const stages = (await api('/recruiter/pipeline', { token: recruiter.token })).body.items
     const hired = stages.find((stage) => stage.category === 'hired')
     await rp.goto(`${ctx.webUrl}/recruiter/applications?jobId=${job.id}`, { waitUntil: 'networkidle0' })
-    await rp.select(`[data-stage-select="${application.id}"] select`, hired.id)
+    await rp.select(`[data-stage-select="${hireeApplication.id}"] select`, hired.id)
     await modal(rp, 'candidate_hired')
     const hiredText = await rp.$eval('[data-success-kind="candidate_hired"]', (element) => element.innerText)
-    ctx.check(hiredText.includes('Great hire!') && hiredText.includes(candidate.fullName), `the recruiter's "Great hire!" names the candidate`)
+    ctx.check(hiredText.includes('Great hire!') && hiredText.includes(hiree.fullName), `the recruiter's "Great hire!" names the candidate`)
     await shot(ctx, rp, '5-candidate-hired')
     await recruiterHandle.checkOverflow()
     ctx.assertClean(recruiterHandle.issues, 'recruiter success modals')
 
-    // 6. The candidate's "you got the role" arrives with the delayed status (10-minute undo window).
+    // 6. The hired candidate's "you got the role" arrives with the delayed status (10-minute undo window).
     await api('/_test/scheduler/tick', { method: 'POST', body: { now: new Date(Date.now() + 11 * 60_000).toISOString() } })
-    await page.goto(`${ctx.webUrl}/candidate`, { waitUntil: 'networkidle0' })
-    await modal(page, 'hired')
-    await shot(ctx, page, '6-hired')
-    await handle.checkOverflow()
+    const hireeHandle = await ctx.newPage(undefined, { celebrations: true })
+    const hp = hireeHandle.page
+    await signInWithForm(hp, ctx.webUrl, '/sign-in', hiree.email, TEST_PASSWORD)
+    let found = false
+    for (let index = 0; index < 4 && !found; index += 1) {
+      const kind = await hp
+        .waitForSelector('[data-success-kind]', { visible: true, timeout: 10_000 })
+        .then((element) => element.evaluate((node) => node.dataset.successKind))
+        .catch(() => null)
+      if (!kind) break
+      if (kind === 'hired') found = true
+      else await closeModal(hp)
+    }
+    ctx.check(found, 'the hired candidate sees "you got the role"')
+    await shot(ctx, hp, '6-hired')
+    await hireeHandle.checkOverflow()
+    ctx.assertClean(hireeHandle.issues, 'hired candidate')
   },
 }

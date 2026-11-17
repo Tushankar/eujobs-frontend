@@ -3,21 +3,59 @@ section.panel {
   overflow: visible; /* the open job stays pinned while the page scrolls (the landing card clips) */
 }
 
-/* The lead and the search keep their own widths; the tabs get the full row so all seven fit without scrolling. */
+/* Compact header (owner 2026-11-17): title and lead on the left, the search beside them, the tabs on the full row below. */
+@media (min-width: 900px) {
+  section.panel {
+    padding-top: 30px;
+  }
+}
+
 .head {
+  display: grid;
+  grid-template-columns: minmax(0, 1fr) minmax(340px, 380px);
+  column-gap: 32px;
+  align-items: center;
   max-width: none;
 }
 
+.head > h1 {
+  grid-column: 1;
+  font-size: 30px;
+  line-height: 1.25;
+  letter-spacing: -1.2px;
+}
+
+.head > p {
+  grid-column: 1;
+  margin-top: 4px;
+}
+
 .search {
-  max-width: 640px;
-  margin-top: 28px;
+  grid-column: 2;
+  grid-row: 1 / 3;
+  width: 100%;
+  margin-top: 0;
+}
+
+@media (max-width: 1023px) {
+  .head {
+    grid-template-columns: minmax(0, 1fr);
+  }
+
+  .search {
+    grid-column: 1;
+    grid-row: auto;
+    max-width: 640px;
+    margin-top: 16px;
+  }
 }
 
 /* ---------- Tabs ---------- */
 
 /* The category tabs (the visa switch sits on the results line, 2026-11-16). */
 .filters {
-  margin-top: 24px;
+  grid-column: 1 / -1;
+  margin-top: 18px;
 }
 
 .filters .tabs {
@@ -31,7 +69,7 @@ section.panel {
   width: max-content;
   max-width: 100%;
   margin-top: 24px;
-  padding: 5px;
+  padding: 4px;
   overflow-x: auto;
   border: 1px solid light-dark(#e9ebef, var(--border));
   border-radius: 999px;
@@ -45,8 +83,8 @@ section.panel {
 
 .tabPill {
   position: absolute;
-  top: 5px;
-  bottom: 5px;
+  top: 4px;
+  bottom: 4px;
   left: 0;
   border-radius: 999px;
   background: var(--brand-gradient);
@@ -63,12 +101,12 @@ section.panel {
   flex-shrink: 0;
   align-items: center;
   gap: 8px;
-  padding: 9px 16px;
+  padding: 7px 14px;
   border: 0;
   border-radius: 999px;
   background: none;
   font: inherit;
-  font-size: 14px;
+  font-size: 13px;
   font-weight: 500;
   white-space: nowrap;
   color: light-dark(#4f545b, var(--muted-foreground));
@@ -113,7 +151,7 @@ section.panel {
   align-items: center;
   justify-content: space-between;
   gap: 8px 16px;
-  margin-top: 28px;
+  margin-top: 18px;
 }
 
 .visaSwitch {
