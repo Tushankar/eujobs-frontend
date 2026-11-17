@@ -17,7 +17,8 @@ if (config.placesManual) setPlacesClient(manualPlaces)
 // Requests reach the API directly or through a local tunnel (C26).
 app.set('trust proxy', 'loopback')
 app.use(helmet())
-app.use(cors({ origin: config.clientOrigin }))
+// Content-Disposition exposed: the client reads the file name of downloads (.ics, CSV exports) across origins.
+app.use(cors({ origin: config.clientOrigin, exposedHeaders: ['Content-Disposition'] }))
 // The Stripe webhook needs the raw body for its signature (§2.10), so it comes before the JSON parser.
 app.use('/api/v1/stripe/webhook', webhookRouter)
 app.use(express.json({ limit: '1mb' }))
