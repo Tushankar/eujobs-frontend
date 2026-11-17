@@ -26,6 +26,8 @@ export const aiApi = api.injectEndpoints({
     getRecruiterMatch: build.query({ query: ({ candidateId, jobId }) => ({ url: `/recruiter/candidates/${candidateId}/match`, params: { jobId } }) }),
     // M-144: user texts in the reader's language
     translate: build.mutation({ query: (body) => ({ url: '/translate', method: 'POST', body }) }),
+    // 2026-11-17: today's AI uses, the plan's daily cap and when it resets
+    getAiUsage: build.query({ query: () => '/ai/usage', providesTags: ['AiUsage'] }),
   }),
 })
 
@@ -43,4 +45,5 @@ export const {
   useWriteJobSummaryMutation,
   useGetRecruiterMatchQuery,
   useTranslateMutation,
+  useGetAiUsageQuery,
 } = aiApi

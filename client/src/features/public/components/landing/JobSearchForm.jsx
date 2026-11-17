@@ -6,6 +6,7 @@ import { useNavigate } from 'react-router-dom'
 import { CompanyLogo, Icon } from '@/components/ui'
 import { useJobText } from '@/lib/jobText.js'
 import { cx } from '@/utils/cx.js'
+import { useGetConfigQuery } from '@/app/api.js'
 import { useGetLandingQuery, useGetPublicJobsQuery, useLazyGetCityNearQuery } from '../../api.js'
 import styles from './Landing.module.css'
 import own from './JobSearchForm.module.css'
@@ -128,7 +129,9 @@ export default function JobSearchForm({ q = '', location = '', onSearch, classNa
   const [active, setActive] = useState(-1)
   const [locating, setLocating] = useState(null)
   const [getCityNear] = useLazyGetCityNearQuery()
-  const canLocate = typeof navigator !== 'undefined' && 'geolocation' in navigator
+  const { data: config } = useGetConfigQuery()
+  // Hidden while city lookups are manual (the Places budget used up, 2026-11-17): nothing could be found near a point.
+  const canLocate = typeof navigator !== 'undefined' && 'geolocation' in navigator && config?.placesManual === false
   const form = useRef(null)
   const placeField = useRef(null)
   const listId = useId()

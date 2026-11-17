@@ -66,7 +66,8 @@
       "updated": "Detalles de la política de compatibilidad actualizados: {{name}}",
       "saved": "Señales de la política de compatibilidad guardadas: {{name}} (v{{version}})",
       "activated": "Política de compatibilidad activada: {{name}} (v{{version}})",
-      "archived": "Política de compatibilidad archivada: {{name}}"
+      "archived": "Política de compatibilidad archivada: {{name}}",
+      "ai_usage_updated": "Ajustes de uso de IA actualizados (límites, presupuestos, precios)"
     },
     "access": {
       "role_created": "Rol creado: {{role}}",

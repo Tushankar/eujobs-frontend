@@ -4,6 +4,7 @@ import PageTitle from '@/components/common/PageTitle.jsx'
 import { tabRowRef } from '@/hooks/scrollActiveIntoView.js'
 import { cx } from '@/utils/cx.js'
 import sparkle from '@/assets/icons/ai-sparkle-blue.svg'
+import AiUsesLeft from '@/features/ai/components/AiUsesLeft.jsx'
 import AiSafetyNotice from './AiSafetyNotice.jsx'
 import styles from './AiPageShell.module.css'
 
@@ -27,10 +28,13 @@ export default function AiPageShell({ eyebrow, title, description, children }) {
         title={title}
         description={description}
         actions={
-          <span className={styles.badge}>
-            <img src={sparkle} alt="" width={14} height={14} />
-            {t('shell.badge')}
-          </span>
+          <div className={styles.actions}>
+            <span className={styles.badge}>
+              <img src={sparkle} alt="" width={14} height={14} />
+              {t('shell.badge')}
+            </span>
+            <AiUsesLeft />
+          </div>
         }
       />
       <nav ref={tabRowRef} className={styles.tabs} aria-label={t('shell.tabsLabel')}>

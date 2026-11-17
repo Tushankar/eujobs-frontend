@@ -48,14 +48,15 @@ export const aiStub = {
   embeddings: {
     async create({ model, input }) {
       aiStub.calls.push({ kind: 'embedding', model, input })
-      return { data: input.map((text, index) => ({ index, embedding: wordVector(text) })) }
+      return { data: input.map((text, index) => ({ index, embedding: wordVector(text) })), usage: { prompt_tokens: 10 * input.length } }
     },
   },
   responses: {
     async create(request) {
       aiStub.calls.push({ kind: 'response', ...request })
       const output = aiStub.reply ? aiStub.reply(request) : fill(request.text.format.schema)
-      return { output_text: JSON.stringify(output) }
+      // Fixed token counts, like OpenAI's usage, so the Usage tab's cost can be checked.
+      return { output_text: JSON.stringify(output), usage: { input_tokens: 1000, output_tokens: 200 } }
     },
   },
 }

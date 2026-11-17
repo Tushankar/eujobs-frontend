@@ -285,7 +285,7 @@ taskHandlers['interview.notes'] = async (payload, task) => {
   if (!file) return fail()
   try {
     const recruiter = (await User.findById(interview.createdBy)) ?? (await companyRecruiter(interview.companyId))
-    const transcript = (await transcribe(absolutePath(file))).trim()
+    const transcript = (await transcribe(absolutePath(file), recruiter)).trim()
     const notes = await write(PROMPTS.interviewNotes, { user: recruiter, input: { transcript }, subjectId: interview.candidateId, model: 'main', cache: false })
     await Interview.updateOne(
       { _id: interview._id },

@@ -30,6 +30,8 @@ const PAGE_PATHS = {
   // §3.22: a recruiter's plan_ended opens Jobs (P11c-Q18).
   jobs: () => '/recruiter/jobs',
   review: () => '/recruiter/onboarding/review',
+  // 2026-11-17: a budget alert opens Admin › AI & matching › Usage.
+  aiUsage: () => '/admin/ai-matching/usage',
 }
 
 /** Where each target opens (P11b-Q1, Q9). */

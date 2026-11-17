@@ -5,6 +5,7 @@ import { Plus } from 'lucide-react'
 import { Button, Icon } from '@/components/ui'
 import PageTitle from '@/components/common/PageTitle.jsx'
 import { useGetPoliciesQuery } from '../api.js'
+import AiMatchingTabs from '../components/AiMatchingTabs.jsx'
 import CreatePolicyModal from '../components/CreatePolicyModal.jsx'
 import FeedbackSection from '../components/FeedbackSection.jsx'
 import OversightSection from '../components/OversightSection.jsx'
@@ -49,6 +50,7 @@ export default function AiMatchingPage() {
           </Button>
         }
       />
+      <AiMatchingTabs value="policies" policies={data?.items.length} />
 
       <div role="status">{notice && <p className={styles.notice}>{notice}</p>}</div>
       {isError && <p className={styles.notice}>{t('page.loadError')}</p>}

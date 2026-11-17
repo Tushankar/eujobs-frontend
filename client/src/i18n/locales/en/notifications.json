@@ -81,6 +81,10 @@
     "admin_content_report_other": "{{target}} reported {{count}} times: {{name}} · {{reason}}",
     "admin_renewal_failed": "{{plan}} renewal failed for {{payer}} · {{reference}} · {{amount}}",
     "admin_joined": "{{name}} joined the admin workspace",
+    "admin_ai_budget": {
+      "warning": "{{provider}} reached {{percent}}% of its {{budget}} monthly budget ({{spent}} so far)",
+      "paused": "{{provider}} used its {{budget}} monthly budget ({{spent}}) and is paused until next month or a higher budget"
+    },
     "plan_ended_paused_one": "Your {{plan}} plan has ended. {{job}} stays live; {{count}} other job was paused.",
     "plan_ended_paused_other": "Your {{plan}} plan has ended. {{job}} stays live; {{count}} other jobs were paused."
   },

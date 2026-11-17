@@ -10,6 +10,7 @@
     "label": "Ciudad",
     "placeholder": "Empieza a escribir una ciudad",
     "hint": "Ciudades de cualquier país.",
+    "manualHint": "Escribe la ciudad y su país, p. ej. «Berlín, Alemania», y elígela.",
     "searching": "Buscando…",
     "noResults": "No hay ninguna ciudad que coincida.",
     "retry": "Reintentar",

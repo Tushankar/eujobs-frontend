@@ -308,6 +308,21 @@
       ],
       "action": "Ouvrir ses accès"
     },
+    "admin_ai_budget": {
+      "subject": "Utilisation de {{provider}} à {{percent}} % du budget mensuel",
+      "heading": "Alerte budget IA",
+      "body": [
+        "Bonjour {{name}},",
+        "L’utilisation de {{provider}} sur EU Jobs a atteint {{percent}} % du budget de ce mois ({{budget}}) : {{spent}} à ce jour, estimé avec les prix définis dans l’onglet Utilisation.",
+        "{{note}}"
+      ],
+      "action": "Ouvrir Utilisation",
+      "notes": {
+        "warning": "Rien n’est encore en pause. Augmentez le budget ou examinez les principaux utilisateurs si ce n’est pas attendu.",
+        "openai_paused": "Les fonctions IA sont en pause jusqu’au 1er du mois prochain ou jusqu’à ce que le budget soit augmenté.",
+        "places_paused": "Les champs de ville acceptent désormais « Ville, Pays » saisi à la main et « Utiliser ma position » est masqué jusqu’au 1er du mois prochain ou jusqu’à ce que le budget soit augmenté."
+      }
+    },
     "recruiter_plan_ended": {
       "subject": "Votre offre {{plan}} est terminée",
       "heading": "Offre terminée",
@@ -847,7 +862,8 @@
       "updated": "Détails de la politique de correspondance modifiés : {{name}}",
       "saved": "Signaux de la politique de correspondance enregistrés : {{name}} (v{{version}})",
       "activated": "Politique de correspondance activée : {{name}} (v{{version}})",
-      "archived": "Politique de correspondance archivée : {{name}}"
+      "archived": "Politique de correspondance archivée : {{name}}",
+      "ai_usage_updated": "Paramètres d’utilisation de l’IA mis à jour (limites, budgets, prix)"
     },
     "access": {
       "role_created": "Rôle créé : {{role}}",

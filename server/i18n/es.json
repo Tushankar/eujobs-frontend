@@ -308,6 +308,21 @@
       ],
       "action": "Abrir su acceso"
     },
+    "admin_ai_budget": {
+      "subject": "Uso de {{provider}} al {{percent}} % del presupuesto mensual",
+      "heading": "Alerta de presupuesto de IA",
+      "body": [
+        "Hola, {{name}}:",
+        "El uso de {{provider}} en EU Jobs ha alcanzado el {{percent}} % del presupuesto de este mes de {{budget}} ({{spent}} hasta ahora, estimado con los precios definidos en la pestaña Uso).",
+        "{{note}}"
+      ],
+      "action": "Abrir Uso",
+      "notes": {
+        "warning": "Todavía no se ha pausado nada. Aumenta el presupuesto o revisa los usuarios principales si no es lo esperado.",
+        "openai_paused": "Las funciones de IA quedan en pausa hasta el día 1 del próximo mes o hasta que se aumente el presupuesto.",
+        "places_paused": "Los campos de ciudad ahora aceptan «Ciudad, País» escrito a mano y «Usar mi ubicación» queda oculto hasta el día 1 del próximo mes o hasta que se aumente el presupuesto."
+      }
+    },
     "recruiter_plan_ended": {
       "subject": "Tu plan {{plan}} ha terminado",
       "heading": "Plan terminado",
@@ -847,7 +862,8 @@
       "updated": "Detalles de la política de coincidencia actualizados: {{name}}",
       "saved": "Señales de la política de coincidencia guardadas: {{name}} (v{{version}})",
       "activated": "Política de coincidencia activada: {{name}} (v{{version}})",
-      "archived": "Política de coincidencia archivada: {{name}}"
+      "archived": "Política de coincidencia archivada: {{name}}",
+      "ai_usage_updated": "Ajustes de uso de IA actualizados (límites, presupuestos, precios)"
     },
     "access": {
       "role_created": "Rol creado: {{role}}",

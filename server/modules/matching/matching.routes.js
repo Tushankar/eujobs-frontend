@@ -3,6 +3,8 @@ import { aiStatus } from '../../lib/ai.js'
 import { validate } from '../../lib/validate.js'
 import { requireAuth, requireRole } from '../../middleware/auth.js'
 import { requirePermission } from '../../middleware/permissions.js'
+import * as usage from '../ai/ai.usage.js'
+import * as aiSchemas from '../ai/ai.schemas.js'
 import * as admin from './matching.admin.js'
 import * as schemas from './matching.schemas.js'
 
@@ -55,4 +57,13 @@ adminAiRouter.use(requireAuth, requireRole('admin'))
 
 adminAiRouter.get('/status', view, async (req, res) => {
   res.json(await aiStatus())
+})
+
+/* 2026-11-17: Usage (calls, estimated cost, budgets, top users) and its settings. */
+adminAiRouter.get('/usage', view, validate({ query: aiSchemas.usageQuery }), async (req, res) => {
+  res.json(await usage.usageOverview(req.query.month))
+})
+
+adminAiRouter.put('/usage/settings', manage, validate({ body: aiSchemas.usageSettingsBody }), async (req, res) => {
+  res.json(await usage.updateUsageSettings(req.user, req.body))
 })

@@ -1,4 +1,6 @@
 import { z } from 'zod'
+import { LIMITS } from '../../config/limits.js'
+import { PLACES_SKUS } from '../../lib/usage.js'
 import { objectId } from '../../lib/validate.js'
 
 /* AI requests (§5, §3.18). Translate names an entity, one of its texts and, for an entry, the entry id (M-144). */
@@ -15,3 +17,26 @@ export const translateBody = z
   .object({ entity: z.enum(Object.keys(FIELDS)), id: objectId, field: z.string(), entryId: objectId.optional() })
   .refine((body) => FIELDS[body.entity].includes(body.field), { path: ['field'], message: 'invalid' })
   .refine((body) => !['workHistory', 'lesson'].includes(body.field) || body.entryId, { path: ['entryId'], message: 'required' })
+
+/* Admin › AI & matching › Usage (2026-11-17): limits, monthly budgets in USD (null: none) and prices in USD. */
+const U = LIMITS.ai.usage
+const cap = z.number().int().min(U.capRange.min).max(U.capRange.max)
+const caps = z.object({ month: cap, year: cap })
+const price = z.number().min(0).max(U.priceMax)
+const budget = z.number().positive().max(U.budgetMax).nullable()
+export const usageQuery = z.object({ month: z.string().regex(/^\d{4}-(0[1-9]|1[0-2])$/).optional() })
+export const usageSettingsBody = z.object({
+  caps: z.object({ plus: caps, recruiter_plus: caps }),
+  burstPerMinute: z.number().int().min(U.burstRange.min).max(U.burstRange.max),
+  skillNamesPerDay: cap,
+  budgets: z.object({ openai: budget, places: budget }),
+  prices: z.object({
+    openai: z
+      .array(z.object({ model: z.string().trim().min(1).max(100), input: price.nullable(), output: price.nullable(), minute: price.nullable() }))
+      .max(50)
+      .refine((items) => new Set(items.map((item) => item.model)).size === items.length, 'duplicate'),
+    places: z
+      .array(z.object({ sku: z.enum(PLACES_SKUS), perThousand: price }))
+      .refine((items) => new Set(items.map((item) => item.sku)).size === items.length, 'duplicate'),
+  }),
+})

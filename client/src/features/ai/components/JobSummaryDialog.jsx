@@ -1,6 +1,7 @@
 import { useTranslation } from 'react-i18next'
 import { Button, Modal } from '@/components/ui'
 import AiStatus from './AiStatus.jsx'
+import AiUsesLeft from './AiUsesLeft.jsx'
 import styles from './JobSummaryDialog.module.css'
 
 /**
@@ -39,6 +40,7 @@ export default function JobSummaryDialog({ open, job, state, onRetry, onClose, a
     >
       <div className={styles.body} data-job-summary>
         <p className={styles.lead}>{t('jobSummary.lead')}</p>
+        <AiUsesLeft />
         <AiStatus isLoading={state.isLoading} error={state.error} onRetry={onRetry}>
           {summary && (
             <>

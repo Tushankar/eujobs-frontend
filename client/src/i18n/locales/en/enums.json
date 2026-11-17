@@ -351,7 +351,8 @@
     "admin_verification_submitted": "Verification to review",
     "admin_content_report": "Content report",
     "admin_renewal_failed": "Failed renewal (admin)",
-    "admin_joined": "Admin joined"
+    "admin_joined": "Admin joined",
+    "admin_ai_budget": "AI budget alert"
   },
   "emailClass": {
     "critical": "Critical",
@@ -533,7 +534,8 @@
     "admin_verification_submitted": "Verification",
     "admin_content_report": "Content report",
     "admin_renewal_failed": "Failed renewal",
-    "admin_joined": "Access"
+    "admin_joined": "Access",
+    "admin_ai_budget": "AI budget"
   },
   "interviewMode": {
     "video": "Video call",

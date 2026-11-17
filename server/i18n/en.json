@@ -308,6 +308,21 @@
       ],
       "action": "Open their access"
     },
+    "admin_ai_budget": {
+      "subject": "{{provider}} usage at {{percent}}% of the monthly budget",
+      "heading": "AI budget alert",
+      "body": [
+        "Hi {{name}},",
+        "{{provider}} usage on EU Jobs has reached {{percent}}% of this month's {{budget}} budget ({{spent}} so far, estimated with the prices set on the Usage tab).",
+        "{{note}}"
+      ],
+      "action": "Open Usage",
+      "notes": {
+        "warning": "Nothing is paused yet. Raise the budget or check the top users if this is unexpected.",
+        "openai_paused": "AI features are paused until the 1st of next month or until the budget is raised.",
+        "places_paused": "City fields now take a typed \"City, Country\" and \"Use my location\" is hidden until the 1st of next month or until the budget is raised."
+      }
+    },
     "recruiter_plan_ended": {
       "subject": "Your {{plan}} plan has ended",
       "heading": "Plan ended",
@@ -847,7 +862,8 @@
       "updated": "Matching policy details updated: {{name}}",
       "saved": "Matching policy signals saved: {{name}} (v{{version}})",
       "activated": "Matching policy activated: {{name}} (v{{version}})",
-      "archived": "Matching policy archived: {{name}}"
+      "archived": "Matching policy archived: {{name}}",
+      "ai_usage_updated": "AI usage settings updated (limits, budgets, prices)"
     },
     "access": {
       "role_created": "Role created: {{role}}",

@@ -6,6 +6,7 @@ import aiMatchIcon from '@/assets/icons/find-candidates-ai-match.svg'
 import { useGetRecruiterMatchQuery } from '@/features/ai/api.js'
 import AiButton from '@/features/ai/components/AiButton.jsx'
 import AiStatus from '@/features/ai/components/AiStatus.jsx'
+import AiUsesLeft from '@/features/ai/components/AiUsesLeft.jsx'
 import { lacksEntitlement } from '@/features/candidate/billing/usePlan.js'
 import { useFormat, usePreferences } from '@/lib/preferences.js'
 import { cx } from '@/utils/cx.js'
@@ -38,6 +39,7 @@ function MatchNarrative({ candidateId, jobId }) {
           </>
         )}
       </AiStatus>
+      <AiUsesLeft />
     </div>
   )
 }

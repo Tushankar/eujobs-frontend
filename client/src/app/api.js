@@ -89,6 +89,7 @@ export const api = createApi({
     'MatchingPolicies',
     'Oversight',
     'AiStatus',
+    'AiUsage',
     'Insights',
     'AdminJobs',
     'AdminRoles',

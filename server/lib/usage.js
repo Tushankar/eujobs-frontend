@@ -5,6 +5,7 @@ import { notifyAdmins } from '../modules/notifications/notifications.service.js'
 import { AppConfig, Subscription } from '../modules/payments/payments.model.js'
 import { isPaid, PAID_PLAN } from '../modules/payments/payments.service.js'
 import { AppError } from './errors.js'
+import { t } from './i18n.js'
 
 /*
  * Paid API usage, budgets and per-user AI limits (owner 2026-11-17). Every OpenAI and Google Places call is counted
@@ -122,7 +123,13 @@ export async function budgetReached(provider) {
   return Boolean(budget) && (await monthSpend(provider)) >= budget
 }
 
+const PROVIDER_NAMES = { openai: 'OpenAI', places: 'Google Places' }
 const usd = (language, amount) => new Intl.NumberFormat(language, { style: 'currency', currency: 'USD' }).format(amount)
+
+/** After a settings save: a budget lowered below this month's spend alerts (and pauses) at once. */
+export async function checkBudgets() {
+  for (const provider of PROVIDERS) await alertBudget(provider)
+}
 
 /** Each alert share is sent once per provider, month and budget amount (a higher budget can alert again). */
 async function alertBudget(provider) {
@@ -140,11 +147,11 @@ async function alertBudget(provider) {
       params: { provider, percent, spent, budget },
       target: { kind: 'page', id: 'aiUsage' },
       emailParams: (language) => ({
-        provider,
+        provider: PROVIDER_NAMES[provider],
         percent,
         spent: usd(language, spent),
         budget: usd(language, budget),
-        paused: share >= 1,
+        note: t(language, `email.admin_ai_budget.notes.${share >= 1 ? `${provider}_paused` : 'warning'}`),
         link: `${config.clientOrigin}/admin/ai-matching/usage`,
       }),
     })
@@ -153,13 +160,17 @@ async function alertBudget(provider) {
 
 /* ---------- per-user limits ---------- */
 
-/** Today's AI uses for a candidate or recruiter: their paid plan's cap for its billing interval; without a plan, the monthly cap of their role's paid plan. */
-export async function dailyCap(user) {
-  const { caps } = await usageSettings()
-  const subscription = await Subscription.findOne({ userId: user._id }, 'planKey status retrying interval')
-  const fallback = caps[PAID_PLAN[user.role]]?.month ?? U.caps.plus.month
+/** The daily cap of a paid plan for its billing interval; without a plan, the monthly cap of the role's paid plan. */
+export function capFor(role, subscription, caps) {
+  const fallback = caps[PAID_PLAN[role]]?.month ?? U.caps.plus.month
   if (!isPaid(subscription)) return fallback
   return caps[subscription.planKey]?.[subscription.interval] ?? fallback
+}
+
+/** Today's AI uses a candidate or recruiter may have. */
+export async function dailyCap(user) {
+  const { caps } = await usageSettings()
+  return capFor(user.role, await Subscription.findOne({ userId: user._id }, 'planKey status retrying interval'), caps)
 }
 
 /** GET /ai/usage: today's counted uses, the cap and when it resets. */

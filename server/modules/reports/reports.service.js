@@ -114,7 +114,7 @@ export async function createReport(admin, { type, period, brief, tz }, upload) {
     ? await storeFile({ ownerId: admin._id, purpose: 'report_voice', tempPath: upload.path, ext: upload.ext, originalName: upload.originalname })
     : null
   try {
-    const transcript = voice ? await transcribe(absolutePath(voice)) : null
+    const transcript = voice ? await transcribe(absolutePath(voice), admin) : null
     const table = await dataRows(type, language, period, tz, range)
     const typeLabel = t(language, `reports.types.${type}`)
     const periodLabel = `${t(language, `reports.periods.${period}`)} (${range.start.toISODate()} – ${range.end.minus({ days: 1 }).toISODate()})`

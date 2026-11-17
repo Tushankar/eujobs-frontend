@@ -84,6 +84,10 @@
     "admin_content_report_other": "{{count}} signalements ({{target}}) : {{name}} · {{reason}}",
     "admin_renewal_failed": "Échec du renouvellement {{plan}} de {{payer}} · {{reference}} · {{amount}}",
     "admin_joined": "{{name}} a rejoint l’espace d’administration",
+    "admin_ai_budget": {
+      "warning": "{{provider}} a atteint {{percent}} % de son budget mensuel de {{budget}} ({{spent}} à ce jour)",
+      "paused": "{{provider}} a épuisé son budget mensuel de {{budget}} ({{spent}}) et reste en pause jusqu’au mois prochain ou à un budget plus élevé"
+    },
     "plan_ended_paused_one": "Votre offre {{plan}} a pris fin. {{job}} reste en ligne ; {{count}} autre offre d’emploi a été mise en pause.",
     "plan_ended_paused_many": "Votre offre {{plan}} a pris fin. {{job}} reste en ligne ; {{count}} autres offres d’emploi ont été mises en pause.",
     "plan_ended_paused_other": "Votre offre {{plan}} a pris fin. {{job}} reste en ligne ; {{count}} autres offres d’emploi ont été mises en pause."

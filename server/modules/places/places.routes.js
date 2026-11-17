@@ -11,11 +11,11 @@ const router = Router()
 router.use(requireAuth, requireVerifiedEmail)
 
 router.get('/autocomplete', placesAutocompletePerUser, validate({ query: schemas.autocompleteQuery }), async (req, res) => {
-  res.json({ items: await places.autocomplete({ ...req.query, language: req.user.language }) })
+  res.json({ items: await places.autocomplete({ ...req.query, language: req.user.language, userId: req.user._id }) })
 })
 
 router.get('/:placeId', placesDetailsPerUser, validate({ params: schemas.detailsParams, query: schemas.detailsQuery }), async (req, res) => {
-  res.json(await places.placeDetails({ ...req.params, ...req.query, language: req.user.language }))
+  res.json(await places.placeDetails({ ...req.params, ...req.query, language: req.user.language, userId: req.user._id }))
 })
 
 export default router

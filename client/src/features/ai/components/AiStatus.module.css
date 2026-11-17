@@ -30,3 +30,20 @@
   flex: 1 1 200px;
   min-width: 0;
 }
+
+.limit p {
+  flex: 1 1 200px;
+  min-width: 0;
+}
+
+/* AiUsesLeft: a quiet count next to AI features. */
+.usesLeft {
+  margin: 0;
+  font-size: 12px;
+  line-height: 18px;
+  color: var(--muted-foreground);
+}
+
+.usesNone {
+  color: light-dark(#8b6a1f, #dcb661);
+}

@@ -10,6 +10,7 @@
     "label": "City",
     "placeholder": "Start typing a city",
     "hint": "Cities anywhere in the world.",
+    "manualHint": "Type the city and its country, e.g. “Berlin, Germany”, then pick it.",
     "searching": "Searching…",
     "noResults": "No matching city.",
     "retry": "Try again",

@@ -159,7 +159,7 @@ export async function addPlanSkill(user, name) {
   const skill = checkedSkill(name)
   if (!profile.learningPlan.some((item) => item.key === skill.key)) {
     if (profile.learningPlan.length >= P.skills.max) throw fieldError({ skill: 'too_many' }, { max: P.skills.max })
-    await addStandardNames([skill])
+    await addStandardNames([skill], user)
     profile.learningPlan.push(skill)
     await profile.save()
   }

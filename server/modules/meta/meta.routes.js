@@ -6,15 +6,19 @@ import { optionalAuth, requireAuth } from '../../middleware/auth.js'
 import * as schemas from './meta.schemas.js'
 import { chargeCurrency } from '../payments/currencies.js'
 import { companyCurrency } from '../payments/payments.service.js'
+import { placesManual } from '../places/places.service.js'
 import * as meta from './meta.service.js'
 
 /* Public catalogue reads (§5 "Meta and public"); mounted at the API root. */
 const router = Router()
 const list = (items) => ({ items, total: items.length, page: 1, pageSize: items.length })
 
-/** Limits and enum keys, so client forms never hard-code them (§2.4). */
-router.get('/meta/config', (req, res) => {
-  res.json({ limits: LIMITS, enums: ENUMS })
+/**
+ * Limits and enum keys, so client forms never hard-code them (§2.4). `placesManual`: city fields take a typed "City,
+ * Country" and "Use my location" is hidden (the testing mode, or the Places budget used up, 2026-11-17).
+ */
+router.get('/meta/config', async (req, res) => {
+  res.json({ limits: LIMITS, enums: ENUMS, placesManual: await placesManual() })
 })
 
 router.get('/meta/countries', async (req, res) => {

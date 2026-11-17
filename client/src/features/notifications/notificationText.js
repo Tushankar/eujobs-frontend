@@ -5,6 +5,7 @@ import {
   BriefcaseBusiness,
   CalendarClock,
   CreditCard,
+  Gauge,
   FileText,
   Flag,
   GraduationCap,
@@ -45,6 +46,7 @@ export const NOTIFICATION_ICONS = {
   admin_content_report: Flag,
   admin_renewal_failed: CreditCard,
   admin_joined: UserPlus,
+  admin_ai_budget: Gauge,
   interview_offered: CalendarClock,
   interview_confirmed: CalendarClock,
   interview_cancelled: CalendarClock,
@@ -107,6 +109,14 @@ export function useNotificationText() {
         return t(`notifications:types.${type}.${me?.role === 'recruiter' ? 'recruiter' : 'candidate'}`, { ...values, count: params.hours })
       case 'interview_offered':
         return t(`notifications:types.${type}.${params.rescheduled ? 'rescheduled' : 'new'}`, values)
+      // 2026-11-17: an OpenAI or Google Places budget at 80 % (warning) or used up (paused); amounts are USD.
+      case 'admin_ai_budget':
+        return t(`notifications:types.${type}.${params.percent >= 100 ? 'paused' : 'warning'}`, {
+          ...values,
+          provider: t(`aiMatching:usage.providers.${params.provider}`),
+          spent: format.money(Math.round(params.spent * 100), 'USD'),
+          budget: format.money(Math.round(params.budget * 100), 'USD'),
+        })
       case 'admin_account_review':
         return t(`notifications:types.${type}.${params.resubmitted ? 'resubmitted' : 'submitted'}`, values)
       default:

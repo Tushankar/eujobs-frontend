@@ -107,7 +107,13 @@ export default function CityField({ label, hint, error, value, onChange, name = 
   const optionId = (index) => `${id}-option-${index}`
 
   return (
-    <Field id={id} label={label ?? t('common:city.label')} hint={hint ?? t('common:city.hint')} error={error ?? (pickError && errorText.code(pickError))}>
+    // Manual entry (the testing mode, or the admin's Places budget used up, 2026-11-17): the hint says how to type it.
+    <Field
+      id={id}
+      label={label ?? t('common:city.label')}
+      hint={config?.placesManual ? t('common:city.manualHint') : (hint ?? t('common:city.hint'))}
+      error={error ?? (pickError && errorText.code(pickError))}
+    >
       {({ describedBy, invalid }) => (
         <div className={styles.root}>
           <div className={cx(fieldStyles.control, invalid && fieldStyles.invalid)}>

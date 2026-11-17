@@ -8,7 +8,8 @@ import styles from '@/components/common/TabBar.module.css'
 
 /**
  * Moderation queue switcher: each tab is a route link (so a tab can be opened directly) with a count.
- * `tabs` = [{ id, label, icon, count, loading, to }]; a loading tab shows a placeholder for its count.
+ * `tabs` = [{ id, label, icon, count, loading, to }]; a loading tab shows a placeholder for its count, and a tab
+ * without a count (undefined) shows none.
  */
 export default function QueueTabs({ tabs, value }) {
   const { t } = useTranslation('moderation')
@@ -29,7 +30,7 @@ export default function QueueTabs({ tabs, value }) {
           >
             <Icon as={tab.icon} size={14} />
             {tab.label}
-            {tab.loading ? <Skeleton shape="pill" width={22} height={20} /> : <span className={styles.count}>{tab.count}</span>}
+            {tab.loading ? <Skeleton shape="pill" width={22} height={20} /> : tab.count !== undefined && <span className={styles.count}>{tab.count}</span>}
           </Link>
         )
       })}

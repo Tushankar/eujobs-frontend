@@ -10,6 +10,7 @@
     "label": "Ville",
     "placeholder": "Commencez à saisir une ville",
     "hint": "Des villes du monde entier.",
+    "manualHint": "Saisissez la ville et son pays, par ex. « Berlin, Allemagne », puis choisissez-la.",
     "searching": "Recherche…",
     "noResults": "Aucune ville correspondante.",
     "retry": "Réessayer",

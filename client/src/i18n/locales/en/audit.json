@@ -66,7 +66,8 @@
       "updated": "Matching policy details updated: {{name}}",
       "saved": "Matching policy signals saved: {{name}} (v{{version}})",
       "activated": "Matching policy activated: {{name}} (v{{version}})",
-      "archived": "Matching policy archived: {{name}}"
+      "archived": "Matching policy archived: {{name}}",
+      "ai_usage_updated": "AI usage settings updated (limits, budgets, prices)"
     },
     "access": {
       "role_created": "Role created: {{role}}",

@@ -2,7 +2,7 @@ import { api } from '@/app/api.js'
 
 /*
  * Admin > AI & matching (M-048, M-049, M-068): policies with their versions, the description suggestion (OpenAI),
- * the oversight of one job's top candidates and the AI service status. Policy changes recompute the scores on the
+ * the oversight of one job's top candidates, the AI service status and the Usage tab. Policy changes recompute the scores on the
  * server, so the oversight refetches. Each write puts the answered policy into the cached list at once (the editor
  * shows a new policy before the list refetches); the refetch then brings the other policies' statuses.
  */
@@ -35,6 +35,9 @@ export const aiMatchingApi = api.injectEndpoints({
     suggestPolicyDescription: build.mutation({ query: (body) => ({ url: '/admin/matching/policies/suggest', method: 'POST', body }) }),
     getOversight: build.query({ query: (params) => ({ url: '/admin/matching/oversight', params }), providesTags: ['Oversight'] }),
     getAiStatus: build.query({ query: () => '/admin/ai/status', providesTags: ['AiStatus'] }),
+    // 2026-11-17: Usage (calls, estimated cost, budgets, top users); a save answers the current month's overview
+    getAdminAiUsage: build.query({ query: (month) => ({ url: '/admin/ai/usage', params: month ? { month } : {} }), providesTags: ['AiUsage'] }),
+    saveAiUsageSettings: build.mutation({ query: (body) => ({ url: '/admin/ai/usage/settings', method: 'PUT', body }), invalidatesTags: ['AiUsage', 'AiStatus'] }),
     // M-067: "Helpful" and "Needs review" on candidates' explanations
     getExplanationFeedback: build.query({ query: () => '/admin/matching/feedback' }),
   }),
@@ -50,5 +53,7 @@ export const {
   useSuggestPolicyDescriptionMutation,
   useGetOversightQuery,
   useGetAiStatusQuery,
+  useGetAdminAiUsageQuery,
+  useSaveAiUsageSettingsMutation,
   useGetExplanationFeedbackQuery,
 } = aiMatchingApi

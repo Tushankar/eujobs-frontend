@@ -69,7 +69,7 @@ async function jobFields(user, input, existing) {
   const preferredSkills = skillEntries(input.preferredSkills, 'preferredSkills')
   const both = preferredSkills.find((skill) => requiredSkills.some((required) => required.key === skill.key))
   if (both) throw fieldError({ preferredSkills: 'in_both' }, { skill: both.name })
-  await addStandardNames([...requiredSkills, ...preferredSkills])
+  await addStandardNames([...requiredSkills, ...preferredSkills], user)
   const codes = input.requiredLanguages.map((language) => language.code)
   if (new Set(codes).size !== codes.length) throw fieldError({ requiredLanguages: 'duplicate' })
 

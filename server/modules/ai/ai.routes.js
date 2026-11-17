@@ -7,6 +7,7 @@ import * as insights from './ai.insights.js'
 import * as schemas from './ai.schemas.js'
 import * as summaries from './ai.summaries.js'
 import { translate } from './ai.translate.js'
+import { usageLeft } from '../../lib/usage.js'
 
 /*
  * AI routes (§5, §3.18). Candidates need the `ai` entitlement of Plus and approved recruiters that of Recruiter Plus (402
@@ -113,4 +114,10 @@ adminRouter.post('/:id/ai-summary/regenerate', ...jobsView, jobParams, async (re
 export const translateRouter = Router()
 translateRouter.post('/', ...reader, validate({ body: schemas.translateBody }), async (req, res) => {
   res.json(await translate(req.user, req.company, req.body))
+})
+
+/* GET /ai/usage (2026-11-17): today's AI uses of a candidate or recruiter, their cap and when it resets. */
+export const usageRouter = Router()
+usageRouter.get('/usage', requireAuth, requireRole('candidate', 'recruiter'), async (req, res) => {
+  res.json(await usageLeft(req.user))
 })

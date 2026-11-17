@@ -7,6 +7,7 @@ import { AiCache, AiUsage } from '../modules/ai/ai.model.js'
 import { AppConfig } from '../modules/payments/payments.model.js'
 import { AppError } from './errors.js'
 import { searchText } from './skills.js'
+import { budgetReached, dailyCap, nextUtcDay, recordUsage, takeBurst, takeSkillNames, utcDay } from './usage.js'
 
 /*
  * The OpenAI service (§2.9). Models follow U4: `fast` (OPENAI_FAST_MODEL) and `main` (OPENAI_MODEL); embeddings use
@@ -37,7 +38,19 @@ export function failNextCall() {
 /** AppConfig('ai') keeps the time of the last success and the last failure for the admin AI status. */
 const noteStatus = (field) => AppConfig.updateOne({ key: 'ai' }, { $set: { [`value.${field}`]: new Date() } }, { upsert: true })
 
-async function call(run) {
+/** The tokens (or, for duration-billed transcription, the seconds) one answer reports. */
+function usageOf(result) {
+  const usage = result?.usage ?? {}
+  if (usage.type === 'duration') return { seconds: usage.seconds ?? 0 }
+  return { inputTokens: usage.input_tokens ?? usage.prompt_tokens ?? 0, outputTokens: usage.output_tokens ?? 0 }
+}
+
+/**
+ * One OpenAI request, counted for the admin's Usage tab (owner 2026-11-17) as `kind` of `model` for `userId`. With
+ * the OpenAI budget used up, nothing is sent: AI_PAUSED until the next month or a higher budget.
+ */
+async function call(run, { kind, model, userId = null }) {
+  if (await budgetReached('openai')) throw new AppError('AI_PAUSED', { params: { resetAt: nextMonth() } })
   try {
     if (failNext) {
       failNext = false
@@ -45,6 +58,7 @@ async function call(run) {
     }
     const result = await run(openai())
     await noteStatus('lastSuccessAt')
+    await recordUsage({ provider: 'openai', model, kind, userId, ...usageOf(result) })
     return result
   } catch (error) {
     console.error(`OpenAI request failed: ${error.status ?? error.name}`)
@@ -53,9 +67,14 @@ async function call(run) {
   }
 }
 
+function nextMonth(now = new Date()) {
+  return new Date(Date.UTC(now.getUTCFullYear(), now.getUTCMonth() + 1, 1)).toISOString()
+}
+
 export async function aiStatus() {
   const status = (await AppConfig.findOne({ key: 'ai' }))?.value ?? {}
   return {
+    paused: await budgetReached('openai'),
     models: { fast: config.openai.fastModel, main: config.openai.model, embedding: config.openai.embeddingModel, transcribe: config.openai.transcribeModel },
     lastSuccessAt: status.lastSuccessAt ?? null,
     lastErrorAt: status.lastErrorAt ?? null,
@@ -68,7 +87,8 @@ export const embeddingModel = () => modelName('embedding')
 
 /** One vector per text, as Float32Array; each input is cut to about 8,000 tokens. */
 export async function embed(texts) {
-  const response = await call((ai) => ai.embeddings.create({ model: embeddingModel(), input: texts.map((text) => text.slice(0, A.embeddingMaxChars)) }))
+  const model = embeddingModel()
+  const response = await call((ai) => ai.embeddings.create({ model, input: texts.map((text) => text.slice(0, A.embeddingMaxChars)) }), { kind: 'embedding', model })
   return response.data.sort((a, b) => a.index - b.index).map((item) => Float32Array.from(item.embedding))
 }
 
@@ -116,9 +136,11 @@ If an input is not a recognisable skill or you are unsure, return it unchanged. 
 /**
  * Sets `standard` on each skill ({ name }): OpenAI's English standard name, so a typo, synonym or other language still
  * matches (lib/skills.js) and embeds well. Cached per name; skills that already have one are skipped. When OpenAI
- * fails the skills stay without `standard` and match on the code form, and the next save asks again. Never blocks a save for long, never counts toward a cap.
+ * fails the skills stay without `standard` and match on the code form, and the next save asks again. Never blocks a
+ * save for long. The names a candidate or recruiter (`user`) sends count toward their daily skill-name cap
+ * (2026-11-17); past it the skills are saved without a standard name.
  */
-export async function addStandardNames(skills) {
+export async function addStandardNames(skills, user = null) {
   const pending = skills.filter((skill) => !skill.standard)
   if (!pending.length) return
   // The main model: every name is asked once and then cached, so accuracy matters more than cost here.
@@ -126,7 +148,8 @@ export async function addStandardNames(skills) {
   const keyOf = (name) => hashOf([model, searchText(name)])
   const hits = new Map((await AiCache.find({ kind: 'skill_name', key: { $in: pending.map((skill) => keyOf(skill.name)) }, language: 'en' })).map((hit) => [hit.key, hit.output.standard]))
   const misses = [...new Set(pending.filter((skill) => !hits.has(keyOf(skill.name))).map((skill) => skill.name))]
-  if (misses.length) {
+  const capped = user && user.role !== 'admin'
+  if (misses.length && (!capped || (await takeSkillNames(user._id, misses.length)))) {
     try {
       const response = await call((ai) =>
         ai.responses.create(
@@ -140,6 +163,7 @@ export async function addStandardNames(skills) {
           // OpenAI's gateway refuses a connection now and then (503); two quick retries ride over it.
           { timeout: A.skillNamesTimeoutMs, maxRetries: 2 },
         ),
+        { kind: 'skill_name', model, userId: user?._id },
       )
       // Only answers for the names asked about count; a name the model skipped keeps its own form.
       const answers = new Map(JSON.parse(response.output_text).items.map((item) => [item.input, item.standard.trim().slice(0, 60)]))
@@ -161,8 +185,8 @@ export async function addStandardNames(skills) {
 export const TRANSCRIBE_FALLBACK_MODEL = 'whisper-1'
 
 /** The text of an audio file: OPENAI_TRANSCRIBE_MODEL first, then whisper-1 when that model fails. */
-export async function transcribe(path) {
-  const run = (model) => call((ai) => ai.audio.transcriptions.create({ model, file: createReadStream(path) }))
+export async function transcribe(path, user = null) {
+  const run = (model) => call((ai) => ai.audio.transcriptions.create({ model, file: createReadStream(path) }), { kind: 'transcription', model, userId: user?._id })
   const primary = client?.models?.transcribe ?? config.openai.transcribeModel
   try {
     return (await run(primary)).text
@@ -175,18 +199,20 @@ export async function transcribe(path) {
 
 export const hashOf = (value) => createHash('sha256').update(typeof value === 'string' ? value : JSON.stringify(value)).digest('hex')
 
-const utcDay = (now = new Date()) => now.toISOString().slice(0, 10)
 const languageName = (language) => new Intl.DisplayNames(['en'], { type: 'language' }).of(language)
 
-/** Reserves one generation of today's cap atomically; at the cap the upsert collides with the existing row. */
-async function reserve(userId) {
+/**
+ * Reserves one generation of today's cap atomically (the user's plan and billing interval, lib/usage.js); at the cap
+ * the upsert collides with the existing row. The burst limit is checked first.
+ */
+async function reserve(user) {
+  await takeBurst(user._id)
+  const limit = await dailyCap(user)
   try {
-    await AiUsage.updateOne({ userId, day: utcDay(), count: { $lt: A.dailyGenerations } }, { $inc: { count: 1 } }, { upsert: true })
+    await AiUsage.updateOne({ userId: user._id, day: utcDay(), count: { $lt: limit } }, { $inc: { count: 1 } }, { upsert: true })
   } catch (error) {
     if (error.code !== 11000) throw error
-    const resetAt = new Date(`${utcDay()}T00:00:00.000Z`)
-    resetAt.setUTCDate(resetAt.getUTCDate() + 1)
-    throw new AppError('AI_DAILY_LIMIT', { params: { resetAt: resetAt.toISOString() } })
+    throw new AppError('AI_DAILY_LIMIT', { params: { resetAt: nextUtcDay().toISOString(), limit } })
   }
 }
 
@@ -205,7 +231,7 @@ export async function generate({ kind, user, language, cacheKey = null, subjectI
     if (hit) return hit.output
   }
   const counted = user.role !== 'admin' && !regenerate
-  if (counted) await reserve(user._id)
+  if (counted) await reserve(user)
   let output
   try {
     const response = await call((ai) =>
@@ -216,6 +242,7 @@ export async function generate({ kind, user, language, cacheKey = null, subjectI
         input: typeof input === 'string' ? input : JSON.stringify(input),
         text: { format: { type: 'json_schema', name: kind, schema, strict: true } },
       }),
+      { kind, model: modelName(model), userId: user._id },
     )
     output = JSON.parse(response.output_text)
   } catch (error) {

@@ -351,7 +351,8 @@
     "admin_verification_submitted": "Verificación por revisar",
     "admin_content_report": "Denuncia de contenido",
     "admin_renewal_failed": "Renovación fallida (administración)",
-    "admin_joined": "Nuevo administrador"
+    "admin_joined": "Nuevo administrador",
+    "admin_ai_budget": "Alerta de presupuesto de IA"
   },
   "emailClass": {
     "critical": "Crítico",
@@ -533,7 +534,8 @@
     "admin_verification_submitted": "Verificación",
     "admin_content_report": "Denuncia de contenido",
     "admin_renewal_failed": "Renovación fallida",
-    "admin_joined": "Accesos"
+    "admin_joined": "Accesos",
+    "admin_ai_budget": "Presupuesto de IA"
   },
   "interviewMode": {
     "video": "Videollamada",

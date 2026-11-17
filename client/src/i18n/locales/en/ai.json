@@ -4,9 +4,12 @@
     "unavailable": "The AI service didn't answer. The evidence shown is unchanged; try again in a moment.",
     "notFound": "This is no longer available.",
     "retry": "Try again",
-    "limit": "You've used today's 50 AI generations. They start again at {{time}}. Texts written earlier still show.",
     "plan": "AI texts are part of Plus.",
-    "upgrade": "See Plus"
+    "upgrade": "See Plus",
+    "limit": "You've used today's {{count}} AI generations. They start again at {{time}}. Texts written earlier still show.",
+    "paused": "AI features are paused for now and start again on {{time}}. Texts written earlier still show.",
+    "busy": "Too many AI requests in a minute. Try again in {{count}} s.",
+    "usesLeft": "{{remaining}} of {{limit}} AI uses left today"
   },
   "badge": "Written by AI",
   "translate": {

@@ -137,5 +137,114 @@
     "job": "{{helpful}} helpful · {{needsReview}} needs review",
     "empty": "No feedback yet.",
     "removedJob": "A deleted job"
+  },
+  "tabs": {
+    "policies": "Matching policies",
+    "usage": "Usage"
+  },
+  "usage": {
+    "description": "What EU Jobs’s AI and location search cost this month, who uses them, and the limits that keep spend under control.",
+    "month": "Month",
+    "estimate": "Costs are estimates: EU Jobs counts every OpenAI and Google Places call and multiplies it by the prices below. The provider’s billing page shows the exact balance, including other apps on the same key.",
+    "providers": {
+      "openai": "OpenAI",
+      "places": "Google Places"
+    },
+    "providerUse": {
+      "openai": "AI texts, matching and transcription",
+      "places": "City search and “Use my location”"
+    },
+    "status": {
+      "paused": "Paused",
+      "near": "{{percent}}% of budget",
+      "ok": "{{percent}}% of budget",
+      "noBudget": "No budget"
+    },
+    "ofBudget": "of {{budget}} budget",
+    "noBudget": "No monthly budget set",
+    "budgetUsed": "Budget used",
+    "openaiCounts": "{{calls}} calls · {{input}} input tokens · {{output}} output tokens",
+    "placesCounts": "{{calls}} calls to Google",
+    "unpriced": "Some models have no price yet, so this cost is partial. Add their prices below.",
+    "billing": {
+      "openai": "Open OpenAI billing",
+      "places": "Open Google Cloud billing"
+    },
+    "columns": {
+      "feature": "Feature",
+      "model": "Provider · model",
+      "calls": "Calls",
+      "tokens": "Tokens in / out",
+      "cost": "Est. cost",
+      "user": "User",
+      "plan": "Plan",
+      "today": "AI uses today"
+    },
+    "kinds": {
+      "embedding": "Matching (embeddings)",
+      "transcription": "Transcription",
+      "places": "Location search",
+      "skill_name": "Skill names"
+    },
+    "seconds": "{{count}} s of audio",
+    "noPrice": "No price",
+    "empty": "Nothing used this month yet.",
+    "breakdown": {
+      "title": "Where the cost comes from",
+      "description": "Every feature that called OpenAI or Google this month, most expensive first."
+    },
+    "users": {
+      "title": "Top users this month",
+      "description": "The 20 users behind the most cost, with today’s AI uses against their plan’s daily limit."
+    },
+    "admin": "Admin (no limit)",
+    "today": "{{used}} of {{limit}}",
+    "interval": {
+      "month": "Monthly",
+      "year": "Yearly"
+    },
+    "modelUse": {
+      "fast": "Fast model",
+      "main": "Main model",
+      "embedding": "Embeddings",
+      "transcribe": "Transcription",
+      "transcribeFallback": "Transcription fallback (billed per minute)",
+      "other": "Other model"
+    },
+    "sku": {
+      "autocomplete": "City suggestions ($ per 1,000)",
+      "details": "Place details ($ per 1,000)",
+      "nearby": "Use my location ($ per 1,000)"
+    },
+    "settings": {
+      "title": "Limits and prices",
+      "description": "Changes apply at once and are recorded in the audit log.",
+      "caps": "Daily AI uses per user",
+      "capsHint": "Each new AI text counts once; texts already written are free. Yearly plans get more.",
+      "capLabel": "{{plan}} · {{interval}}",
+      "limits": "Other limits",
+      "burst": "AI requests per minute",
+      "burstHint": "Per user, stops bursts.",
+      "skillNames": "New skill names per day",
+      "skillNamesHint": "Past this, skills save without the AI standard name.",
+      "budgets": "Monthly budgets (USD)",
+      "budgetsHint": "Leave empty for no budget. Admins who manage AI get an email at 80% and 100%; at 100% the provider pauses until next month or a higher budget (AI features stop, city fields switch to a typed “City, Country”).",
+      "budgetLabel": "{{provider}} budget",
+      "none": "No budget",
+      "openaiPrices": "OpenAI prices (USD)",
+      "openaiPricesHint": "Copy them from the OpenAI pricing page. Token prices are per 1 million tokens.",
+      "placesPrices": "Google Places prices (USD per 1,000 calls)",
+      "placesPricesHint": "Copy them from the Google Maps Platform pricing page.",
+      "price": {
+        "input": "Input / 1M tokens",
+        "output": "Output / 1M tokens",
+        "minute": "Per minute"
+      },
+      "invalid": "Enter a valid number",
+      "checkValues": "Some values are out of range. Check the highlighted fields.",
+      "failed": "The settings could not be saved. Try again.",
+      "saved": "Usage settings saved.",
+      "save": "Save settings"
+    }
   }
 }

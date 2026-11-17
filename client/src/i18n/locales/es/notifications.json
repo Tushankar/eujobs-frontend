@@ -84,6 +84,10 @@
     "admin_content_report_other": "{{count}} denuncias de {{target}}: {{name}} · {{reason}}",
     "admin_renewal_failed": "Falló la renovación de {{plan}} de {{payer}} · {{reference}} · {{amount}}",
     "admin_joined": "{{name}} se unió al espacio de administración",
+    "admin_ai_budget": {
+      "warning": "{{provider}} alcanzó el {{percent}} % de su presupuesto mensual de {{budget}} ({{spent}} hasta ahora)",
+      "paused": "{{provider}} agotó su presupuesto mensual de {{budget}} ({{spent}}) y queda en pausa hasta el próximo mes o un presupuesto mayor"
+    },
     "plan_ended_paused_one": "Tu plan {{plan}} ha terminado. {{job}} sigue publicada; se ha pausado {{count}} oferta más.",
     "plan_ended_paused_many": "Tu plan {{plan}} ha terminado. {{job}} sigue publicada; se han pausado {{count}} ofertas más.",
     "plan_ended_paused_other": "Tu plan {{plan}} ha terminado. {{job}} sigue publicada; se han pausado {{count}} ofertas más."

@@ -133,6 +133,14 @@ export function mailSample(type, language, origin, role = 'candidate') {
       link: `${origin}/admin/payments`,
     },
     admin_joined: { admin: 'Mail Tester', link: `${origin}/admin/access-management` },
+    admin_ai_budget: {
+      provider: 'OpenAI',
+      percent: 80,
+      spent: money('USD', 80),
+      budget: money('USD', 100),
+      note: t(language, 'email.admin_ai_budget.notes.warning'),
+      link: `${origin}/admin/ai-matching/usage`,
+    },
   }
   SAMPLE_PARAMS.alert_weekly = SAMPLE_PARAMS.alert_daily
   Object.assign(SAMPLE_PARAMS, interviewSamples(language, origin, role))

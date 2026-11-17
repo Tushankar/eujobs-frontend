@@ -4,9 +4,12 @@
     "unavailable": "Le service d’IA n’a pas répondu. Les éléments affichés restent inchangés ; réessayez dans un instant.",
     "notFound": "Ce contenu n’est plus disponible.",
     "retry": "Réessayer",
-    "limit": "Vous avez utilisé les 50 générations IA du jour. Elles redeviennent disponibles à partir du {{time}}. Les textes rédigés auparavant restent affichés.",
     "plan": "Les textes IA sont inclus dans Plus.",
-    "upgrade": "Découvrir Plus"
+    "upgrade": "Découvrir Plus",
+    "limit": "Vous avez utilisé les {{count}} générations IA du jour. Elles redeviennent disponibles à partir du {{time}}. Les textes rédigés auparavant restent affichés.",
+    "paused": "Les fonctions IA sont en pause pour le moment et reprennent le {{time}}. Les textes rédigés auparavant restent affichés.",
+    "busy": "Trop de demandes IA en une minute. Réessayez dans {{count}} s.",
+    "usesLeft": "Il vous reste {{remaining}} utilisations IA sur {{limit}} aujourd’hui"
   },
   "badge": "Rédigé par l’IA",
   "translate": {

@@ -134,7 +134,7 @@ describe('AI insights (M-057, M-063 … M-067)', () => {
     assert.deepEqual(roles, [job.id, other.id], 'the recommended job first, then the saved one')
   })
 
-  it('keeps the evidence when OpenAI fails, and shows the limit once 50 generations are used (a cache hit still answers)', async () => {
+  it('keeps the evidence when OpenAI fails, and shows the limit once the plan cap of 40 generations is used (a cache hit still answers)', async () => {
     const { job, candidate } = await market()
     await api().post(`${v1}/_test/ai/fail-next`)
     const failed = await api().get(`${v1}/candidate/insights/narrative?section=job_match&jobId=${job.id}`).set(auth(candidate))
@@ -142,11 +142,12 @@ describe('AI insights (M-057, M-063 … M-067)', () => {
     assert.equal(failed.body.error.code, 'AI_UNAVAILABLE')
     assert.equal((await api().get(`${v1}/candidate/insights/job-match?jobId=${job.id}`).set(auth(candidate))).status, 200)
     assert.equal((await api().get(`${v1}/candidate/insights/narrative?section=job_match&jobId=${job.id}`).set(auth(candidate))).status, 200)
-    await AiUsage.updateOne({ userId: candidate._id }, { count: 50 })
+    await AiUsage.updateOne({ userId: candidate._id }, { count: 40 })
     const limited = await api().get(`${v1}/candidate/insights/narrative?section=why&jobId=${job.id}`).set(auth(candidate))
     assert.equal(limited.status, 429)
     assert.equal(limited.body.error.code, 'AI_DAILY_LIMIT')
     assert.ok(limited.body.error.params.resetAt)
+    assert.equal(limited.body.error.params.limit, 40)
     assert.equal((await api().get(`${v1}/candidate/insights/narrative?section=job_match&jobId=${job.id}`).set(auth(candidate))).status, 200, 'cache hit')
   })
 

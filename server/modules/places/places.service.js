@@ -1,7 +1,9 @@
 import { LIMITS } from '../../config/limits.js'
 import { fieldError } from '../../lib/errors.js'
+import { budgetReached, recordUsage } from '../../lib/usage.js'
 import { Country } from '../meta/meta.model.js'
 import { googlePlaces } from './places.google.js'
+import { manualPlaces } from './places.manual.js'
 
 /*
  * Places proxy (G-1, §2.16): city suggestions and place details in the user's language, in every enabled country
@@ -38,6 +40,22 @@ function ttlCache(ttlMs) {
   }
 }
 
+/**
+ * Whether city fields take a typed "City, Country" (no Google call): the testing mode, or the admin's monthly Places
+ * budget used up (owner 2026-11-17: manual entry until the next month or a higher budget).
+ */
+export async function placesManual() {
+  return client === manualPlaces || (await budgetReached('places'))
+}
+
+/** Runs one lookup on the active client; a Google (or test fake) call is counted for the admin's Usage tab. */
+async function lookup(sku, args, { userId = null, placeId } = {}) {
+  if (placeId?.startsWith('manual-') || (await placesManual())) return manualPlaces[sku](args)
+  const result = await client[sku](args)
+  await recordUsage({ provider: 'places', model: sku, kind: 'places', userId })
+  return result
+}
+
 const suggestionCache = ttlCache(LIMITS.places.cache.autocompleteTtlMs)
 const placeCache = ttlCache(LIMITS.places.cache.detailsTtlMs)
 
@@ -68,11 +86,11 @@ function inDisabledCountry({ structuredFormat }, disabled) {
   return disabled.has(normalize(text.split(',').at(-1)))
 }
 
-export async function autocomplete({ input, language, sessionToken }) {
+export async function autocomplete({ input, language, sessionToken, userId }) {
   const key = `${language}|${input.trim().toLowerCase()}`
   const cached = suggestionCache.get(key)
   if (cached) return cached
-  const suggestions = await client.autocomplete({ input, languageCode: language, sessionToken, locationBias: EUROPE })
+  const suggestions = await lookup('autocomplete', { input, languageCode: language, sessionToken, locationBias: EUROPE }, { userId })
   const disabled = await disabledCountryNames(language)
   const items = suggestions
     .map((suggestion) => suggestion.placePrediction)
@@ -102,16 +120,16 @@ function cityOf(place) {
  * stored or logged.
  */
 export async function cityNear({ latitude, longitude, language }) {
-  const { city, countryCode } = cityOf(await client.nearby({ latitude, longitude, languageCode: language }))
+  const { city, countryCode } = cityOf(await lookup('nearby', { latitude, longitude, languageCode: language }))
   return city && (await allowedCountryCodes()).includes(countryCode) ? { city, countryCode } : { city: null, countryCode: null }
 }
 
 /** One city as { placeId, city, countryCode }; a place outside EU 27 + UK is `not_allowed`. */
-export async function placeDetails({ placeId, language, sessionToken }) {
+export async function placeDetails({ placeId, language, sessionToken, userId }) {
   const key = `${language}|${placeId}`
   const cached = placeCache.get(key)
   if (cached) return cached
-  const { city, countryCode } = cityOf(await client.details({ placeId, languageCode: language, sessionToken }))
+  const { city, countryCode } = cityOf(await lookup('details', { placeId, languageCode: language, sessionToken }, { userId, placeId }))
   if (!city || !(await allowedCountryCodes()).includes(countryCode)) throw fieldError({ placeId: 'not_allowed' })
   const result = { placeId, city, countryCode }
   placeCache.set(key, result)

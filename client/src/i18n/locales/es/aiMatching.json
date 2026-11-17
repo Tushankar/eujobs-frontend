@@ -137,5 +137,114 @@
     "job": "{{helpful}} útiles · {{needsReview}} por revisar",
     "empty": "Aún no hay valoraciones.",
     "removedJob": "Una oferta eliminada"
+  },
+  "tabs": {
+    "policies": "Políticas de coincidencia",
+    "usage": "Uso"
+  },
+  "usage": {
+    "description": "Lo que cuestan este mes la IA y la búsqueda de ubicación de EU Jobs, quién las usa y los límites que mantienen el gasto bajo control.",
+    "month": "Mes",
+    "estimate": "Los costes son estimaciones: EU Jobs cuenta cada llamada a OpenAI y Google Places y la multiplica por los precios de abajo. La página de facturación del proveedor muestra el saldo exacto, incluidas otras aplicaciones con la misma clave.",
+    "providers": {
+      "openai": "OpenAI",
+      "places": "Google Places"
+    },
+    "providerUse": {
+      "openai": "Textos de IA, coincidencias y transcripción",
+      "places": "Búsqueda de ciudades y «Usar mi ubicación»"
+    },
+    "status": {
+      "paused": "En pausa",
+      "near": "{{percent}} % del presupuesto",
+      "ok": "{{percent}} % del presupuesto",
+      "noBudget": "Sin presupuesto"
+    },
+    "ofBudget": "de un presupuesto de {{budget}}",
+    "noBudget": "Sin presupuesto mensual",
+    "budgetUsed": "Presupuesto usado",
+    "openaiCounts": "{{calls}} llamadas · {{input}} tokens de entrada · {{output}} tokens de salida",
+    "placesCounts": "{{calls}} llamadas a Google",
+    "unpriced": "Algunos modelos aún no tienen precio, así que este coste es parcial. Añade sus precios abajo.",
+    "billing": {
+      "openai": "Abrir la facturación de OpenAI",
+      "places": "Abrir la facturación de Google Cloud"
+    },
+    "columns": {
+      "feature": "Función",
+      "model": "Proveedor · modelo",
+      "calls": "Llamadas",
+      "tokens": "Tokens entrada / salida",
+      "cost": "Coste est.",
+      "user": "Usuario",
+      "plan": "Plan",
+      "today": "Usos de IA hoy"
+    },
+    "kinds": {
+      "embedding": "Coincidencias (embeddings)",
+      "transcription": "Transcripción",
+      "places": "Búsqueda de ubicación",
+      "skill_name": "Nombres de habilidades"
+    },
+    "seconds": "{{count}} s de audio",
+    "noPrice": "Sin precio",
+    "empty": "Todavía no hay uso este mes.",
+    "breakdown": {
+      "title": "De dónde viene el coste",
+      "description": "Cada función que llamó a OpenAI o Google este mes, de mayor a menor coste."
+    },
+    "users": {
+      "title": "Usuarios principales del mes",
+      "description": "Los 20 usuarios con más coste, con los usos de IA de hoy frente al límite diario de su plan."
+    },
+    "admin": "Administración (sin límite)",
+    "today": "{{used}} de {{limit}}",
+    "interval": {
+      "month": "Mensual",
+      "year": "Anual"
+    },
+    "modelUse": {
+      "fast": "Modelo rápido",
+      "main": "Modelo principal",
+      "embedding": "Embeddings",
+      "transcribe": "Transcripción",
+      "transcribeFallback": "Transcripción de respaldo (por minuto)",
+      "other": "Otro modelo"
+    },
+    "sku": {
+      "autocomplete": "Sugerencias de ciudad ($ por 1000)",
+      "details": "Detalles del lugar ($ por 1000)",
+      "nearby": "Usar mi ubicación ($ por 1000)"
+    },
+    "settings": {
+      "title": "Límites y precios",
+      "description": "Los cambios se aplican al momento y quedan en el registro de auditoría.",
+      "caps": "Usos de IA diarios por usuario",
+      "capsHint": "Cada texto de IA nuevo cuenta una vez; los textos ya escritos son gratis. Los planes anuales tienen más.",
+      "capLabel": "{{plan}} · {{interval}}",
+      "limits": "Otros límites",
+      "burst": "Solicitudes de IA por minuto",
+      "burstHint": "Por usuario, frena las ráfagas.",
+      "skillNames": "Nombres de habilidades nuevos al día",
+      "skillNamesHint": "Por encima, las habilidades se guardan sin el nombre estándar de la IA.",
+      "budgets": "Presupuestos mensuales (USD)",
+      "budgetsHint": "Déjalo vacío para no tener presupuesto. Los administradores que gestionan la IA reciben un correo al 80 % y al 100 %; al 100 % el proveedor se pausa hasta el próximo mes o un presupuesto mayor (la IA se detiene y los campos de ciudad pasan a «Ciudad, País» escrito a mano).",
+      "budgetLabel": "Presupuesto de {{provider}}",
+      "none": "Sin presupuesto",
+      "openaiPrices": "Precios de OpenAI (USD)",
+      "openaiPricesHint": "Cópialos de la página de precios de OpenAI. Los precios de tokens son por 1 millón de tokens.",
+      "placesPrices": "Precios de Google Places (USD por 1000 llamadas)",
+      "placesPricesHint": "Cópialos de la página de precios de Google Maps Platform.",
+      "price": {
+        "input": "Entrada / 1M tokens",
+        "output": "Salida / 1M tokens",
+        "minute": "Por minuto"
+      },
+      "invalid": "Introduce un número válido",
+      "checkValues": "Algunos valores están fuera de rango. Revisa los campos marcados.",
+      "failed": "No se pudieron guardar los ajustes. Inténtalo de nuevo.",
+      "saved": "Ajustes de uso guardados.",
+      "save": "Guardar ajustes"
+    }
   }
 }

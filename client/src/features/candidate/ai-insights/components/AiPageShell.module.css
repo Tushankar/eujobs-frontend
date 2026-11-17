@@ -58,3 +58,11 @@
 .notice {
   margin-top: 28px;
 }
+
+/* The AI badge over today's "uses left" count (2026-11-17). */
+.actions {
+  display: flex;
+  flex-direction: column;
+  align-items: flex-end;
+  gap: 6px;
+}

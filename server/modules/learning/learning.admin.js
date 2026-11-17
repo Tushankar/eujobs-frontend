@@ -279,7 +279,7 @@ export async function updateDetails(admin, id, body) {
   course.set(fields)
   if (skillTags) {
     const tags = skillEntries(skillTags, 'skillTags')
-    await addStandardNames(tags)
+    await addStandardNames(tags, admin)
     course.skillTags = tags
   }
   if (pipelineCategory !== undefined) course.pipelineCategory = course.audience === 'recruiter' ? (pipelineCategory ?? undefined) : undefined

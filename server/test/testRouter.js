@@ -3,6 +3,7 @@ import mongoose from 'mongoose'
 import { tick } from '../jobs/scheduler.js'
 import { failNextCall } from '../lib/ai.js'
 import { capturedMail } from '../lib/mailer.js'
+import { clearUsageCache } from '../lib/usage.js'
 import { resetRateLimits } from '../middleware/rateLimit.js'
 
 /* /_test routes (§2.13), mounted only when NODE_ENV=test. Dates in /db bodies use EJSON ({ "$date": "…" }). */
@@ -11,6 +12,7 @@ const router = Router()
 
 router.post('/reset', async (req, res) => {
   await resetRateLimits()
+  clearUsageCache()
   capturedMail.length = 0
   res.status(204).end()
 })

@@ -43,6 +43,8 @@ export const EMAIL_TYPES = {
   admin_content_report: 'non_critical',
   admin_renewal_failed: 'non_critical',
   admin_joined: 'non_critical',
+  // 2026-11-17: an OpenAI or Places budget alert (80 %, 100 %) always goes out
+  admin_ai_budget: 'decision',
   // §3.23: invitations and changes are always sent; reminders and "documents received" follow the Interviews switch
   interview_invitation: 'decision',
   interview_rescheduled: 'decision',
@@ -131,6 +133,7 @@ export const NOTIFICATION_TYPES = {
   admin_content_report: { sections: { admin: 'moderation' }, permission: 'moderation.manage', email: 'admin_content_report' },
   admin_renewal_failed: { sections: { admin: 'payments' }, permission: 'finance.view', email: 'admin_renewal_failed' },
   admin_joined: { sections: { admin: 'accessManagement' }, permission: 'roles.view', email: 'admin_joined' },
+  admin_ai_budget: { sections: { admin: 'aiMatching' }, permission: 'ai.manage', email: 'admin_ai_budget' },
 }
 
 /** Admin permission catalogue (§3.13, M-156) in matrix order; groups follow Figma (owner answer P1-Q1). */
