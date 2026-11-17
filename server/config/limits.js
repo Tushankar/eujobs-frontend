@@ -131,6 +131,8 @@ export const LIMITS = {
     lesson_document: { types: ['pdf'], maxBytes: 50 * MB, toDisk: true },
     // M-182
     report_voice: { types: ['mp3', 'm4a', 'wav', 'webm', 'ogg'], maxBytes: 25 * MB, toDisk: true },
+    // 2026-11-17: the candidate's voice profile (up to 3 minutes), transcribed and deleted, never stored
+    voice_profile: { types: ['mp3', 'm4a', 'mp4', 'wav', 'webm', 'ogg'], maxBytes: 10 * MB, toDisk: true },
     // §3.23 (P11d-Q7): the candidate's files in a request card and the recruiter's attachment
     document_request: { types: ['pdf', 'jpg', 'png'], maxBytes: 10 * MB },
     document_attachment: { types: ['pdf', 'jpg', 'png'], maxBytes: 10 * MB },
@@ -187,6 +189,8 @@ export const LIMITS = {
     // notes for a draft are at most `notes` characters.
     shortlist: { candidates: 30, size: 10 },
     notes: { max: 600 },
+    // Phase 3: the voice profile records at most `maxSeconds`; a transcript shorter than `minTranscriptChars` is too short.
+    voice: { maxSeconds: 180, minTranscriptChars: 40, maxTranscriptChars: 6000 },
     embeddingMaxChars: 32_000,
     skillNamesTimeoutMs: 8_000,
     usage: {
@@ -194,6 +198,10 @@ export const LIMITS = {
       // The expensive (main-model, often uncached) features also have their own daily limit per user; each use still
       // counts once toward the cap above.
       featureLimits: { cv_draft: 5, cv_snapshot: 5 },
+      // Weighted credits (owner 2026-11-17): what one text of a kind takes from the daily credits; kinds not listed
+      // take 1. The main-model features cost about 20× a fast one, the voice profile about 7×.
+      creditCosts: { cv_snapshot: 5, cv_draft: 5, interview_notes: 5, voice_profile: 3 },
+      creditCostMax: 50,
       burstPerMinute: 10,
       skillNamesPerDay: 100,
       capRange: { min: 1, max: 10_000 },

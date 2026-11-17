@@ -23,6 +23,7 @@
     "label": "Profile strength",
     "lead": "A little more about you. A lot more possibilities.",
     "completeLead": "Your profile is complete.",
+    "voiceLead": "Prefer talking? Tell us about your work and AI fills your profile.",
     "button": "Improve my profile"
   },
   "verification": {

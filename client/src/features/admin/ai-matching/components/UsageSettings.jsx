@@ -17,11 +17,12 @@ const PRICE_FIELDS = { fast: ['input', 'output'], main: ['input', 'output'], oth
 const text = (value) => (value === null || value === undefined ? '' : String(value))
 const numberOrNull = (value) => (value.trim() === '' ? null : Number(value))
 
-function initialForm({ settings, models, placesSkus }) {
+function initialForm({ settings, models, placesSkus, creditKinds = [] }) {
   const openaiPrice = (model) => settings.prices.openai.find((price) => price.model === model) ?? {}
   return {
     caps: Object.fromEntries(PLANS.map((plan) => [plan, Object.fromEntries(INTERVALS.map((interval) => [interval, text(settings.caps[plan]?.[interval])]))])),
     featureLimits: Object.fromEntries(FEATURES.map((kind) => [kind, text(settings.featureLimits?.[kind])])),
+    creditCosts: Object.fromEntries(creditKinds.map((kind) => [kind, text(settings.creditCosts?.[kind] ?? 1)])),
     burstPerMinute: text(settings.burstPerMinute),
     skillNamesPerDay: text(settings.skillNamesPerDay),
     budgets: { openai: text(settings.budgets.openai), places: text(settings.budgets.places) },
@@ -30,10 +31,11 @@ function initialForm({ settings, models, placesSkus }) {
   }
 }
 
-function toBody(form, { models, placesSkus }) {
+function toBody(form, { models, placesSkus, creditKinds = [] }) {
   return {
     caps: Object.fromEntries(PLANS.map((plan) => [plan, Object.fromEntries(INTERVALS.map((interval) => [interval, Number(form.caps[plan][interval])]))])),
     featureLimits: Object.fromEntries(FEATURES.map((kind) => [kind, Number(form.featureLimits[kind])])),
+    creditCosts: Object.fromEntries(creditKinds.map((kind) => [kind, Number(form.creditCosts[kind])])),
     burstPerMinute: Number(form.burstPerMinute),
     skillNamesPerDay: Number(form.skillNamesPerDay),
     budgets: { openai: numberOrNull(form.budgets.openai), places: numberOrNull(form.budgets.places) },
@@ -107,6 +109,16 @@ export default function UsageSettings({ data, readOnly }) {
               INTERVALS.map((interval) =>
                 input(['caps', plan, interval], { key: `${plan}-${interval}`, label: t('usage.settings.capLabel', { plan: t(`enums:planKey.${plan}`), interval: t(`usage.interval.${interval}`) }), min: 1, step: 1, inputMode: 'numeric', 'data-cap': `${plan}.${interval}` }),
               ),
+            )}
+          </div>
+        </fieldset>
+
+        <fieldset className={styles.group}>
+          <legend className={styles.groupTitle}>{t('usage.settings.costs')}</legend>
+          <p className={styles.groupHint}>{t('usage.settings.costsHint')}</p>
+          <div className={styles.fields}>
+            {(data.creditKinds ?? []).map((kind) =>
+              input(['creditCosts', kind], { key: kind, label: t(`enums:aiKind.${kind}`), min: 1, step: 1, inputMode: 'numeric', 'data-credit-cost-input': kind }),
             )}
           </div>
         </fieldset>

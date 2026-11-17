@@ -22,7 +22,16 @@ const DRAFT_RULES = [
   'Write plainly and warmly, without buzzwords, exclamation marks or placeholders such as [name] or [date].',
 ].join('\n')
 
+// 2026-11-17 (phase 3): drafts a candidate reviews and edits before using them.
+const CANDIDATE_RULES = [
+  'You draft text for a candidate on a European job platform; the candidate reviews and edits it before it is used.',
+  'Use only the candidate facts in the input: never invent experience, employers, job titles, dates, numbers, skills, qualifications or achievements.',
+  'Never mention or infer protected characteristics (age, gender, ethnicity, nationality, religion, disability, health or family status).',
+  'Write plainly and confidently in the first person, without buzzwords, exclamation marks or placeholders such as [company].',
+].join('\n')
+
 const J = LIMITS.job
+const P = LIMITS.profile
 const LANGUAGE_LEVELS = ['a1', 'a2', 'b1', 'b2', 'c1', 'c2', 'native']
 const JOB_LEVELS = ['junior', 'mid', 'senior', 'lead']
 
@@ -32,6 +41,62 @@ const object = (properties) => ({ type: 'object', properties, required: Object.k
 const snapshot = object({ role: text, years: { type: 'integer' }, skills: texts })
 
 export const PROMPTS = {
+  // 2026-11-17 (phase 3): the cover note writer in the apply dialog.
+  coverNote: {
+    kind: 'cover_note',
+    schema: object({ coverNote: text }),
+    instructions: `${CANDIDATE_RULES}
+Write a short cover note for this job application from the candidate's profile and the job: why this role, the two or three most relevant things from their experience and skills (only what the profile says), and one closing line. 80 to 160 words, two or three short paragraphs, no greeting line and no signature. Use the candidate's notes when given.`,
+  },
+  // 2026-11-17: a job alert from one sentence; the server looks the city up in Places.
+  jobAlertDraft: {
+    kind: 'job_alert_draft',
+    schema: object({ name: text, keywords: text, city: text, countryCode: text, frequency: { type: 'string', enum: ['instant', 'daily', 'weekly'] } }),
+    instructions: `Turn the candidate's sentence into a job alert.
+name: a short label of at most ${LIMITS.jobAlert.name.max} characters (for example "Remote React roles").
+keywords: the role, skills or terms to search for, at most ${LIMITS.jobAlert.keywords.max} characters, without the place or the frequency.
+city and countryCode: the city they name and its ISO 3166-1 alpha-2 country code (GB for the United Kingdom); both empty strings when they name no city (remote, a country only, or nothing).
+frequency: instant, daily or weekly as they say; daily when they do not say.`,
+  },
+  // 2026-11-17: the headline and About writer on the profile.
+  profileText: {
+    kind: 'profile_text',
+    schema: object({ headline: text, about: text }),
+    instructions: `${CANDIDATE_RULES}
+From the candidate's work history, skills, education, years of experience and preferences, write:
+headline: their current or target role in at most ${P.headline.max} characters (for example "Senior Product Designer · Design Systems").
+about: what they do, their strongest skills and experience, and what they are looking for, in ${P.about.min * 3} to ${P.about.max} characters, first person, one or two short paragraphs.`,
+  },
+  // 2026-11-17: interview prep for a confirmed interview.
+  interviewPrep: {
+    kind: 'interview_prep',
+    schema: object({ questions: { type: 'array', items: object({ question: text, talkingPoint: text }) }, askThem: texts }),
+    instructions: `${CANDIDATE_RULES}
+Help the candidate prepare for their interview for this job. Give 6 to 8 questions the interviewer is likely to ask about this role (its responsibilities and required skills, and one or two about motivation), each with a talking point of one or two sentences that tells the candidate which part of their own profile to use; when the profile has nothing for a question, say so honestly and suggest how to answer it. Then give 3 good questions the candidate could ask the company about this role. Address the candidate as "you".`,
+  },
+  // 2026-11-17: the voice profile builder, from the transcript of up to 3 minutes of the candidate talking.
+  voiceProfile: {
+    kind: 'voice_profile',
+    schema: object({
+      headline: text,
+      about: text,
+      yearsExperience: { type: 'integer' },
+      skills: texts,
+      workHistory: { type: 'array', items: object({ title: text, employer: text, start: text, end: text, current: { type: 'boolean' } }) },
+      education: { type: 'array', items: object({ degree: text, institution: text }) },
+      languages: { type: 'array', items: object({ code: text, level: { type: 'string', enum: LANGUAGE_LEVELS } }) },
+    }),
+    instructions: `${CANDIDATE_RULES}
+The input is the transcript of a candidate talking about themselves (it may ramble, repeat or correct itself; later corrections win). Fill their profile from it:
+headline: current or target role, at most ${P.headline.max} characters.
+about: first person, ${P.about.min * 3} to ${P.about.max} characters, from what they said.
+yearsExperience: total years of professional experience as a whole number (0 when they do not say).
+skills: up to ${P.skills.max} professional skills they mention, each at most ${P.skills.itemMax} characters.
+workHistory: jobs they name, newest first: title, employer, start and end as YYYY-MM (empty string when they do not say; for a year only use YYYY-01), current true for the job they still do (end empty).
+education: degrees or courses and institutions they name.
+languages: languages they speak, ISO 639-1 code and CEFR level (native for a mother tongue; b2 when they only say they speak it well).
+Leave a list empty when they say nothing about it.`,
+  },
   // 2026-11-17: the job post writer; the client fills only the fields the recruiter left empty.
   jobDraft: {
     kind: 'job_draft',

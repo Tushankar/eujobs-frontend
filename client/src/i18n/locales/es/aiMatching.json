@@ -178,7 +178,7 @@
       "cost": "Coste est.",
       "user": "Usuario",
       "plan": "Plan",
-      "today": "Usos de IA hoy"
+      "today": "Créditos de IA hoy"
     },
     "kinds": {
       "embedding": "Coincidencias (embeddings)",
@@ -195,7 +195,7 @@
     },
     "users": {
       "title": "Usuarios principales del mes",
-      "description": "Los 20 usuarios con más coste, con los usos de IA de hoy frente al límite diario de su plan."
+      "description": "Los 20 usuarios con más coste, con los créditos de IA de hoy frente al límite diario de su plan."
     },
     "admin": "Administración (sin límite)",
     "today": "{{used}} de {{limit}}",
@@ -219,9 +219,9 @@
     "settings": {
       "title": "Límites y precios",
       "description": "Los cambios se aplican al momento y quedan en el registro de auditoría.",
-      "caps": "Usos de IA diarios por usuario",
-      "capsHint": "Cada texto de IA nuevo cuenta una vez; los textos ya escritos son gratis. Los planes anuales tienen más.",
       "capLabel": "{{plan}} · {{interval}}",
+      "costs": "Créditos por texto de IA",
+      "costsHint": "Los textos caros (modelo principal o transcripción) deberían costar más créditos. Los tipos sin cambiar cuestan 1.",
       "limits": "Otros límites",
       "featureLimit": {
         "cv_draft": "Borradores de CV con IA al día",
@@ -249,7 +249,9 @@
       "checkValues": "Algunos valores están fuera de rango. Revisa los campos marcados.",
       "failed": "No se pudieron guardar los ajustes. Inténtalo de nuevo.",
       "saved": "Ajustes de uso guardados.",
-      "save": "Guardar ajustes"
+      "save": "Guardar ajustes",
+      "caps": "Créditos de IA diarios por usuario",
+      "capsHint": "Cada texto de IA nuevo descuenta sus créditos una vez; los textos ya escritos son gratis. Los planes anuales tienen más."
     }
   }
 }

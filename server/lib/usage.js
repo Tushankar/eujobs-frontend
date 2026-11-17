@@ -34,6 +34,7 @@ export function nextUtcDay(now = new Date()) {
 const DEFAULTS = {
   caps: U.caps,
   featureLimits: U.featureLimits,
+  creditCosts: U.creditCosts,
   burstPerMinute: U.burstPerMinute,
   skillNamesPerDay: U.skillNamesPerDay,
   budgets: { openai: null, places: null },
@@ -174,15 +175,20 @@ export async function dailyCap(user) {
   return capFor(user.role, await Subscription.findOne({ userId: user._id }, 'planKey status retrying interval'), caps)
 }
 
+/** The credits one text of `kind` takes (1 unless the admin's settings say more, owner 2026-11-17). */
+export async function creditCost(kind) {
+  return (await usageSettings()).creditCosts?.[kind] ?? 1
+}
+
 /**
- * GET /ai/usage: today's counted uses, the cap and when it resets, plus each feature with its own daily limit (CV
- * drafts, CV to profile) as { kind, used, limit }.
+ * GET /ai/usage: today's credits used, the cap and when it resets, each feature with its own daily limit (CV drafts,
+ * CV to profile) as { kind, used, limit }, and `costs`: the kinds that take more than one credit.
  */
 export async function usageLeft(user) {
-  const [row, limit, { featureLimits }] = await Promise.all([AiUsage.findOne({ userId: user._id, day: utcDay() }), dailyCap(user), usageSettings()])
+  const [row, limit, { featureLimits, creditCosts }] = await Promise.all([AiUsage.findOne({ userId: user._id, day: utcDay() }), dailyCap(user), usageSettings()])
   const used = row?.count ?? 0
   const features = Object.entries(featureLimits ?? {}).map(([kind, featureLimit]) => ({ kind, used: Math.min(row?.features?.get(kind) ?? 0, featureLimit), limit: featureLimit }))
-  return { used: Math.min(used, limit), limit, remaining: Math.max(limit - used, 0), resetAt: nextUtcDay().toISOString(), features }
+  return { used: Math.min(used, limit), limit, remaining: Math.max(limit - used, 0), resetAt: nextUtcDay().toISOString(), features, costs: creditCosts ?? {} }
 }
 
 /** At most `burstPerMinute` uncached AI requests per user in any 60 seconds; RATE_LIMITED with retryAfter otherwise. */

@@ -32,7 +32,7 @@ export default {
       await page.click(`[data-job="${freshJob.id}"] [data-job-summary-button]`)
       await page.waitForSelector('[data-ai-state="limit"]', { visible: true, timeout: 30_000 })
       const message = await page.$eval('[data-ai-state="limit"]', (element) => element.textContent)
-      ctx.check(/40 AI generations/.test(message), `the limit message: ${message}`)
+      ctx.check(/40 AI credits/.test(message), `the limit message: ${message}`)
       await ctx.screenshot(page, '1-limit')
       await page.keyboard.press('Escape')
 

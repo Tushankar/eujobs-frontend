@@ -23,6 +23,7 @@
     "label": "Force du profil",
     "lead": "Un peu plus sur vous. Beaucoup plus de possibilités.",
     "completeLead": "Votre profil est complet.",
+    "voiceLead": "Vous préférez parler ? Racontez votre parcours et l’IA remplit votre profil.",
     "button": "Améliorer mon profil"
   },
   "verification": {

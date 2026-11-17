@@ -296,6 +296,11 @@
     "company_description": "Company description",
     "applicant_shortlist": "AI shortlist",
     "message_draft": "Message draft",
+    "cover_note": "Cover note",
+    "job_alert_draft": "Job alert draft",
+    "profile_text": "Headline and About",
+    "interview_prep": "Interview prep",
+    "voice_profile": "Voice profile",
     "job_summary": "Job summary",
     "match_explanation": "Match explanation",
     "insights": "Insights",
@@ -356,7 +361,8 @@
     "admin_content_report": "Content report",
     "admin_renewal_failed": "Failed renewal (admin)",
     "admin_joined": "Admin joined",
-    "admin_ai_budget": "AI budget alert"
+    "admin_ai_budget": "AI budget alert",
+    "newsletter_confirm": "Newsletter confirmation"
   },
   "emailClass": {
     "critical": "Critical",
@@ -386,7 +392,8 @@
     "report_voice": "Voice note",
     "certificate_pdf": "Certificate PDF",
     "report_csv": "Report CSV",
-    "export_zip": "Data export"
+    "export_zip": "Data export",
+    "blog_cover": "Blog cover"
   },
   "reportType": {
     "marketplace_summary": "Marketplace summary",
@@ -584,5 +591,23 @@
     "text": "Message",
     "interview": "Interview",
     "document_request": "Document request"
+  },
+  "theme": {
+    "light": "Light",
+    "dark": "Dark"
+  },
+  "reviewStatus": {
+    "pending": "Pending",
+    "approved": "Approved",
+    "rejected": "Rejected"
+  },
+  "blogStatus": {
+    "draft": "Draft",
+    "published": "Published"
+  },
+  "subscriberStatus": {
+    "pending": "Pending confirmation",
+    "confirmed": "Confirmed",
+    "unsubscribed": "Unsubscribed"
   }
 }

@@ -1,0 +1,55 @@
+.prep {
+  display: flex;
+  flex-direction: column;
+  gap: 20px;
+}
+
+/* Divided rows: the question in ink, the talking point muted under it. */
+.questions {
+  display: flex;
+  flex-direction: column;
+  margin: 0;
+  padding-left: 20px;
+}
+
+.questions li {
+  padding: 12px 0;
+  border-bottom: 1px solid var(--border);
+}
+
+.questions li:last-child {
+  border-bottom: 0;
+}
+
+.question {
+  margin: 0;
+  font-size: 14px;
+  font-weight: 600;
+  line-height: 20px;
+  color: var(--foreground);
+}
+
+.point {
+  margin: 4px 0 0;
+  font-size: 13px;
+  line-height: 20px;
+  color: var(--text-label);
+}
+
+.heading {
+  margin-bottom: 8px;
+  font-size: 14px;
+  font-weight: 700;
+  color: var(--foreground);
+}
+
+.ask {
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
+  margin: 0;
+  padding-left: 20px;
+  font-size: 13px;
+  line-height: 20px;
+  color: var(--text-label);
+}

@@ -12,6 +12,7 @@ import { usePreferences } from '@/lib/preferences.js'
 import { cx } from '@/utils/cx.js'
 import { joinOpen, useAskOtherTimesMutation, useCancelInterviewMutation, usePickSlotMutation, useRequestRescheduleMutation } from '../api.js'
 import { useWhen } from '../useWhen.js'
+import InterviewPrep from './InterviewPrep.jsx'
 import OfferDialog from './OfferDialog.jsx'
 import { NoShowDialog, NoteDialog, NotesDialog, OutcomeDialog } from './SmallDialogs.jsx'
 import styles from './Cards.module.css'
@@ -167,6 +168,8 @@ export default function InterviewCard({ interview, counterpartName }) {
             </>
           )}
           {interview.mode === 'video' && !open && !started && <p className={styles.hint}>{t('interviews:card.joinOpens')}</p>}
+          {/* 2026-11-17: the candidate's interview prep (Plus). */}
+          {!recruiter && <InterviewPrep interview={interview} />}
           {interview.recording.status === 'processing' && recruiter && (
             <p className={styles.recording}>
               <Icon as={Mic} size={14} /> {t('interviews:card.notesPreparing')}

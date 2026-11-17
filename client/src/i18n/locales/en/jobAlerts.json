@@ -54,6 +54,10 @@
     "cityHint": "Leave empty to match the whole country.",
     "frequency": "How often",
     "save": "Save changes",
-    "submit": "Create alert"
+    "submit": "Create alert",
+    "sentence": "Describe it in a sentence (optional)",
+    "sentencePlaceholder": "e.g. Remote React jobs, or nursing jobs in Lyon, weekly",
+    "sentenceAction": "Fill with AI",
+    "sentenceDone": "AI filled the alert below. Check it, then create it."
   }
 }

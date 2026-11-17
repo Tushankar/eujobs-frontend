@@ -1,7 +1,10 @@
+import { useState } from 'react'
 import { useTranslation } from 'react-i18next'
 import { useGetConfigQuery } from '@/app/api.js'
 import { Button, Modal, SelectField, TextField } from '@/components/ui'
 import CityField from '@/components/common/CityField.jsx'
+import { useDraftJobAlertMutation } from '@/features/ai/api.js'
+import AiFillButton from '@/features/ai/components/AiFillButton.jsx'
 import { check, useErrorText, useFormState } from '@/lib/forms.js'
 import { useFormat, usePreferences } from '@/lib/preferences.js'
 import { useCreateJobAlertMutation, useUpdateJobAlertMutation } from '../api.js'
@@ -17,6 +20,9 @@ function AlertForm({ alert, onClose }) {
   const { data: config } = useGetConfigQuery()
   const [createAlert] = useCreateJobAlertMutation()
   const [updateAlert] = useUpdateJobAlertMutation()
+  const [draftJobAlert] = useDraftJobAlertMutation()
+  // 2026-11-17: "Describe it in a sentence" (Plus) fills the fields below.
+  const [sentence, setSentence] = useState('')
   const limits = config?.limits.jobAlert
   // U35: a new alert takes the header view (Worldwide, Remote or a country); an existing one keeps its own. Remote
   // alerts have no city; a Worldwide alert's city can be anywhere.
@@ -56,6 +62,33 @@ function AlertForm({ alert, onClose }) {
       }
     >
       <form id={FORM_ID} className={styles.form} onSubmit={handleSubmit} noValidate>
+        {!alert && (
+          <div className={styles.sentence} data-job-alert-ai>
+            <TextField
+              label={t('jobAlerts:form.sentence')}
+              placeholder={t('jobAlerts:form.sentencePlaceholder')}
+              name="alertSentence"
+              maxLength={config?.limits.ai?.notes?.max}
+              value={sentence}
+              onChange={(event) => setSentence(event.target.value)}
+            />
+            <AiFillButton
+              label={t('jobAlerts:form.sentenceAction')}
+              disabled={sentence.trim().length < 3}
+              request={() => draftJobAlert({ text: sentence.trim() }).unwrap()}
+              apply={(draft) => {
+                set('name', draft.name)
+                set('keywords', draft.keywords)
+                set('frequency', draft.frequency)
+                if (country !== 'REMOTE' && draft.place) set('place', draft.place)
+              }}
+              snapshot={() => ({ ...values })}
+              restore={(before) => ['name', 'keywords', 'frequency', 'place'].forEach((field) => set(field, before[field]))}
+              done={t('jobAlerts:form.sentenceDone')}
+              data-job-alert-ai-button
+            />
+          </div>
+        )}
         <TextField
           label={t('jobAlerts:form.name')}
           name="alertName"

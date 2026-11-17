@@ -6,6 +6,7 @@ import { useGetConfigQuery } from '@/app/api.js'
 import { Avatar, Button, Checkbox, Icon, IconButton, Panel, Skeleton, SkeletonRegion } from '@/components/ui'
 import ConfirmDialog from '@/components/common/ConfirmDialog.jsx'
 import PageTitle from '@/components/common/PageTitle.jsx'
+import VoiceProfileBuilder from '@/features/ai/components/VoiceProfileBuilder.jsx'
 import PillBadge from '@/components/common/PillBadge.jsx'
 import { checkUpload, useErrorText, useUploadText } from '@/lib/forms.js'
 import { useFormat } from '@/lib/preferences.js'
@@ -225,6 +226,8 @@ function ProfileView({ profile }) {
         description={t('profile:description')}
         actions={
           <div className={styles.actions}>
+            {/* 2026-11-17: build the profile by talking (Plus). */}
+            <VoiceProfileBuilder />
             <Button data-tour="profile-edit" leftIcon={<Icon as={SquarePen} size={20} />} onClick={() => openDialog('core')}>
               {t('profile:edit')}
             </Button>

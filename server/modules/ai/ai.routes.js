@@ -2,7 +2,9 @@ import { Router } from 'express'
 import { validate } from '../../lib/validate.js'
 import { requireApprovedRecruiter, requireAuth, requireRole } from '../../middleware/auth.js'
 import { requireEntitlement } from '../../middleware/entitlements.js'
+import { upload } from '../../middleware/upload.js'
 import { requirePermission } from '../../middleware/permissions.js'
+import * as candidateDrafts from './ai.candidateDrafts.js'
 import * as drafts from './ai.drafts.js'
 import * as insights from './ai.insights.js'
 import * as schemas from './ai.schemas.js'
@@ -138,4 +140,26 @@ recruiterDraftsRouter.post('/jobs/:id/shortlist', jobParams, async (req, res) =>
 })
 recruiterDraftsRouter.post('/message-draft', validate({ body: schemas.messageDraftBody }), async (req, res) => {
   res.json(await messageDraft(req.user, req.company, req.body))
+})
+
+/* 2026-11-17 (phase 3): /candidate/ai drafts for a Plus candidate; each is one AI use (a cached answer is free). */
+export const candidateDraftsRouter = Router()
+candidateDraftsRouter.use(requireAuth, requireRole('candidate'), ai)
+candidateDraftsRouter.post('/cover-note', validate({ body: schemas.coverNoteBody }), async (req, res) => {
+  res.json(await candidateDrafts.coverNote(req.user, req.body))
+})
+candidateDraftsRouter.post('/job-alert', validate({ body: schemas.jobAlertDraftBody }), async (req, res) => {
+  res.json(await candidateDrafts.jobAlertDraft(req.user, req.body))
+})
+candidateDraftsRouter.post('/profile-text', async (req, res) => {
+  res.json(await candidateDrafts.profileText(req.user))
+})
+candidateDraftsRouter.post('/interviews/:id/prep', validate({ params: schemas.jobParams }), async (req, res) => {
+  res.json(await candidateDrafts.interviewPrep(req.user, req.params.id))
+})
+candidateDraftsRouter.post('/voice-profile', upload('voice_profile'), async (req, res) => {
+  res.json(await candidateDrafts.voiceProfile(req.user, req.file))
+})
+candidateDraftsRouter.post('/voice-profile/apply', validate({ body: schemas.voiceProfileBody }), async (req, res) => {
+  res.json(await candidateDrafts.applyVoiceProfile(req.user, req.body))
 })

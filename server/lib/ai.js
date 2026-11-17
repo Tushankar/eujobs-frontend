@@ -7,7 +7,7 @@ import { AiCache, AiUsage } from '../modules/ai/ai.model.js'
 import { AppConfig } from '../modules/payments/payments.model.js'
 import { AppError } from './errors.js'
 import { searchText } from './skills.js'
-import { budgetReached, dailyCap, nextUtcDay, recordUsage, takeBurst, takeSkillNames, usageSettings, utcDay } from './usage.js'
+import { budgetReached, creditCost, dailyCap, nextUtcDay, recordUsage, takeBurst, takeSkillNames, usageSettings, utcDay } from './usage.js'
 
 /*
  * The OpenAI service (§2.9). Models follow U4: `fast` (OPENAI_FAST_MODEL) and `main` (OPENAI_MODEL); embeddings use
@@ -201,32 +201,50 @@ export const hashOf = (value) => createHash('sha256').update(typeof value === 's
 
 const languageName = (language) => new Intl.DisplayNames(['en'], { type: 'language' }).of(language)
 
+/** AI_DAILY_LIMIT when today's credits left are fewer than `cost` (with the limit, what is left and the cost). */
+async function dailyLimitError(user, limit, cost) {
+  const used = (await AiUsage.findOne({ userId: user._id, day: utcDay() }))?.count ?? 0
+  return new AppError('AI_DAILY_LIMIT', { params: { resetAt: nextUtcDay().toISOString(), limit, remaining: Math.max(limit - used, 0), cost } })
+}
+
 /**
- * Reserves one generation of today's cap atomically (the user's plan and billing interval, lib/usage.js), and of the
- * kind's own daily limit when it has one (CV drafts, CV to profile, 2026-11-17); at a limit the upsert collides with
- * the existing row, and the row tells which limit it was. The burst limit is checked first. Returns the kind's
- * limit (null: none), for release().
+ * Before paid work that happens ahead of the text itself (the voice profile's transcription): refuses at once when
+ * today's credits cannot cover `kind`, so nothing is spent on a request that would be refused anyway.
+ */
+export async function assertCredits(user, kind) {
+  if (user.role === 'admin') return
+  const [limit, cost] = await Promise.all([dailyCap(user), creditCost(kind)])
+  const used = (await AiUsage.findOne({ userId: user._id, day: utcDay() }))?.count ?? 0
+  if (used + cost > limit) throw await dailyLimitError(user, limit, cost)
+}
+
+/**
+ * Reserves the kind's credits (weighted, owner 2026-11-17: 1 unless the admin's settings say more) of today's cap
+ * atomically (the user's plan and billing interval, lib/usage.js), and one of the kind's own daily limit when it has
+ * one (CV drafts, CV to profile); at a limit the upsert collides with the existing row, and the row tells which limit
+ * it was. The burst limit is checked first. Returns what release() gives back.
  */
 async function reserve(user, kind) {
   await takeBurst(user._id)
-  const limit = await dailyCap(user)
-  const featureLimit = (await usageSettings()).featureLimits?.[kind] ?? null
+  const [limit, cost, settings] = await Promise.all([dailyCap(user), creditCost(kind), usageSettings()])
+  // A cost above the whole day's credits could otherwise slip through on the day's first (inserted) row.
+  if (cost > limit) throw await dailyLimitError(user, limit, cost)
+  const featureLimit = settings.featureLimits?.[kind] ?? null
   const feature = `features.${kind}`
-  const filter = { userId: user._id, day: utcDay(), count: { $lt: limit }, ...(featureLimit && { [feature]: { $not: { $gte: featureLimit } } }) }
+  const filter = { userId: user._id, day: utcDay(), count: { $not: { $gt: limit - cost } }, ...(featureLimit && { [feature]: { $not: { $gte: featureLimit } } }) }
   try {
-    await AiUsage.updateOne(filter, { $inc: { count: 1, ...(featureLimit && { [feature]: 1 }) } }, { upsert: true })
+    await AiUsage.updateOne(filter, { $inc: { count: cost, ...(featureLimit && { [feature]: 1 }) } }, { upsert: true })
   } catch (error) {
     if (error.code !== 11000) throw error
-    const resetAt = nextUtcDay().toISOString()
     const used = (await AiUsage.findOne({ userId: user._id, day: utcDay() }))?.features?.get(kind) ?? 0
-    if (featureLimit && used >= featureLimit) throw new AppError('AI_FEATURE_LIMIT', { params: { resetAt, limit: featureLimit, feature: kind } })
-    throw new AppError('AI_DAILY_LIMIT', { params: { resetAt, limit } })
+    if (featureLimit && used >= featureLimit) throw new AppError('AI_FEATURE_LIMIT', { params: { resetAt: nextUtcDay().toISOString(), limit: featureLimit, feature: kind } })
+    throw await dailyLimitError(user, limit, cost)
   }
-  return featureLimit
+  return { cost, featureLimit }
 }
 
-const release = (userId, kind, featureLimit) =>
-  AiUsage.updateOne({ userId, day: utcDay() }, { $inc: { count: -1, ...(featureLimit && { [`features.${kind}`]: -1 }) } })
+const release = (userId, kind, { cost, featureLimit }) =>
+  AiUsage.updateOne({ userId, day: utcDay() }, { $inc: { count: -cost, ...(featureLimit && { [`features.${kind}`]: -1 }) } })
 
 /**
  * A structured answer from OpenAI in `language` (S, M-057). `cacheKey` (inputs plus the entity version, hashed) makes
@@ -241,7 +259,7 @@ export async function generate({ kind, user, language, cacheKey = null, subjectI
     if (hit) return hit.output
   }
   const counted = user.role !== 'admin' && !regenerate
-  const featureLimit = counted ? await reserve(user, kind) : null
+  const reserved = counted ? await reserve(user, kind) : null
   let output
   try {
     const response = await call((ai) =>
@@ -256,7 +274,7 @@ export async function generate({ kind, user, language, cacheKey = null, subjectI
     )
     output = JSON.parse(response.output_text)
   } catch (error) {
-    if (counted) await release(user._id, kind, featureLimit)
+    if (counted) await release(user._id, kind, reserved)
     throw error instanceof AppError ? error : new AppError('AI_UNAVAILABLE')
   }
   if (key) await AiCache.updateOne({ kind, key, language }, { output, model: modelName(model), subjectId }, { upsert: true })

@@ -29,6 +29,7 @@
     "cvLive": "Version {{number}} · {{name}} (actif)",
     "coverNote": "Message de motivation (facultatif)",
     "coverNoteHint": "{{count}} sur {{max}} caractères",
+    "coverNoteAi": "Rédiger ma lettre avec l’IA",
     "consent": "J’accepte que {{company}} puisse voir mon profil et le CV que j’envoie pour cette candidature.",
     "cancel": "Annuler",
     "submit": "Envoyer la candidature"

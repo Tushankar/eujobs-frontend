@@ -296,6 +296,11 @@
     "company_description": "Descripción de la empresa",
     "applicant_shortlist": "Preselección con IA",
     "message_draft": "Borrador de mensaje",
+    "cover_note": "Carta de presentación",
+    "job_alert_draft": "Borrador de alerta",
+    "profile_text": "Titular y Acerca de",
+    "interview_prep": "Preparación de entrevista",
+    "voice_profile": "Perfil por voz",
     "job_summary": "Resumen de la oferta",
     "match_explanation": "Explicación de la compatibilidad",
     "insights": "Análisis",
@@ -356,7 +361,8 @@
     "admin_content_report": "Denuncia de contenido",
     "admin_renewal_failed": "Renovación fallida (administración)",
     "admin_joined": "Nuevo administrador",
-    "admin_ai_budget": "Alerta de presupuesto de IA"
+    "admin_ai_budget": "Alerta de presupuesto de IA",
+    "newsletter_confirm": "Confirmación del boletín"
   },
   "emailClass": {
     "critical": "Crítico",
@@ -386,7 +392,8 @@
     "report_voice": "Nota de voz",
     "certificate_pdf": "Certificado en PDF",
     "report_csv": "Informe CSV",
-    "export_zip": "Exportación de datos"
+    "export_zip": "Exportación de datos",
+    "blog_cover": "Portada del blog"
   },
   "reportType": {
     "marketplace_summary": "Resumen de la plataforma",
@@ -584,5 +591,23 @@
     "text": "Mensaje",
     "interview": "Entrevista",
     "document_request": "Solicitud de documentos"
+  },
+  "theme": {
+    "light": "Claro",
+    "dark": "Oscuro"
+  },
+  "reviewStatus": {
+    "pending": "Pendiente",
+    "approved": "Aprobada",
+    "rejected": "Rechazada"
+  },
+  "blogStatus": {
+    "draft": "Borrador",
+    "published": "Publicado"
+  },
+  "subscriberStatus": {
+    "pending": "Pendiente de confirmar",
+    "confirmed": "Confirmado",
+    "unsubscribed": "Dado de baja"
   }
 }

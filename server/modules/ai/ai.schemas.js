@@ -29,6 +29,8 @@ export const usageQuery = z.object({ month: z.string().regex(/^\d{4}-(0[1-9]|1[0
 export const usageSettingsBody = z.object({
   caps: z.object({ plus: caps, recruiter_plus: caps }),
   featureLimits: z.object({ cv_draft: cap, cv_snapshot: cap }),
+  // Weighted credits: what one text of a kind takes (kinds left out take 1).
+  creditCosts: z.partialRecord(z.enum(ENUMS.aiKind), z.number().int().min(1).max(U.creditCostMax)),
   burstPerMinute: z.number().int().min(U.burstRange.min).max(U.burstRange.max),
   skillNamesPerDay: cap,
   budgets: z.object({ openai: budget, places: budget }),
@@ -62,3 +64,21 @@ export const messageDraftBody = z.discriminatedUnion('purpose', [
   z.object({ purpose: z.literal('status_update'), applicationId: objectId, rejected: z.boolean().default(false), notes }),
   z.object({ purpose: z.literal('reply'), conversationId: objectId, notes }),
 ])
+
+/* 2026-11-17 (phase 3): candidate drafts. */
+export const coverNoteBody = z.object({ jobId: objectId, notes })
+export const jobAlertDraftBody = z.object({ text: z.string().trim().min(3).max(LIMITS.ai.notes.max) })
+// The reviewed voice proposal; the server cuts it to the profile limits again before applying.
+const voiceText = (max) => z.string().trim().max(max)
+export const voiceProfileBody = z.object({
+  headline: voiceText(LIMITS.profile.headline.max).default(''),
+  about: voiceText(LIMITS.profile.about.max).default(''),
+  yearsExperience: z.number().int().min(0).max(LIMITS.profile.yearsExperience.max).default(0),
+  skills: z.array(voiceText(LIMITS.profile.skills.itemMax)).max(LIMITS.profile.skills.max).default([]),
+  workHistory: z
+    .array(z.object({ title: voiceText(100), employer: voiceText(100), start: z.string().nullable().default(null), end: z.string().nullable().default(null), current: z.boolean().default(false) }))
+    .max(LIMITS.profile.workHistory.max)
+    .default([]),
+  education: z.array(z.object({ degree: voiceText(100), institution: voiceText(100) })).max(LIMITS.profile.education.max).default([]),
+  languages: z.array(z.object({ code: z.string().trim().max(3), level: z.enum(ENUMS.languageLevel) })).max(LIMITS.profile.languages.max).default([]),
+})

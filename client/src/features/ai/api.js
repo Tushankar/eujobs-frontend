@@ -33,6 +33,13 @@ export const aiApi = api.injectEndpoints({
     draftCompanyDescription: build.mutation({ query: (body) => ({ url: '/recruiter/ai/company-description', method: 'POST', body }), invalidatesTags: ['AiUsage'] }),
     shortlistApplicants: build.mutation({ query: (jobId) => ({ url: `/recruiter/ai/jobs/${jobId}/shortlist`, method: 'POST' }), invalidatesTags: ['AiUsage'] }),
     draftMessage: build.mutation({ query: (body) => ({ url: '/recruiter/ai/message-draft', method: 'POST', body }), invalidatesTags: ['AiUsage'] }),
+    // 2026-11-17 (phase 3): candidate drafts; each counts as one AI use (a cached answer is free).
+    writeCoverNote: build.mutation({ query: (body) => ({ url: '/candidate/ai/cover-note', method: 'POST', body }), invalidatesTags: ['AiUsage'] }),
+    draftJobAlert: build.mutation({ query: (body) => ({ url: '/candidate/ai/job-alert', method: 'POST', body }), invalidatesTags: ['AiUsage'] }),
+    writeProfileText: build.mutation({ query: () => ({ url: '/candidate/ai/profile-text', method: 'POST' }), invalidatesTags: ['AiUsage'] }),
+    prepareInterview: build.mutation({ query: (id) => ({ url: `/candidate/ai/interviews/${id}/prep`, method: 'POST' }), invalidatesTags: ['AiUsage'] }),
+    proposeVoiceProfile: build.mutation({ query: (body) => ({ url: '/candidate/ai/voice-profile', method: 'POST', body }), invalidatesTags: ['AiUsage'] }),
+    applyVoiceProfile: build.mutation({ query: (body) => ({ url: '/candidate/ai/voice-profile/apply', method: 'POST', body }), invalidatesTags: ['Profile', 'Me', 'Insights', 'Jobs'] }),
   }),
 })
 
@@ -55,4 +62,10 @@ export const {
   useDraftCompanyDescriptionMutation,
   useShortlistApplicantsMutation,
   useDraftMessageMutation,
+  useWriteCoverNoteMutation,
+  useDraftJobAlertMutation,
+  useWriteProfileTextMutation,
+  usePrepareInterviewMutation,
+  useProposeVoiceProfileMutation,
+  useApplyVoiceProfileMutation,
 } = aiApi

@@ -29,6 +29,7 @@
     "cvLive": "Versión {{number}} · {{name}} (activo)",
     "coverNote": "Nota de presentación (opcional)",
     "coverNoteHint": "{{count}} de {{max}} caracteres",
+    "coverNoteAi": "Redactar mi carta con IA",
     "consent": "Acepto que {{company}} vea mi perfil y el CV que envío con esta candidatura.",
     "cancel": "Cancelar",
     "submit": "Enviar candidatura"

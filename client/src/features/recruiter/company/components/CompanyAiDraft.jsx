@@ -49,7 +49,7 @@ export default function CompanyAiDraft({ values, onChange }) {
           className={styles.notes}
           label={t('aiDraft.notes')}
           placeholder={t('aiDraft.notesPlaceholder')}
-          maxLength={config?.limits.ai.notes.max}
+          maxLength={config?.limits.ai?.notes?.max}
           value={notes}
           onChange={(event) => setNotes(event.target.value)}
         />

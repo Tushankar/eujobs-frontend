@@ -6,6 +6,8 @@ import { ChevronRight, Lock } from 'lucide-react'
 import { useGetConfigQuery, useGetMeQuery } from '@/app/api.js'
 import { openUpgrade } from '@/app/upgrade.js'
 import { Button, Checkbox, Icon, Modal, SelectField, TextareaField } from '@/components/ui'
+import { useWriteCoverNoteMutation } from '@/features/ai/api.js'
+import AiFillButton from '@/features/ai/components/AiFillButton.jsx'
 import { lacksEntitlement } from '@/features/candidate/billing/usePlan.js'
 import { useGetCvVersionsQuery } from '@/features/candidate/cv/api.js'
 import { completenessIcon } from '@/features/candidate/profile/utils/completenessIcons.js'
@@ -131,6 +133,7 @@ function ApplyDialog({ job, onClose, onApplied }) {
   const [apply, { isLoading }] = useApplyMutation()
   const { values, set, errors, failure, run } = useFormState({ cvVersionId: '', coverNote: '', consent: false })
   const max = config?.limits.application.coverNote.max
+  const [writeCoverNote] = useWriteCoverNoteMutation()
   const company = job.company.displayName
   const cvVersionId = values.cvVersionId || cv?.liveVersionId || ''
 
@@ -182,6 +185,15 @@ function ApplyDialog({ job, onClose, onApplied }) {
           error={errorText.field('coverNote', errors.coverNote)}
           data-autofocus
           onChange={(event) => set('coverNote', event.target.value)}
+        />
+        {/* 2026-11-17: the cover note writer (Plus), from the profile and this job; Undo brings their own text back. */}
+        <AiFillButton
+          request={() => writeCoverNote({ jobId: job.id }).unwrap().then((answer) => answer.coverNote)}
+          apply={(text) => set('coverNote', text)}
+          snapshot={() => values.coverNote}
+          restore={(text) => set('coverNote', text)}
+          label={t('applications:dialog.coverNoteAi')}
+          data-cover-note-ai
         />
         <div>
           <Checkbox name="consent" checked={values.consent} onChange={(event) => set('consent', event.target.checked)} aria-invalid={errors.consent ? true : undefined}>

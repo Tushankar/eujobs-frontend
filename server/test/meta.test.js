@@ -112,7 +112,7 @@ describe('GET /plans (M-116, OD1)', () => {
     assert.equal(anonymous[0].features.length, 4)
     assert.deepEqual(anonymous[1].entitlements, ['apply', 'message_send', 'job_alerts', 'ai'])
     // 2026-11-17: the daily AI uses from the Usage settings, yearly billing getting more; Free has none.
-    assert.equal(anonymous[1].features.at(-1), '40 AI uses a day (60 with yearly billing)')
+    assert.equal(anonymous[1].features.at(-1), '40 AI credits a day (60 with yearly billing)')
     assert.deepEqual(anonymous[1].aiDailyUses, { month: 40, year: 60 })
     assert.equal(anonymous[0].aiDailyUses, null)
 

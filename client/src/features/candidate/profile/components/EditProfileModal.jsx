@@ -5,6 +5,8 @@ import { useGetConfigQuery, useGetCountriesQuery } from '@/app/api.js'
 import { Button, Icon, IconButton, SelectField, TextareaField, TextField } from '@/components/ui'
 import { Field } from '@/components/ui/TextField.jsx'
 import CityField from '@/components/common/CityField.jsx'
+import { useWriteProfileTextMutation } from '@/features/ai/api.js'
+import AiFillButton from '@/features/ai/components/AiFillButton.jsx'
 import { check, useErrorText, useFormState } from '@/lib/forms.js'
 import { useUpdateProfileMutation } from '../api.js'
 import FormDialog from './FormDialog.jsx'
@@ -31,6 +33,7 @@ export default function EditProfileModal({ open, profile, onSaved, onClose }) {
   const { data: config } = useGetConfigQuery()
   const { data: countries = [] } = useGetCountriesQuery()
   const [updateProfile, { isLoading }] = useUpdateProfileMutation()
+  const [writeProfileText] = useWriteProfileTextMutation()
   const { values, set, errors, setErrors, failure, run } = useFormState(() => toForm(profile))
   const [skillDraft, setSkillDraft] = useState('')
   const limits = config?.limits
@@ -117,6 +120,22 @@ export default function EditProfileModal({ open, profile, onSaved, onClose }) {
         onChange={(event) => set('about', event.target.value)}
         error={fieldError('about')}
         hint={t('profile:form.core.count', { count: values.about.trim().length, max: limits.profile.about.max })}
+      />
+      {/* 2026-11-17: the headline and About writer (Plus), from the saved profile; Undo brings their own text back. */}
+      <AiFillButton
+        label={t('profile:form.core.aiWrite')}
+        done={t('profile:form.core.aiDone')}
+        request={() => writeProfileText().unwrap()}
+        apply={({ headline, about }) => {
+          set('headline', headline)
+          set('about', about)
+        }}
+        snapshot={() => ({ headline: values.headline, about: values.about })}
+        restore={({ headline, about }) => {
+          set('headline', headline)
+          set('about', about)
+        }}
+        data-profile-text-ai
       />
       <div className={dialogStyles.row}>
         <TextField

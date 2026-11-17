@@ -6,14 +6,15 @@
     "retry": "Réessayer",
     "plan": "Les textes IA sont inclus dans Plus.",
     "upgrade": "Découvrir Plus",
-    "limit": "Vous avez utilisé les {{count}} générations IA du jour. Elles redeviennent disponibles à partir du {{time}}. Les textes rédigés auparavant restent affichés.",
     "featureLimit": {
       "cv_draft": "Vous avez créé les {{count}} brouillons de CV IA du jour. Vous pourrez en créer d’autres à partir du {{time}}.",
       "cv_snapshot": "Vous avez déjà rempli votre profil depuis un CV {{count}} fois aujourd’hui. Vous pourrez recommencer à partir du {{time}}."
     },
     "paused": "Les fonctions IA sont en pause pour le moment et reprennent le {{time}}. Les textes rédigés auparavant restent affichés.",
     "busy": "Trop de demandes IA en une minute. Réessayez dans {{count}} s.",
-    "usesLeft": "Il vous reste {{remaining}} utilisations IA sur {{limit}} aujourd’hui"
+    "limit": "Vous avez utilisé les {{count}} crédits IA du jour. Ils redeviennent disponibles à partir du {{time}}. Les textes rédigés auparavant restent affichés.",
+    "limitCost": "Il faut {{cost}} crédits IA et il vous en reste {{remaining}} aujourd’hui. Ils redeviennent disponibles à partir du {{time}}.",
+    "usesLeft": "Il vous reste {{remaining}} crédits IA sur {{limit}} aujourd’hui"
   },
   "badge": "Rédigé par l’IA",
   "translate": {
@@ -66,17 +67,59 @@
   },
   "usage": {
     "title": "Vos limites d’utilisation de l’IA",
-    "daily": "Utilisations IA du jour",
     "features": {
       "cv_draft": "Brouillons de CV IA",
       "cv_snapshot": "CV vers profil"
     },
     "resets": "Réinitialisation le {{time}}",
     "percent": "{{percent}} % utilisé",
-    "note": "Rouvrir un texte déjà rédigé ne consomme rien."
+    "note": "Rouvrir un texte déjà rédigé ne consomme rien.",
+    "daily": "Crédits IA du jour"
   },
   "draft": {
     "action": "Rédiger avec l’IA",
     "again": "Rédiger à nouveau"
+  },
+  "fill": {
+    "action": "Rédiger avec l’IA",
+    "done": "L’IA l’a rédigé à partir de votre profil. Modifiez-le avant d’enregistrer.",
+    "undo": "Annuler"
+  },
+  "voice": {
+    "action": "Créer mon profil à la voix",
+    "title": "Créez votre profil à la voix",
+    "description": "Parlez jusqu’à {{minutes}} minutes de votre parcours. L’IA en fait votre profil, et vous vérifiez tout avant l’ajout.",
+    "prompts": {
+      "role": "Votre poste actuel ou visé, et vos années d’expérience",
+      "jobs": "Vos emplois : intitulé, employeur et dates approximatives",
+      "skills": "Les compétences et outils que vous utilisez le plus",
+      "education": "Vos diplômes ou formations",
+      "languages": "Les langues que vous parlez et votre niveau",
+      "wants": "Ce que vous recherchez maintenant"
+    },
+    "start": "Commencer l’enregistrement",
+    "stop": "Arrêter",
+    "listening": "Écoute en cours…",
+    "micBlocked": "Impossible d’utiliser votre micro. Autorisez l’accès au micro dans le navigateur et réessayez.",
+    "tooShort": "Nous avons entendu trop peu de choses. Enregistrez à nouveau en parlant un peu plus de votre parcours.",
+    "privacy": "Votre enregistrement est converti en texte puis supprimé aussitôt ; il n’est jamais conservé.",
+    "heard": "Ce que nous avons entendu",
+    "review": {
+      "headline": "Titre",
+      "about": "À propos",
+      "years": "Années d’expérience",
+      "skills": "Compétences à ajouter",
+      "workHistory": "Emplois à ajouter",
+      "education": "Formations à ajouter",
+      "languages": "Langues à ajouter",
+      "remove": "Retirer {{item}}"
+    },
+    "again": "Enregistrer à nouveau",
+    "apply": "Ajouter à mon profil",
+    "added": "Ajouté à votre profil : {{skills}} compétences, {{workHistory}} emplois et {{education}} formations. Votre titre, votre À propos et vos années ont été mis à jour.",
+    "done": "Terminé"
+  },
+  "credits": {
+    "cost": "Utilise {{count}} crédits IA"
   }
 }

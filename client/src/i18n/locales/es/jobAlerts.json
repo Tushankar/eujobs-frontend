@@ -54,6 +54,10 @@
     "cityHint": "Déjala vacía para todo el país.",
     "frequency": "Frecuencia",
     "save": "Guardar cambios",
-    "submit": "Crear alerta"
+    "submit": "Crear alerta",
+    "sentence": "Descríbela en una frase (opcional)",
+    "sentencePlaceholder": "p. ej. Empleos de React en remoto, o enfermería en Lyon, cada semana",
+    "sentenceAction": "Rellenar con IA",
+    "sentenceDone": "La IA ha rellenado la alerta. Revísala y créala."
   }
 }

@@ -737,7 +737,7 @@
       "month": "mensuelle",
       "year": "annuelle"
     },
-    "aiUses": "{{month}} utilisations IA par jour ({{year}} avec la facturation annuelle)"
+    "aiUses": "{{month}} crédits IA par jour ({{year}} avec la facturation annuelle)"
   },
   "certificate": {
     "title": "Certificat de réussite",

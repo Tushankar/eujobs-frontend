@@ -23,6 +23,7 @@
     "label": "Fuerza del perfil",
     "lead": "Un poco más sobre ti. Muchas más posibilidades.",
     "completeLead": "Tu perfil está completo.",
+    "voiceLead": "¿Prefieres hablar? Cuéntanos tu trabajo y la IA rellena tu perfil.",
     "button": "Mejorar mi perfil"
   },
   "verification": {

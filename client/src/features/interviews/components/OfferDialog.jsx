@@ -5,6 +5,7 @@ import { useGetConfigQuery } from '@/app/api.js'
 import { Button, Checkbox, Icon, IconButton, Modal, SelectField, TextField } from '@/components/ui'
 import { useGetCompanyQuery } from '@/features/recruiter/company/api.js'
 import { useErrorText, useFormState } from '@/lib/forms.js'
+import CreditCost from '@/features/ai/components/CreditCost.jsx'
 import { toInstant, useOfferInterviewMutation, useRescheduleInterviewMutation } from '../api.js'
 import styles from './Dialogs.module.css'
 
@@ -157,6 +158,7 @@ export default function OfferDialog({ applications = [], applicationId, intervie
             <span className={styles.checkText}>
               <strong>{t('interviews:offer.aiNotes')}</strong>
               <span>{t('interviews:offer.aiNotesHint')}</span>
+              <CreditCost kind="interview_notes" />
             </span>
           </Checkbox>
         )}

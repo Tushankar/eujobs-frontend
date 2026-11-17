@@ -330,3 +330,11 @@ a.row:hover {
     padding-left: 16px;
   }
 }
+
+/* 2026-11-17: the voice profile builder in the profile strength card. */
+.voice {
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+  margin-top: 16px;
+}

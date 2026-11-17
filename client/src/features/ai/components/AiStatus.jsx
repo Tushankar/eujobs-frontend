@@ -34,7 +34,10 @@ export default function AiStatus({ isLoading, error, onRetry, children }) {
   if (code === 'AI_DAILY_LIMIT') {
     return (
       <p className={styles.limit} role="alert" data-ai-state="limit">
-        {t('status.limit', { count: params.limit, time: params.resetAt ? format.dateTime(params.resetAt) : '' })}
+        {/* Weighted credits (2026-11-17): an expensive text can need more than what is left today. */}
+        {params.remaining > 0 && params.cost > params.remaining
+          ? t('status.limitCost', { cost: params.cost, remaining: params.remaining, time: params.resetAt ? format.dateTime(params.resetAt) : '' })
+          : t('status.limit', { count: params.limit, time: params.resetAt ? format.dateTime(params.resetAt) : '' })}
       </p>
     )
   }

@@ -1,0 +1,113 @@
+.record {
+  display: flex;
+  flex-direction: column;
+  gap: 16px;
+}
+
+.prompts {
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
+  margin: 0;
+  padding-left: 20px;
+  font-size: 13px;
+  line-height: 20px;
+  color: var(--text-label);
+}
+
+.controls {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: 12px;
+}
+
+.clock {
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+  font-size: 14px;
+  font-variant-numeric: tabular-nums;
+  color: var(--foreground);
+}
+
+.dot {
+  width: 8px;
+  height: 8px;
+  border-radius: var(--radius-full);
+  background: var(--destructive);
+}
+
+.privacy,
+.transcript p {
+  margin: 0;
+  font-size: 12px;
+  line-height: 18px;
+  color: var(--muted-foreground);
+}
+
+.transcript {
+  margin-bottom: 16px;
+  padding: 10px 12px;
+  border: 1px solid var(--border);
+  border-radius: var(--radius-md);
+}
+
+.transcript summary {
+  cursor: pointer;
+  font-size: 13px;
+  font-weight: 600;
+  color: var(--foreground);
+}
+
+.transcript p {
+  margin-top: 8px;
+}
+
+.review {
+  display: flex;
+  flex-direction: column;
+  gap: 16px;
+}
+
+.groupTitle {
+  margin-bottom: 6px;
+  font-size: 13px;
+  font-weight: 700;
+  color: var(--foreground);
+}
+
+/* Divided rows with a remove button, not tinted chips (owner's style). */
+.items {
+  margin: 0;
+  padding: 0;
+  list-style: none;
+  border: 1px solid var(--border);
+  border-radius: var(--radius-md);
+}
+
+.item {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 8px;
+  padding: 4px 4px 4px 12px;
+  font-size: 13px;
+  color: var(--foreground);
+}
+
+.item + .item {
+  border-top: 1px solid var(--border);
+}
+
+.done {
+  margin: 0;
+  font-size: 14px;
+  color: var(--foreground);
+}
+
+.error {
+  margin: 0;
+  font-size: 13px;
+  color: var(--destructive);
+}

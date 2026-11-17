@@ -6,14 +6,15 @@
     "retry": "Reintentar",
     "plan": "Los textos con IA forman parte de Plus.",
     "upgrade": "Ver Plus",
-    "limit": "Has usado las {{count}} generaciones con IA de hoy. Vuelven a estar disponibles a partir del {{time}}. Los textos redactados antes siguen visibles.",
     "featureLimit": {
       "cv_draft": "Ya has creado los {{count}} borradores de CV con IA de hoy. Podrás crear más a partir del {{time}}.",
       "cv_snapshot": "Hoy ya has rellenado tu perfil desde un CV {{count}} veces. Podrás hacerlo de nuevo a partir del {{time}}."
     },
     "paused": "Las funciones de IA están en pausa por ahora y vuelven el {{time}}. Los textos redactados antes siguen visibles.",
     "busy": "Demasiadas solicitudes de IA en un minuto. Inténtalo de nuevo en {{count}} s.",
-    "usesLeft": "Te quedan {{remaining}} de {{limit}} usos de IA hoy"
+    "limit": "Has usado los {{count}} créditos de IA de hoy. Vuelven a estar disponibles a partir del {{time}}. Los textos redactados antes siguen visibles.",
+    "limitCost": "Esto necesita {{cost}} créditos de IA y hoy te quedan {{remaining}}. Vuelven a estar disponibles a partir del {{time}}.",
+    "usesLeft": "Te quedan {{remaining}} de {{limit}} créditos de IA hoy"
   },
   "badge": "Redactado por IA",
   "translate": {
@@ -66,17 +67,59 @@
   },
   "usage": {
     "title": "Tus límites de uso de IA",
-    "daily": "Usos de IA de hoy",
     "features": {
       "cv_draft": "Borradores de CV con IA",
       "cv_snapshot": "CV a perfil"
     },
     "resets": "Se restablece el {{time}}",
     "percent": "{{percent}} % usado",
-    "note": "Abrir un texto ya redactado no gasta nada."
+    "note": "Abrir un texto ya redactado no gasta nada.",
+    "daily": "Créditos de IA de hoy"
   },
   "draft": {
     "action": "Redactar con IA",
     "again": "Redactar de nuevo"
+  },
+  "fill": {
+    "action": "Redactar con IA",
+    "done": "La IA lo ha redactado a partir de tu perfil. Edítalo antes de guardar.",
+    "undo": "Deshacer"
+  },
+  "voice": {
+    "action": "Crear mi perfil por voz",
+    "title": "Crea tu perfil por voz",
+    "description": "Habla hasta {{minutes}} minutos sobre tu trabajo. La IA lo convierte en tu perfil y revisas todo antes de añadirlo.",
+    "prompts": {
+      "role": "Tu puesto actual o deseado y cuántos años has trabajado",
+      "jobs": "Tus empleos: puesto, empresa y fechas aproximadas",
+      "skills": "Las habilidades y herramientas que más usas",
+      "education": "Tus títulos, diplomas o cursos",
+      "languages": "Los idiomas que hablas y tu nivel",
+      "wants": "Qué buscas ahora"
+    },
+    "start": "Empezar a grabar",
+    "stop": "Detener",
+    "listening": "Escuchando…",
+    "micBlocked": "No hemos podido usar tu micrófono. Permite el acceso al micrófono en el navegador e inténtalo de nuevo.",
+    "tooShort": "Hemos oído muy poco. Graba de nuevo y habla un poco más sobre tu trabajo.",
+    "privacy": "Tu grabación se convierte en texto y se elimina al momento; nunca se guarda.",
+    "heard": "Lo que hemos oído",
+    "review": {
+      "headline": "Titular",
+      "about": "Acerca de",
+      "years": "Años de experiencia",
+      "skills": "Habilidades que se añadirán",
+      "workHistory": "Empleos que se añadirán",
+      "education": "Formación que se añadirá",
+      "languages": "Idiomas que se añadirán",
+      "remove": "Quitar {{item}}"
+    },
+    "again": "Grabar de nuevo",
+    "apply": "Añadir a mi perfil",
+    "added": "Añadido a tu perfil: {{skills}} habilidades, {{workHistory}} empleos y {{education}} entradas de formación. Se han actualizado tu titular, Acerca de y años.",
+    "done": "Listo"
+  },
+  "credits": {
+    "cost": "Usa {{count}} créditos de IA"
   }
 }

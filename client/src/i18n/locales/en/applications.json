@@ -29,6 +29,7 @@
     "cvLive": "Version {{number}} · {{name}} (live)",
     "coverNote": "Cover note (optional)",
     "coverNoteHint": "{{count}} of {{max}} characters",
+    "coverNoteAi": "Write my cover note with AI",
     "consent": "I agree that {{company}} can see my profile and the CV I send for this application.",
     "cancel": "Cancel",
     "submit": "Send application"

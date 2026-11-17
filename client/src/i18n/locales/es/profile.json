@@ -103,6 +103,8 @@
       "headline": "Puesto actual o titular",
       "city": "Dónde vives",
       "about": "Un poco sobre mí",
+      "aiWrite": "Redactar titular y Acerca de con IA",
+      "aiDone": "La IA ha redactado tu titular y Acerca de a partir de tu perfil guardado. Edítalos y guarda.",
       "count": "{{count}} / {{max}} caracteres",
       "years": "Años de experiencia",
       "skills": "Puntos fuertes",

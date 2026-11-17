@@ -178,7 +178,7 @@
       "cost": "Est. cost",
       "user": "User",
       "plan": "Plan",
-      "today": "AI uses today"
+      "today": "AI credits today"
     },
     "kinds": {
       "embedding": "Matching (embeddings)",
@@ -195,7 +195,7 @@
     },
     "users": {
       "title": "Top users this month",
-      "description": "The 20 users behind the most cost, with today’s AI uses against their plan’s daily limit."
+      "description": "The 20 users behind the most cost, with today’s AI credits against their plan’s daily limit."
     },
     "admin": "Admin (no limit)",
     "today": "{{used}} of {{limit}}",
@@ -219,9 +219,9 @@
     "settings": {
       "title": "Limits and prices",
       "description": "Changes apply at once and are recorded in the audit log.",
-      "caps": "Daily AI uses per user",
-      "capsHint": "Each new AI text counts once; texts already written are free. Yearly plans get more.",
       "capLabel": "{{plan}} · {{interval}}",
+      "costs": "Credits per AI text",
+      "costsHint": "The expensive texts (main model or transcription) should take more credits. Every kind not changed takes 1.",
       "limits": "Other limits",
       "featureLimit": {
         "cv_draft": "AI CV drafts per day",
@@ -249,7 +249,9 @@
       "checkValues": "Some values are out of range. Check the highlighted fields.",
       "failed": "The settings could not be saved. Try again.",
       "saved": "Usage settings saved.",
-      "save": "Save settings"
+      "save": "Save settings",
+      "caps": "Daily AI credits per user",
+      "capsHint": "Each new AI text takes its credits once; texts already written are free. Yearly plans get more."
     }
   }
 }

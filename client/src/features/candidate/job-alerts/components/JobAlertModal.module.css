@@ -21,3 +21,12 @@
     grid-template-columns: 1fr;
   }
 }
+
+/* 2026-11-17: "Describe it in a sentence" above the fields, set off by a hairline. */
+.sentence {
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+  padding-bottom: 16px;
+  border-bottom: 1px solid var(--border);
+}

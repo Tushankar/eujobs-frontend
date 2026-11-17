@@ -178,7 +178,7 @@
       "cost": "Coût est.",
       "user": "Utilisateur",
       "plan": "Formule",
-      "today": "Utilisations IA du jour"
+      "today": "Crédits IA du jour"
     },
     "kinds": {
       "embedding": "Correspondances (embeddings)",
@@ -195,7 +195,7 @@
     },
     "users": {
       "title": "Principaux utilisateurs du mois",
-      "description": "Les 20 utilisateurs qui coûtent le plus, avec leurs utilisations IA du jour face à la limite quotidienne de leur formule."
+      "description": "Les 20 utilisateurs qui coûtent le plus, avec leurs crédits IA du jour face à la limite quotidienne de leur formule."
     },
     "admin": "Administration (sans limite)",
     "today": "{{used}} sur {{limit}}",
@@ -219,9 +219,9 @@
     "settings": {
       "title": "Limites et prix",
       "description": "Les changements s’appliquent tout de suite et sont consignés dans le journal d’audit.",
-      "caps": "Utilisations IA par jour et par utilisateur",
-      "capsHint": "Chaque nouveau texte IA compte une fois ; les textes déjà rédigés sont gratuits. Les formules annuelles en ont plus.",
       "capLabel": "{{plan}} · {{interval}}",
+      "costs": "Crédits par texte IA",
+      "costsHint": "Les textes coûteux (modèle principal ou transcription) devraient coûter plus de crédits. Les types non modifiés coûtent 1.",
       "limits": "Autres limites",
       "featureLimit": {
         "cv_draft": "Brouillons de CV IA par jour",
@@ -249,7 +249,9 @@
       "checkValues": "Certaines valeurs sont hors limites. Vérifiez les champs signalés.",
       "failed": "Les paramètres n’ont pas pu être enregistrés. Réessayez.",
       "saved": "Paramètres d’utilisation enregistrés.",
-      "save": "Enregistrer"
+      "save": "Enregistrer",
+      "caps": "Crédits IA par jour et par utilisateur",
+      "capsHint": "Chaque nouveau texte IA consomme ses crédits une fois ; les textes déjà rédigés sont gratuits. Les formules annuelles en ont plus."
     }
   }
 }

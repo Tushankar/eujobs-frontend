@@ -2,7 +2,7 @@ import assert from 'node:assert/strict'
 import { after, before, beforeEach, describe, it } from 'node:test'
 import { ScheduledTask } from '../jobs/models.js'
 import { generate } from '../lib/ai.js'
-import { clearUsageCache } from '../lib/usage.js'
+import { clearUsageCache, usageLeft } from '../lib/usage.js'
 import { AuditEvent } from '../modules/admin/admin.model.js'
 import { AiCache, AiUsage, ApiUsage } from '../modules/ai/ai.model.js'
 import { CandidateProfile } from '../modules/candidates/candidates.model.js'
@@ -45,6 +45,7 @@ const v1 = '/api/v1'
 const SETTINGS = {
   caps: { plus: { month: 40, year: 60 }, recruiter_plus: { month: 80, year: 120 } },
   featureLimits: { cv_draft: 5, cv_snapshot: 5 },
+  creditCosts: { cv_snapshot: 5, cv_draft: 5, interview_notes: 5, voice_profile: 3 },
   burstPerMinute: 10,
   skillNamesPerDay: 100,
   budgets: { openai: null, places: null },
@@ -53,7 +54,6 @@ const SETTINGS = {
 const owner = () => createUser({ role: 'admin', isOwner: true })
 const saveSettings = (admin, changes) => api().put(`${v1}/admin/ai/usage/settings`).set(auth(admin)).send({ ...SETTINGS, ...changes })
 const overview = async (admin) => (await api().get(`${v1}/admin/ai/usage`).set(auth(admin))).body
-const usageLeft = async (user) => (await api().get(`${v1}/ai/usage`).set(auth(user))).body
 const summary = (user, job) => api().post(`${v1}/jobs/${job.id}/ai-summary`).set(auth(user))
 
 async function candidate(interval = 'month', planKey = 'plus') {
@@ -110,8 +110,48 @@ describe('daily AI caps by plan and billing interval', () => {
   })
 })
 
+describe('weighted credits (owner 2026-11-17)', () => {
+  const schema = { type: 'object', properties: { text: { type: 'string' } }, required: ['text'], additionalProperties: false }
+  const write = (user, kind) => generate({ kind, user, language: 'en', instructions: 'Write.', input: 'facts', schema })
+
+  it('takes the credits of the kind, refuses when fewer are left, and gives them back when OpenAI fails', async () => {
+    const user = await candidate()
+    await write(user, 'cv_draft')
+    assert.equal((await AiUsage.findOne({ userId: user._id })).count, 5, 'a CV draft takes 5 credits')
+    await write(user, 'job_summary')
+    assert.equal((await AiUsage.findOne({ userId: user._id })).count, 6, 'a cheap text takes 1')
+    assert.deepEqual((await usageLeft(user)).costs, SETTINGS.creditCosts)
+
+    await AiUsage.updateOne({ userId: user._id }, { count: 37 })
+    await assert.rejects(write(user, 'cv_snapshot'), (error) => error.code === 'AI_DAILY_LIMIT' && error.params.cost === 5 && error.params.remaining === 3)
+    await write(user, 'job_summary')
+    assert.equal((await AiUsage.findOne({ userId: user._id })).count, 38, 'the refused 5 were never taken; a 1-credit text still fits')
+
+    await AiUsage.updateOne({ userId: user._id }, { count: 0 })
+    await api().post(`${v1}/_test/ai/fail-next`)
+    await assert.rejects(write(user, 'cv_draft'), (error) => error.code === 'AI_UNAVAILABLE')
+    assert.equal((await AiUsage.findOne({ userId: user._id })).count, 0, 'all 5 given back')
+  })
+
+  it('follows the admin costs, and never lets a cost above the daily credits through', async () => {
+    const admin = await owner()
+    await saveSettings(admin, { creditCosts: { cv_draft: 2 } })
+    const user = await candidate()
+    await write(user, 'cv_draft')
+    assert.equal((await AiUsage.findOne({ userId: user._id })).count, 2)
+    await write(user, 'cv_snapshot')
+    assert.equal((await AiUsage.findOne({ userId: user._id })).count, 3, 'a kind left out takes 1')
+
+    await saveSettings(admin, { creditCosts: { cv_draft: 50 } })
+    const fresh = await candidate()
+    await assert.rejects(write(fresh, 'cv_draft'), (error) => error.code === 'AI_DAILY_LIMIT')
+    assert.equal(await AiUsage.countDocuments({ userId: fresh._id, count: { $gt: 0 } }), 0)
+    assert.equal((await saveSettings(admin, { creditCosts: { cv_draft: 0 } })).status, 422)
+  })
+})
+
 describe('burst, feature and skill-name limits', () => {
-  it('stops CV drafts at their own daily limit, each still counting once toward the cap', async () => {
+  it('stops CV drafts at their own daily limit, each still taking its credits from the cap', async () => {
     await saveSettings(await owner(), { featureLimits: { cv_draft: 2, cv_snapshot: 5 } })
     const user = await candidate()
     const schema = { type: 'object', properties: { text: { type: 'string' } }, required: ['text'], additionalProperties: false }
@@ -121,7 +161,7 @@ describe('burst, feature and skill-name limits', () => {
     await assert.rejects(write('cv_draft'), (error) => error.code === 'AI_FEATURE_LIMIT' && error.params.limit === 2 && error.params.feature === 'cv_draft')
     await write('job_summary')
     const row = await AiUsage.findOne({ userId: user._id })
-    assert.deepEqual([row.count, row.features.get('cv_draft')], [3, 2], 'the refused draft is not counted')
+    assert.deepEqual([row.count, row.features.get('cv_draft')], [11, 2], 'two drafts at 5 credits and a summary at 1; the refused draft is not counted')
     assert.deepEqual((await usageLeft(user)).features[0], { kind: 'cv_draft', used: 2, limit: 2 })
 
     // OpenAI failing releases the feature's use too.

@@ -737,7 +737,7 @@
       "month": "mensual",
       "year": "anual"
     },
-    "aiUses": "{{month}} usos de IA al día ({{year}} con facturación anual)"
+    "aiUses": "{{month}} créditos de IA al día ({{year}} con facturación anual)"
   },
   "certificate": {
     "title": "Certificado de finalización",

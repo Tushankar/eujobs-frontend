@@ -1,4 +1,5 @@
 import { config } from '../../config/env.js'
+import { ENUMS } from '../../config/enums.js'
 import { LIMITS } from '../../config/limits.js'
 import { TRANSCRIBE_FALLBACK_MODEL } from '../../lib/ai.js'
 import { actorFor, recordAudit } from '../../lib/audit.js'
@@ -13,6 +14,9 @@ import { AiUsage } from './ai.model.js'
  * prices, each provider against its budget, the top users, and the settings (limits, budgets, prices). `ai.view`
  * reads, `ai.manage` saves; every save is audited.
  */
+
+// The kinds a candidate or recruiter pays credits for (admins and skill names are never counted).
+const CREDIT_KINDS = ENUMS.aiKind.filter((kind) => !['policy_suggestion', 'report_summary', 'skill_name'].includes(kind))
 
 const sum = (rows, field) => rows.reduce((total, row) => total + row[field], 0)
 
@@ -111,6 +115,7 @@ export async function usageOverview(month = utcMonth()) {
     settings,
     models: openaiModels(rows, settings.prices),
     placesSkus: PLACES_SKUS,
+    creditKinds: CREDIT_KINDS,
     billingUrl: 'https://platform.openai.com/settings/organization/billing/overview',
     placesBillingUrl: 'https://console.cloud.google.com/billing',
   }

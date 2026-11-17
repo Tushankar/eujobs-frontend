@@ -2,6 +2,7 @@ import { useTranslation } from 'react-i18next'
 import { Link } from 'react-router-dom'
 import { ArrowRight, ChevronRight, CircleCheck, UsersRound } from 'lucide-react'
 import { Button, Icon } from '@/components/ui'
+import VoiceProfileBuilder from '@/features/ai/components/VoiceProfileBuilder.jsx'
 import { useFormat, usePreferences } from '@/lib/preferences.js'
 import styles from './RailCards.module.css'
 
@@ -51,6 +52,13 @@ export default function ProfileStrengthCard() {
           ))
         )}
       </ul>
+      {/* 2026-11-17: talk instead of typing while the profile is incomplete (Plus; Free sees the upgrade lock). */}
+      {!completeness.complete && (
+        <div className={styles.voice}>
+          <p className={styles.muted}>{t('completeness:strength.voiceLead')}</p>
+          <VoiceProfileBuilder fullWidth />
+        </div>
+      )}
       <Button as={Link} to="/candidate/profile" variant="secondary" fullWidth className={styles.cardButton} rightIcon={<Icon as={ArrowRight} size={12} />}>
         {t('completeness:strength.button')}
       </Button>

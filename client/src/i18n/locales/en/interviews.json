@@ -210,5 +210,12 @@
   "panel": {
     "title": "Interview",
     "none": "No interview yet."
+  },
+  "prep": {
+    "action": "Prepare with AI",
+    "title": "Interview prep",
+    "description": "Likely questions for this role, with what from your profile to talk about. Practise out loud.",
+    "close": "Close",
+    "askThem": "Questions you could ask them"
   }
 }

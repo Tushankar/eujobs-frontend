@@ -103,6 +103,8 @@
       "headline": "Poste actuel ou titre",
       "city": "Où vous résidez",
       "about": "Quelques mots sur moi",
+      "aiWrite": "Rédiger le titre et l’À propos avec l’IA",
+      "aiDone": "L’IA a rédigé votre titre et votre À propos à partir de votre profil enregistré. Modifiez-les, puis enregistrez.",
       "count": "{{count}} / {{max}} caractères",
       "years": "Années d’expérience",
       "skills": "Points forts",

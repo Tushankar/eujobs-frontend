@@ -70,7 +70,7 @@ export default function JobAiDraft({ values, setValue }) {
         hint={t('jobs:aiDraft.notesHint')}
         placeholder={t('jobs:aiDraft.notesPlaceholder')}
         rows={3}
-        maxLength={config?.limits.ai.notes.max}
+        maxLength={config?.limits.ai?.notes?.max}
         value={notes}
         onChange={(event) => setNotes(event.target.value)}
       />

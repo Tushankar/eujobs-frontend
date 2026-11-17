@@ -6,14 +6,15 @@
     "retry": "Try again",
     "plan": "AI texts are part of Plus.",
     "upgrade": "See Plus",
-    "limit": "You've used today's {{count}} AI generations. They start again at {{time}}. Texts written earlier still show.",
     "featureLimit": {
       "cv_draft": "You've made today's {{count}} AI CV drafts. More are possible from {{time}}.",
       "cv_snapshot": "You've filled your profile from a CV {{count}} times today. More are possible from {{time}}."
     },
     "paused": "AI features are paused for now and start again on {{time}}. Texts written earlier still show.",
     "busy": "Too many AI requests in a minute. Try again in {{count}} s.",
-    "usesLeft": "{{remaining}} of {{limit}} AI uses left today"
+    "limit": "You've used today's {{count}} AI credits. They start again at {{time}}. Texts written earlier still show.",
+    "limitCost": "This needs {{cost}} AI credits and you have {{remaining}} left today. They start again at {{time}}.",
+    "usesLeft": "{{remaining}} of {{limit}} AI credits left today"
   },
   "badge": "Written by AI",
   "translate": {
@@ -66,17 +67,59 @@
   },
   "usage": {
     "title": "Your AI usage limits",
-    "daily": "AI uses today",
     "features": {
       "cv_draft": "AI CV drafts",
       "cv_snapshot": "CV to profile"
     },
     "resets": "Resets {{time}}",
     "percent": "{{percent}}% used",
-    "note": "Opening a text that was already written doesn’t use anything."
+    "note": "Opening a text that was already written doesn’t use anything.",
+    "daily": "AI credits today"
   },
   "draft": {
     "action": "Draft with AI",
     "again": "Draft again"
+  },
+  "fill": {
+    "action": "Write with AI",
+    "done": "AI wrote this from your profile. Edit it before you save.",
+    "undo": "Undo"
+  },
+  "voice": {
+    "action": "Build my profile by voice",
+    "title": "Build your profile by voice",
+    "description": "Talk for up to {{minutes}} minutes about your work. AI turns it into your profile, and you check everything before it is added.",
+    "prompts": {
+      "role": "Your current or target role, and how many years you have worked",
+      "jobs": "Your jobs: title, employer and roughly when",
+      "skills": "The skills and tools you use most",
+      "education": "Your degrees, diplomas or courses",
+      "languages": "The languages you speak and how well",
+      "wants": "What you are looking for next"
+    },
+    "start": "Start recording",
+    "stop": "Stop",
+    "listening": "Listening…",
+    "micBlocked": "We could not use your microphone. Allow microphone access in your browser and try again.",
+    "tooShort": "We heard too little. Record again and talk a bit longer about your work.",
+    "privacy": "Your recording is turned into text and deleted straight away; it is never stored.",
+    "heard": "What we heard",
+    "review": {
+      "headline": "Headline",
+      "about": "About",
+      "years": "Years of experience",
+      "skills": "Skills to add",
+      "workHistory": "Jobs to add",
+      "education": "Education to add",
+      "languages": "Languages to add",
+      "remove": "Remove {{item}}"
+    },
+    "again": "Record again",
+    "apply": "Add to my profile",
+    "added": "Added to your profile: {{skills}} skills, {{workHistory}} jobs and {{education}} education entries. Your headline, About and years were updated.",
+    "done": "Done"
+  },
+  "credits": {
+    "cost": "Uses {{count}} AI credits"
   }
 }

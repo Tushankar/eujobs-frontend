@@ -277,6 +277,12 @@ export const ENUMS = {
     'company_description',
     'applicant_shortlist',
     'message_draft',
+    // 2026-11-17 (phase 3): candidate drafts
+    'cover_note',
+    'job_alert_draft',
+    'profile_text',
+    'interview_prep',
+    'voice_profile',
   ],
   emailType: Object.keys(EMAIL_TYPES),
   emailCategory: [...new Set(Object.values(EMAIL_CATEGORY))],

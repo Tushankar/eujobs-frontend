@@ -296,6 +296,11 @@
     "company_description": "Description de l’entreprise",
     "applicant_shortlist": "Présélection IA",
     "message_draft": "Brouillon de message",
+    "cover_note": "Lettre de motivation",
+    "job_alert_draft": "Brouillon d’alerte",
+    "profile_text": "Titre et À propos",
+    "interview_prep": "Préparation d’entretien",
+    "voice_profile": "Profil vocal",
     "job_summary": "Résumé de l’offre",
     "match_explanation": "Explication de la correspondance",
     "insights": "Analyses",
@@ -356,7 +361,8 @@
     "admin_content_report": "Signalement de contenu",
     "admin_renewal_failed": "Échec de renouvellement (administration)",
     "admin_joined": "Nouvel administrateur",
-    "admin_ai_budget": "Alerte budget IA"
+    "admin_ai_budget": "Alerte budget IA",
+    "newsletter_confirm": "Confirmation de la newsletter"
   },
   "emailClass": {
     "critical": "Essentiel",
@@ -386,7 +392,8 @@
     "report_voice": "Note vocale",
     "certificate_pdf": "Certificat PDF",
     "report_csv": "Rapport CSV",
-    "export_zip": "Export des données"
+    "export_zip": "Export des données",
+    "blog_cover": "Couverture d’article"
   },
   "reportType": {
     "marketplace_summary": "Synthèse de la plateforme",
@@ -584,5 +591,23 @@
     "text": "Message",
     "interview": "Entretien",
     "document_request": "Demande de documents"
+  },
+  "theme": {
+    "light": "Clair",
+    "dark": "Sombre"
+  },
+  "reviewStatus": {
+    "pending": "En attente",
+    "approved": "Approuvé",
+    "rejected": "Refusé"
+  },
+  "blogStatus": {
+    "draft": "Brouillon",
+    "published": "Publié"
+  },
+  "subscriberStatus": {
+    "pending": "En attente de confirmation",
+    "confirmed": "Confirmé",
+    "unsubscribed": "Désabonné"
   }
 }

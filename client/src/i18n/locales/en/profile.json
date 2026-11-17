@@ -102,6 +102,8 @@
       "headline": "Current role or headline",
       "city": "Where you are based",
       "about": "A little about me",
+      "aiWrite": "Write headline and About with AI",
+      "aiDone": "AI wrote your headline and About from your saved profile. Edit them, then save.",
       "count": "{{count}} / {{max}} characters",
       "years": "Years of experience",
       "skills": "Strengths",

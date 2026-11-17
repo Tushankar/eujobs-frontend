@@ -3,6 +3,7 @@ import { Check, Download, FileText, GitCompare, Sparkles, Trash2 } from 'lucide-
 import { Button, Icon, Skeleton } from '@/components/ui'
 import PillBadge from '@/components/common/PillBadge.jsx'
 import AiButton from '@/features/ai/components/AiButton.jsx'
+import CreditCost from '@/features/ai/components/CreditCost.jsx'
 import { useFormat } from '@/lib/preferences.js'
 import styles from './VersionRow.module.css'
 
@@ -82,9 +83,11 @@ export default function VersionRow({ version, comparing, busy, onSetLive, onDown
                 {t('cv:snapshot.propose')}
               </AiButton>
             )}
+            {!snapshot && !pendingSnapshot && <CreditCost kind="cv_snapshot" />}
             <AiButton variant="outline" aria-label={t('cv:draft.createLabel', { number })} leftIcon={<Icon as={Sparkles} size={13} />} loading={busy === 'draft'} onClick={onDraft} data-create-draft>
               {t('cv:draft.create')}
             </AiButton>
+            <CreditCost kind="cv_draft" />
           </>
         )}
         {(snapshot || pendingSnapshot) && (

@@ -211,5 +211,12 @@
   "panel": {
     "title": "Entrevista",
     "none": "Aún no hay entrevista."
+  },
+  "prep": {
+    "action": "Prepararme con IA",
+    "title": "Preparación de la entrevista",
+    "description": "Preguntas probables para este puesto, con lo que puedes contar de tu perfil. Practica en voz alta.",
+    "close": "Cerrar",
+    "askThem": "Preguntas que podrías hacerles"
   }
 }

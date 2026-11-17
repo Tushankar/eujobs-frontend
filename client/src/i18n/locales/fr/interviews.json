@@ -211,5 +211,12 @@
   "panel": {
     "title": "Entretien",
     "none": "Pas encore d’entretien."
+  },
+  "prep": {
+    "action": "Me préparer avec l’IA",
+    "title": "Préparation d’entretien",
+    "description": "Les questions probables pour ce poste, avec ce que vous pouvez mettre en avant de votre profil. Entraînez-vous à voix haute.",
+    "close": "Fermer",
+    "askThem": "Questions que vous pourriez leur poser"
   }
 }
