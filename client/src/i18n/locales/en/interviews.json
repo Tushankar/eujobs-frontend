@@ -164,6 +164,10 @@
   "upcoming": {
     "title": "Upcoming interviews"
   },
+  "otherTime": {
+    "candidate": "Interviewer: {{time}}",
+    "recruiter": "Candidate: {{time}}"
+  },
   "call": {
     "back": "Back to the conversation",
     "cannotJoin": "You cannot join this interview now",

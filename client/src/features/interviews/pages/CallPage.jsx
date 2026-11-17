@@ -129,7 +129,7 @@ export default function CallPage() {
         <header className={styles.header}>
           <div>
             <h1 className={styles.title}>{t('interviews:call.title', { job: interview.job.title })}</h1>
-            <p className={styles.sub}>{when(interview.startAt, interview.minutes)}</p>
+            <p className={styles.sub}>{when(interview.startAt, interview.minutes, interview.otherTimeZone)}</p>
           </div>
           {recording === 'recording' && (
             <span className={styles.recording} role="status" data-recording-indicator>

@@ -38,8 +38,30 @@ export function formatDate(value, locale, options = { dateStyle: 'medium' }) {
   return new Intl.DateTimeFormat(locale, { ...options, ...(dateOnly && { timeZone: 'UTC' }) }).format(new Date(value))
 }
 
+/** 12 or 24 hours as the viewer's own browser/device uses, whatever the format locale (owner 2026-11-17). */
+const DEVICE_HOUR12 = ['h11', 'h12'].includes(new Intl.DateTimeFormat(undefined, { hour: 'numeric' }).resolvedOptions().hourCycle)
+
 export function formatDateTime(value, locale) {
-  return new Intl.DateTimeFormat(locale, { dateStyle: 'medium', timeStyle: 'short' }).format(new Date(value))
+  return new Intl.DateTimeFormat(locale, { dateStyle: 'medium', timeStyle: 'short', hour12: DEVICE_HOUR12 }).format(new Date(value))
+}
+
+/**
+ * The time at `value` in another time zone ("9:30 AM GMT+5:30", with the day when it falls on another one), or null
+ * when the clock there reads the same as the viewer's.
+ */
+export function formatOtherZone(value, locale, timeZone) {
+  const date = new Date(value)
+  const wall = (zone, options) => new Intl.DateTimeFormat('en-GB', { timeZone: zone, ...options }).format(date)
+  if (wall(timeZone, { dateStyle: 'short', timeStyle: 'short' }) === wall(undefined, { dateStyle: 'short', timeStyle: 'short' })) return null
+  const otherDay = wall(timeZone, { dateStyle: 'short' }) !== wall(undefined, { dateStyle: 'short' })
+  return new Intl.DateTimeFormat(locale, {
+    ...(otherDay && { weekday: 'short', day: 'numeric', month: 'short' }),
+    hour: 'numeric',
+    minute: '2-digit',
+    hour12: DEVICE_HOUR12,
+    timeZone,
+    timeZoneName: 'short',
+  }).format(date)
 }
 
 /** "YYYY-MM" (work history, education) as month and year. */

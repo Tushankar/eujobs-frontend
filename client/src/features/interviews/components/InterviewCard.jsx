@@ -121,7 +121,7 @@ export default function InterviewCard({ interview, counterpartName }) {
             <ul className={styles.rows}>
               {interview.slots.map((slot) => (
                 <li key={slot.startAt} className={styles.row}>
-                  <span className={styles.rowMain}>{when(slot.startAt, slot.minutes)}</span>
+                  <span className={styles.rowMain}>{when(slot.startAt, slot.minutes, interview.otherTimeZone)}</span>
                 </li>
               ))}
             </ul>
@@ -136,7 +136,7 @@ export default function InterviewCard({ interview, counterpartName }) {
                   <label className={cx(styles.slot, !pickable(slot) && styles.slotDisabled)}>
                     <input type="radio" name={`slot-${interview.id}`} value={slot.startAt} disabled={!pickable(slot)} checked={choice === slot.startAt} onChange={() => setChoice(slot.startAt)} data-slot={slot.startAt} />
                     <span className={styles.rowMain}>
-                      {when(slot.startAt, slot.minutes)}
+                      {when(slot.startAt, slot.minutes, interview.otherTimeZone)}
                       {!pickable(slot) && <span className={styles.rowMeta}>{t('interviews:card.slotClosed')}</span>}
                     </span>
                   </label>
@@ -166,7 +166,7 @@ export default function InterviewCard({ interview, counterpartName }) {
           <p className={styles.line}>
             <Icon as={CalendarClock} size={16} />
             <span className={styles.when} data-interview-when>
-              {when(interview.startAt, interview.minutes)}
+              {when(interview.startAt, interview.minutes, interview.otherTimeZone)}
             </span>
           </p>
           {interview.rescheduleRequest && (

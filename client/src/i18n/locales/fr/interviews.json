@@ -165,6 +165,10 @@
   "upcoming": {
     "title": "Entretiens à venir"
   },
+  "otherTime": {
+    "candidate": "Recruteur : {{time}}",
+    "recruiter": "Candidat : {{time}}"
+  },
   "call": {
     "back": "Retour à la conversation",
     "cannotJoin": "Vous ne pouvez pas rejoindre cet entretien maintenant",

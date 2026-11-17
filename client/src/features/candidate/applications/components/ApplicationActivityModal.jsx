@@ -4,6 +4,7 @@ import { Check, X } from 'lucide-react'
 import { Button, CompanyLogo, Icon, Modal } from '@/components/ui'
 import { MessageCompanyButton } from '@/features/messages/components/StartConversation.jsx'
 import { useJobText } from '@/lib/jobText.js'
+import { useWhen } from '@/features/interviews/useWhen.js'
 import { useFormat } from '@/lib/preferences.js'
 import { cx } from '@/utils/cx.js'
 import { canWithdraw } from '../status.js'
@@ -35,6 +36,7 @@ function buildSteps(history, status) {
 export default function ApplicationActivityModal({ application, canReapply, onClose, onWithdraw, onReapply, onMessage }) {
   const { t } = useTranslation()
   const format = useFormat()
+  const when = useWhen()
   const jobText = useJobText()
   if (!application) return null
   const { job, history, cv } = application
@@ -116,7 +118,7 @@ export default function ApplicationActivityModal({ application, canReapply, onCl
                   <li key={interview.id}>
                     <Link to={`/candidate/messages/${interview.conversationId}?card=${interview.id}`} onClick={onClose}>
                       {t(`enums:interviewStatus.${interview.status}`)}
-                      {interview.startAt && <> · {format.dateTime(interview.startAt)}</>} · {t(`enums:interviewMode.${interview.mode}`)}
+                      {interview.startAt && <> · {when(interview.startAt, interview.minutes, interview.otherTimeZone)}</>} · {t(`enums:interviewMode.${interview.mode}`)}
                     </Link>
                   </li>
                 ))}

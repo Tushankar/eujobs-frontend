@@ -36,7 +36,7 @@ export default function UpcomingInterviews() {
                     {interview.job.title} · {t(`enums:interviewMode.${interview.mode}`)}
                   </span>
                 </span>
-                <span className={styles.when}>{when(interview.startAt, interview.minutes)}</span>
+                <span className={styles.when}>{when(interview.startAt, interview.minutes, interview.otherTimeZone)}</span>
                 {open ? (
                   <span className={styles.join}>
                     <Icon as={Video} size={14} /> {t('interviews:card.join')}

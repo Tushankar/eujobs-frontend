@@ -23,7 +23,7 @@ export function joinWindow(interview) {
 const sideOf = (user) => (user.role === 'candidate' ? 'candidate' : 'recruiter')
 const other = (side) => (side === 'candidate' ? 'recruiter' : 'candidate')
 
-export function interviewDto(user, interview, { jobTitle, phone } = {}) {
+export function interviewDto(user, interview, { jobTitle, phone, otherTimeZone } = {}) {
   const side = sideOf(user)
   const recruiter = side === 'recruiter'
   const window = joinWindow(interview)
@@ -45,6 +45,8 @@ export function interviewDto(user, interview, { jobTitle, phone } = {}) {
     applicationId: String(interview.applicationId),
     conversationId: String(interview.conversationId),
     job: { id: String(interview.jobId), title: jobTitle ?? null },
+    // The other side's time zone, so each viewer also sees the other's local time (owner 2026-11-17).
+    otherTimeZone: otherTimeZone ?? null,
     consent: { mine: interview.consent?.[side] ?? null, other: interview.consent?.[other(side)] ?? null },
     recording: { status: interview.recording?.status ?? 'off' },
     ...(recruiter && {
@@ -55,15 +57,28 @@ export function interviewDto(user, interview, { jobTitle, phone } = {}) {
   }
 }
 
-/** DTOs for several interviews, with job titles and (recruiter, phone interviews) the candidate's verified phone. */
+/**
+ * DTOs for several interviews, with job titles, the other side's time zone (the candidate's, or the company's
+ * recruiter's) and (recruiter, phone interviews) the candidate's verified phone.
+ */
 export async function interviewDtos(user, interviews) {
-  const [jobs, phones] = await Promise.all([
+  const recruiter = user.role === 'recruiter'
+  const [jobs, others] = await Promise.all([
     Job.find({ _id: { $in: interviews.map((interview) => interview.jobId) } }, 'title'),
-    user.role === 'recruiter' ? User.find({ _id: { $in: interviews.filter((interview) => interview.mode === 'phone').map((interview) => interview.candidateId) } }, 'phone') : [],
+    recruiter
+      ? User.find({ _id: { $in: interviews.map((interview) => interview.candidateId) } }, 'phone timezone')
+      : User.find({ companyId: { $in: interviews.map((interview) => interview.companyId) }, role: 'recruiter', status: 'active' }, 'companyId timezone'),
   ])
   const titles = new Map(jobs.map((job) => [String(job._id), job.title]))
-  const phoneOf = new Map(phones.map((candidate) => [String(candidate._id), candidate.phone?.verifiedAt ? candidate.phone.e164 : null]))
-  return interviews.map((interview) => interviewDto(user, interview, { jobTitle: titles.get(String(interview.jobId)), phone: phoneOf.get(String(interview.candidateId)) }))
+  const phoneOf = new Map(recruiter ? others.map((candidate) => [String(candidate._id), candidate.phone?.verifiedAt ? candidate.phone.e164 : null]) : [])
+  const zoneOf = new Map(others.map((other) => [String(recruiter ? other._id : other.companyId), other.timezone ?? null]))
+  return interviews.map((interview) =>
+    interviewDto(user, interview, {
+      jobTitle: titles.get(String(interview.jobId)),
+      phone: phoneOf.get(String(interview.candidateId)),
+      otherTimeZone: zoneOf.get(String(recruiter ? interview.candidateId : interview.companyId)),
+    }),
+  )
 }
 
 const fileDto = (file, user) => (file ? { name: file.originalName ?? null, size: file.size, url: signedUrl(file, user._id) } : null)

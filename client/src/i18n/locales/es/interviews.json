@@ -165,6 +165,10 @@
   "upcoming": {
     "title": "Próximas entrevistas"
   },
+  "otherTime": {
+    "candidate": "Entrevistador: {{time}}",
+    "recruiter": "Candidato: {{time}}"
+  },
   "call": {
     "back": "Volver a la conversación",
     "cannotJoin": "Ahora no puedes unirte a esta entrevista",
