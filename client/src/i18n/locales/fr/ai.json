@@ -65,8 +65,15 @@
     "openQuestions": "Questions à poser"
   },
   "usage": {
-    "title": "Utilisations IA du jour",
-    "count": "{{used}} sur {{limit}} utilisées",
-    "note": "Il vous en reste {{remaining}}. Elles repartent le {{time}}. Rouvrir un texte déjà rédigé n’en consomme pas."
+    "title": "Vos limites d’utilisation de l’IA",
+    "daily": "Utilisations IA du jour",
+    "features": {
+      "cv_draft": "Brouillons de CV IA",
+      "cv_snapshot": "CV vers profil"
+    },
+    "resets": "Réinitialisation à {{time}}",
+    "percent": "{{percent}} % utilisé",
+    "count": "{{used}} sur {{limit}}",
+    "note": "Rouvrir un texte déjà rédigé ne consomme rien."
   }
 }

@@ -51,7 +51,10 @@ export default {
       const billing = await page.$eval('[data-ai-usage-today]', (element) => element.innerText)
       // The insights page wrote its own text too, so the count is whatever the API says, out of 40.
       const used = (await api('/ai/usage', { token })).body
-      ctx.check(used.used >= 1 && billing.includes(`${used.used} of 40 used`), `Billing shows today's AI uses (${billing.replace(/\n/g, ' | ')})`)
+      const daily = await page.$eval('[data-ai-limit="daily"]', (element) => element.innerText)
+      ctx.check(used.used >= 1 && daily.includes(`${used.used} of 40`) && daily.includes(`${Math.round((used.used / 40) * 100)}% used`), `Billing shows today's AI uses (${daily.replace(/\n/g, ' | ')})`)
+      ctx.check(/0 of 5/.test(await page.$eval('[data-ai-limit="cv_draft"]', (element) => element.innerText)), 'the CV drafts limit row (0 of 5)')
+      ctx.check(Boolean(await page.$('[data-ai-limit="cv_snapshot"]')) && billing.includes('Resets at'), 'the CV to profile row and the reset time')
       const features = await page.$$eval('[data-plan-features="plus"]', (lists) => lists.map((list) => list.innerText).join(' | '))
       ctx.check(features.includes('40 AI uses a day (60 with yearly billing)'), `the Plus card lists its daily AI uses (${features.replace(/\n/g, ' · ')})`)
       await page.evaluate(() => document.querySelector('[data-ai-usage-today]').scrollIntoView({ block: 'center' }))

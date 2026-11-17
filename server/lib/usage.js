@@ -174,11 +174,15 @@ export async function dailyCap(user) {
   return capFor(user.role, await Subscription.findOne({ userId: user._id }, 'planKey status retrying interval'), caps)
 }
 
-/** GET /ai/usage: today's counted uses, the cap and when it resets. */
+/**
+ * GET /ai/usage: today's counted uses, the cap and when it resets, plus each feature with its own daily limit (CV
+ * drafts, CV to profile) as { kind, used, limit }.
+ */
 export async function usageLeft(user) {
-  const [row, limit] = await Promise.all([AiUsage.findOne({ userId: user._id, day: utcDay() }), dailyCap(user)])
+  const [row, limit, { featureLimits }] = await Promise.all([AiUsage.findOne({ userId: user._id, day: utcDay() }), dailyCap(user), usageSettings()])
   const used = row?.count ?? 0
-  return { used: Math.min(used, limit), limit, remaining: Math.max(limit - used, 0), resetAt: nextUtcDay().toISOString() }
+  const features = Object.entries(featureLimits ?? {}).map(([kind, featureLimit]) => ({ kind, used: Math.min(row?.features?.get(kind) ?? 0, featureLimit), limit: featureLimit }))
+  return { used: Math.min(used, limit), limit, remaining: Math.max(limit - used, 0), resetAt: nextUtcDay().toISOString(), features }
 }
 
 /** At most `burstPerMinute` uncached AI requests per user in any 60 seconds; RATE_LIMITED with retryAfter otherwise. */

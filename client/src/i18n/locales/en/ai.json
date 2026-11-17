@@ -65,8 +65,15 @@
     "openQuestions": "Questions to ask"
   },
   "usage": {
-    "title": "AI uses today",
-    "count": "{{used}} of {{limit}} used",
-    "note": "{{remaining}} left. They start again at {{time}}. Opening a text that was already written doesn’t use one."
+    "title": "Your AI usage limits",
+    "daily": "AI uses today",
+    "features": {
+      "cv_draft": "AI CV drafts",
+      "cv_snapshot": "CV to profile"
+    },
+    "resets": "Resets at {{time}}",
+    "percent": "{{percent}}% used",
+    "count": "{{used}} of {{limit}}",
+    "note": "Opening a text that was already written doesn’t use anything."
   }
 }

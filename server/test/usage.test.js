@@ -83,6 +83,7 @@ describe('daily AI caps by plan and billing interval', () => {
     assert.equal((await usageLeft(recruiter)).limit, 120)
     const free = await usageLeft(await createUser({ role: 'candidate' }))
     assert.deepEqual([free.limit, free.used, free.remaining], [40, 0, 40])
+    assert.deepEqual(free.features, [{ kind: 'cv_draft', used: 0, limit: 5 }, { kind: 'cv_snapshot', used: 0, limit: 5 }])
     assert.ok(free.resetAt)
     assert.equal((await api().get(`${v1}/ai/usage`).set(auth(await owner()))).status, 403)
   })
@@ -121,6 +122,7 @@ describe('burst, feature and skill-name limits', () => {
     await write('job_summary')
     const row = await AiUsage.findOne({ userId: user._id })
     assert.deepEqual([row.count, row.features.get('cv_draft')], [3, 2], 'the refused draft is not counted')
+    assert.deepEqual((await usageLeft(user)).features[0], { kind: 'cv_draft', used: 2, limit: 2 })
 
     // OpenAI failing releases the feature's use too.
     await saveSettings(await owner(), { featureLimits: { cv_draft: 5, cv_snapshot: 5 } })

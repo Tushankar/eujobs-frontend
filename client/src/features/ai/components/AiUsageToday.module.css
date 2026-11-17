@@ -1,7 +1,5 @@
+/* Billing's AI usage limits: a name and reset time, a long thin bar, and the share used on the right. */
 .card {
-  display: flex;
-  flex-direction: column;
-  gap: 10px;
   margin-bottom: 16px;
   padding: 20px 24px;
   border: 1px solid var(--border);
@@ -9,35 +7,50 @@
   background: var(--card);
 }
 
-.head {
-  display: flex;
-  flex-wrap: wrap;
-  align-items: baseline;
-  justify-content: space-between;
-  gap: 4px 16px;
-}
-
 .title {
-  display: inline-flex;
-  align-items: center;
-  gap: 8px;
+  margin-bottom: 4px;
   font-size: 15px;
   font-weight: 700;
   color: var(--foreground);
 }
 
-.count {
+.row {
+  display: grid;
+  grid-template-columns: minmax(140px, 1fr) minmax(0, 2fr) minmax(88px, auto);
+  align-items: center;
+  gap: 8px 24px;
+  padding: 14px 0;
+}
+
+.row + .row {
+  border-top: 1px solid var(--border);
+}
+
+.name,
+.used {
+  min-width: 0;
+}
+
+.label {
   margin: 0;
   font-size: 14px;
-  font-weight: 600;
+  font-weight: 500;
   color: var(--foreground);
+}
+
+.reset,
+.count {
+  margin: 2px 0 0;
+  font-size: 12px;
+  line-height: 18px;
+  color: var(--muted-foreground);
 }
 
 .bar {
   height: 8px;
   overflow: hidden;
   border-radius: var(--radius-full);
-  background: var(--muted);
+  background: light-dark(#e8eef7, #26303d);
 }
 
 .bar span {
@@ -51,15 +64,36 @@
   background: light-dark(#c8901c, #dcb661);
 }
 
-.note {
+.used {
+  text-align: right;
+}
+
+.percent {
   margin: 0;
-  font-size: 13px;
-  line-height: 20px;
+  font-size: 14px;
+  color: var(--text-label);
+}
+
+.note {
+  margin: 4px 0 0;
+  font-size: 12px;
+  line-height: 18px;
   color: var(--muted-foreground);
 }
 
-@media (max-width: 480px) {
+/* Phones: the name and the share on one line, the bar under them. */
+@media (max-width: 560px) {
   .card {
     padding: 16px;
+  }
+
+  .row {
+    grid-template-columns: minmax(0, 1fr) auto;
+    gap: 8px 12px;
+  }
+
+  .bar {
+    grid-column: 1 / -1;
+    grid-row: 2;
   }
 }

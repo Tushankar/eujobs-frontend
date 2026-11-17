@@ -65,8 +65,15 @@
     "openQuestions": "Preguntas que hacer"
   },
   "usage": {
-    "title": "Usos de IA de hoy",
-    "count": "{{used}} de {{limit}} usados",
-    "note": "Te quedan {{remaining}}. Vuelven a empezar el {{time}}. Abrir un texto ya redactado no gasta ninguno."
+    "title": "Tus límites de uso de IA",
+    "daily": "Usos de IA de hoy",
+    "features": {
+      "cv_draft": "Borradores de CV con IA",
+      "cv_snapshot": "CV a perfil"
+    },
+    "resets": "Se restablece a las {{time}}",
+    "percent": "{{percent}} % usado",
+    "count": "{{used}} de {{limit}}",
+    "note": "Abrir un texto ya redactado no gasta nada."
   }
 }
