@@ -8,7 +8,7 @@ import styles from './Panel.module.css'
 export default function Panel({ as: Component = 'section', padding = 20, selected = false, className, children, ...rest }) {
   return (
     <Component
-      className={cx(styles.panel, selected && styles.selected, className)}
+      className={cx(styles.panel, padding !== 0 && styles.padded, selected && styles.selected, className)}
       style={{ padding }}
       data-motion-card
       {...rest}

@@ -5,6 +5,15 @@
   background: var(--card);
 }
 
+/* Phones (owner 2026-11-16): 16 px left and right in every panel that has padding. The padding prop is an inline
+ * style, which only !important can override; padding={0} panels (their rows carry the padding) are left alone. */
+@media (max-width: 599px) {
+  .padded {
+    padding-right: 16px !important;
+    padding-left: 16px !important;
+  }
+}
+
 .selected {
   border-color: light-dark(rgba(2, 99, 220, 0.2), rgba(91, 157, 255, 0.28));
   background: var(--accent);
