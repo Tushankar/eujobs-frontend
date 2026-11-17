@@ -8,9 +8,15 @@
     <title>EU Jobs · AI Powered Careers</title>
     <script>
       // The colour theme picked on this device (lib/theme.js), set before the first paint so dark pages never flash white.
-      try {
-        document.documentElement.dataset.theme = localStorage.getItem('lwm-pref-theme') === 'dark' ? 'dark' : 'light'
-      } catch {}
+      // Never picked here: the system's light/dark setting (owner 2026-11-17).
+      ;(function () {
+        var picked = null
+        try {
+          picked = localStorage.getItem('lwm-pref-theme')
+        } catch {}
+        var dark = picked === 'dark' || picked === 'light' ? picked === 'dark' : window.matchMedia('(prefers-color-scheme: dark)').matches
+        document.documentElement.dataset.theme = dark ? 'dark' : 'light'
+      })()
     </script>
     <script>
       // Signed-out visitors on the landing page: fetch the hero photos (the LCP) in parallel with the app's JS.

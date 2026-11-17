@@ -3,7 +3,8 @@ import { useSelector } from 'react-redux'
 import { useGetMeQuery, useUpdateMeMutation } from '@/app/api.js'
 
 /*
- * The colour theme (owner 2026-11-16): light by default. The choice is kept on this device (localStorage, read by
+ * The colour theme (owner 2026-11-16): until one is picked, the system's light/dark setting (index.html, owner
+ * 2026-11-17). The choice is kept on this device (localStorage, read by
  * index.html before the first paint) and, when signed in, on the account (PATCH /me), which wins after sign-in.
  */
 const KEY = 'lwm-pref-theme'
