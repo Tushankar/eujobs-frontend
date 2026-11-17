@@ -111,6 +111,7 @@ describe('Offer and pick (P11d-Q3, Q4, Q13)', () => {
     assert.equal(offered.status, 201)
     assert.equal(offered.body.status, 'offered')
     assert.equal(offered.body.slots.length, 3)
+    assert.equal(offered.body.otherTimeZone, 'Europe/Madrid') // the recruiter sees the candidate's zone
     const id = offered.body.id
 
     // The candidate hears at once, in Spanish, with the three slots in Madrid time.
@@ -122,6 +123,7 @@ describe('Offer and pick (P11d-Q3, Q4, Q13)', () => {
     const thread = (await get(candidate, `/conversations/${offered.body.conversationId}/messages`)).body
     assert.deepEqual(thread.items.map((message) => [message.kind, message.event]), [['interview', 'offered']])
     assert.equal(thread.cards.interviews[0].id, id)
+    assert.equal(thread.cards.interviews[0].otherTimeZone, 'Europe/London') // and the candidate the recruiter's
     assert.equal(thread.conversation.lastMessageCard, 'interview.offered')
     assert.equal(thread.cards.interviews[0].outcome, undefined)
 
