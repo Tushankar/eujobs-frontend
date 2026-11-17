@@ -179,7 +179,24 @@ export const LIMITS = {
   },
   // OD13, U3: counted generations per user and UTC day. U6: embedding input ≈ 8,000 tokens at 4 characters a token.
   // skillNamesTimeoutMs: the standard-name lookup on a skills save (lib/ai.js addStandardNames) gives up after this.
-  ai: { dailyGenerations: 50, embeddingMaxChars: 32_000, skillNamesTimeoutMs: 8_000 },
+  // 2026-11-17: `usage` holds the defaults of the admin's Usage settings (AppConfig 'aiUsage'): the daily cap per paid
+  // plan and billing interval (yearly gets more), the per-minute burst, the daily new skill-name lookups, and the ranges
+  // the admin may set. Budgets alert at `alertAt` shares and pause the provider at 100 %.
+  ai: {
+    embeddingMaxChars: 32_000,
+    skillNamesTimeoutMs: 8_000,
+    usage: {
+      caps: { plus: { month: 40, year: 80 }, recruiter_plus: { month: 80, year: 150 } },
+      burstPerMinute: 10,
+      skillNamesPerDay: 100,
+      capRange: { min: 1, max: 10_000 },
+      burstRange: { min: 1, max: 600 },
+      budgetMax: 1_000_000,
+      priceMax: 10_000,
+      alertAt: [0.8, 1],
+      topUsers: 20,
+    },
+  },
   // U5, M-047: the default policy; M-049 and A: admin §1.19: policy fields
   matching: {
     weights: { sim: 0.6, skill: 0.4 },
