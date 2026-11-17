@@ -6,6 +6,12 @@ import { openAs } from '../lib/payments.js'
 import { login, ownerToken } from '../lib/recruiters.js'
 import { api, db, resetTestState } from '../lib/testApi.js'
 
+/** Scrolls an element into view and lets the page's fade-in animations finish before a screenshot. */
+async function settle(page, selector) {
+  await page.evaluate((target) => document.querySelector(target)?.scrollIntoView({ block: 'start' }), selector)
+  await new Promise((resolve) => setTimeout(resolve, 900))
+}
+
 // The API caches the settings for 30 s; the reset clears that cache.
 async function clearSettings() {
   await db('appconfigs', 'deleteMany', { filter: { key: { $in: ['aiUsage', 'aiUsageAlerts'] } } })
@@ -95,7 +101,10 @@ export default {
       await adminPage.waitForFunction(() => /[1-9]/.test(document.querySelector('[data-usage-provider="openai"] [data-usage-spend]')?.textContent ?? ''), { timeout: 15_000 })
       const spend = await adminPage.$eval('[data-usage-provider="openai"] [data-usage-spend]', (element) => element.textContent)
       ctx.check(/[1-9]/.test(spend), `OpenAI spend shown after pricing (${spend})`)
+      await settle(adminPage, 'h1')
       await ctx.screenshot(adminPage, '4-usage-priced')
+      await settle(adminPage, '[data-usage-settings]')
+      await ctx.screenshot(adminPage, '4b-usage-settings')
       await adminHandle.checkOverflow()
 
       // A budget below this month's spend: alert + pause at once.
@@ -106,6 +115,7 @@ export default {
       ctx.check(Boolean(await adminPage.$('[data-usage-provider="places"] [data-usage-status="paused"]')), 'Places paused too')
       const bell = (await api('/notifications', { token: admin })).body.items.filter((item) => item.type === 'admin_ai_budget')
       ctx.check(bell.length >= 2, `budget alerts in the bell (${bell.length})`)
+      await settle(adminPage, 'h1')
       await ctx.screenshot(adminPage, '5-usage-paused')
       await adminPage.goto(`${ctx.webUrl}/admin/notifications`, { waitUntil: 'networkidle0' })
       await ctx.screenshot(adminPage, '6-admin-notifications')
