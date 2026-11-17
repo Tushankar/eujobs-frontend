@@ -14,12 +14,70 @@ const RULES = [
 const VISA =
   `Right to work: the candidate's rightToWork lists where they may already work ("EU" means all 27 EU countries) and the evidence says whether that covers the job's country. visaSponsorship true means the company sponsors a work visa, so a candidate without that right can still take the job: say so plainly. When it is false and the candidate cannot already work there, name it as a point to check. Never infer a nationality from where someone may work.`
 
+// 2026-11-17 (phase 2): drafts a recruiter reviews and edits before using them.
+const DRAFT_RULES = [
+  'You draft text for a recruiter on a European job platform; the recruiter reviews and edits it before it is used.',
+  'Never invent facts about the company, salary, benefits, location, dates, contact details or people: leave out what the input does not give.',
+  'Never mention or infer protected characteristics (age, gender, ethnicity, nationality, religion, disability, health or family status), and never write requirements that would exclude people on those grounds.',
+  'Write plainly and warmly, without buzzwords, exclamation marks or placeholders such as [name] or [date].',
+].join('\n')
+
+const J = LIMITS.job
+const LANGUAGE_LEVELS = ['a1', 'a2', 'b1', 'b2', 'c1', 'c2', 'native']
+const JOB_LEVELS = ['junior', 'mid', 'senior', 'lead']
+
 const text = { type: 'string' }
 const texts = { type: 'array', items: text }
 const object = (properties) => ({ type: 'object', properties, required: Object.keys(properties), additionalProperties: false })
 const snapshot = object({ role: text, years: { type: 'integer' }, skills: texts })
 
 export const PROMPTS = {
+  // 2026-11-17: the job post writer; the client fills only the fields the recruiter left empty.
+  jobDraft: {
+    kind: 'job_draft',
+    schema: object({
+      brief: text,
+      responsibilities: texts,
+      requiredSkills: texts,
+      preferredSkills: texts,
+      level: { type: 'string', enum: JOB_LEVELS },
+      experienceYears: { type: 'integer' },
+      languages: { type: 'array', items: object({ code: text, minLevel: { type: 'string', enum: LANGUAGE_LEVELS } }) },
+    }),
+    instructions: `${DRAFT_RULES}
+Draft a job posting from the job title, the employment type, the company facts and the recruiter's notes (the notes come first when they say something). Typical duties and skills for this kind of role are fine; facts about this company are only those given.
+brief: what the role is and why it matters, 60 to 160 words, in the second person ("you will…"), no salary or benefits unless the notes give them.
+responsibilities: 4 to 7 duties, each one sentence of at most ${J.responsibilities.itemMax} characters, without bullets or numbering.
+requiredSkills: 4 to 8 skills essential for the role, each a short standard name of at most ${J.requiredSkills.itemMax} characters (a skill, tool or qualification, not a sentence).
+preferredSkills: 2 to 5 nice-to-have skills in the same form, none repeating a required one.
+level and experienceYears (a whole number from ${J.experienceYears.min} to ${J.experienceYears.max}): what the title and notes suggest; mid and 3 when nothing does.
+languages: only languages the notes ask for or the role plainly needs, as ISO 639-1 codes with a minimum CEFR level (or native); usually none.`,
+  },
+  // 2026-11-17: the company description writer, from the company's own details only (no website fetching).
+  companyDescription: {
+    kind: 'company_description',
+    schema: object({ description: text }),
+    instructions: `${DRAFT_RULES}
+Write the "About the company" text candidates read on job postings, from the company facts and the recruiter's notes only: what the company does, for whom, and what working there is like when the notes say so. 60 to 150 words, in the first person plural ("we…"), two short paragraphs at most. Never claim awards, numbers, customers, history or values the input does not give.`,
+  },
+  // 2026-11-17: the "AI shortlist" of a job's new applicants; the code supplies each applicant's evidence and score.
+  applicantShortlist: {
+    kind: 'applicant_shortlist',
+    schema: object({ items: { type: 'array', items: object({ applicationId: text, reason: text }) } }),
+    instructions: `${DRAFT_RULES}
+Rank the job's new applicants for a first review, strongest fit first, using only the evidence given per applicant (matching and missing required skills, years of experience, headline, location, the match score and the cover note). Return at most ${LIMITS.ai.shortlist.size} applicants, each with its applicationId copied exactly and one sentence of at most 25 words naming the main reason (or the main gap) from that evidence. This helps the recruiter decide whom to read first; it is not a hiring decision.`,
+  },
+  // 2026-11-17: "Draft with AI" for a recruiter's message: a first message, a status update or a reply.
+  messageDraft: {
+    kind: 'message_draft',
+    schema: object({ body: text }),
+    instructions: `${DRAFT_RULES}
+Write one message from a recruiter at the company to the candidate, in the recruiter's voice, ready to send after a quick review. purpose says which:
+- first_message: a short, personal first message about the job (or the company's open roles when no job is given), naming one or two things from the candidate's profile that fit and ending with one clear next step such as a short call.
+- status_update: tell the candidate where their application now stands (status gives the new stage, or not_selected). For not_selected: thank them, say kindly that the company will not move forward, without giving reasons. For a next stage: say what happens next only as far as the input says.
+- reply: answer the latest message of the conversation, using the job and candidate facts.
+Use the recruiter's notes when given. 40 to 120 words, plain text with short paragraphs, no subject line, no signature block beyond the recruiter's first name when given.`,
+  },
   // M-058: a summary of one job for any reader (candidate, recruiter or admin).
   jobSummary: {
     kind: 'job_summary',

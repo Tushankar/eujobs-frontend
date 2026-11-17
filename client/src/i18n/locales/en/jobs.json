@@ -82,6 +82,26 @@
     "liveNote": "Changes to a live role are saved when you finish and show to candidates straight away.",
     "progress": "{{done}} of {{total}} sections ready"
   },
+  "aiDraft": {
+    "title": "Write the posting with AI",
+    "text": "From the title, the employment type and a few notes, AI drafts the description, responsibilities, skills, level, years and languages. It only fills fields you left empty; review every step before you publish.",
+    "notes": "Notes for the AI (optional)",
+    "notesHint": "Team, main tools, must-haves, languages… Leave out anything private.",
+    "notesPlaceholder": "e.g. Small product team in Berlin, React and TypeScript, English required, German a plus",
+    "action": "Draft with AI",
+    "needTitle": "Add a job title first.",
+    "filled": "Filled: {{fields}}. Review them in the next steps.",
+    "nothing": "Every field already has your text, so nothing was changed.",
+    "fields": {
+      "brief": "description",
+      "responsibilities": "responsibilities",
+      "requiredSkills": "required skills",
+      "preferredSkills": "preferred skills",
+      "level": "level",
+      "experienceYears": "years of experience",
+      "requiredLanguages": "languages"
+    }
+  },
   "preview": {
     "title": "Preview",
     "hint": "How candidates will see this job"

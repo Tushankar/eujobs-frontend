@@ -74,5 +74,9 @@
     "resets": "Réinitialisation le {{time}}",
     "percent": "{{percent}} % utilisé",
     "note": "Rouvrir un texte déjà rédigé ne consomme rien."
+  },
+  "draft": {
+    "action": "Rédiger avec l’IA",
+    "again": "Rédiger à nouveau"
   }
 }

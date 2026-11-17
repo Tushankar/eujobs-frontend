@@ -13,6 +13,13 @@
     "size": "Taille de l’entreprise",
     "description": "Ce que vous construisez"
   },
+  "aiDraft": {
+    "notes": "Notes pour l’IA (facultatif)",
+    "notesPlaceholder": "ex. nous créons un logiciel de réservation pour petits hôtels ; équipe de 25 en télétravail partiel",
+    "action": "Rédiger avec l’IA",
+    "done": "L’IA a rédigé la description à partir des informations de votre entreprise. Modifiez-la puis enregistrez.",
+    "undo": "Annuler"
+  },
   "logo": {
     "upload": "Importer le logo",
     "replace": "Remplacer le logo",

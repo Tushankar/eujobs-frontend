@@ -83,6 +83,26 @@
     "liveNote": "Los cambios en un puesto publicado se guardan al terminar y los candidatos los ven al momento.",
     "progress": "{{done}} de {{total}} secciones listas"
   },
+  "aiDraft": {
+    "title": "Redacta la oferta con IA",
+    "text": "A partir del título, el tipo de contrato y unas notas, la IA redacta la descripción, las responsabilidades, las habilidades, el nivel, los años y los idiomas. Solo rellena los campos que dejaste vacíos; revisa cada paso antes de publicar.",
+    "notes": "Notas para la IA (opcional)",
+    "notesHint": "Equipo, herramientas principales, requisitos, idiomas… No incluyas nada privado.",
+    "notesPlaceholder": "p. ej. Equipo de producto pequeño en Berlín, React y TypeScript, inglés obligatorio, alemán valorable",
+    "action": "Redactar con IA",
+    "needTitle": "Añade primero un título.",
+    "filled": "Rellenado: {{fields}}. Revísalo en los siguientes pasos.",
+    "nothing": "Todos los campos ya tienen tu texto, así que no se ha cambiado nada.",
+    "fields": {
+      "brief": "descripción",
+      "responsibilities": "responsabilidades",
+      "requiredSkills": "habilidades requeridas",
+      "preferredSkills": "habilidades valoradas",
+      "level": "nivel",
+      "experienceYears": "años de experiencia",
+      "requiredLanguages": "idiomas"
+    }
+  },
   "preview": {
     "title": "Vista previa",
     "hint": "Así verán los candidatos esta oferta"

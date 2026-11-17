@@ -3,10 +3,12 @@ import { useTranslation } from 'react-i18next'
 import { Link, useNavigate } from 'react-router-dom'
 import { MessageSquare } from 'lucide-react'
 import { Button, Icon, Modal } from '@/components/ui'
+import AiDraftButton from '@/features/ai/components/AiDraftButton.jsx'
 import PlanButton from '@/features/candidate/billing/components/PlanButton.jsx'
 import { usePreferences } from '@/lib/preferences.js'
 import { messagesApi, useCompanyMessageStart, useStartConversationMutation } from '../api.js'
 import MessageForm from './MessageForm.jsx'
+import styles from './StartConversation.module.css'
 
 const FORM_ID = 'start-conversation-form'
 const messageIcon = <Icon as={MessageSquare} size={14} strokeWidth={2} />
@@ -36,6 +38,7 @@ function StartConversationDialog({ body, initialBody = '', title, description, o
   const navigate = useNavigate()
   const { me } = usePreferences()
   const [start] = useStartConversationMutation()
+  const [draft, setDraft] = useState(null)
   return (
     <Modal
       open
@@ -54,9 +57,16 @@ function StartConversationDialog({ body, initialBody = '', title, description, o
         </>
       }
     >
+      {/* 2026-11-17: a recruiter's first message drafted by AI from the candidate's profile and the job. */}
+      {me.role === 'recruiter' && body.candidateId && (
+        <div className={styles.draft}>
+          <AiDraftButton request={{ purpose: 'first_message', candidateId: body.candidateId, ...(body.jobId && { jobId: body.jobId }) }} onDraft={(text) => setDraft({ text })} />
+        </div>
+      )}
       <MessageForm
         formId={FORM_ID}
         initialBody={initialBody}
+        draft={draft}
         rows={6}
         autoFocus
         onSubmit={async (text) => {

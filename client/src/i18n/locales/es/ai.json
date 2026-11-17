@@ -74,5 +74,9 @@
     "resets": "Se restablece el {{time}}",
     "percent": "{{percent}} % usado",
     "note": "Abrir un texto ya redactado no gasta nada."
+  },
+  "draft": {
+    "action": "Redactar con IA",
+    "again": "Redactar de nuevo"
   }
 }

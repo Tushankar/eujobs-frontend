@@ -4,6 +4,8 @@ import { ArrowUpRight } from 'lucide-react'
 import { Avatar, Icon } from '@/components/ui'
 import PillBadge from '@/components/common/PillBadge.jsx'
 import { useGetCompanyApplicationsQuery } from '@/features/recruiter/applications/api.js'
+import { useShortlist } from '../utils/useShortlist.js'
+import JobAiShortlist, { ShortlistButton } from './JobAiShortlist.jsx'
 import { PeopleRowsSkeleton } from './JobTalentList.jsx'
 import styles from './JobTalentList.module.css'
 
@@ -12,9 +14,15 @@ export default function JobApplicantsList({ jobId }) {
   const { t } = useTranslation()
   const { data, isLoading } = useGetCompanyApplicationsQuery({ jobId })
   const applications = data?.items ?? []
+  // 2026-11-17: the AI shortlist of the newest unreviewed applicants (Recruiter Plus).
+  const shortlist = useShortlist(jobId)
   return (
     <section data-job-applicants>
-      <h3 className={styles.heading}>{t('applications:jobApplicants.title')}</h3>
+      <div className={styles.headRow}>
+        <h3 className={styles.heading}>{t('applications:jobApplicants.title')}</h3>
+        {applications.length > 0 && <ShortlistButton onClick={shortlist.run} loading={shortlist.isLoading} />}
+      </div>
+      <JobAiShortlist jobId={jobId} state={shortlist} onClose={shortlist.reset} />
       {isLoading ? (
         <PeopleRowsSkeleton pill />
       ) : data && applications.length === 0 ? (

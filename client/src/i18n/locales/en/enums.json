@@ -292,6 +292,10 @@
   },
   "aiKind": {
     "interview_notes": "Interview notes",
+    "job_draft": "Job post draft",
+    "company_description": "Company description",
+    "applicant_shortlist": "AI shortlist",
+    "message_draft": "Message draft",
     "job_summary": "Job summary",
     "match_explanation": "Match explanation",
     "insights": "Insights",

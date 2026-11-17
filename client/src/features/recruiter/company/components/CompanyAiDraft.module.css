@@ -1,0 +1,28 @@
+.draft {
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+}
+
+/* Notes field and the button on one line; the button lines up with the field's control. */
+.row {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: flex-end;
+  gap: 12px;
+}
+
+.notes {
+  flex: 1 1 280px;
+  min-width: 0;
+}
+
+.done {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: 4px 8px;
+  margin: 0;
+  font-size: 13px;
+  color: var(--foreground);
+}

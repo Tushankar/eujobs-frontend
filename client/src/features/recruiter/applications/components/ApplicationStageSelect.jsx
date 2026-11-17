@@ -1,12 +1,17 @@
 import { useState } from 'react'
 import { useTranslation } from 'react-i18next'
-import { Checkbox } from '@/components/ui'
+import { MessageSquareText } from 'lucide-react'
+import { useGetConfigQuery } from '@/app/api.js'
+import { Checkbox, IconButton, TextareaField } from '@/components/ui'
 import ConfirmDialog from '@/components/common/ConfirmDialog.jsx'
 import PillBadge from '@/components/common/PillBadge.jsx'
+import AiDraftButton from '@/features/ai/components/AiDraftButton.jsx'
 import { useCancelInterviewMutation } from '@/features/interviews/api.js'
 import { useInterviewMove } from '@/features/interviews/useInterviewMove.js'
 import StageSelect from '@/features/recruiter/hiring-pipeline/components/StageSelect.jsx'
-import { useRejectApplicationMutation } from '../api.js'
+import { usePreferences } from '@/lib/preferences.js'
+import { useMessageApplicantMutation, useRejectApplicationMutation } from '../api.js'
+import StatusMessageDialog from './StatusMessageDialog.jsx'
 import styles from './ApplicationStageSelect.module.css'
 
 const NOT_SELECTED = 'not_selected'
@@ -14,7 +19,8 @@ const NOT_SELECTED = 'not_selected'
 /**
  * One stage select per application (M-071): the company's stages plus "Not selected", which asks first and offers
  * "Email the candidate" (M-090, checked by default). Choosing a stage again undoes a rejection (OQ-6e). A withdrawn
- * application has no select (M-076).
+ * application has no select (M-076). With messaging (2026-11-17): the reject can carry a personal message (typed or
+ * drafted by AI), and "Send an update" beside the select messages the applicant about their current stage.
  */
 export default function ApplicationStageSelect({ application, candidateName, jobTitle, stages, variant, label }) {
   const { t } = useTranslation()
@@ -25,6 +31,13 @@ export default function ApplicationStageSelect({ application, candidateName, job
   const [rejecting, setRejecting] = useState(false)
   const [notify, setNotify] = useState(true)
   const [alsoCancel, setAlsoCancel] = useState(true)
+  const [message, setMessage] = useState('')
+  const [updating, setUpdating] = useState(false)
+  const [messageApplicant] = useMessageApplicantMutation()
+  const { me } = usePreferences()
+  const { data: config } = useGetConfigQuery()
+  // Recruiters may always message their applicants (message_send gates candidates only).
+  const canMessage = me?.role === 'recruiter'
   const activeInterview = application.interview?.active ? application.interview : null
 
   if (application.status === 'withdrawn') return <PillBadge tone="neutral">{t('applications:recruiter.withdrawn')}</PillBadge>
@@ -35,7 +48,7 @@ export default function ApplicationStageSelect({ application, candidateName, job
 
   return (
     <>
-      <span data-stage-select={application.id}>
+      <span data-stage-select={application.id} className={canMessage ? styles.withUpdate : undefined}>
         <StageSelect
           variant={variant}
           options={options}
@@ -45,11 +58,16 @@ export default function ApplicationStageSelect({ application, candidateName, job
             if (next === NOT_SELECTED) {
               setNotify(true)
               setAlsoCancel(true)
+              setMessage('')
               setRejecting(true)
             } else interviewMove.request(application, next, stages)
           }}
         />
+        {canMessage && (
+          <IconButton icon={MessageSquareText} label={t('applications:statusMessage.open', { name: candidateName ?? '' })} onClick={() => setUpdating(true)} data-status-update={application.id} />
+        )}
       </span>
+      {updating && <StatusMessageDialog application={application} candidateName={candidateName} jobTitle={jobTitle} onClose={() => setUpdating(false)} />}
       <ConfirmDialog
         open={rejecting}
         title={t('applications:reject.title')}
@@ -60,13 +78,28 @@ export default function ApplicationStageSelect({ application, candidateName, job
         onConfirm={async () => {
           setRejecting(false)
           if (activeInterview && alsoCancel) await cancelInterview({ id: activeInterview.id })
-          reject({ id: application.id, notify })
+          await reject({ id: application.id, notify })
+          if (message.trim()) await messageApplicant({ id: application.id, body: message.trim() })
         }}
       >
         <Checkbox name="notify" checked={notify} onChange={(event) => setNotify(event.target.checked)}>
           {t('applications:reject.notify')}
         </Checkbox>
         <p className={styles.hint}>{t('applications:reject.notifyHint')}</p>
+        {canMessage && (
+          <div className={styles.message} data-reject-message>
+            <TextareaField
+              label={t('applications:reject.message')}
+              hint={t('applications:reject.messageHint')}
+              name="rejectMessage"
+              rows={4}
+              maxLength={config?.limits.message.body.max}
+              value={message}
+              onChange={(event) => setMessage(event.target.value)}
+            />
+            <AiDraftButton request={{ purpose: 'status_update', applicationId: application.id, rejected: true }} onDraft={setMessage} />
+          </div>
+        )}
         {activeInterview && (
           <Checkbox name="cancelInterview" checked={alsoCancel} onChange={(event) => setAlsoCancel(event.target.checked)}>
             {t('interviews:move.alsoCancel')}

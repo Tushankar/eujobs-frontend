@@ -272,6 +272,11 @@ export const ENUMS = {
     'skill_name',
     'reply_suggestions',
     'interview_notes',
+    // 2026-11-17 (phase 2): recruiter drafts
+    'job_draft',
+    'company_description',
+    'applicant_shortlist',
+    'message_draft',
   ],
   emailType: Object.keys(EMAIL_TYPES),
   emailCategory: [...new Set(Object.values(EMAIL_CATEGORY))],

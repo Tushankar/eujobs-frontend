@@ -2,7 +2,7 @@ import { LIMITS } from '../../config/limits.js'
 import { AppError, fieldError } from '../../lib/errors.js'
 import { signedUrl } from '../../lib/files.js'
 import { skillOverlap } from '../../lib/skills.js'
-import { Application } from '../applications/applications.model.js'
+import { Application, PipelineStage } from '../applications/applications.model.js'
 import { CandidateProfile } from '../candidates/candidates.model.js'
 import { jobFacts, write } from '../ai/ai.facts.js'
 import { PROMPTS } from '../ai/ai.prompts.js'
@@ -175,6 +175,69 @@ export async function replySuggestions(user, company, id) {
   }
   const { replies } = await write(PROMPTS.replySuggestions, { user, input, subjectId: conversation.candidateId })
   return { messageId: String(last._id), replies: replies.map((reply) => reply.trim()).filter(Boolean).slice(0, R.count) }
+}
+
+/** A job's facts for a message draft, the brief and responsibilities cut short like a suggested reply's. */
+async function draftJobFacts(job) {
+  const R = LIMITS.message.replySuggestions
+  const facts = await jobFacts(job)
+  return { ...facts, brief: facts.brief.slice(0, R.briefChars), responsibilities: facts.responsibilities.slice(0, R.responsibilities) }
+}
+
+const companyBrief = (company) => ({ name: company.displayName, industry: company.industry ?? null, size: company.size ?? null, city: company.location?.city ?? null })
+
+/**
+ * POST /recruiter/ai/message-draft (owner 2026-11-17): "Draft with AI" for a recruiter's message, one AI use each
+ * (never cached, so drafting again gives a new text). `first_message`: to a candidate the company may contact, about
+ * `jobId` or its open roles. `status_update`: to the applicant of `applicationId`, about not being selected
+ * (`rejected`, drafted before the reject is confirmed) or their current stage. `reply`: to the latest messages of
+ * `conversationId`. Only a draft: the recruiter edits and sends it as a normal message.
+ */
+export async function messageDraft(user, company, { purpose, candidateId, jobId, applicationId, rejected, conversationId, notes }) {
+  let facts
+  let subjectId
+  if (purpose === 'reply') {
+    const conversation = await ownConversation(user, company, conversationId)
+    const R = LIMITS.message.replySuggestions
+    const latest = (await Message.find({ conversationId: conversation._id, ...TEXT_ONLY }).sort({ createdAt: -1 }).limit(R.messages)).reverse()
+    facts = { ...(await replyContext(conversation)), messages: latest.map((message) => ({ from: message.senderRole === user.role ? 'you' : 'them', text: message.body.slice(0, R.chars) })) }
+    subjectId = conversation.candidateId
+  } else if (purpose === 'status_update') {
+    const application = await Application.findOne({ _id: applicationId, companyId: company._id })
+    if (!application) throw new AppError('NOT_FOUND')
+    const [candidate, profile, job, stage] = await Promise.all([
+      User.findById(application.candidateId, 'fullName'),
+      CandidateProfile.findOne({ userId: application.candidateId }),
+      Job.findById(application.jobId),
+      PipelineStage.findById(application.stageId, 'name category'),
+    ])
+    facts = {
+      status: rejected || application.status === 'not_selected' ? 'not_selected' : { stage: stage?.name ?? null, category: stage?.category ?? null },
+      job: job && (await draftJobFacts(job)),
+      company: companyBrief(company),
+      candidate: candidate && candidateBrief(candidate, profile),
+    }
+    subjectId = application.candidateId
+  } else {
+    const { user: candidate, profile } = await accessibleCandidate(candidateId, company)
+    const job = jobId ? await Job.findOne({ _id: jobId, companyId: company._id }) : null
+    const openRoles = job ? [] : (await Job.find({ companyId: company._id, status: 'published' }, 'title').limit(LIMITS.message.replySuggestions.openRoles)).map((role) => role.title)
+    facts = { job: job && (await draftJobFacts(job)), openRoles, company: companyBrief(company), candidate: candidateBrief(candidate, profile) }
+    subjectId = candidate._id
+  }
+  const input = { purpose, recruiterFirstName: user.fullName.split(' ')[0], notes: notes || null, ...facts }
+  const { body } = await write(PROMPTS.messageDraft, { user, input, subjectId, cache: false })
+  return { body: body.trim().slice(0, LIMITS.message.body.max) }
+}
+
+/**
+ * POST /recruiter/applications/:id/message (2026-11-17): a status update to an applicant, in the company's thread with
+ * them about that job (started when there is none), like any recruiter message.
+ */
+export async function messageApplicant(user, company, applicationId, body) {
+  const application = await Application.findOne({ _id: applicationId, companyId: company._id }, 'candidateId jobId')
+  if (!application) throw new AppError('NOT_FOUND')
+  return start(user, company, { candidateId: String(application.candidateId), jobId: String(application.jobId), body })
 }
 
 /** Adds a message: the other side's unread count, its delayed email (U13) and, for a candidate's answer, a `message_reply` event. */

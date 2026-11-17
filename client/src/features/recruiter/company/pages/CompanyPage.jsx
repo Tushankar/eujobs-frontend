@@ -8,6 +8,7 @@ import CityField from '@/components/common/CityField.jsx'
 import PillBadge from '@/components/common/PillBadge.jsx'
 import { check, checkUpload, useErrorText, useFormState, useUploadText } from '@/lib/forms.js'
 import { useGetCompanyQuery, useRemoveLogoMutation, useUpdateCompanyMutation, useUploadLogoMutation } from '../api.js'
+import CompanyAiDraft from '../components/CompanyAiDraft.jsx'
 import styles from './CompanyPage.module.css'
 
 /** The Company page (M-146, M-147, M-150): public fields only; the legal name stays as verified in KYC. */
@@ -244,6 +245,8 @@ function CompanyForm({ company }) {
             onChange={field('description')}
             error={errorOf('description')}
           />
+          {/* 2026-11-17: the company description writer (Recruiter Plus). */}
+          <CompanyAiDraft values={values} onChange={(text) => field('description')({ target: { value: text } })} />
 
           {failure && <p role="alert">{errorText.code(failure)}</p>}
           <div className={styles.actions}>

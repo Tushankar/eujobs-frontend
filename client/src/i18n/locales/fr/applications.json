@@ -136,7 +136,18 @@
     "description": "La candidature de {{name}} pour {{job}} quitte votre tableau et apparaît sous « Non retenu ». Pour annuler, choisissez à nouveau une étape dans les 10 minutes : aucun e-mail ne sera envoyé.",
     "notify": "Envoyer un e-mail au candidat",
     "notifyHint": "Envoyé dans sa langue dans 10 minutes.",
+    "message": "Ajouter un message personnel (facultatif)",
+    "messageHint": "Envoyé dans votre conversation avec cette personne, en plus de l’e-mail de statut.",
     "confirm": "Marquer comme non retenu"
+  },
+  "statusMessage": {
+    "open": "Envoyer une nouvelle à {{name}}",
+    "title": "Envoyer une nouvelle à {{name}}",
+    "description": "Concernant {{job}}. Le message arrive dans votre conversation avec cette personne.",
+    "placeholder": "Indiquez où en est sa candidature, ou rédigez-le avec l’IA.",
+    "send": "Envoyer",
+    "sent": "Envoyé. {{name}} peut le lire dans Messages.",
+    "done": "Terminé"
   },
   "board": {
     "title": "Faites avancer les bons profils.",
@@ -227,6 +238,15 @@
     "title": "Candidats",
     "empty": "Aucune candidature active pour ce poste pour l’instant.",
     "all": "Ouvrir dans Candidatures"
+  },
+  "aiShortlist": {
+    "action": "Présélection IA",
+    "title": "Présélection IA",
+    "close": "Fermer la présélection IA",
+    "from_one": "Classé parmi {{count}} nouvelle candidature.",
+    "from_other": "Classé parmi {{count}} nouvelles candidatures.",
+    "none": "Aucune nouvelle candidature à classer.",
+    "disclaimer": "Qui lire en premier, d’après le profil ; ce n’est pas une décision d’embauche."
   },
   "overview": {
     "funnelTitle": "Votre entonnoir de recrutement",

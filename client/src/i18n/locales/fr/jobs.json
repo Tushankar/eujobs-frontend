@@ -83,6 +83,26 @@
     "liveNote": "Les modifications d’un poste en ligne sont enregistrées à la fin et visibles immédiatement par les candidats.",
     "progress": "{{done}} sur {{total}} sections prêtes"
   },
+  "aiDraft": {
+    "title": "Rédiger l’offre avec l’IA",
+    "text": "À partir de l’intitulé, du type de contrat et de quelques notes, l’IA rédige la description, les responsabilités, les compétences, le niveau, les années et les langues. Elle ne remplit que les champs laissés vides ; relisez chaque étape avant de publier.",
+    "notes": "Notes pour l’IA (facultatif)",
+    "notesHint": "Équipe, outils principaux, indispensables, langues… N’indiquez rien de privé.",
+    "notesPlaceholder": "ex. Petite équipe produit à Berlin, React et TypeScript, anglais requis, allemand apprécié",
+    "action": "Rédiger avec l’IA",
+    "needTitle": "Ajoutez d’abord un intitulé.",
+    "filled": "Rempli : {{fields}}. Vérifiez-les aux étapes suivantes.",
+    "nothing": "Tous les champs contiennent déjà votre texte : rien n’a été modifié.",
+    "fields": {
+      "brief": "description",
+      "responsibilities": "responsabilités",
+      "requiredSkills": "compétences requises",
+      "preferredSkills": "compétences appréciées",
+      "level": "niveau",
+      "experienceYears": "années d’expérience",
+      "requiredLanguages": "langues"
+    }
+  },
   "preview": {
     "title": "Aperçu",
     "hint": "Ce que les candidats verront de cette offre"

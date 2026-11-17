@@ -292,6 +292,10 @@
   },
   "aiKind": {
     "interview_notes": "Notas de entrevista",
+    "job_draft": "Borrador de oferta",
+    "company_description": "Descripción de la empresa",
+    "applicant_shortlist": "Preselección con IA",
+    "message_draft": "Borrador de mensaje",
     "job_summary": "Resumen de la oferta",
     "match_explanation": "Explicación de la compatibilidad",
     "insights": "Análisis",

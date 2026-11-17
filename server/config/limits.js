@@ -183,6 +183,10 @@ export const LIMITS = {
   // plan and billing interval (yearly gets more), the per-minute burst, the daily new skill-name lookups, and the ranges
   // the admin may set. Budgets alert at `alertAt` shares and pause the provider at 100 %.
   ai: {
+    // 2026-11-17 (phase 2): the AI shortlist reads at most `candidates` new applicants and returns `size`; the recruiter's
+    // notes for a draft are at most `notes` characters.
+    shortlist: { candidates: 30, size: 10 },
+    notes: { max: 600 },
     embeddingMaxChars: 32_000,
     skillNamesTimeoutMs: 8_000,
     usage: {

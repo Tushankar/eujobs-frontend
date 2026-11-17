@@ -1,4 +1,5 @@
 import { z } from 'zod'
+import { ENUMS } from '../../config/enums.js'
 import { LIMITS } from '../../config/limits.js'
 import { PLACES_SKUS } from '../../lib/usage.js'
 import { objectId } from '../../lib/validate.js'
@@ -41,3 +42,23 @@ export const usageSettingsBody = z.object({
       .refine((items) => new Set(items.map((item) => item.sku)).size === items.length, 'duplicate'),
   }),
 })
+
+/* 2026-11-17 (phase 2): recruiter drafts. `notes` is what the recruiter types for the AI. */
+const notes = z.string().trim().max(LIMITS.ai.notes.max).default('')
+export const jobDraftBody = z.object({
+  title: z.string().trim().min(LIMITS.job.title.min).max(LIMITS.job.title.max),
+  employmentType: z.enum(ENUMS.employmentType),
+  notes,
+})
+export const companyDescriptionBody = z.object({
+  name: z.string().trim().min(LIMITS.company.name.min).max(LIMITS.company.name.max),
+  industry: z.string().trim().max(LIMITS.company.industry.max).default(''),
+  size: z.enum(ENUMS.companySize).nullable().default(null),
+  city: z.string().trim().max(100).default(''),
+  notes,
+})
+export const messageDraftBody = z.discriminatedUnion('purpose', [
+  z.object({ purpose: z.literal('first_message'), candidateId: objectId, jobId: objectId.optional(), notes }),
+  z.object({ purpose: z.literal('status_update'), applicationId: objectId, rejected: z.boolean().default(false), notes }),
+  z.object({ purpose: z.literal('reply'), conversationId: objectId, notes }),
+])

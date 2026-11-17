@@ -8,6 +8,7 @@ import { useGetQualityChecksQuery } from '../api.js'
 import { valuesToBody } from '../utils/jobForm.js'
 import { useJobPreview } from '../utils/useJobPreview.js'
 import { EligibleCountries, LanguageRequirements } from './ListFields.jsx'
+import JobAiDraft from './JobAiDraft.jsx'
 import JobPosting from './JobPosting.jsx'
 import SkillPicker from './SkillPicker.jsx'
 import styles from './JobStepFields.module.css'
@@ -64,6 +65,8 @@ export default function JobStepFields({ step, values, bind, errorOf, setValue, c
             <TextField label={t('jobs:fields.company')} hint={t('jobs:fields.companyHint')} value={companyName} readOnly disabled />
             <SelectField label={t('jobs:fields.employmentType')} options={enumOptions('employmentType')} {...bind('employmentType')} />
           </div>
+          {/* 2026-11-17: the job post writer fills the later steps' empty fields. */}
+          <JobAiDraft values={values} setValue={setValue} />
         </div>
       )
     case 'responsibilities':

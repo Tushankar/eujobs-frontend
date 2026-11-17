@@ -292,6 +292,10 @@
   },
   "aiKind": {
     "interview_notes": "Notes d’entretien",
+    "job_draft": "Brouillon d’offre",
+    "company_description": "Description de l’entreprise",
+    "applicant_shortlist": "Présélection IA",
+    "message_draft": "Brouillon de message",
     "job_summary": "Résumé de l’offre",
     "match_explanation": "Explication de la correspondance",
     "insights": "Analyses",

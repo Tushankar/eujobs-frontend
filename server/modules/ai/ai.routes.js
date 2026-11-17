@@ -3,11 +3,13 @@ import { validate } from '../../lib/validate.js'
 import { requireApprovedRecruiter, requireAuth, requireRole } from '../../middleware/auth.js'
 import { requireEntitlement } from '../../middleware/entitlements.js'
 import { requirePermission } from '../../middleware/permissions.js'
+import * as drafts from './ai.drafts.js'
 import * as insights from './ai.insights.js'
 import * as schemas from './ai.schemas.js'
 import * as summaries from './ai.summaries.js'
 import { translate } from './ai.translate.js'
 import { usageLeft } from '../../lib/usage.js'
+import { messageDraft } from '../messages/messages.service.js'
 
 /*
  * AI routes (§5, §3.18). Candidates need the `ai` entitlement of Plus and approved recruiters that of Recruiter Plus (402
@@ -120,4 +122,20 @@ translateRouter.post('/', ...reader, validate({ body: schemas.translateBody }), 
 export const usageRouter = Router()
 usageRouter.get('/usage', requireAuth, requireRole('candidate', 'recruiter'), async (req, res) => {
   res.json(await usageLeft(req.user))
+})
+
+/* 2026-11-17 (phase 2): /recruiter/ai drafts for an approved Recruiter Plus recruiter; each is one AI use. */
+export const recruiterDraftsRouter = Router()
+recruiterDraftsRouter.use(requireAuth, requireApprovedRecruiter, requireEntitlement('ai', ['recruiter']))
+recruiterDraftsRouter.post('/job-draft', validate({ body: schemas.jobDraftBody }), async (req, res) => {
+  res.json(await drafts.jobDraft(req.user, req.body))
+})
+recruiterDraftsRouter.post('/company-description', validate({ body: schemas.companyDescriptionBody }), async (req, res) => {
+  res.json(await drafts.companyDescription(req.user, req.body))
+})
+recruiterDraftsRouter.post('/jobs/:id/shortlist', jobParams, async (req, res) => {
+  res.json(await drafts.applicantShortlist(req.user, req.params.id))
+})
+recruiterDraftsRouter.post('/message-draft', validate({ body: schemas.messageDraftBody }), async (req, res) => {
+  res.json(await messageDraft(req.user, req.company, req.body))
 })

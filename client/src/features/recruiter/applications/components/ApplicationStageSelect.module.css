@@ -4,3 +4,24 @@
   line-height: 16px;
   color: var(--muted-foreground);
 }
+
+/* 2026-11-17: the stage select with its "Send an update" button. */
+.withUpdate {
+  display: inline-flex;
+  align-items: center;
+  gap: 4px;
+}
+
+/* The optional message in the reject dialog and the update dialog. */
+.message {
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+  margin-top: 16px;
+}
+
+.sent {
+  margin: 0;
+  font-size: 14px;
+  color: var(--foreground);
+}

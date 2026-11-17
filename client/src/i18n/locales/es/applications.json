@@ -136,7 +136,18 @@
     "description": "La candidatura de {{name}} para {{job}} sale de tu tablero y aparece en “No seleccionado”. Para deshacerlo, elige de nuevo una etapa en menos de 10 minutos y no se enviará ningún correo.",
     "notify": "Enviar un correo al candidato",
     "notifyHint": "Se envía en su idioma dentro de 10 minutos.",
+    "message": "Añadir un mensaje personal (opcional)",
+    "messageHint": "Se envía en tu conversación con esta persona, además del correo de estado.",
     "confirm": "Marcar como no seleccionado"
+  },
+  "statusMessage": {
+    "open": "Enviar una novedad a {{name}}",
+    "title": "Enviar una novedad a {{name}}",
+    "description": "Sobre {{job}}. Llega a tu conversación con esta persona.",
+    "placeholder": "Cuéntale en qué punto está su candidatura o redáctalo con IA.",
+    "send": "Enviar novedad",
+    "sent": "Enviado. {{name}} puede leerlo en Mensajes.",
+    "done": "Listo"
   },
   "board": {
     "title": "Haz avanzar a las personas adecuadas.",
@@ -227,6 +238,15 @@
     "title": "Candidatos",
     "empty": "Aún no hay candidaturas activas para este puesto.",
     "all": "Abrir en Candidaturas"
+  },
+  "aiShortlist": {
+    "action": "Preselección con IA",
+    "title": "Preselección con IA",
+    "close": "Cerrar la preselección con IA",
+    "from_one": "Ordenado entre {{count}} candidatura nueva.",
+    "from_other": "Ordenado entre {{count}} candidaturas nuevas.",
+    "none": "No hay candidaturas nuevas que ordenar.",
+    "disclaimer": "A quién leer primero según su perfil; no es una decisión de contratación."
   },
   "overview": {
     "funnelTitle": "Tu embudo de selección",

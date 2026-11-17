@@ -59,7 +59,7 @@ export const COVERAGE = {
   ExplanationFeedback: 'deleted',
   AiUsage: 'deleted',
   ApiUsage: 'anonymised (the counts merge into the no-user row, so the Usage tab keeps its totals)',
-  AiCache: 'deleted (rows about the person: subjectId)',
+  AiCache: 'deleted (rows about the person: subjectId, and AI shortlists naming their applications)',
   Embedding: 'deleted (the candidate\'s vector)',
   MatchResult: 'deleted (the candidate\'s scores)',
   Application: 'deleted (candidate); kept on a deleted company\'s closed jobs (the display name stays)',
@@ -233,6 +233,8 @@ async function eraseCandidate(user) {
     SavedJob.deleteMany({ candidateId: user._id }),
     ExplanationFeedback.deleteMany({ candidateId: user._id }),
     AiCache.deleteMany({ subjectId: user._id }),
+    // 2026-11-17: an AI shortlist naming one of the candidate's applications (it is made again on the next click).
+    AiCache.deleteMany({ kind: 'applicant_shortlist', 'output.items.applicationId': { $in: applicationIds.map(String) } }),
     Embedding.deleteMany({ ownerType: 'candidate', ownerId: user._id }),
     MatchResult.deleteMany({ candidateId: user._id }),
     ShortlistEntry.deleteMany({ candidateId: user._id }),

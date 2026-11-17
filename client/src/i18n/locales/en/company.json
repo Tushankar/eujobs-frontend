@@ -13,6 +13,13 @@
     "size": "Company size",
     "description": "What you’re building"
   },
+  "aiDraft": {
+    "notes": "Notes for the AI (optional)",
+    "notesPlaceholder": "e.g. we build booking software for small hotels; remote-friendly team of 25",
+    "action": "Draft with AI",
+    "done": "AI wrote the description from your company details. Edit it, then save.",
+    "undo": "Undo"
+  },
   "logo": {
     "upload": "Upload logo",
     "replace": "Replace logo",

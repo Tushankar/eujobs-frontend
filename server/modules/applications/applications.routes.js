@@ -6,6 +6,8 @@ import * as pipeline from './applications.pipeline.js'
 import * as schemas from './applications.schemas.js'
 import * as applications from './applications.service.js'
 import * as stats from './applications.stats.js'
+import { messageApplicant } from '../messages/messages.service.js'
+import { messageBody } from '../messages/messages.schemas.js'
 
 /* /candidate/applications, /recruiter/applications, /recruiter/pipeline and the Overview charts (§5). */
 const idParams = validate({ params: schemas.idParams })
@@ -44,6 +46,11 @@ recruiterRouter.get('/:id', idParams, async (req, res) => {
 
 recruiterRouter.patch('/:id/stage', idParams, validate({ body: schemas.stageMoveBody }), async (req, res) => {
   res.json(await applications.moveToStage(req.user, req.company, req.params.id, req.body.stageId))
+})
+
+// 2026-11-17: a status update to the applicant (an AI draft or their own words), in the thread with them about the job.
+recruiterRouter.post('/:id/message', idParams, requireEntitlement('message_send'), validate({ body: messageBody }), async (req, res) => {
+  res.status(201).json(await messageApplicant(req.user, req.company, req.params.id, req.body.body))
 })
 
 recruiterRouter.post('/:id/reject', idParams, validate({ body: schemas.rejectBody }), async (req, res) => {

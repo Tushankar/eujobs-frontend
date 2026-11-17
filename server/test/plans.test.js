@@ -194,7 +194,8 @@ describe('admin › Payments › Plans', () => {
     assert.equal(res.status, 200)
     assert.equal((await stripe().products.retrieve(stripeConfig.productIds.plus)).name, 'Plus Pro')
     const { items } = (await api().get(`${v1}/plans`).query({ currency: 'EUR', role: 'candidate', language: 'fr' })).body
-    assert.deepEqual([items[1].name, items[1].features.at(-1)], ['Plus Pro', 'Support prioritaire'])
+    // The last line is the daily AI uses the server adds (2026-11-17); the admin's features come before it.
+    assert.deepEqual([items[1].name, items[1].features.at(-2)], ['Plus Pro', 'Support prioritaire'])
     assert.equal((await patch(admin, 'plus', bodyOf(plan))).status, 200)
     // Free has no prices: only its texts change.
     const free = await listed(admin, 'free')

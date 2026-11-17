@@ -74,5 +74,9 @@
     "resets": "Resets {{time}}",
     "percent": "{{percent}}% used",
     "note": "Opening a text that was already written doesn’t use anything."
+  },
+  "draft": {
+    "action": "Draft with AI",
+    "again": "Draft again"
   }
 }

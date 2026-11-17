@@ -91,3 +91,21 @@
   justify-items: start;
   gap: 10px;
 }
+
+/* A heading with an action on its right (the applicants' AI shortlist, 2026-11-17): the row takes the heading's rule. */
+.headRow {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  justify-content: space-between;
+  gap: 8px 12px;
+  margin-top: 32px;
+  padding-top: 28px;
+  border-top: 1px solid var(--border);
+}
+
+.headRow .heading {
+  margin: 0;
+  padding: 0;
+  border: 0;
+}

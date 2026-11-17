@@ -12,6 +12,7 @@ import { lacksEntitlement } from '@/features/candidate/billing/usePlan.js'
 import ReportButton from '@/features/moderation/components/ReportButton.jsx'
 import { useFormat, usePreferences } from '@/lib/preferences.js'
 import { cx } from '@/utils/cx.js'
+import AiDraftButton from '@/features/ai/components/AiDraftButton.jsx'
 import { useMarkReadMutation, useSendMessageMutation, useThread } from '../api.js'
 import Counterpart from '../components/Counterpart.jsx'
 import MessageForm from '../components/MessageForm.jsx'
@@ -176,6 +177,8 @@ export default function ThreadPage() {
           ) : (
             <>
               <ReplySuggestions conversationId={conversationId} lastMessage={lastText} onPick={setDraft} />
+              {/* 2026-11-17: a recruiter can also have AI draft a full reply. */}
+              {me.role === 'recruiter' && <AiDraftButton request={{ purpose: 'reply', conversationId }} onDraft={(text) => setDraft({ text })} />}
               <MessageForm
                 submitLabel={t('messages:thread.send')}
                 placeholder={t('messages:form.placeholder')}

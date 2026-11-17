@@ -136,7 +136,18 @@
     "description": "{{name}}’s application for {{job}} leaves your board and shows under “Not selected”. To undo, choose a stage again within 10 minutes and no email is sent.",
     "notify": "Email the candidate",
     "notifyHint": "Sent in their language 10 minutes from now.",
+    "message": "Add a personal message (optional)",
+    "messageHint": "Sent in your conversation with them, besides the status email.",
     "confirm": "Mark as not selected"
+  },
+  "statusMessage": {
+    "open": "Send an update to {{name}}",
+    "title": "Send an update to {{name}}",
+    "description": "About {{job}}. It arrives in your conversation with them.",
+    "placeholder": "Tell them where their application stands, or draft it with AI.",
+    "send": "Send update",
+    "sent": "Sent. {{name}} can read it in Messages.",
+    "done": "Done"
   },
   "board": {
     "title": "Keep good people moving forward.",
@@ -220,6 +231,15 @@
     "title": "Applicants",
     "empty": "No active applications for this role yet.",
     "all": "Open in Applications"
+  },
+  "aiShortlist": {
+    "action": "AI shortlist",
+    "title": "AI shortlist",
+    "close": "Close the AI shortlist",
+    "from_one": "Ranked from {{count}} new applicant.",
+    "from_other": "Ranked from {{count}} new applicants.",
+    "none": "There are no new applicants to rank.",
+    "disclaimer": "Who to read first, from their profile evidence; not a hiring decision."
   },
   "overview": {
     "funnelTitle": "Your hiring funnel",

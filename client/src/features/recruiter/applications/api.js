@@ -14,6 +14,8 @@ export const recruiterApplicationsApi = api.injectEndpoints({
     getCompanyApplication: build.query({ query: (id) => `/recruiter/applications/${id}`, providesTags: ['CompanyApplications'] }),
     moveApplication: build.mutation({ query: ({ id, stageId }) => ({ url: `/recruiter/applications/${id}/stage`, method: 'PATCH', body: { stageId } }), invalidatesTags: MOVE_CHANGES }),
     rejectApplication: build.mutation({ query: ({ id, notify }) => ({ url: `/recruiter/applications/${id}/reject`, method: 'POST', body: { notify } }), invalidatesTags: MOVE_CHANGES }),
+    // 2026-11-17: a status update to the applicant, in the company's thread with them about the job.
+    messageApplicant: build.mutation({ query: ({ id, body }) => ({ url: `/recruiter/applications/${id}/message`, method: 'POST', body: { body } }), invalidatesTags: ['Conversations', 'CandidateActivity'] }),
     getPipeline: build.query({ query: () => '/recruiter/pipeline', providesTags: ['Pipeline'] }),
     addStage: build.mutation({ query: (body) => ({ url: '/recruiter/pipeline/stages', method: 'POST', body }), invalidatesTags: ['Pipeline', 'RecruiterOverview'] }),
     updateStage: build.mutation({ query: ({ id, ...body }) => ({ url: `/recruiter/pipeline/stages/${id}`, method: 'PATCH', body }), invalidatesTags: ['Pipeline', 'CompanyApplications', 'RecruiterOverview'] }),
@@ -31,6 +33,7 @@ export const {
   useGetCompanyApplicationQuery,
   useMoveApplicationMutation,
   useRejectApplicationMutation,
+  useMessageApplicantMutation,
   useGetPipelineQuery,
   useAddStageMutation,
   useUpdateStageMutation,

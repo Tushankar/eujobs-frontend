@@ -28,6 +28,11 @@ export const aiApi = api.injectEndpoints({
     translate: build.mutation({ query: (body) => ({ url: '/translate', method: 'POST', body }) }),
     // 2026-11-17: today's AI uses, the plan's daily cap and when it resets
     getAiUsage: build.query({ query: () => '/ai/usage', providesTags: ['AiUsage'] }),
+    // 2026-11-17 (phase 2): recruiter drafts; each counts as one AI use, so the "uses left" count refreshes.
+    draftJob: build.mutation({ query: (body) => ({ url: '/recruiter/ai/job-draft', method: 'POST', body }), invalidatesTags: ['AiUsage'] }),
+    draftCompanyDescription: build.mutation({ query: (body) => ({ url: '/recruiter/ai/company-description', method: 'POST', body }), invalidatesTags: ['AiUsage'] }),
+    shortlistApplicants: build.mutation({ query: (jobId) => ({ url: `/recruiter/ai/jobs/${jobId}/shortlist`, method: 'POST' }), invalidatesTags: ['AiUsage'] }),
+    draftMessage: build.mutation({ query: (body) => ({ url: '/recruiter/ai/message-draft', method: 'POST', body }), invalidatesTags: ['AiUsage'] }),
   }),
 })
 
@@ -46,4 +51,8 @@ export const {
   useGetRecruiterMatchQuery,
   useTranslateMutation,
   useGetAiUsageQuery,
+  useDraftJobMutation,
+  useDraftCompanyDescriptionMutation,
+  useShortlistApplicantsMutation,
+  useDraftMessageMutation,
 } = aiApi

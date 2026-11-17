@@ -13,6 +13,13 @@
     "size": "Tamaño de la empresa",
     "description": "Qué estás construyendo"
   },
+  "aiDraft": {
+    "notes": "Notas para la IA (opcional)",
+    "notesPlaceholder": "p. ej. creamos software de reservas para hoteles pequeños; equipo de 25 con teletrabajo",
+    "action": "Redactar con IA",
+    "done": "La IA ha redactado la descripción con los datos de tu empresa. Edítala y guarda.",
+    "undo": "Deshacer"
+  },
   "logo": {
     "upload": "Subir logotipo",
     "replace": "Cambiar logotipo",
