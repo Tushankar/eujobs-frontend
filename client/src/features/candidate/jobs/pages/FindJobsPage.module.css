@@ -89,6 +89,12 @@
   cursor: pointer;
 }
 
+/* The select's background is transparent, so without this Chrome opens a white list with the dark theme's text. */
+.sort option {
+  background: var(--card);
+  color: var(--foreground);
+}
+
 .sort svg {
   position: absolute;
   right: 10px;
