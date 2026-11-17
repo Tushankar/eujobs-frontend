@@ -71,9 +71,8 @@
       "cv_draft": "AI CV drafts",
       "cv_snapshot": "CV to profile"
     },
-    "resets": "Resets at {{time}}",
+    "resets": "Resets {{time}}",
     "percent": "{{percent}}% used",
-    "count": "{{used}} of {{limit}}",
     "note": "Opening a text that was already written doesn’t use anything."
   }
 }

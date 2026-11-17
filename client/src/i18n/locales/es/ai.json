@@ -71,9 +71,8 @@
       "cv_draft": "Borradores de CV con IA",
       "cv_snapshot": "CV a perfil"
     },
-    "resets": "Se restablece a las {{time}}",
+    "resets": "Se restablece el {{time}}",
     "percent": "{{percent}} % usado",
-    "count": "{{used}} de {{limit}}",
     "note": "Abrir un texto ya redactado no gasta nada."
   }
 }

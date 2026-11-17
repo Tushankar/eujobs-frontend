@@ -71,9 +71,8 @@
       "cv_draft": "Brouillons de CV IA",
       "cv_snapshot": "CV vers profil"
     },
-    "resets": "Réinitialisation à {{time}}",
+    "resets": "Réinitialisation le {{time}}",
     "percent": "{{percent}} % utilisé",
-    "count": "{{used}} sur {{limit}}",
     "note": "Rouvrir un texte déjà rédigé ne consomme rien."
   }
 }

@@ -4,7 +4,7 @@ import { cx } from '@/utils/cx.js'
 import { useGetAiUsageQuery } from '../api.js'
 import styles from './AiUsageToday.module.css'
 
-/** One limit: its name and reset time, the bar, and the share used with the count under it. */
+/** One limit: its name and reset day and time, the bar, and the share used. */
 function LimitRow({ label, used, limit, resetAt, ...rest }) {
   const { t } = useTranslation('ai')
   const format = useFormat()
@@ -13,15 +13,12 @@ function LimitRow({ label, used, limit, resetAt, ...rest }) {
     <div className={styles.row} {...rest}>
       <div className={styles.name}>
         <p className={styles.label}>{label}</p>
-        <p className={styles.reset}>{t('usage.resets', { time: format.date(resetAt, { timeStyle: 'short' }) })}</p>
+        <p className={styles.reset}>{t('usage.resets', { time: format.date(resetAt, { weekday: 'short', day: 'numeric', month: 'short', hour: '2-digit', minute: '2-digit' }) })}</p>
       </div>
       <div className={styles.bar} role="meter" aria-valuemin={0} aria-valuemax={limit} aria-valuenow={used} aria-label={label}>
         <span className={cx(used >= limit && styles.full)} style={{ width: `${Math.max(share * 100, used ? 0 : 1.5)}%` }} />
       </div>
-      <div className={styles.used}>
-        <p className={styles.percent}>{t('usage.percent', { percent: Math.round(share * 100) })}</p>
-        <p className={styles.count}>{t('usage.count', { used: format.number(used), limit: format.number(limit) })}</p>
-      </div>
+      <p className={styles.percent}>{t('usage.percent', { percent: Math.round(share * 100) })}</p>
     </div>
   )
 }

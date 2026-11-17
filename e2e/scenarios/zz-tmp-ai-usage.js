@@ -52,9 +52,10 @@ export default {
       // The insights page wrote its own text too, so the count is whatever the API says, out of 40.
       const used = (await api('/ai/usage', { token })).body
       const daily = await page.$eval('[data-ai-limit="daily"]', (element) => element.innerText)
-      ctx.check(used.used >= 1 && daily.includes(`${used.used} of 40`) && daily.includes(`${Math.round((used.used / 40) * 100)}% used`), `Billing shows today's AI uses (${daily.replace(/\n/g, ' | ')})`)
-      ctx.check(/0 of 5/.test(await page.$eval('[data-ai-limit="cv_draft"]', (element) => element.innerText)), 'the CV drafts limit row (0 of 5)')
-      ctx.check(Boolean(await page.$('[data-ai-limit="cv_snapshot"]')) && billing.includes('Resets at'), 'the CV to profile row and the reset time')
+      ctx.check(used.used >= 1 && daily.includes(`${Math.round((used.used / 40) * 100)}% used`) && !/ of 40/.test(daily), `Billing shows today's AI uses as a share (${daily.replace(/\n/g, ' | ')})`)
+      ctx.check(/0% used/.test(await page.$eval('[data-ai-limit="cv_draft"]', (element) => element.innerText)), 'the CV drafts limit row (0% used)')
+      // The reset names the day and the time, e.g. "Resets Wed, 18 Nov, 05:30".
+      ctx.check(Boolean(await page.$('[data-ai-limit="cv_snapshot"]')) && /Resets \w{3}, \d{1,2} \w{3}, \d{2}:\d{2}/.test(billing), `the CV to profile row and the reset day and time (${billing.split('\n')[2]})`)
       const features = await page.$$eval('[data-plan-features="plus"]', (lists) => lists.map((list) => list.innerText).join(' | '))
       ctx.check(features.includes('40 AI uses a day (60 with yearly billing)'), `the Plus card lists its daily AI uses (${features.replace(/\n/g, ' · ')})`)
       await page.evaluate(() => document.querySelector('[data-ai-usage-today]').scrollIntoView({ block: 'center' }))
@@ -90,9 +91,10 @@ export default {
       await type('[data-price-sku="autocomplete"]', '2.83')
       await adminPage.click('[data-usage-settings] button[type="submit"]')
       await adminPage.waitForFunction(() => document.querySelector('[data-usage-settings]')?.textContent.includes('Usage settings saved.'), { timeout: 15_000 })
-      await adminPage.waitForFunction(() => document.querySelector('[data-usage-provider="openai"] [data-usage-spend]')?.textContent !== '$0.00', { timeout: 15_000 })
+      // The overview refetches after the save; wait for a non-zero amount.
+      await adminPage.waitForFunction(() => /[1-9]/.test(document.querySelector('[data-usage-provider="openai"] [data-usage-spend]')?.textContent ?? ''), { timeout: 15_000 })
       const spend = await adminPage.$eval('[data-usage-provider="openai"] [data-usage-spend]', (element) => element.textContent)
-      ctx.check(/^\$0\.0\d+|^\$\d/.test(spend), `OpenAI spend shown after pricing (${spend})`)
+      ctx.check(/[1-9]/.test(spend), `OpenAI spend shown after pricing (${spend})`)
       await ctx.screenshot(adminPage, '4-usage-priced')
       await adminHandle.checkOverflow()
 
