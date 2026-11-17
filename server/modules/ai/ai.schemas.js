@@ -27,6 +27,7 @@ const budget = z.number().positive().max(U.budgetMax).nullable()
 export const usageQuery = z.object({ month: z.string().regex(/^\d{4}-(0[1-9]|1[0-2])$/).optional() })
 export const usageSettingsBody = z.object({
   caps: z.object({ plus: caps, recruiter_plus: caps }),
+  featureLimits: z.object({ cv_draft: cap, cv_snapshot: cap }),
   burstPerMinute: z.number().int().min(U.burstRange.min).max(U.burstRange.max),
   skillNamesPerDay: cap,
   budgets: z.object({ openai: budget, places: budget }),

@@ -27,6 +27,8 @@ const aiUsageSchema = new Schema(
     count: { type: Number, default: 0 },
     // 2026-11-17: skill names sent to OpenAI for a standard name (their own daily cap, lib/ai.js addStandardNames).
     skillNames: { type: Number, default: 0 },
+    // 2026-11-17: today's uses of the features with their own daily limit (LIMITS.ai.usage.featureLimits), by kind.
+    features: { type: Map, of: Number, default: {} },
   },
   { timestamps: true },
 )

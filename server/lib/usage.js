@@ -33,6 +33,7 @@ export function nextUtcDay(now = new Date()) {
 
 const DEFAULTS = {
   caps: U.caps,
+  featureLimits: U.featureLimits,
   burstPerMinute: U.burstPerMinute,
   skillNamesPerDay: U.skillNamesPerDay,
   budgets: { openai: null, places: null },

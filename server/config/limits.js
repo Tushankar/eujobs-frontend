@@ -187,6 +187,9 @@ export const LIMITS = {
     skillNamesTimeoutMs: 8_000,
     usage: {
       caps: { plus: { month: 40, year: 60 }, recruiter_plus: { month: 80, year: 120 } },
+      // The expensive (main-model, often uncached) features also have their own daily limit per user; each use still
+      // counts once toward the cap above.
+      featureLimits: { cv_draft: 5, cv_snapshot: 5 },
       burstPerMinute: 10,
       skillNamesPerDay: 100,
       capRange: { min: 1, max: 10_000 },

@@ -7,7 +7,7 @@ import { AiCache, AiUsage } from '../modules/ai/ai.model.js'
 import { AppConfig } from '../modules/payments/payments.model.js'
 import { AppError } from './errors.js'
 import { searchText } from './skills.js'
-import { budgetReached, dailyCap, nextUtcDay, recordUsage, takeBurst, takeSkillNames, utcDay } from './usage.js'
+import { budgetReached, dailyCap, nextUtcDay, recordUsage, takeBurst, takeSkillNames, usageSettings, utcDay } from './usage.js'
 
 /*
  * The OpenAI service (§2.9). Models follow U4: `fast` (OPENAI_FAST_MODEL) and `main` (OPENAI_MODEL); embeddings use
@@ -202,21 +202,31 @@ export const hashOf = (value) => createHash('sha256').update(typeof value === 's
 const languageName = (language) => new Intl.DisplayNames(['en'], { type: 'language' }).of(language)
 
 /**
- * Reserves one generation of today's cap atomically (the user's plan and billing interval, lib/usage.js); at the cap
- * the upsert collides with the existing row. The burst limit is checked first.
+ * Reserves one generation of today's cap atomically (the user's plan and billing interval, lib/usage.js), and of the
+ * kind's own daily limit when it has one (CV drafts, CV to profile, 2026-11-17); at a limit the upsert collides with
+ * the existing row, and the row tells which limit it was. The burst limit is checked first. Returns the kind's
+ * limit (null: none), for release().
  */
-async function reserve(user) {
+async function reserve(user, kind) {
   await takeBurst(user._id)
   const limit = await dailyCap(user)
+  const featureLimit = (await usageSettings()).featureLimits?.[kind] ?? null
+  const feature = `features.${kind}`
+  const filter = { userId: user._id, day: utcDay(), count: { $lt: limit }, ...(featureLimit && { [feature]: { $not: { $gte: featureLimit } } }) }
   try {
-    await AiUsage.updateOne({ userId: user._id, day: utcDay(), count: { $lt: limit } }, { $inc: { count: 1 } }, { upsert: true })
+    await AiUsage.updateOne(filter, { $inc: { count: 1, ...(featureLimit && { [feature]: 1 }) } }, { upsert: true })
   } catch (error) {
     if (error.code !== 11000) throw error
-    throw new AppError('AI_DAILY_LIMIT', { params: { resetAt: nextUtcDay().toISOString(), limit } })
+    const resetAt = nextUtcDay().toISOString()
+    const used = (await AiUsage.findOne({ userId: user._id, day: utcDay() }))?.features?.get(kind) ?? 0
+    if (featureLimit && used >= featureLimit) throw new AppError('AI_FEATURE_LIMIT', { params: { resetAt, limit: featureLimit, feature: kind } })
+    throw new AppError('AI_DAILY_LIMIT', { params: { resetAt, limit } })
   }
+  return featureLimit
 }
 
-const release = (userId) => AiUsage.updateOne({ userId, day: utcDay() }, { $inc: { count: -1 } })
+const release = (userId, kind, featureLimit) =>
+  AiUsage.updateOne({ userId, day: utcDay() }, { $inc: { count: -1, ...(featureLimit && { [`features.${kind}`]: -1 }) } })
 
 /**
  * A structured answer from OpenAI in `language` (S, M-057). `cacheKey` (inputs plus the entity version, hashed) makes
@@ -231,7 +241,7 @@ export async function generate({ kind, user, language, cacheKey = null, subjectI
     if (hit) return hit.output
   }
   const counted = user.role !== 'admin' && !regenerate
-  if (counted) await reserve(user)
+  const featureLimit = counted ? await reserve(user, kind) : null
   let output
   try {
     const response = await call((ai) =>
@@ -246,7 +256,7 @@ export async function generate({ kind, user, language, cacheKey = null, subjectI
     )
     output = JSON.parse(response.output_text)
   } catch (error) {
-    if (counted) await release(user._id)
+    if (counted) await release(user._id, kind, featureLimit)
     throw error instanceof AppError ? error : new AppError('AI_UNAVAILABLE')
   }
   if (key) await AiCache.updateOne({ kind, key, language }, { output, model: modelName(model), subjectId }, { upsert: true })

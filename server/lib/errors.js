@@ -33,6 +33,8 @@ export const ERROR_STATUS = {
   AI_UNAVAILABLE: 503,
   // 2026-11-17: the admin's monthly OpenAI budget is used up
   AI_PAUSED: 503,
+  // 2026-11-17: a feature with its own daily limit (CV drafts, CV to profile) reached it
+  AI_FEATURE_LIMIT: 429,
   PAYMENT_PROVIDER_ERROR: 502,
   PLACES_UNAVAILABLE: 503,
   FX_UNAVAILABLE: 503,
