@@ -4,11 +4,13 @@
   gap: 8px;
 }
 
+/* Each box grows from 0 to 52px, so the row adds nothing to its column's minimum width and fits any phone. */
 .box {
-  width: 52px;
+  width: 0;
   min-width: 0;
+  max-width: 52px;
   height: 56px;
-  flex: 0 1 52px;
+  flex: 1 1 0;
   padding: 0;
   border: 1px solid var(--border-strong);
   border-radius: var(--radius-lg);
