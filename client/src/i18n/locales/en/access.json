@@ -76,6 +76,7 @@
     "noUsersText": "Try a different name, email or role.",
     "saved": "Access was saved for {{name}}.",
     "revoked": "Access was revoked for {{name}}.",
+    "twoFactorReset": "Two-step verification reset for {{name}}.",
     "invited": "An invitation was sent to {{email}}. The link works for 72 hours."
   },
   "manage": {
@@ -99,7 +100,13 @@
     "saveText_other": "{{role}} with {{count}} effective permissions.",
     "noRole": "No role",
     "revokeTitle": "Revoke access for {{name}}?",
-    "revokeText": "This removes the assigned role and any individual permissions. The department label stays."
+    "revokeText": "This removes the assigned role and any individual permissions. The department label stays.",
+    "twoFactor": "Two-step verification",
+    "twoFactorOn": "On · authenticator app",
+    "twoFactorOff": "Not set up yet · they set it up at their next sign-in",
+    "twoFactorReset": "Reset 2FA",
+    "twoFactorResetTitle": "Reset two-step verification for {{name}}?",
+    "twoFactorResetText": "They’ll be signed out on every device and must set up an authenticator app again at their next sign-in. Only do this after confirming it’s really them asking."
   },
   "inviteDialog": {
     "title": "Invite an admin",

@@ -113,7 +113,7 @@ export default function LoginVerification({ verification, onDone, onBack }) {
   return (
     <>
       <AuthIntro title={t(`auth:loginStep.title.${method}`)} />
-      <form className={styles.body} onSubmit={handleSubmit} noValidate>
+      <form className={styles.body} onSubmit={handleSubmit} noValidate data-login-step={method}>
         <p>
           {method === 'email' ? (
             <Trans i18nKey="auth:loginStep.emailLead" values={{ email: verification.email }} components={{ email: <span className={styles.address} /> }} />

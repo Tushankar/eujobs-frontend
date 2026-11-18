@@ -79,6 +79,7 @@
     "noUsersText": "Essayez un autre nom, e-mail ou rôle.",
     "saved": "L’accès de {{name}} a été enregistré.",
     "revoked": "L’accès de {{name}} a été révoqué.",
+    "twoFactorReset": "Validation en deux étapes réinitialisée pour {{name}}.",
     "invited": "Une invitation a été envoyée à {{email}}. Le lien est valable 72 heures."
   },
   "manage": {
@@ -103,7 +104,13 @@
     "saveText_other": "{{role}} avec {{count}} autorisations effectives.",
     "noRole": "Aucun rôle",
     "revokeTitle": "Révoquer l’accès de {{name}} ?",
-    "revokeText": "Le rôle attribué et les autorisations individuelles seront supprimés. Le libellé du service est conservé."
+    "revokeText": "Le rôle attribué et les autorisations individuelles seront supprimés. Le libellé du service est conservé.",
+    "twoFactor": "Validation en deux étapes",
+    "twoFactorOn": "Activée · application d’authentification",
+    "twoFactorOff": "Pas encore configurée · à faire à sa prochaine connexion",
+    "twoFactorReset": "Réinitialiser la 2FA",
+    "twoFactorResetTitle": "Réinitialiser la validation en deux étapes de {{name}} ?",
+    "twoFactorResetText": "Cette personne sera déconnectée de tous ses appareils et devra configurer à nouveau une application d’authentification à sa prochaine connexion. Ne le faites qu’après avoir vérifié que c’est bien elle qui le demande."
   },
   "inviteDialog": {
     "title": "Inviter un administrateur",

@@ -79,6 +79,7 @@
     "noUsersText": "Prueba con otro nombre, correo o rol.",
     "saved": "Se ha guardado el acceso de {{name}}.",
     "revoked": "Se ha revocado el acceso de {{name}}.",
+    "twoFactorReset": "Verificación en dos pasos restablecida para {{name}}.",
     "invited": "Se ha enviado una invitación a {{email}}. El enlace es válido durante 72 horas."
   },
   "manage": {
@@ -103,7 +104,13 @@
     "saveText_other": "{{role}} con {{count}} permisos efectivos.",
     "noRole": "Sin rol",
     "revokeTitle": "¿Revocar el acceso de {{name}}?",
-    "revokeText": "Se eliminarán el rol asignado y los permisos individuales. La etiqueta de departamento se mantiene."
+    "revokeText": "Se eliminarán el rol asignado y los permisos individuales. La etiqueta de departamento se mantiene.",
+    "twoFactor": "Verificación en dos pasos",
+    "twoFactorOn": "Activada · aplicación de autenticación",
+    "twoFactorOff": "Aún sin configurar · la configurará en su próximo inicio de sesión",
+    "twoFactorReset": "Restablecer 2FA",
+    "twoFactorResetTitle": "¿Restablecer la verificación en dos pasos de {{name}}?",
+    "twoFactorResetText": "Se cerrará su sesión en todos los dispositivos y tendrá que configurar de nuevo una aplicación de autenticación en su próximo inicio de sesión. Hazlo solo después de confirmar que realmente lo pide esa persona."
   },
   "inviteDialog": {
     "title": "Invitar a un administrador",
