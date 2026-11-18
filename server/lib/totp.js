@@ -23,7 +23,8 @@ function fromBase32(text) {
 /** A new 160-bit secret in Base32 (what authenticator apps take). */
 export const newSecret = () => base32(randomBytes(20))
 
-function codeAt(secret, step) {
+/** The code an authenticator app shows for `secret` at time step `step`. */
+export function codeAt(secret, step = currentStep()) {
   const counter = Buffer.alloc(8)
   counter.writeBigUInt64BE(BigInt(step))
   const hmac = createHmac('sha1', fromBase32(secret)).update(counter).digest()

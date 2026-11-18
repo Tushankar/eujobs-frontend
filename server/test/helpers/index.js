@@ -14,6 +14,13 @@ export const api = () => request(app)
 export const PASSWORD = 'Harbour-Lantern-58'
 export const auth = (user) => ({ Authorization: `Bearer ${signToken(user)}` })
 
+/** Finishes a sign-in that asked for the emailed code (2026-11-18); answers `res` itself when no step was due. */
+export async function finishLogin(res) {
+  if (res.body.verification?.method !== 'email') return res
+  const code = capturedMail.findLast((mail) => mail.type === 'login_code').params.code
+  return api().post('/api/v1/auth/login/verify').send({ challenge: res.body.verification.challenge, code })
+}
+
 /** A non-reserved test address (nothing is really sent in test mode). */
 let counter = 0
 export const testEmail = (name = 'user') => `${name}.${process.pid}.${++counter}@inbox.localworkman.eu`
