@@ -27,6 +27,8 @@ export default function LoginVerification({ verification, onDone, onBack }) {
   const cooldown = useCooldown()
   const startCooldown = cooldown.start
   const [code, setCode] = useState('')
+  // A wrong code empties the boxes and puts the cursor back in the first one (a new key remounts them).
+  const [attempt, setAttempt] = useState(0)
   const [backup, setBackup] = useState(false)
   const [failure, setFailure] = useState(null)
   const [resent, setResent] = useState(false)
@@ -53,6 +55,10 @@ export default function LoginVerification({ verification, onDone, onBack }) {
       else onDone(result)
     } catch (error) {
       setFailure(error)
+      if (!backup) {
+        setCode('')
+        setAttempt((count) => count + 1)
+      }
     }
   }
 
@@ -95,6 +101,7 @@ export default function LoginVerification({ verification, onDone, onBack }) {
     <TextField label={t('auth:loginStep.backupLabel')} name="code" autoComplete="off" autoFocus maxLength={9} value={code} onChange={(event) => setCode(event.target.value)} error={fieldError} />
   ) : (
     <CodeInput
+      key={attempt}
       label={t(method === 'email' ? 'auth:loginStep.emailLabel' : 'auth:loginStep.appLabel')}
       length={codeLength}
       value={code}

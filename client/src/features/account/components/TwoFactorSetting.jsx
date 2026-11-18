@@ -68,6 +68,8 @@ function SetupPanel({ onCodes }) {
   const [enable, { isLoading }] = useEnableTwoFactorMutation()
   const [code, setCode] = useState('')
   const [error, setError] = useState(null)
+  // A wrong code empties the boxes and focuses the first one again.
+  const [attempt, setAttempt] = useState(0)
 
   useEffect(() => {
     start()
@@ -80,6 +82,8 @@ function SetupPanel({ onCodes }) {
       onCodes((await enable(code).unwrap()).backupCodes)
     } catch (failure) {
       setError(serverFieldErrors(failure).code ?? { key: 'invalid' })
+      setCode('')
+      setAttempt((count) => count + 1)
     }
   }
 
@@ -89,6 +93,8 @@ function SetupPanel({ onCodes }) {
       <AuthenticatorSetup setup={setup}>
         <form className={styles.inline} onSubmit={handleSubmit} noValidate>
           <CodeInput
+            key={attempt}
+            autoFocus={attempt > 0}
             label={t('auth:loginStep.appLabel')}
             hideLabel
             value={code}
