@@ -17,11 +17,11 @@ const emailTokenSchema = new Schema(
 // Kept 7 days past expiry so an expired link still answers TOKEN_EXPIRED.
 emailTokenSchema.index({ expiresAt: 1 }, { expireAfterSeconds: 7 * DAY_SECONDS })
 
-/* Email and phone codes (M-002 … M-004): 6 digits, stored hashed. */
+/* Email and phone codes (M-002 … M-004) and sign-in codes (`login`, 2026-11-18): 6 digits, stored hashed. */
 const verificationCodeSchema = new Schema(
   {
     userId: { type: Schema.Types.ObjectId, ref: 'User', required: true },
-    channel: { type: String, enum: ['email', 'phone'], required: true },
+    channel: { type: String, enum: ['email', 'phone', 'login'], required: true },
     target: { type: String, required: true },
     codeHash: { type: String, required: true },
     expiresAt: { type: Date, required: true },
@@ -55,12 +55,49 @@ const loginEventSchema = new Schema(
     deviceType: { type: String, enum: ['desktop', 'mobile', 'tablet'] },
     city: String,
     country: String,
+    // The remembered browser this session signed in on (TrustedDevice), if any.
+    deviceId: { type: Schema.Types.ObjectId, ref: 'TrustedDevice' },
   },
   { timestamps: true },
 )
 loginEventSchema.index({ userId: 1, createdAt: -1 })
 loginEventSchema.index({ createdAt: 1 }, { expireAfterSeconds: 90 * DAY_SECONDS })
 
+/*
+ * Sign-in second step (owner 2026-11-18). A challenge is what a correct password earns when a second step is due:
+ * `email` (a code to the account's address), `totp` (authenticator app or backup code) or `totp_setup` (an admin
+ * without 2FA sets it up first). One use, 10 minutes, 5 wrong codes.
+ */
+const loginChallengeSchema = new Schema(
+  {
+    userId: { type: Schema.Types.ObjectId, ref: 'User', required: true },
+    method: { type: String, enum: ['email', 'totp', 'totp_setup'], required: true },
+    tokenHash: { type: String, required: true, unique: true },
+    attempts: { type: Number, default: 0 },
+    pendingSecret: String,
+    expiresAt: { type: Date, required: true },
+    consumedAt: Date,
+  },
+  { timestamps: true },
+)
+loginChallengeSchema.index({ userId: 1, createdAt: -1 })
+// Kept an hour past expiry so failed app codes still count towards the per-account limit.
+loginChallengeSchema.index({ expiresAt: 1 }, { expireAfterSeconds: 60 * 60 })
+
+/* A browser that passed the second step: its random key (kept by the browser) is stored hashed, for 90 days. */
+const trustedDeviceSchema = new Schema(
+  {
+    userId: { type: Schema.Types.ObjectId, ref: 'User', required: true },
+    tokenHash: { type: String, required: true, unique: true },
+    expiresAt: { type: Date, required: true },
+  },
+  { timestamps: true },
+)
+trustedDeviceSchema.index({ userId: 1 })
+trustedDeviceSchema.index({ expiresAt: 1 }, { expireAfterSeconds: 0 })
+
 export const EmailToken = mongoose.model('EmailToken', emailTokenSchema)
+export const LoginChallenge = mongoose.model('LoginChallenge', loginChallengeSchema)
+export const TrustedDevice = mongoose.model('TrustedDevice', trustedDeviceSchema)
 export const LoginEvent = mongoose.model('LoginEvent', loginEventSchema)
 export const VerificationCode = mongoose.model('VerificationCode', verificationCodeSchema)

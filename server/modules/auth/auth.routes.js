@@ -1,14 +1,18 @@
 import { Router } from 'express'
 import { requireAuth, requireRole } from '../../middleware/auth.js'
-import { failedLoginsPerEmail, forgotPasswordPerEmail, loginsPerIp, signUpsPerIp } from '../../middleware/rateLimit.js'
+import { failedLoginsPerEmail, forgotPasswordPerEmail, loginsPerIp, loginStepsPerIp, signUpsPerIp } from '../../middleware/rateLimit.js'
 import { validate } from '../../lib/validate.js'
 import { acceptInvite, inviteDetails } from '../admin/admin.access.js'
 import { meDto } from '../users/users.service.js'
 import * as schemas from './auth.schemas.js'
 import * as auth from './auth.service.js'
+import * as loginStep from './login.service.js'
 import * as sessions from './sessions.service.js'
 
 const router = Router()
+
+// A browser that proved the account's email is remembered; admins enter their app code every time, so theirs is not.
+const rememberBrowser = async (user) => (user.role === 'admin' ? undefined : (await loginStep.trustBrowser(user)).deviceToken)
 
 router.post('/candidate/register', signUpsPerIp, validate({ body: schemas.candidateRegisterBody }), async (req, res) => {
   await auth.registerCandidate(req.body)
@@ -17,7 +21,9 @@ router.post('/candidate/register', signUpsPerIp, validate({ body: schemas.candid
 
 router.post('/recruiter/register', signUpsPerIp, validate({ body: schemas.recruiterRegisterBody }), async (req, res) => {
   const user = await auth.registerRecruiter(req.body)
-  res.status(201).json({ token: await sessions.startSession(user, req), me: await meDto(user) })
+  // The browser that created the account is remembered (2026-11-18).
+  const { deviceToken, deviceId } = await loginStep.trustBrowser(user)
+  res.status(201).json({ token: await sessions.startSession(user, req, { deviceId }), me: await meDto(user), deviceToken })
 })
 
 router.post('/login', loginsPerIp, failedLoginsPerEmail, validate({ body: schemas.loginBody }), async (req, res) => {
@@ -25,7 +31,21 @@ router.post('/login', loginsPerIp, failedLoginsPerEmail, validate({ body: schema
     if (error.code === 'INVALID_CREDENTIALS') await sessions.recordFailedSignIn(req.body.email, req)
     throw error
   })
-  res.json({ token: await sessions.startSession(user, req), me: await meDto(user) })
+  res.json(await loginStep.beginLogin(user, req, req.body.deviceToken))
+})
+
+// 2026-11-18: the second step after a correct password (login.service.js).
+router.post('/login/verify', loginStepsPerIp, validate({ body: schemas.loginVerifyBody }), async (req, res) => {
+  res.json(await loginStep.verifyLogin(req.body.challenge, req.body.code, req))
+})
+
+router.post('/login/resend', loginStepsPerIp, validate({ body: schemas.challengeBody }), async (req, res) => {
+  await loginStep.resendLoginCode(req.body.challenge)
+  res.status(204).end()
+})
+
+router.post('/login/setup', loginStepsPerIp, validate({ body: schemas.challengeBody }), async (req, res) => {
+  res.json(await loginStep.loginSetup(req.body.challenge))
 })
 
 // 2026-11-18: signing out ends this device's session, so it leaves the account's device list.
@@ -34,8 +54,10 @@ router.post('/logout', requireAuth, async (req, res) => {
   res.status(204).end()
 })
 
+// The browser that opened the emailed link proved the address, so it is remembered (2026-11-18).
 router.post('/verify-email', validate({ body: schemas.tokenBody }), async (req, res) => {
-  res.json(await auth.verifyEmailLink(req.body.token))
+  const user = await auth.verifyEmailLink(req.body.token)
+  res.json({ role: user.role, deviceToken: await rememberBrowser(user) })
 })
 
 router.post('/verify-email/resend', validate({ body: schemas.emailBody }), async (req, res) => {
@@ -59,7 +81,8 @@ router.post('/forgot-password', forgotPasswordPerEmail, validate({ body: schemas
 })
 
 router.post('/reset-password', validate({ body: schemas.resetBody }), async (req, res) => {
-  res.json(await auth.resetPassword(req.body.token, req.body.password))
+  const user = await auth.resetPassword(req.body.token, req.body.password)
+  res.json({ role: user.role, deviceToken: await rememberBrowser(user) })
 })
 
 // U21: the invite link opens /admin/set-password, which checks the token, then sets the password once.

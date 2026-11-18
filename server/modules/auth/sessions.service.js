@@ -7,7 +7,7 @@ import { interpolate, t } from '../../lib/i18n.js'
 import { sendEmail } from '../../lib/mailer.js'
 import { parseUserAgent } from '../../lib/userAgent.js'
 import { User } from '../users/users.model.js'
-import { LoginEvent } from './auth.model.js'
+import { LoginEvent, TrustedDevice } from './auth.model.js'
 import { signToken } from './auth.service.js'
 
 /* Devices and sign-in history (owner 2026-11-18): sessions, failed attempts, the new-device email and sign-outs. */
@@ -31,8 +31,12 @@ async function describe(req) {
 
 const sameDevice = ({ browser, os, deviceType }) => ({ browser, os, deviceType })
 
-/** A new session for `user`: records the sign-in and returns its token; emails the user when the device is new to the account. */
-export async function startSession(user, req) {
+/**
+ * A new session for `user`: records the sign-in (on the remembered browser `deviceId`, if any) and returns its token.
+ * With `alertIfNew`, emails the user when the browser and system are new to the account (an emailed sign-in code
+ * already told them, so that path passes false).
+ */
+export async function startSession(user, req, { deviceId, alertIfNew = false } = {}) {
   const _id = new mongoose.Types.ObjectId()
   const token = signToken(user, _id)
   const details = await describe(req)
@@ -41,8 +45,8 @@ export async function startSession(user, req) {
     LoginEvent.exists({ userId: user._id, outcome: 'success', ...sameDevice(details) }),
   ])
   const now = new Date()
-  await LoginEvent.create({ _id, userId: user._id, outcome: 'success', tv: user.tokenVersion, expiresAt: new Date(jwt.decode(token).exp * 1000), lastSeenAt: now, ...details })
-  if (signedInBefore && !deviceSeen) await sendNewDeviceEmail(user, details, now)
+  await LoginEvent.create({ _id, userId: user._id, outcome: 'success', tv: user.tokenVersion, expiresAt: new Date(jwt.decode(token).exp * 1000), lastSeenAt: now, deviceId, ...details })
+  if (alertIfNew && signedInBefore && !deviceSeen) await sendNewDeviceEmail(user, details, now)
   return token
 }
 
@@ -116,11 +120,15 @@ export async function listSessions(user, currentSid) {
   return { devices, history: rows }
 }
 
-/** Signs one of the account's other sessions out (the current one signs out through POST /auth/logout). */
+/**
+ * Signs one of the account's other sessions out (the current one signs out through POST /auth/logout); its browser is
+ * no longer remembered, so signing in there asks for a code again.
+ */
 export async function revokeSession(user, id, currentSid) {
   if (id === currentSid) throw new AppError('VALIDATION_FAILED', { fields: { id: 'current_session' } })
-  const { matchedCount } = await LoginEvent.updateOne({ _id: id, userId: user._id, outcome: 'success', revokedAt: null }, { revokedAt: new Date() })
-  if (!matchedCount) throw new AppError('NOT_FOUND')
+  const session = await LoginEvent.findOneAndUpdate({ _id: id, userId: user._id, outcome: 'success', revokedAt: null }, { revokedAt: new Date() })
+  if (!session) throw new AppError('NOT_FOUND')
+  if (session.deviceId) await TrustedDevice.deleteOne({ _id: session.deviceId, userId: user._id })
 }
 
 /** Ends this device's session (sign out). */
@@ -130,10 +138,12 @@ export async function endSession(sid) {
 
 /**
  * Signs every other device out, including tokens issued before sessions existed: the tokenVersion moves on, so this
- * device gets a new token for the same session.
+ * device gets a new token for the same session. Only this device's browser stays remembered.
  */
 export async function revokeOtherSessions(user, currentSid) {
   const now = new Date()
+  const current = currentSid ? await LoginEvent.findById(currentSid, 'deviceId') : null
+  await TrustedDevice.deleteMany({ userId: user._id, ...(current?.deviceId && { _id: { $ne: current.deviceId } }) })
   await LoginEvent.updateMany({ userId: user._id, outcome: 'success', revokedAt: null, _id: { $ne: currentSid } }, { revokedAt: now })
   user.tokenVersion += 1
   await user.save()

@@ -25,6 +25,15 @@ const userSchema = new Schema(
     jobsWorldwide: Boolean,
     timezone: String,
     tokenVersion: { type: Number, default: 0 },
+    // Authenticator-app 2FA (owner 2026-11-18; required for admins): encrypted secret (lib/totp.js), the last code's
+    // time step (a code works once), a secret waiting for its first code, and hashed one-time backup codes.
+    twoFactor: {
+      secret: String,
+      enabledAt: Date,
+      lastStep: Number,
+      pendingSecret: String,
+      backupCodes: { type: [{ hash: String, usedAt: Date }], default: undefined },
+    },
     legal: { termsVersion: String, privacyVersion: String, acceptedAt: Date },
     // P11b-Q3, Q12: the email categories this user switched off (EMAIL_CATEGORIES); every category is on by default.
     emailOff: { type: [{ type: String, enum: ENUMS.emailCategory }], default: undefined },

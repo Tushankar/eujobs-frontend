@@ -37,6 +37,7 @@ export const loginsPerIp = limiter(rateLimits.loginsPerIp, byIp)
 export const failedLoginsPerEmail = limiter(rateLimits.failedLoginsPerEmail, byEmail, { skipSuccessfulRequests: true })
 export const forgotPasswordPerEmail = limiter(rateLimits.forgotPasswordPerEmail, byEmail)
 export const signUpsPerIp = limiter(rateLimits.signUpsPerIp, byIp)
+export const loginStepsPerIp = limiter(rateLimits.loginStepsPerIp, byIp)
 // U17: the public certificate check
 export const certificateVerifyPerIp = limiter(LIMITS.certificate.verifyPerIp, byIp)
 // The public newsletter form

@@ -10,7 +10,7 @@ import { sendEmail } from '../../lib/mailer.js'
 import { EmailLog } from '../../lib/mail/emailLog.model.js'
 import { currentLegalVersions, findEnabledCountry } from '../meta/meta.service.js'
 import { User } from '../users/users.model.js'
-import { EmailToken, VerificationCode } from './auth.model.js'
+import { EmailToken, TrustedDevice, VerificationCode } from './auth.model.js'
 
 const BCRYPT_COST = 12
 const MINUTE_MS = 60 * 1000
@@ -249,7 +249,7 @@ export async function verifyEmailLink(raw) {
   const user = await User.findById(token.userId)
   markEmailVerified(user)
   await user.save()
-  return { role: user.role }
+  return user
 }
 
 export async function resendVerifyEmail(email) {
@@ -295,5 +295,7 @@ export async function resetPassword(raw, password) {
   user.tokenVersion += 1
   markEmailVerified(user)
   await user.save()
-  return { role: user.role }
+  // 2026-11-18: no browser stays remembered (the routes remember the one that opened this link).
+  await TrustedDevice.deleteMany({ userId: user._id })
+  return user
 }

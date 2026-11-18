@@ -25,6 +25,8 @@ export const LIMITS = {
     loginsPerIp: { windowMs: 15 * MINUTE, limit: 20 },
     forgotPasswordPerEmail: { windowMs: HOUR, limit: 5 },
     signUpsPerIp: { windowMs: HOUR, limit: 10 },
+    // 2026-11-18: sign-in code, resend and 2FA setup requests
+    loginStepsPerIp: { windowMs: 15 * MINUTE, limit: 30 },
   },
   // OD9, OQ-6c
   nonCriticalEmailsPer24h: 400,

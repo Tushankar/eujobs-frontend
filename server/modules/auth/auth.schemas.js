@@ -33,7 +33,13 @@ export const loginBody = z.object({
   password,
   portal: z.enum(['candidate', 'recruiter', 'admin']),
   timezone: timezone.optional(),
+  // 2026-11-18: the key of a browser that passed the sign-in second step before
+  deviceToken: z.string().max(200).optional(),
 })
+
+// 2026-11-18: the sign-in second step
+export const challengeBody = z.object({ challenge: z.string().min(1).max(200) })
+export const loginVerifyBody = z.object({ challenge: z.string().min(1).max(200), code: z.string().trim().min(1).max(20) })
 
 export const tokenBody = z.object({ token: z.string().min(1) })
 export const emailBody = z.object({ email })
