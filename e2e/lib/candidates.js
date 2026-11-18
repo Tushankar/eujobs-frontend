@@ -2,7 +2,7 @@ import { readFileSync } from 'node:fs'
 import { basename } from 'node:path'
 import { PLACES } from '../../server/seed/data/places.js'
 import { API_URL } from './env.js'
-import { api, TEST_PASSWORD, uniqueEmail, verifiedCandidate } from './testApi.js'
+import { api, login, TEST_PASSWORD, uniqueEmail, verifiedCandidate } from './testApi.js'
 
 /* Candidates for the Phase 3 checks, created through the API so each scenario starts from a known state. */
 
@@ -13,7 +13,7 @@ import { api, TEST_PASSWORD, uniqueEmail, verifiedCandidate } from './testApi.js
 export async function onboardedCandidate(label, { tour = false, ...overrides } = {}) {
   const email = uniqueEmail(label.toLowerCase())
   await verifiedCandidate(email, TEST_PASSWORD, { fullName: `${label} ${Date.now() % 100000}`, ...overrides })
-  const { body } = await api('/auth/login', { method: 'POST', body: { email, password: TEST_PASSWORD, portal: 'candidate' } })
+  const { body } = await login(email, TEST_PASSWORD, 'candidate')
   const preferences = await api('/candidate/onboarding/preferences', { method: 'PUT', token: body.token, body: { workPreference: 'remote', placeId: PLACES.london.placeId } })
   if (preferences.status !== 200) throw new Error(`onboarding preferences failed: ${preferences.status}`)
   const completed = await api('/candidate/onboarding/complete', { method: 'POST', token: body.token })

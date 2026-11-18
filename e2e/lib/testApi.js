@@ -1,4 +1,5 @@
 import { API_URL } from './env.js'
+import { nextAppCode, rememberSecret } from './totp.js'
 
 /*
  * Node-side calls to the test API (§2.13): /_test helpers plus plain API requests for setup.
@@ -47,6 +48,24 @@ export async function verifiedCandidate(email, password, overrides = {}) {
   if (registered.status !== 201) throw new Error(`register failed: ${registered.status}`)
   const link = await linkToken(email, 'verify_email')
   await api('/auth/verify-email', { method: 'POST', body: { token: link.searchParams.get('token') } })
+}
+
+/**
+ * POST /auth/login, finishing the sign-in second step (2026-11-18): the emailed code from the captured mail, or the
+ * authenticator app (set up on an admin's first sign-in). Answers { status, body } like api(); body has the token.
+ */
+export async function login(email, password, portal) {
+  const res = await api('/auth/login', { method: 'POST', body: { email, password, portal } })
+  const verification = res.body?.verification
+  if (!verification) return res
+  const { challenge, method } = verification
+  let code
+  if (method === 'email') code = (await mailTo(email, 'login_code')).at(-1)?.params.code
+  else {
+    if (method === 'totp_setup') rememberSecret(email, (await api('/auth/login/setup', { method: 'POST', body: { challenge } })).body.secret)
+    code = await nextAppCode(email)
+  }
+  return api('/auth/login/verify', { method: 'POST', body: { challenge, code } })
 }
 
 /** Password of the accounts scenarios create (passes the password rules). */

@@ -77,7 +77,7 @@ export default function LoginVerification({ verification, onDone, onBack }) {
         <div className={styles.body}>
           <p>{t('auth:loginStep.backupLead')}</p>
           <BackupCodes codes={finished.backupCodes} />
-          <Button fullWidth onClick={() => onDone(finished)}>
+          <Button fullWidth onClick={() => onDone(finished)} data-backup-continue>
             {t('auth:loginStep.backupContinue')}
           </Button>
         </div>

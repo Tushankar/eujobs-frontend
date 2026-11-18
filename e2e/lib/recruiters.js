@@ -2,7 +2,7 @@ import { PLACES } from '../../server/seed/data/places.js'
 import { fixture } from '../fixtures/make.js'
 import { uploadAs } from './candidates.js'
 import { seedCredentials } from './env.js'
-import { api, db, mailTo, TEST_PASSWORD, uniqueEmail } from './testApi.js'
+import { api, db, login as apiLogin, mailTo, TEST_PASSWORD, uniqueEmail } from './testApi.js'
 
 /* Recruiters for the Phase 4 checks, created through the API so each scenario starts from a known state. */
 
@@ -19,12 +19,18 @@ function check(result, what) {
   return result.body
 }
 
-/** Signs in through the API; returns the token. */
+/** Signs in through the API (finishing the sign-in code or authenticator step); returns the token. */
 export async function login(email, portal = 'recruiter', password = TEST_PASSWORD) {
-  return check(await api('/auth/login', { method: 'POST', body: { email, password, portal } }), `login ${email}`).token
+  return check(await apiLogin(email, password, portal), `login ${email}`).token
 }
 
-export const ownerToken = () => login(seedCredentials.email(), 'admin', seedCredentials.password)
+// The Owner signs in with an authenticator code each time (2026-11-18), so a token that still works is reused.
+let owner = null
+export async function ownerToken() {
+  if (owner && (await api('/me', { token: owner })).status === 200) return owner
+  owner = await login(seedCredentials.email(), 'admin', seedCredentials.password)
+  return owner
+}
 
 /** A recruiter who entered the email code (status onboarding); returns { email, token, fullName }. */
 export async function registeredRecruiter(label, overrides = {}) {

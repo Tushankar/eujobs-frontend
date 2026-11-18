@@ -1,6 +1,6 @@
 import { openAsAdmin, sidebarLabels, systemRole } from '../lib/admins.js'
 import { clickText, fill, responseTo, signInWithForm, waitForPath, waitForSettled, waitForText } from '../lib/flows.js'
-import { api, linkToken, TEST_PASSWORD, uniqueEmail } from '../lib/testApi.js'
+import { api, linkToken, login, TEST_PASSWORD, uniqueEmail } from '../lib/testApi.js'
 
 // The Staff role: users.view and candidates.view (§3.13), so these pages and nothing else.
 const STAFF_PAGES = ['Candidates', 'Recruiters', 'Applications', 'Recruitment']
@@ -74,7 +74,7 @@ export default {
     ctx.check((await invitee.page.$eval('[data-forbidden]', (panel) => panel.innerText)).includes('View finance'), 'the 403 page names the permission')
     await invitee.checkOverflow()
     await ctx.screenshot(invitee.page, '6-forbidden')
-    const { token } = (await api('/auth/login', { method: 'POST', body: { email, password: TEST_PASSWORD, portal: 'admin' } })).body
+    const { token } = (await login(email, TEST_PASSWORD, 'admin')).body
     const refused = await api('/admin/payments', { token })
     ctx.check(refused.status === 403 && refused.body.error.code === 'PERMISSION_DENIED' && refused.body.error.params.permission === 'finance.view', `the API answers PERMISSION_DENIED (got ${refused.status} ${JSON.stringify(refused.body)})`)
     ctx.assertClean(invitee.issues, 'invited admin')

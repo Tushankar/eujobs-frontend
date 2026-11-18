@@ -1,6 +1,6 @@
 import { signInWithForm } from './flows.js'
 import { ownerToken } from './recruiters.js'
-import { api, linkToken, TEST_PASSWORD, uniqueEmail } from './testApi.js'
+import { api, linkToken, login, TEST_PASSWORD, uniqueEmail } from './testApi.js'
 
 /* Admin staff for the Phase 10 scenarios (M-154 … M-160): roles and invited admins made through the real API. */
 
@@ -29,7 +29,7 @@ export async function invitedAdmin(label, roleId) {
   const invited = check(await api('/admin/invitations', { method: 'POST', token: owner, body: { email, fullName, roleId } }), `invite ${label}`)
   const link = await linkToken(email, 'admin_invite')
   check(await api('/auth/invite/accept', { method: 'POST', body: { token: link.searchParams.get('token'), password: TEST_PASSWORD } }), 'accept invite')
-  const { token } = check(await api('/auth/login', { method: 'POST', body: { email, password: TEST_PASSWORD, portal: 'admin' } }), 'admin login')
+  const { token } = check(await login(email, TEST_PASSWORD, 'admin'), 'admin login')
   // U22: a new admin has not accepted the Terms yet; the workspace would ask on the first page, as for any account.
   check(await api('/me/legal/accept', { method: 'POST', token }), 'accept the Terms')
   return { id: invited.id, email, fullName, token }

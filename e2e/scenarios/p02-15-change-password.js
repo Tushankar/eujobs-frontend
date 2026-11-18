@@ -1,5 +1,5 @@
 import { bodyText, clickText, fill, signInWithForm } from '../lib/flows.js'
-import { api, db } from '../lib/testApi.js'
+import { api, db, login } from '../lib/testApi.js'
 
 const NEW_PASSWORD = 'Velvet-Orchard-36'
 
@@ -57,7 +57,7 @@ export default {
       ctx.check((await bodyText(admin.page)).includes('Notificaciones por correo'), 'the admin email switches, in Spanish')
       ctx.assertClean(admin.issues, 'admin settings')
     } finally {
-      const signedIn = await api('/auth/login', { method: 'POST', body: { email: emma, password: NEW_PASSWORD, portal: 'candidate' } })
+      const signedIn = await login(emma, NEW_PASSWORD, 'candidate')
       if (signedIn.status === 200) {
         await api('/me/password', { method: 'POST', token: signedIn.body.token, body: { currentPassword: NEW_PASSWORD, newPassword: ctx.seedCredentials.password } })
       }

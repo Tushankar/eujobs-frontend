@@ -1,7 +1,7 @@
 import { PLACES } from '../../server/seed/data/places.js'
 import { clickText, signInWithForm, waitForPath } from '../lib/flows.js'
 import { meOf, rowsOf, subscribeThroughApi, waitForPlan } from '../lib/payments.js'
-import { api, TEST_PASSWORD, uniqueEmail, verifiedCandidate } from '../lib/testApi.js'
+import { api, login, TEST_PASSWORD, uniqueEmail, verifiedCandidate } from '../lib/testApi.js'
 
 /** P5-08 (M-129): a subscriber still in onboarding sees "You're on Plus" on the plan step; Continue does not cancel. */
 export default {
@@ -10,7 +10,7 @@ export default {
   async run(ctx) {
     const email = uniqueEmail('onplan')
     await verifiedCandidate(email, TEST_PASSWORD, { fullName: `Onplan ${Date.now() % 100000}` })
-    const { body } = await api('/auth/login', { method: 'POST', body: { email, password: TEST_PASSWORD, portal: 'candidate' } })
+    const { body } = await login(email, TEST_PASSWORD, 'candidate')
     await api('/candidate/onboarding/preferences', { method: 'PUT', token: body.token, body: { workPreference: 'remote', placeId: PLACES.london.placeId } })
     const me = await meOf(body.token)
     await subscribeThroughApi(me)

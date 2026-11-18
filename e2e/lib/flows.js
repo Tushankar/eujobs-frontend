@@ -1,3 +1,6 @@
+import { mailTo } from './testApi.js'
+import { nextAppCode, rememberSecret } from './totp.js'
+
 /* Browser steps shared by scenarios. */
 
 /**
@@ -33,14 +36,40 @@ export function waitForSettled(page) {
   return page.waitForFunction(() => !document.querySelector('[role="status"][class*="loading"]') && document.querySelector('h1'), { timeout: 15_000 })
 }
 
-/** Signs in through a sign-in form and waits until the URL leaves the sign-in page and the landing page has rendered. */
+/**
+ * The sign-in second step on screen (2026-11-18): the emailed code from the captured mail, or the authenticator code
+ * (an admin's first sign-in sets the app up from the key on screen, then continues past the backup codes).
+ */
+export async function finishLoginStep(page, email, method) {
+  const form = `[data-login-step="${method}"]`
+  await page.waitForSelector(form)
+  if (method === 'totp_setup') {
+    await page.waitForFunction(() => document.querySelector('[data-setup-key]')?.textContent.trim(), { timeout: 15_000 })
+    rememberSecret(email, await page.$eval('[data-setup-key]', (key) => key.textContent))
+  }
+  const code = method === 'email' ? (await mailTo(email, 'login_code')).at(-1)?.params.code : await nextAppCode(email)
+  await fill(page, `${form} input[name="code"]`, code)
+  const verify = responseTo(page, '/api/v1/auth/login/verify', 'POST')
+  await page.click(`${form} button[type="submit"]`)
+  await verify
+  if (method === 'totp_setup') {
+    await page.waitForSelector('[data-backup-continue]')
+    await page.click('[data-backup-continue]')
+  }
+}
+
+/**
+ * Signs in through a sign-in form and waits until the URL leaves the sign-in page and the landing page has rendered.
+ * A second step (sign-in code, authenticator) is finished on the way.
+ */
 export async function signInWithForm(page, webUrl, signInPath, email, password) {
   await page.goto(`${webUrl}${signInPath}`, { waitUntil: 'networkidle0' })
   await fill(page, 'input[name="email"]', email)
   await fill(page, 'input[name="password"]', password)
   const login = responseTo(page, '/api/v1/auth/login', 'POST')
   await page.click('button[type="submit"]')
-  await login
+  const step = (await (await login).json().catch(() => null))?.verification
+  if (step) await finishLoginStep(page, email, step.method)
   await page.waitForFunction((path) => location.pathname !== path, { timeout: 15_000 }, signInPath)
   // The router keeps the sign-in page on screen until the landing page's data has loaded, so its heading is no sign.
   await page.waitForFunction(() => !document.querySelector('input[name="password"]'), { timeout: 15_000 })
