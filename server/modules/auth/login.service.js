@@ -1,9 +1,10 @@
 import { createHash, randomBytes } from 'node:crypto'
+import { LIMITS } from '../../config/limits.js'
 import { AppError } from '../../lib/errors.js'
 import { sendEmail } from '../../lib/mailer.js'
 import { meDto } from '../users/users.service.js'
 import { User } from '../users/users.model.js'
-import { LoginChallenge, TrustedDevice } from './auth.model.js'
+import { LoginChallenge, TrustedDevice, VerificationCode } from './auth.model.js'
 import { assertCodeResendAllowed, issueCode, verifyCode } from './auth.service.js'
 import { startSession } from './sessions.service.js'
 import { checkSecondFactor, enableWith, newSetup, twoFactorOn } from './twoFactor.service.js'
@@ -55,9 +56,12 @@ export async function beginLogin(user, req, deviceToken) {
   }
   const method = twoFactorOn(user) ? 'totp' : admin ? 'totp_setup' : 'email'
   if (method === 'email') {
-    // A code sent less than a minute ago still works, so a quick second try does not wait for the resend limit.
-    const canSend = await assertCodeResendAllowed(user._id, 'login').then(() => true, () => false)
-    if (canSend) await sendLoginCode(user)
+    // An unused code sent in the last minute still works; otherwise a new one goes out (five an hour at most).
+    const now = Date.now()
+    const recent = { userId: user._id, channel: 'login', sentAt: { $gte: new Date(now - LIMITS.code.resendAfterMs) } }
+    const live = await VerificationCode.exists({ ...recent, consumedAt: null, expiresAt: { $gt: new Date(now) } })
+    const sentThisHour = await VerificationCode.countDocuments({ userId: user._id, channel: 'login', sentAt: { $gte: new Date(now - 3_600_000) } })
+    if (!live && sentThisHour < LIMITS.code.maxPerHour) await sendLoginCode(user)
   }
   const raw = randomBytes(32).toString('base64url')
   await LoginChallenge.create({ userId: user._id, method, tokenHash: sha256(raw), expiresAt: new Date(Date.now() + CHALLENGE_TTL_MS) })
