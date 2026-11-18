@@ -51,26 +51,42 @@
     },
     "new_device_sign_in": {
       "subject": "Nouvelle connexion à votre compte EU Jobs",
-      "heading": "Nouvel appareil connecté",
+      "heading": "Nouvelle connexion depuis un nouvel appareil",
       "body": [
         "Bonjour {{name}},",
-        "Une connexion à votre compte EU Jobs vient d'avoir lieu depuis un appareil qui n'avait encore jamais été utilisé.",
-        "Appareil : {{device}}",
-        "Lieu : {{location}} (IP {{ip}})",
-        "Heure : {{time}}",
-        "Si c'était vous, vous n'avez rien à faire. Sinon, déconnectez cet appareil et changez votre mot de passe dès maintenant."
+        "Une connexion à votre compte EU Jobs vient d’avoir lieu depuis un appareil qui n’avait encore jamais été utilisé.",
+        "Si c’était vous, vous n’avez rien à faire. Si vous ne la reconnaissez pas, déconnectez cet appareil et changez votre mot de passe."
       ],
+      "facts": {
+        "title": "Détails de la connexion",
+        "rows": {
+          "device": "Navigateur",
+          "location": "Lieu approximatif",
+          "ip": "Adresse IP",
+          "time": "Heure"
+        }
+      },
       "action": "Vérifier vos appareils",
-      "note": "Pour votre sécurité, nous envoyons cet e-mail chaque fois qu’un nouvel appareil se connecte à votre compte."
+      "note": "Nous envoyons cet e-mail chaque fois qu’un nouvel appareil se connecte à votre compte, pour vous aider à le protéger."
     },
     "login_code": {
       "subject": "Votre code de connexion EU Jobs",
-      "heading": "Confirmez que c’est vous",
+      "heading": "Votre code de connexion",
       "body": [
         "Bonjour {{name}},",
-        "Quelqu’un a saisi votre mot de passe pour se connecter à EU Jobs depuis un navigateur que nous ne reconnaissons pas. Saisissez ce code pour terminer la connexion. Il expire dans 10 minutes."
+        "Utilisez ce code pour terminer votre connexion à EU Jobs sur un nouveau navigateur. Il expire dans 10 minutes."
       ],
-      "note": "Si ce n’était pas vous, ne communiquez pas ce code et changez votre mot de passe dès maintenant : quelqu’un le connaît."
+      "facts": {
+        "title": "Détails de la connexion",
+        "rows": {
+          "device": "Navigateur",
+          "location": "Lieu approximatif",
+          "ip": "Adresse IP",
+          "time": "Heure"
+        }
+      },
+      "secondary": "Vous n’avez pas essayé de vous connecter ? Quelqu’un connaît peut-être votre mot de passe. Réinitialisez-le maintenant, ce qui déconnecte aussi tous les appareils :",
+      "note": "Ne communiquez jamais ce code. EU Jobs ne vous le demandera jamais par téléphone, e-mail ou chat."
     },
     "verification_approved": {
       "subject": "Votre vérification « {{check}} » est approuvée",

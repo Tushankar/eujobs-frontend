@@ -51,26 +51,42 @@
     },
     "new_device_sign_in": {
       "subject": "New sign-in to your EU Jobs account",
-      "heading": "New device signed in",
+      "heading": "New sign-in on a new device",
       "body": [
         "Hi {{name}},",
-        "Your EU Jobs account was just signed in on a device it has not used before.",
-        "Device: {{device}}",
-        "Location: {{location}} (IP {{ip}})",
-        "Time: {{time}}",
-        "If this was you, there is nothing to do. If not, sign that device out and change your password now."
+        "Your EU Jobs account was just signed in on a device it hasn’t used before.",
+        "If this was you, there’s nothing to do. If you don’t recognise it, sign that device out and change your password."
       ],
+      "facts": {
+        "title": "Sign-in details",
+        "rows": {
+          "device": "Browser",
+          "location": "Approximate location",
+          "ip": "IP address",
+          "time": "Time"
+        }
+      },
       "action": "Review your devices",
-      "note": "For your security we send this email every time a new device signs in to your account."
+      "note": "We send this email every time a new device signs in to your account, to help keep it secure."
     },
     "login_code": {
       "subject": "Your EU Jobs sign-in code",
-      "heading": "Confirm it’s you",
+      "heading": "Your sign-in code",
       "body": [
         "Hi {{name}},",
-        "Someone entered your password to sign in to EU Jobs on a browser we don’t recognise. Enter this code to finish signing in. It expires in 10 minutes."
+        "Use this code to finish signing in to EU Jobs on a new browser. It expires in 10 minutes."
       ],
-      "note": "If this wasn’t you, don’t share the code and change your password now: someone knows it."
+      "facts": {
+        "title": "Sign-in details",
+        "rows": {
+          "device": "Browser",
+          "location": "Approximate location",
+          "ip": "IP address",
+          "time": "Time"
+        }
+      },
+      "secondary": "Didn’t try to sign in? Someone may know your password. Reset it now, which also signs out every device:",
+      "note": "Never share this code. EU Jobs will never ask you for it by phone, email or chat."
     },
     "verification_approved": {
       "subject": "Your {{check}} check is approved",

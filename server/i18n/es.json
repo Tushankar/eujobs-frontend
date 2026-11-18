@@ -51,26 +51,42 @@
     },
     "new_device_sign_in": {
       "subject": "Nuevo inicio de sesión en tu cuenta de EU Jobs",
-      "heading": "Nuevo dispositivo conectado",
+      "heading": "Nuevo inicio de sesión en un dispositivo nuevo",
       "body": [
         "Hola {{name}}:",
         "Se acaba de iniciar sesión en tu cuenta de EU Jobs desde un dispositivo que no se había usado antes.",
-        "Dispositivo: {{device}}",
-        "Ubicación: {{location}} (IP {{ip}})",
-        "Hora: {{time}}",
-        "Si fuiste tú, no tienes que hacer nada. Si no, cierra la sesión de ese dispositivo y cambia tu contraseña ahora."
+        "Si fuiste tú, no tienes que hacer nada. Si no lo reconoces, cierra la sesión de ese dispositivo y cambia tu contraseña."
       ],
+      "facts": {
+        "title": "Detalles del inicio de sesión",
+        "rows": {
+          "device": "Navegador",
+          "location": "Ubicación aproximada",
+          "ip": "Dirección IP",
+          "time": "Hora"
+        }
+      },
       "action": "Revisar tus dispositivos",
-      "note": "Por tu seguridad, te enviamos este correo cada vez que un dispositivo nuevo inicia sesión en tu cuenta."
+      "note": "Te enviamos este correo cada vez que un dispositivo nuevo inicia sesión en tu cuenta, para ayudarte a mantenerla segura."
     },
     "login_code": {
       "subject": "Tu código de inicio de sesión de EU Jobs",
-      "heading": "Confirma que eres tú",
+      "heading": "Tu código de inicio de sesión",
       "body": [
         "Hola {{name}}:",
-        "Alguien ha introducido tu contraseña para iniciar sesión en EU Jobs en un navegador que no reconocemos. Introduce este código para terminar de iniciar sesión. Caduca en 10 minutos."
+        "Usa este código para terminar de iniciar sesión en EU Jobs en un navegador nuevo. Caduca en 10 minutos."
       ],
-      "note": "Si no has sido tú, no compartas el código y cambia tu contraseña ahora: alguien la conoce."
+      "facts": {
+        "title": "Detalles del inicio de sesión",
+        "rows": {
+          "device": "Navegador",
+          "location": "Ubicación aproximada",
+          "ip": "Dirección IP",
+          "time": "Hora"
+        }
+      },
+      "secondary": "¿No has intentado iniciar sesión? Puede que alguien conozca tu contraseña. Restablécela ahora; así también se cerrará la sesión en todos los dispositivos:",
+      "note": "No compartas nunca este código. EU Jobs nunca te lo pedirá por teléfono, correo ni chat."
     },
     "verification_approved": {
       "subject": "Tu verificación de {{check}} está aprobada",

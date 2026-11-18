@@ -4,7 +4,9 @@ import { interpolate, t } from '../i18n.js'
 /*
  * Renders an email from the recipient's dictionary through one shared layout (§2.8).
  * A template has subject, heading, body[], and optionally action (button to params.link),
- * secondary (a second link to params.secondaryLink), note, and reason (replaces the layout's account reason line). params.code shows a code box; params.items (strings)
+ * secondary (a second link to params.secondaryLink), note, and reason (replaces the layout's account reason line). params.code shows a code box;
+ * a template's `facts` ({ title, rows: { key: label } }) shows a details table of the params with those keys (2026-11-18,
+ * the sign-in emails); params.items (strings)
  * shows a list after the body, such as the jobs of an alert; with params.moreLink, the template's `more` line and that
  * link follow the list (a shortened list).
  * Layout (full width): a navy band (#012B74, the logo's navy) with the white EU JOBS logo and an "Open EU Jobs" link,
@@ -51,6 +53,7 @@ export function renderEmail(type, language, params) {
   const fillHtml = (text) => interpolate(escapeHtml(text), Object.fromEntries(Object.entries(params).map(([k, v]) => [k, escapeHtml(v)])))
   // A line that is only an optional parameter (e.g. {{details}}) is left out when that parameter is empty.
   const body = template.body.filter((line) => fill(line).trim())
+  const facts = template.facts ? Object.entries(template.facts.rows).filter(([key]) => params[key]).map(([key, label]) => [label, String(params[key])]) : []
 
   const text = [
     fill(template.heading),
@@ -59,6 +62,7 @@ export function renderEmail(type, language, params) {
     ...(params.items ?? []).map((item) => `- ${item}`),
     params.moreLink ? `${fill(template.more)} ${params.moreLink}` : null,
     params.code ? `\n${params.code}\n` : null,
+    facts.length ? `${template.facts.title}\n${facts.map(([label, value]) => `${label}: ${value}`).join('\n')}\n` : null,
     template.action ? `${template.action}: ${params.link}` : null,
     template.secondary ? `${template.secondary} ${params.secondaryLink}` : null,
     template.note ? `\n${template.note}` : null,
@@ -81,6 +85,21 @@ ${params.items
 ${rest.length ? `<div style="margin-top:2px;font-size:13px;line-height:1.4;color:${MUTED}">${escapeHtml(rest.join(' · '))}</div>` : ''}
 </td></tr>`
   })
+  .join('\n')}
+</table>`
+    : ''
+
+  // Label and value rows with hairline dividers (browser, location, IP, time).
+  const factsTable = facts.length
+    ? `<p style="margin:4px 0 8px;font-size:13px;line-height:1.4;font-weight:600;color:${INK}">${escapeHtml(template.facts.title)}</p>
+<table role="presentation" width="100%" cellpadding="0" cellspacing="0" style="margin:0 0 16px;border:1px solid ${LINE};border-radius:12px;border-collapse:separate">
+${facts
+  .map(
+    ([label, value], index) => `<tr>
+<td valign="top" style="width:34%;padding:10px 16px;${index ? `border-top:1px solid ${LINE};` : ''}font-size:13px;line-height:1.5;color:${MUTED}">${escapeHtml(label)}</td>
+<td valign="top" style="padding:10px 16px;${index ? `border-top:1px solid ${LINE};` : ''}font-size:14px;line-height:1.5;font-weight:500;color:${INK}">${escapeHtml(value)}</td>
+</tr>`,
+  )
   .join('\n')}
 </table>`
     : ''
@@ -114,7 +133,8 @@ ${paragraph(`${escapeHtml(layout.linkHint)}<br>${link(params.link)}`, `margin:12
 ${body.map((line) => paragraph(fillHtml(line))).join('\n')}
 ${items}
 ${params.moreLink ? paragraph(`${fillHtml(template.more)}<br>${link(params.moreLink)}`, 'font-size:14px') : ''}
-${params.code ? `<p style="margin:8px 0 16px;padding:16px;background:#F2F5FC;border:1px solid ${LINE};border-radius:12px;text-align:center;font-size:30px;line-height:1.2;font-weight:700;letter-spacing:8px;color:${NAVY}">${escapeHtml(params.code)}</p>` : ''}
+${params.code ? `<p style="margin:8px 0 20px;padding:18px 16px;background:#F7F8FA;border:1px solid ${LINE};border-radius:12px;text-align:center;font-size:32px;line-height:1.2;font-weight:700;letter-spacing:10px;font-variant-numeric:tabular-nums;color:${INK}">${escapeHtml(params.code)}</p>` : ''}
+${factsTable}
 ${button}
 ${template.secondary ? paragraph(`${escapeHtml(template.secondary)}<br>${link(params.secondaryLink)}`, 'margin:16px 0 0;font-size:14px') : ''}
 ${template.note ? paragraph(escapeHtml(template.note), `margin:16px 0 0;font-size:13px;color:${MUTED}`) : ''}
