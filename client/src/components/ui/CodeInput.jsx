@@ -1,4 +1,4 @@
-import { useId, useRef } from 'react'
+import { useId, useLayoutEffect, useRef } from 'react'
 import { useTranslation } from 'react-i18next'
 import { cx } from '@/utils/cx.js'
 import fieldStyles from './Field.module.css'
@@ -13,22 +13,34 @@ export default function CodeInput({ label, hideLabel = false, value, onChange, l
   const { t } = useTranslation()
   const id = useId()
   const boxes = useRef([])
+  // The newest code: the focus moves to the next box before the parent's new `value` renders, so the handlers read
+  // this instead of the prop (else the "no gaps" rule sees the old, shorter code and sends the focus back).
+  const latest = useRef(value)
+  useLayoutEffect(() => {
+    latest.current = value
+  }, [value])
   const focus = (index) => boxes.current[Math.max(0, Math.min(length - 1, index))]?.focus()
+
+  function change(next) {
+    latest.current = next
+    onChange(next)
+  }
 
   /** Writes `digits` from box `index` on and focuses the box after them. */
   function put(index, digits) {
-    const chars = value.padEnd(length, ' ').split('')
+    const chars = latest.current.padEnd(length, ' ').split('')
     digits.split('').forEach((digit, offset) => {
       if (index + offset < length) chars[index + offset] = digit
     })
-    onChange(chars.join('').replace(/\s+$/, '').replace(/\s/g, ''))
+    change(chars.join('').replace(/\s+$/, '').replace(/\s/g, ''))
     focus(index + digits.length)
   }
 
   function handleKeyDown(event, index) {
-    if (event.key === 'Backspace' && !value[index]) {
+    const current = latest.current
+    if (event.key === 'Backspace' && !current[index]) {
       event.preventDefault()
-      onChange(value.slice(0, Math.max(0, index - 1)) + value.slice(index))
+      change(current.slice(0, Math.max(0, index - 1)) + current.slice(index))
       focus(index - 1)
     } else if (event.key === 'ArrowLeft') {
       event.preventDefault()
@@ -63,7 +75,7 @@ export default function CodeInput({ label, hideLabel = false, value, onChange, l
             autoFocus={autoFocus && index === 0}
             disabled={disabled}
             // The code has no gaps: a box after the first empty one sends the focus back to it.
-            onFocus={(event) => (index > value.length ? focus(value.length) : event.target.select())}
+            onFocus={(event) => (index > latest.current.length ? focus(latest.current.length) : event.target.select())}
             onKeyDown={(event) => handleKeyDown(event, index)}
             onPaste={(event) => {
               event.preventDefault()
@@ -72,9 +84,10 @@ export default function CodeInput({ label, hideLabel = false, value, onChange, l
             }}
             onChange={(event) => {
               const digits = event.target.value.replace(/\D/g, '')
-              if (!digits) onChange(value.slice(0, index) + value.slice(index + 1))
+              const current = latest.current
+              if (!digits) change(current.slice(0, index) + current.slice(index + 1))
               // Typing after this box's digit replaces it; several digits at once (the phone's autofill) fill from here on.
-              else put(index, digits.length === 2 && digits[0] === value[index] ? digits[1] : digits)
+              else put(index, digits.length === 2 && digits[0] === current[index] ? digits[1] : digits)
             }}
           />
         ))}
