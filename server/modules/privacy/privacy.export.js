@@ -172,6 +172,7 @@ async function candidateExport(user) {
     'learning.json': learned,
     'ai-feedback.json': feedback.map(({ jobId, value, updatedAt }) => ({ job: jobOf(jobId)?.title ?? null, value, at: updatedAt })),
     'notifications.json': await notifications(user),
+    'sign-ins.json': await signIns(user),
     ...(await interviewRecords(user, companyName, jobOf)),
   }
   const files = [
@@ -275,6 +276,7 @@ async function recruiterExport(user) {
     'payments.json': paid,
     'learning.json': learned,
     'notifications.json': await notifications(user),
+    'sign-ins.json': await signIns(user),
   }
   const label = (key) => t(user.language, `csv.export.${key}`)
   const jobCounts = Object.entries(Object.groupBy(jobs, (job) => job.status)).map(([status, list]) => [`${label('jobs')}: ${t(user.language, `labels.jobStatus.${status}`)}`, list.length])

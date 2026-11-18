@@ -8,6 +8,7 @@ import PageTitle from '@/components/common/PageTitle.jsx'
 import { useUpdateMeMutation } from '@/app/api.js'
 import { identitySubtitle } from '@/components/layout/identity.js'
 import ChangePasswordForm from '@/features/account/components/ChangePasswordForm.jsx'
+import DeviceSessions from '@/features/account/components/DeviceSessions.jsx'
 import SettingRow, { SettingsSection } from '@/features/account/components/SettingRow.jsx'
 import EmailSwitches from '@/features/notifications/components/EmailSwitches.jsx'
 import { LANGUAGES, languageName } from '@/i18n/index.js'
@@ -113,6 +114,8 @@ export default function AdminSettingsPage() {
                 <ChangePasswordForm />
               </SettingRow>
           </SettingsSection>
+
+          <DeviceSessions />
 
           {/* P11b-Q3, Q12 (supersedes OD6): the email switches of the admin's notification categories. */}
           <Panel padding={0} className={styles.card} data-card="notifications">

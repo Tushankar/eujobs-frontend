@@ -3,6 +3,48 @@
     "title": "Connexion et sécurité",
     "verified": "Vérifié"
   },
+  "devices": {
+    "title": "Où vous êtes connecté",
+    "description": "Appareils actuellement connectés à votre compte. Si vous n'en reconnaissez pas un, déconnectez-le et changez votre mot de passe.",
+    "activeLabel": "Appareils connectés",
+    "device": "{{browser}} sur {{os}}",
+    "unknownBrowser": "Navigateur inconnu",
+    "unknownOs": "système inconnu",
+    "unknownDevice": "Appareil inconnu",
+    "unknownLocation": "Lieu inconnu",
+    "thisDevice": "Cet appareil",
+    "signedIn": "Connecté le {{time}}",
+    "activeNow": "Actif maintenant",
+    "lastActive": "Dernière activité {{time}}",
+    "signOut": "Déconnecter",
+    "signOutOthers": "Déconnecter tous les autres appareils",
+    "signedOutOne": "{{device}} a été déconnecté.",
+    "signedOutOthers_one": "{{count}} autre appareil a été déconnecté.",
+    "signedOutOthers_other": "{{count}} autres appareils ont été déconnectés.",
+    "signedOutOthers_many": "{{count}} autres appareils ont été déconnectés.",
+    "confirmTitle": "Déconnecter tous les autres appareils ?",
+    "confirmText_one": "{{count}} autre appareil sera déconnecté immédiatement et devra saisir votre mot de passe pour se reconnecter. Vous restez connecté ici.",
+    "confirmText_other": "{{count}} autres appareils seront déconnectés immédiatement et devront saisir votre mot de passe pour se reconnecter. Vous restez connecté ici.",
+    "confirmText_many": "{{count}} autres appareils seront déconnectés immédiatement et devront saisir votre mot de passe pour se reconnecter. Vous restez connecté ici.",
+    "activityTitle": "Activité de connexion",
+    "filters": {
+      "all": "Tout",
+      "success": "Réussies",
+      "failed": "Échouées"
+    },
+    "status": {
+      "active": "Active",
+      "signed_out": "Déconnectée",
+      "expired": "Expirée",
+      "failed": "Tentative échouée"
+    },
+    "noActivity": "Aucune connexion au cours des 90 derniers jours.",
+    "noFailed": "Aucune tentative échouée au cours des 90 derniers jours.",
+    "showMore_one": "Afficher {{count}} de plus",
+    "showMore_other": "Afficher {{count}} de plus",
+    "showMore_many": "Afficher {{count}} de plus",
+    "retention": "L'activité de connexion est conservée 90 jours. Nous vous prévenons par e-mail quand un nouvel appareil se connecte."
+  },
   "password": {
     "description": "Saisissez votre mot de passe actuel, puis le nouveau. Vous restez connecté sur vos autres appareils.",
     "current": "Mot de passe actuel",

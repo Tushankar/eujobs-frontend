@@ -6,8 +6,10 @@ import { openUpgrade } from './upgrade.js'
  * One RTK Query API (§2.15). Feature groups add endpoints with api.injectEndpoints in their own
  * api.js. Errors arrive as { status, data: { error: { code, fields, params } } } (§2.3).
  */
+export const API_BASE = `${import.meta.env.VITE_API_URL ?? ''}/api/v1`
+
 const rawBaseQuery = fetchBaseQuery({
-  baseUrl: `${import.meta.env.VITE_API_URL ?? ''}/api/v1`,
+  baseUrl: API_BASE,
   prepareHeaders(headers) {
     const token = getToken()
     if (token) headers.set('Authorization', `Bearer ${token}`)
@@ -50,6 +52,7 @@ export const api = createApi({
   baseQuery: baseQueryWithReauth,
   tagTypes: [
     'Me',
+    'Sessions',
     'Countries',
     'Config',
     'Faqs',

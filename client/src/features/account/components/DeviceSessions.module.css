@@ -1,0 +1,219 @@
+/* Where you're signed in: header with the sign-out-all action, device rows, then the sign-in activity list */
+.card {
+  overflow: hidden;
+  scroll-margin-top: 96px;
+}
+
+.header {
+  display: flex;
+  align-items: flex-start;
+  gap: 16px;
+  padding: 20px 24px 16px;
+}
+
+.headerText {
+  flex: 1;
+  min-width: 0;
+}
+
+.heading {
+  font-family: var(--font-display);
+  font-size: 18px;
+  font-weight: 800;
+  line-height: 24px;
+  color: var(--foreground);
+}
+
+.description {
+  max-width: 620px;
+  margin-top: 4px;
+  font-size: 13px;
+  line-height: 20px;
+  color: var(--muted-foreground);
+}
+
+.headerAction,
+.rowAction {
+  flex-shrink: 0;
+}
+
+.notice {
+  padding: 0 24px 16px;
+}
+
+.list {
+  list-style: none;
+}
+
+.row {
+  display: flex;
+  align-items: center;
+  gap: 14px;
+  padding: 16px 24px;
+  border-top: 1px solid var(--border);
+  transition: background var(--transition);
+}
+
+.row:hover {
+  background: var(--muted);
+}
+
+.deviceIcon {
+  flex-shrink: 0;
+  align-self: flex-start;
+  margin-top: 2px;
+  color: var(--muted-foreground);
+}
+
+.failedIcon {
+  color: var(--destructive);
+}
+
+.text {
+  display: flex;
+  flex: 1;
+  flex-direction: column;
+  gap: 2px;
+  min-width: 0;
+}
+
+.title {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: 4px 10px;
+  font-size: 14px;
+  font-weight: 600;
+  line-height: 20px;
+  color: var(--foreground);
+}
+
+.meta {
+  font-size: 13px;
+  line-height: 20px;
+  color: var(--muted-foreground);
+  overflow-wrap: anywhere;
+}
+
+.live {
+  font-weight: 600;
+  color: var(--success-fg);
+}
+
+/* Activity: a subheading with underline tabs, then rows with the time and status on the right */
+.activityHead {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: flex-end;
+  justify-content: space-between;
+  gap: 8px 16px;
+  padding: 20px 24px 0;
+  border-top: 1px solid var(--border);
+}
+
+.subheading {
+  padding-bottom: 12px;
+  font-family: var(--font-display);
+  font-size: 16px;
+  font-weight: 800;
+  line-height: 22px;
+  color: var(--foreground);
+}
+
+.when {
+  display: flex;
+  flex-shrink: 0;
+  flex-direction: column;
+  align-items: flex-end;
+  gap: 4px;
+}
+
+.time {
+  font-size: 13px;
+  font-weight: 600;
+  line-height: 20px;
+  color: var(--foreground);
+  white-space: nowrap;
+}
+
+.empty {
+  padding: 20px 24px;
+  border-top: 1px solid var(--border);
+  font-size: 13px;
+  line-height: 20px;
+  color: var(--muted-foreground);
+}
+
+.footer {
+  display: flex;
+  justify-content: center;
+  padding: 8px 24px;
+  border-top: 1px solid var(--border);
+}
+
+.retention {
+  padding: 12px 24px 16px;
+  border-top: 1px solid var(--border);
+  font-size: 12px;
+  line-height: 18px;
+  color: var(--muted-foreground);
+}
+
+.skeleton {
+  display: block;
+}
+
+.skeletonRow {
+  display: flex;
+  align-items: center;
+  gap: 14px;
+  padding: 16px 24px;
+  border-top: 1px solid var(--border);
+}
+
+.skeletonText {
+  display: flex;
+  flex: 1;
+  flex-direction: column;
+  gap: 8px;
+}
+
+@media (max-width: 639px) {
+  .header,
+  .row,
+  .activityHead,
+  .skeletonRow {
+    padding-left: 16px;
+    padding-right: 16px;
+  }
+
+  .notice,
+  .empty,
+  .footer,
+  .retention {
+    padding-left: 16px;
+    padding-right: 16px;
+  }
+
+  /* Phone: the header action and a row's Sign out drop under the text; the time and status go under the device. */
+  .header,
+  .row {
+    flex-wrap: wrap;
+  }
+
+  .headerAction {
+    width: 100%;
+  }
+
+  .rowAction {
+    margin-left: 36px;
+  }
+
+  .when {
+    flex-direction: row;
+    align-items: center;
+    width: calc(100% - 34px);
+    margin-left: 34px;
+    gap: 8px;
+  }
+}

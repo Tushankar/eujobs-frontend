@@ -3,6 +3,45 @@
     "title": "Sign in & security",
     "verified": "Verified"
   },
+  "devices": {
+    "title": "Where you're signed in",
+    "description": "Devices signed in to your account right now. If you don't recognise one, sign it out and change your password.",
+    "activeLabel": "Signed-in devices",
+    "device": "{{browser}} on {{os}}",
+    "unknownBrowser": "Unknown browser",
+    "unknownOs": "unknown system",
+    "unknownDevice": "Unknown device",
+    "unknownLocation": "Unknown location",
+    "thisDevice": "This device",
+    "signedIn": "Signed in {{time}}",
+    "activeNow": "Active now",
+    "lastActive": "Last active {{time}}",
+    "signOut": "Sign out",
+    "signOutOthers": "Sign out of all other devices",
+    "signedOutOne": "{{device}} has been signed out.",
+    "signedOutOthers_one": "{{count}} other device has been signed out.",
+    "signedOutOthers_other": "{{count}} other devices have been signed out.",
+    "confirmTitle": "Sign out of all other devices?",
+    "confirmText_one": "{{count}} other device will be signed out right away and will need your password to sign in again. You stay signed in here.",
+    "confirmText_other": "{{count}} other devices will be signed out right away and will need your password to sign in again. You stay signed in here.",
+    "activityTitle": "Sign-in activity",
+    "filters": {
+      "all": "All",
+      "success": "Signed in",
+      "failed": "Failed"
+    },
+    "status": {
+      "active": "Active",
+      "signed_out": "Signed out",
+      "expired": "Expired",
+      "failed": "Failed attempt"
+    },
+    "noActivity": "No sign-ins in the last 90 days.",
+    "noFailed": "No failed sign-in attempts in the last 90 days.",
+    "showMore_one": "Show {{count}} more",
+    "showMore_other": "Show {{count}} more",
+    "retention": "Sign-in activity is kept for 90 days. We email you when a new device signs in."
+  },
   "password": {
     "description": "Enter your current password, then the new one. You stay signed in on your other devices.",
     "current": "Current password",

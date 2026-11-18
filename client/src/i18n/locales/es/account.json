@@ -3,6 +3,48 @@
     "title": "Inicio de sesión y seguridad",
     "verified": "Verificado"
   },
+  "devices": {
+    "title": "Dónde has iniciado sesión",
+    "description": "Dispositivos con sesión iniciada en tu cuenta ahora mismo. Si no reconoces alguno, cierra su sesión y cambia tu contraseña.",
+    "activeLabel": "Dispositivos con sesión iniciada",
+    "device": "{{browser}} en {{os}}",
+    "unknownBrowser": "Navegador desconocido",
+    "unknownOs": "sistema desconocido",
+    "unknownDevice": "Dispositivo desconocido",
+    "unknownLocation": "Ubicación desconocida",
+    "thisDevice": "Este dispositivo",
+    "signedIn": "Sesión iniciada el {{time}}",
+    "activeNow": "Activo ahora",
+    "lastActive": "Última actividad {{time}}",
+    "signOut": "Cerrar sesión",
+    "signOutOthers": "Cerrar sesión en los demás dispositivos",
+    "signedOutOne": "Se ha cerrado la sesión de {{device}}.",
+    "signedOutOthers_one": "Se ha cerrado la sesión de {{count}} dispositivo más.",
+    "signedOutOthers_other": "Se ha cerrado la sesión de {{count}} dispositivos más.",
+    "signedOutOthers_many": "Se ha cerrado la sesión de {{count}} dispositivos más.",
+    "confirmTitle": "¿Cerrar sesión en los demás dispositivos?",
+    "confirmText_one": "Se cerrará la sesión de {{count}} dispositivo más al instante y necesitará tu contraseña para volver a entrar. Aquí sigues con la sesión iniciada.",
+    "confirmText_other": "Se cerrará la sesión de {{count}} dispositivos más al instante y necesitarán tu contraseña para volver a entrar. Aquí sigues con la sesión iniciada.",
+    "confirmText_many": "Se cerrará la sesión de {{count}} dispositivos más al instante y necesitarán tu contraseña para volver a entrar. Aquí sigues con la sesión iniciada.",
+    "activityTitle": "Actividad de inicio de sesión",
+    "filters": {
+      "all": "Todo",
+      "success": "Correctos",
+      "failed": "Fallidos"
+    },
+    "status": {
+      "active": "Activa",
+      "signed_out": "Sesión cerrada",
+      "expired": "Caducada",
+      "failed": "Intento fallido"
+    },
+    "noActivity": "No hay inicios de sesión en los últimos 90 días.",
+    "noFailed": "No hay intentos fallidos en los últimos 90 días.",
+    "showMore_one": "Mostrar {{count}} más",
+    "showMore_other": "Mostrar {{count}} más",
+    "showMore_many": "Mostrar {{count}} más",
+    "retention": "La actividad de inicio de sesión se guarda 90 días. Te avisamos por correo cuando un dispositivo nuevo inicia sesión."
+  },
   "password": {
     "description": "Introduce tu contraseña actual y después la nueva. Seguirás con la sesión iniciada en tus otros dispositivos.",
     "current": "Contraseña actual",

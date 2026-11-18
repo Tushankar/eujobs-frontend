@@ -9,7 +9,7 @@ import { AuditEvent } from '../admin/admin.model.js'
 import { AiCache, AiUsage, ApiUsage, ExplanationFeedback } from '../ai/ai.model.js'
 import { AlertMatch, JobAlert } from '../alerts/alerts.model.js'
 import { Application } from '../applications/applications.model.js'
-import { EmailToken, VerificationCode } from '../auth/auth.model.js'
+import { EmailToken, LoginEvent, VerificationCode } from '../auth/auth.model.js'
 import { CandidateProfile } from '../candidates/candidates.model.js'
 import { Company, KycDocument } from '../companies/companies.model.js'
 import { CvAccessRequest, CvVersion } from '../cv/cv.model.js'
@@ -191,6 +191,7 @@ async function removeOwnRecords(user) {
     Notification.deleteMany({ userId: user._id }),
     EmailToken.deleteMany({ userId: user._id }),
     VerificationCode.deleteMany({ userId: user._id }),
+    LoginEvent.deleteMany({ userId: user._id }),
     EmailLog.deleteMany({ $or: [{ userId: user._id }, { to: user.email }] }),
     AiUsage.deleteMany({ userId: user._id }),
     anonymiseApiUsage(user._id),

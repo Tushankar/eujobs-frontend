@@ -1,4 +1,5 @@
 import { api, writesMe } from '@/app/api.js'
+import { setToken } from '@/app/token.js'
 
 /* The signed-in account's own settings (M-010, M-095). */
 export const accountApi = api.injectEndpoints({
@@ -11,6 +12,18 @@ export const accountApi = api.injectEndpoints({
     getMyReview: build.query({ query: () => '/me/review', transformResponse: (response) => response.review, providesTags: ['MyReview'] }),
     saveMyReview: build.mutation({ query: (body) => ({ url: '/me/review', method: 'PUT', body }), invalidatesTags: ['MyReview', 'AdminReviews'] }),
     deleteMyReview: build.mutation({ query: () => ({ url: '/me/review', method: 'DELETE' }), invalidatesTags: ['MyReview', 'AdminReviews'] }),
+    // 2026-11-18: signed-in devices and sign-in history.
+    getSessions: build.query({ query: () => '/me/sessions', providesTags: ['Sessions'] }),
+    revokeSession: build.mutation({ query: (id) => ({ url: `/me/sessions/${id}`, method: 'DELETE' }), invalidatesTags: ['Sessions'] }),
+    // The account's other tokens stop working, this device's too: its new token is stored before the list refetches.
+    signOutOtherSessions: build.mutation({
+      query: () => ({ url: '/me/sessions/sign-out-others', method: 'POST' }),
+      async onQueryStarted(arg, { queryFulfilled }) {
+        const { data } = await queryFulfilled
+        setToken(data.token)
+      },
+      invalidatesTags: ['Sessions'],
+    }),
   }),
 })
 
@@ -21,4 +34,7 @@ export const {
   useGetMyReviewQuery,
   useSaveMyReviewMutation,
   useDeleteMyReviewMutation,
+  useGetSessionsQuery,
+  useRevokeSessionMutation,
+  useSignOutOtherSessionsMutation,
 } = accountApi
