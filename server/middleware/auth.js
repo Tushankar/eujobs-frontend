@@ -3,9 +3,13 @@ import { config } from '../config/env.js'
 import { AppError } from '../lib/errors.js'
 import { Company } from '../modules/companies/companies.model.js'
 import { currentStep } from '../modules/companies/companies.service.js'
+import { liveSession } from '../modules/auth/sessions.service.js'
 import { User } from '../modules/users/users.model.js'
 
-/** The user of a valid Bearer JWT whose tokenVersion matches (M-007, M-011), else null. */
+/**
+ * The user of a valid Bearer JWT whose tokenVersion matches (M-007, M-011) and whose session (`sid`, 2026-11-18) is
+ * not signed out, else null. Sets req.sessionId.
+ */
 async function sessionUser(req) {
   const header = req.get('authorization') ?? ''
   if (!header.startsWith('Bearer ')) return null
@@ -16,7 +20,10 @@ async function sessionUser(req) {
     return null
   }
   const user = await User.findById(claims.sub)
-  return user && user.tokenVersion === claims.tv ? user : null
+  if (!user || user.tokenVersion !== claims.tv) return null
+  if (claims.sid && !(await liveSession(claims.sid, user._id))) return null
+  req.sessionId = claims.sid
+  return user
 }
 
 /** The user is loaded on every request. */

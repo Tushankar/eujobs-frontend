@@ -6,6 +6,7 @@ import { acceptInvite, inviteDetails } from '../admin/admin.access.js'
 import { meDto } from '../users/users.service.js'
 import * as schemas from './auth.schemas.js'
 import * as auth from './auth.service.js'
+import * as sessions from './sessions.service.js'
 
 const router = Router()
 
@@ -16,12 +17,21 @@ router.post('/candidate/register', signUpsPerIp, validate({ body: schemas.candid
 
 router.post('/recruiter/register', signUpsPerIp, validate({ body: schemas.recruiterRegisterBody }), async (req, res) => {
   const user = await auth.registerRecruiter(req.body)
-  res.status(201).json({ token: auth.signToken(user), me: await meDto(user) })
+  res.status(201).json({ token: await sessions.startSession(user, req), me: await meDto(user) })
 })
 
 router.post('/login', loginsPerIp, failedLoginsPerEmail, validate({ body: schemas.loginBody }), async (req, res) => {
-  const user = await auth.login(req.body)
-  res.json({ token: auth.signToken(user), me: await meDto(user) })
+  const user = await auth.login(req.body).catch(async (error) => {
+    if (error.code === 'INVALID_CREDENTIALS') await sessions.recordFailedSignIn(req.body.email, req)
+    throw error
+  })
+  res.json({ token: await sessions.startSession(user, req), me: await meDto(user) })
+})
+
+// 2026-11-18: signing out ends this device's session, so it leaves the account's device list.
+router.post('/logout', requireAuth, async (req, res) => {
+  await sessions.endSession(req.sessionId)
+  res.status(204).end()
 })
 
 router.post('/verify-email', validate({ body: schemas.tokenBody }), async (req, res) => {

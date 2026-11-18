@@ -49,6 +49,22 @@
       "action": "Reset password",
       "note": "If you did not ask for this, you can ignore this email. Your password stays the same."
     },
+    "new_device_sign_in": {
+      "subject": "New sign-in to your EU Jobs account",
+      "heading": "New device signed in",
+      "body": [
+        "Hi {{name}},",
+        "Your EU Jobs account was just signed in on a device it has not used before.",
+        "Device: {{device}}",
+        "Location: {{location}} (IP {{ip}})",
+        "Time: {{time}}",
+        "If this was you, there is nothing to do. If not, sign that device out and change your password now."
+      ],
+      "action": "Review your devices",
+      "note": "For your security we send this email every time a new device signs in to your account.",
+      "device": "{{browser}} on {{os}}",
+      "unknown": "Unknown"
+    },
     "verification_approved": {
       "subject": "Your {{check}} check is approved",
       "heading": "Check approved",

@@ -49,6 +49,22 @@
       "action": "Restablecer contraseña",
       "note": "Si no lo has solicitado, puedes ignorar este correo. Tu contraseña no cambiará."
     },
+    "new_device_sign_in": {
+      "subject": "Nuevo inicio de sesión en tu cuenta de EU Jobs",
+      "heading": "Nuevo dispositivo conectado",
+      "body": [
+        "Hola {{name}}:",
+        "Se acaba de iniciar sesión en tu cuenta de EU Jobs desde un dispositivo que no se había usado antes.",
+        "Dispositivo: {{device}}",
+        "Ubicación: {{location}} (IP {{ip}})",
+        "Hora: {{time}}",
+        "Si fuiste tú, no tienes que hacer nada. Si no, cierra la sesión de ese dispositivo y cambia tu contraseña ahora."
+      ],
+      "action": "Revisar tus dispositivos",
+      "note": "Por tu seguridad, te enviamos este correo cada vez que un dispositivo nuevo inicia sesión en tu cuenta.",
+      "device": "{{browser}} en {{os}}",
+      "unknown": "Desconocido"
+    },
     "verification_approved": {
       "subject": "Tu verificación de {{check}} está aprobada",
       "heading": "Verificación aprobada",

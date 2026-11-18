@@ -10,6 +10,8 @@ export const EMAIL_TYPES = {
   recruiter_email_code: 'critical',
   password_reset: 'critical',
   admin_invite: 'critical',
+  // 2026-11-18: a sign-in from a device the account has not used before
+  new_device_sign_in: 'critical',
   recruiter_approved: 'decision',
   recruiter_rejected: 'decision',
   recruiter_suspended: 'decision',

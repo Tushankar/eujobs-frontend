@@ -49,6 +49,22 @@
       "action": "Réinitialiser le mot de passe",
       "note": "Si vous n’êtes pas à l’origine de cette demande, vous pouvez ignorer cet e-mail. Votre mot de passe reste inchangé."
     },
+    "new_device_sign_in": {
+      "subject": "Nouvelle connexion à votre compte EU Jobs",
+      "heading": "Nouvel appareil connecté",
+      "body": [
+        "Bonjour {{name}},",
+        "Une connexion à votre compte EU Jobs vient d'avoir lieu depuis un appareil qui n'avait encore jamais été utilisé.",
+        "Appareil : {{device}}",
+        "Lieu : {{location}} (IP {{ip}})",
+        "Heure : {{time}}",
+        "Si c'était vous, vous n'avez rien à faire. Sinon, déconnectez cet appareil et changez votre mot de passe dès maintenant."
+      ],
+      "action": "Vérifier vos appareils",
+      "note": "Pour votre sécurité, nous envoyons cet e-mail chaque fois qu’un nouvel appareil se connecte à votre compte.",
+      "device": "{{browser}} sur {{os}}",
+      "unknown": "Inconnu"
+    },
     "verification_approved": {
       "subject": "Votre vérification « {{check}} » est approuvée",
       "heading": "Vérification approuvée",

@@ -7,6 +7,7 @@ import { t } from '../../lib/i18n.js'
 import { Application } from '../applications/applications.model.js'
 import { JobAlert } from '../alerts/alerts.model.js'
 import { ExplanationFeedback } from '../ai/ai.model.js'
+import { LoginEvent } from '../auth/auth.model.js'
 import { CandidateProfile } from '../candidates/candidates.model.js'
 import { Company, KycDocument } from '../companies/companies.model.js'
 import { CvAccessRequest, CvVersion } from '../cv/cv.model.js'
@@ -118,6 +119,12 @@ async function learning(user) {
 
 const notifications = async (user) =>
   (await Notification.find({ userId: user._id }).sort({ at: -1 }).lean()).map(({ type, params, count, at, readAt }) => ({ type, params, count, at, readAt: readAt ?? null }))
+
+// 2026-11-18: the last 90 days of sign-ins and failed attempts.
+const signIns = async (user) =>
+  (await LoginEvent.find({ userId: user._id }).sort({ createdAt: -1 }).lean()).map(({ outcome, ip, browser, os, deviceType, city, country, createdAt, lastSeenAt, revokedAt }) => ({
+    outcome, ip: ip ?? null, browser: browser ?? null, os: os ?? null, deviceType: deviceType ?? null, city: city ?? null, country: country ?? null, at: createdAt, lastSeenAt: lastSeenAt ?? null, signedOutAt: revokedAt ?? null,
+  }))
 
 async function candidateExport(user) {
   const [profile, cvVersions, requests, downloads, submissions, applications, saved, alerts, feedback] = await Promise.all([

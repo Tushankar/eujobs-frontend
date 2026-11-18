@@ -4,6 +4,7 @@ import { z } from 'zod'
 import { objectId, validate } from '../../lib/validate.js'
 import { switchesBody } from '../notifications/notifications.schemas.js'
 import { setEmailSwitches } from '../notifications/notifications.service.js'
+import * as sessions from '../auth/sessions.service.js'
 import * as schemas from './users.schemas.js'
 import { markCelebrationSeen } from './celebrations.js'
 import * as users from './users.service.js'
@@ -51,6 +52,21 @@ router.post('/tour', async (req, res) => {
   if (!['candidate', 'recruiter'].includes(req.user.role)) return res.status(204).end()
   await users.finishTour(req.user)
   res.json(await users.meDto(req.user))
+})
+
+// 2026-11-18: signed-in devices and sign-in history (Settings › Data & account; admin Settings).
+router.get('/sessions', async (req, res) => {
+  res.json(await sessions.listSessions(req.user, req.sessionId))
+})
+
+router.delete('/sessions/:id', validate({ params: z.object({ id: objectId }) }), async (req, res) => {
+  await sessions.revokeSession(req.user, req.params.id, req.sessionId)
+  res.status(204).end()
+})
+
+// Answers this device's new token: the account's other tokens stop working.
+router.post('/sessions/sign-out-others', async (req, res) => {
+  res.json({ token: await sessions.revokeOtherSessions(req.user, req.sessionId) })
 })
 
 // P11b-Q3, Q12: one email switch per category, for every role; in-app notifications are always on.

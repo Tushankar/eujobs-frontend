@@ -49,8 +49,9 @@ async function passwordMatches(user, password) {
   return false
 }
 
-export function signToken(user) {
-  return jwt.sign({ role: user.role, tv: user.tokenVersion }, config.jwt.secret, {
+/** `sid` is the LoginEvent of the session (sessions.service.js); tokens without one (tests) are not listed or revocable. */
+export function signToken(user, sid) {
+  return jwt.sign({ role: user.role, tv: user.tokenVersion, ...(sid && { sid: String(sid) }) }, config.jwt.secret, {
     subject: String(user._id),
     expiresIn: config.jwt.expiresIn,
     algorithm: 'HS256',
