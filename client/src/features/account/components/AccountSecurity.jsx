@@ -6,13 +6,18 @@ import EmailText from '@/components/common/EmailText.jsx'
 import { usePreferences } from '@/lib/preferences.js'
 import ChangePasswordForm from './ChangePasswordForm.jsx'
 import SettingRow, { SettingsSection } from './SettingRow.jsx'
+import TwoFactorSetting from './TwoFactorSetting.jsx'
 import styles from './AccountSecurity.module.css'
 
-/** Data & account › Sign in & security (candidate, recruiter): the sign-in email and the password row that opens its form. */
+/**
+ * Data & account › Sign in & security (candidate, recruiter): the sign-in email, the password row that opens its form
+ * and two-step verification (2026-11-18); one row is open at a time.
+ */
 export default function AccountSecurity() {
   const { t } = useTranslation()
   const { me } = usePreferences()
-  const [open, setOpen] = useState(false)
+  const [open, setOpen] = useState(null)
+  const toggle = (row) => setOpen((current) => (current === row ? null : row))
   return (
     <SettingsSection title={t('account:security.title')}>
       <SettingRow
@@ -32,10 +37,11 @@ export default function AccountSecurity() {
           </span>
         }
       />
-      <SettingRow id="password" icon={KeyRound} label={t('auth:fields.password')} value="••••••••" open={open} onToggle={() => setOpen(!open)}>
+      <SettingRow id="password" icon={KeyRound} label={t('auth:fields.password')} value="••••••••" open={open === 'password'} onToggle={() => toggle('password')}>
         <p className={styles.description}>{t('account:password.description')}</p>
         <ChangePasswordForm />
       </SettingRow>
+      <TwoFactorSetting open={open === 'twoFactor'} onToggle={() => toggle('twoFactor')} />
     </SettingsSection>
   )
 }

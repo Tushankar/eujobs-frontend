@@ -1,0 +1,64 @@
+/* Two-step verification row: the On value line and the open panel */
+.value {
+  display: flex;
+  flex-flow: row wrap;
+  align-items: center;
+  gap: 4px 10px;
+}
+
+.on {
+  display: inline-flex;
+  align-items: center;
+  gap: 4px;
+  font-size: 12px;
+  font-weight: 600;
+  color: var(--success-fg);
+}
+
+.panel {
+  display: flex;
+  flex-direction: column;
+  gap: 16px;
+  max-width: 560px;
+}
+
+.text {
+  font-size: 13px;
+  line-height: 20px;
+  color: var(--muted-foreground);
+}
+
+.inline {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: flex-start;
+  gap: 12px;
+}
+
+.inline > :first-child {
+  flex: 1;
+  min-width: 180px;
+  max-width: 260px;
+}
+
+.actions {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 8px;
+}
+
+.submit {
+  align-self: flex-start;
+}
+
+.stack {
+  display: flex;
+  flex-direction: column;
+  align-items: flex-start;
+  gap: 12px;
+  max-width: 320px;
+}
+
+.stack > :first-child {
+  align-self: stretch;
+}

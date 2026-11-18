@@ -47,3 +47,49 @@
     grid-template-columns: minmax(0, 1fr);
   }
 }
+
+/* 2026-11-18: the admin's two-step verification, with the Owner's reset */
+.twoFactor {
+  display: flex;
+  align-items: center;
+  gap: 14px;
+  padding: 14px 16px;
+  border: 1px solid var(--border);
+  border-radius: var(--radius-xl);
+}
+
+.twoFactorIcon {
+  flex-shrink: 0;
+  color: var(--muted-foreground);
+}
+
+.twoFactorText {
+  display: flex;
+  flex: 1;
+  flex-direction: column;
+  gap: 2px;
+  min-width: 0;
+}
+
+.twoFactorLabel {
+  font-size: 14px;
+  font-weight: 600;
+  line-height: 20px;
+  color: var(--foreground);
+}
+
+.twoFactorOn {
+  display: inline-flex;
+  align-items: center;
+  gap: 4px;
+  font-size: 13px;
+  font-weight: 600;
+  line-height: 20px;
+  color: var(--success-fg);
+}
+
+.twoFactorOff {
+  font-size: 13px;
+  line-height: 20px;
+  color: var(--muted-foreground);
+}

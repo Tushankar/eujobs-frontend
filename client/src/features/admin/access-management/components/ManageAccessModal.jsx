@@ -1,13 +1,14 @@
 import { useState } from 'react'
 import { useTranslation } from 'react-i18next'
-import { Check, Trash2 } from 'lucide-react'
+import { Check, CircleCheck, ShieldCheck, Trash2 } from 'lucide-react'
 import { errorCode, useGetConfigQuery } from '@/app/api.js'
 import ConfirmDialog from '@/components/common/ConfirmDialog.jsx'
 import SectionTitle from '@/components/common/SectionTitle.jsx'
 import { Button, Icon, Modal, SelectField, TextField } from '@/components/ui'
 import FormAlert from '@/features/auth/components/FormAlert.jsx'
 import { serverFieldErrors, useErrorText } from '@/lib/forms.js'
-import { useGetPermissionsQuery, useRevokeAccessMutation, useSaveAccessMutation } from '../api.js'
+import { usePreferences } from '@/lib/preferences.js'
+import { useGetPermissionsQuery, useResetTwoFactorMutation, useRevokeAccessMutation, useSaveAccessMutation } from '../api.js'
 import { accessErrorText } from '../accessErrors.js'
 import PermissionOption from './PermissionOption.jsx'
 import styles from './ManageAccessModal.module.css'
@@ -38,6 +39,10 @@ export default function ManageAccessModal({ user, roles, onClose, onDone }) {
   const { data: catalogue = [] } = useGetPermissionsQuery()
   const [saveAccess] = useSaveAccessMutation()
   const [revokeAccess] = useRevokeAccessMutation()
+  const [resetTwoFactor] = useResetTwoFactorMutation()
+  const { me } = usePreferences()
+  // 2026-11-18: only the Owner resets another admin's two-step verification (lost phone and backup codes).
+  const canResetTwoFactor = me.isOwner && me.id !== user.id && user.twoFactorEnabled
   const hasRole = Boolean(user.role)
   const [roleId, setRoleId] = useState(user.role?.status === 'active' ? user.role.id : '')
   const [department, setDepartment] = useState(user.department)
@@ -119,6 +124,24 @@ export default function ManageAccessModal({ user, roles, onClose, onDone }) {
       >
         <form id={FORM_ID} className={styles.form} onSubmit={handleSubmit} noValidate>
           {failure && errorCode(failure) !== 'VALIDATION_FAILED' && <FormAlert>{failureText}</FormAlert>}
+          <div className={styles.twoFactor} data-two-factor>
+            <Icon as={ShieldCheck} size={20} className={styles.twoFactorIcon} />
+            <div className={styles.twoFactorText}>
+              <span className={styles.twoFactorLabel}>{t('manage.twoFactor')}</span>
+              {user.twoFactorEnabled ? (
+                <span className={styles.twoFactorOn}>
+                  <Icon as={CircleCheck} size={14} /> {t('manage.twoFactorOn')}
+                </span>
+              ) : (
+                <span className={styles.twoFactorOff}>{t('manage.twoFactorOff')}</span>
+              )}
+            </div>
+            {canResetTwoFactor && (
+              <Button variant="outline" size="sm" onClick={() => setConfirming('resetTwoFactor')}>
+                {t('manage.twoFactorReset')}
+              </Button>
+            )}
+          </div>
           <div className={styles.pair}>
             <SelectField
               label={t('manage.role')}
@@ -182,6 +205,15 @@ export default function ManageAccessModal({ user, roles, onClose, onDone }) {
         tone="danger"
         onClose={() => setConfirming(null)}
         onConfirm={() => run(() => revokeAccess(user.id), t('users.revoked', { name: user.fullName }))}
+      />
+      <ConfirmDialog
+        open={confirming === 'resetTwoFactor'}
+        title={t('manage.twoFactorResetTitle', { name: user.fullName })}
+        description={t('manage.twoFactorResetText')}
+        confirmLabel={t('manage.twoFactorReset')}
+        tone="danger"
+        onClose={() => setConfirming(null)}
+        onConfirm={() => run(() => resetTwoFactor(user.id), t('users.twoFactorReset', { name: user.fullName }))}
       />
     </>
   )

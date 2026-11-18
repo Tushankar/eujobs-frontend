@@ -9,6 +9,7 @@ import { useUpdateMeMutation } from '@/app/api.js'
 import { identitySubtitle } from '@/components/layout/identity.js'
 import ChangePasswordForm from '@/features/account/components/ChangePasswordForm.jsx'
 import DeviceSessions from '@/features/account/components/DeviceSessions.jsx'
+import TwoFactorSetting from '@/features/account/components/TwoFactorSetting.jsx'
 import SettingRow, { SettingsSection } from '@/features/account/components/SettingRow.jsx'
 import EmailSwitches from '@/features/notifications/components/EmailSwitches.jsx'
 import { LANGUAGES, languageName } from '@/i18n/index.js'
@@ -113,6 +114,8 @@ export default function AdminSettingsPage() {
                 <p className={styles.description}>{t('account:password.description')}</p>
                 <ChangePasswordForm />
               </SettingRow>
+
+              <TwoFactorSetting open={open === 'twoFactor'} onToggle={() => toggle('twoFactor')} />
           </SettingsSection>
 
           <DeviceSessions />

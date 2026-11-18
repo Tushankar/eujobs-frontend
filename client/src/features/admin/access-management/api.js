@@ -18,6 +18,8 @@ export const accessApi = api.injectEndpoints({
     getAccessUsers: build.query({ query: () => '/admin/access/users', transformResponse: (response) => response.items, providesTags: ['AdminAccess'] }),
     saveAccess: build.mutation({ query: ({ id, ...body }) => ({ url: `/admin/access/users/${id}`, method: 'PUT', body }), invalidatesTags: changes }),
     revokeAccess: build.mutation({ query: (id) => ({ url: `/admin/access/users/${id}`, method: 'DELETE' }), invalidatesTags: changes }),
+    // 2026-11-18: Owner only; the admin sets the authenticator app up again at the next sign-in.
+    resetTwoFactor: build.mutation({ query: (id) => ({ url: `/admin/access/users/${id}/2fa/reset`, method: 'POST' }), invalidatesTags: ['AdminAccess'] }),
     inviteAdmin: build.mutation({ query: (body) => ({ url: '/admin/invitations', method: 'POST', body }), invalidatesTags: ['AdminRoles', 'AdminAccess'] }),
   }),
 })
@@ -32,5 +34,6 @@ export const {
   useGetAccessUsersQuery,
   useSaveAccessMutation,
   useRevokeAccessMutation,
+  useResetTwoFactorMutation,
   useInviteAdminMutation,
 } = accessApi
