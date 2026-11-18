@@ -1,0 +1,15 @@
+/* "This browser will be remembered" line under the code */
+.remember {
+  display: flex;
+  align-items: flex-start;
+  gap: 8px;
+  font-size: 13px;
+  line-height: 20px;
+  color: var(--muted-foreground);
+}
+
+.rememberIcon {
+  flex-shrink: 0;
+  margin-top: 2px;
+  color: var(--success-fg);
+}

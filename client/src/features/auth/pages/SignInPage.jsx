@@ -12,6 +12,7 @@ import { useLoginMutation } from '../api.js'
 import AuthIntro from '../components/AuthIntro.jsx'
 import AuthSwitchPrompt from '../components/AuthSwitchPrompt.jsx'
 import FormAlert from '../components/FormAlert.jsx'
+import LoginVerification from '../components/LoginVerification.jsx'
 import ResendVerification from '../components/ResendVerification.jsx'
 import WorkspacePicker from '../components/WorkspacePicker.jsx'
 import { ADMIN_CHOICES, SIGN_IN_CHOICES } from '../data/workspaceChoices.js'
@@ -38,6 +39,14 @@ export default function SignInPage({ workspace = 'candidate' }) {
   const { values, errors, setErrors, field } = useFormState({ email: '', password: '' })
   const [login, { isLoading }] = useLoginMutation()
   const [failure, setFailure] = useState(null)
+  // 2026-11-18: a correct password on an unrecognised browser (or any admin sign-in) asks for a second step.
+  const [verification, setVerification] = useState(null)
+
+  async function finish({ token, me }) {
+    await signIn(token, me)
+    const wrongPortal = workspace !== 'admin' && me.role !== workspace
+    navigate(landingPath(me, searchParams.get('next')), { replace: true, state: wrongPortal ? { notice: 'wrongPortal' } : undefined })
+  }
 
   async function handleSubmit(event) {
     event.preventDefault()
@@ -46,10 +55,9 @@ export default function SignInPage({ workspace = 'candidate' }) {
     setFailure(null)
     if (Object.keys(nextErrors).length > 0) return
     try {
-      const { token, me } = await login({ ...values, portal: workspace, timezone: browserTimeZone() }).unwrap()
-      await signIn(token, me)
-      const wrongPortal = workspace !== 'admin' && me.role !== workspace
-      navigate(landingPath(me, searchParams.get('next')), { replace: true, state: wrongPortal ? { notice: 'wrongPortal' } : undefined })
+      const result = await login({ ...values, portal: workspace, timezone: browserTimeZone() }).unwrap()
+      if (result.verification) setVerification(result.verification)
+      else await finish(result)
     } catch (error) {
       setErrors(serverFieldErrors(error))
       setFailure(error)
@@ -57,6 +65,21 @@ export default function SignInPage({ workspace = 'candidate' }) {
   }
 
   const failureCode = failure && errorCode(failure)
+
+  if (verification) {
+    return (
+      <AuthLayout hero={portal.hero} showLogo={workspace !== 'admin'} logoTo={SIGN_IN_PATH[workspace]}>
+        <LoginVerification
+          verification={verification}
+          onDone={finish}
+          onBack={() => {
+            setVerification(null)
+            setFailure(null)
+          }}
+        />
+      </AuthLayout>
+    )
+  }
 
   return (
     <AuthLayout hero={portal.hero} showLogo={workspace !== 'admin'} logoTo={SIGN_IN_PATH[workspace]}>

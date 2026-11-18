@@ -44,8 +44,13 @@ async function sendLoginCode(user) {
   await sendEmail({ type: 'login_code', to: user.email, userId: user._id, language: user.language, params: { name: user.fullName, code } })
 }
 
-/** What the sign-in page needs to show the step. */
-const verificationDto = (user, method, raw) => ({ challenge: raw, method, ...(method === 'email' && { email: maskEmail(user.email) }), expiresInMs: CHALLENGE_TTL_MS })
+/** What the sign-in page needs to show the step; `rememberDays` when passing it remembers the browser (not admins). */
+const verificationDto = (user, method, raw) => ({
+  challenge: raw,
+  method,
+  ...(method === 'email' && { email: maskEmail(user.email) }),
+  ...(user.role !== 'admin' && { rememberDays: TRUST_TTL_MS / 86_400_000 }),
+})
 
 /** After a correct password: { token, me } when no step is due, else { verification }. */
 export async function beginLogin(user, req, deviceToken) {

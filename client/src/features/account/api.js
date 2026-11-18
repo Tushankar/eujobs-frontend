@@ -24,6 +24,11 @@ export const accountApi = api.injectEndpoints({
       },
       invalidatesTags: ['Sessions'],
     }),
+    // 2026-11-18: authenticator-app 2FA. Enable and new codes answer the backup codes; /me refetches for the count.
+    setupTwoFactor: build.mutation({ query: () => ({ url: '/me/2fa/setup', method: 'POST' }) }),
+    enableTwoFactor: build.mutation({ query: (code) => ({ url: '/me/2fa/enable', method: 'POST', body: { code } }), invalidatesTags: ['Me'] }),
+    disableTwoFactor: build.mutation({ query: (password) => ({ url: '/me/2fa/disable', method: 'POST', body: { password } }), ...writesMe }),
+    newBackupCodes: build.mutation({ query: (password) => ({ url: '/me/2fa/backup-codes', method: 'POST', body: { password } }), invalidatesTags: ['Me'] }),
   }),
 })
 
@@ -37,4 +42,8 @@ export const {
   useGetSessionsQuery,
   useRevokeSessionMutation,
   useSignOutOtherSessionsMutation,
+  useSetupTwoFactorMutation,
+  useEnableTwoFactorMutation,
+  useDisableTwoFactorMutation,
+  useNewBackupCodesMutation,
 } = accountApi
