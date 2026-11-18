@@ -66,7 +66,7 @@ function placeName({ city, country }, language) {
 }
 
 async function sendNewDeviceEmail(user, details, at) {
-  const words = t(user.language, 'email.new_device_sign_in')
+  const words = t(user.language, 'signIn')
   await sendEmail({
     type: 'new_device_sign_in',
     to: user.email,

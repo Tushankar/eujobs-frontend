@@ -11,7 +11,7 @@ import { AuditEvent } from '../modules/admin/admin.model.js'
 import { AiCache, AiUsage, ExplanationFeedback } from '../modules/ai/ai.model.js'
 import { AlertMatch, JobAlert } from '../modules/alerts/alerts.model.js'
 import { Application, PipelineStage } from '../modules/applications/applications.model.js'
-import { EmailToken, VerificationCode } from '../modules/auth/auth.model.js'
+import { EmailToken, LoginEvent, VerificationCode } from '../modules/auth/auth.model.js'
 import { CandidateProfile } from '../modules/candidates/candidates.model.js'
 import { Company, KycDocument } from '../modules/companies/companies.model.js'
 import { CvAccessRequest, CvVersion } from '../modules/cv/cv.model.js'
@@ -39,7 +39,7 @@ const MODELS = [
   AuditEvent, AiCache, AiUsage, ExplanationFeedback, AlertMatch, JobAlert, Application, PipelineStage, EmailToken, VerificationCode, CandidateProfile,
   Company, KycDocument, CvAccessRequest, CvVersion, CandidateNote, ProfileView, RecruiterActivity, ShortlistEntry, File, FileAccessLog, Job, SavedJob,
   Certificate, Course, Enrollment, QuizAttempt, Embedding, MatchResult, Conversation, Message, ModerationCase, Payment, Subscription, User,
-  VerificationSubmission, EmailLog, ScheduledTask, JobRun,
+  VerificationSubmission, EmailLog, ScheduledTask, JobRun, LoginEvent,
 ]
 useTestDb(MODELS)
 useTestUploads()
@@ -110,6 +110,7 @@ async function world() {
   const reported = await ModerationCase.create({ targetType: 'job', targetId: job._id, targetName: job.title, reports: [{ reporterId: candidate._id, reason: 'spam', at: new Date() }], openedBy: 'user' })
   await EmailToken.create({ userId: candidate._id, purpose: 'reset_password', tokenHash: `t-${candidate._id}`, expiresAt: new Date(Date.now() + 3600_000) })
   await VerificationCode.create({ userId: candidate._id, channel: 'phone', target: '+442079460000', codeHash: 'c', expiresAt: new Date(Date.now() + 600_000), sentAt: new Date() })
+  await LoginEvent.create({ userId: candidate._id, outcome: 'failed', ip: '81.2.69.160', browser: 'Chrome', os: 'Windows', deviceType: 'desktop' })
   await EmailLog.create({ type: 'application_status', class: 'non_critical', userId: candidate._id, to: candidate.email, status: 'sent' })
   await ScheduledTask.create({ type: 'email.stage', key: `email.stage:${application._id}`, dueAt: new Date(Date.now() + 600_000), payload: { applicationId: String(application._id) } })
   return { recruiter, company, candidate, job, application, conversation, certificate, payment, reported, files: { cvFile, photo, evidence, pdf } }
@@ -245,6 +246,7 @@ describe('DELETE /me: candidate erasure (M-188, OD15)', () => {
     assert.equal(await Subscription.countDocuments({ userId: id }), 0)
     assert.equal(await EmailToken.countDocuments({ userId: id }), 0)
     assert.equal(await VerificationCode.countDocuments({ userId: id }), 0)
+    assert.equal(await LoginEvent.countDocuments({ userId: id }), 0)
     assert.equal(await EmailLog.countDocuments({ $or: [{ userId: id }, { to: candidate.email }] }), 0)
     assert.equal(await ScheduledTask.countDocuments({ type: 'email.stage' }), 0)
     assert.equal(await Notification.countDocuments({ userId: id }), 0)

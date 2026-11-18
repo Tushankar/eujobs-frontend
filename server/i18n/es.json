@@ -61,9 +61,7 @@
         "Si fuiste tú, no tienes que hacer nada. Si no, cierra la sesión de ese dispositivo y cambia tu contraseña ahora."
       ],
       "action": "Revisar tus dispositivos",
-      "note": "Por tu seguridad, te enviamos este correo cada vez que un dispositivo nuevo inicia sesión en tu cuenta.",
-      "device": "{{browser}} en {{os}}",
-      "unknown": "Desconocido"
+      "note": "Por tu seguridad, te enviamos este correo cada vez que un dispositivo nuevo inicia sesión en tu cuenta."
     },
     "verification_approved": {
       "subject": "Tu verificación de {{check}} está aprobada",
@@ -555,6 +553,10 @@
       ],
       "action": "Gestionar la facturación"
     }
+  },
+  "signIn": {
+    "device": "{{browser}} en {{os}}",
+    "unknown": "Desconocido"
   },
   "verification": {
     "category": {

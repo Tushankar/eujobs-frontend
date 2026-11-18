@@ -79,6 +79,7 @@ export const COVERAGE = {
   ModerationCase: 'kept with the reporter, owner and name shown as "Deleted user"',
   EmailToken: 'deleted',
   VerificationCode: 'deleted',
+  LoginEvent: 'deleted (sign-ins and failed attempts)',
   EmailLog: 'deleted',
   Review: 'deleted (the landing page review)',
   NewsletterSubscriber: 'deleted (the subscription of the account email)',

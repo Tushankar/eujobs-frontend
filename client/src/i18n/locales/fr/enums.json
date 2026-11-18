@@ -333,6 +333,7 @@
     "already_registered": "Compte déjà existant",
     "recruiter_email_code": "Code e-mail recruteur",
     "password_reset": "Réinitialisation du mot de passe",
+    "new_device_sign_in": "Connexion depuis un nouvel appareil",
     "admin_invite": "Invitation administrateur",
     "recruiter_approved": "Recruteur approuvé",
     "recruiter_rejected": "Recruteur refusé",

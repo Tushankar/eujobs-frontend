@@ -61,9 +61,7 @@
         "Si c'était vous, vous n'avez rien à faire. Sinon, déconnectez cet appareil et changez votre mot de passe dès maintenant."
       ],
       "action": "Vérifier vos appareils",
-      "note": "Pour votre sécurité, nous envoyons cet e-mail chaque fois qu’un nouvel appareil se connecte à votre compte.",
-      "device": "{{browser}} sur {{os}}",
-      "unknown": "Inconnu"
+      "note": "Pour votre sécurité, nous envoyons cet e-mail chaque fois qu’un nouvel appareil se connecte à votre compte."
     },
     "verification_approved": {
       "subject": "Votre vérification « {{check}} » est approuvée",
@@ -555,6 +553,10 @@
       ],
       "action": "Gérer la facturation"
     }
+  },
+  "signIn": {
+    "device": "{{browser}} sur {{os}}",
+    "unknown": "Inconnu"
   },
   "verification": {
     "category": {

@@ -61,9 +61,7 @@
         "If this was you, there is nothing to do. If not, sign that device out and change your password now."
       ],
       "action": "Review your devices",
-      "note": "For your security we send this email every time a new device signs in to your account.",
-      "device": "{{browser}} on {{os}}",
-      "unknown": "Unknown"
+      "note": "For your security we send this email every time a new device signs in to your account."
     },
     "verification_approved": {
       "subject": "Your {{check}} check is approved",
@@ -555,6 +553,10 @@
       ],
       "action": "Manage billing"
     }
+  },
+  "signIn": {
+    "device": "{{browser}} on {{os}}",
+    "unknown": "Unknown"
   },
   "verification": {
     "category": {
