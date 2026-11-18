@@ -89,6 +89,7 @@ function SetupPanel({ onCodes }) {
       <AuthenticatorSetup setup={setup}>
         <form className={styles.inline} onSubmit={handleSubmit} noValidate>
           <TextField
+            className={styles.codeField}
             label={<span className="sr-only">{t('auth:loginStep.appLabel')}</span>}
             name="code"
             inputMode="numeric"
@@ -98,7 +99,7 @@ function SetupPanel({ onCodes }) {
             onChange={(event) => setCode(event.target.value.replace(/\D/g, ''))}
             error={error && errorText.field('code', error)}
           />
-          <Button type="submit" loading={isLoading} disabled={code.length !== 6 || !setup}>
+          <Button type="submit" loading={isLoading} disabled={code.length !== 6 || !setup} className={styles.codeButton}>
             {t('account:twoFactor.turnOn')}
           </Button>
         </form>
