@@ -205,6 +205,10 @@
     width: 100%;
   }
 
+  .row > .text {
+    flex-basis: calc(100% - 36px);
+  }
+
   .rowAction {
     margin-left: 36px;
   }

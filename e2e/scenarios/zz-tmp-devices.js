@@ -50,8 +50,11 @@ export default {
     await page.$$eval('[data-card="devices"] li', (items) => items.find((item) => item.innerText.includes('Safari on iOS')).querySelector('button').click())
     await waitForText(page, 'Safari on iOS has been signed out.')
     ctx.check((await api('/me/sessions', { token: phone.body.token })).status === 401, 'the iPhone token is refused')
+    // The list refetches after the notice shows.
+    await page.waitForFunction(() => document.querySelectorAll('[data-card="devices"] ul[aria-label="Signed-in devices"] > li').length === 3, { timeout: 10_000 }).catch(() => null)
     rows = await deviceRows(page)
     ctx.check(rows.length === 3, `three devices left (got ${rows.length})`)
+    await ctx.screenshot(page, '2b-after-one-sign-out')
 
     // Sign out of every other device, then reload: this device stays signed in with its new token.
     await clickText(page, 'Sign out of all other devices')
