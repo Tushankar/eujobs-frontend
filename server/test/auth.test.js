@@ -5,7 +5,7 @@ import { EmailLog } from '../lib/mail/emailLog.model.js'
 import { EmailToken, VerificationCode } from '../modules/auth/auth.model.js'
 import { User } from '../modules/users/users.model.js'
 import { seedCatalog } from '../seed/catalog.js'
-import { api, auth, createUser, linkToken, mailTo, PASSWORD, shiftBack, testEmail, useTestDb } from './helpers/index.js'
+import { api, auth, createUser, finishLogin, linkToken, mailTo, PASSWORD, shiftBack, testEmail, useTestDb } from './helpers/index.js'
 
 useTestDb([User, EmailToken, VerificationCode, EmailLog])
 before(() => seedCatalog())
@@ -27,7 +27,7 @@ const recruiter = (overrides = {}) => ({
   phone: '020 7946 0958',
   ...overrides,
 })
-const login = (email, password = PASSWORD, portal = 'candidate') => api().post('/api/v1/auth/login').send({ email, password, portal })
+const login = (email, password = PASSWORD, portal = 'candidate', deviceToken) => api().post('/api/v1/auth/login').send({ email, password, portal, deviceToken })
 
 describe('candidate sign-up and the email link (M-001, U36)', () => {
   for (const language of ['en', 'es', 'fr']) {
@@ -99,9 +99,10 @@ describe('candidate sign-in (M-001, M-005)', () => {
     const token = linkToken(body.email, 'verify_email')
     const verified = await api().post('/api/v1/auth/verify-email').send({ token })
     assert.equal(verified.status, 200)
-    assert.deepEqual(verified.body, { role: 'candidate' })
+    assert.equal(verified.body.role, 'candidate')
 
-    const res = await login(body.email)
+    // 2026-11-18: the browser that opened the link is remembered, so no sign-in code is asked.
+    const res = await login(body.email, PASSWORD, 'candidate', verified.body.deviceToken)
     assert.equal(res.status, 200)
     assert.ok(res.body.token)
     assert.equal(res.body.me.status, 'active')
@@ -126,7 +127,7 @@ describe('candidate sign-in (M-001, M-005)', () => {
 
   it('signs a candidate in on the recruiter portal with role candidate', async () => {
     const user = await createUser()
-    const res = await login(user.email, PASSWORD, 'recruiter')
+    const res = await finishLogin(await login(user.email, PASSWORD, 'recruiter'))
     assert.equal(res.status, 200)
     assert.equal(res.body.me.role, 'candidate')
   })
@@ -312,7 +313,7 @@ describe('forgot and reset password (M-009)', () => {
 
     const res = await reset(token, 'Copper-Meadow-71')
     assert.equal(res.status, 200)
-    assert.deepEqual(res.body, { role: 'recruiter' })
+    assert.equal(res.body.role, 'recruiter')
     const after = await User.findById(user._id)
     assert.equal(after.tokenVersion, 1)
     assert.ok(after.emailVerifiedAt)

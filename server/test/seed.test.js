@@ -26,7 +26,7 @@ import { FAQS } from '../seed/data/faqs.js'
 import { LEGAL_VERSION } from '../seed/data/legal.js'
 import { PLACES } from '../seed/data/places.js'
 import { demoAddress, seedDemo } from '../seed/demo.js'
-import { api, useTestDb, useTestUploads } from './helpers/index.js'
+import { api, finishLogin, useTestDb, useTestUploads } from './helpers/index.js'
 
 useTestDb()
 useTestUploads()
@@ -177,9 +177,9 @@ describe('seed:demo (§3.20, OD9, P12)', () => {
   })
 
   it('signs in Emma with SEED_PASSWORD', async () => {
-    const res = await api()
-      .post('/api/v1/auth/login')
-      .send({ email: demoAddress('emma'), password: config.seed.password, portal: 'candidate' })
+    const res = await finishLogin(
+      await api().post('/api/v1/auth/login').send({ email: demoAddress('emma'), password: config.seed.password, portal: 'candidate' }),
+    )
     assert.equal(res.status, 200)
     assert.equal(res.body.me.role, 'candidate')
     assert.equal(res.body.me.status, 'active')

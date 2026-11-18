@@ -1,4 +1,5 @@
 import { api, formData, writesMe } from '@/app/api.js'
+import { getDeviceToken, storesDevice } from '@/app/device.js'
 
 /* Auth endpoints (§5 "Auth and me") and recruiter onboarding (M-151 … M-153). */
 const post = (url) => (body) => ({ url, method: 'POST', body })
@@ -18,15 +19,19 @@ const writesOnboarding = (tags = []) => ({
 
 export const authApi = api.injectEndpoints({
   endpoints: (build) => ({
-    login: build.mutation({ query: post('/auth/login') }),
+    // 2026-11-18: the remembered-device key goes with every sign-in; the answer is { token, me } or { verification }.
+    login: build.mutation({ query: (body) => post('/auth/login')({ ...body, deviceToken: getDeviceToken() }) }),
+    verifyLogin: build.mutation({ query: post('/auth/login/verify'), ...storesDevice }),
+    resendLoginCode: build.mutation({ query: (challenge) => post('/auth/login/resend')({ challenge }) }),
+    setupLoginApp: build.mutation({ query: (challenge) => post('/auth/login/setup')({ challenge }) }),
     registerCandidate: build.mutation({ query: post('/auth/candidate/register') }),
-    registerRecruiter: build.mutation({ query: post('/auth/recruiter/register') }),
-    verifyEmail: build.mutation({ query: (token) => post('/auth/verify-email')({ token }) }),
+    registerRecruiter: build.mutation({ query: post('/auth/recruiter/register'), ...storesDevice }),
+    verifyEmail: build.mutation({ query: (token) => post('/auth/verify-email')({ token }), ...storesDevice }),
     resendVerifyEmail: build.mutation({ query: (email) => post('/auth/verify-email/resend')({ email }) }),
     verifyEmailCode: build.mutation({ query: (code) => post('/auth/email-code/verify')({ code }), ...writesMe }),
     resendEmailCode: build.mutation({ query: () => ({ url: '/auth/email-code/resend', method: 'POST' }) }),
     forgotPassword: build.mutation({ query: (email) => post('/auth/forgot-password')({ email }) }),
-    resetPassword: build.mutation({ query: post('/auth/reset-password') }),
+    resetPassword: build.mutation({ query: post('/auth/reset-password'), ...storesDevice }),
     // U21: an admin invite link (/admin/set-password)
     getInvite: build.query({ query: (token) => `/auth/invite/${encodeURIComponent(token)}` }),
     acceptInvite: build.mutation({ query: post('/auth/invite/accept') }),
@@ -46,6 +51,9 @@ export const authApi = api.injectEndpoints({
 
 export const {
   useLoginMutation,
+  useVerifyLoginMutation,
+  useResendLoginCodeMutation,
+  useSetupLoginAppMutation,
   useRegisterCandidateMutation,
   useRegisterRecruiterMutation,
   useVerifyEmailMutation,
