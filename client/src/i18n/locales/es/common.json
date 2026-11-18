@@ -1,5 +1,6 @@
 {
   "loading": "Cargando…",
+  "codeDigit": "Dígito {{index}} de {{count}}",
   "remote": "Remoto",
   "closeDialog": "Cerrar el cuadro de diálogo",
   "hidePassword": "Ocultar contraseña",

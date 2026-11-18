@@ -24,7 +24,7 @@ async function locate(ip) {
 }
 
 /** Who signed in from where: IP (IPv4 without its ::ffff: prefix), browser, OS, device type, city and country. */
-async function describe(req) {
+export async function describe(req) {
   const ip = req.ip?.replace(/^::ffff:/, '')
   return { ip, ...parseUserAgent(req.get('user-agent')), ...(ip && (await locate(ip))) }
 }
@@ -69,23 +69,26 @@ function placeName({ city, country }, language) {
   return [city, countryName].filter(Boolean).join(', ')
 }
 
-async function sendNewDeviceEmail(user, details, at) {
+/** The "sign-in details" rows of the security emails, in the user's language and time zone. */
+export function signInFacts(user, details, at = new Date()) {
   const words = t(user.language, 'signIn')
+  return {
+    device: interpolate(words.device, { browser: details.browser ?? words.unknown, os: details.os ?? words.unknown }),
+    location: placeName(details, user.language) || words.unknown,
+    ip: details.ip ?? words.unknown,
+    time: DateTime.fromJSDate(at, { zone: user.timezone || 'UTC' })
+      .setLocale(user.language)
+      .toLocaleString({ day: 'numeric', month: 'long', year: 'numeric', hour: 'numeric', minute: '2-digit', timeZoneName: 'short' }),
+  }
+}
+
+async function sendNewDeviceEmail(user, details, at) {
   await sendEmail({
     type: 'new_device_sign_in',
     to: user.email,
     userId: user._id,
     language: user.language,
-    params: {
-      name: user.fullName,
-      device: interpolate(words.device, { browser: details.browser ?? words.unknown, os: details.os ?? words.unknown }),
-      location: placeName(details, user.language) || words.unknown,
-      ip: details.ip ?? words.unknown,
-      time: DateTime.fromJSDate(at, { zone: user.timezone || 'UTC' })
-        .setLocale(user.language)
-        .toLocaleString({ day: 'numeric', month: 'long', year: 'numeric', hour: 'numeric', minute: '2-digit', timeZoneName: 'short' }),
-      link: `${config.clientOrigin}${SETTINGS_PATH[user.role]}#devices`,
-    },
+    params: { name: user.fullName, ...signInFacts(user, details, at), link: `${config.clientOrigin}${SETTINGS_PATH[user.role]}#devices` },
   })
 }
 

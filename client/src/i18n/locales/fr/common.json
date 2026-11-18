@@ -1,5 +1,6 @@
 {
   "loading": "Chargement…",
+  "codeDigit": "Chiffre {{index}} sur {{count}}",
   "remote": "À distance",
   "closeDialog": "Fermer la boîte de dialogue",
   "hidePassword": "Masquer le mot de passe",

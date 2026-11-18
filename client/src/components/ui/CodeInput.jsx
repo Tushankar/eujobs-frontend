@@ -9,7 +9,7 @@ import styles from './CodeInput.module.css'
  * to the previous one, arrows move; a paste or the phone's code suggestion fills every box. `value` is the digits typed
  * so far; `onChange` gets the new string.
  */
-export default function CodeInput({ label, value, onChange, length = 6, error, autoFocus, disabled, className }) {
+export default function CodeInput({ label, hideLabel = false, value, onChange, length = 6, error, autoFocus, disabled, className }) {
   const { t } = useTranslation()
   const id = useId()
   const boxes = useRef([])
@@ -41,7 +41,7 @@ export default function CodeInput({ label, value, onChange, length = 6, error, a
 
   return (
     <div className={cx(fieldStyles.field, className)} role="group" aria-labelledby={`${id}-label`} data-code-input>
-      <span id={`${id}-label`} className={fieldStyles.label}>
+      <span id={`${id}-label`} className={hideLabel ? 'sr-only' : fieldStyles.label}>
         {label}
       </span>
       <div className={styles.boxes}>

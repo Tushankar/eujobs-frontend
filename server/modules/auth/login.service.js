@@ -1,4 +1,5 @@
 import { createHash, randomBytes } from 'node:crypto'
+import { config } from '../../config/env.js'
 import { LIMITS } from '../../config/limits.js'
 import { AppError } from '../../lib/errors.js'
 import { sendEmail } from '../../lib/mailer.js'
@@ -6,7 +7,7 @@ import { meDto } from '../users/users.service.js'
 import { User } from '../users/users.model.js'
 import { LoginChallenge, TrustedDevice, VerificationCode } from './auth.model.js'
 import { assertCodeResendAllowed, issueCode, verifyCode } from './auth.service.js'
-import { startSession } from './sessions.service.js'
+import { describe, signInFacts, startSession } from './sessions.service.js'
 import { checkSecondFactor, enableWith, newSetup, twoFactorOn } from './twoFactor.service.js'
 
 /*
@@ -39,9 +40,16 @@ export async function trustBrowser(user) {
   return { deviceToken: raw, deviceId: device._id }
 }
 
-async function sendLoginCode(user) {
+/** The emailed sign-in code, with where the sign-in comes from; "Didn't try to sign in?" links to a password reset. */
+async function sendLoginCode(user, req) {
   const code = await issueCode(user._id, 'login', user.email)
-  await sendEmail({ type: 'login_code', to: user.email, userId: user._id, language: user.language, params: { name: user.fullName, code } })
+  await sendEmail({
+    type: 'login_code',
+    to: user.email,
+    userId: user._id,
+    language: user.language,
+    params: { name: user.fullName, code, ...signInFacts(user, await describe(req)), secondaryLink: `${config.clientOrigin}/forgot-password` },
+  })
 }
 
 /** What the sign-in page needs to show the step; `rememberDays` when passing it remembers the browser (not admins). */
@@ -66,7 +74,7 @@ export async function beginLogin(user, req, deviceToken) {
     const recent = { userId: user._id, channel: 'login', sentAt: { $gte: new Date(now - LIMITS.code.resendAfterMs) } }
     const live = await VerificationCode.exists({ ...recent, consumedAt: null, expiresAt: { $gt: new Date(now) } })
     const sentThisHour = await VerificationCode.countDocuments({ userId: user._id, channel: 'login', sentAt: { $gte: new Date(now - 3_600_000) } })
-    if (!live && sentThisHour < LIMITS.code.maxPerHour) await sendLoginCode(user)
+    if (!live && sentThisHour < LIMITS.code.maxPerHour) await sendLoginCode(user, req)
   }
   const raw = randomBytes(32).toString('base64url')
   await LoginChallenge.create({ userId: user._id, method, tokenHash: sha256(raw), expiresAt: new Date(Date.now() + CHALLENGE_TTL_MS) })
@@ -107,11 +115,11 @@ export async function loginSetup(raw) {
 }
 
 /** POST /auth/login/resend: a new emailed code (once a minute, five an hour). */
-export async function resendLoginCode(raw) {
+export async function resendLoginCode(raw, req) {
   const { challenge, user } = await openChallenge(raw)
   if (challenge.method !== 'email') throw new AppError('CONFLICT')
   await assertCodeResendAllowed(user._id, 'login')
-  await sendLoginCode(user)
+  await sendLoginCode(user, req)
 }
 
 /**

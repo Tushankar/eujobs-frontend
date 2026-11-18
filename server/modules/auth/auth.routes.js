@@ -40,7 +40,7 @@ router.post('/login/verify', loginStepsPerIp, validate({ body: schemas.loginVeri
 })
 
 router.post('/login/resend', loginStepsPerIp, validate({ body: schemas.challengeBody }), async (req, res) => {
-  await loginStep.resendLoginCode(req.body.challenge)
+  await loginStep.resendLoginCode(req.body.challenge, req)
   res.status(204).end()
 })
 

@@ -28,27 +28,17 @@
   color: var(--muted-foreground);
 }
 
-/* The 6-digit code and its button on one line, the same 44px height, tops aligned (an error shows under the code). */
+/* The digit boxes and the button on one line, the button as tall as a box; an error shows under the boxes. */
 .inline {
   display: flex;
   flex-wrap: wrap;
   align-items: flex-start;
-  gap: 12px;
-}
-
-.codeField {
-  width: 184px;
-}
-
-.codeField input {
-  font-size: 18px;
-  font-weight: 600;
-  letter-spacing: 6px;
-  text-align: center;
+  gap: 16px;
 }
 
 .codeButton {
-  min-height: 44px;
+  min-height: 56px;
+  padding-inline: 24px;
 }
 
 .actions {
