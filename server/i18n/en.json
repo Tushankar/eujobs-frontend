@@ -63,6 +63,15 @@
       "action": "Review your devices",
       "note": "For your security we send this email every time a new device signs in to your account."
     },
+    "login_code": {
+      "subject": "Your EU Jobs sign-in code",
+      "heading": "Confirm it’s you",
+      "body": [
+        "Hi {{name}},",
+        "Someone entered your password to sign in to EU Jobs on a browser we don’t recognise. Enter this code to finish signing in. It expires in 10 minutes."
+      ],
+      "note": "If this wasn’t you, don’t share the code and change your password now: someone knows it."
+    },
     "verification_approved": {
       "subject": "Your {{check}} check is approved",
       "heading": "Check approved",

@@ -12,6 +12,8 @@ export const EMAIL_TYPES = {
   admin_invite: 'critical',
   // 2026-11-18: a sign-in from a device the account has not used before
   new_device_sign_in: 'critical',
+  // 2026-11-18: the sign-in code for a browser the account has not verified
+  login_code: 'critical',
   recruiter_approved: 'decision',
   recruiter_rejected: 'decision',
   recruiter_suspended: 'decision',

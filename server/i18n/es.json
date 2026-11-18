@@ -63,6 +63,15 @@
       "action": "Revisar tus dispositivos",
       "note": "Por tu seguridad, te enviamos este correo cada vez que un dispositivo nuevo inicia sesión en tu cuenta."
     },
+    "login_code": {
+      "subject": "Tu código de inicio de sesión de EU Jobs",
+      "heading": "Confirma que eres tú",
+      "body": [
+        "Hola {{name}}:",
+        "Alguien ha introducido tu contraseña para iniciar sesión en EU Jobs en un navegador que no reconocemos. Introduce este código para terminar de iniciar sesión. Caduca en 10 minutos."
+      ],
+      "note": "Si no has sido tú, no compartas el código y cambia tu contraseña ahora: alguien la conoce."
+    },
     "verification_approved": {
       "subject": "Tu verificación de {{check}} está aprobada",
       "heading": "Verificación aprobada",

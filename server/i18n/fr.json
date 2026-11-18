@@ -63,6 +63,15 @@
       "action": "Vérifier vos appareils",
       "note": "Pour votre sécurité, nous envoyons cet e-mail chaque fois qu’un nouvel appareil se connecte à votre compte."
     },
+    "login_code": {
+      "subject": "Votre code de connexion EU Jobs",
+      "heading": "Confirmez que c’est vous",
+      "body": [
+        "Bonjour {{name}},",
+        "Quelqu’un a saisi votre mot de passe pour se connecter à EU Jobs depuis un navigateur que nous ne reconnaissons pas. Saisissez ce code pour terminer la connexion. Il expire dans 10 minutes."
+      ],
+      "note": "Si ce n’était pas vous, ne communiquez pas ce code et changez votre mot de passe dès maintenant : quelqu’un le connaît."
+    },
     "verification_approved": {
       "subject": "Votre vérification « {{check}} » est approuvée",
       "heading": "Vérification approuvée",

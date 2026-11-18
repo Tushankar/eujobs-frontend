@@ -334,6 +334,7 @@
     "recruiter_email_code": "Código de correo del reclutador",
     "password_reset": "Restablecimiento de contraseña",
     "new_device_sign_in": "Inicio de sesión desde un dispositivo nuevo",
+    "login_code": "Código de inicio de sesión",
     "admin_invite": "Invitación de administración",
     "recruiter_approved": "Reclutador aprobado",
     "recruiter_rejected": "Reclutador rechazado",

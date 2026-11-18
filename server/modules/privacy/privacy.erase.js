@@ -9,7 +9,7 @@ import { AuditEvent } from '../admin/admin.model.js'
 import { AiCache, AiUsage, ApiUsage, ExplanationFeedback } from '../ai/ai.model.js'
 import { AlertMatch, JobAlert } from '../alerts/alerts.model.js'
 import { Application } from '../applications/applications.model.js'
-import { EmailToken, LoginEvent, VerificationCode } from '../auth/auth.model.js'
+import { EmailToken, LoginChallenge, LoginEvent, TrustedDevice, VerificationCode } from '../auth/auth.model.js'
 import { CandidateProfile } from '../candidates/candidates.model.js'
 import { Company, KycDocument } from '../companies/companies.model.js'
 import { CvAccessRequest, CvVersion } from '../cv/cv.model.js'
@@ -80,6 +80,8 @@ export const COVERAGE = {
   EmailToken: 'deleted',
   VerificationCode: 'deleted',
   LoginEvent: 'deleted (sign-ins and failed attempts)',
+  LoginChallenge: 'deleted (pending sign-in steps)',
+  TrustedDevice: 'deleted (remembered browsers)',
   EmailLog: 'deleted',
   Review: 'deleted (the landing page review)',
   NewsletterSubscriber: 'deleted (the subscription of the account email)',
@@ -193,6 +195,8 @@ async function removeOwnRecords(user) {
     EmailToken.deleteMany({ userId: user._id }),
     VerificationCode.deleteMany({ userId: user._id }),
     LoginEvent.deleteMany({ userId: user._id }),
+    LoginChallenge.deleteMany({ userId: user._id }),
+    TrustedDevice.deleteMany({ userId: user._id }),
     EmailLog.deleteMany({ $or: [{ userId: user._id }, { to: user.email }] }),
     AiUsage.deleteMany({ userId: user._id }),
     anonymiseApiUsage(user._id),
