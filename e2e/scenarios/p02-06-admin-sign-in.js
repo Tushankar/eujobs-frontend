@@ -1,4 +1,4 @@
-import { bodyText, fill, waitForPath, waitForSettled } from '../lib/flows.js'
+import { bodyText, fill, submitSignIn, waitForPath, waitForSettled } from '../lib/flows.js'
 
 /** P2-06 (M-198): the Owner signs in on the admin page; the restricted notice and Forgot link show, no demo note. */
 export default {
@@ -17,7 +17,8 @@ export default {
 
     await fill(page, 'input[name="email"]', ctx.seedCredentials.email(null))
     await fill(page, 'input[name="password"]', ctx.seedCredentials.password)
-    await page.click('button[type="submit"]')
+    // 2026-11-18: the authenticator step (set up on the Owner's first sign-in after a reseed).
+    await submitSignIn(page, ctx.seedCredentials.email(null))
     await waitForPath(page, () => location.pathname === '/admin')
     await waitForSettled(page)
     await handle.checkOverflow()

@@ -1,4 +1,4 @@
-import { fill, waitForPath } from '../lib/flows.js'
+import { fill, submitSignIn, waitForPath } from '../lib/flows.js'
 
 async function attempt(ctx, path, email) {
   const handle = await ctx.newPage()
@@ -7,7 +7,7 @@ async function attempt(ctx, path, email) {
   await page.goto(`${ctx.webUrl}${path}`, { waitUntil: 'networkidle0' })
   await fill(page, 'input[name="email"]', email)
   await fill(page, 'input[name="password"]', ctx.seedCredentials.password)
-  await page.click('button[type="submit"]')
+  await submitSignIn(page, email)
   return handle
 }
 

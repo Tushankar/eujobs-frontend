@@ -1,9 +1,9 @@
-import { fill, waitForPath, waitForSettled } from '../lib/flows.js'
+import { fill, submitSignIn, waitForPath, waitForSettled } from '../lib/flows.js'
 
 async function signInHere(ctx, page) {
   await fill(page, 'input[name="email"]', ctx.seedCredentials.email('emma'))
   await fill(page, 'input[name="password"]', ctx.seedCredentials.password)
-  await page.click('button[type="submit"]')
+  await submitSignIn(page, ctx.seedCredentials.email('emma'))
   await page.waitForFunction(() => !location.pathname.startsWith('/sign-in'))
   await waitForSettled(page)
 }

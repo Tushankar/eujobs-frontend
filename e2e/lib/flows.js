@@ -58,6 +58,16 @@ export async function finishLoginStep(page, email, method) {
   }
 }
 
+/** Submits a filled sign-in form and finishes the second step when one is asked; answers the login response. */
+export async function submitSignIn(page, email) {
+  const login = responseTo(page, '/api/v1/auth/login', 'POST')
+  await page.click('button[type="submit"]')
+  const response = await login
+  const step = (await response.json().catch(() => null))?.verification
+  if (step) await finishLoginStep(page, email, step.method)
+  return response
+}
+
 /**
  * Signs in through a sign-in form and waits until the URL leaves the sign-in page and the landing page has rendered.
  * A second step (sign-in code, authenticator) is finished on the way.
@@ -66,10 +76,7 @@ export async function signInWithForm(page, webUrl, signInPath, email, password) 
   await page.goto(`${webUrl}${signInPath}`, { waitUntil: 'networkidle0' })
   await fill(page, 'input[name="email"]', email)
   await fill(page, 'input[name="password"]', password)
-  const login = responseTo(page, '/api/v1/auth/login', 'POST')
-  await page.click('button[type="submit"]')
-  const step = (await (await login).json().catch(() => null))?.verification
-  if (step) await finishLoginStep(page, email, step.method)
+  await submitSignIn(page, email)
   await page.waitForFunction((path) => location.pathname !== path, { timeout: 15_000 }, signInPath)
   // The router keeps the sign-in page on screen until the landing page's data has loaded, so its heading is no sign.
   await page.waitForFunction(() => !document.querySelector('input[name="password"]'), { timeout: 15_000 })
