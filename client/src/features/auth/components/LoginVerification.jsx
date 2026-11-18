@@ -1,7 +1,7 @@
 import { useEffect, useState } from 'react'
 import { Trans, useTranslation } from 'react-i18next'
 import { ShieldCheck } from 'lucide-react'
-import { Button, Icon, TextField } from '@/components/ui'
+import { Button, CodeInput, Icon, TextField } from '@/components/ui'
 import { errorCode, useGetConfigQuery } from '@/app/api.js'
 import { useCooldown, useErrorText } from '@/lib/forms.js'
 import AuthenticatorSetup from '@/features/account/components/AuthenticatorSetup.jsx'
@@ -89,23 +89,26 @@ export default function LoginVerification({ verification, onDone, onBack }) {
   // A spent, expired or unknown challenge means starting the sign-in again.
   const expired = failureCode?.startsWith('TOKEN_')
   const fieldError = failureCode === 'CODE_INVALID' || failureCode === 'VALIDATION_FAILED' ? errorText.code(failure) : undefined
-  const digitsOnly = method === 'email' || !backup
-  const codeField = (
-    <TextField
-      className={digitsOnly ? styles.code : undefined}
-      label={t(method === 'email' ? 'auth:loginStep.emailLabel' : backup ? 'auth:loginStep.backupLabel' : 'auth:loginStep.appLabel')}
-      name="code"
-      inputMode={digitsOnly ? 'numeric' : 'text'}
-      autoComplete="one-time-code"
-      autoFocus
-      maxLength={digitsOnly ? config?.limits.code.length : 9}
+  const codeLength = config?.limits.code.length ?? 6
+  // A 6-digit code goes in separate boxes; a backup code ("abcd-efgh") in one field.
+  const codeField = backup ? (
+    <TextField label={t('auth:loginStep.backupLabel')} name="code" autoComplete="off" autoFocus maxLength={9} value={code} onChange={(event) => setCode(event.target.value)} error={fieldError} />
+  ) : (
+    <CodeInput
+      label={t(method === 'email' ? 'auth:loginStep.emailLabel' : 'auth:loginStep.appLabel')}
+      length={codeLength}
       value={code}
-      onChange={(event) => setCode(digitsOnly ? event.target.value.replace(/\D/g, '') : event.target.value)}
+      onChange={(next) => {
+        setCode(next)
+        setFailure(null)
+      }}
       error={fieldError}
+      autoFocus
     />
   )
+  const complete = backup ? code.trim().length > 0 : code.length === codeLength
   const submit = (
-    <Button type="submit" fullWidth loading={isLoading} disabled={!code || expired || (method === 'totp_setup' && !setup)}>
+    <Button type="submit" fullWidth loading={isLoading} disabled={!complete || expired || (method === 'totp_setup' && !setup)}>
       {t(method === 'totp_setup' ? 'auth:loginStep.setupSubmit' : 'auth:loginStep.submit')}
     </Button>
   )

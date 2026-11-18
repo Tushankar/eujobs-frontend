@@ -1,7 +1,7 @@
 import { useEffect, useState } from 'react'
 import { useTranslation } from 'react-i18next'
 import { CircleCheck, ShieldCheck } from 'lucide-react'
-import { Button, Icon, PasswordField, TextField } from '@/components/ui'
+import { Button, CodeInput, Icon, PasswordField } from '@/components/ui'
 import { serverFieldErrors, useErrorText } from '@/lib/forms.js'
 import { usePreferences } from '@/lib/preferences.js'
 import { useDisableTwoFactorMutation, useEnableTwoFactorMutation, useNewBackupCodesMutation, useSetupTwoFactorMutation } from '../api.js'
@@ -88,15 +88,14 @@ function SetupPanel({ onCodes }) {
       <p className={styles.text}>{t('account:twoFactor.setupLead')}</p>
       <AuthenticatorSetup setup={setup}>
         <form className={styles.inline} onSubmit={handleSubmit} noValidate>
-          <TextField
-            className={styles.codeField}
-            label={<span className="sr-only">{t('auth:loginStep.appLabel')}</span>}
-            name="code"
-            inputMode="numeric"
-            autoComplete="one-time-code"
-            maxLength={6}
+          <CodeInput
+            label={t('auth:loginStep.appLabel')}
+            hideLabel
             value={code}
-            onChange={(event) => setCode(event.target.value.replace(/\D/g, ''))}
+            onChange={(next) => {
+              setCode(next)
+              setError(null)
+            }}
             error={error && errorText.field('code', error)}
           />
           <Button type="submit" loading={isLoading} disabled={code.length !== 6 || !setup} className={styles.codeButton}>

@@ -1,6 +1,7 @@
 export { default as Avatar } from './Avatar.jsx'
 export { default as Button } from './Button.jsx'
 export { default as Checkbox } from './Checkbox.jsx'
+export { default as CodeInput } from './CodeInput.jsx'
 export { default as CompanyLogo } from './CompanyLogo.jsx'
 export { default as Dropdown } from './Dropdown.jsx'
 export { default as Icon } from './Icon.jsx'
