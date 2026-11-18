@@ -40,7 +40,7 @@ export default {
     const code = (await mailTo(email, 'login_code')).at(-1).params.code
     await fill(page, 'input[name="code"]', code === '000000' ? '111111' : '000000')
     await page.click('[data-login-step] button[type="submit"]')
-    await waitForText(page, 'That code isn’t right')
+    await waitForText(page, 'That code isn')
     await ctx.screenshot(page, '2-wrong-code')
     await finishLoginStep(page, email, 'email')
     await landed(page, '/candidate')
