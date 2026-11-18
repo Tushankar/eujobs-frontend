@@ -6,6 +6,7 @@ import { t } from '../../lib/i18n.js'
 import { sendEmail } from '../../lib/mailer.js'
 import { EmailToken } from '../auth/auth.model.js'
 import { checkPassword, findEmailToken, hashPassword, issueEmailToken, useEmailToken } from '../auth/auth.service.js'
+import { resetForAdmin } from '../auth/twoFactor.service.js'
 import { SYSTEM_ROLES } from '../../seed/data/catalog.js'
 import { notifyAdmins } from '../notifications/notifications.service.js'
 import { User } from '../users/users.model.js'
@@ -150,6 +151,8 @@ async function accessDto(user, roles, language) {
     removed: user.adminAccess?.removed ?? [],
     permissions: [...(await effectivePermissions(user))],
     lastLoginAt: user.lastLoginAt ?? null,
+    // 2026-11-18: authenticator-app 2FA (every admin sets it up at sign-in)
+    twoFactorEnabled: Boolean(user.twoFactor?.enabledAt),
     createdAt: user.createdAt,
   }
 }
@@ -198,6 +201,19 @@ export async function revokeAccess(admin, id) {
   await user.save()
   await audit(admin, 'user_access_revoked', { type: 'user', id: user._id }, { name: user.fullName })
   return accessDto(user, new Map(), admin.language)
+}
+
+/**
+ * POST /admin/access/users/:id/2fa/reset (owner 2026-11-18): the Owner resets another admin's 2FA (lost phone and
+ * backup codes); that admin is signed out everywhere and sets it up again at the next sign-in.
+ */
+export async function resetTwoFactor(owner, id) {
+  const user = await User.findOne({ _id: id, role: 'admin' })
+  if (!user) throw new AppError('NOT_FOUND')
+  await resetForAdmin(owner, user)
+  await audit(owner, 'two_factor_reset', { type: 'user', id: user._id }, { name: user.fullName })
+  const roles = await AdminRole.find({ _id: user.adminAccess?.roleId })
+  return accessDto(user, new Map(roles.map((role) => [String(role._id), role])), owner.language)
 }
 
 /* ---------- invites (M-159, U21) ---------- */

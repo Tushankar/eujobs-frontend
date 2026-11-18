@@ -5,6 +5,7 @@ import { objectId, validate } from '../../lib/validate.js'
 import { switchesBody } from '../notifications/notifications.schemas.js'
 import { setEmailSwitches } from '../notifications/notifications.service.js'
 import * as sessions from '../auth/sessions.service.js'
+import * as twoFactor from '../auth/twoFactor.service.js'
 import * as schemas from './users.schemas.js'
 import { markCelebrationSeen } from './celebrations.js'
 import * as users from './users.service.js'
@@ -67,6 +68,27 @@ router.delete('/sessions/:id', validate({ params: z.object({ id: objectId }) }),
 // Answers this device's new token: the account's other tokens stop working.
 router.post('/sessions/sign-out-others', async (req, res) => {
   res.json({ token: await sessions.revokeOtherSessions(req.user, req.sessionId) })
+})
+
+// 2026-11-18: authenticator-app 2FA. Setup answers the key and QR code; the first code turns it on and answers the
+// one-time backup codes. Turning it off and new backup codes need the password; admins cannot turn it off.
+const passwordBody = z.object({ password: z.string().min(1) })
+
+router.post('/2fa/setup', async (req, res) => {
+  res.json(await twoFactor.startSetup(req.user))
+})
+
+router.post('/2fa/enable', validate({ body: z.object({ code: z.string().trim().min(1).max(20) }) }), async (req, res) => {
+  res.json(await twoFactor.enable(req.user, req.body.code))
+})
+
+router.post('/2fa/disable', validate({ body: passwordBody }), async (req, res) => {
+  await twoFactor.disable(req.user, req.body.password)
+  res.json(await users.meDto(req.user))
+})
+
+router.post('/2fa/backup-codes', validate({ body: passwordBody }), async (req, res) => {
+  res.json(await twoFactor.regenerateBackupCodes(req.user, req.body.password))
 })
 
 // P11b-Q3, Q12: one email switch per category, for every role; in-app notifications are always on.

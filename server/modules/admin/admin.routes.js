@@ -59,6 +59,11 @@ router.delete('/access/users/:id', requirePermission('roles.assign'), validate({
   res.json(await access.revokeAccess(req.user, req.params.id))
 })
 
+// 2026-11-18: Owner only (checked in the service)
+router.post('/access/users/:id/2fa/reset', requirePermission('roles.assign'), validate({ params: idParams }), async (req, res) => {
+  res.json(await access.resetTwoFactor(req.user, req.params.id))
+})
+
 router.post('/invitations', requirePermission('users.add'), validate({ body: schemas.inviteBody }), async (req, res) => {
   res.status(201).json(await access.invite(req.user, req.body))
 })

@@ -7,6 +7,7 @@ import { candidateSummary, fullNameChanged } from '../candidates/candidates.serv
 import { roleText } from '../admin/admin.access.js'
 import { effectivePermissions, listPermissions } from '../admin/admin.service.js'
 import { checkPassword, hashPassword } from '../auth/auth.service.js'
+import { twoFactorDto } from '../auth/twoFactor.service.js'
 import { Company } from '../companies/companies.model.js'
 import { logoUrls } from '../companies/companies.service.js'
 import { CvVersion } from '../cv/cv.model.js'
@@ -40,6 +41,8 @@ export async function meDto(user) {
     ...(user.role === 'candidate' && { jobsWorldwide: user.jobsWorldwide !== false }),
     timezone: user.timezone ?? null,
     emailVerified: Boolean(user.emailVerifiedAt),
+    // 2026-11-18: authenticator-app 2FA (Settings › Sign in & security)
+    twoFactor: twoFactorDto(user),
     legal: {
       termsVersion: legal.termsVersion ?? null,
       privacyVersion: legal.privacyVersion ?? null,

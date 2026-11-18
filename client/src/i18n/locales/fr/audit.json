@@ -76,6 +76,7 @@
       "role_archived": "Rôle archivé : {{role}}",
       "user_access_saved": "Accès enregistré pour {{name}}",
       "user_access_revoked": "Accès révoqué pour {{name}}",
+      "two_factor_reset": "Validation en deux étapes réinitialisée pour {{name}}",
       "admin_invited": "Administrateur invité : {{name}} ({{email}}) en tant que {{role}}",
       "invite_accepted": "Invitation acceptée : {{name}}",
       "account_deleted": "Compte supprimé par son titulaire ({{accountRole}})"
