@@ -1,0 +1,89 @@
+import { useId, useRef } from 'react'
+import { useTranslation } from 'react-i18next'
+import { cx } from '@/utils/cx.js'
+import fieldStyles from './Field.module.css'
+import styles from './CodeInput.module.css'
+
+/**
+ * A one-time code as separate digit boxes (owner 2026-11-18, LinkedIn-style). Typing moves to the next box, Backspace
+ * to the previous one, arrows move; a paste or the phone's code suggestion fills every box. `value` is the digits typed
+ * so far; `onChange` gets the new string.
+ */
+export default function CodeInput({ label, value, onChange, length = 6, error, autoFocus, disabled, className }) {
+  const { t } = useTranslation()
+  const id = useId()
+  const boxes = useRef([])
+  const focus = (index) => boxes.current[Math.max(0, Math.min(length - 1, index))]?.focus()
+
+  /** Writes `digits` from box `index` on and focuses the box after them. */
+  function put(index, digits) {
+    const chars = value.padEnd(length, ' ').split('')
+    digits.split('').forEach((digit, offset) => {
+      if (index + offset < length) chars[index + offset] = digit
+    })
+    onChange(chars.join('').replace(/\s+$/, '').replace(/\s/g, ''))
+    focus(index + digits.length)
+  }
+
+  function handleKeyDown(event, index) {
+    if (event.key === 'Backspace' && !value[index]) {
+      event.preventDefault()
+      onChange(value.slice(0, Math.max(0, index - 1)) + value.slice(index))
+      focus(index - 1)
+    } else if (event.key === 'ArrowLeft') {
+      event.preventDefault()
+      focus(index - 1)
+    } else if (event.key === 'ArrowRight') {
+      event.preventDefault()
+      focus(index + 1)
+    }
+  }
+
+  return (
+    <div className={cx(fieldStyles.field, className)} role="group" aria-labelledby={`${id}-label`} data-code-input>
+      <span id={`${id}-label`} className={fieldStyles.label}>
+        {label}
+      </span>
+      <div className={styles.boxes}>
+        {Array.from({ length }, (_, index) => (
+          <input
+            key={index}
+            ref={(element) => {
+              boxes.current[index] = element
+            }}
+            className={cx(styles.box, value[index] && styles.filled, error && styles.invalid)}
+            name={index === 0 ? 'code' : undefined}
+            value={value[index] ?? ''}
+            inputMode="numeric"
+            autoComplete={index === 0 ? 'one-time-code' : 'off'}
+            // Room for a whole code, so a paste or autofill into any box arrives in onChange.
+            maxLength={length}
+            aria-label={t('common:codeDigit', { index: index + 1, count: length })}
+            aria-invalid={Boolean(error)}
+            autoFocus={autoFocus && index === 0}
+            disabled={disabled}
+            // The code has no gaps: a box after the first empty one sends the focus back to it.
+            onFocus={(event) => (index > value.length ? focus(value.length) : event.target.select())}
+            onKeyDown={(event) => handleKeyDown(event, index)}
+            onPaste={(event) => {
+              event.preventDefault()
+              const digits = event.clipboardData.getData('text').replace(/\D/g, '').slice(0, length)
+              if (digits) put(digits.length === length ? 0 : index, digits)
+            }}
+            onChange={(event) => {
+              const digits = event.target.value.replace(/\D/g, '')
+              if (!digits) onChange(value.slice(0, index) + value.slice(index + 1))
+              // Typing after this box's digit replaces it; several digits at once (the phone's autofill) fill from here on.
+              else put(index, digits.length === 2 && digits[0] === value[index] ? digits[1] : digits)
+            }}
+          />
+        ))}
+      </div>
+      {error && (
+        <p className={fieldStyles.error} role="alert">
+          {error}
+        </p>
+      )}
+    </div>
+  )
+}

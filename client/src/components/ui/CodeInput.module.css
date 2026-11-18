@@ -1,0 +1,74 @@
+/* Six digit boxes in one row; same border, focus edge and error colour as the text fields */
+.boxes {
+  display: flex;
+  gap: 8px;
+}
+
+.box {
+  width: 52px;
+  min-width: 0;
+  height: 56px;
+  flex: 0 1 52px;
+  padding: 0;
+  border: 1px solid var(--border-strong);
+  border-radius: var(--radius-lg);
+  background: var(--card);
+  font-family: inherit;
+  font-size: 22px;
+  font-weight: 700;
+  line-height: 1;
+  text-align: center;
+  color: var(--foreground);
+  caret-color: var(--ring);
+  transition:
+    border-color var(--transition),
+    box-shadow var(--transition);
+}
+
+.box:hover {
+  border-color: var(--text-faint);
+}
+
+.box:focus {
+  outline: none;
+  border-color: var(--ring);
+  box-shadow: inset 0 0 0 1px var(--ring);
+}
+
+.filled {
+  border-color: var(--foreground);
+}
+
+.invalid,
+.invalid:hover {
+  border-color: var(--destructive);
+}
+
+.invalid:focus {
+  border-color: var(--destructive);
+  box-shadow: inset 0 0 0 1px var(--destructive);
+}
+
+.box:disabled {
+  opacity: 0.6;
+}
+
+/* A small gap between the first and last three digits, as codes are read in two halves. */
+.box:nth-child(3) {
+  margin-right: 8px;
+}
+
+@media (max-width: 379px) {
+  .boxes {
+    gap: 6px;
+  }
+
+  .box {
+    height: 50px;
+    font-size: 20px;
+  }
+
+  .box:nth-child(3) {
+    margin-right: 4px;
+  }
+}
