@@ -21,11 +21,14 @@ export function twoFactorDto(user) {
   return { enabled: twoFactorOn(user), backupCodesLeft: user.twoFactor?.backupCodes?.filter((code) => !code.usedAt).length ?? 0 }
 }
 
-/** A new secret with what the authenticator app needs: the Base32 key, its otpauth link and a QR code image. */
-export async function newSetup(user) {
-  const secret = newSecret()
+/** A new secret, encrypted for storing. */
+export const newStoredSecret = () => encryptSecret(newSecret())
+
+/** What the authenticator app needs for a stored secret: the Base32 key, its otpauth link and a QR code image. */
+export async function setupFor(user, stored) {
+  const secret = decryptSecret(stored)
   const url = otpauthUrl(secret, user.email, ISSUER)
-  return { secret, stored: encryptSecret(secret), setup: { secret, otpauthUrl: url, qr: await QRCode.toDataURL(url, { margin: 1, width: 220 }) } }
+  return { secret, otpauthUrl: url, qr: await QRCode.toDataURL(url, { margin: 1, width: 220 }) }
 }
 
 /** Ten one-time codes ("abcd-efgh"); only their hashes are kept. */
@@ -75,13 +78,15 @@ async function assertPassword(user, password) {
   if (!(await bcrypt.compare(password ?? '', user.passwordHash))) throw fieldError({ password: 'invalid' })
 }
 
-/** POST /me/2fa/setup: a secret waiting for its first code. */
+/**
+ * POST /me/2fa/setup: a secret waiting for its first code. A repeated or concurrent request gets the same secret, so
+ * the QR code on screen always matches the one stored.
+ */
 export async function startSetup(user) {
   if (twoFactorOn(user)) throw new AppError('CONFLICT')
-  const { stored, setup } = await newSetup(user)
-  user.twoFactor = { pendingSecret: stored }
-  await user.save()
-  return setup
+  await User.updateOne({ _id: user._id, 'twoFactor.pendingSecret': null }, { twoFactor: { pendingSecret: newStoredSecret() } })
+  const { twoFactor } = await User.findById(user._id, 'twoFactor')
+  return setupFor(user, twoFactor.pendingSecret)
 }
 
 /** POST /me/2fa/enable: the first code turns 2FA on and answers the backup codes. */

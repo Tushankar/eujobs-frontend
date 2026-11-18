@@ -33,10 +33,10 @@ const sameDevice = ({ browser, os, deviceType }) => ({ browser, os, deviceType }
 
 /**
  * A new session for `user`: records the sign-in (on the remembered browser `deviceId`, if any) and returns its token.
- * With `alertIfNew`, emails the user when the browser and system are new to the account (an emailed sign-in code
- * already told them, so that path passes false).
+ * `alert` is when the "new sign-in" email goes out: 'always', 'newDevice' (a browser and system the account has not
+ * used) or 'never' (the default; an emailed sign-in code already told the user).
  */
-export async function startSession(user, req, { deviceId, alertIfNew = false } = {}) {
+export async function startSession(user, req, { deviceId, alert = 'never' } = {}) {
   const _id = new mongoose.Types.ObjectId()
   const token = signToken(user, _id)
   const details = await describe(req)
@@ -46,7 +46,7 @@ export async function startSession(user, req, { deviceId, alertIfNew = false } =
   ])
   const now = new Date()
   await LoginEvent.create({ _id, userId: user._id, outcome: 'success', tv: user.tokenVersion, expiresAt: new Date(jwt.decode(token).exp * 1000), lastSeenAt: now, deviceId, ...details })
-  if (alertIfNew && signedInBefore && !deviceSeen) await sendNewDeviceEmail(user, details, now)
+  if (alert === 'always' || (alert === 'newDevice' && signedInBefore && !deviceSeen)) await sendNewDeviceEmail(user, details, now)
   return token
 }
 

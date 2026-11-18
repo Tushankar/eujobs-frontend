@@ -75,11 +75,12 @@ export async function signIn(token, me) {
 /**
  * Logout is client-side (M-007), in this order: signed out first, so the workspace unmounts and its queries and polling
  * stop; then every cached response is dropped; the token goes last. No query refetches without a session (no 401).
- * 2026-11-18: the server is told too (not awaited), so this device leaves the account's device list.
+ * 2026-11-18: the server is told too (not awaited), so this device leaves the account's device list; not when the
+ * session already ended (`endedOnServer`), which would only answer 401.
  */
-export function signOut() {
+export function signOut({ endedOnServer = false } = {}) {
   const token = getToken()
-  if (token) fetch(`${API_BASE}/auth/logout`, { method: 'POST', headers: { Authorization: `Bearer ${token}` }, keepalive: true }).catch(() => {})
+  if (token && !endedOnServer) fetch(`${API_BASE}/auth/logout`, { method: 'POST', headers: { Authorization: `Bearer ${token}` }, keepalive: true }).catch(() => {})
   store.dispatch(signedOut())
   store.dispatch(api.util.resetApiState())
   clearToken()
@@ -96,7 +97,7 @@ function needsSession(pathname) {
 /** The session ended: drop it, and leave a page that needs one for its sign-in with ?next. */
 function returnToSignIn() {
   const { pathname, search } = window.location
-  signOut()
+  signOut({ endedOnServer: true })
   if (needsSession(pathname)) navigateTo(`${signInPathFor(pathname)}?next=${encodeURIComponent(pathname + search)}`, { replace: true })
 }
 

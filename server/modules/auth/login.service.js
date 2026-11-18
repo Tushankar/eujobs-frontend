@@ -8,7 +8,7 @@ import { User } from '../users/users.model.js'
 import { LoginChallenge, TrustedDevice, VerificationCode } from './auth.model.js'
 import { assertCodeResendAllowed, issueCode, verifyCode } from './auth.service.js'
 import { describe, signInFacts, startSession } from './sessions.service.js'
-import { checkSecondFactor, enableWith, newSetup, twoFactorOn } from './twoFactor.service.js'
+import { checkSecondFactor, enableWith, newStoredSecret, setupFor, twoFactorOn } from './twoFactor.service.js'
 
 /*
  * The sign-in second step (owner 2026-11-18). After a correct password:
@@ -108,10 +108,9 @@ async function wrongAppCode(challenge) {
 export async function loginSetup(raw) {
   const { challenge, user } = await openChallenge(raw)
   if (challenge.method !== 'totp_setup') throw new AppError('CONFLICT')
-  const { stored, setup } = await newSetup(user)
-  challenge.pendingSecret = stored
-  await challenge.save()
-  return setup
+  // A repeated or concurrent request gets the same secret, so the QR code on screen matches the stored one.
+  await LoginChallenge.updateOne({ _id: challenge._id, pendingSecret: null }, { pendingSecret: newStoredSecret() })
+  return setupFor(user, (await LoginChallenge.findById(challenge._id, 'pendingSecret')).pendingSecret)
 }
 
 /** POST /auth/login/resend: a new emailed code (once a minute, five an hour). */
@@ -149,6 +148,9 @@ export async function verifyLogin(raw, code, req) {
   await user.save()
   // Admins enter their code every time, so their browser is not remembered.
   const trusted = user.role === 'admin' ? null : await trustBrowser(user)
-  const token = await startSession(user, req, { deviceId: trusted?.deviceId, alertIfNew: challenge.method !== 'email' })
+  // An app code on an unrecognised browser is worth telling the user about; admins enter one every time, so they hear
+  // about new browsers only. The emailed code already told the user.
+  const alert = challenge.method === 'email' ? 'never' : user.role === 'admin' ? 'newDevice' : 'always'
+  const token = await startSession(user, req, { deviceId: trusted?.deviceId, alert })
   return { token, me: await meDto(user), ...(trusted && { deviceToken: trusted.deviceToken }), ...(backupCodes && { backupCodes }) }
 }
