@@ -60,6 +60,17 @@
   max-height: calc(100dvh - 80px);
 }
 
+/* The menu and its country list still scroll (wheel, touch, keys), but without a visible scrollbar (owner 2026-11-19). */
+.panel,
+.scroll {
+  scrollbar-width: none;
+}
+
+.panel::-webkit-scrollbar,
+.scroll::-webkit-scrollbar {
+  display: none;
+}
+
 /* Rows come in groups split by a thin line (LinkedIn-style account menu). */
 .group {
   display: flex;
