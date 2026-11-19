@@ -113,7 +113,7 @@
     "choose": "Elige un país",
     "note": "Tu país determina qué ofertas y candidatos ves, la moneda y el formato de fechas y números.",
     "yours": "Tu país",
-    "current": "País actual",
+    "default": "País predeterminado",
     "search": "Buscar países",
     "none": "Ningún país coincide"
   },

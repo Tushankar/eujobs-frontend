@@ -3,6 +3,7 @@ import { fieldError } from '../../lib/errors.js'
 import { AdminRole } from '../admin/admin.model.js'
 import { Application } from '../applications/applications.model.js'
 import { candidateCounters } from '../applications/applications.stats.js'
+import { CandidateProfile } from '../candidates/candidates.model.js'
 import { candidateSummary, fullNameChanged } from '../candidates/candidates.service.js'
 import { roleText } from '../admin/admin.access.js'
 import { effectivePermissions, listPermissions } from '../admin/admin.service.js'
@@ -13,6 +14,7 @@ import { logoUrls } from '../companies/companies.service.js'
 import { CvVersion } from '../cv/cv.model.js'
 import { Job } from '../jobs/jobs.model.js'
 import { celebrationDtos } from './celebrations.js'
+import { User } from './users.model.js'
 import { reissueCertificates } from '../learning/learning.certificates.js'
 import { unreadCount } from '../messages/messages.service.js'
 import { currentLegalVersions, findEnabledCountry } from '../meta/meta.service.js'
@@ -148,6 +150,8 @@ export async function updateMe(user, patch) {
     user.pickerCountry = country.code
     if (!user.languageExplicit && patch.language === undefined) user.language = country.defaultLanguage
   }
+  // Server side only (onboarding, company location; mePatchBody drops it), always with the same pickerCountry.
+  if (patch.homeCountry !== undefined) user.homeCountry = user.pickerCountry
   if (patch.jobsWorldwide !== undefined) {
     if (user.role !== 'candidate') throw fieldError({ jobsWorldwide: 'not_allowed' })
     user.jobsWorldwide = patch.jobsWorldwide

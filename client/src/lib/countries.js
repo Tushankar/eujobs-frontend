@@ -12,7 +12,7 @@ export function usePickerOptions() {
   const { me, country } = usePreferences()
   const options = useCountryOptions()
   if (me?.role !== 'candidate') return options
-  const own = options.find((option) => option.code === country && !option.isRemote)
+  const own = options.find((option) => option.code === (me.homeCountry ?? country) && !option.isRemote)
   const remote = options.find((option) => option.isRemote)
   return [
     { code: 'WORLDWIDE', name: t('common:worldwide'), isRemote: false },
