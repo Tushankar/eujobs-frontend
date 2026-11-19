@@ -1,4 +1,4 @@
-import { Star } from 'lucide-react'
+import { CircleCheck, CircleX, Clock3, MessageSquareText, Star } from 'lucide-react'
 import { useState } from 'react'
 import { useTranslation } from 'react-i18next'
 import { useGetConfigQuery } from '@/app/api.js'
@@ -8,6 +8,8 @@ import { useFormat } from '@/lib/preferences.js'
 import { cx } from '@/utils/cx.js'
 import { useDeleteMyReviewMutation, useGetMyReviewQuery, useSaveMyReviewMutation } from '../api.js'
 import styles from './MyReview.module.css'
+
+const STATUS_ICON = { pending: Clock3, approved: CircleCheck, rejected: CircleX }
 
 /**
  * Settings › Review (2026-11-13): the user's one review of EU Jobs (1–5 stars and a short text). An admin approves it
@@ -60,10 +62,22 @@ function ReviewForm({ review }) {
   return (
     <form className={styles.form} onSubmit={submit} noValidate>
       {review && (
-        <p className={cx(styles.status, styles[review.status])} role="status">
-          {t(`account:review.status.${review.status}`, { date: format.date(review.decidedAt ?? review.submittedAt) })}
-          {review.reason && <span className={styles.reason}>{t('account:review.reason', { reason: review.reason })}</span>}
-        </p>
+        <div className={cx(styles.status, styles[review.status])} role="status">
+          <Icon as={STATUS_ICON[review.status]} size={18} className={styles.statusIcon} />
+          <div className={styles.statusBody}>
+            <p className={styles.statusText}>{t(`account:review.status.${review.status}`, { date: format.date(review.decidedAt ?? review.submittedAt) })}</p>
+            {/* Owner 2026-11-19: the team's note in its own readable box, not as more coloured status text. */}
+            {review.reason && (
+              <div className={styles.note}>
+                <p className={styles.noteLabel}>
+                  <Icon as={MessageSquareText} size={14} />
+                  {t('account:review.reason')}
+                </p>
+                <p className={styles.noteText}>{review.reason}</p>
+              </div>
+            )}
+          </div>
+        </div>
       )}
       <fieldset className={styles.stars}>
         <legend className={styles.label}>{t('account:review.rating')}</legend>

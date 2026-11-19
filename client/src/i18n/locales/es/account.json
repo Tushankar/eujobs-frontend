@@ -179,7 +179,7 @@
     "update": "Actualizar reseña",
     "delete": "Eliminar reseña",
     "saved": "¡Gracias! Tu reseña se ha enviado para su aprobación.",
-    "reason": "Nota de nuestro equipo: {{reason}}",
+    "reason": "Nota de nuestro equipo",
     "status": {
       "pending": "Pendiente de aprobación (enviada el {{date}})",
       "approved": "Aprobada el {{date}}: se muestra en la página de inicio",

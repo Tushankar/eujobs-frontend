@@ -47,10 +47,7 @@ export const writesMe = {
   },
 }
 
-export const api = createApi({
-  reducerPath: 'api',
-  baseQuery: baseQueryWithReauth,
-  tagTypes: [
+const TAG_TYPES = [
     'Me',
     'Sessions',
     'Countries',
@@ -112,10 +109,26 @@ export const api = createApi({
     'AdminBlog',
     'Subscribers',
     'NewsletterIssues',
-  ],
+]
+
+/**
+ * A new header country (or Worldwide) changes what almost every list holds: jobs, candidates, prices in its currency
+ * (owner 2026-11-19: it showed only after a reload). /me itself comes back from the PATCH (writesMe).
+ */
+const COUNTRY_TAGS = TAG_TYPES.filter((tag) => tag !== 'Me')
+const changesCountry = (body) => body?.pickerCountry !== undefined || body?.jobsWorldwide !== undefined
+
+export const api = createApi({
+  reducerPath: 'api',
+  baseQuery: baseQueryWithReauth,
+  tagTypes: TAG_TYPES,
   endpoints: (build) => ({
     getMe: build.query({ query: () => '/me', providesTags: ['Me'] }),
-    updateMe: build.mutation({ query: (body) => ({ url: '/me', method: 'PATCH', body }), ...writesMe }),
+    updateMe: build.mutation({
+      query: (body) => ({ url: '/me', method: 'PATCH', body }),
+      ...writesMe,
+      invalidatesTags: (result, error, body) => (!error && changesCountry(body) ? COUNTRY_TAGS : []),
+    }),
     // The first-login product tour was finished or skipped (me.tourPending turns false).
     finishTour: build.mutation({ query: () => ({ url: '/me/tour', method: 'POST' }), ...writesMe }),
     // 2026-11-17: a success modal was seen (CelebrationHost); /me refreshes without it.

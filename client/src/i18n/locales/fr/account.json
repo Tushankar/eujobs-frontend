@@ -179,7 +179,7 @@
     "update": "Mettre à jour l’avis",
     "delete": "Supprimer l’avis",
     "saved": "Merci ! Votre avis a été envoyé pour validation.",
-    "reason": "Note de notre équipe : {{reason}}",
+    "reason": "Note de notre équipe",
     "status": {
       "pending": "En attente de validation (envoyé le {{date}})",
       "approved": "Approuvé le {{date}} : affiché sur la page d’accueil",

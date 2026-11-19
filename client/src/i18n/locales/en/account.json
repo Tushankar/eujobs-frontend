@@ -173,7 +173,7 @@
     "update": "Update review",
     "delete": "Delete review",
     "saved": "Thanks! Your review was sent for approval.",
-    "reason": "Note from our team: {{reason}}",
+    "reason": "Note from our team",
     "status": {
       "pending": "Waiting for approval (sent {{date}})",
       "approved": "Approved on {{date}} — shown on the home page",
