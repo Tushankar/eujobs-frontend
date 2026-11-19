@@ -210,6 +210,57 @@
   scrollbar-color: light-dark(#d3d7e0, var(--border-strong)) transparent;
 }
 
+/* With the current country pinned above it, the list is shorter so the panel still fits without scrolling. */
+.menuScroll[data-pinned] {
+  max-height: min(162px, 34vh);
+}
+
+/* The pinned current country: a selected row with a caption, above the A–Z list. */
+.menuCurrent {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  width: 100%;
+  margin-bottom: 6px;
+  padding: 8px 14px 8px 12px;
+  border: 1px solid light-dark(#cfe0fb, color-mix(in srgb, var(--primary) 35%, transparent));
+  border-radius: var(--radius-xl);
+  background: var(--accent);
+  font-family: var(--font-display);
+  text-align: left;
+  color: var(--primary);
+  cursor: pointer;
+}
+
+.menuCurrent svg {
+  flex-shrink: 0;
+}
+
+.menuCurrentText {
+  display: flex;
+  flex: 1;
+  flex-direction: column;
+  min-width: 0;
+}
+
+.menuCurrentLabel {
+  font-size: 11px;
+  font-weight: 600;
+  line-height: 14px;
+  letter-spacing: 0.2px;
+  color: var(--muted-foreground);
+}
+
+.menuCurrentName {
+  overflow: hidden;
+  font-size: 14px;
+  font-weight: 700;
+  line-height: 20px;
+  letter-spacing: -0.2px;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
 .menuItem {
   display: flex;
   align-items: center;

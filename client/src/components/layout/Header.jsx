@@ -41,6 +41,8 @@ function MenuOption({ selected, onSelect, children }) {
 function CountryMenu({ options, selected, onPick }) {
   const { t } = useTranslation()
   const { query, setQuery, shown } = useCountrySearch(options)
+  // The current country is pinned above the A–Z list, which can be 240 rows long (owner 2026-11-19).
+  const current = !query && options.find((option) => option.code === selected)
   return (
     <div className={styles.menu}>
       <input
@@ -53,7 +55,17 @@ function CountryMenu({ options, selected, onPick }) {
         aria-label={t('shell:country.search')}
         autoFocus
       />
-      <ul className={styles.menuScroll}>
+      {current && (
+        <button type="button" className={styles.menuCurrent} aria-current="true" onClick={() => onPick(current.code)}>
+          <Icon as={MapPin} size={16} />
+          <span className={styles.menuCurrentText}>
+            <span className={styles.menuCurrentLabel}>{t('shell:country.current')}</span>
+            <span className={styles.menuCurrentName}>{current.name}</span>
+          </span>
+          <Icon as={Check} size={16} />
+        </button>
+      )}
+      <ul className={styles.menuScroll} data-pinned={current ? '' : undefined}>
         {shown.map((option) => (
           <li key={option.code}>
             <MenuOption selected={option.code === selected} onSelect={() => onPick(option.code)}>
