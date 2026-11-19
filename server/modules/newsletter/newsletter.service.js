@@ -7,8 +7,8 @@ import { NewsletterSubscriber } from './newsletter.model.js'
 
 /*
  * The newsletter double opt-in (2026-11-13, EU). Subscribing always answers the same way, so the form never tells
- * whether an address is on the list; a confirmed address gets no new email. There is no newsletter sending yet:
- * admins see and export the confirmed list.
+ * whether an address is on the list; a confirmed address gets no new email. Issues are composed and sent from
+ * newsletter.issues.js; every issue carries the subscriber's own unsubscribe key.
  */
 const MINUTE = 60 * 1000
 const hash = (token) => createHash('sha256').update(token).digest('hex')
@@ -30,8 +30,9 @@ export async function subscribe({ email, language }) {
   return { ok: true }
 }
 
-async function byToken(token) {
-  const subscriber = await NewsletterSubscriber.findOne({ tokenHash: hash(token) })
+/** The mailed token (stored hashed); `orKey` also accepts the unsubscribe key printed in every issue. */
+async function byToken(token, orKey = false) {
+  const subscriber = await NewsletterSubscriber.findOne(orKey ? { $or: [{ tokenHash: hash(token) }, { unsubscribeKey: token }] } : { tokenHash: hash(token) })
   if (!subscriber) throw new AppError('TOKEN_INVALID')
   return subscriber
 }
@@ -44,19 +45,29 @@ export async function confirm(token) {
     if (Date.now() - subscriber.tokenSentAt > LIMITS.newsletter.confirmTtlMs) throw new AppError('TOKEN_EXPIRED')
     subscriber.status = 'confirmed'
     subscriber.confirmedAt = new Date()
+    subscriber.unsubscribeKey ??= randomBytes(32).toString('hex')
     await subscriber.save()
   }
   return { status: subscriber.status }
 }
 
 export async function unsubscribe(token) {
-  const subscriber = await byToken(token)
+  const subscriber = await byToken(token, true)
   if (subscriber.status !== 'unsubscribed') {
     subscriber.status = 'unsubscribed'
     subscriber.unsubscribedAt = new Date()
     await subscriber.save()
   }
   return { status: subscriber.status }
+}
+
+/** The unsubscribe key of a subscriber, made on first use for addresses confirmed before issues existed. */
+export async function unsubscribeKeyOf(subscriber) {
+  if (!subscriber.unsubscribeKey) {
+    subscriber.unsubscribeKey = randomBytes(32).toString('hex')
+    await subscriber.save()
+  }
+  return subscriber.unsubscribeKey
 }
 
 const adminDto = (subscriber) => ({

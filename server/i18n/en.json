@@ -495,6 +495,14 @@
       "note": "If you did not sign up, ignore this email and you will not be subscribed.",
       "reason": "You are receiving this email because this address was entered in the EU Jobs newsletter form."
     },
+    "newsletter_issue": {
+      "subject": "{{subject}}",
+      "heading": "What is new on EU Jobs",
+      "body": [],
+      "action": "Browse all jobs",
+      "secondary": "No longer want these emails? Unsubscribe:",
+      "reason": "You are receiving this email because you subscribed to the EU Jobs newsletter."
+    },
     "plan_started": {
       "subject": "Welcome to {{plan}}",
       "heading": "Your {{plan}} plan is active",
@@ -791,6 +799,11 @@
     "verify": "Check this certificate at",
     "note": "This certificate confirms that the course was completed and its final quiz passed. It does not verify workplace skills."
   },
+  "newsletter": {
+    "subject": "New jobs and news from EU Jobs",
+    "jobs": "New jobs",
+    "posts": "From the blog"
+  },
   "csv": {
     "candidates": [
       "Name",
@@ -949,7 +962,10 @@
       "blog_updated": "Blog post updated: {{title}}",
       "blog_published": "Blog post published: {{title}}",
       "blog_unpublished": "Blog post unpublished: {{title}}",
-      "blog_deleted": "Blog post deleted: {{title}}"
+      "blog_deleted": "Blog post deleted: {{title}}",
+      "newsletter_created": "Newsletter draft created",
+      "newsletter_deleted": "Newsletter draft deleted",
+      "newsletter_sent": "Newsletter sent: {{title}} ({{count}} recipients)"
     }
   },
   "reports": {

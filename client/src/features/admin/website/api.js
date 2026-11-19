@@ -17,6 +17,30 @@ export const websiteApi = api.injectEndpoints({
       query: ({ status, page }) => ({ url: '/admin/content/subscribers', params: { status, page } }),
       providesTags: ['Subscribers'],
     }),
+    // 2026-11-19: newsletter issues (jobs, posts and a per-language intro, sent to the confirmed subscribers).
+    getNewsletterIssues: build.query({ query: () => '/admin/content/newsletter', providesTags: ['NewsletterIssues'] }),
+    getNewsletterIssue: build.query({
+      query: (id) => `/admin/content/newsletter/${id}`,
+      providesTags: ['NewsletterIssues'],
+    }),
+    getNewsletterOptions: build.query({ query: () => '/admin/content/newsletter/options' }),
+    getNewsletterPreview: build.query({
+      query: ({ id, language }) => ({ url: `/admin/content/newsletter/${id}/preview`, params: { language } }),
+      providesTags: ['NewsletterIssues'],
+    }),
+    createNewsletterIssue: build.mutation({ query: () => ({ url: '/admin/content/newsletter', method: 'POST' }), invalidatesTags: ['NewsletterIssues'] }),
+    updateNewsletterIssue: build.mutation({
+      query: ({ id, ...body }) => ({ url: `/admin/content/newsletter/${id}`, method: 'PATCH', body }),
+      invalidatesTags: ['NewsletterIssues'],
+    }),
+    deleteNewsletterIssue: build.mutation({ query: (id) => ({ url: `/admin/content/newsletter/${id}`, method: 'DELETE' }), invalidatesTags: ['NewsletterIssues'] }),
+    sendNewsletterTest: build.mutation({
+      query: ({ id, language }) => ({ url: `/admin/content/newsletter/${id}/test`, method: 'POST', body: { language } }),
+    }),
+    sendNewsletterIssue: build.mutation({
+      query: (id) => ({ url: `/admin/content/newsletter/${id}/send`, method: 'POST' }),
+      invalidatesTags: ['NewsletterIssues', 'Subscribers'],
+    }),
   }),
 })
 
@@ -29,4 +53,13 @@ export const {
   useDeletePostMutation,
   useUploadBlogCoverMutation,
   useGetSubscribersQuery,
+  useGetNewsletterIssuesQuery,
+  useGetNewsletterIssueQuery,
+  useGetNewsletterOptionsQuery,
+  useGetNewsletterPreviewQuery,
+  useCreateNewsletterIssueMutation,
+  useUpdateNewsletterIssueMutation,
+  useDeleteNewsletterIssueMutation,
+  useSendNewsletterTestMutation,
+  useSendNewsletterIssueMutation,
 } = websiteApi

@@ -111,6 +111,7 @@ export const api = createApi({
     'AdminReviews',
     'AdminBlog',
     'Subscribers',
+    'NewsletterIssues',
   ],
   endpoints: (build) => ({
     getMe: build.query({ query: () => '/me', providesTags: ['Me'] }),

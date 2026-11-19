@@ -369,12 +369,14 @@
     "admin_renewal_failed": "Failed renewal (admin)",
     "admin_joined": "Admin joined",
     "admin_ai_budget": "AI budget alert",
-    "newsletter_confirm": "Newsletter confirmation"
+    "newsletter_confirm": "Newsletter confirmation",
+    "newsletter_issue": "Newsletter issue"
   },
   "emailClass": {
     "critical": "Critical",
     "decision": "Decision",
-    "non_critical": "Non-critical"
+    "non_critical": "Non-critical",
+    "newsletter": "Newsletter"
   },
   "emailStatus": {
     "sent": "Sent",
@@ -439,6 +441,9 @@
     },
     "matching": {
       "recompute": "Match recalculation"
+    },
+    "newsletter": {
+      "send": "Newsletter sending"
     }
   },
   "permission": {

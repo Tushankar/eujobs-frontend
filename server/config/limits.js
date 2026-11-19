@@ -232,6 +232,19 @@ export const LIMITS = {
   review: { text: { min: 20, max: 400 }, landing: 6 },
   blog: { title: { min: 5, max: 120 }, excerpt: { min: 20, max: 300 }, body: { min: 50, max: 50_000 }, landing: 3, pageSize: 9 },
   newsletter: { perIp: { windowMs: HOUR, limit: 10 }, confirmTtlMs: 7 * 24 * HOUR },
+  // 2026-11-19: newsletter issues. One batch of mail a minute (Gmail SMTP allows about 500 a day, Workspace 2000).
+  newsletterIssue: {
+    subject: { max: 120 },
+    intro: { max: 1500 },
+    maxJobs: 10,
+    maxPosts: 5,
+    defaultJobs: 5,
+    defaultPosts: 3,
+    optionJobs: 40,
+    optionPosts: 20,
+    batchSize: 100,
+    batchPauseMs: MINUTE,
+  },
   // M-206: the four paginated admin tables
   adminTable: { pageSize: 20, maxPageSize: 100 },
 }

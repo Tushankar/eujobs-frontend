@@ -369,12 +369,14 @@
     "admin_renewal_failed": "Renovación fallida (administración)",
     "admin_joined": "Nuevo administrador",
     "admin_ai_budget": "Alerta de presupuesto de IA",
-    "newsletter_confirm": "Confirmación del boletín"
+    "newsletter_confirm": "Confirmación del boletín",
+    "newsletter_issue": "Edición del boletín"
   },
   "emailClass": {
     "critical": "Crítico",
     "decision": "Decisión",
-    "non_critical": "No crítico"
+    "non_critical": "No crítico",
+    "newsletter": "Boletín"
   },
   "emailStatus": {
     "sent": "Enviado",
@@ -439,6 +441,9 @@
     },
     "matching": {
       "recompute": "Recálculo de compatibilidad"
+    },
+    "newsletter": {
+      "send": "Envío del boletín"
     }
   },
   "permission": {

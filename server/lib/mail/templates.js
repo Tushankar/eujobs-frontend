@@ -8,7 +8,8 @@ import { interpolate, t } from '../i18n.js'
  * a template's `facts` ({ title, rows: { key: label } }) shows a details table of the params with those keys (2026-11-18,
  * the sign-in emails); params.items (strings)
  * shows a list after the body, such as the jobs of an alert; with params.moreLink, the template's `more` line and that
- * link follow the list (a shortened list).
+ * link follow the list (a shortened list); params.paragraphs (strings) are extra body paragraphs; params.sections
+ * ([{ title, items: [{ title, details?, href }] }], 2026-11-19, the newsletter) show titled lists whose items link out.
  * Layout (full width): a navy band (#012B74, the logo's navy) with the white EU JOBS logo and an "Open EU Jobs" link,
  * a blue accent line, the content in a 680px column, and a light footer band with the reason line and legal links.
  * The logo is a PNG served by the client at CLIENT_ORIGIN/email/logo-white.png (mail apps block SVG and cannot reach
@@ -59,6 +60,8 @@ export function renderEmail(type, language, params) {
     fill(template.heading),
     '',
     ...body.map(fill),
+    ...(params.paragraphs ?? []),
+    ...(params.sections ?? []).flatMap((section) => ['', section.title, ...section.items.map((item) => `- ${item.title}${item.details ? ` · ${item.details}` : ''}\n  ${item.href}`)]),
     ...(params.items ?? []).map((item) => `- ${item}`),
     params.moreLink ? `${fill(template.more)} ${params.moreLink}` : null,
     params.code ? `\n${params.code}\n` : null,
@@ -88,6 +91,23 @@ ${rest.length ? `<div style="margin-top:2px;font-size:13px;line-height:1.4;color
   .join('\n')}
 </table>`
     : ''
+
+  // Titled lists of linked items (the newsletter's jobs and posts).
+  const sections = (params.sections ?? [])
+    .map(
+      (section) => `<p style="margin:20px 0 8px;font-size:13px;line-height:1.4;font-weight:700;letter-spacing:0.4px;text-transform:uppercase;color:${MUTED}">${escapeHtml(section.title)}</p>
+<table role="presentation" width="100%" cellpadding="0" cellspacing="0" style="margin:0 0 8px;border:1px solid ${LINE};border-radius:12px;border-collapse:separate">
+${section.items
+  .map(
+    (item, index) => `<tr><td style="padding:12px 16px;${index ? `border-top:1px solid ${LINE};` : ''}">
+<a href="${escapeHtml(item.href)}" style="font-size:15px;line-height:1.4;font-weight:600;color:${INK};text-decoration:none">${escapeHtml(item.title)}</a>
+${item.details ? `<div style="margin-top:2px;font-size:13px;line-height:1.4;color:${MUTED}">${escapeHtml(item.details)}</div>` : ''}
+</td></tr>`,
+  )
+  .join('\n')}
+</table>`,
+    )
+    .join('\n')
 
   // Label and value rows with hairline dividers (browser, location, IP, time).
   const factsTable = facts.length
@@ -131,6 +151,8 @@ ${paragraph(`${escapeHtml(layout.linkHint)}<br>${link(params.link)}`, `margin:12
     `<tr><td>
 <h1 style="margin:0 0 14px;font-size:22px;line-height:1.3;font-weight:700;letter-spacing:-0.2px;color:${INK}">${fillHtml(template.heading)}</h1>
 ${body.map((line) => paragraph(fillHtml(line))).join('\n')}
+${(params.paragraphs ?? []).map((line) => paragraph(escapeHtml(line))).join('\n')}
+${sections}
 ${items}
 ${params.moreLink ? paragraph(`${fillHtml(template.more)}<br>${link(params.moreLink)}`, 'font-size:14px') : ''}
 ${params.code ? `<p style="margin:8px 0 20px;padding:18px 16px;background:#F7F8FA;border:1px solid ${LINE};border-radius:12px;text-align:center;font-size:32px;line-height:1.2;font-weight:700;letter-spacing:10px;font-variant-numeric:tabular-nums;color:${INK}">${escapeHtml(params.code)}</p>` : ''}

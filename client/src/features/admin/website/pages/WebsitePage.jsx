@@ -1,7 +1,7 @@
 import { useState } from 'react'
 import { useTranslation } from 'react-i18next'
 import { Link, useLocation } from 'react-router-dom'
-import { Download, FileText, Mail, Newspaper, Plus } from 'lucide-react'
+import { Download, FileText, Mail, Newspaper, Plus, Send } from 'lucide-react'
 import { can } from '@/app/permissions.js'
 import ConfirmDialog from '@/components/common/ConfirmDialog.jsx'
 import DataTable from '@/components/common/DataTable.jsx'
@@ -17,7 +17,8 @@ import QueueTabs from '@/features/admin/moderation/components/QueueTabs.jsx'
 import { downloadFromApi } from '@/lib/download.js'
 import { useErrorText } from '@/lib/forms.js'
 import { useFormat, usePreferences } from '@/lib/preferences.js'
-import { useDeletePostMutation, useGetAdminPostsQuery, useGetSubscribersQuery, useSetPostStatusMutation } from '../api.js'
+import NewsletterTab from '../components/NewsletterTab.jsx'
+import { useDeletePostMutation, useGetAdminPostsQuery, useGetNewsletterIssuesQuery, useGetSubscribersQuery, useSetPostStatusMutation } from '../api.js'
 import styles from './WebsitePage.module.css'
 
 const SUBSCRIBER_STATUSES = ['confirmed', 'pending', 'unsubscribed']
@@ -227,14 +228,16 @@ function SubscribersTab({ canExport, onNotice }) {
   )
 }
 
-/** Admin › Website (2026-11-13): /admin/website (Blog) and /admin/website/subscribers. */
+/** Admin › Website (2026-11-13): /admin/website (Blog), /admin/website/subscribers and /admin/website/newsletter (2026-11-19). */
 export default function WebsitePage() {
   const { t } = useTranslation()
   const { me } = usePreferences()
-  const tab = useLocation().pathname.endsWith('/subscribers') ? 'subscribers' : 'blog'
+  const { pathname } = useLocation()
+  const tab = pathname.endsWith('/subscribers') ? 'subscribers' : pathname.endsWith('/newsletter') ? 'newsletter' : 'blog'
   const [notice, setNotice] = useState('')
   const posts = useGetAdminPostsQuery()
   const subscribers = useGetSubscribersQuery({ status: 'confirmed', page: 1 })
+  const issues = useGetNewsletterIssuesQuery()
 
   return (
     <>
@@ -251,15 +254,21 @@ export default function WebsitePage() {
             loading: subscribers.isLoading,
             to: '/admin/website/subscribers',
           },
+          {
+            id: 'newsletter',
+            label: t('website:admin.tabs.newsletter'),
+            icon: Send,
+            count: issues.data?.total ?? 0,
+            loading: issues.isLoading,
+            to: '/admin/website/newsletter',
+          },
         ]}
       />
       {notice && <NoticeBanner>{notice}</NoticeBanner>}
       <div className={styles.body}>
-        {tab === 'blog' ? (
-          <BlogTab manage={can(me, 'content.manage')} onNotice={setNotice} />
-        ) : (
-          <SubscribersTab canExport={can(me, 'reports.export')} onNotice={setNotice} />
-        )}
+        {tab === 'blog' && <BlogTab manage={can(me, 'content.manage')} onNotice={setNotice} />}
+        {tab === 'subscribers' && <SubscribersTab canExport={can(me, 'reports.export')} onNotice={setNotice} />}
+        {tab === 'newsletter' && <NewsletterTab manage={can(me, 'content.manage')} onNotice={setNotice} />}
       </div>
     </>
   )

@@ -495,6 +495,14 @@
       "note": "Si vous ne vous êtes pas inscrit, ignorez cet e-mail : vous ne serez pas inscrit.",
       "reason": "Vous recevez cet e-mail parce que cette adresse a été saisie dans le formulaire de la newsletter EU Jobs."
     },
+    "newsletter_issue": {
+      "subject": "{{subject}}",
+      "heading": "Les nouveautés d’EU Jobs",
+      "body": [],
+      "action": "Voir toutes les offres",
+      "secondary": "Vous ne souhaitez plus recevoir ces e-mails ? Désabonnez-vous :",
+      "reason": "Vous recevez cet e-mail parce que vous êtes abonné à la newsletter EU Jobs."
+    },
     "plan_started": {
       "subject": "Bienvenue dans {{plan}}",
       "heading": "Votre offre {{plan}} est active",
@@ -791,6 +799,11 @@
     "verify": "Vérifiez ce certificat sur",
     "note": "Ce certificat confirme que la formation a été suivie et son quiz final réussi. Il ne vérifie pas les compétences professionnelles."
   },
+  "newsletter": {
+    "subject": "Nouvelles offres et actualités d’EU Jobs",
+    "jobs": "Nouvelles offres",
+    "posts": "Sur le blog"
+  },
   "csv": {
     "candidates": [
       "Nom",
@@ -949,7 +962,10 @@
       "blog_updated": "Article de blog modifié : {{title}}",
       "blog_published": "Article de blog publié : {{title}}",
       "blog_unpublished": "Article de blog dépublié : {{title}}",
-      "blog_deleted": "Article de blog supprimé : {{title}}"
+      "blog_deleted": "Article de blog supprimé : {{title}}",
+      "newsletter_created": "Brouillon de newsletter créé",
+      "newsletter_deleted": "Brouillon de newsletter supprimé",
+      "newsletter_sent": "Newsletter envoyée : {{title}} ({{count}} destinataires)"
     }
   },
   "reports": {

@@ -48,6 +48,7 @@ export const ADMIN_MOUNTS = [
   ['/admin/payments', paymentRoutes.adminRouter],
   ['/admin/content/blog', blogRoutes.adminRouter],
   ['/admin/content/subscribers', newsletterRoutes.adminRouter],
+  ['/admin/content/newsletter', newsletterRoutes.issuesRouter],
   ['/admin', adminRoutes],
 ]
 

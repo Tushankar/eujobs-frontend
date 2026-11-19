@@ -63,6 +63,8 @@ export const EMAIL_TYPES = {
   documents_received: 'non_critical',
   // 2026-11-13: the newsletter's double opt-in (EU), sent to an address that may have no account
   newsletter_confirm: 'critical',
+  // 2026-11-19: a newsletter issue to the confirmed subscribers; own class, so the daily cap of account mail never blocks it
+  newsletter_issue: 'newsletter',
 }
 
 /** The email switch (category) of each non-critical type (P11b-Q12); critical and decision emails have none. */
@@ -297,7 +299,7 @@ export const ENUMS = {
   emailType: Object.keys(EMAIL_TYPES),
   emailCategory: [...new Set(Object.values(EMAIL_CATEGORY))],
   notificationType: Object.keys(NOTIFICATION_TYPES),
-  emailClass: ['critical', 'decision', 'non_critical'],
+  emailClass: ['critical', 'decision', 'non_critical', 'newsletter'],
   emailStatus: ['sent', 'failed', 'suppressed_reserved', 'skipped_toggle', 'skipped_cap'],
   filePurpose: [
     'photo',
@@ -326,7 +328,7 @@ export const ENUMS = {
   reviewStatus: ['pending', 'approved', 'rejected'],
   blogStatus: ['draft', 'published'],
   subscriberStatus: ['pending', 'confirmed', 'unsubscribed'],
-  taskType: ['email.message', 'email.stage', 'email.new-applications', 'alerts.instant', 'matching.recompute', 'interview.reminder', 'interview.expire', 'interview.close', 'interview.notes'],
+  taskType: ['email.message', 'email.stage', 'email.new-applications', 'alerts.instant', 'matching.recompute', 'interview.reminder', 'interview.expire', 'interview.close', 'interview.notes', 'newsletter.send'],
   permission: PERMISSIONS.map((permission) => permission.id),
   permissionGroup: ['people', 'roles', 'recruitment', 'finance', 'governance'],
 }

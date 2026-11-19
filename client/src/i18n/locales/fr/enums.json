@@ -369,12 +369,14 @@
     "admin_renewal_failed": "Échec de renouvellement (administration)",
     "admin_joined": "Nouvel administrateur",
     "admin_ai_budget": "Alerte budget IA",
-    "newsletter_confirm": "Confirmation de la newsletter"
+    "newsletter_confirm": "Confirmation de la newsletter",
+    "newsletter_issue": "Édition de la newsletter"
   },
   "emailClass": {
     "critical": "Essentiel",
     "decision": "Décision",
-    "non_critical": "Non essentiel"
+    "non_critical": "Non essentiel",
+    "newsletter": "Newsletter"
   },
   "emailStatus": {
     "sent": "Envoyé",
@@ -439,6 +441,9 @@
     },
     "matching": {
       "recompute": "Recalcul des correspondances"
+    },
+    "newsletter": {
+      "send": "Envoi de la newsletter"
     }
   },
   "permission": {
