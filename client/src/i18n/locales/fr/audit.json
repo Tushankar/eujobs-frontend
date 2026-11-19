@@ -113,7 +113,8 @@
       "blog_deleted": "Article de blog supprimé : {{title}}",
       "newsletter_created": "Brouillon de newsletter créé",
       "newsletter_deleted": "Brouillon de newsletter supprimé",
-      "newsletter_sent": "Newsletter envoyée : {{title}} ({{count}} destinataires)"
+      "newsletter_sent": "Newsletter envoyée : {{title}} ({{count}} destinataires)",
+      "newsletter_sent_new": "Newsletter envoyée à {{count}} nouveaux abonnés : {{title}}"
     }
   }
 }

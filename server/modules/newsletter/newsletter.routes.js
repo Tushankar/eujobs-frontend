@@ -99,3 +99,7 @@ issuesRouter.post('/:id/test', manage, idParams, validate({ body: z.object({ lan
 issuesRouter.post('/:id/send', manage, idParams, async (req, res) => {
   res.status(202).json(await issues.send(req.user, req.params.id))
 })
+
+issuesRouter.post('/:id/send-new', manage, idParams, async (req, res) => {
+  res.status(202).json(await issues.sendToNew(req.user, req.params.id))
+})

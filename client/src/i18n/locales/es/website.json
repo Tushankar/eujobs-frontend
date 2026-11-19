@@ -131,6 +131,11 @@
       "progress": "{{sent}} de {{total}} correos enviados.",
       "failed": "{{count}} no se pudieron entregar.",
       "sendingNote": "Los correos salen en lotes de 100 por minuto. Puedes salir de esta página.",
+      "newSubscribers": "{{count}} personas confirmaron después de enviar esta edición y no la han recibido.",
+      "sendNew": "Enviar a {{count}} nuevos suscriptores",
+      "sendNewConfirm": "Enviar",
+      "confirmNewTitle": "¿Enviar a los nuevos suscriptores?",
+      "confirmNewText": "Se envía solo a las {{count}} personas que confirmaron después de enviar esta edición. Al resto no se le vuelve a escribir.",
       "confirmTitle": "¿Enviar este boletín?",
       "confirmText": "Se envía a {{count}} suscriptores confirmados y después no se puede retirar ni editar.",
       "notice": {

@@ -37,6 +37,10 @@ export const websiteApi = api.injectEndpoints({
     sendNewsletterTest: build.mutation({
       query: ({ id, language }) => ({ url: `/admin/content/newsletter/${id}/test`, method: 'POST', body: { language } }),
     }),
+    sendNewsletterToNew: build.mutation({
+      query: (id) => ({ url: `/admin/content/newsletter/${id}/send-new`, method: 'POST' }),
+      invalidatesTags: ['NewsletterIssues'],
+    }),
     sendNewsletterIssue: build.mutation({
       query: (id) => ({ url: `/admin/content/newsletter/${id}/send`, method: 'POST' }),
       invalidatesTags: ['NewsletterIssues', 'Subscribers'],
@@ -62,4 +66,5 @@ export const {
   useDeleteNewsletterIssueMutation,
   useSendNewsletterTestMutation,
   useSendNewsletterIssueMutation,
+  useSendNewsletterToNewMutation,
 } = websiteApi

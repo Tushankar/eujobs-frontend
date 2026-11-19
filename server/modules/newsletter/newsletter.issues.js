@@ -131,7 +131,14 @@ export async function get(id) {
     posts: snapshot.posts.map((post) => ({ slug: post.slug, title: post.title })),
     deliveries: await deliveryCounts(issue),
     confirmed: await NewsletterSubscriber.countDocuments({ status: 'confirmed' }),
+    newSubscribers: issue.status === 'sent' ? await countNew(issue) : 0,
   })
+}
+
+/** Confirmed subscribers this issue was never sent to (they confirmed after it went out). */
+async function countNew(issue) {
+  const done = await NewsletterDelivery.find({ issueId: issue._id }, 'subscriberId')
+  return NewsletterSubscriber.countDocuments({ status: 'confirmed', _id: { $nin: done.map((row) => row.subscriberId) } })
 }
 
 /** The newest open jobs and published posts a draft can pick from. */
@@ -238,6 +245,24 @@ export async function send(admin, id) {
   if (!claimed) throw new AppError('LOCKED')
   await scheduleTask({ type: 'newsletter.send', key: `newsletter:${issue._id}`, dueAt: new Date(), payload: { issueId: String(issue._id) } })
   await audit(admin, claimed, 'newsletter_sent', { count: recipients })
+  return get(issue._id)
+}
+
+/** A sent issue goes once more, to the subscribers who confirmed after it went out; the earlier recipients are not mailed again. */
+export async function sendToNew(admin, id) {
+  const issue = await findIssue(id)
+  if (issue.status !== 'sent') throw new AppError('LOCKED')
+  const fresh = await countNew(issue)
+  if (!fresh) throw fieldError({ recipients: 'required' })
+  const total = await NewsletterDelivery.countDocuments({ issueId: issue._id })
+  const claimed = await NewsletterIssue.findOneAndUpdate(
+    { _id: issue._id, status: 'sent' },
+    { $set: { status: 'sending', recipients: total + fresh }, $unset: { finishedAt: 1 } },
+    { returnDocument: 'after' },
+  )
+  if (!claimed) throw new AppError('LOCKED')
+  await scheduleTask({ type: 'newsletter.send', key: `newsletter:${issue._id}`, dueAt: new Date(), payload: { issueId: String(issue._id) } })
+  await audit(admin, claimed, 'newsletter_sent_new', { count: fresh })
   return get(issue._id)
 }
 

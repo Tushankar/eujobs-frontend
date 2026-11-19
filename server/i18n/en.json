@@ -965,7 +965,8 @@
       "blog_deleted": "Blog post deleted: {{title}}",
       "newsletter_created": "Newsletter draft created",
       "newsletter_deleted": "Newsletter draft deleted",
-      "newsletter_sent": "Newsletter sent: {{title}} ({{count}} recipients)"
+      "newsletter_sent": "Newsletter sent: {{title}} ({{count}} recipients)",
+      "newsletter_sent_new": "Newsletter sent to {{count}} new subscribers: {{title}}"
     }
   },
   "reports": {

@@ -965,7 +965,8 @@
       "blog_deleted": "Artículo del blog eliminado: {{title}}",
       "newsletter_created": "Borrador del boletín creado",
       "newsletter_deleted": "Borrador del boletín eliminado",
-      "newsletter_sent": "Boletín enviado: {{title}} ({{count}} destinatarios)"
+      "newsletter_sent": "Boletín enviado: {{title}} ({{count}} destinatarios)",
+      "newsletter_sent_new": "Boletín enviado a {{count}} nuevos suscriptores: {{title}}"
     }
   },
   "reports": {

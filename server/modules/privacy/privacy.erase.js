@@ -27,7 +27,7 @@ import { scheduleRecompute } from '../matching/matching.service.js'
 import { Conversation, Message } from '../messages/messages.model.js'
 import { ModerationCase } from '../moderation/moderation.model.js'
 import { Notification } from '../notifications/notifications.model.js'
-import { NewsletterSubscriber } from '../newsletter/newsletter.model.js'
+import { NewsletterDelivery, NewsletterSubscriber } from '../newsletter/newsletter.model.js'
 import { companyRecruiter, notify } from '../notifications/notifications.service.js'
 import { Payment, Subscription } from '../payments/payments.model.js'
 import { Review } from '../reviews/reviews.model.js'
@@ -85,6 +85,8 @@ export const COVERAGE = {
   EmailLog: 'deleted',
   Review: 'deleted (the landing page review)',
   NewsletterSubscriber: 'deleted (the subscription of the account email)',
+  NewsletterDelivery: 'deleted with the subscription of the account email',
+  NewsletterIssue: 'kept: composed by admins, who are not erased through DELETE /me',
   BlogPost: 'kept: written by admins, who are not erased through DELETE /me',
   ScheduledTask: 'pending tasks about the person\'s items deleted',
   Company: 'deleted recruiter: kept with the display name, logo and public profile; contact fields removed (M-189)',
@@ -201,8 +203,15 @@ async function removeOwnRecords(user) {
     AiUsage.deleteMany({ userId: user._id }),
     anonymiseApiUsage(user._id),
     Review.deleteMany({ userId: user._id }),
-    NewsletterSubscriber.deleteMany({ email: user.email }),
+    eraseSubscription(user.email),
   ])
+}
+
+/** The subscription of the account email and the record of the issues it was sent (2026-11-19). */
+async function eraseSubscription(email) {
+  const subscribers = await NewsletterSubscriber.find({ email }, '_id')
+  await NewsletterDelivery.deleteMany({ subscriberId: { $in: subscribers.map((subscriber) => subscriber._id) } })
+  await NewsletterSubscriber.deleteMany({ email })
 }
 
 /** 2026-11-17: the person's API usage counts move to the no-user row of the same day, provider, model and kind. */

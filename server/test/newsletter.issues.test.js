@@ -125,6 +125,28 @@ describe('newsletter issues', () => {
     assert.equal(mailTo(email, 'newsletter_issue').length, 1)
   })
 
+  it('sends a sent issue once more to the subscribers who confirmed after it, and nobody twice', async () => {
+    const { admin } = await content()
+    const early = await subscribe()
+    const { id } = (await api().post(v1).set(auth(admin))).body
+    assert.equal(code(await api().post(`${v1}/${id}/send-new`).set(auth(admin))), 'LOCKED')
+    await api().post(`${v1}/${id}/send`).set(auth(admin))
+    await tick(new Date(Date.now() + 1000))
+    assert.equal((await api().get(`${v1}/${id}`).set(auth(admin))).body.newSubscribers, 0)
+    assert.deepEqual((await api().post(`${v1}/${id}/send-new`).set(auth(admin))).body.error.fields, { recipients: 'required' })
+
+    const late = await subscribe('fr')
+    assert.equal((await api().get(`${v1}/${id}`).set(auth(admin))).body.newSubscribers, 1)
+    const again = await api().post(`${v1}/${id}/send-new`).set(auth(admin))
+    assert.deepEqual([again.status, again.body.status, again.body.recipients], [202, 'sending', 2])
+    assert.equal(code(await api().post(`${v1}/${id}/send-new`).set(auth(admin))), 'LOCKED')
+    await tick(new Date(Date.now() + 2000))
+    assert.equal(mailTo(early, 'newsletter_issue').length, 1)
+    assert.equal(mailTo(late, 'newsletter_issue').length, 1)
+    const done = await api().get(`${v1}/${id}`).set(auth(admin))
+    assert.deepEqual([done.body.status, done.body.deliveries.sent, done.body.newSubscribers], ['sent', 2, 0])
+  })
+
   it('sends a test to the admin and limits the pages to content permissions', async () => {
     const { admin } = await content()
     const { id } = (await api().post(v1).set(auth(admin))).body

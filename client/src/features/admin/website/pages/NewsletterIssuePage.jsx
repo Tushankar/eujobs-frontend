@@ -19,6 +19,7 @@ import {
   useGetNewsletterPreviewQuery,
   useSendNewsletterIssueMutation,
   useSendNewsletterTestMutation,
+  useSendNewsletterToNewMutation,
   useUpdateNewsletterIssueMutation,
 } from '../api.js'
 import styles from './WebsitePage.module.css'
@@ -56,9 +57,11 @@ function Editor({ issue }) {
   const [update, { isLoading: saving }] = useUpdateNewsletterIssueMutation()
   const [sendTest, { isLoading: testing }] = useSendNewsletterTestMutation()
   const [send, { isLoading: sendingNow }] = useSendNewsletterIssueMutation()
+  const [sendToNew, { isLoading: sendingNew }] = useSendNewsletterToNewMutation()
   const [language, setLanguage] = useState('en')
   const [notice, setNotice] = useState('')
   const [confirming, setConfirming] = useState(false)
+  const [confirmingNew, setConfirmingNew] = useState(false)
   const [translations, setTranslations] = useState(issue.translations)
   const [jobIds, setJobIds] = useState(issue.jobIds)
   const [postIds, setPostIds] = useState(issue.postIds)
@@ -237,6 +240,14 @@ function Editor({ issue }) {
                 </p>
                 {issue.deliveries.failed > 0 && <p className={styles.sideText}>{t('website:admin.newsletter.failed', { count: issue.deliveries.failed })}</p>}
                 {issue.status === 'sending' && <p className={styles.hint}>{t('website:admin.newsletter.sendingNote')}</p>}
+                {manage && issue.status === 'sent' && issue.newSubscribers > 0 && (
+                  <>
+                    <p className={styles.sideText}>{t('website:admin.newsletter.newSubscribers', { count: issue.newSubscribers })}</p>
+                    <Button leftIcon={<Icon as={Send} size={14} />} loading={sendingNew} onClick={() => setConfirmingNew(true)}>
+                      {t('website:admin.newsletter.sendNew', { count: issue.newSubscribers })}
+                    </Button>
+                  </>
+                )}
               </>
             )}
           </Panel>
@@ -265,6 +276,17 @@ function Editor({ issue }) {
           }, t('website:admin.newsletter.notice.sending'))
         }}
         onClose={() => setConfirming(false)}
+      />
+      <ConfirmDialog
+        open={confirmingNew}
+        title={t('website:admin.newsletter.confirmNewTitle')}
+        description={t('website:admin.newsletter.confirmNewText', { count: issue.newSubscribers })}
+        confirmLabel={t('website:admin.newsletter.sendNewConfirm')}
+        onConfirm={() => {
+          setConfirmingNew(false)
+          run(() => sendToNew(issue.id).unwrap(), t('website:admin.newsletter.notice.sending'))
+        }}
+        onClose={() => setConfirmingNew(false)}
       />
     </>
   )

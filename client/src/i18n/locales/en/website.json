@@ -131,6 +131,11 @@
       "progress": "{{sent}} of {{total}} emails sent.",
       "failed": "{{count}} could not be delivered.",
       "sendingNote": "Emails go out in batches of 100 a minute. You can leave this page.",
+      "newSubscribers": "{{count}} people confirmed after this issue went out and have not received it.",
+      "sendNew": "Send to {{count}} new subscribers",
+      "sendNewConfirm": "Send",
+      "confirmNewTitle": "Send to the new subscribers?",
+      "confirmNewText": "It goes only to the {{count}} people who confirmed after this issue was sent. Everyone else is not mailed again.",
       "confirmTitle": "Send this newsletter?",
       "confirmText": "It goes to {{count}} confirmed subscribers and cannot be recalled or edited afterwards.",
       "notice": {

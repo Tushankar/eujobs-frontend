@@ -131,6 +131,11 @@
       "progress": "{{sent}} e-mails sur {{total}} envoyés.",
       "failed": "{{count}} n’ont pas pu être remis.",
       "sendingNote": "Les e-mails partent par lots de 100 par minute. Vous pouvez quitter cette page.",
+      "newSubscribers": "{{count}} personnes ont confirmé après l’envoi de cette édition et ne l’ont pas reçue.",
+      "sendNew": "Envoyer à {{count}} nouveaux abonnés",
+      "sendNewConfirm": "Envoyer",
+      "confirmNewTitle": "Envoyer aux nouveaux abonnés ?",
+      "confirmNewText": "Elle part uniquement vers les {{count}} personnes qui ont confirmé après l’envoi de cette édition. Les autres ne reçoivent rien de plus.",
       "confirmTitle": "Envoyer cette newsletter ?",
       "confirmText": "Elle part vers {{count}} abonnés confirmés et ne peut ensuite ni être rappelée ni modifiée.",
       "notice": {
