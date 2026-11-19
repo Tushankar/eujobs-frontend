@@ -40,9 +40,10 @@ function MenuOption({ selected, onSelect, children }) {
 /** The country list with a search box (worldwide since 2026-11-16: about 240 countries); Enter picks the first match. */
 function CountryMenu({ options, selected, home, onPick }) {
   const { t } = useTranslation()
+  const format = useFormat()
   const { query, setQuery, shown } = useCountrySearch(options)
   // The account's default country is pinned above the A–Z list, which can be 240 rows long (owner 2026-11-19).
-  const pinned = !query && options.find((option) => option.code === home)
+  const pinned = !query && options.some((option) => option.code === home) && { code: home, name: format.country(home) }
   return (
     <div className={styles.menu}>
       <input
