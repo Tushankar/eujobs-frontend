@@ -63,7 +63,7 @@ router.put('/onboarding/preferences', validate({ body: schemas.preferencesBody }
 /** M-014, M-136: ends onboarding; the header country takes the profile country (language per M-134). */
 router.post('/onboarding/complete', withProfile, async (req, res) => {
   const countryCode = await candidates.completeOnboarding(req.user, req.profile)
-  await updateMe(req.user, { pickerCountry: countryCode })
+  await updateMe(req.user, { pickerCountry: countryCode, homeCountry: countryCode })
   res.json(await meDto(req.user))
 })
 

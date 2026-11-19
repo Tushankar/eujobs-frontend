@@ -150,7 +150,7 @@ export default function ProfileMenu({ workspace }) {
       )}
     >
       {({ close }) => (
-        <div className={styles.menu}>
+        <div className={styles.menu} data-profile-menu>
           <div className={styles.identity}>
             <p className={styles.name}>{me.fullName}</p>
             <p className={styles.email}>{me.email}</p>

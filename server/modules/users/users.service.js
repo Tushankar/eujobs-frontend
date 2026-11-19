@@ -20,6 +20,23 @@ import { counts as notificationCounts, emailSwitches } from '../notifications/no
 import { planState } from '../payments/payments.service.js'
 
 /**
+ * The default country (owner 2026-11-19). Accounts from before it get it once: the candidate profile's or the
+ * company's location country, else the header country they have now.
+ */
+async function homeCountryOf(user) {
+  if (user.homeCountry || user.role === 'admin') return user.homeCountry ?? null
+  const place =
+    user.role === 'candidate'
+      ? (await CandidateProfile.findOne({ userId: user._id }, 'location').lean())?.location
+      : user.companyId && (await Company.findById(user.companyId, 'location').lean())?.location
+  const code = place?.countryCode ?? user.pickerCountry
+  if (!code) return null
+  await User.updateOne({ _id: user._id, homeCountry: { $exists: false } }, { $set: { homeCountry: code } })
+  user.homeCountry = code
+  return code
+}
+
+/**
  * The session profile (GET /me). Candidates carry the completeness checklist and the shell photo URL,
  * plan and entitlements, recruiters their company.
  * `legal.acceptRequired` is true when a newer Terms or Privacy version exists (U22).
@@ -37,6 +54,7 @@ export async function meDto(user) {
     languageExplicit: user.languageExplicit,
     theme: user.theme ?? null,
     pickerCountry: user.pickerCountry ?? null,
+    homeCountry: await homeCountryOf(user),
     // Owner 2026-11-16: candidates browse jobs worldwide until they pick Remote or a country.
     ...(user.role === 'candidate' && { jobsWorldwide: user.jobsWorldwide !== false }),
     timezone: user.timezone ?? null,

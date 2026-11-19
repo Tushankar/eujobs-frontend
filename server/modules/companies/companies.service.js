@@ -157,7 +157,7 @@ export async function saveOnboardingCompany(user, body) {
     user.companyId = company._id
     await user.save()
   }
-  if (existing?.location?.countryCode !== location.countryCode) await updateMe(user, { pickerCountry: location.countryCode })
+  if (existing?.location?.countryCode !== location.countryCode) await updateMe(user, { pickerCountry: location.countryCode, homeCountry: location.countryCode })
 }
 
 async function ownCompany(user) {

@@ -37,7 +37,7 @@ const byId = (docs) => new Map(docs.map((doc) => [String(doc._id), doc]))
 const omit = (doc, keys) => doc && Object.fromEntries(Object.entries(doc).filter(([key]) => !keys.includes(key)))
 
 function account(user) {
-  const fields = ['role', 'email', 'fullName', 'jobTitle', 'status', 'phone', 'language', 'pickerCountry', 'timezone', 'legal', 'privacy', 'emailVerifiedAt', 'lastLoginAt', 'createdAt']
+  const fields = ['role', 'email', 'fullName', 'jobTitle', 'status', 'phone', 'language', 'pickerCountry', 'homeCountry','timezone', 'legal', 'privacy', 'emailVerifiedAt', 'lastLoginAt', 'createdAt']
   const picked = Object.fromEntries(fields.filter((field) => user[field] !== undefined).map((field) => [field, user[field]]))
   if (user.role !== 'candidate') delete picked.privacy
   return { ...picked, emailSwitches: emailSwitches(user) }

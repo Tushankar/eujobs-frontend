@@ -38,13 +38,13 @@ export default {
     await page.evaluateOnNewDocument(() => localStorage.setItem('lwm-pref-theme', 'light'))
     await signInWithForm(page, ctx.webUrl, '/sign-in', candidate.email, TEST_PASSWORD)
     await openMenu(page)
-    const rows = await page.evaluate(() => document.querySelector('[class*="menu"]')?.innerText ?? '')
+    const rows = await page.evaluate(() => document.querySelector('[data-profile-menu]')?.innerText ?? '')
     for (const label of ['Profile', 'Saved jobs', 'My courses', 'Settings', 'Billing & plan', 'Take the product tour', 'Country', 'Language', 'Dark mode', 'Help', 'Sign out']) {
       ctx.check(rows.includes(label), `candidate menu has "${label}"`)
     }
     await ctx.screenshot(page, 'candidate-menu')
 
-    await clickText(page, 'Saved jobs', '[class*="menu"] a')
+    await clickText(page, 'Saved jobs', '[data-profile-menu] a')
     await waitForPath(page, '/candidate')
     await pause(900)
     ctx.check((await page.evaluate(() => location.search)) === '?tab=saved', 'Saved jobs opens ?tab=saved')
@@ -60,7 +60,7 @@ export default {
     await page.click('[data-menu-theme]')
     await pause(200)
 
-    await clickText(page, 'My courses', '[class*="menu"] a')
+    await clickText(page, 'My courses', '[data-profile-menu] a')
     await waitForPath(page, '/candidate/learning')
 
     await openMenu(page)
@@ -75,12 +75,12 @@ export default {
     await second.page.evaluateOnNewDocument(() => localStorage.setItem('lwm-pref-theme', 'light'))
     await signInWithForm(second.page, ctx.webUrl, '/recruiter/sign-in', recruiter.email, TEST_PASSWORD)
     await openMenu(second.page)
-    const recRows = await second.page.evaluate(() => document.querySelector('[class*="menu"]')?.innerText ?? '')
+    const recRows = await second.page.evaluate(() => document.querySelector('[data-profile-menu]')?.innerText ?? '')
     for (const label of ['Company profile', 'Shortlists', 'My courses', 'Settings', 'Billing & plan', 'Dark mode', 'Help', 'Sign out']) {
       ctx.check(recRows.includes(label), `recruiter menu has "${label}"`)
     }
     await ctx.screenshot(second.page, 'recruiter-menu')
-    await clickText(second.page, 'My courses', '[class*="menu"] a')
+    await clickText(second.page, 'My courses', '[data-profile-menu] a')
     await waitForPath(second.page, '/recruiter/settings/courses')
     ctx.assertClean(second.issues, 'recruiter')
   },

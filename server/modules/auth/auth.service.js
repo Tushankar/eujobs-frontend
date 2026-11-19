@@ -181,6 +181,7 @@ async function newAccountFields(input) {
     language: input.language,
     languageExplicit: input.languageExplicit,
     pickerCountry: input.country,
+    homeCountry: input.country,
     timezone: input.timezone,
     legal: { ...(await currentLegalVersions()), acceptedAt: new Date() },
   }

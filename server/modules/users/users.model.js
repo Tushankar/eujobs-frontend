@@ -21,6 +21,9 @@ const userSchema = new Schema(
     // Owner 2026-11-16: unset until the account picks one with the theme button.
     theme: { type: String, enum: ENUMS.theme },
     pickerCountry: String,
+    // Owner 2026-11-19: the account's default country, pinned in the header picker. Set at sign-up, onboarding and by
+    // the company location; picking a country in the header changes only pickerCountry.
+    homeCountry: String,
     // Candidates (owner 2026-11-16): false once they pick Remote or a country to browse; unset or true = Worldwide.
     jobsWorldwide: Boolean,
     timezone: String,
