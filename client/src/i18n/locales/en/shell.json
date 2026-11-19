@@ -113,6 +113,7 @@
     "choose": "Choose a country",
     "note": "Your country sets the jobs and candidates you see, the currency and the date and number formats.",
     "yours": "Your country",
+    "current": "Current country",
     "search": "Search countries",
     "none": "No country matches"
   },

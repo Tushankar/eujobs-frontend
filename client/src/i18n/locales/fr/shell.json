@@ -113,6 +113,7 @@
     "choose": "Choisir un pays",
     "note": "Votre pays détermine les offres et les candidats affichés, la devise et le format des dates et des nombres.",
     "yours": "Votre pays",
+    "current": "Pays actuel",
     "search": "Rechercher un pays",
     "none": "Aucun pays ne correspond"
   },
