@@ -5,7 +5,8 @@ import { TEST_PASSWORD } from '../lib/testApi.js'
 
 const pause = (ms) => new Promise((resolve) => setTimeout(resolve, ms))
 const openMenu = async (page) => {
-  await page.click('button[aria-label="Open profile menu"]')
+  const trigger = await page.waitForSelector('button[aria-label="Open profile menu"]', { visible: true, timeout: 15_000 })
+  await trigger.click()
   await pause(350)
 }
 
