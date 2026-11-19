@@ -1,4 +1,5 @@
-import { useState } from 'react'
+import { useEffect, useRef, useState } from 'react'
+import { useLocation } from 'react-router-dom'
 import { useTranslation } from 'react-i18next'
 import { Award, CirclePlay, Compass, GraduationCap } from 'lucide-react'
 import EmptyState from '@/components/common/EmptyState.jsx'
@@ -26,6 +27,12 @@ export default function LearningPage() {
   const { data: enrollments = [], isLoading: enrollmentsLoading } = useGetEnrollmentsQuery()
   const format = useFormat()
   const [level, setLevel] = useState('all')
+  // The avatar menu links to #my-courses: scroll there once the enrolments have loaded.
+  const { key: locationKey, hash } = useLocation()
+  const myCoursesRef = useRef(null)
+  useEffect(() => {
+    if (hash === '#my-courses' && !enrollmentsLoading) myCoursesRef.current?.scrollIntoView({ behavior: 'smooth', block: 'start' })
+  }, [locationKey, hash, enrollmentsLoading])
 
   const visible = level === 'all' ? courses : courses.filter((course) => course.level === level)
   const inProgress = courses.filter((course) => course.enrollment?.lessonsDone > 0 && !course.enrollment.completedAt).length
@@ -42,7 +49,7 @@ export default function LearningPage() {
       </div>
 
       {(enrollmentsLoading || enrollments.length > 0) && (
-        <section className={styles.section} aria-labelledby="my-courses-heading" data-my-courses>
+        <section ref={myCoursesRef} id="my-courses" className={styles.section} aria-labelledby="my-courses-heading" data-my-courses>
           <h2 className={styles.sectionTitle} id="my-courses-heading">
             {t('myCourses.title')}
           </h2>

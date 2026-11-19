@@ -1,6 +1,6 @@
-import { useState } from 'react'
+import { useEffect, useRef, useState } from 'react'
 import { useTranslation } from 'react-i18next'
-import { Link } from 'react-router-dom'
+import { Link, useLocation, useSearchParams } from 'react-router-dom'
 import { ArrowRight, ArrowUpRight, Bookmark, BriefcaseBusiness, Eye, Search, ShieldCheck, SlidersHorizontal, Sun } from 'lucide-react'
 import { useGetMeQuery } from '@/app/api.js'
 import { Button, Icon, SkeletonRegion } from '@/components/ui'
@@ -41,7 +41,15 @@ function viewsDelta(views, format) {
 export default function OverviewPage() {
   const { t } = useTranslation()
   const format = useFormat()
-  const [tab, setTab] = useState('for-you')
+  // The tab lives in the URL (?tab=saved) so the avatar menu can open Saved jobs; #jobs scrolls to the list.
+  const [params, setParams] = useSearchParams()
+  const tab = TABS.includes(params.get('tab')) ? params.get('tab') : 'for-you'
+  const setTab = (next) => setParams(next === 'for-you' ? {} : { tab: next }, { replace: true })
+  const { key: locationKey, hash } = useLocation()
+  const jobsRef = useRef(null)
+  useEffect(() => {
+    if (hash === '#jobs') jobsRef.current?.scrollIntoView({ behavior: 'smooth', block: 'start' })
+  }, [locationKey, hash])
   const [now] = useState(() => new Date())
   const { data: me } = useGetMeQuery()
   const { data: overview, isLoading: overviewLoading } = useGetCandidateOverviewQuery()
@@ -110,7 +118,7 @@ export default function OverviewPage() {
       </div>
 
       <div className={styles.columns}>
-        <section className={`${styles.main} sticky-side`}>
+        <section ref={jobsRef} id="jobs" className={`${styles.main} sticky-side`}>
           <div className={styles.sectionHead}>
             <div>
               <h2 className={styles.sectionTitle}>{t('findJobs:overview.opportunities')}</h2>

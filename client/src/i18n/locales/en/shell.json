@@ -131,7 +131,12 @@
   },
   "profileMenu": {
     "open": "Open profile menu",
-    "profile": "Profile"
+    "profile": "Profile",
+    "companyProfile": "Company profile",
+    "savedJobs": "Saved jobs",
+    "myCourses": "My courses",
+    "billing": "Billing & plan",
+    "darkMode": "Dark mode"
   },
   "forbidden": {
     "title": "You don’t have access to this page",

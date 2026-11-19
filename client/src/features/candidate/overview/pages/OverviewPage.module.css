@@ -230,3 +230,8 @@
     flex-wrap: wrap;
   }
 }
+
+/* Opened from the avatar menu (#jobs): clear the sticky app header. */
+#jobs {
+  scroll-margin-top: 88px;
+}

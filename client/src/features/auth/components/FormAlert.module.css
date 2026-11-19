@@ -1,38 +1,67 @@
+/* Neutral card + thin tone bar (owner 2026-11-19): calm in light and dark, the tone only on the bar and the icon. */
 .alert {
+  --tone: var(--destructive);
   display: flex;
-  flex-direction: column;
-  gap: 8px;
-  padding: 12px 16px;
-  border: 1px solid transparent;
+  align-items: flex-start;
+  gap: 10px;
+  padding: 12px 16px 12px 18px;
+  border: 1px solid var(--border);
   border-radius: var(--radius-xl);
-  font-size: 12px;
-  line-height: 18px;
+  background: var(--card);
+  box-shadow: inset 3px 0 0 var(--tone);
+  font-size: 13px;
+  line-height: 19px;
+  color: var(--foreground);
 }
 
 .error {
-  border-color: light-dark(#f3d4d4, #642626);
-  background: light-dark(#fdf3f3, #3b1111);
-  color: var(--destructive);
-}
-
-.info {
-  border-color: var(--border);
-  background: var(--accent);
-  color: var(--accent-foreground);
+  --tone: var(--destructive);
 }
 
 .success {
-  border-color: light-dark(#cfe7d8, #2e5c3f);
-  background: light-dark(#edf7f0, #183520);
-  color: light-dark(#28734b, #6fcd9b);
+  --tone: light-dark(#1f8a55, #4cc283);
 }
 
-/* A message from a control inside the alert (e.g. resend) reads as plain text, not a second box. */
+.info {
+  --tone: var(--primary);
+}
+
+.icon {
+  flex-shrink: 0;
+  margin-top: 1.5px;
+  color: var(--tone);
+}
+
+.content {
+  display: flex;
+  flex: 1;
+  flex-direction: column;
+  gap: 6px;
+  min-width: 0;
+}
+
+.title {
+  font-weight: 600;
+  color: var(--foreground);
+}
+
+/* With a title, the message below it is the muted detail line. */
+.withTitle .content {
+  gap: 2px;
+  color: var(--muted-foreground);
+}
+
+/* A message from a control inside the alert (e.g. resend) reads as plain text, not a second card. */
 .alert .alert {
   padding: 0;
   border: 0;
   background: none;
+  box-shadow: none;
   color: inherit;
+}
+
+.alert .alert .icon {
+  display: none;
 }
 
 .alert a,
@@ -44,7 +73,8 @@
   background: none;
   font: inherit;
   font-weight: 600;
-  color: inherit;
+  color: var(--foreground);
   text-decoration: underline;
+  text-underline-offset: 2px;
   cursor: pointer;
 }

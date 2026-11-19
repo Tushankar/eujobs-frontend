@@ -1,11 +1,32 @@
 import { useState } from 'react'
 import { useTranslation } from 'react-i18next'
 import { useDispatch } from 'react-redux'
-import { Link } from 'react-router-dom'
-import { Check, ChevronDown, ChevronRight, Compass, Earth, MapPin, Users } from 'lucide-react'
+import { Link, useNavigate } from 'react-router-dom'
+import {
+  ArrowUpRight,
+  Bookmark,
+  Building2,
+  Check,
+  ChevronDown,
+  ChevronRight,
+  CircleHelp,
+  Compass,
+  CreditCard,
+  Earth,
+  GraduationCap,
+  LogOut,
+  MapPin,
+  Moon,
+  Settings,
+  Users,
+} from 'lucide-react'
 import { startTour } from '@/app/tour.js'
+import { signOut } from '@/app/session.js'
 import { cx } from '@/utils/cx.js'
-import { Avatar, Dropdown, Icon } from '@/components/ui'
+import { Avatar, Dropdown, Icon, Switch } from '@/components/ui'
+import ConfirmDialog from '@/components/common/ConfirmDialog.jsx'
+import { useTheme } from '@/lib/theme.js'
+import { useGetCandidateOverviewQuery } from '@/features/candidate/jobs/api.js'
 import { workspacePath } from '@/app/workspaces.js'
 import { LANGUAGES, languageName } from '@/i18n/index.js'
 import { useCountrySearch, usePickerOptions } from '@/lib/countries.js'
@@ -63,19 +84,63 @@ function OptionList({ options, selected, onSelect, className }) {
   )
 }
 
-/** Avatar dropdown (Figma "Menu - Profile menu"): identity (M-195), profile link, country and language. */
+/** A link row of the menu: icon, label, an optional value (e.g. a count) and a trailing arrow. */
+function LinkRow({ to, icon, label, value, external, onClick, ...rest }) {
+  return (
+    <Link to={to} className={styles.row} onClick={onClick} {...rest}>
+      <Icon as={icon} size={16} />
+      <span className={styles.rowLabel}>{label}</span>
+      {value != null && <span className={styles.rowValue}>{value}</span>}
+      <Icon as={external ? ArrowUpRight : ChevronRight} size={14} />
+    </Link>
+  )
+}
+
+/** The saved-jobs count of the candidate Overview (same cached query), shown on the Saved jobs row. */
+function SavedJobsRow({ workspace, onClick }) {
+  const { t } = useTranslation()
+  const { data: overview } = useGetCandidateOverviewQuery()
+  return (
+    <LinkRow
+      to={`${workspace.basePath}?tab=saved#jobs`}
+      icon={Bookmark}
+      label={t('shell:profileMenu.savedJobs')}
+      value={overview?.savedJobs || undefined}
+      onClick={onClick}
+      data-menu-saved-jobs
+    />
+  )
+}
+
+/**
+ * Avatar dropdown (Figma "Menu - Profile menu"; expanded 2026-11-19): identity (M-195), then groups split by thin lines —
+ * the person's own pages (profile, saved jobs or shortlists, my courses), account (settings, billing, product tour),
+ * preferences (country, language, dark mode) and help + sign out. Admins keep profile, language, theme, help, sign out.
+ */
 export default function ProfileMenu({ workspace }) {
   const { t } = useTranslation()
   const { me, view: country, language, setCountry, setLanguage } = usePreferences()
   const format = useFormat()
   const countries = usePickerOptions()
   const dispatch = useDispatch()
+  const navigate = useNavigate()
+  const { theme, toggle: toggleTheme } = useTheme()
   const [open, setOpen] = useState(null)
+  const [confirmingSignOut, setConfirmingSignOut] = useState(false)
   const toggle = (row) => setOpen((current) => (current === row ? null : row))
   if (!me) return null
   const paid = isPaidPlan(me)
+  const isAdmin = workspace.id === 'admin'
+  const path = (to) => workspacePath(workspace, to)
+
+  function handleSignOut() {
+    setConfirmingSignOut(false)
+    signOut()
+    navigate(workspace.signInPath)
+  }
 
   return (
+    <>
     <Dropdown
       panelClassName={styles.panel}
       trigger={(props) => (
@@ -96,15 +161,32 @@ export default function ProfileMenu({ workspace }) {
             <PlanBadge me={me} />
           </div>
 
-          <div className={styles.body}>
-            <Link to={workspacePath(workspace, workspace.profilePath)} className={styles.row} onClick={close}>
-              <Icon as={Users} size={16} />
-              <span className={styles.rowLabel}>{t('shell:profileMenu.profile')}</span>
-              <Icon as={ChevronRight} size={14} />
-            </Link>
+          <div className={styles.group}>
+            <LinkRow
+              to={path(workspace.profilePath)}
+              icon={workspace.id === 'recruiter' ? Building2 : Users}
+              label={t(workspace.id === 'recruiter' ? 'shell:profileMenu.companyProfile' : 'shell:profileMenu.profile')}
+              onClick={close}
+            />
+            {workspace.id === 'candidate' && <SavedJobsRow workspace={workspace} onClick={close} />}
+            {/* Shortlists are the recruiter's saved candidates (Recruiter Plus; without it the page shows the gate). */}
+            {workspace.id === 'recruiter' && <LinkRow to={path('shortlists')} icon={Bookmark} label={t('shell:nav.shortlists')} onClick={close} />}
+            {!isAdmin && (
+              <LinkRow
+                to={path(workspace.id === 'candidate' ? 'learning#my-courses' : 'settings/courses')}
+                icon={GraduationCap}
+                label={t('shell:profileMenu.myCourses')}
+                onClick={close}
+                data-menu-my-courses
+              />
+            )}
+          </div>
 
-            {/* Candidates and recruiters can replay the first-login product tour. */}
-            {workspace.id !== 'admin' && (
+          {!isAdmin && (
+            <div className={styles.group}>
+              <LinkRow to={path('settings')} icon={Settings} label={t('shell:sidebar.settings')} onClick={close} />
+              <LinkRow to={path('settings/billing')} icon={CreditCard} label={t('shell:profileMenu.billing')} onClick={close} />
+              {/* Candidates and recruiters can replay the first-login product tour. */}
               <button
                 type="button"
                 className={styles.row}
@@ -117,11 +199,13 @@ export default function ProfileMenu({ workspace }) {
                 <span className={styles.rowLabel}>{t('tour:replay')}</span>
                 <Icon as={ChevronRight} size={14} />
               </button>
-            )}
+            </div>
+          )}
 
+          <div className={styles.group}>
             {workspace.showLocation && (
               <>
-                <button type="button" className={cx(styles.row, styles.rowTall)} aria-expanded={open === 'country'} onClick={() => toggle('country')}>
+                <button type="button" className={styles.row} aria-expanded={open === 'country'} onClick={() => toggle('country')}>
                   <Icon as={MapPin} size={16} />
                   <span className={styles.rowLabel}>{t('shell:country.label')}</span>
                   <span className={styles.rowValue}>{country && format.country(country)}</span>
@@ -159,9 +243,41 @@ export default function ProfileMenu({ workspace }) {
                 }}
               />
             )}
+
+            {/* A <label> around the switch: clicking anywhere on the row flips it. */}
+            <label className={styles.row} data-menu-theme>
+              <Icon as={Moon} size={16} />
+              <span className={styles.rowLabel}>{t('shell:profileMenu.darkMode')}</span>
+              <Switch checked={theme === 'dark'} onChange={toggleTheme} label={t('shell:profileMenu.darkMode')} />
+            </label>
+          </div>
+
+          <div className={styles.group}>
+            <LinkRow to={path('help')} icon={CircleHelp} label={t('shell:sidebar.help')} external onClick={close} />
+            <button
+              type="button"
+              className={styles.row}
+              data-menu-sign-out
+              onClick={() => {
+                close()
+                setConfirmingSignOut(true)
+              }}
+            >
+              <Icon as={LogOut} size={16} />
+              <span className={styles.rowLabel}>{t('shell:signOut')}</span>
+            </button>
           </div>
         </div>
       )}
     </Dropdown>
+    <ConfirmDialog
+      open={confirmingSignOut}
+      title={t('shell:signOutConfirm.title')}
+      description={t('shell:signOutConfirm.description')}
+      confirmLabel={t('shell:signOut')}
+      onClose={() => setConfirmingSignOut(false)}
+      onConfirm={handleSignOut}
+    />
+    </>
   )
 }

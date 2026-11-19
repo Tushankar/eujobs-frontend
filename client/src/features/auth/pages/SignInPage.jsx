@@ -93,7 +93,7 @@ export default function SignInPage({ workspace = 'candidate' }) {
             <ResendVerification email={values.email} />
           </FormAlert>
         )}
-        {failureCode && failureCode !== 'EMAIL_UNVERIFIED' && failureCode !== 'VALIDATION_FAILED' && <FormAlert>{errorText.code(failure)}</FormAlert>}
+        {failureCode && failureCode !== 'EMAIL_UNVERIFIED' && failureCode !== 'VALIDATION_FAILED' && <FormAlert title={t('auth:signIn.failedTitle')}>{errorText.code(failure)}</FormAlert>}
         <TextField
           label={t('auth:fields.email')}
           name="email"

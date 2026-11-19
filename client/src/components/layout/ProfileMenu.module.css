@@ -55,10 +55,20 @@
   color: var(--primary-hover);
 }
 
-.body {
+/* The panel grows with the extra rows (2026-11-19) so it rarely scrolls; it still caps at the viewport. */
+.panel {
+  max-height: calc(100dvh - 80px);
+}
+
+/* Rows come in groups split by a thin line (LinkedIn-style account menu). */
+.group {
   display: flex;
   flex-direction: column;
-  padding: 8px;
+  padding: 6px 8px;
+}
+
+.group + .group {
+  border-top: 1px solid var(--border);
 }
 
 .row {
@@ -66,11 +76,12 @@
   align-items: center;
   gap: 8px;
   width: 100%;
-  min-height: 40px;
-  padding: 10px 16px;
+  min-height: 36px;
+  padding: 8px 12px;
   border: 0;
   border-radius: var(--radius-xl);
   background: transparent;
+  cursor: pointer;
   font-size: 12px;
   font-weight: 600;
   line-height: 18px;
@@ -80,11 +91,6 @@
 
 .row:hover {
   background: var(--muted);
-}
-
-/* The Figma Location row is 58.4px tall (Profile and Languages rows are 40px). */
-.rowTall {
-  min-height: 58.4px;
 }
 
 .rowLabel {
@@ -102,7 +108,7 @@
   color: var(--muted-foreground);
 }
 
-.row svg:last-child {
+.row > svg:last-child:not(:first-child) {
   color: var(--muted-foreground);
 }
 

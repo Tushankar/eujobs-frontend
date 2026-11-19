@@ -131,7 +131,12 @@
   },
   "profileMenu": {
     "open": "Abrir el menú de perfil",
-    "profile": "Perfil"
+    "profile": "Perfil",
+    "companyProfile": "Perfil de la empresa",
+    "savedJobs": "Empleos guardados",
+    "myCourses": "Mis cursos",
+    "billing": "Facturación y plan",
+    "darkMode": "Modo oscuro"
   },
   "forbidden": {
     "title": "No tienes acceso a esta página",

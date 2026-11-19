@@ -97,3 +97,8 @@
     grid-template-columns: minmax(0, 1fr);
   }
 }
+
+/* Opened from the avatar menu (#my-courses): clear the sticky app header. */
+#my-courses {
+  scroll-margin-top: 88px;
+}
