@@ -110,7 +110,10 @@
       "blog_updated": "Artículo del blog actualizado: {{title}}",
       "blog_published": "Artículo del blog publicado: {{title}}",
       "blog_unpublished": "Artículo del blog despublicado: {{title}}",
-      "blog_deleted": "Artículo del blog eliminado: {{title}}"
+      "blog_deleted": "Artículo del blog eliminado: {{title}}",
+      "newsletter_created": "Borrador del boletín creado",
+      "newsletter_deleted": "Borrador del boletín eliminado",
+      "newsletter_sent": "Boletín enviado: {{title}} ({{count}} destinatarios)"
     }
   }
 }

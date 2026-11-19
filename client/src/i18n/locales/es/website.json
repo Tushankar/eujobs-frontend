@@ -50,10 +50,11 @@
   },
   "admin": {
     "title": "Sitio web",
-    "description": "El blog y los suscriptores del boletín del sitio web público.",
+    "description": "El blog, el boletín y los suscriptores del sitio público.",
     "tabs": {
       "blog": "Blog",
-      "subscribers": "Suscriptores"
+      "subscribers": "Suscriptores",
+      "newsletter": "Boletín"
     },
     "blog": {
       "new": "Nuevo artículo",
@@ -92,6 +93,59 @@
       },
       "export": "Exportar confirmados (CSV)",
       "caption": "Suscriptores del boletín"
+    },
+    "newsletter": {
+      "new": "Nueva edición",
+      "empty": "Aún no hay ediciones del boletín",
+      "emptyText": "Una edición reúne las ofertas y los artículos más recientes y se envía a todos los suscriptores confirmados.",
+      "subject": "Asunto",
+      "untitled": "Sin título",
+      "items": "{{jobs}} ofertas · {{posts}} artículos",
+      "delivery": "Envío",
+      "deliveryText": "{{sent}} de {{total}} enviados · {{failed}} fallidos",
+      "date": "Fecha",
+      "open": "Ver",
+      "caption": "Ediciones del boletín",
+      "deleteTitle": "¿Eliminar este borrador?",
+      "deleteText": "El borrador se elimina para siempre. No se envió nada.",
+      "statuses": { "draft": "Borrador", "sending": "Enviando", "sent": "Enviado" },
+      "back": "Volver a las ediciones del boletín",
+      "issueTitle": "Edición del boletín",
+      "issueDescription": "Elige las ofertas y los artículos, escribe una breve introducción, revisa la vista previa y envía.",
+      "language": "Idioma",
+      "fallbackHint": "Déjalo vacío para enviar el asunto en inglés a los suscriptores de este idioma.",
+      "intro": "Introducción",
+      "introHint": "Unas frases antes de las ofertas. Deja una línea en blanco entre párrafos. Vacío usa la introducción en inglés.",
+      "jobs": "Ofertas ({{count}} de {{max}})",
+      "posts": "Artículos del blog ({{count}} de {{max}})",
+      "noJobs": "No hay ofertas abiertas para destacar ahora.",
+      "noPosts": "Aún no hay artículos publicados.",
+      "remote": "Remoto",
+      "save": "Guardar borrador",
+      "test": "Enviarme una prueba",
+      "send": "Enviar boletín",
+      "willSend": "Se envía a {{count}} suscriptores confirmados, cada uno en su idioma y con su propio enlace de baja.",
+      "previewNote": "La vista previa y la prueba muestran el borrador guardado; se guarda antes de una prueba o un envío.",
+      "preview": "Vista previa en {{language}}: {{subject}}",
+      "previewTitle": "Vista previa del correo",
+      "progress": "{{sent}} de {{total}} correos enviados.",
+      "failed": "{{count}} no se pudieron entregar.",
+      "sendingNote": "Los correos salen en lotes de 100 por minuto. Puedes salir de esta página.",
+      "confirmTitle": "¿Enviar este boletín?",
+      "confirmText": "Se envía a {{count}} suscriptores confirmados y después no se puede retirar ni editar.",
+      "notice": {
+        "saved": "Borrador guardado.",
+        "test": "Un correo de prueba en {{language}} va de camino.",
+        "sending": "El envío ha comenzado.",
+        "deleted": "El borrador se eliminó."
+      },
+      "errors": {
+        "subject": "Añade primero un asunto en inglés.",
+        "items": "Elige al menos una oferta o un artículo.",
+        "recipients": "Nadie ha confirmado todavía el boletín.",
+        "jobIds": "Una de las ofertas ya no está abierta. Recarga y elige de nuevo.",
+        "postIds": "Uno de los artículos ya no está publicado. Recarga y elige de nuevo."
+      }
     },
     "notice": {
       "published": "«{{title}}» se ha publicado.",

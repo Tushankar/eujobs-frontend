@@ -50,10 +50,11 @@
   },
   "admin": {
     "title": "Site web",
-    "description": "Le blog et les abonnés à la newsletter du site web public.",
+    "description": "Le blog, la newsletter et les abonnés du site public.",
     "tabs": {
       "blog": "Blog",
-      "subscribers": "Abonnés"
+      "subscribers": "Abonnés",
+      "newsletter": "Newsletter"
     },
     "blog": {
       "new": "Nouvel article",
@@ -92,6 +93,59 @@
       },
       "export": "Exporter les confirmés (CSV)",
       "caption": "Abonnés à la newsletter"
+    },
+    "newsletter": {
+      "new": "Nouvelle édition",
+      "empty": "Aucune édition de la newsletter pour l’instant",
+      "emptyText": "Une édition rassemble les offres et articles les plus récents et part vers tous les abonnés confirmés.",
+      "subject": "Objet",
+      "untitled": "Sans titre",
+      "items": "{{jobs}} offres · {{posts}} articles",
+      "delivery": "Envoi",
+      "deliveryText": "{{sent}} sur {{total}} envoyés · {{failed}} échoués",
+      "date": "Date",
+      "open": "Voir",
+      "caption": "Éditions de la newsletter",
+      "deleteTitle": "Supprimer ce brouillon ?",
+      "deleteText": "Le brouillon est supprimé définitivement. Rien n’a été envoyé.",
+      "statuses": { "draft": "Brouillon", "sending": "Envoi en cours", "sent": "Envoyée" },
+      "back": "Retour aux éditions de la newsletter",
+      "issueTitle": "Édition de la newsletter",
+      "issueDescription": "Choisissez les offres et les articles, écrivez une courte introduction, vérifiez l’aperçu et envoyez.",
+      "language": "Langue",
+      "fallbackHint": "Laissez vide pour envoyer l’objet en anglais aux abonnés de cette langue.",
+      "intro": "Introduction",
+      "introHint": "Quelques phrases avant les offres. Laissez une ligne vide entre les paragraphes. Vide : l’introduction en anglais est utilisée.",
+      "jobs": "Offres ({{count}} sur {{max}})",
+      "posts": "Articles du blog ({{count}} sur {{max}})",
+      "noJobs": "Aucune offre ouverte à mettre en avant pour le moment.",
+      "noPosts": "Aucun article publié pour l’instant.",
+      "remote": "À distance",
+      "save": "Enregistrer le brouillon",
+      "test": "M’envoyer un test",
+      "send": "Envoyer la newsletter",
+      "willSend": "Part vers {{count}} abonnés confirmés, chacun dans sa langue, avec son propre lien de désabonnement.",
+      "previewNote": "L’aperçu et le test montrent le brouillon enregistré ; l’enregistrement a lieu avant un test ou un envoi.",
+      "preview": "Aperçu en {{language}} : {{subject}}",
+      "previewTitle": "Aperçu de l’e-mail",
+      "progress": "{{sent}} e-mails sur {{total}} envoyés.",
+      "failed": "{{count}} n’ont pas pu être remis.",
+      "sendingNote": "Les e-mails partent par lots de 100 par minute. Vous pouvez quitter cette page.",
+      "confirmTitle": "Envoyer cette newsletter ?",
+      "confirmText": "Elle part vers {{count}} abonnés confirmés et ne peut ensuite ni être rappelée ni modifiée.",
+      "notice": {
+        "saved": "Brouillon enregistré.",
+        "test": "Un e-mail de test en {{language}} est en route.",
+        "sending": "L’envoi a commencé.",
+        "deleted": "Le brouillon a été supprimé."
+      },
+      "errors": {
+        "subject": "Ajoutez d’abord un objet en anglais.",
+        "items": "Choisissez au moins une offre ou un article.",
+        "recipients": "Personne n’a encore confirmé la newsletter.",
+        "jobIds": "Une des offres n’est plus ouverte. Rechargez et choisissez à nouveau.",
+        "postIds": "Un des articles n’est plus publié. Rechargez et choisissez à nouveau."
+      }
     },
     "notice": {
       "published": "« {{title}} » est publié.",

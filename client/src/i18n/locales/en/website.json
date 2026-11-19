@@ -50,10 +50,11 @@
   },
   "admin": {
     "title": "Website",
-    "description": "The public website’s blog and newsletter subscribers.",
+    "description": "The public website’s blog, newsletter and subscribers.",
     "tabs": {
       "blog": "Blog",
-      "subscribers": "Subscribers"
+      "subscribers": "Subscribers",
+      "newsletter": "Newsletter"
     },
     "blog": {
       "new": "New post",
@@ -92,6 +93,59 @@
       },
       "export": "Export confirmed (CSV)",
       "caption": "Newsletter subscribers"
+    },
+    "newsletter": {
+      "new": "New issue",
+      "empty": "No newsletter issues yet",
+      "emptyText": "An issue collects the newest jobs and blog posts and goes to every confirmed subscriber.",
+      "subject": "Subject",
+      "untitled": "Untitled",
+      "items": "{{jobs}} jobs · {{posts}} posts",
+      "delivery": "Delivery",
+      "deliveryText": "{{sent}} of {{total}} sent · {{failed}} failed",
+      "date": "Date",
+      "open": "View",
+      "caption": "Newsletter issues",
+      "deleteTitle": "Delete this draft?",
+      "deleteText": "The draft is removed for good. Nothing was sent.",
+      "statuses": { "draft": "Draft", "sending": "Sending", "sent": "Sent" },
+      "back": "Back to newsletter issues",
+      "issueTitle": "Newsletter issue",
+      "issueDescription": "Pick the jobs and posts, write a short intro, check the preview and send.",
+      "language": "Language",
+      "fallbackHint": "Leave empty to send the English subject to subscribers in this language.",
+      "intro": "Intro",
+      "introHint": "A few sentences before the jobs. Leave a blank line between paragraphs. Empty uses the English intro.",
+      "jobs": "Jobs ({{count}} of {{max}})",
+      "posts": "Blog posts ({{count}} of {{max}})",
+      "noJobs": "No open jobs to feature right now.",
+      "noPosts": "No published blog posts yet.",
+      "remote": "Remote",
+      "save": "Save draft",
+      "test": "Send a test to me",
+      "send": "Send newsletter",
+      "willSend": "Goes to {{count}} confirmed subscribers, each in their own language, with their own unsubscribe link.",
+      "previewNote": "The preview and the test show the saved draft; saving happens before a test or a send.",
+      "preview": "Preview in {{language}}: {{subject}}",
+      "previewTitle": "Email preview",
+      "progress": "{{sent}} of {{total}} emails sent.",
+      "failed": "{{count}} could not be delivered.",
+      "sendingNote": "Emails go out in batches of 100 a minute. You can leave this page.",
+      "confirmTitle": "Send this newsletter?",
+      "confirmText": "It goes to {{count}} confirmed subscribers and cannot be recalled or edited afterwards.",
+      "notice": {
+        "saved": "Draft saved.",
+        "test": "A test email in {{language}} is on its way to you.",
+        "sending": "Sending has started.",
+        "deleted": "The draft was deleted."
+      },
+      "errors": {
+        "subject": "Add an English subject first.",
+        "items": "Pick at least one job or blog post.",
+        "recipients": "Nobody has confirmed the newsletter yet.",
+        "jobIds": "One of the jobs is no longer open. Reload and pick again.",
+        "postIds": "One of the posts is no longer published. Reload and pick again."
+      }
     },
     "notice": {
       "published": "“{{title}}” is published.",

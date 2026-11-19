@@ -110,7 +110,10 @@
       "blog_updated": "Blog post updated: {{title}}",
       "blog_published": "Blog post published: {{title}}",
       "blog_unpublished": "Blog post unpublished: {{title}}",
-      "blog_deleted": "Blog post deleted: {{title}}"
+      "blog_deleted": "Blog post deleted: {{title}}",
+      "newsletter_created": "Newsletter draft created",
+      "newsletter_deleted": "Newsletter draft deleted",
+      "newsletter_sent": "Newsletter sent: {{title}} ({{count}} recipients)"
     }
   }
 }

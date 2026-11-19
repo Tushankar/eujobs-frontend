@@ -12,7 +12,7 @@ import SegmentedTabs from '@/components/common/SegmentedTabs.jsx'
 import { Button, Checkbox, Icon, Panel, Skeleton, SkeletonRegion, TextareaField, TextField } from '@/components/ui'
 import { useErrorText } from '@/lib/forms.js'
 import { useFormat, usePreferences } from '@/lib/preferences.js'
-import { ISSUE_TONES } from '../components/NewsletterTab.jsx'
+import { ISSUE_TONES } from '../issueTones.js'
 import {
   useGetNewsletterIssueQuery,
   useGetNewsletterOptionsQuery,
@@ -70,7 +70,6 @@ function Editor({ issue }) {
   // The picks and the posts and jobs already in the draft (a pick that left the newest list stays selectable).
   const jobOptions = [...(options?.jobs ?? []), ...issue.jobs.filter((job) => !options?.jobs.some((option) => option.id === job.id))]
   const postOptions = options?.posts ?? []
-  const postTitle = (id) => postOptions.find((post) => post.id === id)
 
   function failure(error) {
     const fields = error?.data?.error?.fields

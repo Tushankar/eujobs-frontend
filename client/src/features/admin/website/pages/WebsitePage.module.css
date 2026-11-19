@@ -148,3 +148,57 @@
   border: 1px solid var(--border);
   border-radius: var(--radius-xl);
 }
+
+/* 2026-11-19: newsletter issue editor: the jobs and posts to pick, and the preview of the email. */
+.picker {
+  min-width: 0;
+  margin: 0;
+  padding: 0;
+  border: 0;
+}
+
+.pickList {
+  display: flex;
+  flex-direction: column;
+  max-height: 320px;
+  margin: 0;
+  padding: 0;
+  overflow-y: auto;
+  border: 1px solid var(--border);
+  border-radius: var(--radius-xl);
+  list-style: none;
+}
+
+.pickList > li {
+  padding: 10px 14px;
+}
+
+.pickList > li + li {
+  border-top: 1px solid var(--border);
+}
+
+.pickTitle {
+  display: block;
+  font-weight: 600;
+  color: var(--foreground);
+}
+
+.sideText {
+  margin: 0;
+  font-size: 14px;
+  line-height: 1.5;
+  color: var(--foreground);
+}
+
+.previewPanel {
+  margin-top: 20px;
+}
+
+.previewFrame {
+  display: block;
+  width: 100%;
+  height: 640px;
+  border: 1px solid var(--border);
+  border-radius: var(--radius-xl);
+  background: #fff;
+}
