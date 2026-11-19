@@ -69,7 +69,8 @@ export default function DeviceSessions() {
 
   const devices = data?.devices ?? []
   const others = devices.filter((row) => !row.current)
-  const history = data?.history ?? []
+  // Owner 2026-11-19: signed-out sessions are not listed (still kept for the data export).
+  const history = (data?.history ?? []).filter((row) => row.status !== 'signed_out')
   const failed = history.filter((row) => row.status === 'failed')
   const rows = filter === 'all' ? history : filter === 'failed' ? failed : history.filter((row) => row.status !== 'failed')
 
