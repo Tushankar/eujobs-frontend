@@ -11,9 +11,8 @@ import { Button, Icon } from '@/components/ui'
 import { useErrorText } from '@/lib/forms.js'
 import { useFormat } from '@/lib/preferences.js'
 import { useCreateNewsletterIssueMutation, useDeleteNewsletterIssueMutation, useGetNewsletterIssuesQuery } from '../api.js'
-import styles from '../pages/WebsitePage.module.css'
-
 import { ISSUE_TONES } from '../issueTones.js'
+import styles from '../pages/WebsitePage.module.css'
 
 /** Website › Newsletter: the issues, newest first. A new issue starts as a draft with the latest jobs and posts (`content.manage`). */
 export default function NewsletterTab({ manage, onNotice }) {
