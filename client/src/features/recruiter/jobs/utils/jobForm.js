@@ -1,9 +1,17 @@
+import { currentRole } from '@/app/roles.js'
 /*
  * Create-a-job wizard model (§3.7, M-033, M-035, M-039, P4-D6 … D8): steps, form values <-> the API body, and the
  * client checks per step, which mirror the server's (limits from GET /meta/config). Form values are strings so
  * inputs stay controlled; the body holds numbers and keys.
  */
-export const JOB_STEPS = ['basics', 'responsibilities', 'required-skills', 'preferred-skills', 'experience', 'location', 'quality', 'review', 'publish']
+const STEPS = ['basics', 'responsibilities', 'required-skills', 'preferred-skills', 'experience', 'location', 'quality', 'review', 'publish']
+
+/** The wizard's steps; an agency (2026-11-20) also sets its terms (client, dates, rate, contract) after the location. */
+export function jobSteps(role = currentRole()) {
+  if (role !== 'agency') return STEPS
+  const at = STEPS.indexOf('location') + 1
+  return [...STEPS.slice(0, at), 'agency', ...STEPS.slice(at)]
+}
 
 export const EMPTY_VALUES = {
   title: '',
@@ -24,6 +32,14 @@ export const EMPTY_VALUES = {
   // A remote job's salary currency (recruiter's choice, 2026-11-16); other jobs pay in their country's currency.
   salaryCurrency: 'EUR',
   visaSponsorship: false,
+  // Agency jobs (2026-11-20): the client, the dates, the pay rate (major units) and the hours per week.
+  clientId: '',
+  showClient: true,
+  startDate: '',
+  endDate: '',
+  rateAmount: '',
+  ratePeriod: 'hour',
+  hoursPerWeek: '',
 }
 
 const toNumber = (text) => (String(text).trim() === '' ? null : Number(String(text).trim()))
@@ -54,8 +70,29 @@ export function jobToValues(job) {
     salaryPeriod: job.salary?.period ?? 'year',
     salaryCurrency: (job.country === 'REMOTE' && job.salary?.currency) || 'EUR',
     visaSponsorship: job.visaSponsorship,
+    clientId: job.agency?.clientId ?? '',
+    showClient: job.agency?.showClient ?? true,
+    startDate: job.agency?.startDate ?? '',
+    endDate: job.agency?.endDate ?? '',
+    rateAmount: job.agency?.rate ? String(job.agency.rate.amountMinor / 100) : '',
+    ratePeriod: job.agency?.rate?.period ?? 'hour',
+    hoursPerWeek: toText(job.agency?.hoursPerWeek),
   }
 }
+
+/** The agency terms of the body (agencies only): the rate goes in minor units. */
+function agencyBody(values) {
+  const rate = String(values.rateAmount).trim()
+  return {
+    clientId: values.clientId || null,
+    showClient: values.showClient,
+    startDate: values.startDate || null,
+    endDate: values.endDate || null,
+    rate: rate && RATE.test(rate) ? { amountMinor: Math.round(Number(rate) * 100), period: values.ratePeriod } : null,
+    hoursPerWeek: toNumber(values.hoursPerWeek),
+  }
+}
+const RATE = /^\d+(\.\d{1,2})?$/
 
 /** Form values -> the job body of POST/PUT /recruiter/jobs. */
 export function valuesToBody(values) {
@@ -77,6 +114,7 @@ export function valuesToBody(values) {
     placeId: !remote && values.place ? values.place.placeId : null,
     remoteCountries: remote ? values.remoteCountries : [],
     salary: min == null && max == null ? null : { min, max, period: values.salaryPeriod, ...(remote && { currency: values.salaryCurrency }) },
+    ...(currentRole() === 'agency' && { agency: agencyBody(values) }),
   }
 }
 
@@ -136,6 +174,22 @@ export function validateStep(step, values, limits, { publishing = false } = {}) 
       errors.salaryMax = { key: 'below_min' }
     }
   }
+  if (step === 'agency') {
+    const A = J.agency
+    need('clientId', !values.clientId)
+    need('startDate', !values.startDate)
+    need('endDate', !values.endDate)
+    if (values.startDate && values.endDate && values.endDate < values.startDate) errors.endDate = { key: 'before_start' }
+    const rate = String(values.rateAmount).trim()
+    if (rate) {
+      if (!RATE.test(rate) || Number(rate) <= 0) errors.rateAmount = { key: 'invalid' }
+      else if (Math.round(Number(rate) * 100) > A.rate.max) errors.rateAmount = { key: 'too_big', params: { max: A.rate.max / 100 } }
+    } else need('rateAmount', true)
+    if (!blank(values.hoursPerWeek)) {
+      const problem = wholeNumber(values.hoursPerWeek, A.hoursPerWeek)
+      if (problem) errors.hoursPerWeek = problem
+    }
+  }
   return errors
 }
 
@@ -143,7 +197,7 @@ export function validateStep(step, values, limits, { publishing = false } = {}) 
 export function validateAll(values, limits) {
   let errors = {}
   let firstStep = -1
-  JOB_STEPS.forEach((step, index) => {
+  jobSteps().forEach((step, index) => {
     const stepErrors = validateStep(step, values, limits, { publishing: true })
     if (firstStep === -1 && Object.keys(stepErrors).length > 0) firstStep = index
     errors = { ...errors, ...stepErrors }
@@ -153,6 +207,18 @@ export function validateAll(values, limits) {
 
 /** A server VALIDATION_FAILED on the job body, as form errors (the body's names map back to the form's). */
 export function bodyErrorsToForm(fields) {
-  const renamed = { 'salary.min': 'salaryMin', 'salary.max': 'salaryMax', 'salary.currency': 'salaryCurrency', salary: 'salaryMin' }
+  const renamed = {
+    'salary.min': 'salaryMin',
+    'salary.max': 'salaryMax',
+    'salary.currency': 'salaryCurrency',
+    salary: 'salaryMin',
+    'agency.clientId': 'clientId',
+    'agency.startDate': 'startDate',
+    'agency.endDate': 'endDate',
+    'agency.rate.amountMinor': 'rateAmount',
+    'agency.rate.currency': 'rateAmount',
+    'agency.hoursPerWeek': 'hoursPerWeek',
+    'agency.contract': 'contract',
+  }
   return Object.fromEntries(Object.entries(fields).map(([field, error]) => [renamed[field] ?? field.split('.')[0], error]))
 }
