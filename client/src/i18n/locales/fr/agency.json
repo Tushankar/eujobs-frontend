@@ -290,7 +290,6 @@
       "offers": "Offres",
       "agencies": "Mes agences"
     },
-    "phasesLabel": "Dates de placement",
     "phases": {
       "running": "En cours",
       "upcoming": "À venir",
@@ -318,21 +317,11 @@
       "accept": "Accepter",
       "decline": "Refuser",
       "after": "Après votre placement comme {{job}}",
-      "accepted": "Vous avez accepté le placement comme {{job}}."
+      "accepted": "Vous avez accepté le placement comme {{job}}.",
+      "agreement_pending": "Acceptez d’abord le dernier accord de {{agency}}, depuis Mes agences.",
+      "not_on_books": "Vous ne faites plus partie du vivier de {{agency}}. Redemandez à le rejoindre depuis Mes agences."
     },
     "empty": {
-      "running": {
-        "title": "Rien en cours",
-        "text": "Les placements apparaissent ici pendant qu’ils se déroulent."
-      },
-      "upcoming": {
-        "title": "Rien à venir",
-        "text": "Les placements confirmés qui n’ont pas encore commencé apparaissent ici."
-      },
-      "over": {
-        "title": "Rien de terminé",
-        "text": "Les placements terminés apparaissent ici."
-      },
       "offers": {
         "title": "Aucune offre",
         "text": "Quand une agence vous propose un autre placement, il apparaît ici pour l’accepter ou le refuser."
@@ -340,6 +329,10 @@
       "agencies": {
         "title": "Aucune agence",
         "text": "Demandez à rejoindre une agence depuis l’une de ses offres, ou acceptez l’invitation d’une agence."
+      },
+      "placements": {
+        "title": "Aucun placement",
+        "text": "Quand une agence vous embauche pour l’une de ses offres, le placement apparaît ici avec ses dates et ses règles."
       }
     },
     "start": {
@@ -403,7 +396,8 @@
       "hours": "Heures",
       "pay": "Rémunération",
       "days_one": "{{count}} jour",
-      "days_other": "{{count}} jours"
+      "days_other": "{{count}} jours",
+      "days_many": "{{count}} jours"
     }
   }
 }

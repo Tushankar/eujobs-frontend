@@ -37,6 +37,8 @@ export const ROUTES = {
     '/candidate/jobs',
     '/candidate/jobs/:job',
     '/candidate/applications',
+    // 2026-11-20 (agencies, phase 5)
+    '/candidate/agencies',
     '/candidate/messages',
     '/candidate/job-alerts',
     '/candidate/profile',

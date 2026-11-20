@@ -290,7 +290,6 @@
       "offers": "Ofertas",
       "agencies": "Mis agencias"
     },
-    "phasesLabel": "Fechas de colocación",
     "phases": {
       "running": "En curso",
       "upcoming": "Próximas",
@@ -318,21 +317,11 @@
       "accept": "Aceptar",
       "decline": "Rechazar",
       "after": "Después de tu colocación como {{job}}",
-      "accepted": "Aceptaste la colocación como {{job}}."
+      "accepted": "Aceptaste la colocación como {{job}}.",
+      "agreement_pending": "Acepta primero el último acuerdo de {{agency}}, desde Mis agencias.",
+      "not_on_books": "Ya no estás en la cartera de {{agency}}. Pide unirte de nuevo desde Mis agencias."
     },
     "empty": {
-      "running": {
-        "title": "Nada en curso",
-        "text": "Las colocaciones aparecen aquí mientras duran."
-      },
-      "upcoming": {
-        "title": "Nada próximo",
-        "text": "Las colocaciones confirmadas que aún no han empezado aparecen aquí."
-      },
-      "over": {
-        "title": "Nada terminado aún",
-        "text": "Las colocaciones que han terminado aparecen aquí."
-      },
       "offers": {
         "title": "Sin ofertas",
         "text": "Cuando una agencia te ofrezca otra colocación, aparecerá aquí para aceptarla o rechazarla."
@@ -340,6 +329,10 @@
       "agencies": {
         "title": "Aún no hay agencias",
         "text": "Pide unirte a una agencia desde uno de sus empleos, o acepta la invitación de una agencia."
+      },
+      "placements": {
+        "title": "Aún no hay colocaciones",
+        "text": "Cuando una agencia te contrate para uno de sus empleos, la colocación aparecerá aquí con sus fechas y reglas."
       }
     },
     "start": {
@@ -403,7 +396,8 @@
       "hours": "Horas",
       "pay": "Pago",
       "days_one": "{{count}} día",
-      "days_other": "{{count}} días"
+      "days_other": "{{count}} días",
+      "days_many": "{{count}} días"
     }
   }
 }

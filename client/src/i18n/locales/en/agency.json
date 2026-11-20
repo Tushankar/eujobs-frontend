@@ -287,7 +287,6 @@
       "offers": "Offers",
       "agencies": "My agencies"
     },
-    "phasesLabel": "Placement dates",
     "phases": {
       "running": "Running",
       "upcoming": "Upcoming",
@@ -315,21 +314,11 @@
       "accept": "Accept",
       "decline": "Decline",
       "after": "After your placement as {{job}}",
-      "accepted": "You accepted the placement as {{job}}."
+      "accepted": "You accepted the placement as {{job}}.",
+      "agreement_pending": "Agree to {{agency}}’s latest agreement first, from My agencies.",
+      "not_on_books": "You are no longer on {{agency}}’s books. Ask to join again from My agencies."
     },
     "empty": {
-      "running": {
-        "title": "Nothing running",
-        "text": "Placements show here while they run."
-      },
-      "upcoming": {
-        "title": "Nothing upcoming",
-        "text": "Confirmed placements that have not started yet show here."
-      },
-      "over": {
-        "title": "Nothing over yet",
-        "text": "Placements that have ended show here."
-      },
       "offers": {
         "title": "No offers",
         "text": "When an agency offers you another placement, it shows here to accept or decline."
@@ -337,6 +326,10 @@
       "agencies": {
         "title": "No agencies yet",
         "text": "Ask to join an agency from one of its jobs, or accept an agency’s invitation."
+      },
+      "placements": {
+        "title": "No placements yet",
+        "text": "When an agency hires you for one of its jobs, the placement shows here with its dates and rules."
       }
     },
     "start": {
