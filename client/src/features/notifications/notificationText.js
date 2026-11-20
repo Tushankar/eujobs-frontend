@@ -1,3 +1,4 @@
+import { isHiring } from '@/app/roles.js'
 import { useTranslation } from 'react-i18next'
 import {
   BadgeCheck,
@@ -104,9 +105,9 @@ export function useNotificationText() {
         return params.paused ? t('notifications:types.plan_ended_paused', { ...values, count: params.paused }) : t('notifications:types.plan_ended', values)
       // §3.23: the candidate reads the company, the recruiter the candidate; a reminder says how soon.
       case 'interview_confirmed':
-        return t(`notifications:types.${type}.${me?.role === 'recruiter' ? 'recruiter' : 'candidate'}`, values)
+        return t(`notifications:types.${type}.${isHiring(me?.role) ? 'recruiter' : 'candidate'}`, values)
       case 'interview_reminder':
-        return t(`notifications:types.${type}.${me?.role === 'recruiter' ? 'recruiter' : 'candidate'}`, { ...values, count: params.hours })
+        return t(`notifications:types.${type}.${isHiring(me?.role) ? 'recruiter' : 'candidate'}`, { ...values, count: params.hours })
       case 'interview_offered':
         return t(`notifications:types.${type}.${params.rescheduled ? 'rescheduled' : 'new'}`, values)
       // 2026-11-17: an OpenAI or Google Places budget at 80 % (warning) or used up (paused); amounts are USD.

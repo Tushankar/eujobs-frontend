@@ -1,4 +1,4 @@
-import { hiringPath } from '@/app/roles.js'
+import { HIRING_ROLES, hiringPath } from '@/app/roles.js'
 import { useTranslation } from 'react-i18next'
 import { Link } from 'react-router-dom'
 import { useDispatch } from 'react-redux'
@@ -86,7 +86,7 @@ export default function CandidateCard({ candidate, hasJob, jobId, locked, onTogg
 
       <div className={styles.footer}>
         {locked ? (
-          <PlanButton variant="ghost" size="sm" entitlement="discovery" roles={['recruiter']} aria-label={t('discovery:compare.toggle', { name: candidate.fullName })}>
+          <PlanButton variant="ghost" size="sm" entitlement="discovery" roles={HIRING_ROLES} aria-label={t('discovery:compare.toggle', { name: candidate.fullName })}>
             {t('discovery:compare.label')}
           </PlanButton>
         ) : (

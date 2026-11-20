@@ -1,3 +1,4 @@
+import { isHiring } from '@/app/roles.js'
 import { useTranslation } from 'react-i18next'
 import { useFormat, usePreferences } from '@/lib/preferences.js'
 
@@ -12,6 +13,6 @@ export function useWhen() {
   return (startAt, minutes, otherTimeZone) => {
     const text = `${format.dateTime(startAt, { zone: true })} · ${t('interviews:minutes', { count: minutes })}`
     const other = otherTimeZone && format.otherZone(startAt, otherTimeZone)
-    return other ? `${text} · ${t(`interviews:otherTime.${me?.role === 'recruiter' ? 'recruiter' : 'candidate'}`, { time: other })}` : text
+    return other ? `${text} · ${t(`interviews:otherTime.${isHiring(me?.role) ? 'recruiter' : 'candidate'}`, { time: other })}` : text
   }
 }

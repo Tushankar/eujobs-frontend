@@ -1,3 +1,4 @@
+import { HIRING_ROLES } from '@/app/roles.js'
 import { api } from '@/app/api.js'
 import { lacksEntitlement } from '@/features/candidate/billing/usePlan.js'
 import { usePreferences } from '@/lib/preferences.js'
@@ -41,6 +42,6 @@ export const {
 export function usePublishLock() {
   const { me } = usePreferences()
   const { data } = useGetRecruiterJobsQuery()
-  const lacks = lacksEntitlement(me, 'jobs_unlimited', ['recruiter'])
+  const lacks = lacksEntitlement(me, 'jobs_unlimited', HIRING_ROLES)
   return (jobId) => lacks && (data?.items ?? []).some((job) => job.status === 'published' && job.id !== jobId)
 }

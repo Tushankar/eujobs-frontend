@@ -1,3 +1,4 @@
+import { HIRING_ROLES } from '@/app/roles.js'
 import PlanButton from '@/features/candidate/billing/components/PlanButton.jsx'
 
 const LOCKED = { 'data-ai-locked': true }
@@ -7,5 +8,5 @@ const LOCKED = { 'data-ai-locked': true }
  * lock and opens the upgrade dialog, so a Free user never meets a button that fails; everyone else gets the action.
  */
 export default function AiButton(props) {
-  return <PlanButton entitlement="ai" roles={['candidate', 'recruiter']} lockedProps={LOCKED} {...props} />
+  return <PlanButton entitlement="ai" roles={['candidate', ...HIRING_ROLES]} lockedProps={LOCKED} {...props} />
 }

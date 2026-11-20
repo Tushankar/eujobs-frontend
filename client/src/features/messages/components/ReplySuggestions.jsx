@@ -1,3 +1,4 @@
+import { HIRING_ROLES } from '@/app/roles.js'
 import { useTranslation } from 'react-i18next'
 import { Sparkles } from 'lucide-react'
 import { Icon, Skeleton, SkeletonRegion } from '@/components/ui'
@@ -7,7 +8,7 @@ import { usePreferences } from '@/lib/preferences.js'
 import { useGetReplySuggestionsQuery } from '../api.js'
 import styles from './ReplySuggestions.module.css'
 
-const ROLES = ['candidate', 'recruiter']
+const ROLES = ['candidate', ...HIRING_ROLES]
 const BONES = [220, 260, 190]
 
 /** The AI replies to the latest message; a pick goes into the composer through `onPick({ text })`. */

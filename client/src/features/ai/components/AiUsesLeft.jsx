@@ -1,3 +1,4 @@
+import { HIRING_ROLES } from '@/app/roles.js'
 import { useTranslation } from 'react-i18next'
 import { usePreferences } from '@/lib/preferences.js'
 import { cx } from '@/utils/cx.js'
@@ -11,7 +12,7 @@ import styles from './AiStatus.module.css'
 export default function AiUsesLeft({ className }) {
   const { t } = useTranslation('ai')
   const { me } = usePreferences()
-  const eligible = ['candidate', 'recruiter'].includes(me?.role) && me.entitlements?.includes('ai')
+  const eligible = ['candidate', ...HIRING_ROLES].includes(me?.role) && me.entitlements?.includes('ai')
   const { data } = useGetAiUsageQuery(undefined, { skip: !eligible })
   if (!eligible || !data) return null
   return (

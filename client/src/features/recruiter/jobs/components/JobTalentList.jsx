@@ -1,4 +1,4 @@
-import { hiringPath } from '@/app/roles.js'
+import { HIRING_ROLES, hiringPath } from '@/app/roles.js'
 import { useTranslation } from 'react-i18next'
 import { Link } from 'react-router-dom'
 import { ArrowUpRight } from 'lucide-react'
@@ -18,7 +18,7 @@ const SKELETON_ROWS = 3
 export default function JobTalentList({ jobId }) {
   const { t } = useTranslation()
   const { me } = usePreferences()
-  const locked = lacksEntitlement(me, 'discovery', ['recruiter'])
+  const locked = lacksEntitlement(me, 'discovery', HIRING_ROLES)
   const { data, isLoading } = useGetRelevantTalentQuery(jobId, { skip: !me || locked })
   const talent = data?.items ?? []
   return (
@@ -27,7 +27,7 @@ export default function JobTalentList({ jobId }) {
       {locked ? (
         <div className={styles.locked}>
           <p className={styles.empty}>{t('discovery:locked.talent')}</p>
-          <PlanButton variant="outline" size="sm" entitlement="discovery" roles={['recruiter']}>
+          <PlanButton variant="outline" size="sm" entitlement="discovery" roles={HIRING_ROLES}>
             {t('discovery:locked.seeCandidates')}
           </PlanButton>
         </div>

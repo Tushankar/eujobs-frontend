@@ -1,3 +1,4 @@
+import { isHiring } from '@/app/roles.js'
 import { useTranslation } from 'react-i18next'
 import { useDispatch, useSelector } from 'react-redux'
 import { closeUpgrade } from '@/app/upgrade.js'
@@ -15,7 +16,7 @@ export default function UpgradeDialog() {
   const dispatch = useDispatch()
   const { me } = usePreferences()
   const { open, entitlement } = useSelector((state) => state.upgrade)
-  const keys = me?.role === 'recruiter' ? { needs: 'recruiter.upgradeNeeds', all: 'recruiter.upgradeDescription' } : { needs: 'upgrade.needs', all: 'upgrade.description' }
+  const keys = isHiring(me?.role) ? { needs: 'recruiter.upgradeNeeds', all: 'recruiter.upgradeDescription' } : { needs: 'upgrade.needs', all: 'upgrade.description' }
   const description = entitlement ? t(keys.needs, { feature: t(`enums:entitlement.${entitlement}`) }) : t(keys.all)
   // P11d-Q9: the dialog lists what the plan includes, from its plan record.
   const { plus } = usePlan()

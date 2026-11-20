@@ -1,3 +1,4 @@
+import { HIRING_ROLES } from '@/app/roles.js'
 import { useState } from 'react'
 import { useTranslation } from 'react-i18next'
 import { CalendarPlus } from 'lucide-react'
@@ -19,7 +20,7 @@ export default function ScheduleInterviewButton({ application, compact = false }
     <>
       <PlanButton
         entitlement="interviews"
-        roles={['recruiter']}
+        roles={HIRING_ROLES}
         variant={compact ? 'ghost' : 'outline'}
         size="sm"
         leftIcon={<Icon as={CalendarPlus} size={14} />}

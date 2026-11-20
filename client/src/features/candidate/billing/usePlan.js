@@ -1,9 +1,11 @@
+import { HIRING_ROLES, isHiring } from '@/app/roles.js'
 import { useGetCountriesQuery } from '@/app/api.js'
 import { usePreferences } from '@/lib/preferences.js'
 import { useGetPlansQuery } from './api.js'
 
-/** The Checkout item of each role's paid plan: Plus (M-124) and Recruiter Plus (§3.22). */
-export const planItem = (role) => ({ kind: 'subscription', itemId: role === 'recruiter' ? 'recruiter_plus' : 'plus' })
+/** The Checkout item of each role's paid plan: Plus (M-124), Recruiter Plus (§3.22) and Agency Plus (2026-11-20). */
+const PAID_PLAN = { recruiter: 'recruiter_plus', agency: 'agency_plus' }
+export const planItem = (role) => ({ kind: 'subscription', itemId: PAID_PLAN[role] ?? 'plus' })
 
 /**
  * True when `me` has one of `roles` and lacks the entitlement (M-118 lock chips, §3.22). Entitlement keys belong to
@@ -18,10 +20,11 @@ export const lacksEntitlement = (me, entitlement, roles = ['candidate']) => role
  */
 export function usePlan() {
   const { me } = usePreferences()
-  const recruiter = me?.role === 'recruiter'
+  // Recruiters and agencies pay in the company country's currency, which the server picks.
+  const recruiter = isHiring(me?.role)
   const { data: countries, isLoading: countriesLoading } = useGetCountriesQuery(undefined, { skip: recruiter })
   const currency = recruiter ? undefined : (countries?.find((country) => country.code === me?.pickerCountry)?.currency ?? 'EUR')
-  const { data: plans = [], isLoading: plansLoading } = useGetPlansQuery(currency, { skip: !['candidate', 'recruiter'].includes(me?.role) || (!recruiter && !countries) })
+  const { data: plans = [], isLoading: plansLoading } = useGetPlansQuery(currency, { skip: !['candidate', ...HIRING_ROLES].includes(me?.role) || (!recruiter && !countries) })
   const item = planItem(me?.role)
   const plus = plans.find((plan) => plan.key === item.itemId)
   const free = plans.find((plan) => plan !== plus)

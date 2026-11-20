@@ -1,3 +1,4 @@
+import { HIRING_ROLES } from '@/app/roles.js'
 import { useTranslation } from 'react-i18next'
 import { useFormat, usePreferences } from '@/lib/preferences.js'
 import { cx } from '@/utils/cx.js'
@@ -31,7 +32,7 @@ function LimitRow({ label, used, limit, resetAt, ...rest }) {
 export default function AiUsageToday() {
   const { t } = useTranslation('ai')
   const { me } = usePreferences()
-  const eligible = ['candidate', 'recruiter'].includes(me?.role) && me.entitlements?.includes('ai')
+  const eligible = ['candidate', ...HIRING_ROLES].includes(me?.role) && me.entitlements?.includes('ai')
   const { data } = useGetAiUsageQuery(undefined, { skip: !eligible, refetchOnMountOrArgChange: true })
   if (!eligible || !data) return null
   // CV features are the candidate's own; a recruiter sees only the daily uses.

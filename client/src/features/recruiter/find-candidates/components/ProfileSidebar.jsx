@@ -1,3 +1,4 @@
+import { HIRING_ROLES } from '@/app/roles.js'
 import { useTranslation } from 'react-i18next'
 import { Bookmark, ShieldCheck } from 'lucide-react'
 import { Icon, Panel, SelectField, Skeleton, SkeletonRegion } from '@/components/ui'
@@ -69,7 +70,7 @@ export default function ProfileSidebar({ candidate, jobs, job, onJobChange, onTo
           {/* §3.22: the shortlist needs Recruiter Plus (`discovery`). */}
           <PlanButton
             entitlement="discovery"
-            roles={['recruiter']}
+            roles={HIRING_ROLES}
             variant="outline"
             fullWidth
             leftIcon={<Icon as={Bookmark} size={14} strokeWidth={2} />}

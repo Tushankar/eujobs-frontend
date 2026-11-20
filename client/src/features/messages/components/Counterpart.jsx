@@ -1,3 +1,4 @@
+import { isHiring } from '@/app/roles.js'
 import { useTranslation } from 'react-i18next'
 import { Avatar, CompanyLogo } from '@/components/ui'
 import styles from './Counterpart.module.css'
@@ -10,7 +11,7 @@ export default function Counterpart({ conversation, role, size = 40 }) {
   const { t } = useTranslation()
   const { counterpart, job } = conversation
   const name = counterpart?.name ?? t('messages:deletedUser')
-  const details = [role === 'recruiter' ? counterpart?.headline : null, job?.title && t('messages:about', { job: job.title })].filter(Boolean).join(' · ')
+  const details = [isHiring(role) ? counterpart?.headline : null, job?.title && t('messages:about', { job: job.title })].filter(Boolean).join(' · ')
   return (
     <span className={styles.root}>
       {role === 'candidate' ? (

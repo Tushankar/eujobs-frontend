@@ -1,4 +1,4 @@
-import { hiringBase } from '@/app/roles.js'
+import { hiringBase, isHiring } from '@/app/roles.js'
 import { useState } from 'react'
 import { useTranslation } from 'react-i18next'
 import { useDispatch, useSelector } from 'react-redux'
@@ -40,7 +40,7 @@ function useContent() {
   const format = useFormat()
   const { me } = usePreferences()
   return ({ kind, params }) => {
-    const role = me?.role === 'recruiter' ? 'recruiter' : 'candidate'
+    const role = isHiring(me?.role) ? 'recruiter' : 'candidate'
     const values = {
       ...params,
       plan: params.planKey ? t(`enums:planKey.${params.planKey}`) : '',

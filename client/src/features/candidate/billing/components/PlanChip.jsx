@@ -12,7 +12,7 @@ import styles from './PlanChip.module.css'
 export default function PlanChip({ className }) {
   const { t } = useTranslation()
   const { me } = usePreferences()
-  const plan = t(`enums:planKey.${me?.role === 'recruiter' ? 'recruiter_plus' : 'plus'}`)
+  const plan = t(`enums:planKey.${planItem(me?.role).itemId}`)
   const label = t('shell:nav.planLocked', { plan })
   return (
     <span className={cx(styles.chip, className)} data-plan-chip title={label}>

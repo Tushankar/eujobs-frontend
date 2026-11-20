@@ -1,3 +1,4 @@
+import { HIRING_ROLES } from '@/app/roles.js'
 import { useEffect, useState } from 'react'
 import { useTranslation } from 'react-i18next'
 import { useSearchParams } from 'react-router-dom'
@@ -19,7 +20,7 @@ import styles from '../pages/FindCandidatesPage.module.css'
 const MAX_COMPARED = 3
 const SORTS = ['recommended', 'experience', 'name']
 const DEBOUNCE_MS = 300
-const RECRUITER = ['recruiter']
+const RECRUITER = HIRING_ROLES
 const SKELETON_CARDS = 6
 
 /**

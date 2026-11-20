@@ -1,3 +1,4 @@
+import { HIRING_ROLES } from '@/app/roles.js'
 import { useId, useState } from 'react'
 import { useTranslation } from 'react-i18next'
 import { Check, ChevronDown, ChevronRight, ChevronUp } from 'lucide-react'
@@ -76,7 +77,7 @@ function MatchDetails({ candidate, jobId, id }) {
         </div>
       )}
       {jobId &&
-        (lacksEntitlement(me, 'ai', ['recruiter']) ? (
+        (lacksEntitlement(me, 'ai', HIRING_ROLES) ? (
           <AiButton variant="outline" size="sm">
             {t('discovery:match.aiNarrative')}
           </AiButton>

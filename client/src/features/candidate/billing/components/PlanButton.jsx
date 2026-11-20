@@ -19,7 +19,7 @@ export default function PlanButton({ entitlement, roles = ['candidate'], when = 
     return (
       <Button {...props} {...lockedProps} leftIcon={<Icon as={Lock} size={13} />} onClick={() => dispatch(openUpgrade(entitlement))} data-plan-locked={entitlement}>
         {children}
-        <span className="sr-only"> · {t(`enums:planKey.${me.role === 'recruiter' ? 'recruiter_plus' : 'plus'}`)}</span>
+        <span className="sr-only"> · {t(`enums:planKey.${planItem(me.role).itemId}`)}</span>
       </Button>
     )
   }

@@ -1,3 +1,4 @@
+import { isHiring } from '@/app/roles.js'
 import { useState } from 'react'
 import { useTranslation } from 'react-i18next'
 import { useDispatch } from 'react-redux'
@@ -157,7 +158,7 @@ export default function ProfileMenu({ workspace }) {
             {/* A paid plan (Plus, Recruiter Plus) shows as the premium badge; Free stays a text line. */}
             {!(me.role === 'candidate' && paid) && <p className={styles.role}>{identitySubtitle(me, t)}</p>}
             {/* P11c-Q19: a recruiter's plan (Free or Recruiter Plus) under the company. */}
-            {me.role === 'recruiter' && !paid && <p className={styles.role} data-recruiter-plan>{t(`enums:planKey.${me.plan}`)}</p>}
+            {isHiring(me.role) && !paid && <p className={styles.role} data-recruiter-plan>{t(`enums:planKey.${me.plan}`)}</p>}
             <PlanBadge me={me} />
           </div>
 

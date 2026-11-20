@@ -1,3 +1,4 @@
+import { HIRING_ROLES, sideOf } from '@/app/roles.js'
 import { useEffect, useState } from 'react'
 import { useTranslation } from 'react-i18next'
 import { useDispatch } from 'react-redux'
@@ -73,7 +74,8 @@ export default function InterviewCard({ interview, counterpartName }) {
   const when = useWhen()
   const now = useNow()
   const { data: config } = useGetConfigQuery()
-  const role = me.role
+  // Agencies see the hiring side's texts.
+  const role = sideOf(me.role)
   const recruiter = role === 'recruiter'
   const [dialog, setDialog] = useState(null)
   const [choice, setChoice] = useState(null)
@@ -92,7 +94,7 @@ export default function InterviewCard({ interview, counterpartName }) {
   const pickable = (slot) => new Date(slot.startAt).getTime() - now >= cutoff
   const started = interview.startAt && new Date(interview.startAt).getTime() <= now
   const open = joinOpen(interview, now)
-  const plusProps = { entitlement: 'interviews', roles: ['recruiter'] }
+  const plusProps = { entitlement: 'interviews', roles: HIRING_ROLES }
   const noteMax = config?.limits.interviews.note.max ?? 500
   const close = () => setDialog(null)
 

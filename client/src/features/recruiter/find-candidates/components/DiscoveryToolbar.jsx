@@ -1,3 +1,4 @@
+import { HIRING_ROLES } from '@/app/roles.js'
 import { useMemo, useState } from 'react'
 import { useTranslation } from 'react-i18next'
 import { Search, SlidersHorizontal } from 'lucide-react'
@@ -34,7 +35,7 @@ export default function DiscoveryToolbar({ locked, jobsLoading, query, onQueryCh
   )
 
   if (locked) {
-    const lock = { variant: 'outline', entitlement: 'discovery', roles: ['recruiter'] }
+    const lock = { variant: 'outline', entitlement: 'discovery', roles: HIRING_ROLES }
     return (
       <Panel padding={16}>
         <div className={styles.row}>

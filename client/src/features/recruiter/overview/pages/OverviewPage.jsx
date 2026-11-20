@@ -1,4 +1,4 @@
-import { hiringPath } from '@/app/roles.js'
+import { HIRING_ROLES, hiringPath } from '@/app/roles.js'
 import { useState } from 'react'
 import { useTranslation } from 'react-i18next'
 import { Link } from 'react-router-dom'
@@ -42,7 +42,7 @@ export default function OverviewPage() {
   const { data: me } = useGetMeQuery()
   const { data: overview, isLoading: overviewLoading } = useGetRecruiterOverviewQuery()
   // P11c-Q15: the talent list needs Recruiter Plus; its count (Recommended candidates) stays.
-  const talentLocked = lacksEntitlement(me, 'discovery', ['recruiter'])
+  const talentLocked = lacksEntitlement(me, 'discovery', HIRING_ROLES)
   const { data: talent, isLoading: talentLoading } = useGetTalentQuery(undefined, { skip: !me || talentLocked })
   const { data: jobs, isLoading: jobsLoading } = useGetRecruiterJobsQuery()
   const toggleShortlist = useShortlistToggle()
@@ -95,7 +95,7 @@ export default function OverviewPage() {
       {talentLocked ? (
         <div className={styles.talentLocked}>
           <p className={styles.talentEmpty}>{t('discovery:locked.talent')}</p>
-          <PlanButton variant="outline" size="sm" entitlement="discovery" roles={['recruiter']}>
+          <PlanButton variant="outline" size="sm" entitlement="discovery" roles={HIRING_ROLES}>
             {t('discovery:locked.seeCandidates')}
           </PlanButton>
         </div>

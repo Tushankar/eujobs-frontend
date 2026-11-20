@@ -1,3 +1,4 @@
+import { HIRING_ROLES } from '@/app/roles.js'
 import { useDispatch } from 'react-redux'
 import { celebrate } from '@/app/celebrate.js'
 import { lacksEntitlement } from '@/features/candidate/billing/usePlan.js'
@@ -35,7 +36,7 @@ export function useMoveTo() {
   const { me } = usePreferences()
   const dispatch = useDispatch()
   const [move] = useMoveApplicationMutation()
-  const canSchedule = !lacksEntitlement(me, 'interviews', ['recruiter'])
+  const canSchedule = !lacksEntitlement(me, 'interviews', HIRING_ROLES)
   return async (application, stageId, to, candidateName) => {
     await move({ id: application.id, stageId }).unwrap()
     setPrompt(to === 'interview' && !application.interview?.active && canSchedule ? { kind: 'schedule', application } : null)

@@ -1,3 +1,4 @@
+import { HIRING_ROLES } from '@/app/roles.js'
 import { useEffect, useRef, useState } from 'react'
 import { useTranslation } from 'react-i18next'
 import { ArrowLeft, ArrowRight, Check } from 'lucide-react'
@@ -179,7 +180,7 @@ export default function JobWizard({ initialValues, initialStep = 0, reachable = 
                   <PlanButton
                     key={action.id}
                     entitlement="jobs_unlimited"
-                    roles={['recruiter']}
+                    roles={HIRING_ROLES}
                     when={Boolean(action.locked)}
                     variant={index === finishActions.length - 1 ? 'primary' : 'secondary'}
                     loading={busy}

@@ -1,3 +1,4 @@
+import { isHiring } from '@/app/roles.js'
 import { useState } from 'react'
 import { useTranslation } from 'react-i18next'
 import { MessageSquareText } from 'lucide-react'
@@ -40,7 +41,7 @@ export default function ApplicationStageSelect({ application, candidateName, job
   const { me } = usePreferences()
   const { data: config } = useGetConfigQuery()
   // Recruiters may always message their applicants (message_send gates candidates only).
-  const canMessage = me?.role === 'recruiter'
+  const canMessage = isHiring(me?.role)
   const activeInterview = application.interview?.active ? application.interview : null
 
   if (application.status === 'withdrawn') return <PillBadge tone="neutral">{t('applications:recruiter.withdrawn')}</PillBadge>

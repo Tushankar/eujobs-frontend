@@ -1,3 +1,4 @@
+import { HIRING_ROLES } from '@/app/roles.js'
 import { useState } from 'react'
 import { useTranslation } from 'react-i18next'
 import { useOutletContext } from 'react-router-dom'
@@ -164,7 +165,7 @@ export default function CandidateResumePage() {
           {/* §3.22: CV requests need Recruiter Plus (`outreach`). */}
           <PlanButton
             entitlement="outreach"
-            roles={['recruiter']}
+            roles={HIRING_ROLES}
             variant="outline"
             disabled={pending}
             leftIcon={<Icon as={Clock} size={13} strokeWidth={2} />}

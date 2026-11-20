@@ -1,4 +1,4 @@
-import { hiringPath } from '@/app/roles.js'
+import { HIRING_ROLES, hiringPath } from '@/app/roles.js'
 import { useState } from 'react'
 import { useTranslation } from 'react-i18next'
 import { useDispatch } from 'react-redux'
@@ -123,7 +123,7 @@ export default function JobsTable({ jobs, sort, onSort, caption, loading = false
   const errorText = useErrorText()
   const jobText = useJobText()
   const { me } = usePreferences()
-  const lacksDiscovery = lacksEntitlement(me, 'discovery', ['recruiter'])
+  const lacksDiscovery = lacksEntitlement(me, 'discovery', HIRING_ROLES)
   const dispatch = useDispatch()
   const publishLocked = usePublishLock()
   const [setJobStatus] = useSetJobStatusMutation()
@@ -204,7 +204,7 @@ export default function JobsTable({ jobs, sort, onSort, caption, loading = false
                 <td className={styles.td} data-label={t('jobs:table.candidates')}>
                   {/* P11c-Q15: the count stays; opening the list needs Recruiter Plus. */}
                   {lacksDiscovery ? (
-                    <PlanButton variant="ghost" size="sm" entitlement="discovery" roles={['recruiter']}>
+                    <PlanButton variant="ghost" size="sm" entitlement="discovery" roles={HIRING_ROLES}>
                       {t('jobs:table.relevant', { count: job.relevantCount })}
                     </PlanButton>
                   ) : (

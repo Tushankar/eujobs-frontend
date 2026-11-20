@@ -1,3 +1,4 @@
+import { isHiring } from '@/app/roles.js'
 import { useEffect, useRef, useState } from 'react'
 import { useTranslation } from 'react-i18next'
 import { useDispatch } from 'react-redux'
@@ -124,7 +125,7 @@ export default function ThreadPage() {
       <Panel padding={0} className={styles.thread}>
         <header className={cx(styles.header, styles.headerRow)}>
           <Counterpart conversation={data.conversation} role={me.role} size={44} />
-          {me.role === 'recruiter' && !data.conversation.closed && <RecruiterThreadActions applications={data.cards?.activeApplications} />}
+          {isHiring(me.role) && !data.conversation.closed && <RecruiterThreadActions applications={data.cards?.activeApplications} />}
         </header>
         <ol className={styles.messages} aria-label={t('messages:thread.messages')}>
           {data.items.map((message) => (
@@ -178,7 +179,7 @@ export default function ThreadPage() {
             <>
               <ReplySuggestions conversationId={conversationId} lastMessage={lastText} onPick={setDraft} />
               {/* 2026-11-17: a recruiter can also have AI draft a full reply. */}
-              {me.role === 'recruiter' && <AiDraftButton request={{ purpose: 'reply', conversationId }} onDraft={(text) => setDraft({ text })} />}
+              {isHiring(me.role) && <AiDraftButton request={{ purpose: 'reply', conversationId }} onDraft={(text) => setDraft({ text })} />}
               <MessageForm
                 submitLabel={t('messages:thread.send')}
                 placeholder={t('messages:form.placeholder')}

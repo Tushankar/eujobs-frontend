@@ -1,3 +1,4 @@
+import { HIRING_ROLES } from '@/app/roles.js'
 import { useState } from 'react'
 import { useTranslation } from 'react-i18next'
 import { CalendarClock, CalendarPlus, FileText } from 'lucide-react'
@@ -48,10 +49,10 @@ export function RecruiterThreadActions({ applications }) {
   if (!applications?.length) return null
   return (
     <div className={styles.actions}>
-      <PlanButton entitlement="interviews" roles={['recruiter']} variant="outline" size="sm" leftIcon={<Icon as={CalendarPlus} size={14} />} onClick={() => setOpen('interview')} data-schedule-interview>
+      <PlanButton entitlement="interviews" roles={HIRING_ROLES} variant="outline" size="sm" leftIcon={<Icon as={CalendarPlus} size={14} />} onClick={() => setOpen('interview')} data-schedule-interview>
         {t('interviews:thread.schedule')}
       </PlanButton>
-      <PlanButton entitlement="interviews" roles={['recruiter']} variant="outline" size="sm" leftIcon={<Icon as={FileText} size={14} />} onClick={() => setOpen('documents')} data-request-documents>
+      <PlanButton entitlement="interviews" roles={HIRING_ROLES} variant="outline" size="sm" leftIcon={<Icon as={FileText} size={14} />} onClick={() => setOpen('documents')} data-request-documents>
         {t('interviews:thread.requestDocuments')}
       </PlanButton>
       {open === 'interview' && <OfferDialog applications={applications} onClose={() => setOpen(null)} />}

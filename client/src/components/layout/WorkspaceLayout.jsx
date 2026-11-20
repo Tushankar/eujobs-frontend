@@ -1,3 +1,4 @@
+import { HIRING_ROLES } from '@/app/roles.js'
 import { useRef, useState } from 'react'
 import { useTranslation } from 'react-i18next'
 import { useSelector } from 'react-redux'
@@ -72,7 +73,7 @@ export default function WorkspaceLayout({ workspaceId }) {
         </main>
       </div>
       <LegalAcceptDialog />
-      {['candidate', 'recruiter'].includes(workspaceId) && (
+      {['candidate', ...HIRING_ROLES].includes(workspaceId) && (
         <>
           <UpgradeDialog />
           {/* P11d-A6: the interview prompts of a stage move, outside the row that moved. */}

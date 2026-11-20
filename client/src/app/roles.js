@@ -7,6 +7,8 @@ import { store } from './store.js'
  */
 export const HIRING_ROLES = ['recruiter', 'agency']
 export const isHiring = (role) => HIRING_ROLES.includes(role)
+/** 'recruiter' for both hiring roles (shared texts and records name the hiring side so), else the role. */
+export const sideOf = (role) => (isHiring(role) ? 'recruiter' : role)
 
 /** The hiring workspace of a role: /agency for agencies, /recruiter otherwise. */
 export const hiringBase = (role) => (role === 'agency' ? '/agency' : '/recruiter')

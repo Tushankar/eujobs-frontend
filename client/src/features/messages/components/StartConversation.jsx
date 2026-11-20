@@ -1,3 +1,4 @@
+import { HIRING_ROLES, isHiring } from '@/app/roles.js'
 import { useState } from 'react'
 import { useTranslation } from 'react-i18next'
 import { Link, useNavigate } from 'react-router-dom'
@@ -58,7 +59,7 @@ function StartConversationDialog({ body, initialBody = '', title, description, o
       }
     >
       {/* 2026-11-17: a recruiter's first message drafted by AI from the candidate's profile and the job. */}
-      {me.role === 'recruiter' && body.candidateId && (
+      {isHiring(me.role) && body.candidateId && (
         <div className={styles.draft}>
           <AiDraftButton request={{ purpose: 'first_message', candidateId: body.candidateId, ...(body.jobId && { jobId: body.jobId }) }} onDraft={(text) => setDraft({ text })} />
         </div>
@@ -89,7 +90,7 @@ export function MessageCandidateButton({ candidate, job }) {
   return (
     <>
       {/* §3.22: starting a conversation needs Recruiter Plus (`outreach`); an existing thread opens above. */}
-      <PlanButton entitlement="outreach" roles={['recruiter']} variant="outline" fullWidth leftIcon={messageIcon} data-start-conversation onClick={() => setOpen(true)}>
+      <PlanButton entitlement="outreach" roles={HIRING_ROLES} variant="outline" fullWidth leftIcon={messageIcon} data-start-conversation onClick={() => setOpen(true)}>
         {t('messages:outreach.button')}
       </PlanButton>
       {open && (
