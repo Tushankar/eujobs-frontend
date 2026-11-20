@@ -52,6 +52,28 @@ export const WORKSPACES = {
       { key: 'company', to: 'company', vuesax: 'buildings' },
     ],
   },
+  // 2026-11-20: agencies have the recruiter workspace plus clients, talent on the books and placements.
+  agency: {
+    id: 'agency',
+    basePath: '/agency',
+    signInPath: '/agencies/login',
+    showLocation: true,
+    profilePath: 'company',
+    nav: [
+      { key: 'overview', to: '', vuesax: 'element-3', end: true },
+      { key: 'jobs', to: 'jobs', vuesax: 'briefcase' },
+      { key: 'clients', to: 'clients', vuesax: 'buildings-2' },
+      { key: 'talent', to: 'talent', vuesax: 'people' },
+      { key: 'placements', to: 'placements', vuesax: 'calendar-tick' },
+      { key: 'applications', to: 'applications', vuesax: 'document-text' },
+      { key: 'hiringPipeline', to: 'hiring-pipeline', vuesax: 'kanban' },
+      { key: 'findCandidates', to: 'find-candidates', vuesax: 'user-search' },
+      { key: 'shortlists', to: 'shortlists', vuesax: 'bookmark', entitlement: 'discovery' },
+      { key: 'messages', to: 'messages', vuesax: 'messages-2', badge: { useText: useUnreadMessagesBadge } },
+      { key: 'recruiterLearning', to: 'learning', vuesax: 'teacher' },
+      { key: 'agencyPage', to: 'company', vuesax: 'buildings' },
+    ],
+  },
   admin: {
     id: 'admin',
     basePath: '/admin',

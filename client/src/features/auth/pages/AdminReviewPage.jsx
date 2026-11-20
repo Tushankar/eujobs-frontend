@@ -1,3 +1,4 @@
+import { currentRole, hiringSignIn } from '@/app/roles.js'
 import { useState } from 'react'
 import { useTranslation } from 'react-i18next'
 import { Link } from 'react-router-dom'
@@ -162,7 +163,7 @@ export default function AdminReviewPage() {
           </>
         ) : (
           <>
-            <Button as={Link} to="/recruiter/sign-in" variant="outline">
+            <Button as={Link} to={hiringSignIn(currentRole())} variant="outline">
               {review('signIn')}
             </Button>
             <Button disabled rightIcon={<Icon as={Lock} size={14} />}>

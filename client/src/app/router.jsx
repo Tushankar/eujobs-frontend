@@ -10,6 +10,7 @@ import authRoutes from '@/features/auth/routes.jsx'
 import publicRoutes from '@/features/public/routes.jsx'
 import candidateRoutes from '@/features/candidate/routes.jsx'
 import recruiterRoutes from '@/features/recruiter/routes.jsx'
+import agencyRoutes from '@/features/agency/routes.jsx'
 import adminRoutes from '@/features/admin/routes.jsx'
 
 // M-125, P3-C10: the onboarding plan step comes back from Stripe here before onboarding is complete.
@@ -67,6 +68,8 @@ const routes = [
   ...publicRoutes,
   workspaceRoute('candidate', candidateRoutes),
   workspaceRoute('recruiter', recruiterRoutes),
+  // 2026-11-20: agencies get every recruiter page plus their own (features/agency).
+  workspaceRoute('agency', [...recruiterRoutes, ...agencyRoutes]),
   workspaceRoute('admin', adminRoutes),
   { path: '*', element: <NotFoundPage /> },
 ]

@@ -1,3 +1,4 @@
+import { hiringPath, hiringSignIn, hiringSignUp } from '@/app/roles.js'
 import { useEffect, useState } from 'react'
 import { Trans, useTranslation } from 'react-i18next'
 import { Navigate, useNavigate } from 'react-router-dom'
@@ -36,7 +37,7 @@ export default function EmailCodePage() {
     if (resendSeconds) startCooldown(resendSeconds)
   }, [resendSeconds, startCooldown])
 
-  if (me?.emailVerified) return <Navigate to="/recruiter/onboarding" replace />
+  if (me?.emailVerified) return <Navigate to={hiringPath('onboarding')} replace />
 
   async function handleSubmit(event) {
     event.preventDefault()
@@ -44,7 +45,7 @@ export default function EmailCodePage() {
     setResent(false)
     try {
       await verify(code.trim()).unwrap()
-      navigate('/recruiter/onboarding', { replace: true })
+      navigate(hiringPath('onboarding'), { replace: true })
     } catch (error) {
       setFailure(error)
     }
@@ -68,7 +69,7 @@ export default function EmailCodePage() {
   const fieldError = failureCode === 'CODE_INVALID' || failureCode === 'VALIDATION_FAILED' ? errorText.code(failure) : undefined
 
   return (
-    <AuthLayout logoTo="/recruiter/sign-in">
+    <AuthLayout logoTo={hiringSignIn(me?.role)}>
       <AuthIntro title={t('auth:emailCode.title')} />
       <form className={styles.body} onSubmit={handleSubmit} noValidate>
         <p>
@@ -97,8 +98,10 @@ export default function EmailCodePage() {
           <button
             type="button"
             onClick={() => {
+              // The sign-up page of this account's kind, worked out before signing out.
+              const signUp = hiringSignUp(me?.role)
               signOut()
-              navigate('/recruiter/sign-up')
+              navigate(signUp)
             }}
           >
             {t('auth:emailCode.otherAccount')}

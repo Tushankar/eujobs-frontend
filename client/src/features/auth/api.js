@@ -26,6 +26,8 @@ export const authApi = api.injectEndpoints({
     setupLoginApp: build.mutation({ query: (challenge) => post('/auth/login/setup')({ challenge }) }),
     registerCandidate: build.mutation({ query: post('/auth/candidate/register') }),
     registerRecruiter: build.mutation({ query: post('/auth/recruiter/register'), ...storesDevice }),
+    // 2026-11-20: an agency signs up with the same details.
+    registerAgency: build.mutation({ query: post('/auth/agency/register'), ...storesDevice }),
     verifyEmail: build.mutation({ query: (token) => post('/auth/verify-email')({ token }), ...storesDevice }),
     resendVerifyEmail: build.mutation({ query: (email) => post('/auth/verify-email/resend')({ email }) }),
     verifyEmailCode: build.mutation({ query: (code) => post('/auth/email-code/verify')({ code }), ...writesMe }),
@@ -56,6 +58,7 @@ export const {
   useSetupLoginAppMutation,
   useRegisterCandidateMutation,
   useRegisterRecruiterMutation,
+  useRegisterAgencyMutation,
   useVerifyEmailMutation,
   useResendVerifyEmailMutation,
   useVerifyEmailCodeMutation,

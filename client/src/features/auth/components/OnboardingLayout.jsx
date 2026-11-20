@@ -1,3 +1,4 @@
+import { currentRole, hiringPath, hiringSignIn } from '@/app/roles.js'
 import { useState } from 'react'
 import { useTranslation } from 'react-i18next'
 import { Link, Navigate, Outlet, useLocation, useNavigate } from 'react-router-dom'
@@ -44,15 +45,16 @@ export default function OnboardingLayout() {
   }
 
   function handleSignOut() {
+    const signInPath = hiringSignIn(currentRole())
     signOut()
-    navigate('/recruiter/sign-in', { replace: true })
+    navigate(signInPath, { replace: true })
   }
 
   return (
     <div className={styles.page}>
       <header className={styles.header}>
         <div className={styles.headerInner}>
-          <Link to="/recruiter/onboarding" aria-label={BRAND.name}>
+          <Link to={hiringPath('onboarding')} aria-label={BRAND.name}>
             <BrandLogo height={30} motion="intro" />
           </Link>
           <div className={styles.headerAside}>

@@ -1,10 +1,13 @@
-/** Recruiter onboarding: the five steps (routes from the Figma frames); labels are auth:onboarding.steps.<id>. */
-export const ONBOARDING_STEPS = [
-  { id: 'account', path: '/recruiter/onboarding/account' },
-  { id: 'company', path: '/recruiter/onboarding/company' },
-  { id: 'kyc', path: '/recruiter/onboarding/kyc' },
-  { id: 'verify', path: '/recruiter/onboarding/verify' },
-  { id: 'review', path: '/recruiter/onboarding/review' },
-]
+import { hiringPath } from '@/app/roles.js'
+/**
+ * Recruiter and agency onboarding: the five steps (routes from the Figma frames); labels are auth:onboarding.steps.<id>.
+ * Paths are in the account's own workspace (/recruiter/onboarding/…, /agency/onboarding/…).
+ */
+export const stepPath = (id) => hiringPath(`onboarding/${id}`)
 
-export const stepPath = (id) => ONBOARDING_STEPS.find((step) => step.id === id).path
+export const ONBOARDING_STEPS = ['account', 'company', 'kyc', 'verify', 'review'].map((id) => ({
+  id,
+  get path() {
+    return stepPath(id)
+  },
+}))

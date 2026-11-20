@@ -1,3 +1,4 @@
+import { hiringBase, hiringSignIn } from '@/app/roles.js'
 import { useState } from 'react'
 import { useTranslation } from 'react-i18next'
 import { Link, useNavigate } from 'react-router-dom'
@@ -9,14 +10,14 @@ import { browserCountry } from '@/lib/browserCountry.js'
 import { countryChoices, useCountryOptions } from '@/lib/countries.js'
 import { browserTimeZone, check, compact, serverFieldErrors, useErrorText } from '@/lib/forms.js'
 import { readAnonymousPreference } from '@/lib/preferences.js'
-import { useRegisterRecruiterMutation } from '../api.js'
+import { useRegisterAgencyMutation, useRegisterRecruiterMutation } from '../api.js'
 import AuthIntro from '../components/AuthIntro.jsx'
 import AuthSwitchPrompt from '../components/AuthSwitchPrompt.jsx'
 import CreateAccountButton from '../components/CreateAccountButton.jsx'
 import FormAlert from '../components/FormAlert.jsx'
 import TermsConsent from '../components/TermsConsent.jsx'
 import WorkspacePicker from '../components/WorkspacePicker.jsx'
-import { SIGN_UP_CHOICES } from '../data/workspaceChoices.js'
+import { AGENCY_CHOICES, SIGN_UP_CHOICES } from '../data/workspaceChoices.js'
 import hintStyles from '../components/compactHint.module.css'
 import { useFormState } from '../utils/useFormState.js'
 import styles from './RecruiterSignUpPage.module.css'
@@ -24,9 +25,10 @@ import CountryField from '@/components/common/CountryField.jsx'
 
 /**
  * Recruiter sign-up (U37): creates the account, signs in and emails a code, which is entered next
- * (M-002). A registered email answers EMAIL_TAKEN with sign-in and reset links (OQ-6h).
+ * (M-002). A registered email answers EMAIL_TAKEN with sign-in and reset links (OQ-6h). 2026-11-20: agencies sign up
+ * here too (`role="agency"`, /agencies/signup) and onboard in their own workspace.
  */
-export default function RecruiterSignUpPage() {
+export default function RecruiterSignUpPage({ role = 'recruiter' }) {
   const { t, i18n } = useTranslation()
   const navigate = useNavigate()
   const errorText = useErrorText()
@@ -42,7 +44,12 @@ export default function RecruiterSignUpPage() {
     confirmPassword: '',
     acceptTerms: false,
   })
-  const [register, { isLoading }] = useRegisterRecruiterMutation()
+  const agency = role === 'agency'
+  const [registerRecruiter, recruiterState] = useRegisterRecruiterMutation()
+  const [registerAgency, agencyState] = useRegisterAgencyMutation()
+  const register = agency ? registerAgency : registerRecruiter
+  const { isLoading } = agency ? agencyState : recruiterState
+  const signInPath = hiringSignIn(role)
   const [failure, setFailure] = useState(null)
   const country = values.country || (countries.length ? browserCountry(countries) : '')
 
@@ -76,7 +83,7 @@ export default function RecruiterSignUpPage() {
         timezone: browserTimeZone(),
       }).unwrap()
       await signIn(token, me)
-      navigate('/recruiter/onboarding/email-code', { replace: true })
+      navigate(`${hiringBase(role)}/onboarding/email-code`, { replace: true })
     } catch (error) {
       setErrors(serverFieldErrors(error))
       setFailure(error)
@@ -86,18 +93,18 @@ export default function RecruiterSignUpPage() {
   const failureCode = failure && errorCode(failure)
 
   return (
-    <AuthLayout logoTo="/recruiter/sign-in">
+    <AuthLayout logoTo={signInPath}>
       <AuthIntro title={t('auth:signUp.title')} lead={t('auth:signUp.lead')} />
-      <WorkspacePicker choices={SIGN_UP_CHOICES} activeId="recruiter" helper={t('auth:signIn.helper.recruiter')} />
+      <WorkspacePicker choices={agency ? AGENCY_CHOICES : SIGN_UP_CHOICES} activeId={role} helper={t(`auth:signIn.helper.${role}`)} />
 
-      <h2 className={styles.heading}>{t('auth:recruiterSignUp.heading')}</h2>
-      <p className={styles.description}>{t('auth:recruiterSignUp.description')}</p>
+      <h2 className={styles.heading}>{t(`auth:${agency ? 'agencySignUp' : 'recruiterSignUp'}.heading`)}</h2>
+      <p className={styles.description}>{t(`auth:${agency ? 'agencySignUp' : 'recruiterSignUp'}.description`)}</p>
 
       <form className={styles.form} onSubmit={handleSubmit} noValidate>
         {failureCode === 'EMAIL_TAKEN' && (
           <FormAlert>
             <span>{errorText.code(failure)}</span>
-            <Link to="/recruiter/sign-in">{t('auth:recruiterSignUp.takenSignIn')}</Link>
+            <Link to={signInPath}>{t('auth:recruiterSignUp.takenSignIn')}</Link>
             <Link to="/forgot-password">{t('auth:recruiterSignUp.takenReset')}</Link>
           </FormAlert>
         )}
@@ -171,7 +178,7 @@ export default function RecruiterSignUpPage() {
         <CreateAccountButton loading={isLoading} disabled={!values.acceptTerms} />
       </form>
 
-      <AuthSwitchPrompt linkTo="/recruiter/sign-in" linkLabel={t('auth:signUp.signInLink')}>
+      <AuthSwitchPrompt linkTo={signInPath} linkLabel={t('auth:signUp.signInLink')}>
         {t('auth:signUp.haveAccount')}
       </AuthSwitchPrompt>
     </AuthLayout>

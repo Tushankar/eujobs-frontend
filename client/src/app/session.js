@@ -1,3 +1,4 @@
+import { hiringBase, isHiring } from './roles.js'
 import i18n from '@/i18n/index.js'
 import { applyTheme } from '@/lib/theme.js'
 import { api, API_BASE, setAuthRequiredHandler } from './api.js'
@@ -7,12 +8,13 @@ import { signedIn, signedOut, store } from './store.js'
 import { clearToken, getToken, setToken, TOKEN_KEY } from './token.js'
 
 /* Sign-in state and the account state machine of BACKEND_PLAN §3.1. */
-export const SIGN_IN_PATH = { candidate: '/sign-in', recruiter: '/recruiter/sign-in', admin: '/admin/sign-in' }
-export const WORKSPACE_PATH = { candidate: '/candidate', recruiter: '/recruiter', admin: '/admin' }
+export const SIGN_IN_PATH = { candidate: '/sign-in', recruiter: '/recruiter/sign-in', admin: '/admin/sign-in', agency: '/agencies/login' }
+// 2026-11-20: agencies work under /agency (their public pages are under /agencies).
+export const WORKSPACE_PATH = { candidate: '/candidate', recruiter: '/recruiter', admin: '/admin', agency: '/agency' }
 
 /** The sign-in page of the workspace a path belongs to. */
 export function signInPathFor(pathname) {
-  const role = Object.keys(WORKSPACE_PATH).find((id) => pathname.startsWith(WORKSPACE_PATH[id]))
+  const role = Object.keys(WORKSPACE_PATH).find((id) => pathname === WORKSPACE_PATH[id] || pathname.startsWith(`${WORKSPACE_PATH[id]}/`))
   return SIGN_IN_PATH[role] ?? SIGN_IN_PATH.candidate
 }
 
@@ -27,12 +29,14 @@ export function safeNext(next) {
  */
 export function requiredPage(me) {
   if (me.role === 'candidate' && !me.onboardingCompleted) return { path: '/candidate/onboarding/story', prefix: '/candidate/onboarding' }
-  if (me.role !== 'recruiter' || me.status === 'active') return null
-  if (me.status === 'unverified') return { path: '/recruiter/onboarding/email-code', prefix: '/recruiter/onboarding/email-code' }
-  if (me.status === 'onboarding') return { path: '/recruiter/onboarding', prefix: '/recruiter/onboarding' }
+  if (!isHiring(me.role) || me.status === 'active') return null
+  // Recruiters and agencies (2026-11-20) onboard the same way, each in its own workspace.
+  const onboarding = `${hiringBase(me.role)}/onboarding`
+  if (me.status === 'unverified') return { path: `${onboarding}/email-code`, prefix: `${onboarding}/email-code` }
+  if (me.status === 'onboarding') return { path: onboarding, prefix: onboarding }
   // M-152, P4-D3: a rejected recruiter may reopen every step to fix it, then resubmit from the review page.
-  if (me.status === 'rejected') return { path: '/recruiter/onboarding/review', prefix: '/recruiter/onboarding' }
-  return { path: '/recruiter/onboarding/review', prefix: '/recruiter/onboarding/review' }
+  if (me.status === 'rejected') return { path: `${onboarding}/review`, prefix: onboarding }
+  return { path: `${onboarding}/review`, prefix: `${onboarding}/review` }
 }
 
 /** Where a signed-in account lands: its required page, else `next` inside its own workspace, else the workspace. */

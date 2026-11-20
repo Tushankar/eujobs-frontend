@@ -13,8 +13,15 @@ export const sideOf = (role) => (isHiring(role) ? 'recruiter' : role)
 /** The hiring workspace of a role: /agency for agencies, /recruiter otherwise. */
 export const hiringBase = (role) => (role === 'agency' ? '/agency' : '/recruiter')
 
+/** The signed-in account's role (read when called), or undefined. */
+export const currentRole = () => api.endpoints.getMe.select()(store.getState())?.data?.role
+
+/** The sign-in and sign-up pages of a hiring role (agencies: /agencies/login, /agencies/signup). */
+export const hiringSignIn = (role) => (role === 'agency' ? '/agencies/login' : '/recruiter/sign-in')
+export const hiringSignUp = (role) => (role === 'agency' ? '/agencies/signup' : '/recruiter/sign-up')
+
 /** A path in the signed-in account's hiring workspace, e.g. hiringPath('jobs/new') → /agency/jobs/new. */
 export function hiringPath(to = '') {
-  const base = hiringBase(api.endpoints.getMe.select()(store.getState())?.data?.role)
+  const base = hiringBase(currentRole())
   return to ? `${base}/${to}` : base
 }
