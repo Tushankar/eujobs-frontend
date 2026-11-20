@@ -38,5 +38,17 @@
   "PLACES_UNAVAILABLE": "City search isn't available right now. Try again shortly.",
   "FX_UNAVAILABLE": "Exchange rates aren’t available right now, so the prices weren’t converted. Try again shortly.",
   "INTERNAL_ERROR": "Something went wrong on our side. Try again.",
-  "NETWORK_ERROR": "We couldn't reach the server. Check your connection and try again."
+  "NETWORK_ERROR": "We couldn't reach the server. Check your connection and try again.",
+  "reasons": {
+    "not_on_books": "This candidate is not on your books yet. Invite them and wait until they agree to your agreement.",
+    "agreement_pending": "This candidate has not agreed to your latest agreement yet.",
+    "placement_started": "This placement has started. End it early from Placements instead.",
+    "no_agreement": "Publish your agreement before you take anyone on.",
+    "client_has_jobs": "This client has jobs, so it stays on your list.",
+    "agreement_changed": "The agreement changed while you were reading it. Open it again.",
+    "already_agreed": "You already agreed to this version.",
+    "notice_given": "Notice has already been given for this placement.",
+    "not_over": "You can re-hire once this placement is over.",
+    "already_placed": "This person already has an offer or placement for this job."
+  }
 }

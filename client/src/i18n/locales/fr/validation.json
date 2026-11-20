@@ -129,8 +129,14 @@
     "placeIdAlert": {
       "other_country": "Choisissez une ville dans le pays de cette alerte.",
       "invalid": "Les alertes à distance concernent les offres à distance, qui n’ont pas de ville."
+    },
+    "name": {
+      "duplicate": "Vous avez déjà un client portant ce nom."
     }
   },
   "in_both": "{{skill}} est déjà une compétence requise.",
-  "below_min": "Indiquez un montant au moins égal au minimum."
+  "below_min": "Indiquez un montant au moins égal au minimum.",
+  "not_in_document": "Cette clause ne figure pas mot pour mot dans le PDF. Copiez-la depuis le document.",
+  "rules_unconfirmed": "Confirmez les règles du contrat avant de publier.",
+  "no_text": "Ce PDF ne contient pas de texte lisible."
 }

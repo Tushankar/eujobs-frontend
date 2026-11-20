@@ -40,5 +40,17 @@
   "PLACES_UNAVAILABLE": "La búsqueda de ciudades no está disponible en este momento. Inténtalo de nuevo en unos minutos.",
   "FX_UNAVAILABLE": "Los tipos de cambio no están disponibles ahora, así que no se convirtieron los precios. Inténtalo de nuevo en breve.",
   "INTERNAL_ERROR": "Algo ha fallado por nuestra parte. Inténtalo de nuevo.",
-  "NETWORK_ERROR": "No hemos podido conectar con el servidor. Revisa tu conexión e inténtalo de nuevo."
+  "NETWORK_ERROR": "No hemos podido conectar con el servidor. Revisa tu conexión e inténtalo de nuevo.",
+  "reasons": {
+    "not_on_books": "Este candidato aún no está en tu cartera. Invítalo y espera a que acepte tu acuerdo.",
+    "agreement_pending": "Este candidato aún no ha aceptado la última versión de tu acuerdo.",
+    "placement_started": "Esta colocación ya ha empezado. Finalízala antes desde Colocaciones.",
+    "no_agreement": "Publica tu acuerdo antes de incorporar a nadie.",
+    "client_has_jobs": "Este cliente tiene ofertas, así que se queda en tu lista.",
+    "agreement_changed": "El acuerdo cambió mientras lo leías. Ábrelo de nuevo.",
+    "already_agreed": "Ya aceptaste esta versión.",
+    "notice_given": "Ya se ha dado el preaviso de esta colocación.",
+    "not_over": "Podrás volver a contratar cuando termine esta colocación.",
+    "already_placed": "Esta persona ya tiene una oferta o colocación para este empleo."
+  }
 }

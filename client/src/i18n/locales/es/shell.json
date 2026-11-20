@@ -30,7 +30,11 @@
     "aiBadge": "IA",
     "planLocked": "Incluido en {{plan}}",
     "messages": "Mensajes",
-    "website": "Sitio web"
+    "website": "Sitio web",
+    "clients": "Clientes",
+    "talent": "Talento",
+    "placements": "Colocaciones",
+    "agencyPage": "Página de la agencia"
   },
   "titles": {
     "settings": "Configuración",

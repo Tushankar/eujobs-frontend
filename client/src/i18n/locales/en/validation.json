@@ -129,8 +129,14 @@
     "placeIdAlert": {
       "other_country": "Choose a city in the country of this alert.",
       "invalid": "Remote alerts match remote jobs, which have no city."
+    },
+    "name": {
+      "duplicate": "You already have a client with this name."
     }
   },
   "in_both": "{{skill}} is already a required skill.",
-  "below_min": "Use an amount at least as high as the minimum."
+  "below_min": "Use an amount at least as high as the minimum.",
+  "not_in_document": "This clause is not in the PDF word for word. Copy it from the document.",
+  "rules_unconfirmed": "Confirm the contract’s rules before publishing.",
+  "no_text": "This PDF has no text to read."
 }

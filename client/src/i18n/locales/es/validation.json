@@ -129,8 +129,14 @@
     "placeIdAlert": {
       "other_country": "Elige una ciudad del país de esta alerta.",
       "invalid": "Las alertas en remoto buscan ofertas en remoto, que no tienen ciudad."
+    },
+    "name": {
+      "duplicate": "Ya tienes un cliente con este nombre."
     }
   },
   "in_both": "{{skill}} ya es una competencia obligatoria.",
-  "below_min": "Usa un importe igual o superior al mínimo."
+  "below_min": "Usa un importe igual o superior al mínimo.",
+  "not_in_document": "Esta cláusula no aparece tal cual en el PDF. Cópiala del documento.",
+  "rules_unconfirmed": "Confirma las reglas del contrato antes de publicar.",
+  "no_text": "Este PDF no tiene texto que leer."
 }

@@ -40,5 +40,17 @@
   "PLACES_UNAVAILABLE": "La recherche de villes n’est pas disponible pour le moment. Réessayez dans quelques instants.",
   "FX_UNAVAILABLE": "Les taux de change ne sont pas disponibles pour le moment : les prix n’ont pas été convertis. Réessayez dans un instant.",
   "INTERNAL_ERROR": "Une erreur s’est produite de notre côté. Réessayez.",
-  "NETWORK_ERROR": "Impossible de joindre le serveur. Vérifiez votre connexion et réessayez."
+  "NETWORK_ERROR": "Impossible de joindre le serveur. Vérifiez votre connexion et réessayez.",
+  "reasons": {
+    "not_on_books": "Ce candidat n’est pas encore dans votre vivier. Invitez-le et attendez qu’il accepte votre accord.",
+    "agreement_pending": "Ce candidat n’a pas encore accepté la dernière version de votre accord.",
+    "placement_started": "Ce placement a commencé. Terminez-le plus tôt depuis Placements.",
+    "no_agreement": "Publiez votre accord avant d’accueillir quelqu’un.",
+    "client_has_jobs": "Ce client a des offres, il reste donc dans votre liste.",
+    "agreement_changed": "L’accord a changé pendant votre lecture. Ouvrez-le à nouveau.",
+    "already_agreed": "Vous avez déjà accepté cette version.",
+    "notice_given": "Le préavis a déjà été donné pour ce placement.",
+    "not_over": "Vous pourrez réembaucher une fois ce placement terminé.",
+    "already_placed": "Cette personne a déjà une offre ou un placement pour cet emploi."
+  }
 }

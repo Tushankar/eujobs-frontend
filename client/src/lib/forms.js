@@ -85,7 +85,9 @@ export function useErrorText() {
     field: (name, error) => error && t([`validation:fields.${name}.${error.key}`, `validation:${error.key}`], error.params),
     code: (error) => {
       const params = error?.data?.error?.params ?? {}
-      return t(`errors:${errorCode(error)}`, { ...params, count: params.attemptsLeft ?? params.retryAfter })
+      // 2026-11-20: a CONFLICT that names its reason (agencies: not on the books, …) has its own message when there is one.
+      const keys = [...(params.reason ? [`errors:reasons.${params.reason}`] : []), `errors:${errorCode(error)}`]
+      return t(keys, { ...params, count: params.attemptsLeft ?? params.retryAfter })
     },
   }
 }
