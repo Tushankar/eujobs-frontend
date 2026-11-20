@@ -12,6 +12,7 @@ import { haystack, visibleFilter } from '../jobs/jobs.search.js'
 import { jobFieldsDto } from '../jobs/jobs.service.js'
 import { listFaqs } from '../meta/meta.service.js'
 import { landingReviews } from '../reviews/reviews.service.js'
+import { User } from '../users/users.model.js'
 
 /*
  * The public landing page (no session): the newest visible jobs, live counts per work mode and employment type, the
@@ -34,7 +35,7 @@ function countBy(jobs, field) {
 }
 
 export async function landing(language) {
-  const jobs = await Job.find(await visibleFilter(), 'title companyId employmentType workPreference experienceYears country location salary publishedAt visaSponsorship').sort({ publishedAt: -1 })
+  const jobs = await Job.find(await visibleFilter(), 'title companyId employmentType workPreference experienceYears country location salary publishedAt visaSponsorship agency.startDate').sort({ publishedAt: -1 })
   const latest = jobs.slice(0, LATEST_JOBS)
   const companies = await Company.find({ _id: { $in: latest.map((job) => job.companyId) } }, 'displayName logoFileId')
   const [logos, faqs, reviews, posts] = await Promise.all([logoUrls(companies), listFaqs('candidate', language), landingReviews(), latestPosts(language)])
@@ -43,6 +44,8 @@ export async function landing(language) {
   return {
     total: jobs.length,
     counts: { workPreference: countBy(jobs, 'workPreference'), employmentType: countBy(jobs, 'employmentType') },
+    // 2026-11-20: the /agencies page's live figures (open agency jobs, approved agencies).
+    agencies: { jobs: jobs.filter((job) => job.agency).length, accounts: await User.countDocuments({ role: 'agency', status: 'active' }) },
     jobs: latest.map((job) => {
       const company = companyById.get(String(job.companyId))
       return {
