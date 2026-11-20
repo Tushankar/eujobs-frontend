@@ -1,5 +1,4 @@
 import { readFile } from 'node:fs/promises'
-import mongoose from 'mongoose'
 import { z } from 'zod'
 import { ENUMS } from '../../config/enums.js'
 import { LIMITS } from '../../config/limits.js'
@@ -16,18 +15,8 @@ import { File } from '../files/files.model.js'
  * A clause is shown only when it is in the document word for word.
  */
 const R = LIMITS.contractRules
-export const RULES = ['exclusivity', 'noticeDays', 'coolingOffDays', 'maxWeeklyHours']
-
-const rule = (value) => new mongoose.Schema({ value, clause: String }, { _id: false })
-export const rulesSchema = new mongoose.Schema(
-  {
-    exclusivity: rule({ type: String, enum: ENUMS.exclusivity }),
-    noticeDays: rule(Number),
-    coolingOffDays: rule(Number),
-    maxWeeklyHours: rule(Number),
-  },
-  { _id: false },
-)
+export { RULES, rulesSchema } from './rules.schema.js'
+import { RULES } from './rules.schema.js'
 
 /* PUT bodies: every rule with its value (null: the contract does not say) and its clause. */
 const clause = z.string().trim().min(1).max(R.clause.max).nullable().default(null)

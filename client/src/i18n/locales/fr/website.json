@@ -108,7 +108,11 @@
       "caption": "Éditions de la newsletter",
       "deleteTitle": "Supprimer ce brouillon ?",
       "deleteText": "Le brouillon est supprimé définitivement. Rien n’a été envoyé.",
-      "statuses": { "draft": "Brouillon", "sending": "Envoi en cours", "sent": "Envoyée" },
+      "statuses": {
+        "draft": "Brouillon",
+        "sending": "Envoi en cours",
+        "sent": "Envoyée"
+      },
       "back": "Retour aux éditions de la newsletter",
       "issueTitle": "Édition de la newsletter",
       "issueDescription": "Choisissez les offres et les articles, écrivez une courte introduction, vérifiez l’aperçu et envoyez.",
@@ -221,5 +225,61 @@
     "signUp": "Nouveau ? Créez un compte gratuit",
     "requirements": "Exigences",
     "visaOnly": "Uniquement avec parrainage de visa"
+  },
+  "agencies": {
+    "documentTitle": "Pour les agences",
+    "eyebrow": "Pour les agences de recrutement",
+    "titleLead": "Placez des personnes chez vos clients,",
+    "titleAccent": "gardez vos talents dans votre vivier",
+    "lead": "Publiez des emplois temporaires et en contrat pour les entreprises avec lesquelles vous travaillez, accueillez des candidats dans votre vivier avec votre propre accord, et laissez EU Jobs vérifier que chaque placement respecte son contrat.",
+    "signUp": "Inscrire mon agence",
+    "signIn": "Se connecter",
+    "liveJobs_one": "{{value}} emploi d’agence ouvert en ce moment",
+    "liveJobs_many": "{{value}} emplois d’agence ouverts en ce moment",
+    "liveJobs_other": "{{value}} emplois d’agence ouverts en ce moment",
+    "liveAgencies_one": "{{value}} agence sur EU Jobs",
+    "liveAgencies_many": "{{value}} agences sur EU Jobs",
+    "liveAgencies_other": "{{value}} agences sur EU Jobs",
+    "how": {
+      "title": "Comment ça marche",
+      "steps": [
+        {
+          "title": "Ajoutez vos clients et publiez des emplois",
+          "text": "Chaque emploi est pour un client, avec ses dates, son taux et ses heures. Affichez le nom du client ou gardez-le confidentiel."
+        },
+        {
+          "title": "Accueillez des candidats dans votre vivier",
+          "text": "Les candidats demandent à rejoindre ou vous les invitez. Ils lisent votre accord et l’acceptent dans l’application."
+        },
+        {
+          "title": "Placez-les, puis replacez-les",
+          "text": "Embauchez pour un emploi et le placement commence. À la fin, vous pouvez proposer à la même personne son emploi suivant."
+        }
+      ]
+    },
+    "features": {
+      "title": "Ce que votre agence obtient",
+      "clients": {
+        "title": "Clients",
+        "text": "Toutes les entreprises pour lesquelles vous recrutez dans une liste, liées à leur page EU Jobs quand elles en ont une."
+      },
+      "books": {
+        "title": "Les talents de votre vivier",
+        "text": "Demandes, invitations, et qui a accepté quelle version de votre accord."
+      },
+      "contracts": {
+        "title": "Des contrats lus par l’IA",
+        "text": "Avec Agency Plus, l’IA lit votre accord et le contrat de chaque emploi et cite la clause de chaque règle. Vous vérifiez et confirmez."
+      },
+      "placements": {
+        "title": "Des placements qui respectent leurs règles",
+        "text": "Exclusivité, préavis, délai de carence et heures hebdomadaires sont vérifiés avant que quelqu’un accepte un autre emploi."
+      },
+      "hiring": {
+        "title": "Tous les outils de recrutement",
+        "text": "Le suivi des candidatures, la recherche de candidats, la messagerie et les entretiens des recruteurs."
+      }
+    },
+    "plans": "Offres pour les agences"
   }
 }

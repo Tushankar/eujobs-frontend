@@ -108,7 +108,11 @@
       "caption": "Ediciones del boletín",
       "deleteTitle": "¿Eliminar este borrador?",
       "deleteText": "El borrador se elimina para siempre. No se envió nada.",
-      "statuses": { "draft": "Borrador", "sending": "Enviando", "sent": "Enviado" },
+      "statuses": {
+        "draft": "Borrador",
+        "sending": "Enviando",
+        "sent": "Enviado"
+      },
       "back": "Volver a las ediciones del boletín",
       "issueTitle": "Edición del boletín",
       "issueDescription": "Elige las ofertas y los artículos, escribe una breve introducción, revisa la vista previa y envía.",
@@ -221,5 +225,61 @@
     "signUp": "¿Eres nuevo? Crea una cuenta gratis",
     "requirements": "Requisitos",
     "visaOnly": "Solo con patrocinio de visado"
+  },
+  "agencies": {
+    "documentTitle": "Para agencias",
+    "eyebrow": "Para agencias de selección",
+    "titleLead": "Coloca personas en tus clientes,",
+    "titleAccent": "mantén tu talento en cartera",
+    "lead": "Publica empleos temporales y por contrato para las empresas con las que trabajas, incorpora candidatos a tu cartera con tu propio acuerdo y deja que EU Jobs compruebe que cada colocación respeta su contrato.",
+    "signUp": "Regístrate como agencia",
+    "signIn": "Iniciar sesión",
+    "liveJobs_one": "{{value}} empleo de agencia abierto ahora",
+    "liveJobs_many": "{{value}} empleos de agencia abiertos ahora",
+    "liveJobs_other": "{{value}} empleos de agencia abiertos ahora",
+    "liveAgencies_one": "{{value}} agencia en EU Jobs",
+    "liveAgencies_many": "{{value}} agencias en EU Jobs",
+    "liveAgencies_other": "{{value}} agencias en EU Jobs",
+    "how": {
+      "title": "Cómo funciona",
+      "steps": [
+        {
+          "title": "Añade tus clientes y publica empleos",
+          "text": "Cada empleo es para un cliente, con sus fechas, tarifa y horas. Muestra el nombre del cliente o mantenlo confidencial."
+        },
+        {
+          "title": "Incorpora candidatos a tu cartera",
+          "text": "Los candidatos piden unirse o tú los invitas. Leen tu acuerdo y lo aceptan en la aplicación."
+        },
+        {
+          "title": "Colócalos, y vuelve a colocarlos",
+          "text": "Contrata para un empleo y empieza la colocación. Cuando termine puedes ofrecer a la misma persona su siguiente empleo."
+        }
+      ]
+    },
+    "features": {
+      "title": "Lo que obtiene tu agencia",
+      "clients": {
+        "title": "Clientes",
+        "text": "Todas las empresas para las que seleccionas en una lista, vinculadas a su página de EU Jobs si la tienen."
+      },
+      "books": {
+        "title": "Talento en tu cartera",
+        "text": "Solicitudes, invitaciones y quién aceptó cada versión de tu acuerdo."
+      },
+      "contracts": {
+        "title": "Contratos leídos por IA",
+        "text": "Con Agency Plus, la IA lee tu acuerdo y el contrato de cada empleo y cita la cláusula de cada regla. Tú revisas y confirmas."
+      },
+      "placements": {
+        "title": "Colocaciones que respetan sus reglas",
+        "text": "Exclusividad, preaviso, periodo de espera y horas semanales se comprueban antes de que alguien acepte otro empleo."
+      },
+      "hiring": {
+        "title": "Todas las herramientas de selección",
+        "text": "El proceso de selección, la búsqueda de candidatos, los mensajes y las entrevistas que usan los reclutadores."
+      }
+    },
+    "plans": "Planes para agencias"
   }
 }

@@ -97,6 +97,9 @@ const FIXTURES = {
       '<?xml version="1.0"?><svg xmlns="http://www.w3.org/2000/svg" width="64" height="64" onload="alert(1)"><script>alert(2)</script><rect width="64" height="64" fill="#5b4ba8" onclick="alert(3)"/></svg>',
     ),
   'notes.txt': () => Buffer.from('Plain text is not a KYC document.'),
+  // 2026-11-20 (agencies): an agreement whose clauses the browser check quotes.
+  'agency-agreement.pdf': () =>
+    textPdf(['Agency Terms of Engagement (sample)', 'Either party may end an Assignment by giving seven days of written notice.', 'Created for the browser checks. It is not a real agreement.']),
   // P11, part 3 (Phase 8): course cover and lesson files, and the oversized ones (M-102, M-107).
   'cover.jpg': () => image('jpeg', { width: 960, height: 540, background: '#3a6ea5' }),
   'worksheet.pdf': () => textPdf(['Lesson worksheet', 'Map one flow from the first screen to the goal, then list its states.']),

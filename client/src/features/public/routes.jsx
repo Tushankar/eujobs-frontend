@@ -24,5 +24,7 @@ export default [
   { path: '/blog/:slug', lazy: lazyPage(() => import('./pages/BlogPostPage.jsx')) },
   { path: '/jobs', loader: jobsLoader, lazy: lazyPage(() => import('./pages/PublicJobsPage.jsx')) },
   { path: '/pricing', lazy: lazyPage(() => import('./pages/PricingPage.jsx')) },
+  // 2026-11-20: what agencies get, with their sign-up and sign-in
+  { path: '/agencies', lazy: lazyPage(() => import('./pages/AgenciesPage.jsx')) },
   { path: '/newsletter/:action', lazy: lazyPage(() => import('./pages/NewsletterPage.jsx')) },
 ]

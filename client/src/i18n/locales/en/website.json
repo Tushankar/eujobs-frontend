@@ -108,7 +108,11 @@
       "caption": "Newsletter issues",
       "deleteTitle": "Delete this draft?",
       "deleteText": "The draft is removed for good. Nothing was sent.",
-      "statuses": { "draft": "Draft", "sending": "Sending", "sent": "Sent" },
+      "statuses": {
+        "draft": "Draft",
+        "sending": "Sending",
+        "sent": "Sent"
+      },
       "back": "Back to newsletter issues",
       "issueTitle": "Newsletter issue",
       "issueDescription": "Pick the jobs and posts, write a short intro, check the preview and send.",
@@ -219,5 +223,59 @@
     "signUp": "New here? Create a free account",
     "requirements": "Requirements",
     "visaOnly": "Visa sponsorship only"
+  },
+  "agencies": {
+    "documentTitle": "For agencies",
+    "eyebrow": "For recruitment agencies",
+    "titleLead": "Place people with your clients,",
+    "titleAccent": "keep your talent on the books",
+    "lead": "Post short-term and contract jobs for the companies you work with, take candidates onto your books with your own agreement, and let EU Jobs check that each placement keeps to its contract.",
+    "signUp": "Sign up as an agency",
+    "signIn": "Sign in",
+    "liveJobs_one": "{{value}} agency job open now",
+    "liveJobs_other": "{{value}} agency jobs open now",
+    "liveAgencies_one": "{{value}} agency on EU Jobs",
+    "liveAgencies_other": "{{value}} agencies on EU Jobs",
+    "how": {
+      "title": "How it works",
+      "steps": [
+        {
+          "title": "Add your clients and post jobs",
+          "text": "Each job is for one client, with its dates, pay rate and hours. Show the client’s name or keep it confidential."
+        },
+        {
+          "title": "Take candidates onto your books",
+          "text": "Candidates ask to join or you invite them. They read your agreement and agree to it in the app."
+        },
+        {
+          "title": "Place them, and place them again",
+          "text": "Hire for a job and the placement starts. When it ends you can offer the same person their next job."
+        }
+      ]
+    },
+    "features": {
+      "title": "What your agency gets",
+      "clients": {
+        "title": "Clients",
+        "text": "Every company you recruit for in one list, linked to its EU Jobs page when it has one."
+      },
+      "books": {
+        "title": "Talent on your books",
+        "text": "Requests, invitations and who agreed to which version of your agreement."
+      },
+      "contracts": {
+        "title": "Contracts read by AI",
+        "text": "On Agency Plus, AI reads your agreement and each job’s contract and quotes the clause behind every rule. You check and confirm."
+      },
+      "placements": {
+        "title": "Placements that keep to their rules",
+        "text": "Exclusivity, notice, cooling-off and weekly hours are checked before anyone takes another job."
+      },
+      "hiring": {
+        "title": "Every hiring tool",
+        "text": "The pipeline, candidate search, messages and interviews that recruiters use."
+      }
+    },
+    "plans": "Agency plans"
   }
 }

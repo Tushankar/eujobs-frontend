@@ -1,7 +1,7 @@
 import mongoose from 'mongoose'
 import { ENUMS } from '../../config/enums.js'
 import { placeSchema } from '../candidates/candidates.model.js'
-import { rulesSchema } from './contracts.js'
+import { rulesSchema } from './rules.schema.js'
 
 const { Schema } = mongoose
 const { ObjectId } = Schema.Types

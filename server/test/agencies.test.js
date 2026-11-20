@@ -238,3 +238,29 @@ describe('shared hiring tools', () => {
     assert.equal((await api().get(`${v1}/me/counters`).set(auth(candidate))).body.unreadMessages, 1)
   })
 })
+
+describe('admin and public figures (phase 4)', () => {
+  it('lists agencies in their own admin table, exports them and counts pending ones per kind', async () => {
+    const owner = await createUser({ role: 'admin', isOwner: true })
+    const { user: agency } = await approvedAgency()
+    await approvedRecruiter()
+    await createUser({ role: 'agency', status: 'pending_review', fullName: 'Waiting Agency' })
+    const table = (await api().get(`${v1}/admin/users`).query({ role: 'agency' }).set(auth(owner))).body
+    assert.deepEqual(table.items.map((row) => [row.email, row.plan]).sort(), [[agency.email, 'agency_plus'], [(await User.findOne({ fullName: 'Waiting Agency' })).email, 'free']].sort())
+    assert.equal((await api().get(`${v1}/admin/users/${agency._id}`).set(auth(owner))).body.role, 'agency')
+    const csv = await api().get(`${v1}/admin/users/export`).query({ role: 'agency' }).set(auth(owner))
+    assert.match(csv.headers['content-disposition'], /agencies-\d{4}-\d{2}-\d{2}\.csv/)
+    assert.equal(await AuditEvent.countDocuments({ type: 'reports.agencies_exported' }), 1)
+    const queue = (await api().get(`${v1}/admin/moderation/accounts`).set(auth(owner))).body
+    assert.deepEqual(queue.pending, { recruiter: 0, agency: 1 })
+  })
+
+  it('gives the /agencies page its live figures', async () => {
+    const { user: agency } = await approvedAgency()
+    const client = (await addClient(agency, { name: 'Acme' })).body
+    const job = (await createJob(agency, jobBody({ agency: terms(client.id) }))).body
+    await setStatus(agency, job.id, 'published')
+    const { agencies } = (await api().get(`${v1}/landing`)).body
+    assert.deepEqual(agencies, { jobs: 1, accounts: 1 })
+  })
+})

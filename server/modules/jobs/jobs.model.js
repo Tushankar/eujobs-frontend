@@ -1,6 +1,6 @@
 import mongoose from 'mongoose'
 import { ENUMS } from '../../config/enums.js'
-import { rulesSchema } from '../agencies/contracts.js'
+import { rulesSchema } from '../agencies/rules.schema.js'
 import { placeSchema } from '../candidates/candidates.model.js'
 
 const { Schema } = mongoose

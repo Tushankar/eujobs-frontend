@@ -14,7 +14,7 @@ import { creditCost } from '../lib/usage.js'
 import { seedCatalog } from '../seed/catalog.js'
 import { aiStub } from './helpers/ai.js'
 import { imagePdf, textPdf } from './helpers/fixtures.js'
-import { api, attach, auth, createUser, useTestDb, useTestUploads } from './helpers/index.js'
+import { api, attach, auth, createUser, mailTo, useTestDb, useTestUploads } from './helpers/index.js'
 import { approvedAgency, approvedRecruiter, jobBody, listedCandidate } from './helpers/market.js'
 import { useFakePlaces } from './helpers/places.js'
 
@@ -223,5 +223,21 @@ describe('job contract rules', () => {
 
     const replaced = await contract(['A new assignment text.'])
     assert.deepEqual([replaced.body.agency.contract.confirmedAt, replaced.body.agency.contract.rules.coolingOffDays], [null, NONE])
+  })
+})
+
+describe('agency notifications (phase 4)', () => {
+  it('tells the agency in the bell and by email when someone asks to join, agrees and leaves', async () => {
+    const { user: agency, company } = await agencyWithAgreement()
+    const candidate = await listedCandidate({ fullName: 'Nora North' })
+    const joined = (await join(candidate, company)).body
+    await agencyAction(agency, joined.id, 'accept')
+    await agree(candidate, joined.id, 1)
+    await api().post(`${v1}/candidate/agencies/memberships/${joined.id}/end`).set(auth(candidate))
+    const bell = (await api().get(`${v1}/notifications`).set(auth(agency))).body.items
+    assert.deepEqual(bell.map((item) => item.type).sort(), ['agency_join_requested', 'agency_member_agreed', 'agency_member_left'])
+    assert.equal(bell.find((item) => item.type === 'agency_join_requested').path, '/agency/talent?tab=requests')
+    const mails = mailTo(agency.email, 'agency_update').map((mail) => mail.params.summary)
+    assert.deepEqual(mails, ['Nora North asked to join your books.', 'Nora North agreed to version 1 of your agreement.', 'Nora North left your books.'])
   })
 })
