@@ -51,7 +51,8 @@ function useContent() {
     // Some moments word their steps per role; asking for a key that does not exist would log a missing-key error.
     const roleKey = `${kind}.steps.${role}`
     const steps = t(i18n.exists(roleKey, { ns: 'success' }) ? roleKey : `${kind}.steps`, { ...values, returnObjects: true })
-    const to = PRIMARY[kind]?.(role, params)
+    // Links use the real role (an agency works under /agency); texts use the hiring side.
+    const to = PRIMARY[kind]?.(me?.role, params)
     return {
       title: t(`${kind}.title`, values),
       message: i18n.exists(`${kind}.message`, { ns: 'success' }) ? t(`${kind}.message`, values) : '',

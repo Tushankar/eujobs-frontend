@@ -98,6 +98,8 @@ router.use('/recruiter/overview', discoveryRoutes.overviewRouter)
 router.use('/recruiter/overview', applicationRoutes.overviewRouter)
 router.use('/recruiter/applications', applicationRoutes.recruiterRouter)
 router.use('/recruiter/pipeline', applicationRoutes.pipelineRouter)
+// 2026-11-20: agencies keep their plan at /agency/subscription (the client builds /${role}/subscription).
+router.use('/agency/subscription', paymentRoutes.subscriptionRouter)
 router.use('/agency/clients', agencyRoutes.clientsRouter)
 router.use('/agency/agreement', agencyRoutes.agreementRouter)
 router.use('/agency/talent', agencyRoutes.talentRouter)

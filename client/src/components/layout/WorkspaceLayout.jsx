@@ -1,4 +1,4 @@
-import { HIRING_ROLES } from '@/app/roles.js'
+import { HIRING_ROLES, isHiring } from '@/app/roles.js'
 import { useRef, useState } from 'react'
 import { useTranslation } from 'react-i18next'
 import { useSelector } from 'react-redux'
@@ -77,7 +77,7 @@ export default function WorkspaceLayout({ workspaceId }) {
         <>
           <UpgradeDialog />
           {/* P11d-A6: the interview prompts of a stage move, outside the row that moved. */}
-          {workspaceId === 'recruiter' && <InterviewMovePrompts />}
+          {isHiring(workspaceId) && <InterviewMovePrompts />}
           <ProductTour workspace={workspace} />
         </>
       )}

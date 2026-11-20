@@ -201,7 +201,7 @@ export default function InterviewCard({ interview, counterpartName }) {
 
       <div className={styles.actions}>
         {interview.status === 'confirmed' && interview.mode === 'video' && (
-          <Button as={open ? Link : 'button'} to={open ? `/${role}/interviews/${interview.id}/call` : undefined} disabled={!open} leftIcon={<Icon as={Video} size={14} />} data-join-interview>
+          <Button as={open ? Link : 'button'} to={open ? `/${me.role}/interviews/${interview.id}/call` : undefined} disabled={!open} leftIcon={<Icon as={Video} size={14} />} data-join-interview>
             {t('interviews:card.join')}
           </Button>
         )}

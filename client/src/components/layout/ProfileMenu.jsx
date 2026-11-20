@@ -171,7 +171,7 @@ export default function ProfileMenu({ workspace }) {
             />
             {workspace.id === 'candidate' && <SavedJobsRow workspace={workspace} onClick={close} />}
             {/* Shortlists are the recruiter's saved candidates (Recruiter Plus; without it the page shows the gate). */}
-            {workspace.id === 'recruiter' && <LinkRow to={path('shortlists')} icon={Bookmark} label={t('shell:nav.shortlists')} onClick={close} />}
+            {isHiring(workspace.id) && <LinkRow to={path('shortlists')} icon={Bookmark} label={t('shell:nav.shortlists')} onClick={close} />}
             {!isAdmin && (
               <LinkRow
                 to={path(workspace.id === 'candidate' ? 'learning#my-courses' : 'settings/courses')}
