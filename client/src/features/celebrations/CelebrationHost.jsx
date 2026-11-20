@@ -1,3 +1,4 @@
+import { hiringBase } from '@/app/roles.js'
 import { useState } from 'react'
 import { useTranslation } from 'react-i18next'
 import { useDispatch, useSelector } from 'react-redux'
@@ -21,14 +22,14 @@ const PRIMARY = {
   plan_started: (role) => `/${role}`,
   certificate: (role, params) => `/${role}/learning/${params.courseId}`,
   course_purchased: (role, params) => `/${role}/learning/${params.courseId}`,
-  job_published: (role, params) => `/recruiter/find-candidates?jobId=${params.jobId}`,
+  job_published: (role, params) => `${hiringBase(role)}/find-candidates?jobId=${params.jobId}`,
   interview_confirmed: (role, params) => `/${role}/interviews/${params.interviewId}`,
   hired: (role, params) => `/candidate/applications/${params.applicationId}`,
   profile_complete: () => '/candidate/jobs',
   verification_approved: () => '/candidate/verification',
   onboarding_done: () => '/candidate/jobs',
-  account_approved: () => '/recruiter/jobs/new',
-  candidate_hired: (role, params) => `/recruiter/jobs/${params.jobId}`,
+  account_approved: (role) => `${hiringBase(role)}/jobs/new`,
+  candidate_hired: (role, params) => `${hiringBase(role)}/jobs/${params.jobId}`,
   company_submitted: () => null,
   first_alert: () => null,
 }

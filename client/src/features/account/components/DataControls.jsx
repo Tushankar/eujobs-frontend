@@ -1,10 +1,11 @@
+import { isHiring } from '@/app/roles.js'
 import { useState } from 'react'
 import { useTranslation } from 'react-i18next'
 import { useNavigate } from 'react-router-dom'
 import { Download, FileDown, Trash2 } from 'lucide-react'
 import { Button, Icon, Modal, PasswordField } from '@/components/ui'
 import { errorCode } from '@/app/api.js'
-import { signOut } from '@/app/session.js'
+import { SIGN_IN_PATH, signOut } from '@/app/session.js'
 import { downloadFromApi } from '@/lib/download.js'
 import { check, compact, serverFieldErrors, useErrorText } from '@/lib/forms.js'
 import { usePreferences } from '@/lib/preferences.js'
@@ -29,7 +30,7 @@ export default function DataControls() {
   const [password, setPassword] = useState('')
   const [errors, setErrors] = useState({})
   const [deleteError, setDeleteError] = useState('')
-  const deleteKey = me.role === 'recruiter' ? 'account:data.deleteRecruiter' : 'account:data.delete'
+  const deleteKey = isHiring(me.role) ? 'account:data.deleteRecruiter' : 'account:data.delete'
 
   async function handleExport() {
     setExporting(true)
@@ -59,7 +60,7 @@ export default function DataControls() {
     try {
       await deleteAccount({ currentPassword: password }).unwrap()
       signOut()
-      navigate(me.role === 'recruiter' ? '/recruiter/sign-in' : '/sign-in', { replace: true })
+      navigate(SIGN_IN_PATH[me.role] ?? SIGN_IN_PATH.candidate, { replace: true })
     } catch (error) {
       setErrors(serverFieldErrors(error))
       if (errorCode(error) !== 'VALIDATION_FAILED') setDeleteError(errorText.code(error))
