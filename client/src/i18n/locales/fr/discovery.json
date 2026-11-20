@@ -12,7 +12,9 @@
     "empty": "Aucun candidat ne correspond à cette recherche",
     "emptyText": "Essayez un autre nom, poste ou compétence, ou effacez les filtres.",
     "clear": "Effacer la recherche et les filtres",
-    "applicantsOnly": "Avec l’offre gratuite, vous voyez les personnes qui ont postulé à vos offres d’emploi. Recruiter Plus ajoute la recherche, les filtres et tous les candidats de votre marché."
+    "applicantsOnly": "Avec l’offre gratuite, vous voyez les personnes qui ont postulé à vos offres d’emploi. Recruiter Plus ajoute la recherche, les filtres et tous les candidats de votre marché.",
+    "relevantView": "Seuls les candidats pertinents pour {{job}} sont affichés.",
+    "showAll": "Voir tous les candidats"
   },
   "toolbar": {
     "search": "Rechercher des candidats",

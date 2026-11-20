@@ -207,7 +207,7 @@ export default function JobsTable({ jobs, sort, onSort, caption, loading = false
                       {t('jobs:table.relevant', { count: job.relevantCount })}
                     </PlanButton>
                   ) : (
-                    <Link to={`/recruiter/find-candidates?jobId=${job.id}`} className={styles.relevant}>
+                    <Link to={`/recruiter/find-candidates?jobId=${job.id}&relevant=1`} className={styles.relevant}>
                       {t('jobs:table.relevant', { count: job.relevantCount })}
                     </Link>
                   )}

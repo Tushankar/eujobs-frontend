@@ -178,7 +178,9 @@ export async function listCandidates(user, company, query, entitlements) {
   }
   const country = viewOf(user)
   const job = await matchJob(company, query.jobId)
-  const entries = (await marketCandidates(country)).filter(keep(query, country))
+  // `relevant`: the job's relevant candidates in its own market, so the list matches the count on Jobs.
+  const population = query.relevant && job ? (await relevantCandidates(job)).map(({ entry }) => entry) : await marketCandidates(country)
+  const entries = population.filter(keep(query, country))
   const card = await cardContext(user, company, entries, job)
   let items = entries.map(card)
   if (query.verified) items = items.filter((item) => item.verification.verified)

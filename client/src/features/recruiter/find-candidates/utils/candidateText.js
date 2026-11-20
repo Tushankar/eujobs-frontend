@@ -5,11 +5,12 @@ import { useFormat } from '@/lib/preferences.js'
 /* How candidate facts read on cards, the compare table and the profile (A: recruiter B2). */
 
 /** The filters of Find candidates and Shortlists as API query parameters (empty values left out). */
-export function filterParams({ query, filters, sort, jobId }) {
+export function filterParams({ query, filters, sort, jobId, relevant }) {
   const params = {
     q: query.trim(),
     sort,
     jobId,
+    relevant: relevant && jobId ? '1' : '',
     workPreference: filters.workPreference,
     availability: filters.availability,
     minYears: filters.minYears,

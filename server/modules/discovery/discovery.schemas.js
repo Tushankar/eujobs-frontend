@@ -20,6 +20,8 @@ export const discoveryQuery = z.object({
   languageLevel: z.enum(ENUMS.languageLevel).optional(),
   verified: flag,
   placeId: placeId.optional(),
+  // "N relevant" on Jobs: only the job's relevant candidates (the same list its count is taken from).
+  relevant: flag,
   sort: z.enum(['recommended', 'experience', 'name']).default('recommended'),
 })
 

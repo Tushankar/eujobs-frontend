@@ -133,6 +133,22 @@ describe('recruiter jobs (§3.7, M-033 … M-041, P4-D6 … D8)', () => {
     assert.equal((await Job.findById(job.id)).relevantCount, 4)
   })
 
+  it('lists exactly the relevant candidates behind "N relevant" on Jobs', async () => {
+    const { user } = await approvedRecruiter()
+    const figma = await listedCandidate({ fullName: 'Figma Person', profile: { skills: ['Figma'] } })
+    await listedCandidate({ fullName: 'Excel Person', profile: { skills: ['Excel'] } })
+    const job = await published(user)
+    assert.equal(job.relevantCount, 1)
+    const list = (query) => api().get(`/api/v1/recruiter/candidates?jobId=${job.id}${query}`).set(auth(user))
+    const all = await list('')
+    assert.equal(all.status, 200, JSON.stringify(all.body))
+    assert.equal(all.body.items.length, 2)
+    const relevant = (await list('&relevant=1')).body
+    assert.deepEqual(relevant.items.map((item) => item.id), [String(figma._id)])
+    // The filters still narrow the relevant list.
+    assert.equal((await list('&relevant=1&q=nobody')).body.items.length, 0)
+  })
+
   it('runs the quality checks and suggests skills of the company market (M-060, P4-D5)', async () => {
     const { user } = await approvedRecruiter()
     const checks = (await api().post('/api/v1/recruiter/jobs/quality-checks').set(auth(user)).send({ title: 'Designer', requiredSkills: ['Figma'] })).body.items

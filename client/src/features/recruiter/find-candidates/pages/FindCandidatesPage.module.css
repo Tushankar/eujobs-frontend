@@ -114,6 +114,32 @@
   color: var(--muted-foreground);
 }
 
+/* "Candidates relevant to <job> · Show all candidates" (from "N relevant" on Jobs). */
+.relevantView {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: baseline;
+  gap: 4px 12px;
+  margin-top: 8px;
+  font-size: 12px;
+  line-height: 18px;
+  color: var(--muted-foreground);
+}
+
+.showAll {
+  padding: 0;
+  border: 0;
+  background: none;
+  font: inherit;
+  font-weight: 600;
+  color: var(--ring);
+  cursor: pointer;
+}
+
+.showAll:hover {
+  text-decoration: underline;
+}
+
 /* New search, filters or sort loading: the current cards stay, dimmed. */
 .grid {
   transition: opacity var(--transition);

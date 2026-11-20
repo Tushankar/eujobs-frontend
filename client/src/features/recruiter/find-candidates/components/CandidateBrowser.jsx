@@ -1,5 +1,6 @@
 import { useEffect, useState } from 'react'
 import { useTranslation } from 'react-i18next'
+import { useSearchParams } from 'react-router-dom'
 import { Button, Skeleton, SkeletonRegion } from '@/components/ui'
 import { tableState } from '@/components/common/tableState.js'
 import PlanButton from '@/features/candidate/billing/components/PlanButton.jsx'
@@ -39,8 +40,11 @@ export default function CandidateBrowser({ useList, notice, extra, empty }) {
   const [compareOpen, setCompareOpen] = useState(false)
   const [limitHit, setLimitHit] = useState(false)
   const { jobs, job, setJobId, ready, loading: jobsLoading } = useMatchJob()
+  const [searchParams, setSearchParams] = useSearchParams()
+  // "N relevant" on Jobs links here with `?relevant=1`: only that job's relevant candidates, until cleared.
+  const relevantOnly = !locked && searchParams.get('relevant') === '1' && Boolean(job)
   const toggleShortlist = useShortlistToggle()
-  const params = locked ? { query: '', filters: EMPTY_FILTERS, sort: 'recommended' } : { query: debounced, filters, sort, jobId: job?.id }
+  const params = locked ? { query: '', filters: EMPTY_FILTERS, sort: 'recommended' } : { query: debounced, filters, sort, jobId: job?.id, relevant: relevantOnly }
   const list = useList(filterParams(params), { skip: !ready })
   const { data } = list
   const items = data?.items ?? []
@@ -65,15 +69,34 @@ export default function CandidateBrowser({ useList, notice, extra, empty }) {
     setComparedIds([...comparedIds, id])
   }
 
+  /** Leaves the relevant-only view; the job stays chosen. */
+  function showAll() {
+    const next = new URLSearchParams(searchParams)
+    next.delete('relevant')
+    setSearchParams(next, { replace: true })
+  }
+
+  /** A job picked in the toolbar replaces the one linked from Jobs (`?jobId`) and the relevant-only view. */
+  function changeJob(id) {
+    setJobId(id)
+    if (searchParams.has('jobId') || searchParams.has('relevant')) {
+      const next = new URLSearchParams(searchParams)
+      next.delete('jobId')
+      next.delete('relevant')
+      setSearchParams(next, { replace: true })
+    }
+  }
+
   function clear() {
     setQuery('')
     setFilters(EMPTY_FILTERS)
+    if (relevantOnly) showAll()
   }
 
   return (
     <>
       <div className={styles.toolbar} data-tour="candidates-search">
-        <DiscoveryToolbar locked={locked} jobsLoading={jobsLoading} query={query} onQueryChange={setQuery} jobs={jobs} job={job} onJobChange={setJobId} filters={filters} onFiltersChange={setFilters} />
+        <DiscoveryToolbar locked={locked} jobsLoading={jobsLoading} query={query} onQueryChange={setQuery} jobs={jobs} job={job} onJobChange={changeJob} filters={filters} onFiltersChange={setFilters} />
       </div>
 
       <div className={styles.resultsBar}>
@@ -90,6 +113,14 @@ export default function CandidateBrowser({ useList, notice, extra, empty }) {
         )}
       </div>
       {locked && <p className={styles.view}>{t('discovery:find.applicantsOnly')}</p>}
+      {relevantOnly && (
+        <p className={styles.relevantView} data-relevant-view>
+          <span>{t('discovery:find.relevantView', { job: job.title })}</span>
+          <button type="button" className={styles.showAll} onClick={showAll}>
+            {t('discovery:find.showAll')}
+          </button>
+        </p>
+      )}
       {data && notice?.(data)}
 
       {loading ? (

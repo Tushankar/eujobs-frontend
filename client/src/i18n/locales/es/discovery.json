@@ -12,7 +12,9 @@
     "empty": "Ningún candidato coincide con esta búsqueda",
     "emptyText": "Prueba con otro nombre, puesto o habilidad, o borra los filtros.",
     "clear": "Borrar búsqueda y filtros",
-    "applicantsOnly": "Con el plan gratuito ves a las personas que se postularon a tus ofertas. Recruiter Plus añade la búsqueda, los filtros y todos los candidatos de tu mercado."
+    "applicantsOnly": "Con el plan gratuito ves a las personas que se postularon a tus ofertas. Recruiter Plus añade la búsqueda, los filtros y todos los candidatos de tu mercado.",
+    "relevantView": "Solo se muestran los candidatos relevantes para {{job}}.",
+    "showAll": "Ver todos los candidatos"
   },
   "toolbar": {
     "search": "Buscar candidatos",
