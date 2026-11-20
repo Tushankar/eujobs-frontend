@@ -91,56 +91,6 @@ a.file:hover {
   color: var(--muted-foreground);
 }
 
-.pdfButton {
-  position: relative;
-  display: inline-flex;
-  align-items: center;
-  gap: 8px;
-  height: 40px;
-  padding: 0 18px;
-  border-radius: 999px;
-  font-size: 13px;
-  font-weight: 600;
-  cursor: pointer;
-  white-space: nowrap;
-}
-
-.pdfButton input {
-  position: absolute;
-  inset: 0;
-  opacity: 0;
-  cursor: pointer;
-}
-
-.pdfButton:focus-within {
-  outline: 2px solid var(--ring);
-  outline-offset: 2px;
-}
-
-.pdfButton[aria-busy='true'] {
-  opacity: 0.6;
-  pointer-events: none;
-}
-
-.outline {
-  border: 1px solid var(--border-strong);
-  background: var(--card);
-  color: var(--foreground);
-}
-
-.outline:hover {
-  background: var(--muted);
-}
-
-.primary {
-  background: var(--brand-gradient);
-  color: #fff;
-}
-
-.primary:hover {
-  background: var(--brand-gradient-hover);
-}
-
 .linkDanger {
   padding: 0;
   border: 0;

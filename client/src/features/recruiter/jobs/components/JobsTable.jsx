@@ -18,7 +18,7 @@ import { lacksEntitlement } from '@/features/candidate/billing/usePlan.js'
 import { useJobText } from '@/lib/jobText.js'
 import { usePreferences } from '@/lib/preferences.js'
 import { useDeleteJobMutation, usePublishLock, useSetJobStatusMutation } from '../api.js'
-import { JOB_STEPS } from '../utils/jobForm.js'
+import { jobSteps } from '../utils/jobForm.js'
 import JobStatusBadge from './JobStatusBadge.jsx'
 import styles from './JobsTable.module.css'
 
@@ -141,7 +141,7 @@ export default function JobsTable({ jobs, sort, onSort, caption, loading = false
       if (status === 'published' && job.status === 'draft') dispatch(celebrate({ kind: 'job_published', params: { job: job.title, jobId: job.id } }))
     } catch (error) {
       const step = error.data?.error?.params?.step
-      if (errorCode(error) === 'VALIDATION_FAILED' && step) navigate(`${hiringPath()}/jobs/${job.id}/edit?step=${JOB_STEPS.indexOf(step)}&publish=1`)
+      if (errorCode(error) === 'VALIDATION_FAILED' && step) navigate(`${hiringPath()}/jobs/${job.id}/edit?step=${jobSteps().indexOf(step)}&publish=1`)
       else setFailure(errorCode(error) === 'LOCKED' ? t('jobs:table.locked') : errorText.code(error))
     }
   }

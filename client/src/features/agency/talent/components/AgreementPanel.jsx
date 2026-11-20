@@ -1,6 +1,6 @@
 import { useState } from 'react'
 import { useTranslation } from 'react-i18next'
-import { FileText, Sparkles, Upload } from 'lucide-react'
+import { FileText, Sparkles } from 'lucide-react'
 import { errorCode, useGetConfigQuery } from '@/app/api.js'
 import ConfirmDialog from '@/components/common/ConfirmDialog.jsx'
 import GetStartedCard from '@/components/common/GetStartedCard.jsx'
@@ -11,22 +11,8 @@ import { checkUpload, serverFieldErrors, useErrorText, useUploadText } from '@/l
 import { useFormat } from '@/lib/preferences.js'
 import { useDeleteAgreementDraftMutation, useGetAgreementQuery, usePublishAgreementMutation, useReadAgreementMutation, useSaveAgreementRulesMutation, useUploadAgreementMutation } from '../../api.js'
 import { RulesEditor, RulesList } from '../../components/ContractRules.jsx'
+import PdfButton from '../../components/PdfButton.jsx'
 import styles from './AgreementPanel.module.css'
-
-/** A PDF picker drawn as a button (the input covers it). */
-export function PdfButton({ label, onFile, busy, variant = 'outline' }) {
-  return (
-    <label className={`${styles.pdfButton} ${styles[variant]}`} aria-busy={busy || undefined}>
-      <input type="file" accept=".pdf,application/pdf" disabled={busy} onChange={(event) => {
-        const file = event.target.files?.[0]
-        event.target.value = ''
-        if (file) onFile(file)
-      }} />
-      <Icon as={Upload} size={14} />
-      {label}
-    </label>
-  )
-}
 
 /** The PDF of a version: its name, opened in a new tab. */
 function FileLink({ file }) {

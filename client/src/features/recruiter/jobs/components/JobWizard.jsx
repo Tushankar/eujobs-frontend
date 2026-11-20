@@ -8,7 +8,7 @@ import { cx } from '@/utils/cx.js'
 import { Button, Icon } from '@/components/ui'
 import PlanButton from '@/features/candidate/billing/components/PlanButton.jsx'
 import { serverFieldErrors, useErrorText } from '@/lib/forms.js'
-import { bodyErrorsToForm, JOB_STEPS, validateAll, validateStep } from '../utils/jobForm.js'
+import { bodyErrorsToForm, jobSteps, validateAll, validateStep } from '../utils/jobForm.js'
 import JobPreviewCard from './JobPreviewCard.jsx'
 import JobStepFields from './JobStepFields.jsx'
 import styles from './JobWizard.module.css'
@@ -38,12 +38,12 @@ export default function JobWizard({ initialValues, initialStep = 0, reachable = 
   useEffect(() => scrollActiveIntoView(stepsRef.current), [step])
   useEffect(() => (stepsRef.current ? trackRowEdges(stepsRef.current) : undefined), [])
 
-  const current = JOB_STEPS[step]
+  const current = jobSteps()[step]
   const isFirst = step === 0
-  const isLast = step === JOB_STEPS.length - 1
+  const isLast = step === jobSteps().length - 1
   // A step reads as done once passed and ready to publish; steps without fields only once the recruiter is past them.
   // The last step is the action itself, so it is not counted.
-  const doneSteps = JOB_STEPS.map(
+  const doneSteps = jobSteps().map(
     (id, index) =>
       Boolean(config) &&
       index !== step &&
@@ -51,7 +51,7 @@ export default function JobWizard({ initialValues, initialStep = 0, reachable = 
       (index < step || !READ_ONLY_STEPS.includes(id)) &&
       Object.keys(validateStep(id, values, config.limits, { publishing: true })).length === 0,
   )
-  const sections = JOB_STEPS.length - 1
+  const sections = jobSteps().length - 1
   const doneCount = doneSteps.slice(0, sections).filter(Boolean).length
 
   useEffect(() => {
@@ -88,7 +88,7 @@ export default function JobWizard({ initialValues, initialStep = 0, reachable = 
     } catch (error) {
       if (errorCode(error) === 'VALIDATION_FAILED') {
         setErrors(bodyErrorsToForm(serverFieldErrors(error)))
-        const serverStep = JOB_STEPS.indexOf(error.data.error.params?.step)
+        const serverStep = jobSteps().indexOf(error.data.error.params?.step)
         if (serverStep >= 0) setStep(serverStep)
       } else setFailure(error)
       return false
@@ -129,7 +129,7 @@ export default function JobWizard({ initialValues, initialStep = 0, reachable = 
             </div>
           </div>
           <ol ref={stepsRef} className={styles.steps}>
-            {JOB_STEPS.map((id, index) => {
+            {jobSteps().map((id, index) => {
               const active = index === step
               const done = doneSteps[index]
               return (
@@ -152,7 +152,7 @@ export default function JobWizard({ initialValues, initialStep = 0, reachable = 
 
         <form className={`${styles.form} sticky-side`} onSubmit={handleSubmit} noValidate>
           <div className={styles.header}>
-            <p className={styles.eyebrow}>{t('jobs:wizard.stepCount', { current: step + 1, total: JOB_STEPS.length })}</p>
+            <p className={styles.eyebrow}>{t('jobs:wizard.stepCount', { current: step + 1, total: jobSteps().length })}</p>
             <h2 className={styles.title} ref={headingRef} tabIndex={-1}>
               {t(`jobs:steps.${current}`)}
             </h2>

@@ -8,7 +8,7 @@ import PageTitle from '@/components/common/PageTitle.jsx'
 import { useCreateJobMutation, useGetRecruiterJobQuery, usePublishLock, useSetJobStatusMutation, useUpdateJobMutation } from '../api.js'
 import JobNotFound from '../components/JobNotFound.jsx'
 import JobWizard from '../components/JobWizard.jsx'
-import { EMPTY_VALUES, JOB_STEPS, jobToValues, validateAll, valuesToBody } from '../utils/jobForm.js'
+import { EMPTY_VALUES, jobSteps, jobToValues, validateAll, valuesToBody } from '../utils/jobForm.js'
 import styles from './CreateJobPage.module.css'
 
 const DRAFT_ACTIONS = [
@@ -67,7 +67,7 @@ function EditJob({ jobId }) {
 
   const draft = job.status === 'draft'
   const initialValues = jobToValues(job)
-  const step = Math.min(Math.max(Number(params.get('step')) || 0, 0), JOB_STEPS.length - 1)
+  const step = Math.min(Math.max(Number(params.get('step')) || 0, 0), jobSteps().length - 1)
   // Opened from a failed publish (M-039): show what is missing.
   const initialErrors = params.get('publish') ? validateAll(initialValues, config.limits).errors : {}
   const save = (values) => updateJob({ id: jobId, body: valuesToBody(values) }).unwrap()
@@ -89,7 +89,7 @@ function EditJob({ jobId }) {
           key={jobId}
           initialValues={initialValues}
           initialStep={step}
-          reachable={JOB_STEPS.length - 1}
+          reachable={jobSteps().length - 1}
           initialErrors={initialErrors}
           companyName={job.company.displayName}
           finishActions={draft ? DRAFT_ACTIONS.map((action) => ({ ...action, locked: action.status === 'published' && publishLocked(jobId) })) : LIVE_ACTIONS}
