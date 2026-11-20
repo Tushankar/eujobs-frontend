@@ -1,0 +1,104 @@
+.toolbar {
+  display: flex;
+  justify-content: flex-end;
+  margin-bottom: 16px;
+}
+
+.search {
+  width: min(320px, 100%);
+}
+
+.card {
+  border: 1px solid var(--border);
+  border-radius: var(--radius-xl);
+  background: var(--card);
+}
+
+.list li + li {
+  border-top: 1px solid var(--border);
+}
+
+.row {
+  display: flex;
+  align-items: center;
+  gap: 14px;
+  padding: 14px 18px;
+  transition: background-color var(--transition);
+}
+
+.row:hover {
+  background: var(--muted);
+}
+
+.text {
+  display: flex;
+  flex: 1;
+  flex-direction: column;
+  gap: 2px;
+  min-width: 0;
+  padding: 0;
+  border: 0;
+  background: none;
+  text-align: left;
+  cursor: pointer;
+}
+
+.name {
+  font-size: 14px;
+  font-weight: 600;
+  line-height: 20px;
+  color: var(--foreground);
+}
+
+.meta,
+.linked {
+  font-size: 12px;
+  line-height: 18px;
+  color: var(--muted-foreground);
+}
+
+.linked {
+  font-weight: 600;
+}
+
+.menuPanel {
+  min-width: 168px;
+}
+
+.menu {
+  padding: 6px;
+}
+
+.menuItem {
+  display: block;
+  width: 100%;
+  padding: 9px 10px;
+  border: 0;
+  border-radius: var(--radius-lg);
+  background: transparent;
+  font-size: 12px;
+  line-height: 16px;
+  text-align: left;
+  color: var(--foreground);
+  cursor: pointer;
+}
+
+.menuItem:hover {
+  background: var(--muted);
+}
+
+.menuDanger {
+  color: var(--destructive);
+}
+
+.failure {
+  font-size: 13px;
+  line-height: 20px;
+  color: var(--destructive);
+}
+
+@media (max-width: 599px) {
+  .row {
+    padding: 14px 16px;
+  }
+}

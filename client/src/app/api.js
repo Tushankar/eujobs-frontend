@@ -109,6 +109,11 @@ const TAG_TYPES = [
     'AdminBlog',
     'Subscribers',
     'NewsletterIssues',
+    // 2026-11-20: agencies
+    'AgencyClients',
+    'AgencyAgreement',
+    'AgencyTalent',
+    'AgencyPlacements',
 ]
 
 /**

@@ -1,0 +1,192 @@
+.stack {
+  display: flex;
+  flex-direction: column;
+  gap: 16px;
+}
+
+.card {
+  display: flex;
+  flex-direction: column;
+  gap: 18px;
+}
+
+.head {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: flex-start;
+  justify-content: space-between;
+  gap: 12px;
+}
+
+.title {
+  font-family: var(--font-display);
+  font-size: 16px;
+  font-weight: 700;
+  line-height: 24px;
+  color: var(--foreground);
+}
+
+.lead {
+  margin-top: 2px;
+  font-size: 13px;
+  line-height: 20px;
+  color: var(--muted-foreground);
+}
+
+.fileRow {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  justify-content: space-between;
+  gap: 10px 16px;
+  padding: 12px 14px;
+  border: 1px solid var(--border);
+  border-radius: var(--radius-lg);
+}
+
+.fileActions {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: 8px 16px;
+}
+
+.file {
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+  min-width: 0;
+  font-size: 13px;
+  font-weight: 600;
+  color: var(--foreground);
+  overflow-wrap: anywhere;
+}
+
+a.file:hover {
+  color: var(--primary);
+}
+
+.ai {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  justify-content: space-between;
+  gap: 12px;
+  padding: 14px 16px;
+  border: 1px solid var(--border);
+  border-radius: var(--radius-lg);
+  background: var(--muted);
+}
+
+.aiTitle {
+  font-size: 14px;
+  font-weight: 700;
+  line-height: 20px;
+  color: var(--foreground);
+}
+
+.aiText {
+  font-size: 12px;
+  line-height: 18px;
+  color: var(--muted-foreground);
+}
+
+.pdfButton {
+  position: relative;
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+  height: 40px;
+  padding: 0 18px;
+  border-radius: 999px;
+  font-size: 13px;
+  font-weight: 600;
+  cursor: pointer;
+  white-space: nowrap;
+}
+
+.pdfButton input {
+  position: absolute;
+  inset: 0;
+  opacity: 0;
+  cursor: pointer;
+}
+
+.pdfButton:focus-within {
+  outline: 2px solid var(--ring);
+  outline-offset: 2px;
+}
+
+.pdfButton[aria-busy='true'] {
+  opacity: 0.6;
+  pointer-events: none;
+}
+
+.outline {
+  border: 1px solid var(--border-strong);
+  background: var(--card);
+  color: var(--foreground);
+}
+
+.outline:hover {
+  background: var(--muted);
+}
+
+.primary {
+  background: var(--brand-gradient);
+  color: #fff;
+}
+
+.primary:hover {
+  background: var(--brand-gradient-hover);
+}
+
+.linkDanger {
+  padding: 0;
+  border: 0;
+  background: none;
+  font-size: 13px;
+  font-weight: 600;
+  color: var(--destructive);
+  cursor: pointer;
+}
+
+.problem,
+.notice {
+  padding: 10px 14px;
+  border: 1px solid var(--border);
+  border-radius: var(--radius-lg);
+  font-size: 13px;
+  line-height: 20px;
+}
+
+.problem {
+  color: var(--destructive);
+}
+
+.notice {
+  color: var(--foreground);
+}
+
+.earlier li + li {
+  border-top: 1px solid var(--border);
+}
+
+.earlierRow {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: 6px 16px;
+  padding: 12px 0;
+}
+
+.version {
+  font-size: 14px;
+  font-weight: 600;
+  color: var(--foreground);
+}
+
+.date {
+  font-size: 13px;
+  color: var(--muted-foreground);
+}

@@ -1,0 +1,149 @@
+.form {
+  display: flex;
+  flex-direction: column;
+  gap: 16px;
+}
+
+.logoRow {
+  display: flex;
+  align-items: center;
+  gap: 14px;
+  padding-bottom: 16px;
+  border-bottom: 1px solid var(--border);
+}
+
+.logoActions {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: 6px 14px;
+  min-width: 0;
+}
+
+.upload {
+  position: relative;
+  font-size: 13px;
+  font-weight: 600;
+  color: var(--primary);
+  cursor: pointer;
+}
+
+.upload input {
+  position: absolute;
+  inset: 0;
+  opacity: 0;
+  cursor: pointer;
+}
+
+.upload:focus-within {
+  outline: 2px solid var(--ring);
+  outline-offset: 2px;
+  border-radius: var(--radius-sm);
+}
+
+.removeLogo {
+  padding: 0;
+  border: 0;
+  background: none;
+  font-size: 13px;
+  font-weight: 600;
+  color: var(--destructive);
+  cursor: pointer;
+}
+
+.logoHint,
+.logoError {
+  flex-basis: 100%;
+  font-size: 12px;
+  line-height: 18px;
+  color: var(--muted-foreground);
+}
+
+.logoError,
+.error {
+  color: var(--destructive);
+}
+
+.error {
+  font-size: 13px;
+  line-height: 20px;
+}
+
+.search {
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+}
+
+.results {
+  display: flex;
+  flex-direction: column;
+  max-height: 220px;
+  overflow-y: auto;
+  border: 1px solid var(--border);
+  border-radius: var(--radius-lg);
+}
+
+.results[aria-busy='true'] {
+  opacity: 0.6;
+}
+
+.results li + li {
+  border-top: 1px solid var(--border);
+}
+
+.none {
+  padding: 12px 14px;
+  font-size: 13px;
+  color: var(--muted-foreground);
+}
+
+.result {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  width: 100%;
+  padding: 10px 12px;
+  border: 0;
+  background: transparent;
+  text-align: left;
+  cursor: pointer;
+}
+
+.result:hover,
+.result:focus-visible {
+  background: var(--muted);
+}
+
+.resultText {
+  display: flex;
+  flex-direction: column;
+  min-width: 0;
+}
+
+.resultName {
+  font-size: 14px;
+  font-weight: 600;
+  color: var(--foreground);
+}
+
+.resultMeta {
+  font-size: 12px;
+  color: var(--muted-foreground);
+}
+
+.linked {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 12px;
+  padding: 10px 12px 10px 14px;
+  border: 1px solid var(--border);
+  border-radius: var(--radius-lg);
+}
+
+.linkedName {
+  font-size: 14px;
+  font-weight: 600;
+  color: var(--foreground);
+}
