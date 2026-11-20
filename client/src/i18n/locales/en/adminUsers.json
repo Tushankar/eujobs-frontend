@@ -7,6 +7,10 @@
     "title": "Recruiters, with a clear view.",
     "description": "Review recruiter accounts, their companies and activity, and keep your marketplace trustworthy."
   },
+  "agencies": {
+    "title": "Agencies, with a clear view.",
+    "description": "Review agency accounts, their companies and activity, and keep your marketplace trustworthy."
+  },
   "export": "Export CSV",
   "exporting": "Exporting…",
   "search": "Search names, emails or companies",
@@ -47,7 +51,12 @@
     "partial": "{{count}} of 3 verified",
     "verified": "Verified"
   },
-  "recruiterState": { "pending": "Pending", "approved": "Approved", "rejected": "Rejected", "suspended": "Suspended" },
+  "recruiterState": {
+    "pending": "Pending",
+    "approved": "Approved",
+    "rejected": "Rejected",
+    "suspended": "Suspended"
+  },
   "learning": "{{enrolled}} enrolled, {{certificates}} certificates",
   "courses_one": "{{count}} course",
   "courses_other": "{{count}} courses",
@@ -62,7 +71,11 @@
   "manageLabel": "Manage {{name}}",
   "empty": "No accounts match",
   "emptyText": "Try a different search, or clear the filters.",
-  "caption": { "candidate": "Candidates", "recruiter": "Recruiters" },
+  "caption": {
+    "candidate": "Candidates",
+    "recruiter": "Recruiters",
+    "agency": "Agencies"
+  },
   "detail": {
     "back": "Back to {{list}}",
     "notFound": "This account doesn’t exist.",

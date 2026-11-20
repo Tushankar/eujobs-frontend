@@ -90,7 +90,8 @@
       "applications_exported": "Applications exported ({{count}} rows)",
       "report_generated": "Report generated: {{report}} ({{filename}})",
       "report_downloaded": "Report downloaded again: {{report}} ({{filename}})",
-      "subscribers_exported": "Newsletter subscribers exported ({{count}} rows)"
+      "subscribers_exported": "Newsletter subscribers exported ({{count}} rows)",
+      "agencies_exported": "Agencies exported ({{count}} rows)"
     },
     "jobs": {
       "status_changed": "Job status changed: {{title}} ({{company}}), {{from}} → {{to}}",

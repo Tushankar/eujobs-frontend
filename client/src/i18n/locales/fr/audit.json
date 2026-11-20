@@ -90,7 +90,8 @@
       "applications_exported": "Candidatures exportées ({{count}} lignes)",
       "report_generated": "Rapport généré : {{report}} ({{filename}})",
       "report_downloaded": "Rapport téléchargé à nouveau : {{report}} ({{filename}})",
-      "subscribers_exported": "Abonnés à la newsletter exportés ({{count}} lignes)"
+      "subscribers_exported": "Abonnés à la newsletter exportés ({{count}} lignes)",
+      "agencies_exported": "Agences exportées ({{count}} lignes)"
     },
     "jobs": {
       "status_changed": "Statut de l’offre modifié : {{title}} ({{company}}), {{from}} → {{to}}",

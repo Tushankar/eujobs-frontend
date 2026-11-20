@@ -7,6 +7,10 @@
     "title": "Les recruteurs, en toute clarté.",
     "description": "Examinez les comptes recruteurs, leurs entreprises et leur activité, et gardez un marché digne de confiance."
   },
+  "agencies": {
+    "title": "Les agences, en toute clarté.",
+    "description": "Examinez les comptes d’agence, leurs entreprises et leur activité, et gardez une place de marché digne de confiance."
+  },
   "export": "Exporter en CSV",
   "exporting": "Export en cours…",
   "search": "Rechercher des noms, e-mails ou entreprises",
@@ -47,7 +51,12 @@
     "partial": "{{count}} sur 3 vérifiés",
     "verified": "Vérifié"
   },
-  "recruiterState": { "pending": "En attente", "approved": "Approuvé", "rejected": "Refusé", "suspended": "Suspendu" },
+  "recruiterState": {
+    "pending": "En attente",
+    "approved": "Approuvé",
+    "rejected": "Refusé",
+    "suspended": "Suspendu"
+  },
   "learning": "{{enrolled}} inscriptions, {{certificates}} certificats",
   "courses_one": "{{count}} formation",
   "courses_many": "{{count}} formations",
@@ -64,7 +73,11 @@
   "manageLabel": "Gérer {{name}}",
   "empty": "Aucun compte ne correspond",
   "emptyText": "Essayez une autre recherche ou effacez les filtres.",
-  "caption": { "candidate": "Candidats", "recruiter": "Recruteurs" },
+  "caption": {
+    "candidate": "Candidats",
+    "recruiter": "Recruteurs",
+    "agency": "Agences"
+  },
   "detail": {
     "back": "Retour à {{list}}",
     "notFound": "Ce compte n’existe pas.",

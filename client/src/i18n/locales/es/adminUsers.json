@@ -7,6 +7,10 @@
     "title": "Reclutadores, con una visión clara.",
     "description": "Revisa las cuentas de los reclutadores, sus empresas y su actividad, y mantén un mercado de confianza."
   },
+  "agencies": {
+    "title": "Agencias, con una visión clara.",
+    "description": "Revisa las cuentas de agencia, sus empresas y su actividad, y mantén la confianza en tu mercado."
+  },
   "export": "Exportar CSV",
   "exporting": "Exportando…",
   "search": "Buscar nombres, correos o empresas",
@@ -47,7 +51,12 @@
     "partial": "{{count}} de 3 verificados",
     "verified": "Verificado"
   },
-  "recruiterState": { "pending": "Pendiente", "approved": "Aprobado", "rejected": "Rechazado", "suspended": "Suspendido" },
+  "recruiterState": {
+    "pending": "Pendiente",
+    "approved": "Aprobado",
+    "rejected": "Rechazado",
+    "suspended": "Suspendido"
+  },
   "learning": "{{enrolled}} inscripciones, {{certificates}} certificados",
   "courses_one": "{{count}} curso",
   "courses_many": "{{count}} cursos",
@@ -64,7 +73,11 @@
   "manageLabel": "Gestionar a {{name}}",
   "empty": "Ninguna cuenta coincide",
   "emptyText": "Prueba con otra búsqueda o borra los filtros.",
-  "caption": { "candidate": "Candidatos", "recruiter": "Reclutadores" },
+  "caption": {
+    "candidate": "Candidatos",
+    "recruiter": "Reclutadores",
+    "agency": "Agencias"
+  },
   "detail": {
     "back": "Volver a {{list}}",
     "notFound": "Esta cuenta no existe.",
