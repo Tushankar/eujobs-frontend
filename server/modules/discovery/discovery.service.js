@@ -221,7 +221,7 @@ export async function candidateProfile(user, company, id, jobId) {
   return {
     ...card,
     // M-071: one stage select per application; the profile of a non-applicant has none.
-    applications: applications.map((application) => ({ id: String(application._id), status: application.status, stageId: String(application.stageId), appliedAt: application.appliedAt, job: { id: String(application.jobId), title: jobTitles.get(String(application.jobId)) } })),
+    applications: applications.map((application) => ({ id: String(application._id), status: application.status, stageId: String(application.stageId), appliedAt: application.appliedAt, coverNote: application.coverNote ?? '', job: { id: String(application.jobId), title: jobTitles.get(String(application.jobId)) } })),
     // A new conversation needs a listable candidate or an application that is not withdrawn (P7-C2, owner change).
     canStartConversation: !entry.viaApplication || applications.some((application) => application.status !== 'withdrawn'),
     // C24: course certificates show wherever the profile is visible (they do not verify skills, M-026).

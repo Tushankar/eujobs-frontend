@@ -103,3 +103,12 @@
   border-color: var(--foreground);
   color: var(--foreground);
 }
+
+/* The candidate's cover note, clamped above the badges. */
+.coverNote {
+  padding: 8px 0 12px;
+}
+
+.meta + .coverNote {
+  padding-top: 0;
+}

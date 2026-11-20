@@ -6,6 +6,7 @@ import { Avatar, Icon, Modal } from '@/components/ui'
 import InterviewStatus from '@/features/interviews/components/InterviewStatus.jsx'
 import ScheduleInterviewButton from '@/features/interviews/components/ScheduleInterviewButton.jsx'
 import ApplicationStageSelect from '@/features/recruiter/applications/components/ApplicationStageSelect.jsx'
+import CoverNote from '@/features/recruiter/applications/components/CoverNote.jsx'
 import CandidateNotes from '@/features/recruiter/find-candidates/components/CandidateNotes.jsx'
 import { useFormat } from '@/lib/preferences.js'
 import styles from './ApplicantPanel.module.css'
@@ -39,6 +40,15 @@ export default function ApplicantPanel({ application, stages, onClose }) {
             </Link>
           </div>
         </div>
+
+        {current.coverNote && (
+          <section className={styles.section} aria-labelledby="panel-cover-note">
+            <h3 id="panel-cover-note" className={styles.heading}>
+              {t('applications:coverNote.title')}
+            </h3>
+            <CoverNote text={current.coverNote} labelled={false} />
+          </section>
+        )}
 
         <section className={styles.section} aria-labelledby="panel-stage">
           <h3 id="panel-stage" className={styles.heading}>

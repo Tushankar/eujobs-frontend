@@ -235,6 +235,11 @@
     "row": "{{job}} · a postulé le {{date}}",
     "stage": "Étape de la candidature pour {{job}}"
   },
+  "coverNote": {
+    "title": "Message de motivation",
+    "more": "Voir plus",
+    "less": "Voir moins"
+  },
   "jobApplicants": {
     "title": "Candidats",
     "empty": "Aucune candidature active pour ce poste pour l’instant.",

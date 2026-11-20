@@ -4,6 +4,7 @@ import { Avatar, Icon, Skeleton } from '@/components/ui'
 import PillBadge from '@/components/common/PillBadge.jsx'
 import InterviewStatus from '@/features/interviews/components/InterviewStatus.jsx'
 import ApplicationStageSelect from '@/features/recruiter/applications/components/ApplicationStageSelect.jsx'
+import CoverNote from '@/features/recruiter/applications/components/CoverNote.jsx'
 import { useFormat } from '@/lib/preferences.js'
 import { cx } from '@/utils/cx.js'
 import styles from './ApplicantCard.module.css'
@@ -44,6 +45,7 @@ export default function ApplicantCard({ application, stages, dragging, onDragSta
       </div>
       <p className={styles.role}>{candidate.headline}</p>
       {meta.length > 0 && <p className={styles.meta}>{meta.join(' · ')}</p>}
+      <CoverNote text={application.coverNote} className={styles.coverNote} />
       <div className={styles.badges}>
         <PillBadge tone="accent">
           <Icon as={Sparkles} size={10} />

@@ -210,6 +210,7 @@ async function recruiterDtos(viewer, applications) {
       id: String(application._id),
       status: application.status,
       appliedAt: application.appliedAt,
+      coverNote: application.coverNote ?? '',
       stage: stageOf(application, stageById),
       history: application.history.map(({ status, stageName, at }) => ({ status, stageName, at })),
       noteCount: notes.get(String(application.candidateId)) ?? 0,

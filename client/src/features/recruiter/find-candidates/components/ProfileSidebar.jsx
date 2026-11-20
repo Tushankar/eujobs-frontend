@@ -4,6 +4,7 @@ import { Icon, Panel, SelectField, Skeleton, SkeletonRegion } from '@/components
 import PlanButton from '@/features/candidate/billing/components/PlanButton.jsx'
 import { useGetPipelineQuery } from '@/features/recruiter/applications/api.js'
 import ApplicationStageSelect from '@/features/recruiter/applications/components/ApplicationStageSelect.jsx'
+import CoverNote from '@/features/recruiter/applications/components/CoverNote.jsx'
 import { MessageCandidateButton } from '@/features/messages/components/StartConversation.jsx'
 import ReportButton from '@/features/moderation/components/ReportButton.jsx'
 import { useFormat } from '@/lib/preferences.js'
@@ -47,6 +48,7 @@ function CompanyApplications({ candidate }) {
               jobTitle={application.job.title}
               label={t('applications:profile.stage', { job: application.job.title })}
             />
+            <CoverNote text={application.coverNote} />
           </li>
         ))}
       </ul>

@@ -228,6 +228,11 @@
     "row": "{{job}} · applied {{date}}",
     "stage": "Stage of the application for {{job}}"
   },
+  "coverNote": {
+    "title": "Cover note",
+    "more": "Show more",
+    "less": "Show less"
+  },
   "jobApplicants": {
     "title": "Applicants",
     "empty": "No active applications for this role yet.",

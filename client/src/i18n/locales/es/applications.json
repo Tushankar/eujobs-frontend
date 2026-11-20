@@ -235,6 +235,11 @@
     "row": "{{job}} · se postuló el {{date}}",
     "stage": "Etapa de la candidatura para {{job}}"
   },
+  "coverNote": {
+    "title": "Nota de presentación",
+    "more": "Ver más",
+    "less": "Ver menos"
+  },
   "jobApplicants": {
     "title": "Candidatos",
     "empty": "Aún no hay candidaturas activas para este puesto.",
