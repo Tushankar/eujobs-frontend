@@ -4,6 +4,7 @@ import { useGetConfigQuery } from '@/app/api.js'
 import PillBadge from '@/components/common/PillBadge.jsx'
 import { Button, SelectField, TextareaField, TextField } from '@/components/ui'
 import { useErrorText } from '@/lib/forms.js'
+import { NUMBER_RULES, RULES, useRuleText } from '../rules.js'
 import styles from './ContractRules.module.css'
 
 /*
@@ -11,19 +12,6 @@ import styles from './ContractRules.module.css'
  * assignment may do, the notice, the cooling-off and the weekly hours. Each has a value (null: not stated) and the
  * clause it comes from.
  */
-export const RULES = ['exclusivity', 'noticeDays', 'coolingOffDays', 'maxWeeklyHours']
-const NUMBER_RULES = ['noticeDays', 'coolingOffDays', 'maxWeeklyHours']
-
-/** A rule's value in words. */
-export function useRuleText() {
-  const { t } = useTranslation()
-  return (name, value) => {
-    if (value == null) return t('agency:rules.notStated')
-    if (name === 'exclusivity') return t(`enums:exclusivity.${value}`)
-    return t(name === 'maxWeeklyHours' ? 'agency:rules.hours' : 'agency:rules.days', { count: value })
-  }
-}
-
 const same = (a, b) => (a?.value ?? null) === (b?.value ?? null)
 
 /** The rules as rows: label, value, the quoted clause, where it came from and whether the agency changed AI's reading. */
@@ -64,8 +52,8 @@ function toBody(values) {
 
 /**
  * The rules as a form: each value and the clause it comes from (quoted from the PDF; checked by the server when the
- * PDF has text). `errors` are the server's fields ("noticeDays.clause"). `actions` = [{ intent, label }] submit
- * buttons (the last is the primary one); `onSubmit(body, intent)` runs with the one pressed.
+ * PDF has text). `errors` are the server's fields ("noticeDays.clause"). `actions` = [{ intent, label }] buttons (the
+ * last is the primary one); `onSubmit(body, intent)` runs with the one pressed.
  */
 export function RulesEditor({ rules, errors = {}, onSubmit, actions, busy }) {
   const { t } = useTranslation()
@@ -92,14 +80,13 @@ export function RulesEditor({ rules, errors = {}, onSubmit, actions, busy }) {
     return Object.keys(found).length === 0
   }
 
-  function handleSubmit(event) {
-    event.preventDefault()
-    const intent = event.nativeEvent.submitter?.value ?? actions.at(-1).intent
+  // Not a <form>: the editor also sits inside the job wizard's form (forms cannot nest).
+  function submit(intent) {
     if (validate()) onSubmit(toBody(values), intent)
   }
 
   return (
-    <form className={styles.editor} onSubmit={handleSubmit} noValidate data-rules-editor>
+    <div className={styles.editor} role="group" aria-label={t('agency:rules.title')} data-rules-editor>
       {RULES.map((name) => (
         <fieldset key={name} className={styles.fieldset}>
           <legend className={styles.legend}>{t(`agency:rules.labels.${name}`)}</legend>
@@ -138,11 +125,18 @@ export function RulesEditor({ rules, errors = {}, onSubmit, actions, busy }) {
       ))}
       <div className={styles.actions}>
         {actions.map((action, index) => (
-          <Button key={action.intent} type="submit" name="intent" value={action.intent} variant={index === actions.length - 1 ? 'primary' : 'outline'} loading={busy === action.intent} disabled={Boolean(busy)}>
+          <Button
+            key={action.intent}
+            variant={index === actions.length - 1 ? 'primary' : 'outline'}
+            loading={busy === action.intent}
+            disabled={Boolean(busy)}
+            onClick={() => submit(action.intent)}
+            data-rules-action={action.intent}
+          >
             {action.label}
           </Button>
         ))}
       </div>
-    </form>
+    </div>
   )
 }

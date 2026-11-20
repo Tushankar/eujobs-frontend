@@ -88,7 +88,8 @@ function agencyBody(values) {
     showClient: values.showClient,
     startDate: values.startDate || null,
     endDate: values.endDate || null,
-    rate: rate && RATE.test(rate) ? { amountMinor: Math.round(Number(rate) * 100), period: values.ratePeriod } : null,
+    // A remote job pays the rate in the currency picked for it, as its salary.
+    rate: rate && RATE.test(rate) ? { amountMinor: Math.round(Number(rate) * 100), period: values.ratePeriod, ...(values.workPreference === 'remote' && { currency: values.salaryCurrency }) } : null,
     hoursPerWeek: toNumber(values.hoursPerWeek),
   }
 }

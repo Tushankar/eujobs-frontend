@@ -21,7 +21,7 @@ const READ_ONLY_STEPS = ['quality', 'review']
  * `onFinish(values, action)` on the last step. Either may reject with the API error: a VALIDATION_FAILED shows on
  * the fields and opens the step the server names (M-039). `finishActions` = [{ id, labelKey, status }].
  */
-export default function JobWizard({ initialValues, initialStep = 0, reachable = initialStep, initialErrors = {}, companyName, finishActions, onContinue, onCancel, onFinish }) {
+export default function JobWizard({ initialValues, initialStep = 0, reachable = initialStep, initialErrors = {}, companyName, finishActions, onContinue, onCancel, onFinish, job }) {
   const { t } = useTranslation()
   const errorText = useErrorText()
   const { data: config } = useGetConfigQuery()
@@ -160,7 +160,7 @@ export default function JobWizard({ initialValues, initialStep = 0, reachable = 
 
           <div className={styles.body}>
             {config && (
-              <JobStepFields step={current} values={values} bind={bind} errorOf={errorOf} setValue={setValue} companyName={companyName} choosesStatus={finishActions.length > 1} />
+              <JobStepFields step={current} values={values} bind={bind} errorOf={errorOf} setValue={setValue} companyName={companyName} choosesStatus={finishActions.length > 1} job={job} />
             )}
           </div>
 

@@ -118,7 +118,8 @@ export default function RecruiterSignUpPage({ role = 'recruiter' }) {
           error={errorText.field('fullName', errors.fullName)}
         />
         <TextField
-          label={t('auth:fields.jobTitle')}
+          label={t(agency ? 'auth:fields.agencyRole' : 'auth:fields.jobTitle')}
+          hint={agency ? t('auth:fields.agencyRoleHint') : undefined}
           name="jobTitle"
           autoComplete="organization-title"
           value={values.jobTitle}

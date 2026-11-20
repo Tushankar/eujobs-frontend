@@ -1,0 +1,39 @@
+.stack {
+  display: flex;
+  flex-direction: column;
+  gap: 18px;
+}
+
+.pair {
+  display: grid;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  align-items: end;
+  gap: 16px;
+}
+
+.addClient {
+  padding-bottom: 12px;
+  font-size: 13px;
+  font-weight: 600;
+}
+
+.addClient a {
+  color: var(--primary);
+}
+
+.note {
+  margin-top: -10px;
+  font-size: 12px;
+  line-height: 18px;
+  color: var(--muted-foreground);
+}
+
+@media (max-width: 599px) {
+  .pair {
+    grid-template-columns: 1fr;
+  }
+
+  .addClient {
+    padding-bottom: 0;
+  }
+}

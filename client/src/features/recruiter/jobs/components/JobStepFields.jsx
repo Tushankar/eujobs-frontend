@@ -1,4 +1,5 @@
 import { useTranslation } from 'react-i18next'
+import { currentRole } from '@/app/roles.js'
 import { CircleAlert, CircleCheck } from 'lucide-react'
 import { useGetConfigQuery, useGetCountriesQuery } from '@/app/api.js'
 import { Checkbox, Icon, SelectField, TextareaField, TextField } from '@/components/ui'
@@ -9,9 +10,12 @@ import { valuesToBody } from '../utils/jobForm.js'
 import { useJobPreview } from '../utils/useJobPreview.js'
 import { EligibleCountries, LanguageRequirements } from './ListFields.jsx'
 import JobAiDraft from './JobAiDraft.jsx'
+import AgencyTermsFields from '@/features/agency/components/AgencyTermsFields.jsx'
 import JobPosting from './JobPosting.jsx'
 import SkillPicker from './SkillPicker.jsx'
 import styles from './JobStepFields.module.css'
+
+const AGENCY_EMPLOYMENT = ['full_time', 'part_time']
 
 /** M-060: the server's quality rules for the current values, with translated results. */
 function QualityChecks({ values }) {
@@ -47,7 +51,7 @@ function useCurrencyOptions() {
  * The fields (or read-only content) of one wizard step. `bind(name)` returns value/onChange/error props;
  * `errorOf(name)` the translated error of a field set with setValue.
  */
-export default function JobStepFields({ step, values, bind, errorOf, setValue, companyName, choosesStatus }) {
+export default function JobStepFields({ step, values, bind, errorOf, setValue, companyName, choosesStatus, job }) {
   const { t } = useTranslation()
   const jobText = useJobText()
   const { data: config } = useGetConfigQuery()
@@ -63,7 +67,12 @@ export default function JobStepFields({ step, values, bind, errorOf, setValue, c
           <TextField label={t('jobs:fields.title')} placeholder={t('jobs:fields.titlePlaceholder')} autoComplete="off" {...bind('title')} />
           <div className={styles.pair}>
             <TextField label={t('jobs:fields.company')} hint={t('jobs:fields.companyHint')} value={companyName} readOnly disabled />
-            <SelectField label={t('jobs:fields.employmentType')} options={enumOptions('employmentType')} {...bind('employmentType')} />
+            {/* 2026-11-20: an agency job is full or part time; its length is in its dates. */}
+            <SelectField
+              label={t('jobs:fields.employmentType')}
+              options={enumOptions('employmentType').filter((option) => currentRole() !== 'agency' || AGENCY_EMPLOYMENT.includes(option.value))}
+              {...bind('employmentType')}
+            />
           </div>
           {/* 2026-11-17: the job post writer fills the later steps' empty fields. */}
           <JobAiDraft values={values} setValue={setValue} />
@@ -145,6 +154,8 @@ export default function JobStepFields({ step, values, bind, errorOf, setValue, c
           </Checkbox>
         </div>
       )
+    case 'agency':
+      return <AgencyTermsFields values={values} bind={bind} setValue={setValue} errorOf={errorOf} currency={currency} job={job} />
     case 'quality':
       return <QualityChecks values={values} />
     case 'review':

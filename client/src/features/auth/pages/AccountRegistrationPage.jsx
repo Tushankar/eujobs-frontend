@@ -1,3 +1,4 @@
+import { currentRole } from '@/app/roles.js'
 import { useTranslation } from 'react-i18next'
 import { useNavigate } from 'react-router-dom'
 import { Users } from 'lucide-react'
@@ -64,7 +65,7 @@ export default function AccountRegistrationPage() {
               error={errorText.field('fullName', errors.fullName)}
             />
             <TextField
-              label={t('auth:fields.jobTitle')}
+              label={t(currentRole() === 'agency' ? 'auth:fields.agencyRole' : 'auth:fields.jobTitle')}
               name="jobTitle"
               autoComplete="organization-title"
               disabled={!editable}

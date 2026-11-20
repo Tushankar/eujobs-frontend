@@ -92,6 +92,7 @@ function EditJob({ jobId }) {
           reachable={jobSteps().length - 1}
           initialErrors={initialErrors}
           companyName={job.company.displayName}
+          job={job}
           finishActions={draft ? DRAFT_ACTIONS.map((action) => ({ ...action, locked: action.status === 'published' && publishLocked(jobId) })) : LIVE_ACTIONS}
           onContinue={draft ? save : undefined}
           onCancel={() => navigate(`${hiringPath()}/jobs/${jobId}`)}

@@ -1,0 +1,224 @@
+{
+  "clients": {
+    "title": "Clients",
+    "description": "The companies your agency fills roles for. Each agency job is for one of them.",
+    "add": "Add client",
+    "search": "Search clients",
+    "edit": "Edit",
+    "delete": "Delete",
+    "manage": "Manage {{name}}",
+    "jobs_one": "{{count}} job",
+    "jobs_other": "{{count}} jobs",
+    "noDetails": "No industry or city yet",
+    "linkedTo": "On EU Jobs as {{company}}",
+    "emptyFiltered": "No clients match",
+    "emptyFilteredText": "Try another name, industry or city.",
+    "deleteTitle": "Delete {{name}}?",
+    "deleteText": "The client leaves your list. A client with jobs stays, because those jobs and their placements name it.",
+    "start": {
+      "title": "Add the companies you recruit for",
+      "text": "Every agency job is for a client. Add them once and pick one when you post a job.",
+      "steps": [
+        { "title": "Add a client", "text": "Its name, and if you like its industry, city and logo." },
+        { "title": "Link it if it is on EU Jobs", "text": "So rules about the same client recognise it exactly." },
+        { "title": "Post jobs for it", "text": "Choose the client in the job's agency terms." }
+      ]
+    },
+    "fields": {
+      "name": "Client name",
+      "industry": "Industry (optional)",
+      "city": "City (optional)"
+    },
+    "dialog": {
+      "addTitle": "Add a client",
+      "editTitle": "Edit client",
+      "description": "Only the name is needed. Candidates see the client's name on a job only when you choose to show it.",
+      "add": "Add client",
+      "save": "Save changes",
+      "addLogo": "Add logo",
+      "replaceLogo": "Replace logo",
+      "removeLogo": "Remove logo",
+      "link": "The same company on EU Jobs (optional)",
+      "linkHint": "Type at least 2 letters of its name.",
+      "noCompanies": "No verified company with that name.",
+      "unlink": "Remove link"
+    }
+  },
+  "talent": {
+    "title": "Talent",
+    "description": "The candidates on your books, people asking to join, and the agreement they sign.",
+    "tabsLabel": "Talent sections",
+    "tabs": {
+      "books": "On the books",
+      "requests": "Requests",
+      "agreement": "Agreement"
+    },
+    "noDetails": "No headline yet",
+    "agreed": "Agreed to version {{version}}",
+    "newVersionWaiting": "New version to agree",
+    "invited": "Invited",
+    "waitingAgreement": "Waiting for them to agree",
+    "accept": "Accept",
+    "decline": "Decline",
+    "withdraw": "Withdraw",
+    "manage": "Manage {{name}}",
+    "viewProfile": "View profile",
+    "remove": "Remove from the books",
+    "removeTitle": "Remove {{name}} from your books?",
+    "removeText": "They can no longer be placed by your agency. A placement that is running continues to its end.",
+    "noAgreement": "Publish your agreement before you take anyone on. Requests wait until then.",
+    "openAgreement": "Open the agreement",
+    "findCandidates": "Find candidates",
+    "empty": {
+      "books": {
+        "title": "Nobody on your books yet",
+        "text": "Invite candidates from their profile, or accept the people who ask to join."
+      },
+      "requests": {
+        "title": "No requests",
+        "text": "Candidates who ask to join, and people you invite, show here until they agree."
+      }
+    }
+  },
+  "agreement": {
+    "upload": "Upload the agreement (PDF)",
+    "replace": "Replace PDF",
+    "newVersion": "Upload a new version",
+    "deleteDraft": "Delete draft",
+    "deleteTitle": "Delete this draft?",
+    "deleteText": "The draft's PDF and its rules are removed. The current version stays as it is.",
+    "draftTitle": "Version {{version}} (draft)",
+    "draftLead": "Check the four rules below against your PDF, then publish. Candidates on your books are asked to agree to a new version before their next placement.",
+    "currentTitle": "Version {{version}}",
+    "currentLead": "Published {{date}} · {{agreed}} of {{total}} on your books agreed to it",
+    "earlier": "Earlier versions",
+    "version": "Version {{version}}",
+    "aiTitle": "Read the rules with AI",
+    "aiText": "AI finds the four rules in your PDF and quotes the clause each comes from. You check them before publishing.",
+    "aiDone": "AI read this PDF on {{when}}. Check its reading below.",
+    "read": "Read with AI",
+    "readAgain": "Read again",
+    "readDone": "AI read the PDF. Check each rule and its clause.",
+    "noText": "This PDF has no text to read (a scan). Type the rules below instead.",
+    "saveRules": "Save rules",
+    "publish": "Publish version {{version}}",
+    "saved": "Rules saved.",
+    "published": "Published. Candidates on your books will be asked to agree to it.",
+    "start": {
+      "title": "Upload the agreement candidates sign",
+      "text": "Candidates join your books by agreeing to it. Its rules decide whether someone on a placement may take other work.",
+      "steps": [
+        { "title": "Upload the PDF", "text": "Your agency agreement or terms of engagement." },
+        { "title": "Check the rules", "text": "AI reads them on Agency Plus; you can also type them." },
+        { "title": "Publish", "text": "Then invite candidates or accept their requests." }
+      ]
+    }
+  },
+  "rules": {
+    "title": "Contract rules",
+    "labels": {
+      "exclusivity": "Other work during an assignment",
+      "noticeDays": "Notice to end early",
+      "coolingOffDays": "Cooling-off at the client",
+      "maxWeeklyHours": "Most hours a week"
+    },
+    "help": {
+      "exclusivity": "What the candidate may do while an assignment runs.",
+      "noticeDays": "Days of notice the candidate gives to end an assignment early.",
+      "coolingOffDays": "Days after an assignment before they may work for that client directly or through another agency.",
+      "maxWeeklyHours": "The most hours a week across all their jobs."
+    },
+    "notStated": "Not stated",
+    "days_one": "{{count}} day",
+    "days_other": "{{count}} days",
+    "hours_one": "{{count}} hour a week",
+    "hours_other": "{{count}} hours a week",
+    "value": "Rule",
+    "valueDays": "Days",
+    "valueHours": "Hours a week",
+    "clause": "Clause",
+    "clauseHint": "Copied word for word from the PDF.",
+    "changedFromAi": "Changed from AI"
+  },
+  "contract": {
+    "title": "Contract (optional)",
+    "lead": "The contract for this job. Once you confirm its rules they apply to this job's placements before your agreement's.",
+    "none": "No contract attached",
+    "attach": "Attach contract (PDF)",
+    "remove": "Remove",
+    "aiText": "AI can read the rules of this contract and quote each clause (Agency Plus).",
+    "confirm": "Confirm rules",
+    "confirmAgain": "Save and confirm",
+    "confirmed": "Rules confirmed",
+    "toConfirm": "Rules to confirm"
+  },
+  "terms": {
+    "client": "Client",
+    "clientPlaceholder": "Choose a client",
+    "noClients": "Add a client first",
+    "addClient": "Add a client",
+    "showClient": "Show the client's name to candidates",
+    "showClientHint": "Leave it off to show \"Confidential client\". Your agency's name always shows.",
+    "startDate": "Start date",
+    "endDate": "End date",
+    "rate": "Pay rate ({{currency}})",
+    "rateNoCurrency": "Pay rate",
+    "ratePeriod": "Paid",
+    "hoursPerWeek": "Hours per week (optional)",
+    "hoursHint": "Left empty, a {{type}} job counts as {{count}} hours a week."
+  },
+  "placements": {
+    "title": "Placements",
+    "description": "The people your agency has placed, the offers you made and placements that are over.",
+    "tabsLabel": "Placement views",
+    "tabs": {
+      "running": "Running",
+      "upcoming": "Upcoming",
+      "offered": "Offers",
+      "over": "Over"
+    },
+    "phase": {
+      "running": "Running",
+      "upcoming": "Upcoming",
+      "over": "Over"
+    },
+    "range": "{{start}} to {{end}}",
+    "notice": "ends {{date}} (notice given)",
+    "endedEarly": "ends {{date}} (ended early)",
+    "client": "Client",
+    "dates": "Dates",
+    "hours": "Hours",
+    "pay": "Pay",
+    "rate": "{{amount}} {{period}}",
+    "rules": "Rules of this placement",
+    "rulesOnAccept": "The rules are set when the candidate accepts.",
+    "end": "End early",
+    "endTitle": "End {{name}}'s placement early",
+    "endText": "Pick the new last day (today at the soonest). Rules that count from the end count from this day.",
+    "endDate": "Last day",
+    "endDateInvalid": "Choose a day from today up to before the current end.",
+    "rehire": "Re-hire",
+    "rehireTitle": "Offer {{name}} another placement",
+    "rehireText": "Pick one of your published agency jobs. Its dates, rate and contract apply; they accept or decline.",
+    "job": "Job",
+    "noOpenJobs": "You have no published agency job that starts from today. Publish one first.",
+    "sendOffer": "Send offer",
+    "withdraw": "Withdraw offer",
+    "empty": {
+      "running": { "title": "Nothing running", "text": "Placements show here while they run." },
+      "upcoming": { "title": "Nothing upcoming", "text": "Placements that have not started yet show here." },
+      "offered": { "title": "No open offers", "text": "Re-hire offers waiting for an answer show here." },
+      "over": { "title": "Nothing over yet", "text": "When a placement ends you can re-hire the person from here." }
+    },
+    "start": {
+      "title": "Your placements start here",
+      "text": "A placement starts when you move someone on your books to Hired on an agency job.",
+      "steps": [
+        { "title": "Publish your agreement", "text": "Candidates agree to it to join your books." },
+        { "title": "Post an agency job", "text": "With its client, dates and pay rate." },
+        { "title": "Hire", "text": "Move the applicant to Hired; the placement appears here." }
+      ],
+      "action": "Open the agreement"
+    }
+  }
+}
