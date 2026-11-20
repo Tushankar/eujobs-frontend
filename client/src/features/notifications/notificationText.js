@@ -59,6 +59,12 @@ export const NOTIFICATION_ICONS = {
   document_requested: FileText,
   document_answered: FileText,
   documents_received: FileText,
+  // 2026-11-20: agencies
+  agency_join_requested: UserPlus,
+  agency_member_agreed: BadgeCheck,
+  agency_member_left: Users,
+  placement_offer_answered: CalendarClock,
+  placement_notice_given: CalendarClock,
 }
 
 const PLURAL_TYPES = ['message', 'admin_content_report']
@@ -96,6 +102,7 @@ export function useNotificationText() {
       case 'verification_decided':
       case 'account_decided':
       case 'cv_request_decided':
+      case 'placement_offer_answered':
         return t(`notifications:types.${type}.${params.decision}`, values)
       case 'content_restricted':
       case 'content_lifted':

@@ -65,6 +65,8 @@ export const EMAIL_TYPES = {
   newsletter_confirm: 'critical',
   // 2026-11-19: a newsletter issue to the confirmed subscribers; own class, so the daily cap of account mail never blocks it
   newsletter_issue: 'newsletter',
+  // 2026-11-20: what happens on an agency's books and placements (one email per event, with its summary)
+  agency_update: 'non_critical',
 }
 
 /** The email switch (category) of each non-critical type (P11b-Q12); critical and decision emails have none. */
@@ -84,13 +86,14 @@ export const EMAIL_CATEGORY = {
   admin_joined: 'admin_joined',
   interview_reminder: 'interviews',
   documents_received: 'interviews',
+  agency_update: 'agency_updates',
 }
 
 /** The email switches each role sees in Settings → Notifications, in this order (P11b-Q3, Q12). */
 export const EMAIL_CATEGORIES = {
   candidate: ['applications', 'messages', 'cv_requests', 'job_alerts', 'interviews'],
   recruiter: ['new_applications', 'messages', 'interviews'],
-  agency: ['new_applications', 'messages', 'interviews'],
+  agency: ['new_applications', 'messages', 'interviews', 'agency_updates'],
   admin: ['account_reviews', 'verification', 'content_reports', 'failed_renewals', 'admin_joined'],
 }
 
@@ -141,6 +144,12 @@ export const NOTIFICATION_TYPES = {
   admin_renewal_failed: { sections: { admin: 'payments' }, permission: 'finance.view', email: 'admin_renewal_failed' },
   admin_joined: { sections: { admin: 'accessManagement' }, permission: 'roles.view', email: 'admin_joined' },
   admin_ai_budget: { sections: { admin: 'aiMatching' }, permission: 'ai.manage', email: 'admin_ai_budget' },
+  // 2026-11-20: agencies (the hiring side's sections; only agencies get these)
+  agency_join_requested: { sections: { recruiter: 'talent' } },
+  agency_member_agreed: { sections: { recruiter: 'talent' } },
+  agency_member_left: { sections: { recruiter: 'talent' } },
+  placement_offer_answered: { sections: { recruiter: 'placements' } },
+  placement_notice_given: { sections: { recruiter: 'placements' } },
 }
 
 /** Admin permission catalogue (§3.13, M-156) in matrix order; groups follow Figma (owner answer P1-Q1). */

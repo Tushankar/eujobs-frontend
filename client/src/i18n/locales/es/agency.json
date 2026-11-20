@@ -1,0 +1,284 @@
+{
+  "clients": {
+    "title": "Clientes",
+    "description": "Las empresas para las que tu agencia cubre puestos. Cada oferta de agencia es para una de ellas.",
+    "add": "Añadir cliente",
+    "search": "Buscar clientes",
+    "edit": "Editar",
+    "delete": "Eliminar",
+    "manage": "Gestionar {{name}}",
+    "jobs_one": "{{count}} oferta",
+    "jobs_other": "{{count}} ofertas",
+    "jobs_many": "{{count}} ofertas",
+    "noDetails": "Sin sector ni ciudad todavía",
+    "linkedTo": "En EU Jobs como {{company}}",
+    "emptyFiltered": "Ningún cliente coincide",
+    "emptyFilteredText": "Prueba con otro nombre, sector o ciudad.",
+    "deleteTitle": "¿Eliminar {{name}}?",
+    "deleteText": "El cliente sale de tu lista. Un cliente con ofertas se queda, porque esas ofertas y sus colocaciones lo nombran.",
+    "start": {
+      "title": "Añade las empresas para las que seleccionas",
+      "text": "Cada oferta de agencia es para un cliente. Añádelos una vez y elige uno al publicar una oferta.",
+      "steps": [
+        {
+          "title": "Añade un cliente",
+          "text": "Su nombre y, si quieres, su sector, ciudad y logotipo."
+        },
+        {
+          "title": "Vincúlalo si está en EU Jobs",
+          "text": "Así las reglas sobre el mismo cliente lo reconocen con exactitud."
+        },
+        {
+          "title": "Publica ofertas para él",
+          "text": "Elige el cliente en las condiciones de agencia de la oferta."
+        }
+      ]
+    },
+    "fields": {
+      "name": "Nombre del cliente",
+      "industry": "Sector (opcional)",
+      "city": "Ciudad (opcional)"
+    },
+    "dialog": {
+      "addTitle": "Añadir un cliente",
+      "editTitle": "Editar cliente",
+      "description": "Solo hace falta el nombre. Los candidatos ven el nombre del cliente en una oferta solo si eliges mostrarlo.",
+      "add": "Añadir cliente",
+      "save": "Guardar cambios",
+      "addLogo": "Añadir logotipo",
+      "replaceLogo": "Cambiar logotipo",
+      "removeLogo": "Quitar logotipo",
+      "link": "La misma empresa en EU Jobs (opcional)",
+      "linkHint": "Escribe al menos 2 letras de su nombre.",
+      "noCompanies": "No hay ninguna empresa verificada con ese nombre.",
+      "unlink": "Quitar vínculo"
+    }
+  },
+  "talent": {
+    "title": "Talento",
+    "description": "Los candidatos en tu cartera, las personas que piden unirse y el acuerdo que firman.",
+    "tabsLabel": "Secciones de talento",
+    "tabs": {
+      "books": "En cartera",
+      "requests": "Solicitudes",
+      "agreement": "Acuerdo"
+    },
+    "noDetails": "Sin titular todavía",
+    "agreed": "Aceptó la versión {{version}}",
+    "newVersionWaiting": "Nueva versión por aceptar",
+    "invited": "Invitado",
+    "waitingAgreement": "Esperando su aceptación",
+    "accept": "Aceptar",
+    "decline": "Rechazar",
+    "withdraw": "Retirar",
+    "manage": "Gestionar a {{name}}",
+    "viewProfile": "Ver perfil",
+    "remove": "Quitar de la cartera",
+    "removeTitle": "¿Quitar a {{name}} de tu cartera?",
+    "removeText": "Tu agencia ya no podrá colocarle. Una colocación en curso continúa hasta su fin.",
+    "noAgreement": "Publica tu acuerdo antes de incorporar a nadie. Las solicitudes esperan hasta entonces.",
+    "openAgreement": "Abrir el acuerdo",
+    "findCandidates": "Buscar candidatos",
+    "empty": {
+      "books": {
+        "title": "Aún no hay nadie en tu cartera",
+        "text": "Invita a candidatos desde su perfil o acepta a quienes piden unirse."
+      },
+      "requests": {
+        "title": "No hay solicitudes",
+        "text": "Los candidatos que piden unirse y las personas que invitas aparecen aquí hasta que aceptan."
+      }
+    }
+  },
+  "agreement": {
+    "upload": "Subir el acuerdo (PDF)",
+    "replace": "Cambiar PDF",
+    "newVersion": "Subir una nueva versión",
+    "deleteDraft": "Eliminar borrador",
+    "deleteTitle": "¿Eliminar este borrador?",
+    "deleteText": "Se eliminan el PDF del borrador y sus reglas. La versión actual queda igual.",
+    "draftTitle": "Versión {{version}} (borrador)",
+    "draftLead": "Comprueba las cuatro reglas con tu PDF y publica. A los candidatos de tu cartera se les pide aceptar una nueva versión antes de su próxima colocación.",
+    "currentTitle": "Versión {{version}}",
+    "currentLead": "Publicada el {{date}} · {{agreed}} de {{total}} en tu cartera la aceptaron",
+    "earlier": "Versiones anteriores",
+    "version": "Versión {{version}}",
+    "aiTitle": "Leer las reglas con IA",
+    "aiText": "La IA encuentra las cuatro reglas en tu PDF y cita la cláusula de cada una. Tú las revisas antes de publicar.",
+    "aiDone": "La IA leyó este PDF el {{when}}. Revisa su lectura abajo.",
+    "read": "Leer con IA",
+    "readAgain": "Leer de nuevo",
+    "readDone": "La IA leyó el PDF. Revisa cada regla y su cláusula.",
+    "noText": "Este PDF no tiene texto que leer (es un escaneo). Escribe las reglas abajo.",
+    "saveRules": "Guardar reglas",
+    "publish": "Publicar la versión {{version}}",
+    "saved": "Reglas guardadas.",
+    "published": "Publicado. Se pedirá a los candidatos de tu cartera que lo acepten.",
+    "start": {
+      "title": "Sube el acuerdo que firman los candidatos",
+      "text": "Los candidatos se unen a tu cartera aceptándolo. Sus reglas deciden si alguien en una colocación puede aceptar otro trabajo.",
+      "steps": [
+        {
+          "title": "Sube el PDF",
+          "text": "Tu acuerdo de agencia o condiciones de contratación."
+        },
+        {
+          "title": "Revisa las reglas",
+          "text": "La IA las lee con Agency Plus; también puedes escribirlas."
+        },
+        {
+          "title": "Publica",
+          "text": "Después invita a candidatos o acepta sus solicitudes."
+        }
+      ]
+    }
+  },
+  "rules": {
+    "title": "Reglas del contrato",
+    "labels": {
+      "exclusivity": "Otro trabajo durante una asignación",
+      "noticeDays": "Preaviso para terminar antes",
+      "coolingOffDays": "Periodo de espera en el cliente",
+      "maxWeeklyHours": "Máximo de horas a la semana"
+    },
+    "help": {
+      "exclusivity": "Lo que el candidato puede hacer mientras dura una asignación.",
+      "noticeDays": "Días de preaviso que da el candidato para terminar una asignación antes.",
+      "coolingOffDays": "Días tras una asignación antes de poder trabajar para ese cliente directamente o con otra agencia.",
+      "maxWeeklyHours": "El máximo de horas a la semana sumando todos sus trabajos."
+    },
+    "notStated": "No indicado",
+    "days_one": "{{count}} día",
+    "days_other": "{{count}} días",
+    "days_many": "{{count}} días",
+    "hours_one": "{{count}} hora a la semana",
+    "hours_other": "{{count}} horas a la semana",
+    "hours_many": "{{count}} horas a la semana",
+    "value": "Regla",
+    "valueDays": "Días",
+    "valueHours": "Horas a la semana",
+    "clause": "Cláusula",
+    "clauseHint": "Copiada tal cual del PDF.",
+    "changedFromAi": "Cambiado respecto a la IA"
+  },
+  "contract": {
+    "title": "Contrato (opcional)",
+    "lead": "El contrato de esta oferta. Cuando confirmes sus reglas, se aplican a las colocaciones de esta oferta antes que las de tu acuerdo.",
+    "none": "Sin contrato adjunto",
+    "attach": "Adjuntar contrato (PDF)",
+    "remove": "Quitar",
+    "aiText": "La IA puede leer las reglas de este contrato y citar cada cláusula (Agency Plus).",
+    "confirm": "Confirmar reglas",
+    "confirmAgain": "Guardar y confirmar",
+    "confirmed": "Reglas confirmadas",
+    "toConfirm": "Reglas por confirmar"
+  },
+  "terms": {
+    "client": "Cliente",
+    "clientPlaceholder": "Elige un cliente",
+    "noClients": "Añade primero un cliente",
+    "addClient": "Añadir un cliente",
+    "showClient": "Mostrar el nombre del cliente a los candidatos",
+    "showClientHint": "Si lo dejas desactivado se muestra «Cliente confidencial». El nombre de tu agencia siempre se muestra.",
+    "startDate": "Fecha de inicio",
+    "endDate": "Fecha de fin",
+    "rate": "Tarifa ({{currency}})",
+    "rateNoCurrency": "Tarifa",
+    "ratePeriod": "Pago",
+    "hoursPerWeek": "Horas a la semana (opcional)",
+    "hoursHint": "Si lo dejas vacío, un empleo a {{type}} cuenta como {{count}} horas a la semana."
+  },
+  "placements": {
+    "title": "Colocaciones",
+    "description": "Las personas que tu agencia ha colocado, las ofertas que hiciste y las colocaciones terminadas.",
+    "tabsLabel": "Vistas de colocaciones",
+    "tabs": {
+      "running": "En curso",
+      "upcoming": "Próximas",
+      "offered": "Ofertas",
+      "over": "Terminadas"
+    },
+    "phase": {
+      "running": "En curso",
+      "upcoming": "Próxima",
+      "over": "Terminada"
+    },
+    "range": "Del {{start}} al {{end}}",
+    "notice": "termina el {{date}} (con preaviso)",
+    "endedEarly": "termina el {{date}} (finalizada antes)",
+    "client": "Cliente",
+    "dates": "Fechas",
+    "hours": "Horas",
+    "pay": "Pago",
+    "rate": "{{amount}} {{period}}",
+    "rules": "Reglas de esta colocación",
+    "rulesOnAccept": "Las reglas se fijan cuando el candidato acepta.",
+    "end": "Terminar antes",
+    "endTitle": "Terminar antes la colocación de {{name}}",
+    "endText": "Elige el nuevo último día (como pronto hoy). Las reglas que cuentan desde el fin cuentan desde ese día.",
+    "endDate": "Último día",
+    "endDateInvalid": "Elige un día desde hoy hasta antes del fin actual.",
+    "rehire": "Volver a contratar",
+    "rehireTitle": "Ofrecer otra colocación a {{name}}",
+    "rehireText": "Elige una de tus ofertas de agencia publicadas. Se aplican sus fechas, tarifa y contrato; la persona acepta o rechaza.",
+    "job": "Oferta",
+    "noOpenJobs": "No tienes ninguna oferta de agencia publicada que empiece desde hoy. Publica una primero.",
+    "sendOffer": "Enviar oferta",
+    "withdraw": "Retirar oferta",
+    "empty": {
+      "running": {
+        "title": "Nada en curso",
+        "text": "Las colocaciones aparecen aquí mientras duran."
+      },
+      "upcoming": {
+        "title": "Nada próximo",
+        "text": "Aquí aparecen las colocaciones que aún no han empezado."
+      },
+      "offered": {
+        "title": "No hay ofertas abiertas",
+        "text": "Aquí aparecen las ofertas de recontratación pendientes de respuesta."
+      },
+      "over": {
+        "title": "Nada terminado aún",
+        "text": "Cuando termine una colocación podrás volver a contratar a la persona desde aquí."
+      }
+    },
+    "start": {
+      "title": "Tus colocaciones empiezan aquí",
+      "text": "Una colocación empieza cuando pasas a Contratación a alguien de tu cartera en una oferta de agencia.",
+      "steps": [
+        {
+          "title": "Publica tu acuerdo",
+          "text": "Los candidatos lo aceptan para unirse a tu cartera."
+        },
+        {
+          "title": "Publica una oferta de agencia",
+          "text": "Con su cliente, fechas y tarifa."
+        },
+        {
+          "title": "Contrata",
+          "text": "Pasa al candidato a Contratación; la colocación aparece aquí."
+        }
+      ],
+      "action": "Abrir el acuerdo"
+    }
+  },
+  "invite": {
+    "invite": "Invitar a tu cartera",
+    "acceptRequest": "Aceptar su solicitud",
+    "openTalent": "Abrir en Talento"
+  },
+  "summary": {
+    "title": "Condiciones de agencia",
+    "edit": "Editar",
+    "client": "Cliente",
+    "dates": "Fechas",
+    "pay": "Pago",
+    "hours": "Horas",
+    "contract": "Contrato",
+    "confidential": "se muestra como Cliente confidencial",
+    "missing": "Por añadir antes de publicar",
+    "defaultHours": "Según el tipo de empleo",
+    "noContract": "Ninguno (se aplica el acuerdo)"
+  }
+}

@@ -22,14 +22,27 @@
   "unreadMark": "Sin leer",
   "unavailable": "Este elemento ya no está disponible.",
   "types": {
-    "interview_offered": { "new": "{{company}} ha propuesto horarios de entrevista para {{job}}", "rescheduled": "{{company}} ha propuesto nuevos horarios de entrevista para {{job}}" },
-    "interview_confirmed": { "candidate": "Entrevista con {{company}} reservada para el {{when}}", "recruiter": "{{candidate}} ha reservado la entrevista para {{job}}: {{when}}" },
+    "interview_offered": {
+      "new": "{{company}} ha propuesto horarios de entrevista para {{job}}",
+      "rescheduled": "{{company}} ha propuesto nuevos horarios de entrevista para {{job}}"
+    },
+    "interview_confirmed": {
+      "candidate": "Entrevista con {{company}} reservada para el {{when}}",
+      "recruiter": "{{candidate}} ha reservado la entrevista para {{job}}: {{when}}"
+    },
     "interview_cancelled": "{{company}} ha cancelado tu entrevista para {{job}}",
     "interview_candidate_deleted": "La persona candidata para {{job}} eliminó su cuenta: la entrevista queda cancelada",
     "interview_other_times": "{{candidate}} ha pedido otros horarios de entrevista para {{job}}",
     "interview_reschedule_requested": "{{candidate}} ha pedido cambiar la entrevista para {{job}}",
     "interview_expired": "No se eligió ningún horario: {{candidate}}, {{job}}. Propón nuevos horarios.",
-    "interview_reminder": { "candidate_one": "Tu entrevista con {{company}} empieza dentro de {{count}} hora", "candidate_many": "Tu entrevista con {{company}} empieza dentro de {{count}} horas", "candidate_other": "Tu entrevista con {{company}} empieza dentro de {{count}} horas", "recruiter_one": "Tu entrevista con {{candidate}} empieza dentro de {{count}} hora", "recruiter_many": "Tu entrevista con {{candidate}} empieza dentro de {{count}} horas", "recruiter_other": "Tu entrevista con {{candidate}} empieza dentro de {{count}} horas" },
+    "interview_reminder": {
+      "candidate_one": "Tu entrevista con {{company}} empieza dentro de {{count}} hora",
+      "candidate_many": "Tu entrevista con {{company}} empieza dentro de {{count}} horas",
+      "candidate_other": "Tu entrevista con {{company}} empieza dentro de {{count}} horas",
+      "recruiter_one": "Tu entrevista con {{candidate}} empieza dentro de {{count}} hora",
+      "recruiter_many": "Tu entrevista con {{candidate}} empieza dentro de {{count}} horas",
+      "recruiter_other": "Tu entrevista con {{candidate}} empieza dentro de {{count}} horas"
+    },
     "interview_notes_ready": "Ya están listas las notas con IA de tu entrevista con {{candidate}}",
     "document_requested": "{{company}} te ha solicitado documentos para {{job}}",
     "document_answered": "{{candidate}} ha respondido a tu solicitud de documentos para {{job}}",
@@ -90,7 +103,15 @@
     },
     "plan_ended_paused_one": "Tu plan {{plan}} ha terminado. {{job}} sigue publicada; se ha pausado {{count}} oferta más.",
     "plan_ended_paused_many": "Tu plan {{plan}} ha terminado. {{job}} sigue publicada; se han pausado {{count}} ofertas más.",
-    "plan_ended_paused_other": "Tu plan {{plan}} ha terminado. {{job}} sigue publicada; se han pausado {{count}} ofertas más."
+    "plan_ended_paused_other": "Tu plan {{plan}} ha terminado. {{job}} sigue publicada; se han pausado {{count}} ofertas más.",
+    "agency_join_requested": "{{candidate}} pidió unirse a tu cartera",
+    "agency_member_agreed": "{{candidate}} aceptó la versión {{version}} de tu acuerdo",
+    "agency_member_left": "{{candidate}} dejó tu cartera",
+    "placement_offer_answered": {
+      "accepted": "{{candidate}} aceptó tu oferta para {{job}}",
+      "declined": "{{candidate}} rechazó tu oferta para {{job}}"
+    },
+    "placement_notice_given": "{{candidate}} dio preaviso en {{job}}: ahora termina el {{date}}"
   },
   "settings": {
     "title": "Notificaciones por correo",
@@ -98,7 +119,8 @@
     "alwaysOn": {
       "candidate": "Siempre se envían: restablecimiento de contraseña, decisiones de verificación y de moderación, certificados, una renovación fallida y el fin de tu plan.",
       "recruiter": "Siempre se envían: restablecimiento de contraseña, decisiones sobre la cuenta (aprobada, rechazada, suspendida), decisiones de moderación y certificados.",
-      "admin": "Siempre se envían: restablecimiento de contraseña e invitaciones."
+      "admin": "Siempre se envían: restablecimiento de contraseña e invitaciones.",
+      "agency": "Siempre se envían: restablecer la contraseña, decisiones sobre la cuenta (aprobada, rechazada, suspendida), decisiones de moderación y certificados."
     },
     "categories": {
       "interviews": "Recordatorios 24 horas y 1 hora antes de una entrevista, y cuando una persona candidata ha respondido a una solicitud de documentos. Las invitaciones y los cambios se envían siempre.",
@@ -111,7 +133,8 @@
       "verification": "Un candidato envía pruebas para una verificación.",
       "content_reports": "Alguien denuncia una oferta, un perfil, una empresa o un mensaje.",
       "failed_renewals": "Falla el pago de renovación de Plus de un candidato.",
-      "admin_joined": "Un administrador invitado acepta la invitación."
+      "admin_joined": "Un administrador invitado acepta la invitación.",
+      "agency_updates": "Personas que piden unirse a tu cartera, aceptan o se van, respuestas a ofertas de recontratación y preavisos."
     }
   }
 }

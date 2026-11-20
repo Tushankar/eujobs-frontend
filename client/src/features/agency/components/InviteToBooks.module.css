@@ -1,0 +1,25 @@
+.root {
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+}
+
+.state {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  justify-content: space-between;
+  gap: 8px;
+  font-size: 13px;
+  font-weight: 600;
+}
+
+.state a {
+  color: var(--primary);
+}
+
+.failure {
+  font-size: 12px;
+  line-height: 18px;
+  color: var(--destructive);
+}

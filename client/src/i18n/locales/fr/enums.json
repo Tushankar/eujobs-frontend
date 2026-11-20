@@ -407,7 +407,8 @@
     "admin_joined": "Nouvel administrateur",
     "admin_ai_budget": "Alerte budget IA",
     "newsletter_confirm": "Confirmation de la newsletter",
-    "newsletter_issue": "Édition de la newsletter"
+    "newsletter_issue": "Édition de la newsletter",
+    "agency_update": "Actualité de l’agence"
   },
   "emailClass": {
     "critical": "Essentiel",
@@ -556,7 +557,8 @@
     "verification": "Vérification",
     "content_reports": "Signalements de contenu",
     "failed_renewals": "Renouvellements échoués",
-    "admin_joined": "Nouveaux administrateurs"
+    "admin_joined": "Nouveaux administrateurs",
+    "agency_updates": "Actualités de l’agence"
   },
   "notificationType": {
     "interview_offered": "Créneaux d’entretien",
@@ -598,7 +600,12 @@
     "admin_content_report": "Signalement de contenu",
     "admin_renewal_failed": "Renouvellement échoué",
     "admin_joined": "Accès",
-    "admin_ai_budget": "Budget IA"
+    "admin_ai_budget": "Budget IA",
+    "agency_join_requested": "Demande pour rejoindre",
+    "agency_member_agreed": "Accord accepté",
+    "agency_member_left": "Départ du vivier",
+    "placement_offer_answered": "Offre répondue",
+    "placement_notice_given": "Préavis donné"
   },
   "interviewMode": {
     "video": "Appel vidéo",

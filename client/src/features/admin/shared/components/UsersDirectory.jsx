@@ -25,14 +25,18 @@ import CountryField from '@/components/common/CountryField.jsx'
 const FILTERS = {
   candidate: ['status', 'country', 'verification', 'plan', 'rightToWork'],
   recruiter: ['state', 'country', 'plan'],
+  agency: ['state', 'country', 'plan'],
 }
 const OPTIONS = {
   status: ['active', 'unverified'],
   state: ['pending', 'approved', 'rejected', 'suspended'],
   verification: ['not_started', 'in_review', 'partial', 'verified'],
   // The plan filter offers the role's plans (P11c-Q17).
-  plan: { candidate: ['free', 'plus'], recruiter: ['free', 'recruiter_plus'] },
+  plan: { candidate: ['free', 'plus'], recruiter: ['free', 'recruiter_plus'], agency: ['free', 'agency_plus'] },
 }
+
+// The list (path and texts) of each role.
+export const USER_LISTS = { candidate: 'candidates', recruiter: 'recruiters', agency: 'agencies' }
 
 /**
  * Admin › Candidates or Recruiters (M-161, M-169, M-206): server-paginated with the filters in the URL (the Overview's
@@ -54,7 +58,7 @@ export default function UsersDirectory({ role }) {
   const result = useGetAdminUsersQuery(query, { refetchOnMountOrArgChange: true })
   const { data, isSuccess } = result
   const table = tableState(result, data?.items ?? [])
-  const listPath = workspacePath(WORKSPACES.admin, `${role}s`)
+  const listPath = workspacePath(WORKSPACES.admin, USER_LISTS[role])
 
   async function exportCsv() {
     setExporting(true)
@@ -116,7 +120,7 @@ export default function UsersDirectory({ role }) {
   const plan = { key: 'plan', header: t('columns.plan'), skeleton: 'pill', render: (row) => <PillBadge tone={row.plan === 'free' ? 'neutral' : 'accent'}>{t(`enums:planKey.${row.plan}`)}</PillBadge> }
   const columns = [
     user,
-    ...(role === 'recruiter' ? [{ key: 'company', header: t('columns.company'), render: (row) => muted(row.company?.displayName ?? t('noCountry')) }] : []),
+    ...(role !== 'candidate' ? [{ key: 'company', header: t('columns.company'), render: (row) => muted(row.company?.displayName ?? t('noCountry')) }] : []),
     role === 'candidate'
       ? { key: 'location', header: t('columns.location'), render: (row) => stack(country(row), t('rightToWorkLine', { value: rightToWork(row) }), true) }
       : { key: 'country', header: t('columns.country'), render: country },
@@ -171,8 +175,8 @@ export default function UsersDirectory({ role }) {
   return (
     <>
       <PageTitle
-        title={t(`${role}s.title`)}
-        description={t(`${role}s.description`)}
+        title={t(`${USER_LISTS[role]}.title`)}
+        description={t(`${USER_LISTS[role]}.description`)}
         actions={
           can(me, 'reports.export') && (
             <Button variant="outline" leftIcon={<Icon as={Download} size={13} />} onClick={exportCsv} loading={exporting} disabled={!data?.total}>

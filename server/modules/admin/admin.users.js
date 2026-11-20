@@ -1,3 +1,4 @@
+import { HIRING_ROLES } from '../../config/enums.js'
 import { signedUrl } from '../../lib/files.js'
 import { t } from '../../lib/i18n.js'
 import { paginate } from '../../lib/pages.js'
@@ -12,7 +13,7 @@ import { validRightToWork } from '../discovery/discovery.population.js'
 import { File } from '../files/files.model.js'
 import { Job } from '../jobs/jobs.model.js'
 import { Certificate, Course, Enrollment } from '../learning/learning.model.js'
-import { isPaid, subscriptionDto } from '../payments/payments.service.js'
+import { isPaid, PAID_PLAN, subscriptionDto } from '../payments/payments.service.js'
 import { Subscription } from '../payments/payments.model.js'
 import { User } from '../users/users.model.js'
 import { VerificationSubmission } from '../verification/verification.model.js'
@@ -94,8 +95,9 @@ async function candidateRows() {
   })
 }
 
-async function recruiterRows() {
-  const users = await User.find({ role: 'recruiter' }).sort({ createdAt: -1 })
+/** Recruiters, or (2026-11-20) agencies: the same columns, each on its own plan. */
+async function recruiterRows(role = 'recruiter') {
+  const users = await User.find({ role }).sort({ createdAt: -1 })
   const ids = users.map((user) => user._id)
   const [companies, learning, subscriptions] = await Promise.all([
     Company.find({ ownerUserId: { $in: ids } }, 'ownerUserId displayName location'),
@@ -116,7 +118,7 @@ async function recruiterRows() {
       joinedAt: user.createdAt,
       company: company ? { id: String(company._id), displayName: company.displayName } : null,
       country: company?.location?.countryCode ?? null,
-      plan: paid.has(String(user._id)) ? 'recruiter_plus' : 'free',
+      plan: paid.has(String(user._id)) ? PAID_PLAN[role] : 'free',
       learning: learning(user._id),
     }
   })
@@ -126,7 +128,7 @@ const matchesText = (row, q) => !q || [row.fullName, row.email, row.company?.dis
 
 /** Every row of one table matching the query (search, status or state, country and the candidate filters). */
 export async function filteredUsers(query) {
-  const rows = query.role === 'candidate' ? await candidateRows() : await recruiterRows()
+  const rows = query.role === 'candidate' ? await candidateRows() : await recruiterRows(query.role)
   return rows.filter(
     (row) =>
       matchesText(row, query.q) &&
@@ -326,7 +328,7 @@ async function recruiterDetail(admin, user) {
 
 /** GET /admin/users/:id: a candidate or recruiter (admins are listed in Access management only, M-154). */
 export async function userDetail(admin, id) {
-  const user = await User.findOne({ _id: id, role: { $in: ['candidate', 'recruiter'] } })
+  const user = await User.findOne({ _id: id, role: { $in: ['candidate', ...HIRING_ROLES] } })
   if (!user) throw new AppError('NOT_FOUND')
   return user.role === 'candidate' ? candidateDetail(admin, user) : recruiterDetail(admin, user)
 }

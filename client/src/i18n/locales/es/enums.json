@@ -407,7 +407,8 @@
     "admin_joined": "Nuevo administrador",
     "admin_ai_budget": "Alerta de presupuesto de IA",
     "newsletter_confirm": "Confirmación del boletín",
-    "newsletter_issue": "Edición del boletín"
+    "newsletter_issue": "Edición del boletín",
+    "agency_update": "Novedad de la agencia"
   },
   "emailClass": {
     "critical": "Crítico",
@@ -556,7 +557,8 @@
     "verification": "Verificación",
     "content_reports": "Denuncias de contenido",
     "failed_renewals": "Renovaciones fallidas",
-    "admin_joined": "Nuevos administradores"
+    "admin_joined": "Nuevos administradores",
+    "agency_updates": "Novedades de la agencia"
   },
   "notificationType": {
     "interview_offered": "Horarios de entrevista",
@@ -598,7 +600,12 @@
     "admin_content_report": "Denuncia de contenido",
     "admin_renewal_failed": "Renovación fallida",
     "admin_joined": "Accesos",
-    "admin_ai_budget": "Presupuesto de IA"
+    "admin_ai_budget": "Presupuesto de IA",
+    "agency_join_requested": "Solicitud para unirse",
+    "agency_member_agreed": "Acuerdo aceptado",
+    "agency_member_left": "Salida de la cartera",
+    "placement_offer_answered": "Oferta respondida",
+    "placement_notice_given": "Preaviso dado"
   },
   "interviewMode": {
     "video": "Videollamada",

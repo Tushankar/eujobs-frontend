@@ -1,0 +1,284 @@
+{
+  "clients": {
+    "title": "Clients",
+    "description": "Les entreprises pour lesquelles votre agence pourvoit des postes. Chaque offre d’agence est pour l’une d’elles.",
+    "add": "Ajouter un client",
+    "search": "Rechercher des clients",
+    "edit": "Modifier",
+    "delete": "Supprimer",
+    "manage": "Gérer {{name}}",
+    "jobs_one": "{{count}} offre",
+    "jobs_other": "{{count}} offres",
+    "jobs_many": "{{count}} offres",
+    "noDetails": "Pas encore de secteur ni de ville",
+    "linkedTo": "Sur EU Jobs sous le nom {{company}}",
+    "emptyFiltered": "Aucun client ne correspond",
+    "emptyFilteredText": "Essayez un autre nom, secteur ou ville.",
+    "deleteTitle": "Supprimer {{name}} ?",
+    "deleteText": "Le client quitte votre liste. Un client avec des offres reste, car ces offres et leurs placements le citent.",
+    "start": {
+      "title": "Ajoutez les entreprises pour lesquelles vous recrutez",
+      "text": "Chaque offre d’agence est pour un client. Ajoutez-les une fois et choisissez-en un en publiant une offre.",
+      "steps": [
+        {
+          "title": "Ajoutez un client",
+          "text": "Son nom et, si vous le souhaitez, son secteur, sa ville et son logo."
+        },
+        {
+          "title": "Liez-le s’il est sur EU Jobs",
+          "text": "Les règles sur le même client le reconnaissent alors exactement."
+        },
+        {
+          "title": "Publiez des offres pour lui",
+          "text": "Choisissez le client dans les conditions d’agence de l’offre."
+        }
+      ]
+    },
+    "fields": {
+      "name": "Nom du client",
+      "industry": "Secteur (facultatif)",
+      "city": "Ville (facultatif)"
+    },
+    "dialog": {
+      "addTitle": "Ajouter un client",
+      "editTitle": "Modifier le client",
+      "description": "Seul le nom est nécessaire. Les candidats voient le nom du client sur une offre seulement si vous choisissez de l’afficher.",
+      "add": "Ajouter le client",
+      "save": "Enregistrer",
+      "addLogo": "Ajouter un logo",
+      "replaceLogo": "Remplacer le logo",
+      "removeLogo": "Retirer le logo",
+      "link": "La même entreprise sur EU Jobs (facultatif)",
+      "linkHint": "Saisissez au moins 2 lettres de son nom.",
+      "noCompanies": "Aucune entreprise vérifiée à ce nom.",
+      "unlink": "Retirer le lien"
+    }
+  },
+  "talent": {
+    "title": "Talents",
+    "description": "Les candidats de votre vivier, les personnes qui demandent à le rejoindre et l’accord qu’ils signent.",
+    "tabsLabel": "Sections des talents",
+    "tabs": {
+      "books": "Dans le vivier",
+      "requests": "Demandes",
+      "agreement": "Accord"
+    },
+    "noDetails": "Pas encore de titre",
+    "agreed": "A accepté la version {{version}}",
+    "newVersionWaiting": "Nouvelle version à accepter",
+    "invited": "Invité",
+    "waitingAgreement": "En attente de son accord",
+    "accept": "Accepter",
+    "decline": "Refuser",
+    "withdraw": "Retirer",
+    "manage": "Gérer {{name}}",
+    "viewProfile": "Voir le profil",
+    "remove": "Retirer du vivier",
+    "removeTitle": "Retirer {{name}} de votre vivier ?",
+    "removeText": "Votre agence ne pourra plus le placer. Un placement en cours continue jusqu’à son terme.",
+    "noAgreement": "Publiez votre accord avant d’accueillir quelqu’un. Les demandes attendent jusque-là.",
+    "openAgreement": "Ouvrir l’accord",
+    "findCandidates": "Trouver des candidats",
+    "empty": {
+      "books": {
+        "title": "Personne dans votre vivier pour l’instant",
+        "text": "Invitez des candidats depuis leur profil ou acceptez ceux qui demandent à rejoindre."
+      },
+      "requests": {
+        "title": "Aucune demande",
+        "text": "Les candidats qui demandent à rejoindre et ceux que vous invitez apparaissent ici jusqu’à leur accord."
+      }
+    }
+  },
+  "agreement": {
+    "upload": "Téléverser l’accord (PDF)",
+    "replace": "Remplacer le PDF",
+    "newVersion": "Téléverser une nouvelle version",
+    "deleteDraft": "Supprimer le brouillon",
+    "deleteTitle": "Supprimer ce brouillon ?",
+    "deleteText": "Le PDF du brouillon et ses règles sont supprimés. La version actuelle reste inchangée.",
+    "draftTitle": "Version {{version}} (brouillon)",
+    "draftLead": "Vérifiez les quatre règles avec votre PDF, puis publiez. Les candidats de votre vivier devront accepter une nouvelle version avant leur prochain placement.",
+    "currentTitle": "Version {{version}}",
+    "currentLead": "Publiée le {{date}} · {{agreed}} sur {{total}} de votre vivier l’ont acceptée",
+    "earlier": "Versions précédentes",
+    "version": "Version {{version}}",
+    "aiTitle": "Lire les règles avec l’IA",
+    "aiText": "L’IA trouve les quatre règles dans votre PDF et cite la clause de chacune. Vous les vérifiez avant de publier.",
+    "aiDone": "L’IA a lu ce PDF le {{when}}. Vérifiez sa lecture ci-dessous.",
+    "read": "Lire avec l’IA",
+    "readAgain": "Relire",
+    "readDone": "L’IA a lu le PDF. Vérifiez chaque règle et sa clause.",
+    "noText": "Ce PDF ne contient pas de texte lisible (un scan). Saisissez les règles ci-dessous.",
+    "saveRules": "Enregistrer les règles",
+    "publish": "Publier la version {{version}}",
+    "saved": "Règles enregistrées.",
+    "published": "Publié. Les candidats de votre vivier devront l’accepter.",
+    "start": {
+      "title": "Téléversez l’accord que signent les candidats",
+      "text": "Les candidats rejoignent votre vivier en l’acceptant. Ses règles décident si une personne en placement peut accepter un autre travail.",
+      "steps": [
+        {
+          "title": "Téléversez le PDF",
+          "text": "Votre accord d’agence ou vos conditions d’engagement."
+        },
+        {
+          "title": "Vérifiez les règles",
+          "text": "L’IA les lit avec Agency Plus ; vous pouvez aussi les saisir."
+        },
+        {
+          "title": "Publiez",
+          "text": "Invitez ensuite des candidats ou acceptez leurs demandes."
+        }
+      ]
+    }
+  },
+  "rules": {
+    "title": "Règles du contrat",
+    "labels": {
+      "exclusivity": "Autre travail pendant une mission",
+      "noticeDays": "Préavis pour terminer plus tôt",
+      "coolingOffDays": "Délai de carence chez le client",
+      "maxWeeklyHours": "Heures maximales par semaine"
+    },
+    "help": {
+      "exclusivity": "Ce que le candidat peut faire pendant une mission.",
+      "noticeDays": "Jours de préavis que le candidat donne pour terminer une mission plus tôt.",
+      "coolingOffDays": "Jours après une mission avant de pouvoir travailler pour ce client directement ou via une autre agence.",
+      "maxWeeklyHours": "Le maximum d’heures par semaine, tous emplois confondus."
+    },
+    "notStated": "Non précisé",
+    "days_one": "{{count}} jour",
+    "days_other": "{{count}} jours",
+    "days_many": "{{count}} jours",
+    "hours_one": "{{count}} heure par semaine",
+    "hours_other": "{{count}} heures par semaine",
+    "hours_many": "{{count}} heures par semaine",
+    "value": "Règle",
+    "valueDays": "Jours",
+    "valueHours": "Heures par semaine",
+    "clause": "Clause",
+    "clauseHint": "Copiée mot pour mot depuis le PDF.",
+    "changedFromAi": "Modifié par rapport à l’IA"
+  },
+  "contract": {
+    "title": "Contrat (facultatif)",
+    "lead": "Le contrat de cette offre. Une fois ses règles confirmées, elles s’appliquent aux placements de cette offre avant celles de votre accord.",
+    "none": "Aucun contrat joint",
+    "attach": "Joindre le contrat (PDF)",
+    "remove": "Retirer",
+    "aiText": "L’IA peut lire les règles de ce contrat et citer chaque clause (Agency Plus).",
+    "confirm": "Confirmer les règles",
+    "confirmAgain": "Enregistrer et confirmer",
+    "confirmed": "Règles confirmées",
+    "toConfirm": "Règles à confirmer"
+  },
+  "terms": {
+    "client": "Client",
+    "clientPlaceholder": "Choisissez un client",
+    "noClients": "Ajoutez d’abord un client",
+    "addClient": "Ajouter un client",
+    "showClient": "Afficher le nom du client aux candidats",
+    "showClientHint": "Désactivé, l’offre affiche « Client confidentiel ». Le nom de votre agence s’affiche toujours.",
+    "startDate": "Date de début",
+    "endDate": "Date de fin",
+    "rate": "Taux de rémunération ({{currency}})",
+    "rateNoCurrency": "Taux de rémunération",
+    "ratePeriod": "Payé",
+    "hoursPerWeek": "Heures par semaine (facultatif)",
+    "hoursHint": "Laissé vide, un emploi à {{type}} compte pour {{count}} heures par semaine."
+  },
+  "placements": {
+    "title": "Placements",
+    "description": "Les personnes placées par votre agence, les offres que vous avez faites et les placements terminés.",
+    "tabsLabel": "Vues des placements",
+    "tabs": {
+      "running": "En cours",
+      "upcoming": "À venir",
+      "offered": "Offres",
+      "over": "Terminés"
+    },
+    "phase": {
+      "running": "En cours",
+      "upcoming": "À venir",
+      "over": "Terminé"
+    },
+    "range": "Du {{start}} au {{end}}",
+    "notice": "se termine le {{date}} (préavis donné)",
+    "endedEarly": "se termine le {{date}} (terminé plus tôt)",
+    "client": "Client",
+    "dates": "Dates",
+    "hours": "Heures",
+    "pay": "Rémunération",
+    "rate": "{{amount}} {{period}}",
+    "rules": "Règles de ce placement",
+    "rulesOnAccept": "Les règles sont fixées quand le candidat accepte.",
+    "end": "Terminer plus tôt",
+    "endTitle": "Terminer plus tôt le placement de {{name}}",
+    "endText": "Choisissez le nouveau dernier jour (aujourd’hui au plus tôt). Les règles qui comptent depuis la fin comptent depuis ce jour.",
+    "endDate": "Dernier jour",
+    "endDateInvalid": "Choisissez un jour à partir d’aujourd’hui et avant la fin actuelle.",
+    "rehire": "Réembaucher",
+    "rehireTitle": "Proposer un autre placement à {{name}}",
+    "rehireText": "Choisissez l’une de vos offres d’agence publiées. Ses dates, son taux et son contrat s’appliquent ; la personne accepte ou refuse.",
+    "job": "Offre",
+    "noOpenJobs": "Vous n’avez aucune offre d’agence publiée qui commence à partir d’aujourd’hui. Publiez-en une d’abord.",
+    "sendOffer": "Envoyer l’offre",
+    "withdraw": "Retirer l’offre",
+    "empty": {
+      "running": {
+        "title": "Rien en cours",
+        "text": "Les placements apparaissent ici pendant leur durée."
+      },
+      "upcoming": {
+        "title": "Rien à venir",
+        "text": "Les placements qui n’ont pas encore commencé apparaissent ici."
+      },
+      "offered": {
+        "title": "Aucune offre ouverte",
+        "text": "Les offres de réembauche en attente de réponse apparaissent ici."
+      },
+      "over": {
+        "title": "Rien de terminé pour l’instant",
+        "text": "Quand un placement se termine, vous pouvez réembaucher la personne d’ici."
+      }
+    },
+    "start": {
+      "title": "Vos placements commencent ici",
+      "text": "Un placement commence quand vous passez une personne de votre vivier à Embauché sur une offre d’agence.",
+      "steps": [
+        {
+          "title": "Publiez votre accord",
+          "text": "Les candidats l’acceptent pour rejoindre votre vivier."
+        },
+        {
+          "title": "Publiez une offre d’agence",
+          "text": "Avec son client, ses dates et son taux."
+        },
+        {
+          "title": "Embauchez",
+          "text": "Passez le candidat à Embauché ; le placement apparaît ici."
+        }
+      ],
+      "action": "Ouvrir l’accord"
+    }
+  },
+  "invite": {
+    "invite": "Inviter dans votre vivier",
+    "acceptRequest": "Accepter sa demande",
+    "openTalent": "Ouvrir dans Talents"
+  },
+  "summary": {
+    "title": "Conditions d’agence",
+    "edit": "Modifier",
+    "client": "Client",
+    "dates": "Dates",
+    "pay": "Rémunération",
+    "hours": "Heures",
+    "contract": "Contrat",
+    "confidential": "affiché comme Client confidentiel",
+    "missing": "À ajouter avant de publier",
+    "defaultHours": "Selon le type d’emploi",
+    "noContract": "Aucun (l’accord s’applique)"
+  }
+}

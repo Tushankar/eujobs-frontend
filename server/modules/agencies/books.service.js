@@ -9,6 +9,7 @@ import { accessibleCandidate } from '../discovery/discovery.service.js'
 import { File } from '../files/files.model.js'
 import { User } from '../users/users.model.js'
 import { AgencyAgreement, AgencyMembership } from './agencies.model.js'
+import { tellAgency } from './agencies.notify.js'
 import { currentAgreement } from './agreements.service.js'
 import { rulesDto } from './contracts.js'
 
@@ -187,7 +188,9 @@ const candidateAnswer = async (user, membership) => (await candidateDtos(user, [
 /** POST /candidate/agencies/:companyId/join: a request the agency answers. */
 export async function join(user, companyId) {
   const company = await agencyCompany(companyId)
-  return candidateAnswer(user, await open(company._id, user._id, 'requested', 'candidate'))
+  const membership = await open(company._id, user._id, 'requested', 'candidate')
+  await tellAgency(company._id, 'agency_join_requested', { candidate: user.fullName })
+  return candidateAnswer(user, membership)
 }
 
 /** GET /candidate/agencies/memberships/:id/agreement: the current agreement to read before agreeing (PDF and rules). */
@@ -212,6 +215,7 @@ export async function agree(user, id, version) {
   membership.acceptances.push({ version, name: user.fullName, at: new Date() })
   if (membership.status !== 'active') move(membership, 'active', 'candidate')
   await membership.save()
+  await tellAgency(membership.companyId, 'agency_member_agreed', { candidate: user.fullName, version })
   return candidateAnswer(user, membership)
 }
 
@@ -230,6 +234,7 @@ export async function endByCandidate(user, id) {
   if (membership.status !== 'active') throw new AppError('CONFLICT', { params: { status: membership.status } })
   move(membership, 'ended', 'candidate')
   await membership.save()
+  await tellAgency(membership.companyId, 'agency_member_left', { candidate: user.fullName })
   return candidateAnswer(user, membership)
 }
 

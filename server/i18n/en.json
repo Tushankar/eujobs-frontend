@@ -585,6 +585,25 @@
         "Nothing to do if you want to continue. To change your card, switch to monthly billing or cancel, open Billing before {{date}}."
       ],
       "action": "Manage billing"
+    },
+    "agency_update": {
+      "subject": "{{summary}}",
+      "heading": "Agency update",
+      "body": [
+        "Hi {{name}},",
+        "{{summary}}"
+      ],
+      "action": "Open"
+    },
+    "agencySummary": {
+      "agency_join_requested": "{{candidate}} asked to join your books.",
+      "agency_member_agreed": "{{candidate}} agreed to version {{version}} of your agreement.",
+      "agency_member_left": "{{candidate}} left your books.",
+      "placement_offer_answered": {
+        "accepted": "{{candidate}} accepted your offer for {{job}}.",
+        "declined": "{{candidate}} declined your offer for {{job}}."
+      },
+      "placement_notice_given": "{{candidate}} gave notice on {{job}}. The placement now ends on {{date}}."
     }
   },
   "signIn": {
@@ -677,7 +696,8 @@
     "plan": {
       "free": "Free",
       "plus": "Plus",
-      "recruiter_plus": "Recruiter Plus"
+      "recruiter_plus": "Recruiter Plus",
+      "agency_plus": "Agency Plus"
     },
     "rtwRegion": {
       "EU": "EU (all 27 countries)"

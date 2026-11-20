@@ -100,6 +100,7 @@ export function mailSample(type, language, origin, role = 'candidate') {
     application_status: { job: 'Senior Product Designer', company: 'Mail Test Ltd', link: `${origin}/candidate/applications` },
     application_rejected: { job: 'Senior Product Designer', company: 'Mail Test Ltd', link: `${origin}/candidate/jobs` },
     new_applications: { job: 'Senior Product Designer', link: `${origin}/recruiter/applications` },
+    agency_update: { summary: 'Mail Tester asked to join your books.', link: `${origin}/agency/talent?tab=requests` },
     new_message: { sender: 'Mail Test Ltd', link: `${origin}/candidate/messages` },
     alert_instant: {
       alertName: 'Product design roles',

@@ -5,6 +5,7 @@ import { Job } from '../jobs/jobs.model.js'
 import { User } from '../users/users.model.js'
 import { AgencyClient, AgencyMembership, AgencyPlacement } from './agencies.model.js'
 import { currentAgreement } from './agreements.service.js'
+import { tellAgency } from './agencies.notify.js'
 import { agreedAgreement } from './books.service.js'
 import { RULES, rulesDto } from './contracts.js'
 import { checkTarget, effectiveEnd, hoursOf, jobTarget, phaseOf, today } from './lock.js'
@@ -220,6 +221,7 @@ export async function acceptOffer(user, id) {
   const now = new Date()
   placement.set({ ...(await fromJob(job, user._id)), ...(await placementRules(job, user._id)), status: 'confirmed', confirmedAt: now, decidedAt: now })
   await placement.save()
+  await tellAgency(placement.companyId, 'placement_offer_answered', { candidate: user.fullName, job: job.title, decision: 'accepted' })
   return dtoOf(placement, user._id)
 }
 
@@ -229,6 +231,8 @@ export async function declineOffer(user, id) {
   placement.status = 'declined'
   placement.decidedAt = new Date()
   await placement.save()
+  const job = await Job.findById(placement.jobId, 'title')
+  await tellAgency(placement.companyId, 'placement_offer_answered', { candidate: user.fullName, job: job?.title ?? '', decision: 'declined' })
   return dtoOf(placement, user._id)
 }
 
@@ -239,6 +243,8 @@ export async function giveNotice(user, id) {
   if (placement.noticeGivenOn) throw new AppError('CONFLICT', { params: { reason: 'notice_given' } })
   placement.noticeGivenOn = today()
   await placement.save()
+  const job = await Job.findById(placement.jobId, 'title')
+  await tellAgency(placement.companyId, 'placement_notice_given', { candidate: user.fullName, job: job?.title ?? '', date: effectiveEnd(placement) })
   return dtoOf(placement, user._id)
 }
 

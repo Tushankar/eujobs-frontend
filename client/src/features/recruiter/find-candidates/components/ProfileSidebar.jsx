@@ -9,6 +9,7 @@ import CoverNote from '@/features/recruiter/applications/components/CoverNote.js
 import { MessageCandidateButton } from '@/features/messages/components/StartConversation.jsx'
 import ReportButton from '@/features/moderation/components/ReportButton.jsx'
 import { useFormat } from '@/lib/preferences.js'
+import InviteToBooks from '@/features/agency/components/InviteToBooks.jsx'
 import MatchInsights from './MatchInsights.jsx'
 import styles from './ProfileSidebar.module.css'
 
@@ -80,6 +81,8 @@ export default function ProfileSidebar({ candidate, jobs, job, onJobChange, onTo
             {t(candidate.shortlisted ? 'discovery:profile.removeShortlist' : 'discovery:profile.addShortlist')}
           </PlanButton>
           <MessageCandidateButton candidate={candidate} job={job} />
+          {/* 2026-11-20: agencies invite candidates onto their books. */}
+          <InviteToBooks candidateId={candidate.id} />
           <ReportButton targetType="candidate_profile" targetId={candidate.id} size="sm" fullWidth />
         </div>
       </Panel>

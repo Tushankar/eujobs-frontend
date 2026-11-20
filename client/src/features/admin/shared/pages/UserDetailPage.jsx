@@ -1,3 +1,4 @@
+import { USER_LISTS } from '../components/UsersDirectory.jsx'
 import { useTranslation } from 'react-i18next'
 import { Link, useParams } from 'react-router-dom'
 import { ArrowLeft, FileText, ShieldCheck, UserX } from 'lucide-react'
@@ -395,7 +396,7 @@ export default function UserDetailPage({ role }) {
   const format = useFormat()
   const { userId } = useParams()
   const { data: user, error, isLoading } = useGetAdminUserQuery(userId)
-  const listPath = workspacePath(WORKSPACES.admin, `${role}s`)
+  const listPath = workspacePath(WORKSPACES.admin, USER_LISTS[role])
   const back = (
     <Link to={listPath} className={styles.back}>
       <Icon as={ArrowLeft} size={14} />

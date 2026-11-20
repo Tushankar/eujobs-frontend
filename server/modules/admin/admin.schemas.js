@@ -33,7 +33,8 @@ export const inviteBody = z.object({ email, fullName, roleId: objectId, departme
 
 // M-161, M-169, M-138: one table per role; the candidate filters apply to candidates only.
 export const usersQuery = z.object({
-  role: z.enum(['candidate', 'recruiter']),
+  // 2026-11-20: agencies have their own table, like recruiters.
+  role: z.enum(['candidate', 'recruiter', 'agency']),
   q: q.optional(),
   status: z.enum(ENUMS.userStatus).optional(),
   state: z.enum(['pending', 'approved', 'rejected', 'suspended']).optional(),

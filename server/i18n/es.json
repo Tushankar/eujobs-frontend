@@ -585,6 +585,25 @@
         "Si quieres continuar, no tienes que hacer nada. Para cambiar tu tarjeta, pasar a facturación mensual o cancelar, abre Facturación antes del {{date}}."
       ],
       "action": "Gestionar la facturación"
+    },
+    "agency_update": {
+      "subject": "{{summary}}",
+      "heading": "Novedades de la agencia",
+      "body": [
+        "Hola, {{name}}:",
+        "{{summary}}"
+      ],
+      "action": "Abrir"
+    },
+    "agencySummary": {
+      "agency_join_requested": "{{candidate}} pidió unirse a tu cartera.",
+      "agency_member_agreed": "{{candidate}} aceptó la versión {{version}} de tu acuerdo.",
+      "agency_member_left": "{{candidate}} dejó tu cartera.",
+      "placement_offer_answered": {
+        "accepted": "{{candidate}} aceptó tu oferta para {{job}}.",
+        "declined": "{{candidate}} rechazó tu oferta para {{job}}."
+      },
+      "placement_notice_given": "{{candidate}} dio preaviso en {{job}}. La colocación termina ahora el {{date}}."
     }
   },
   "signIn": {
@@ -677,7 +696,8 @@
     "plan": {
       "free": "Free",
       "plus": "Plus",
-      "recruiter_plus": "Recruiter Plus"
+      "recruiter_plus": "Recruiter Plus",
+      "agency_plus": "Agency Plus"
     },
     "rtwRegion": {
       "EU": "UE (los 27 países)"

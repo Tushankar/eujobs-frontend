@@ -407,7 +407,8 @@
     "admin_joined": "Admin joined",
     "admin_ai_budget": "AI budget alert",
     "newsletter_confirm": "Newsletter confirmation",
-    "newsletter_issue": "Newsletter issue"
+    "newsletter_issue": "Newsletter issue",
+    "agency_update": "Agency update"
   },
   "emailClass": {
     "critical": "Critical",
@@ -556,7 +557,8 @@
     "verification": "Verification",
     "content_reports": "Content reports",
     "failed_renewals": "Failed renewals",
-    "admin_joined": "Admins joining"
+    "admin_joined": "Admins joining",
+    "agency_updates": "Agency updates"
   },
   "notificationType": {
     "interview_offered": "Interview times",
@@ -598,7 +600,12 @@
     "admin_content_report": "Content report",
     "admin_renewal_failed": "Failed renewal",
     "admin_joined": "Access",
-    "admin_ai_budget": "AI budget"
+    "admin_ai_budget": "AI budget",
+    "agency_join_requested": "Request to join",
+    "agency_member_agreed": "Agreement accepted",
+    "agency_member_left": "Left the books",
+    "placement_offer_answered": "Offer answered",
+    "placement_notice_given": "Notice given"
   },
   "interviewMode": {
     "video": "Video call",

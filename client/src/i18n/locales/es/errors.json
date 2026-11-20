@@ -23,7 +23,7 @@
   "CONFLICT": "Esto ya está hecho.",
   "IN_USE": "Todavía está en uso.",
   "LOCKED": "Ya no se puede cambiar.",
-  "PLACEMENT_LOCKED": "Tu asignación actual con la agencia todavía no permite este empleo.",
+  "PLACEMENT_LOCKED": "Las reglas de una colocación de agencia todavía no permiten este empleo.",
   "OWNER_PROTECTED": "El acceso de propietario no se puede cambiar.",
   "VALIDATION_FAILED": "Revisa los campos marcados.",
   "FILE_TYPE_NOT_ALLOWED": "No se acepta este tipo de archivo.",

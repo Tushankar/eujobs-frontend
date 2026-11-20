@@ -1,3 +1,4 @@
+import AgencyJobSummary from '@/features/agency/components/AgencyJobSummary.jsx'
 import { hiringPath } from '@/app/roles.js'
 import { useEffect, useState } from 'react'
 import { useTranslation } from 'react-i18next'
@@ -77,6 +78,7 @@ export default function JobDetailsPage() {
         </section>
 
         <div className={`${styles.aside} sticky-side`}>
+          {job?.agency && <AgencyJobSummary job={job} />}
           <section className={styles.activity} aria-labelledby="activity-title">
             <h2 className={styles.cardTitle} id="activity-title">
               {t('jobs:details.activity')}

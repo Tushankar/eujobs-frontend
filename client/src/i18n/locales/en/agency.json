@@ -19,9 +19,18 @@
       "title": "Add the companies you recruit for",
       "text": "Every agency job is for a client. Add them once and pick one when you post a job.",
       "steps": [
-        { "title": "Add a client", "text": "Its name, and if you like its industry, city and logo." },
-        { "title": "Link it if it is on EU Jobs", "text": "So rules about the same client recognise it exactly." },
-        { "title": "Post jobs for it", "text": "Choose the client in the job's agency terms." }
+        {
+          "title": "Add a client",
+          "text": "Its name, and if you like its industry, city and logo."
+        },
+        {
+          "title": "Link it if it is on EU Jobs",
+          "text": "So rules about the same client recognise it exactly."
+        },
+        {
+          "title": "Post jobs for it",
+          "text": "Choose the client in the job's agency terms."
+        }
       ]
     },
     "fields": {
@@ -108,9 +117,18 @@
       "title": "Upload the agreement candidates sign",
       "text": "Candidates join your books by agreeing to it. Its rules decide whether someone on a placement may take other work.",
       "steps": [
-        { "title": "Upload the PDF", "text": "Your agency agreement or terms of engagement." },
-        { "title": "Check the rules", "text": "AI reads them on Agency Plus; you can also type them." },
-        { "title": "Publish", "text": "Then invite candidates or accept their requests." }
+        {
+          "title": "Upload the PDF",
+          "text": "Your agency agreement or terms of engagement."
+        },
+        {
+          "title": "Check the rules",
+          "text": "AI reads them on Agency Plus; you can also type them."
+        },
+        {
+          "title": "Publish",
+          "text": "Then invite candidates or accept their requests."
+        }
       ]
     }
   },
@@ -205,20 +223,59 @@
     "sendOffer": "Send offer",
     "withdraw": "Withdraw offer",
     "empty": {
-      "running": { "title": "Nothing running", "text": "Placements show here while they run." },
-      "upcoming": { "title": "Nothing upcoming", "text": "Placements that have not started yet show here." },
-      "offered": { "title": "No open offers", "text": "Re-hire offers waiting for an answer show here." },
-      "over": { "title": "Nothing over yet", "text": "When a placement ends you can re-hire the person from here." }
+      "running": {
+        "title": "Nothing running",
+        "text": "Placements show here while they run."
+      },
+      "upcoming": {
+        "title": "Nothing upcoming",
+        "text": "Placements that have not started yet show here."
+      },
+      "offered": {
+        "title": "No open offers",
+        "text": "Re-hire offers waiting for an answer show here."
+      },
+      "over": {
+        "title": "Nothing over yet",
+        "text": "When a placement ends you can re-hire the person from here."
+      }
     },
     "start": {
       "title": "Your placements start here",
       "text": "A placement starts when you move someone on your books to Hired on an agency job.",
       "steps": [
-        { "title": "Publish your agreement", "text": "Candidates agree to it to join your books." },
-        { "title": "Post an agency job", "text": "With its client, dates and pay rate." },
-        { "title": "Hire", "text": "Move the applicant to Hired; the placement appears here." }
+        {
+          "title": "Publish your agreement",
+          "text": "Candidates agree to it to join your books."
+        },
+        {
+          "title": "Post an agency job",
+          "text": "With its client, dates and pay rate."
+        },
+        {
+          "title": "Hire",
+          "text": "Move the applicant to Hired; the placement appears here."
+        }
       ],
       "action": "Open the agreement"
     }
+  },
+  "invite": {
+    "invite": "Invite to your books",
+    "acceptRequest": "Accept their request",
+    "openTalent": "Open in Talent"
+  },
+  "summary": {
+    "title": "Agency terms",
+    "edit": "Edit",
+    "client": "Client",
+    "dates": "Dates",
+    "pay": "Pay",
+    "hours": "Hours",
+    "contract": "Contract",
+    "confidential": "shown as Confidential client",
+    "missing": "To add before publishing",
+    "defaultHours": "From the job type",
+    "noContract": "None (the agreement applies)"
   }
 }

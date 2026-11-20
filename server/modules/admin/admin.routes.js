@@ -76,7 +76,8 @@ router.get('/users', requirePermission('users.view'), validate({ query: schemas.
 
 router.get('/users/export', requirePermission('users.view'), requirePermission('reports.export'), validate({ query: schemas.usersQuery }), async (req, res) => {
   const rows = users.exportRows(req.query.role, await users.filteredUsers(req.query), req.user.language)
-  await auditedExport(req, res, { type: `${req.query.role}s_exported`, name: `${req.query.role}s`, rows })
+  const list = { candidate: 'candidates', recruiter: 'recruiters', agency: 'agencies' }[req.query.role]
+  await auditedExport(req, res, { type: `${list}_exported`, name: list, rows })
 })
 
 router.get('/users/:id', requirePermission('users.view'), validate({ params: idParams }), async (req, res) => {

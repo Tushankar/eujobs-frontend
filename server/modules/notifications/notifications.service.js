@@ -31,6 +31,10 @@ const PAGE_PATHS = {
   // §3.22: a recruiter's plan_ended opens Jobs (P11c-Q18).
   jobs: (role) => `/${role}/jobs`,
   review: (role) => `/${role}/onboarding/review`,
+  // 2026-11-20: an agency's Talent (books, requests) and Placements pages.
+  talent: (role) => `/${role}/talent`,
+  talentRequests: (role) => `/${role}/talent?tab=requests`,
+  placements: (role) => `/${role}/placements`,
   // 2026-11-17: a budget alert opens Admin › AI & matching › Usage.
   aiUsage: () => '/admin/ai-matching/usage',
 }

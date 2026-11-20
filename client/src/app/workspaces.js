@@ -86,6 +86,8 @@ export const WORKSPACES = {
       { key: 'overview', to: '', vuesax: 'element-3', end: true, permission: 'dashboard.view' },
       { key: 'candidates', to: 'candidates', vuesax: 'profile-2user', permission: 'users.view' },
       { key: 'recruiters', to: 'recruiters', vuesax: 'user-square', permission: 'users.view' },
+      // 2026-11-20
+      { key: 'agencies', to: 'agencies', vuesax: 'buildings', permission: 'users.view' },
       { key: 'jobs', to: 'jobs', vuesax: 'briefcase', permission: 'jobs.view' },
       { key: 'applications', to: 'applications', vuesax: 'document-text', permission: 'candidates.view' },
       { key: 'recruitment', to: 'recruitment', vuesax: 'kanban', permission: 'candidates.view' },
