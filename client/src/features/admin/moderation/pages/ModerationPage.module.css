@@ -68,3 +68,14 @@
     padding-left: 16px;
   }
 }
+
+/* 2026-11-20: Recruiters | Agencies above the account queue. */
+.kinds {
+  padding: 12px 24px 0;
+}
+
+@media (max-width: 599px) {
+  .kinds {
+    padding: 8px 16px 0;
+  }
+}

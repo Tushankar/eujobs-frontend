@@ -150,6 +150,11 @@
         "noFlags": "No hay nada que destaque en los datos.",
         "note": "La IA puede equivocarse. Comprueba los documentos y los datos antes de decidir."
       }
+    },
+    "kindFilter": "Tipo de cuenta",
+    "kinds": {
+      "recruiter": "Reclutadores",
+      "agency": "Agencias"
     }
   },
   "title": "La confianza es una práctica continua.",

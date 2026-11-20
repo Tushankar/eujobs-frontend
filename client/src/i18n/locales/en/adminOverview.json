@@ -70,7 +70,9 @@
     "conversionCaption_other": "{{shortlisted}} of {{count}} applications shortlisted · All time",
     "recruiterAccounts": "Recruiter accounts",
     "companyRegistrations": "Company registrations",
-    "reviewedOutreach": "Reviewed outreach"
+    "reviewedOutreach": "Reviewed outreach",
+    "agenciesCaption_one": "Plus {{count}} agency account · All time",
+    "agenciesCaption_other": "Plus {{count}} agency accounts · All time"
   },
   "quality": {
     "title": "Matching quality needs more than a score",

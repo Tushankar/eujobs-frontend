@@ -197,7 +197,7 @@ export default function AccountReview({ userId, onDecided, onClose }) {
             <div className={styles.personText}>
               <div className={accountStyles.nameRow}>
                 <h3 className={styles.personName}>{account.fullName}</h3>
-                <PillBadge tone="neutral">{t('enums:role.recruiter')}</PillBadge>
+                <PillBadge tone="neutral">{t(`enums:role.${account.role ?? 'recruiter'}`)}</PillBadge>
               </div>
               <p className={styles.personEmail}>{[account.jobTitle, account.email].filter(Boolean).join(' · ')}</p>
             </div>

@@ -150,6 +150,11 @@
         "noFlags": "Rien de particulier dans les informations.",
         "note": "L’IA peut se tromper. Vérifiez les documents et les informations avant de décider."
       }
+    },
+    "kindFilter": "Type de compte",
+    "kinds": {
+      "recruiter": "Recruteurs",
+      "agency": "Agences"
     }
   },
   "title": "La confiance se construit au quotidien.",

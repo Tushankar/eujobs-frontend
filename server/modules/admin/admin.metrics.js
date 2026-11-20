@@ -86,7 +86,12 @@ const outreachFilter = (scope) => ({ startedBy: 'recruiter', ...(scope.companyId
 /** GET /admin/overview: the KPIs, the marketplace health counters, the demanded skills and the recent activity. */
 export async function overview({ country }) {
   const scope = await scopeOf(country)
-  const [candidates, recruiters] = await Promise.all([filteredUsers({ role: 'candidate', country }), filteredUsers({ role: 'recruiter', country })])
+  // 2026-11-20: agencies count with recruiters as active users and accounts waiting for review.
+  const [candidates, recruiters, agencies] = await Promise.all([
+    filteredUsers({ role: 'candidate', country }),
+    filteredUsers({ role: 'recruiter', country }),
+    filteredUsers({ role: 'agency', country }),
+  ])
   const [published, applications, enrollments, badges, roleMatch, companies, purchases, checks, shortlists, outreach, skills, recent, payments] = await Promise.all([
     Job.countDocuments({ status: 'published', ...scope.job }),
     Application.countDocuments({ ...NOT_WITHDRAWN, ...scope.application }),
@@ -106,7 +111,7 @@ export async function overview({ country }) {
   return {
     kpis: {
       candidateRegistrations: candidates.length,
-      activeUsers: active(candidates) + active(recruiters),
+      activeUsers: active(candidates) + active(recruiters) + active(agencies),
       publishedJobs: published,
       applications,
       verifiedProfiles: candidates.filter((row) => row.verification.state === 'verified').length,
@@ -120,7 +125,7 @@ export async function overview({ country }) {
       checksInReview: checks,
       shortlists,
       outreach,
-      pendingReviews: recruiters.filter((row) => row.status === 'pending_review').length,
+      pendingReviews: [...recruiters, ...agencies].filter((row) => row.status === 'pending_review').length,
       // P11c-Q20: the Payments card's count, split by role.
       activeSubscribers: payments.activeSubscribers,
     },
@@ -139,8 +144,9 @@ export function overviewExportRows({ kpis, health }, language) {
 /** GET /admin/analytics (M-175 … M-180, U11, OQ-5): all-time cards and the demanded skills. */
 export async function analytics({ country }) {
   const scope = await scopeOf(country)
-  const [recruiters, applications, shortlist, companies, outreach, skills] = await Promise.all([
+  const [recruiters, agencies, applications, shortlist, companies, outreach, skills] = await Promise.all([
     filteredUsers({ role: 'recruiter', country }),
+    filteredUsers({ role: 'agency', country }),
     Application.find({ ...NOT_WITHDRAWN, ...scope.application }, 'companyId candidateId'),
     ShortlistEntry.find({}, 'companyId candidateId'),
     Company.countDocuments(scope.company),
@@ -152,6 +158,7 @@ export async function analytics({ country }) {
   return {
     shortlistConversion: { percent: applications.length ? Math.round((shortlisted / applications.length) * 100) : null, shortlisted, applications: applications.length },
     recruiterAccounts: recruiters.length,
+    agencyAccounts: agencies.length,
     companyRegistrations: companies,
     reviewedOutreach: outreach,
     skills,
@@ -192,7 +199,7 @@ export async function activity({ period, tz, country }) {
   const scope = await scopeOf(country)
   const window = { $gte: range.start.toJSDate(), $lt: range.end.toJSDate() }
   const [users, applications] = await Promise.all([
-    User.find({ role: { $in: ['candidate', 'recruiter'] }, createdAt: window, ...(scope.userIds && { _id: { $in: scope.userIds } }) }, 'createdAt'),
+    User.find({ role: { $in: ['candidate', 'recruiter', 'agency'] }, createdAt: window, ...(scope.userIds && { _id: { $in: scope.userIds } }) }, 'createdAt'),
     Application.find({ appliedAt: window, ...scope.application }, 'appliedAt'),
   ])
   const count = (dates, bucket) => dates.filter((date) => date >= bucket.start.toJSDate() && date < bucket.end.toJSDate()).length

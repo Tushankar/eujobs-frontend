@@ -73,7 +73,10 @@
     "conversionCaption_other": "{{shortlisted}} de {{count}} candidaturas preseleccionadas · Todo el periodo",
     "recruiterAccounts": "Cuentas de reclutadores",
     "companyRegistrations": "Registros de empresas",
-    "reviewedOutreach": "Contactos revisados"
+    "reviewedOutreach": "Contactos revisados",
+    "agenciesCaption_one": "Más {{count}} cuenta de agencia · Todo el periodo",
+    "agenciesCaption_many": "Más {{count}} cuentas de agencia · Todo el periodo",
+    "agenciesCaption_other": "Más {{count}} cuentas de agencia · Todo el periodo"
   },
   "quality": {
     "title": "La calidad de la compatibilidad necesita algo más que una puntuación",

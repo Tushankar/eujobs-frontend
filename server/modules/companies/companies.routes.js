@@ -66,7 +66,9 @@ export const adminRouter = Router()
 adminRouter.use(requireAuth, requireRole('admin'), requirePermission('moderation.manage'))
 
 adminRouter.get('/', validate({ query: schemas.accountsQuery }), async (req, res) => {
-  res.json({ ...(await review.listAccounts(req.user, req.query.status, req.query.role)), counts: await review.accountCounts(req.query.role) })
+  // 2026-11-20: `pending` counts each kind's accounts waiting, for the Recruiters | Agencies tabs.
+  const pending = Object.fromEntries(await Promise.all(HIRING_ROLES.map(async (role) => [role, (await review.accountCounts(role)).pending_review])))
+  res.json({ ...(await review.listAccounts(req.user, req.query.status, req.query.role)), counts: await review.accountCounts(req.query.role), pending })
 })
 
 adminRouter.get('/:userId', validate({ params: schemas.accountParams }), async (req, res) => {

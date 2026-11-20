@@ -149,6 +149,11 @@
         "noFlags": "Nothing stands out in the details.",
         "note": "AI can be wrong. Check the documents and details before you decide."
       }
+    },
+    "kindFilter": "Account kind",
+    "kinds": {
+      "recruiter": "Recruiters",
+      "agency": "Agencies"
     }
   },
   "title": "Trust is an ongoing practice.",

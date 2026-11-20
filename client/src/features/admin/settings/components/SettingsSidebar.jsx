@@ -31,7 +31,7 @@ function RowLink({ to, icon, label, caption, count }) {
 function TodoCard({ me }) {
   const { t } = useTranslation()
   const skip = !can(me, 'moderation.manage')
-  const { data: accounts, isLoading: accountsLoading } = useGetAccountQueueQuery('pending_review', { skip })
+  const { data: accounts, isLoading: accountsLoading } = useGetAccountQueueQuery({ status: 'pending_review', role: 'recruiter' }, { skip })
   const { data: summary, isLoading: summaryLoading } = useGetModerationSummaryQuery(undefined, { skip })
   const { data: checks, isLoading: checksLoading } = useGetVerificationQueueQuery('in_review', { skip })
   if (!skip && (accountsLoading || summaryLoading || checksLoading))
@@ -60,7 +60,7 @@ function TodoCard({ me }) {
     )
   if (skip || !accounts || !summary || !checks) return null
   const rows = [
-    { key: 'accounts', to: '/admin/moderation/accounts', icon: Users, count: accounts.counts.pending_review ?? 0 },
+    { key: 'accounts', to: '/admin/moderation/accounts', icon: Users, count: Object.values(accounts.pending ?? {}).reduce((sum, count) => sum + count, 0) },
     { key: 'content', to: '/admin/moderation', icon: TriangleAlert, count: summary.contentOpen },
     { key: 'verification', to: '/admin/moderation/verification', icon: ShieldCheck, count: checks.total },
   ].filter((row) => row.count > 0)

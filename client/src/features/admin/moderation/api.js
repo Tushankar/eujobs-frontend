@@ -12,8 +12,9 @@ export const moderationApi = api.injectEndpoints({
       query: ({ id, ...body }) => ({ url: `/admin/moderation/verification/${id}/decision`, method: 'POST', body }),
       invalidatesTags: ['VerificationQueue'],
     }),
+    // 2026-11-20: recruiters or agencies (`role`).
     getAccountQueue: build.query({
-      query: (status = 'pending_review') => ({ url: '/admin/moderation/accounts', params: { status } }),
+      query: ({ status = 'pending_review', role = 'recruiter' } = {}) => ({ url: '/admin/moderation/accounts', params: { status, role } }),
       providesTags: ['AccountReview'],
     }),
     getAccount: build.query({ query: (userId) => `/admin/moderation/accounts/${userId}`, providesTags: ['AccountReview'] }),

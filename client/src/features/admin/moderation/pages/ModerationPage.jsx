@@ -1,6 +1,6 @@
 import { useState } from 'react'
 import { useTranslation } from 'react-i18next'
-import { useParams } from 'react-router-dom'
+import { useLocation, useParams } from 'react-router-dom'
 import { CircleCheck, MessageSquareQuote, ShieldCheck, TriangleAlert, Users } from 'lucide-react'
 import PageTitle from '@/components/common/PageTitle.jsx'
 import StatCard from '@/components/common/StatCard.jsx'
@@ -33,9 +33,12 @@ export default function ModerationPage() {
   const tabId = ['accounts', 'verification', 'reviews'].includes(kind) ? kind : 'content'
   const { data: inReview, isLoading: inReviewLoading } = useGetVerificationQueueQuery('in_review')
   const [accountStatus, setAccountStatus] = useState('pending_review')
-  const { data: accounts, isLoading: accountsLoading } = useGetAccountQueueQuery(accountStatus)
+  // The same request as the open queue (status, and recruiters or agencies), so the two share one answer.
+  const accountKind = new URLSearchParams(useLocation().search).get('kind') === 'agency' ? 'agency' : 'recruiter'
+  const { data: accounts, isLoading: accountsLoading } = useGetAccountQueueQuery({ status: accountStatus, role: accountKind })
   const { data: summary, isLoading: summaryLoading } = useGetModerationSummaryQuery()
-  const pendingAccounts = accounts?.counts.pending_review ?? 0
+  // Recruiters and agencies waiting for review (2026-11-20).
+  const pendingAccounts = Object.values(accounts?.pending ?? {}).reduce((sum, count) => sum + count, 0)
   const openContent = summary?.contentOpen ?? 0
   const [status, setStatus] = useState('')
   const [reviewStatus, setReviewStatus] = useState('pending')

@@ -32,7 +32,8 @@ export default function AnalyticsPage() {
       caption: t('analytics.conversionCaption', { shortlisted: conversion?.shortlisted ?? 0, count: conversion?.applications ?? 0 }),
       icon: TrendingUp,
     },
-    { key: 'recruiterAccounts', value: data?.recruiterAccounts ?? 0, caption: t('kpis.allTime'), icon: Users },
+    // 2026-11-20: agency accounts are named under the recruiter accounts.
+    { key: 'recruiterAccounts', value: data?.recruiterAccounts ?? 0, caption: data?.agencyAccounts ? t('analytics.agenciesCaption', { count: data.agencyAccounts }) : t('kpis.allTime'), icon: Users },
     { key: 'companyRegistrations', value: data?.companyRegistrations ?? 0, caption: t('kpis.allTime'), icon: Building2 },
     { key: 'reviewedOutreach', value: data?.reviewedOutreach ?? 0, caption: t('kpis.allTime'), icon: MessageSquare },
   ]

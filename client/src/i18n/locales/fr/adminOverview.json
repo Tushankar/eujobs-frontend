@@ -73,7 +73,10 @@
     "conversionCaption_other": "{{shortlisted}} sur {{count}} candidatures ajoutées à la short-list · Depuis le début",
     "recruiterAccounts": "Comptes recruteurs",
     "companyRegistrations": "Inscriptions d’entreprises",
-    "reviewedOutreach": "Prises de contact relues"
+    "reviewedOutreach": "Prises de contact relues",
+    "agenciesCaption_one": "Plus {{count}} compte d’agence · Depuis le début",
+    "agenciesCaption_many": "Plus {{count}} comptes d’agence · Depuis le début",
+    "agenciesCaption_other": "Plus {{count}} comptes d’agence · Depuis le début"
   },
   "quality": {
     "title": "La qualité de la correspondance ne se résume pas à un score",
