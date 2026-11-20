@@ -51,7 +51,10 @@ export default {
       await page.click('button[type="submit"]')
       await waitForPath(page, () => location.pathname.startsWith('/agency/onboarding/') && !location.pathname.endsWith('email-code'))
       await waitForSettled(page)
-      ctx.check((await bodyText(page)).includes('Your role at the agency'), 'onboarding step 1 says "Your role at the agency"')
+      ctx.check((await bodyText(page)).includes('Create a trusted agency account'), 'onboarding speaks to an agency')
+      // Step 1 was filled at sign-up, so onboarding opened step 2; step 1 shows the same label.
+      await page.goto(`${ctx.webUrl}/agency/onboarding/account`, { waitUntil: 'networkidle0' })
+      await waitForText(page, 'Your role at the agency')
       await ctx.screenshot(page, '3-agency-onboarding')
       await page.evaluate(() => localStorage.clear())
     }
@@ -60,6 +63,7 @@ export default {
     const agency = await approvedAgency('P1501')
     await signInWithForm(page, ctx.webUrl, '/agencies/login', agency.email, TEST_PASSWORD)
     await waitForPath(page, '/agency')
+    await page.waitForSelector('#workspace-sidebar nav a')
     const labels = await sidebarLabels(page)
     ctx.check(['Clients', 'Talent', 'Placements', 'Agency page'].every((label) => labels.includes(label)), `agency nav (${labels.join(', ')})`)
     await ctx.screenshot(page, '4-agency-overview')

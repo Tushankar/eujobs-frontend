@@ -604,6 +604,22 @@
         "declined": "{{candidate}} declined your offer for {{job}}."
       },
       "placement_notice_given": "{{candidate}} gave notice on {{job}}. The placement now ends on {{date}}."
+    },
+    "candidateSummary": {
+      "agency_invited": "{{agency}} invited you to join its books. Read its agreement to accept.",
+      "agency_request_accepted": "{{agency}} accepted your request to join its books. Read and agree to its agreement to finish joining.",
+      "agency_membership_declined": {
+        "request": "{{agency}} declined your request to join its books.",
+        "invitation": "{{agency}} withdrew its invitation to join its books."
+      },
+      "agency_removed": "{{agency}} took you off its books. A placement already running continues to its end.",
+      "agency_agreement_updated": "{{agency}} published version {{version}} of its agreement. Agree to it before your next placement with them.",
+      "placement_confirmed": "Your placement as {{job}} with {{agency}} is confirmed. It starts on {{date}}.",
+      "placement_ended_early": "{{agency}} ended your placement as {{job}} early. Your last day is {{date}}.",
+      "placement_offered": "{{agency}} offered you a new placement as {{job}}. Accept or decline it on your Agencies page.",
+      "placement_offer_withdrawn": "{{agency}} withdrew its offer for {{job}}.",
+      "placement_starts_soon": "Your placement as {{job}} with {{agency}} starts tomorrow, {{date}}.",
+      "placement_ends_soon": "Your placement as {{job}} with {{agency}} ends on {{date}}."
     }
   },
   "signIn": {

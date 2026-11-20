@@ -8,8 +8,8 @@ import { logoUrls } from '../companies/companies.service.js'
 import { accessibleCandidate } from '../discovery/discovery.service.js'
 import { File } from '../files/files.model.js'
 import { User } from '../users/users.model.js'
-import { AgencyAgreement, AgencyMembership } from './agencies.model.js'
-import { tellAgency } from './agencies.notify.js'
+import { AgencyAgreement, AgencyMembership, AgencyPlacement } from './agencies.model.js'
+import { tellAgency, tellCandidate } from './agencies.notify.js'
 import { currentAgreement } from './agreements.service.js'
 import { rulesDto } from './contracts.js'
 
@@ -117,7 +117,9 @@ export async function invite(user, company, candidateId) {
   const existing = await AgencyMembership.findOne({ companyId: company._id, candidateId })
   // A candidate who already asked is accepted instead.
   if (existing?.status === 'requested') return accept(company, existing._id)
-  return agencyAnswer(company, await open(company._id, candidateId, 'awaiting_agreement', 'agency'))
+  const membership = await open(company._id, candidateId, 'awaiting_agreement', 'agency')
+  await tellCandidate(candidateId, 'agency_invited', { agency: company.displayName })
+  return agencyAnswer(company, membership)
 }
 
 /** POST /agency/talent/:id/accept: a request is accepted; the candidate then agrees to the agreement. */
@@ -127,6 +129,7 @@ export async function accept(company, id) {
   if (membership.status !== 'requested') throw new AppError('CONFLICT', { params: { status: membership.status } })
   move(membership, 'awaiting_agreement', 'agency')
   await membership.save()
+  await tellCandidate(membership.candidateId, 'agency_request_accepted', { agency: company.displayName })
   return agencyAnswer(company, membership)
 }
 
@@ -134,8 +137,11 @@ export async function accept(company, id) {
 export async function declineByAgency(company, id) {
   const membership = await ownMembership(company, id)
   if (!['requested', 'awaiting_agreement'].includes(membership.status)) throw new AppError('CONFLICT', { params: { status: membership.status } })
+  // A request turned down, or an invitation (or accepted request) the agency takes back.
+  const decision = membership.status === 'requested' ? 'request' : 'invitation'
   move(membership, 'declined', 'agency')
   await membership.save()
+  await tellCandidate(membership.candidateId, 'agency_membership_declined', { agency: company.displayName, decision })
   return agencyAnswer(company, membership)
 }
 
@@ -145,6 +151,7 @@ export async function endByAgency(company, id) {
   if (membership.status !== 'active') throw new AppError('CONFLICT', { params: { status: membership.status } })
   move(membership, 'ended', 'agency')
   await membership.save()
+  await tellCandidate(membership.candidateId, 'agency_removed', { agency: company.displayName })
   return agencyAnswer(company, membership)
 }
 
@@ -243,4 +250,14 @@ export async function agreedAgreement(companyId, candidateId) {
   const membership = await AgencyMembership.findOne({ companyId, candidateId }, 'acceptances')
   const version = membership && lastAcceptance(membership)?.version
   return version ? AgencyAgreement.findOne({ companyId, version }) : null
+}
+
+/** GET /me/counters (phase 5): what waits for the candidate on Agencies: open re-hire offers and agreements to agree to. */
+export async function candidateAgencyActions(user) {
+  const [offers, memberships] = await Promise.all([
+    AgencyPlacement.countDocuments({ candidateId: user._id, status: 'offered' }),
+    AgencyMembership.find({ candidateId: user._id, status: { $in: ['awaiting_agreement', 'active'] } }, 'companyId status acceptances'),
+  ])
+  const waiting = await Promise.all(memberships.map(async (membership) => agreementState(membership, await currentAgreement(membership.companyId)).needsAgreement))
+  return offers + waiting.filter(Boolean).length
 }

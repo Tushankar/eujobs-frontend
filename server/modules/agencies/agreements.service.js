@@ -3,6 +3,7 @@ import { AppError } from '../../lib/errors.js'
 import { removeFiles, signedUrl, storeFile } from '../../lib/files.js'
 import { File } from '../files/files.model.js'
 import { AgencyAgreement, AgencyMembership } from './agencies.model.js'
+import { tellCandidate } from './agencies.notify.js'
 import { checkedRules, EMPTY_RULES, readRules, rulesDto } from './contracts.js'
 
 /*
@@ -96,6 +97,9 @@ export async function publishDraft(user, company) {
     target: { type: 'company', id: company._id },
     params: { company: company.displayName, version: draft.version },
   })
+  // 2026-11-20 (phase 5): candidates on the books under an older version are asked to agree to this one.
+  const members = await AgencyMembership.find({ companyId: company._id, status: 'active', 'acceptances.0': { $exists: true } }, 'candidateId')
+  for (const member of members) await tellCandidate(member.candidateId, 'agency_agreement_updated', { agency: company.displayName, version: draft.version })
   return draft
 }
 

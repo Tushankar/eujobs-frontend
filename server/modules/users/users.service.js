@@ -3,6 +3,7 @@ import bcrypt from 'bcryptjs'
 import { fieldError } from '../../lib/errors.js'
 import { AdminRole } from '../admin/admin.model.js'
 import { Application } from '../applications/applications.model.js'
+import { candidateAgencyActions } from '../agencies/books.service.js'
 import { candidateCounters } from '../applications/applications.stats.js'
 import { CandidateProfile } from '../candidates/candidates.model.js'
 import { candidateSummary, fullNameChanged } from '../candidates/candidates.service.js'
@@ -133,7 +134,9 @@ export async function counters(user) {
   const notifications = await notificationCounts(user)
   if (user.role === 'admin') return { notifications }
   const unreadMessages = await unreadCount(user, user.companyId)
-  return user.role === 'candidate' ? { unreadMessages, ...(await candidateCounters(user)), notifications } : { unreadMessages, notifications }
+  if (user.role !== 'candidate') return { unreadMessages, notifications }
+  // 2026-11-20: agencyActions = re-hire offers and agreements waiting (the Agencies sidebar badge).
+  return { unreadMessages, ...(await candidateCounters(user)), agencyActions: await candidateAgencyActions(user), notifications }
 }
 
 /** PATCH /me. Until the language is explicit, the country's default language follows the country (M-134). */

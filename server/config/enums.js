@@ -91,7 +91,7 @@ export const EMAIL_CATEGORY = {
 
 /** The email switches each role sees in Settings → Notifications, in this order (P11b-Q3, Q12). */
 export const EMAIL_CATEGORIES = {
-  candidate: ['applications', 'messages', 'cv_requests', 'job_alerts', 'interviews'],
+  candidate: ['applications', 'messages', 'cv_requests', 'job_alerts', 'interviews', 'agency_updates'],
   recruiter: ['new_applications', 'messages', 'interviews'],
   agency: ['new_applications', 'messages', 'interviews', 'agency_updates'],
   admin: ['account_reviews', 'verification', 'content_reports', 'failed_renewals', 'admin_joined'],
@@ -150,6 +150,18 @@ export const NOTIFICATION_TYPES = {
   agency_member_left: { sections: { recruiter: 'talent' } },
   placement_offer_answered: { sections: { recruiter: 'placements' } },
   placement_notice_given: { sections: { recruiter: 'placements' } },
+  // 2026-11-20 (phase 5): the candidate's agencies and placements (sidebar Agencies)
+  agency_invited: { sections: { candidate: 'agencies' } },
+  agency_request_accepted: { sections: { candidate: 'agencies' } },
+  agency_membership_declined: { sections: { candidate: 'agencies' } },
+  agency_removed: { sections: { candidate: 'agencies' } },
+  agency_agreement_updated: { sections: { candidate: 'agencies' } },
+  placement_confirmed: { sections: { candidate: 'agencies' } },
+  placement_ended_early: { sections: { candidate: 'agencies' } },
+  placement_offered: { sections: { candidate: 'agencies' } },
+  placement_offer_withdrawn: { sections: { candidate: 'agencies' } },
+  placement_starts_soon: { sections: { candidate: 'agencies' } },
+  placement_ends_soon: { sections: { candidate: 'agencies' } },
 }
 
 /** Admin permission catalogue (§3.13, M-156) in matrix order; groups follow Figma (owner answer P1-Q1). */
@@ -367,3 +379,6 @@ export const ENUMS = {
   permission: PERMISSIONS.map((permission) => permission.id),
   permissionGroup: ['people', 'roles', 'recruitment', 'finance', 'governance'],
 }
+
+/** 2026-11-20: the job type filter: the employment types and "agency" (every agency job, whatever its hours). */
+export const JOB_TYPES = [...ENUMS.employmentType, 'agency']

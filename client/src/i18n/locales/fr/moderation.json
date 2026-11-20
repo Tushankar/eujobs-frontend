@@ -54,7 +54,7 @@
   "accounts": {
     "tab": "Examen des comptes",
     "title": "File d’examen des comptes",
-    "description": "Approuvez, refusez ou suspendez les comptes recruteurs après avoir vérifié les données de l’entreprise et les documents KYC.",
+    "description": "Approuvez, refusez ou suspendez les comptes recruteurs et agences après avoir vérifié les données de l’entreprise et les documents KYC.",
     "statusFilter": "Filtrer par statut du compte",
     "status": {
       "pending_review": "En attente de validation",
@@ -68,7 +68,7 @@
     "review": "Examiner le compte",
     "stat": {
       "label": "Comptes en attente",
-      "caption": "Décisions sur des recruteurs à prendre"
+      "caption": "Décisions sur des recruteurs et agences à prendre"
     },
     "dialog": {
       "title": "Examiner le compte recruteur",

@@ -2,6 +2,8 @@ import { HIRING_ROLES } from '../../config/enums.js'
 import { AppError } from '../../lib/errors.js'
 import { t } from '../../lib/i18n.js'
 import { matchesKeywords, searchText, skillOverlap } from '../../lib/skills.js'
+import { AgencyClient, AgencyMembership, AgencyPlacement } from '../agencies/agencies.model.js'
+import { checkWith, targetOf } from '../agencies/lock.js'
 import { Application } from '../applications/applications.model.js'
 import { CandidateProfile } from '../candidates/candidates.model.js'
 import { Company } from '../companies/companies.model.js'
@@ -51,6 +53,23 @@ const annualTop = (salary) => {
   return amount == null ? null : amount * (salary.period === 'month' ? 12 : 1)
 }
 
+/** 2026-11-20: the job type filter; "agency" is every agency job, the others its employment type. */
+export const isJobType = (job, type) => (type === 'agency' ? Boolean(job.agency) : job.employmentType === type)
+
+/** 2026-11-20: the clients of these jobs' agency terms, by id. */
+export async function agencyClients(jobs) {
+  const ids = jobs.map((job) => job.agency?.clientId).filter(Boolean)
+  return new Map(ids.length ? (await AgencyClient.find({ _id: { $in: ids } }, 'name nameKey linkedCompanyId')).map((client) => [String(client._id), client]) : [])
+}
+
+/** An agency job's terms with the client's name, or null where the agency keeps the client confidential. */
+export function agencyCard(job, clients) {
+  const fields = jobFieldsDto(job).agency
+  if (!fields) return null
+  const client = job.agency.showClient && clients.get(String(job.agency.clientId))
+  return { ...fields, client: client ? { name: client.name } : null }
+}
+
 /** Everything a card needs for these jobs and this candidate: companies, logos, profile skills, saved ids. */
 async function cardContext(user, jobs) {
   const companies = await Company.find({ _id: { $in: [...new Set(jobs.map((job) => String(job.companyId)))] } })
@@ -64,6 +83,18 @@ async function cardContext(user, jobs) {
   const applied = new Map(
     (await Application.find({ candidateId: user._id, jobId: { $in: jobs.map((job) => job._id) }, status: { $ne: 'withdrawn' } }, 'jobId status')).map((application) => [String(application.jobId), { id: String(application._id), status: application.status }]),
   )
+  // 2026-11-20: agency jobs: the client, the candidate's membership with the agency and the placement rule check.
+  const clients = await agencyClients(jobs)
+  const agencyIds = [...new Set(jobs.filter((job) => job.agency).map((job) => String(job.companyId)))]
+  const memberships = new Map(
+    agencyIds.length ? (await AgencyMembership.find({ candidateId: user._id, companyId: { $in: agencyIds } }, 'companyId status')).map((entry) => [String(entry.companyId), { id: String(entry._id), status: entry.status }]) : [],
+  )
+  const placements = await AgencyPlacement.find({ candidateId: user._id, status: 'confirmed' })
+  const lockOf = (job) => {
+    if (!placements.length) return null
+    const result = checkWith(placements, targetOf(job, clients.get(String(job.agency?.clientId)), byId.get(String(job.companyId))))
+    return result.allowed ? null : { freeFrom: result.freeFrom }
+  }
   const skills = profile?.skills ?? []
   const scored = user.privacy?.matchingConsent && (await planState(user._id)).entitlements.includes('ai')
   const results = scored ? await resultsBy({ candidateId: user._id }, jobs.map((job) => job._id)) : new Map()
@@ -88,6 +119,10 @@ async function cardContext(user, jobs) {
         // M-052: one overlap definition and label for everyone.
         overlap: { matched, count: matched.length, total },
         match: result(job) ? { score: result(job).score, label: result(job).label ?? null } : null,
+        agency: agencyCard(job, clients),
+        // 2026-11-20: the candidate's membership with the job's agency, and the day their placements let them take it.
+        ...(job.agency && { agencyMembership: memberships.get(String(job.companyId)) ?? null }),
+        lock: lockOf(job),
       }
     },
   }
@@ -125,6 +160,7 @@ export async function searchJobs(user, query) {
   const kept = jobs.filter((job) => {
     if (query.workPreference.length && !query.workPreference.includes(job.workPreference)) return false
     if (query.level.length && !query.level.includes(job.level)) return false
+    if (query.employmentType.length && !query.employmentType.some((type) => isJobType(job, type))) return false
     if (query.placeId && job.location?.placeId !== query.placeId) return false
     if (query.visaSponsorship && !job.visaSponsorship) return false
     if (query.eligible && view === 'REMOTE' && job.remoteCountries.length && !job.remoteCountries.includes(query.eligible)) return false

@@ -54,7 +54,7 @@
   "accounts": {
     "tab": "Revisión de cuentas",
     "title": "Cola de revisión de cuentas",
-    "description": "Aprueba, rechaza o suspende cuentas de reclutadores tras comprobar los datos de la empresa y los documentos KYC.",
+    "description": "Aprueba, rechaza o suspende cuentas de reclutadores y agencias tras comprobar los datos de la empresa y los documentos KYC.",
     "statusFilter": "Filtrar por estado de la cuenta",
     "status": {
       "pending_review": "Pendiente de revisión",
@@ -68,7 +68,7 @@
     "review": "Revisar cuenta",
     "stat": {
       "label": "Cuentas pendientes",
-      "caption": "Decisiones sobre reclutadores pendientes"
+      "caption": "Decisiones sobre reclutadores y agencias pendientes"
     },
     "dialog": {
       "title": "Revisar cuenta de reclutador",

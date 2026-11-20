@@ -1,14 +1,15 @@
 import { AppError, fieldError } from '../../lib/errors.js'
+import { dailyJobs } from '../../jobs/scheduler.js'
 import { Company } from '../companies/companies.model.js'
 import { logoUrls } from '../companies/companies.service.js'
 import { Job } from '../jobs/jobs.model.js'
 import { User } from '../users/users.model.js'
 import { AgencyClient, AgencyMembership, AgencyPlacement } from './agencies.model.js'
 import { currentAgreement } from './agreements.service.js'
-import { tellAgency } from './agencies.notify.js'
+import { tellAgency, tellCandidate } from './agencies.notify.js'
 import { agreedAgreement } from './books.service.js'
 import { RULES, rulesDto } from './contracts.js'
-import { checkTarget, effectiveEnd, hoursOf, jobTarget, phaseOf, today } from './lock.js'
+import { addDays, checkTarget, effectiveEnd, hoursOf, jobTarget, phaseOf, today } from './lock.js'
 
 /*
  * 2026-11-20: placements. Hired on an agency job creates a confirmed placement; a re-hire is offered and confirmed when
@@ -83,6 +84,8 @@ export async function hire(application, job) {
     confirmedAt: now,
     decidedAt: now,
   })
+  const agency = await Company.findById(job.companyId, 'displayName')
+  await tellCandidate(application.candidateId, 'placement_confirmed', { agency: agency?.displayName ?? '', job: job.title, date: job.agency.startDate })
 }
 
 /** Leaving Hired: a placement that has not started is cancelled; a started one keeps the stage (CONFLICT). */
@@ -166,6 +169,8 @@ export async function endEarly(user, company, id, endDate) {
   if (endDate < today() || endDate < placement.startDate || endDate >= effectiveEnd(placement)) throw fieldError({ endDate: 'invalid' })
   placement.endedEarlyOn = endDate
   await placement.save()
+  const job = await Job.findById(placement.jobId, 'title')
+  await tellCandidate(placement.candidateId, 'placement_ended_early', { agency: company.displayName, job: job?.title ?? '', date: effectiveEnd(placement) })
   return dtoOf(placement, user._id)
 }
 
@@ -182,6 +187,7 @@ export async function offerRehire(user, company, id, jobId) {
   await assertOnBooks(company._id, previous.candidateId)
   await assertAllowed(previous.candidateId, job)
   const placement = await AgencyPlacement.create({ ...(await fromJob(job, previous.candidateId)), previousId: previous._id, status: 'offered' })
+  await tellCandidate(previous.candidateId, 'placement_offered', { agency: company.displayName, job: job.title })
   return dtoOf(placement, user._id)
 }
 
@@ -192,6 +198,8 @@ export async function withdrawOffer(user, company, id) {
   placement.status = 'withdrawn'
   placement.decidedAt = new Date()
   await placement.save()
+  const job = await Job.findById(placement.jobId, 'title')
+  await tellCandidate(placement.candidateId, 'placement_offer_withdrawn', { agency: company.displayName, job: job?.title ?? '' })
   return dtoOf(placement, user._id)
 }
 
@@ -199,8 +207,13 @@ export async function withdrawOffer(user, company, id) {
 
 /** GET /candidate/placements?view=: the candidate's offers and placements. */
 export async function myPlacements(user, view) {
-  const placements = await AgencyPlacement.find({ candidateId: user._id, status: { $in: ['offered', 'confirmed'] } }).sort({ startDate: -1, createdAt: -1 })
-  return { items: await placementDtos(filtered(placements, view), user._id) }
+  const placements = filtered(await AgencyPlacement.find({ candidateId: user._id, status: { $in: ['offered', 'confirmed'] } }).sort({ startDate: -1, createdAt: -1 }), view)
+  // An offer shows the rules that would apply if accepted now (phase 5: read before accepting); nothing is saved.
+  for (const placement of placements.filter((entry) => entry.status === 'offered')) {
+    const job = await Job.findById(placement.jobId)
+    if (job) placement.set(await placementRules(job, user._id))
+  }
+  return { items: await placementDtos(placements, user._id) }
 }
 
 async function myPlacement(user, id) {
@@ -254,3 +267,30 @@ export async function checkJob(user, jobId) {
   if (!job) throw new AppError('NOT_FOUND')
   return checkTarget(user._id, await jobTarget(job))
 }
+
+/*
+ * Daily (phase 5): a placement starting tomorrow, and one ending in 3 days (its effective end, so a notice or an
+ * earlier end is reminded too). Each day is reminded once; a new end date is reminded again.
+ */
+const ENDS_SOON_DAYS = 3
+
+export async function sendPlacementReminders() {
+  const tomorrow = addDays(today(), 1)
+  const endsOn = addDays(today(), ENDS_SOON_DAYS)
+  const placements = await AgencyPlacement.find({ status: 'confirmed', $or: [{ startDate: tomorrow, remindedStartOn: null }, { endDate: { $gte: endsOn }, startDate: { $lte: endsOn } }] })
+  for (const placement of placements) {
+    const due = [
+      placement.startDate === tomorrow && !placement.remindedStartOn && { type: 'placement_starts_soon', date: tomorrow, mark: { remindedStartOn: tomorrow } },
+      effectiveEnd(placement) === endsOn && placement.remindedEndOn !== endsOn && { type: 'placement_ends_soon', date: endsOn, mark: { remindedEndOn: endsOn } },
+    ].filter(Boolean)
+    if (!due.length) continue
+    const [job, agency] = await Promise.all([Job.findById(placement.jobId, 'title'), Company.findById(placement.companyId, 'displayName')])
+    for (const reminder of due) {
+      // Marked first, so a failing notice is not sent twice.
+      await AgencyPlacement.updateOne({ _id: placement._id }, reminder.mark)
+      await tellCandidate(placement.candidateId, reminder.type, { agency: agency?.displayName ?? '', job: job?.title ?? '', date: reminder.date })
+    }
+  }
+}
+
+dailyJobs.push({ name: 'placement-reminders', hour: 8, run: sendPlacementReminders })

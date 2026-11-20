@@ -53,7 +53,7 @@
   "accounts": {
     "tab": "Account review",
     "title": "Account review queue",
-    "description": "Approve, reject or suspend recruiter accounts after checking the company record and the KYC documents.",
+    "description": "Approve, reject or suspend recruiter and agency accounts after checking the company record and the KYC documents.",
     "statusFilter": "Filter by account status",
     "status": {
       "pending_review": "Pending review",
@@ -67,7 +67,7 @@
     "review": "Review account",
     "stat": {
       "label": "Pending accounts",
-      "caption": "Recruiter decisions needed"
+      "caption": "Recruiter and agency decisions needed"
     },
     "dialog": {
       "title": "Review recruiter account",

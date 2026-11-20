@@ -35,6 +35,10 @@ const PAGE_PATHS = {
   talent: (role) => `/${role}/talent`,
   talentRequests: (role) => `/${role}/talent?tab=requests`,
   placements: (role) => `/${role}/placements`,
+  // 2026-11-20 (phase 5): the candidate's Agencies page and its tabs.
+  agencyPlacements: () => '/candidate/agencies',
+  agencyOffers: () => '/candidate/agencies?tab=offers',
+  myAgencies: () => '/candidate/agencies?tab=agencies',
   // 2026-11-17: a budget alert opens Admin › AI & matching › Usage.
   aiUsage: () => '/admin/ai-matching/usage',
 }

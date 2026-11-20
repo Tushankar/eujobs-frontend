@@ -39,6 +39,9 @@ export default function OnboardingLayout() {
 
   const percent = ((currentIndex + 1) / ONBOARDING_STEPS.length) * 100
 
+  // 2026-11-20: agencies read their own intro.
+  const intro = currentRole() === 'agency' ? 'agencyIntro' : 'recruiterIntro'
+
   function stepState(step, index) {
     if (index === currentIndex) return 'current'
     return state.steps[step.id] ? 'done' : 'todo'
@@ -69,9 +72,9 @@ export default function OnboardingLayout() {
       <main className={styles.main}>
         <aside className={styles.sidebar}>
           <div className={styles.intro}>
-            <p className={styles.eyebrow}>{t('auth:onboarding.eyebrow')}</p>
-            <h1 className={styles.title}>{t('auth:onboarding.title')}</h1>
-            <p className={styles.description}>{t('auth:onboarding.description')}</p>
+            <p className={styles.eyebrow}>{t(`auth:onboarding.${intro}.eyebrow`)}</p>
+            <h1 className={styles.title}>{t(`auth:onboarding.${intro}.title`)}</h1>
+            <p className={styles.description}>{t(`auth:onboarding.${intro}.description`)}</p>
           </div>
 
           <nav className={styles.steps} aria-label={t('auth:onboarding.progressLabel')}>

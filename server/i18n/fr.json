@@ -604,6 +604,22 @@
         "declined": "{{candidate}} a refusé votre offre pour {{job}}."
       },
       "placement_notice_given": "{{candidate}} a donné son préavis pour {{job}}. Le placement se termine désormais le {{date}}."
+    },
+    "candidateSummary": {
+      "agency_invited": "{{agency}} vous a invité à rejoindre son vivier. Lisez son accord pour accepter.",
+      "agency_request_accepted": "{{agency}} a accepté votre demande pour rejoindre son vivier. Lisez et acceptez son accord pour terminer.",
+      "agency_membership_declined": {
+        "request": "{{agency}} a refusé votre demande pour rejoindre son vivier.",
+        "invitation": "{{agency}} a retiré son invitation à rejoindre son vivier."
+      },
+      "agency_removed": "{{agency}} vous a retiré de son vivier. Un placement en cours continue jusqu'à sa fin.",
+      "agency_agreement_updated": "{{agency}} a publié la version {{version}} de son accord. Acceptez-la avant votre prochain placement avec eux.",
+      "placement_confirmed": "Votre placement comme {{job}} avec {{agency}} est confirmé. Il commence le {{date}}.",
+      "placement_ended_early": "{{agency}} a mis fin plus tôt à votre placement comme {{job}}. Votre dernier jour est le {{date}}.",
+      "placement_offered": "{{agency}} vous a proposé un nouveau placement comme {{job}}. Acceptez ou refusez-le sur votre page Agences.",
+      "placement_offer_withdrawn": "{{agency}} a retiré son offre pour {{job}}.",
+      "placement_starts_soon": "Votre placement comme {{job}} avec {{agency}} commence demain, le {{date}}.",
+      "placement_ends_soon": "Votre placement comme {{job}} avec {{agency}} se termine le {{date}}."
     }
   },
   "signIn": {

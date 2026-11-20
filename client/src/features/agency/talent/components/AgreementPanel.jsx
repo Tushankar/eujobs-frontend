@@ -80,7 +80,7 @@ export default function AgreementPanel() {
         setNotice(t('agency:agreement.published'))
       } else setNotice(t('agency:agreement.saved'))
     } catch (error) {
-      if (errorCode(error) === 'VALIDATION_FAILED') setFieldErrors(error.data.error.fields ?? {})
+      if (errorCode(error) === 'VALIDATION_FAILED') setFieldErrors(serverFieldErrors(error))
       else setProblem(errorText.code(error))
     } finally {
       setBusy(null)

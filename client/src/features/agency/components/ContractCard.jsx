@@ -56,7 +56,7 @@ export default function ContractCard({ job, error }) {
     try {
       await confirm({ jobId: job.id, rules }).unwrap()
     } catch (failure) {
-      if (errorCode(failure) === 'VALIDATION_FAILED') setFieldErrors(failure.data.error.fields ?? {})
+      if (errorCode(failure) === 'VALIDATION_FAILED') setFieldErrors(serverFieldErrors(failure))
       else setProblem(errorText.code(failure))
     } finally {
       setBusy(null)

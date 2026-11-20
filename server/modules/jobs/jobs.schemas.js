@@ -1,6 +1,6 @@
 import ISO6391 from 'iso-639-1'
 import { z } from 'zod'
-import { ENUMS } from '../../config/enums.js'
+import { ENUMS, JOB_TYPES } from '../../config/enums.js'
 import { LIMITS } from '../../config/limits.js'
 import { pageQuery } from '../../lib/pages.js'
 import { objectId } from '../../lib/validate.js'
@@ -82,6 +82,8 @@ export const searchQuery = z.object({
   q: z.string().trim().max(200).default(''),
   workPreference: list(ENUMS.workPreference),
   level: list(ENUMS.jobLevel),
+  // 2026-11-20: job types; "agency" is every agency job (which keeps its full or part time too).
+  employmentType: list(JOB_TYPES),
   placeId: placeId.optional(),
   salaryMin: z.coerce.number().int().min(0).max(J.salary.max).optional(),
   eligible: z.string().trim().toUpperCase().length(2).optional(),

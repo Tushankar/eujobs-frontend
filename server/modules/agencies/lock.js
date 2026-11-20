@@ -54,8 +54,13 @@ const placementClient = (placement) => ({
  * client (an agency job's client; a company job's company).
  */
 export async function jobTarget(job) {
+  if (job.agency) return targetOf(job, job.agency.clientId && (await AgencyClient.findById(job.agency.clientId, 'nameKey linkedCompanyId')))
+  return targetOf(job, null, await Company.findById(job.companyId, 'displayName legalName'))
+}
+
+/** jobTarget from records already loaded: an agency job's client, or a company job's company (2026-11-20, job cards). */
+export function targetOf(job, client, company) {
   if (job.agency) {
-    const client = job.agency.clientId && (await AgencyClient.findById(job.agency.clientId, 'nameKey linkedCompanyId'))
     return {
       jobId: String(job._id),
       agencyCompanyId: String(job.companyId),
@@ -65,7 +70,6 @@ export async function jobTarget(job) {
       client: { companyIds: client?.linkedCompanyId ? [String(client.linkedCompanyId)] : [], nameKeys: client ? [client.nameKey] : [] },
     }
   }
-  const company = await Company.findById(job.companyId, 'displayName legalName')
   return {
     jobId: String(job._id),
     agencyCompanyId: null,
@@ -114,9 +118,12 @@ function blocksOf(placement, target, overlapping) {
  * `freeFrom` is the first day all of them have lifted (null when nothing blocks).
  */
 export async function checkTarget(candidateId, target, { exceptId = null } = {}) {
-  const placements = (await AgencyPlacement.find({ candidateId, status: 'confirmed', ...(exceptId && { _id: { $ne: exceptId } }) })).filter(
-    (placement) => addDays(effectiveEnd(placement), placement.rules?.coolingOffDays?.value ?? 0) >= target.start,
-  )
+  return checkWith(await AgencyPlacement.find({ candidateId, status: 'confirmed', ...(exceptId && { _id: { $ne: exceptId } }) }), target)
+}
+
+/** checkTarget over confirmed placements already loaded (job cards check many jobs at once). */
+export function checkWith(confirmed, target) {
+  const placements = confirmed.filter((placement) => addDays(effectiveEnd(placement), placement.rules?.coolingOffDays?.value ?? 0) >= target.start)
   const overlapping = placements.filter((placement) => overlaps(target, placement))
   const blocks = placements.flatMap((placement) => blocksOf(placement, target, overlapping))
   return { allowed: blocks.length === 0, blocks, freeFrom: blocks.length ? latest(blocks.map((entry) => entry.freeFrom)) : null }

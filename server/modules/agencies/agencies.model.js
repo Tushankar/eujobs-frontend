@@ -102,6 +102,9 @@ const placementSchema = new Schema(
     endedEarlyOn: String,
     confirmedAt: Date,
     decidedAt: Date,
+    // 2026-11-20 (phase 5): the days the candidate was reminded of (start tomorrow, end in 3 days)
+    remindedStartOn: { type: String, default: null },
+    remindedEndOn: { type: String, default: null },
   },
   { timestamps: true },
 )

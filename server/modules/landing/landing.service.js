@@ -1,5 +1,5 @@
 import { config } from '../../config/env.js'
-import { ENUMS } from '../../config/enums.js'
+import { ENUMS, JOB_TYPES } from '../../config/enums.js'
 import { signedUrl } from '../../lib/files.js'
 import { t } from '../../lib/i18n.js'
 import { matchesKeywords, searchText } from '../../lib/skills.js'
@@ -8,7 +8,7 @@ import { Company } from '../companies/companies.model.js'
 import { publicCompanyDto } from '../companies/companies.service.js'
 import { File } from '../files/files.model.js'
 import { Job } from '../jobs/jobs.model.js'
-import { haystack, visibleFilter } from '../jobs/jobs.search.js'
+import { agencyCard, agencyClients, haystack, isJobType, visibleFilter } from '../jobs/jobs.search.js'
 import { jobFieldsDto } from '../jobs/jobs.service.js'
 import { listFaqs } from '../meta/meta.service.js'
 import { landingReviews } from '../reviews/reviews.service.js'
@@ -90,13 +90,15 @@ export async function publicJobs({ language, q, location, workPreference, employ
   const searched = jobs.filter(
     (job) => (!q || matchesKeywords(q, haystack(job, company(job), language))) && (!location || matchesKeywords(location, placeText(job, language))) && (!visa || job.visaSponsorship),
   )
-  const items = searched.filter((job) => (!workPreference || job.workPreference === workPreference) && (!employmentType || job.employmentType === employmentType))
-  const logos = await logoUrls(companies)
+  const items = searched.filter((job) => (!workPreference || job.workPreference === workPreference) && (!employmentType || isJobType(job, employmentType)))
+  const [logos, clients] = await Promise.all([logoUrls(companies), agencyClients(items)])
   return {
     total: searched.length,
-    counts: { workPreference: countBy(searched, 'workPreference'), employmentType: countBy(searched, 'employmentType') },
+    // 2026-11-20: "agency" counts every agency job (the Agency tab).
+    counts: { workPreference: countBy(searched, 'workPreference'), employmentType: Object.fromEntries(JOB_TYPES.map((type) => [type, searched.filter((job) => isJobType(job, type)).length])) },
     items: items.map((job) => ({
       ...jobFieldsDto(job),
+      agency: agencyCard(job, clients),
       // The list only holds jobs of approved, active recruiters, so a verified company is one with a verification date.
       company: { ...publicCompanyDto(company(job), logos.get(String(job.companyId))), verified: Boolean(company(job).verifiedAt) },
     })),

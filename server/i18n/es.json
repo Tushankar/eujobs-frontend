@@ -604,6 +604,22 @@
         "declined": "{{candidate}} rechazó tu oferta para {{job}}."
       },
       "placement_notice_given": "{{candidate}} dio preaviso en {{job}}. La colocación termina ahora el {{date}}."
+    },
+    "candidateSummary": {
+      "agency_invited": "{{agency}} te invitó a unirte a su cartera. Lee su acuerdo para aceptar.",
+      "agency_request_accepted": "{{agency}} aceptó tu solicitud para unirte a su cartera. Lee y acepta su acuerdo para terminar.",
+      "agency_membership_declined": {
+        "request": "{{agency}} rechazó tu solicitud para unirte a su cartera.",
+        "invitation": "{{agency}} retiró su invitación para unirte a su cartera."
+      },
+      "agency_removed": "{{agency}} te quitó de su cartera. Una colocación en curso continúa hasta su fin.",
+      "agency_agreement_updated": "{{agency}} publicó la versión {{version}} de su acuerdo. Acéptala antes de tu próxima colocación con ellos.",
+      "placement_confirmed": "Tu colocación como {{job}} con {{agency}} está confirmada. Empieza el {{date}}.",
+      "placement_ended_early": "{{agency}} terminó antes tu colocación como {{job}}. Tu último día es el {{date}}.",
+      "placement_offered": "{{agency}} te ofreció una nueva colocación como {{job}}. Acéptala o recházala en tu página Agencias.",
+      "placement_offer_withdrawn": "{{agency}} retiró su oferta para {{job}}.",
+      "placement_starts_soon": "Tu colocación como {{job}} con {{agency}} empieza mañana, {{date}}.",
+      "placement_ends_soon": "Tu colocación como {{job}} con {{agency}} termina el {{date}}."
     }
   },
   "signIn": {
