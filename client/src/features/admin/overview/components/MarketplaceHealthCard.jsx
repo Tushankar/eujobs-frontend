@@ -42,7 +42,7 @@ export default function MarketplaceHealthCard({ health, loading }) {
               <dd className={styles.value}>
                 {health && (key === 'activeSubscribers' ? format.number(health[key].total) : format.number(health[key]))}
                 {health && key === 'activeSubscribers' && (
-                  <span className={styles.split}>{t('health.byRole', { candidates: format.number(health[key].candidate), recruiters: format.number(health[key].recruiter) })}</span>
+                  <span className={styles.split}>{t('health.byRole', { candidates: format.number(health[key].candidate), recruiters: format.number(health[key].recruiter), agencies: format.number(health[key].agency ?? 0) })}</span>
                 )}
               </dd>
             </div>

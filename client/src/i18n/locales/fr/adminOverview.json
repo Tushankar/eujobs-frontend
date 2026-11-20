@@ -47,7 +47,7 @@
     "outreach": "Brouillons de prise de contact relus",
     "pendingReviews": "Examens d’utilisateurs en attente",
     "activeSubscribers": "Abonnés actifs",
-    "byRole": "Candidats {{candidates}} · Recruteurs {{recruiters}}",
+    "byRole": "Candidats {{candidates}} · Recruteurs {{recruiters}} · Agences {{agencies}}",
     "moderation": "Examiner la file de modération"
   },
   "skills": {

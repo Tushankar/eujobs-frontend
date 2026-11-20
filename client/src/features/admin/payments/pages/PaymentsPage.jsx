@@ -27,7 +27,7 @@ const STATUS_TONE = { paid: 'success', failed: 'danger', refunded: 'neutral' }
 const MONEY_LINES = 3
 const FILTERS = {
   status: ['paid', 'failed', 'refunded'],
-  payer: ['candidate', 'recruiter'],
+  payer: ['candidate', 'recruiter', 'agency'],
   kind: ['course', 'subscription'],
   source: ['stripe', 'seed'],
 }
@@ -53,7 +53,7 @@ function RoleMoney({ mrr }) {
   const { t } = useTranslation('adminPayments')
   return (
     <span className={styles.roleMoney}>
-      {['candidate', 'recruiter'].map((role) => (
+      {['candidate', 'recruiter', 'agency'].map((role) => (
         <span key={role} className={styles.roleGroup} data-mrr-role={role}>
           <span className={styles.roleLabel}>{t(`stats.role.${role}`)}</span>
           <MoneyLines totals={mrr[role]} />
@@ -145,7 +145,7 @@ export default function PaymentsPage() {
   const { data: stats, isLoading: statsLoading } = useGetPaymentStatsQuery(filters.country ? { country: filters.country } : {}, { refetchOnMountOrArgChange: true })
   const { data: plans } = useGetAdminPlansQuery()
   const format = useFormat()
-  const byRole = (counts) => t('stats.byRole', { candidates: format.number(counts.candidate), recruiters: format.number(counts.recruiter) })
+  const byRole = (counts) => t('stats.byRole', { candidates: format.number(counts.candidate), recruiters: format.number(counts.recruiter), agencies: format.number(counts.agency ?? 0) })
 
   async function exportCsv() {
     setExporting(true)

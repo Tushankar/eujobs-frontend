@@ -11,10 +11,11 @@
     "mrrCaption": "Abonnements actifs, par devise",
     "failedRenewals": "Renouvellements échoués",
     "failedRenewalsCaption": "Renouvellements Plus qui n’ont pas abouti · Depuis le début",
-    "byRole": "Candidats {{candidates}} · Recruteurs {{recruiters}}",
+    "byRole": "Candidats {{candidates}} · Recruteurs {{recruiters}} · Agences {{agencies}}",
     "role": {
       "candidate": "Candidats",
-      "recruiter": "Recruteurs"
+      "recruiter": "Recruteurs",
+      "agency": "Agences"
     },
     "none": "Aucun",
     "more": "+{{count}} de plus"
@@ -27,7 +28,8 @@
     "allPayers": "Tous les payeurs",
     "payers": {
       "candidate": "Candidats",
-      "recruiter": "Recruteurs"
+      "recruiter": "Recruteurs",
+      "agency": "Agences"
     },
     "kind": "Filtrer par type",
     "allKinds": "Tous les types",

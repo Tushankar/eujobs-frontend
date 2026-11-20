@@ -59,7 +59,7 @@ export const auditQuery = z.object({
 export const paymentsQuery = z.object({
   q: q.optional(),
   status: z.enum(ENUMS.paymentStatus).optional(),
-  payer: z.enum(['candidate', 'recruiter']).optional(),
+  payer: z.enum(['candidate', 'recruiter', 'agency']).optional(),
   kind: z.enum(ENUMS.paymentKind).optional(),
   source: z.enum(ENUMS.paymentSource).optional(),
   country: country.optional(),

@@ -47,7 +47,7 @@
     "outreach": "Borradores de contacto revisados",
     "pendingReviews": "Revisiones de usuarios pendientes",
     "activeSubscribers": "Suscriptores activos",
-    "byRole": "Candidatos {{candidates}} · Reclutadores {{recruiters}}",
+    "byRole": "Candidatos {{candidates}} · Reclutadores {{recruiters}} · Agencias {{agencies}}",
     "moderation": "Revisar la cola de moderación"
   },
   "skills": {

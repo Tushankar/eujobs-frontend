@@ -11,10 +11,11 @@
     "mrrCaption": "Planes activos, por moneda",
     "failedRenewals": "Renovaciones fallidas",
     "failedRenewalsCaption": "Renovaciones de Plus que no se completaron · Todo el periodo",
-    "byRole": "Candidatos {{candidates}} · Reclutadores {{recruiters}}",
+    "byRole": "Candidatos {{candidates}} · Reclutadores {{recruiters}} · Agencias {{agencies}}",
     "role": {
       "candidate": "Candidatos",
-      "recruiter": "Reclutadores"
+      "recruiter": "Reclutadores",
+      "agency": "Agencias"
     },
     "none": "Ninguna",
     "more": "+{{count}} más"
@@ -27,7 +28,8 @@
     "allPayers": "Todos los pagadores",
     "payers": {
       "candidate": "Candidatos",
-      "recruiter": "Reclutadores"
+      "recruiter": "Reclutadores",
+      "agency": "Agencias"
     },
     "kind": "Filtrar por tipo",
     "allKinds": "Todos los tipos",

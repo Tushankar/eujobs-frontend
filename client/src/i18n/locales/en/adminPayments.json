@@ -11,10 +11,11 @@
     "mrrCaption": "Active plans, per currency",
     "failedRenewals": "Failed renewals",
     "failedRenewalsCaption": "Plus renewals that did not go through · All time",
-    "byRole": "Candidates {{candidates}} · Recruiters {{recruiters}}",
+    "byRole": "Candidates {{candidates}} · Recruiters {{recruiters}} · Agencies {{agencies}}",
     "role": {
       "candidate": "Candidates",
-      "recruiter": "Recruiters"
+      "recruiter": "Recruiters",
+      "agency": "Agencies"
     },
     "none": "None",
     "more": "+{{count}} more"
@@ -27,7 +28,8 @@
     "allPayers": "All payers",
     "payers": {
       "candidate": "Candidates",
-      "recruiter": "Recruiters"
+      "recruiter": "Recruiters",
+      "agency": "Agencies"
     },
     "kind": "Filter by type",
     "allKinds": "All types",

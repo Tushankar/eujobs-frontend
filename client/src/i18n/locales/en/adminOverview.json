@@ -46,7 +46,7 @@
     "outreach": "Outreach drafts reviewed",
     "pendingReviews": "Pending user reviews",
     "activeSubscribers": "Active subscribers",
-    "byRole": "Candidates {{candidates}} · Recruiters {{recruiters}}",
+    "byRole": "Candidates {{candidates}} · Recruiters {{recruiters}} · Agencies {{agencies}}",
     "moderation": "Review moderation queue"
   },
   "skills": {
