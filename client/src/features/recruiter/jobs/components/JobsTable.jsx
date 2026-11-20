@@ -1,3 +1,4 @@
+import { hiringPath } from '@/app/roles.js'
 import { useState } from 'react'
 import { useTranslation } from 'react-i18next'
 import { useDispatch } from 'react-redux'
@@ -63,12 +64,12 @@ function ManageMenu({ job, onStatus, onRequestClose, onRequestDelete, publishLoc
       {({ close }) => (
         <ul className={styles.menu}>
           <li>
-            <Link to={`/recruiter/jobs/${job.id}/edit`} className={styles.menuItem} onClick={close}>
+            <Link to={`${hiringPath()}/jobs/${job.id}/edit`} className={styles.menuItem} onClick={close}>
               {t('jobs:table.edit')}
             </Link>
           </li>
           <li>
-            <Link to={`/recruiter/find-candidates?jobId=${job.id}`} className={styles.menuItem} onClick={close}>
+            <Link to={`${hiringPath()}/find-candidates?jobId=${job.id}`} className={styles.menuItem} onClick={close}>
               {t('jobs:table.viewCandidates')}
             </Link>
           </li>
@@ -140,7 +141,7 @@ export default function JobsTable({ jobs, sort, onSort, caption, loading = false
       if (status === 'published' && job.status === 'draft') dispatch(celebrate({ kind: 'job_published', params: { job: job.title, jobId: job.id } }))
     } catch (error) {
       const step = error.data?.error?.params?.step
-      if (errorCode(error) === 'VALIDATION_FAILED' && step) navigate(`/recruiter/jobs/${job.id}/edit?step=${JOB_STEPS.indexOf(step)}&publish=1`)
+      if (errorCode(error) === 'VALIDATION_FAILED' && step) navigate(`${hiringPath()}/jobs/${job.id}/edit?step=${JOB_STEPS.indexOf(step)}&publish=1`)
       else setFailure(errorCode(error) === 'LOCKED' ? t('jobs:table.locked') : errorText.code(error))
     }
   }
@@ -192,7 +193,7 @@ export default function JobsTable({ jobs, sort, onSort, caption, loading = false
             {jobs.map((job) => (
               <tr key={job.id} className={styles.row} data-recruiter-job={job.id}>
                 <td className={styles.td}>
-                  <Link to={`/recruiter/jobs/${job.id}`} className={styles.roleTitle}>
+                  <Link to={`${hiringPath()}/jobs/${job.id}`} className={styles.roleTitle}>
                     {job.title}
                   </Link>
                   <p className={styles.roleMeta}>{[jobText.place(job), job.employmentType && t(`enums:employmentType.${job.employmentType}`)].filter(Boolean).join(' · ')}</p>
@@ -207,7 +208,7 @@ export default function JobsTable({ jobs, sort, onSort, caption, loading = false
                       {t('jobs:table.relevant', { count: job.relevantCount })}
                     </PlanButton>
                   ) : (
-                    <Link to={`/recruiter/find-candidates?jobId=${job.id}&relevant=1`} className={styles.relevant}>
+                    <Link to={`${hiringPath()}/find-candidates?jobId=${job.id}&relevant=1`} className={styles.relevant}>
                       {t('jobs:table.relevant', { count: job.relevantCount })}
                     </Link>
                   )}
@@ -220,7 +221,7 @@ export default function JobsTable({ jobs, sort, onSort, caption, loading = false
                     {/* M-059: the AI summary on each row; Recruiter Plus (§3.22), a locked button otherwise */}
                     {job.status !== 'draft' && <JobSummaryButton job={job} />}
                     <ManageMenu job={job} onStatus={changeStatus} onRequestClose={setClosing} onRequestDelete={setDeleting} publishLocked={publishLocked(job.id)} />
-                    <IconButton as={Link} to={`/recruiter/jobs/${job.id}`} icon={Eye} label={t('jobs:table.view', { title: job.title })} />
+                    <IconButton as={Link} to={`${hiringPath()}/jobs/${job.id}`} icon={Eye} label={t('jobs:table.view', { title: job.title })} />
                   </div>
                 </td>
               </tr>

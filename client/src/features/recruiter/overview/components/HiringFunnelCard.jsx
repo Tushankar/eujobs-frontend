@@ -1,3 +1,4 @@
+import { hiringPath } from '@/app/roles.js'
 import { useTranslation } from 'react-i18next'
 import { Link } from 'react-router-dom'
 import { ArrowRight } from 'lucide-react'
@@ -36,7 +37,7 @@ export default function HiringFunnelCard() {
         <ul className={styles.list}>
           {stages.map(({ id, name, count }) => (
             <li key={id} data-funnel-stage={name} data-count={count}>
-              <Link to="/recruiter/hiring-pipeline" className={styles.row} aria-label={t('applications:overview.funnelRow', { stage: name, count })}>
+              <Link to={hiringPath('hiring-pipeline')} className={styles.row} aria-label={t('applications:overview.funnelRow', { stage: name, count })}>
                 <span className={styles.stage}>{name}</span>
                 <span className={styles.track}>
                   <span className={styles.fill} style={{ width: `${(count / max) * 100}%` }} />
@@ -47,7 +48,7 @@ export default function HiringFunnelCard() {
           ))}
         </ul>
       )}
-      <Link to="/recruiter/hiring-pipeline" className={styles.link}>
+      <Link to={hiringPath('hiring-pipeline')} className={styles.link}>
         {t('applications:overview.funnelLink')}
         <Icon as={ArrowRight} size={12} />
       </Link>

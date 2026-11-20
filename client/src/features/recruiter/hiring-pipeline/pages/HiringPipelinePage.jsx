@@ -1,3 +1,4 @@
+import { hiringPath } from '@/app/roles.js'
 import { useTranslation } from 'react-i18next'
 import { useLocation, useNavigate, useSearchParams } from 'react-router-dom'
 import { Columns3, Layers, Settings2 } from 'lucide-react'
@@ -16,9 +17,9 @@ import { useInterviewMove } from '@/features/interviews/useInterviewMove.js'
 import { useStageMove } from '../useStageMove.js'
 import styles from './HiringPipelinePage.module.css'
 
-const PIPELINE_PATH = '/recruiter/hiring-pipeline'
-const MANAGE_PATH = `${PIPELINE_PATH}/manage-stage`
-const FUNNEL_PATH = `${PIPELINE_PATH}/funnel`
+const pipelinePath = () => hiringPath('hiring-pipeline')
+const managePath = () => hiringPath('hiring-pipeline/manage-stage')
+const funnelPath = () => hiringPath('hiring-pipeline/funnel')
 // Placeholder cards per column while the board loads (the default pipeline has six stages).
 const SKELETON_COLUMNS = [2, 3, 1, 2, 1, 0]
 // The funnel's stage shapes (width, height) while it loads, narrowing like the drawing.
@@ -84,7 +85,7 @@ export default function HiringPipelinePage() {
         title={t('applications:board.title')}
         description={t('applications:board.description')}
         actions={
-          <Button variant="outline" leftIcon={<Icon as={Settings2} size={14} />} onClick={() => navigate(MANAGE_PATH)}>
+          <Button variant="outline" leftIcon={<Icon as={Settings2} size={14} />} onClick={() => navigate(managePath())}>
             {t('applications:board.manage')}
           </Button>
         }
@@ -108,7 +109,7 @@ export default function HiringPipelinePage() {
             { id: 'funnel', label: t('applications:board.views.funnel'), icon: Layers, iconSize: 13 },
           ]}
           value={view}
-          onChange={(next) => navigate(`${next === 'funnel' ? FUNNEL_PATH : PIPELINE_PATH}${search}`)}
+          onChange={(next) => navigate(`${next === 'funnel' ? funnelPath() : pipelinePath()}${search}`)}
         />
       </div>
 
@@ -205,7 +206,7 @@ export default function HiringPipelinePage() {
       )}
 
       <ApplicantPanel application={opened} stages={stages} onClose={() => setParam('application', '')} />
-      <ManageStagesModal open={managing} onClose={() => navigate(PIPELINE_PATH)} stages={stages} />
+      <ManageStagesModal open={managing} onClose={() => navigate(pipelinePath())} stages={stages} />
     </div>
   )
 }

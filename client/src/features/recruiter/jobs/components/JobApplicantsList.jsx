@@ -1,3 +1,4 @@
+import { hiringPath } from '@/app/roles.js'
 import { useTranslation } from 'react-i18next'
 import { Link } from 'react-router-dom'
 import { ArrowUpRight } from 'lucide-react'
@@ -31,7 +32,7 @@ export default function JobApplicantsList({ jobId }) {
         <ul className={styles.list}>
           {applications.map(({ id, candidate, stage }) => (
             <li key={id}>
-              <Link to={`/recruiter/find-candidates/${candidate.id}?jobId=${jobId}`} className={styles.row} aria-label={t('applications:recruiter.viewProfile', { name: candidate.fullName })}>
+              <Link to={`${hiringPath()}/find-candidates/${candidate.id}?jobId=${jobId}`} className={styles.row} aria-label={t('applications:recruiter.viewProfile', { name: candidate.fullName })}>
                 <Avatar name={candidate.fullName} src={candidate.photoUrl ?? undefined} size={36} />
                 <span className={styles.text}>
                   <span className={styles.name}>{candidate.fullName}</span>

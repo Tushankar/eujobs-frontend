@@ -1,3 +1,4 @@
+import { hiringPath } from '@/app/roles.js'
 import { useRef, useState } from 'react'
 import { useTranslation } from 'react-i18next'
 import { Link } from 'react-router-dom'
@@ -26,7 +27,7 @@ function PageHeading() {
         <h1 className={styles.title}>{t('company:title')}</h1>
         <p className={styles.lead}>{t('company:lead')}</p>
       </div>
-      <Button as={Link} to="/recruiter/jobs/new" rightIcon={<Icon as={ArrowRight} size={13} />}>
+      <Button as={Link} to={hiringPath('jobs/new')} rightIcon={<Icon as={ArrowRight} size={13} />}>
         {t('company:createRole')}
       </Button>
     </div>

@@ -1,3 +1,4 @@
+import { hiringPath } from '@/app/roles.js'
 import { useTranslation } from 'react-i18next'
 import { useDispatch } from 'react-redux'
 import { useNavigate, useParams, useSearchParams } from 'react-router-dom'
@@ -30,7 +31,7 @@ function NewJob() {
 
   async function createDraft(values, nextStep) {
     const job = await createJob(valuesToBody(values)).unwrap()
-    navigate(`/recruiter/jobs/${job.id}/edit?step=${nextStep}`, { replace: true })
+    navigate(`${hiringPath()}/jobs/${job.id}/edit?step=${nextStep}`, { replace: true })
   }
 
   return (
@@ -42,7 +43,7 @@ function NewJob() {
           companyName={me?.company?.displayName ?? ''}
           finishActions={DRAFT_ACTIONS}
           onContinue={createDraft}
-          onCancel={() => navigate('/recruiter/jobs')}
+          onCancel={() => navigate(hiringPath('jobs'))}
           onFinish={() => {}}
         />
       </div>
@@ -77,7 +78,7 @@ function EditJob({ jobId }) {
     // 2026-11-17: the first publish of a draft gets the "Your job is live" success modal.
     if (draft && action.status === 'published') dispatch(celebrate({ kind: 'job_published', params: { job: values.title.trim(), jobId } }))
     const notice = !draft ? 'saved' : action.status === 'published' ? 'published' : 'draft'
-    navigate(`/recruiter/jobs/${jobId}`, { state: { notice } })
+    navigate(`${hiringPath()}/jobs/${jobId}`, { state: { notice } })
   }
 
   return (
@@ -93,7 +94,7 @@ function EditJob({ jobId }) {
           companyName={job.company.displayName}
           finishActions={draft ? DRAFT_ACTIONS.map((action) => ({ ...action, locked: action.status === 'published' && publishLocked(jobId) })) : LIVE_ACTIONS}
           onContinue={draft ? save : undefined}
-          onCancel={() => navigate(`/recruiter/jobs/${jobId}`)}
+          onCancel={() => navigate(`${hiringPath()}/jobs/${jobId}`)}
           onFinish={finish}
         />
       </div>

@@ -1,3 +1,4 @@
+import { hiringPath } from '@/app/roles.js'
 import { useTranslation } from 'react-i18next'
 import { Link } from 'react-router-dom'
 import { useDispatch } from 'react-redux'
@@ -21,7 +22,7 @@ export default function CandidateCard({ candidate, hasJob, jobId, locked, onTogg
   const { t } = useTranslation()
   const { country } = usePreferences()
   const text = useCandidateText()
-  const profilePath = `/recruiter/find-candidates/${candidate.id}${jobId ? `?jobId=${jobId}` : ''}`
+  const profilePath = `${hiringPath()}/find-candidates/${candidate.id}${jobId ? `?jobId=${jobId}` : ''}`
   const rightToWork = country && country !== 'REMOTE' ? text.rightToWork(candidate, country) : null
 
   return (

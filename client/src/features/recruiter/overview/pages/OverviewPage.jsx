@@ -1,3 +1,4 @@
+import { hiringPath } from '@/app/roles.js'
 import { useState } from 'react'
 import { useTranslation } from 'react-i18next'
 import { Link } from 'react-router-dom'
@@ -51,13 +52,13 @@ export default function OverviewPage() {
   const firstName = me?.fullName.split(/\s+/)[0] ?? ''
 
   const stats = [
-    { key: 'openPositions', value: overview?.openPositions, icon: BriefcaseBusiness, to: '/recruiter/jobs' },
-    { key: 'recommended', value: overview?.recommendedCandidates, iconSrc: aiNavIcon, to: '/recruiter/find-candidates' },
-    { key: 'applications', value: overview?.applications, icon: FileText, to: '/recruiter/applications' },
-    { key: 'shortlisted', value: overview?.shortlisted, icon: Bookmark, to: '/recruiter/shortlists' },
+    { key: 'openPositions', value: overview?.openPositions, icon: BriefcaseBusiness, to: hiringPath('jobs') },
+    { key: 'recommended', value: overview?.recommendedCandidates, iconSrc: aiNavIcon, to: hiringPath('find-candidates') },
+    { key: 'applications', value: overview?.applications, icon: FileText, to: hiringPath('applications') },
+    { key: 'shortlisted', value: overview?.shortlisted, icon: Bookmark, to: hiringPath('shortlists') },
   ]
   const createButton = (
-    <Button as={Link} to="/recruiter/jobs/new" leftIcon={<Icon as={Plus} size={14} />}>
+    <Button as={Link} to={hiringPath('jobs/new')} leftIcon={<Icon as={Plus} size={14} />}>
       {t('discovery:overview.createJob')}
     </Button>
   )
@@ -86,7 +87,7 @@ export default function OverviewPage() {
 
       <div className={styles.sectionHead}>
         <SectionHeading title={t('discovery:overview.talent')} description={t('discovery:overview.talentDescription')} />
-        <Link to="/recruiter/find-candidates" className={styles.sectionLink}>
+        <Link to={hiringPath('find-candidates')} className={styles.sectionLink}>
           {t('discovery:overview.talentLink')}
           <Icon as={ArrowRight} size={12} />
         </Link>
@@ -117,7 +118,7 @@ export default function OverviewPage() {
       <div className={styles.rolesHead}>
         <SectionHeading title={t('discovery:overview.openRoles')} />
         {openRoles.length > ROLES_SHOWN && (
-          <Link to="/recruiter/jobs" className={styles.sectionLink}>
+          <Link to={hiringPath('jobs')} className={styles.sectionLink}>
             {t('discovery:overview.viewAll')}
             <Icon as={ArrowRight} size={12} />
           </Link>

@@ -1,3 +1,4 @@
+import { hiringPath } from '@/app/roles.js'
 import { useTranslation } from 'react-i18next'
 import { Link } from 'react-router-dom'
 import { Bookmark, SearchX } from 'lucide-react'
@@ -48,7 +49,7 @@ export default function ShortlistsPage() {
               title={t('discovery:shortlists.empty')}
               description={t('discovery:shortlists.emptyText')}
               action={
-                <Button as={Link} to="/recruiter/find-candidates">
+                <Button as={Link} to={hiringPath('find-candidates')}>
                   {t('discovery:shortlists.find')}
                 </Button>
               }

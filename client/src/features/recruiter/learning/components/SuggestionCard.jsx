@@ -1,3 +1,4 @@
+import { hiringPath } from '@/app/roles.js'
 import { useTranslation } from 'react-i18next'
 import { Link } from 'react-router-dom'
 import { ArrowRight } from 'lucide-react'
@@ -29,7 +30,7 @@ export default function SuggestionCard({ course, rank }) {
         <p className={styles.reason} data-suggestion-reason>
           {t('suggestions.reason', { count: course.reason.count, stage: t(`enums:stageCategory.${course.reason.stage}`) })}
         </p>
-        <Link to={`/recruiter/learning/${course.id}`} className={styles.link} aria-label={t('card.viewLabel', { title: course.title })}>
+        <Link to={`${hiringPath()}/learning/${course.id}`} className={styles.link} aria-label={t('card.viewLabel', { title: course.title })}>
           {t('card.view')}
           <Icon as={ArrowRight} size={11} />
         </Link>

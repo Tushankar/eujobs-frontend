@@ -1,3 +1,4 @@
+import { hiringPath } from '@/app/roles.js'
 import { useEffect, useState } from 'react'
 import { useTranslation } from 'react-i18next'
 import { Link, useLocation, useNavigate, useParams } from 'react-router-dom'
@@ -38,7 +39,7 @@ export default function JobDetailsPage() {
 
   return (
     <>
-      <Link to="/recruiter/jobs" className={styles.back}>
+      <Link to={hiringPath('jobs')} className={styles.back}>
         <Icon as={ArrowLeft} size={13} />
         {t('jobs:details.back')}
       </Link>
@@ -57,7 +58,7 @@ export default function JobDetailsPage() {
         description={meta ?? <Skeleton width="min(360px, 80vw)" />}
         actions={
           <div className={styles.actions}>
-            <Button as={Link} to={`/recruiter/jobs/${jobId}/edit`} variant="secondary" className={styles.edit} leftIcon={<Icon as={Settings2} size={14} />}>
+            <Button as={Link} to={`${hiringPath()}/jobs/${jobId}/edit`} variant="secondary" className={styles.edit} leftIcon={<Icon as={Settings2} size={14} />}>
               {t('jobs:details.edit')}
             </Button>
           </div>
@@ -82,10 +83,10 @@ export default function JobDetailsPage() {
             </h2>
             <p className={styles.activityText}>{job ? t('jobs:details.relevant', { count: job.relevantCount }) : <Skeleton width={180} />}</p>
             <div className={styles.buttons}>
-              <Button as={Link} to={`/recruiter/find-candidates?jobId=${jobId}`} fullWidth rightIcon={<Icon as={ArrowRight} size={13} />}>
+              <Button as={Link} to={`${hiringPath()}/find-candidates?jobId=${jobId}`} fullWidth rightIcon={<Icon as={ArrowRight} size={13} />}>
                 {t('jobs:details.discover')}
               </Button>
-              <Button as={Link} to={`/recruiter/applications?jobId=${jobId}`} variant="secondary" fullWidth className={styles.outlined}>
+              <Button as={Link} to={`${hiringPath()}/applications?jobId=${jobId}`} variant="secondary" fullWidth className={styles.outlined}>
                 {t('jobs:details.applications')}
               </Button>
             </div>

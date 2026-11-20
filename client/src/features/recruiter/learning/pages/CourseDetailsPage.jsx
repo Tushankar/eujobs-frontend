@@ -1,3 +1,4 @@
+import { hiringPath } from '@/app/roles.js'
 import { useTranslation } from 'react-i18next'
 import { Link, useParams } from 'react-router-dom'
 import { ArrowLeft, BookOpen, Check, ShieldCheck } from 'lucide-react'
@@ -15,7 +16,7 @@ import LessonRow, { LessonRowSkeleton } from '../components/LessonRow.jsx'
 import styles from './CourseDetailsPage.module.css'
 import { useMarkSeen } from '@/features/notifications/api.js'
 
-const LIBRARY_PATH = '/recruiter/learning'
+const libraryPath = () => hiringPath('learning')
 
 /** The course while it loads: real section titles and labels, placeholders for the course's own content. */
 function CourseSkeleton() {
@@ -89,7 +90,7 @@ export default function CourseDetailsPage() {
   const { data: course, isError, isLoading } = useGetCourseQuery(courseId)
 
   const backLink = (
-    <Link to={LIBRARY_PATH} className={styles.back}>
+    <Link to={libraryPath()} className={styles.back}>
       <Icon as={ArrowLeft} size={14} />
       {t('library.back')}
     </Link>
@@ -104,7 +105,7 @@ export default function CourseDetailsPage() {
           title={t('details.missingTitle')}
           description={t('details.missingText')}
           action={
-            <Button as={Link} to={LIBRARY_PATH}>
+            <Button as={Link} to={libraryPath()}>
               {t('library.browse')}
             </Button>
           }
@@ -162,7 +163,7 @@ export default function CourseDetailsPage() {
                   <LessonRow
                     number={index + 1}
                     lesson={lesson}
-                    to={`${LIBRARY_PATH}/${course.id}/lessons/${lesson.id}`}
+                    to={`${libraryPath()}/${course.id}/lessons/${lesson.id}`}
                     subtitle={[t(`enums:lessonType.${lesson.type}`), lesson.durationSec && format.duration(lesson.durationSec)].filter(Boolean).join(' · ')}
                   />
                 </li>

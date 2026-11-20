@@ -1,3 +1,4 @@
+import { hiringPath } from '@/app/roles.js'
 import { useState } from 'react'
 import { useTranslation } from 'react-i18next'
 import { Link } from 'react-router-dom'
@@ -34,7 +35,7 @@ export default function ApplicantPanel({ application, stages, onClose }) {
           <div className={styles.summaryText}>
             <p className={styles.job}>{job.title}</p>
             <p className={styles.applied}>{t('applications:panel.applied', { date: format.dateTime(current.appliedAt) })}</p>
-            <Link to={`/recruiter/find-candidates/${candidate.id}`} className={styles.profileLink}>
+            <Link to={`${hiringPath()}/find-candidates/${candidate.id}`} className={styles.profileLink}>
               {t('applications:panel.profile')}
               <Icon as={ArrowUpRight} size={13} />
             </Link>

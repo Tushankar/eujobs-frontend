@@ -1,3 +1,4 @@
+import { hiringPath } from '@/app/roles.js'
 import { useState } from 'react'
 import { useTranslation } from 'react-i18next'
 import { Link } from 'react-router-dom'
@@ -60,7 +61,7 @@ export default function JobsPage() {
   }
 
   const createButton = (
-    <Button as={Link} to="/recruiter/jobs/new" data-tour="job-create" leftIcon={<Icon as={Plus} size={14} />}>
+    <Button as={Link} to={hiringPath('jobs/new')} data-tour="job-create" leftIcon={<Icon as={Plus} size={14} />}>
       {t('jobs:page.create')}
     </Button>
   )

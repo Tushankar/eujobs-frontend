@@ -1,3 +1,4 @@
+import { hiringPath } from '@/app/roles.js'
 import { useTranslation } from 'react-i18next'
 import { Link } from 'react-router-dom'
 import { ArrowRight, GraduationCap } from 'lucide-react'
@@ -30,7 +31,7 @@ export default function MyCoursesPage() {
               title={t('myCourses.emptyTitle')}
               description={t('myCourses.emptyText')}
               action={
-                <Button as={Link} to="/recruiter/learning" variant="outline" rightIcon={<Icon as={ArrowRight} size={13} />}>
+                <Button as={Link} to={hiringPath('learning')} variant="outline" rightIcon={<Icon as={ArrowRight} size={13} />}>
                   {t('myCourses.browse')}
                 </Button>
               }

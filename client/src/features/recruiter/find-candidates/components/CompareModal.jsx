@@ -1,3 +1,4 @@
+import { hiringPath } from '@/app/roles.js'
 import { useTranslation } from 'react-i18next'
 import { Link } from 'react-router-dom'
 import { Avatar, Modal } from '@/components/ui'
@@ -49,7 +50,7 @@ export default function CompareModal({ open, onClose, candidates, job }) {
               {candidates.map((candidate) => (
                 <th key={candidate.id} scope="col" className={styles.person}>
                   <Avatar name={candidate.fullName} src={candidate.photoUrl ?? undefined} size={40} />
-                  <Link to={`/recruiter/find-candidates/${candidate.id}`} className={styles.name}>
+                  <Link to={`${hiringPath()}/find-candidates/${candidate.id}`} className={styles.name}>
                     {candidate.fullName}
                   </Link>
                 </th>

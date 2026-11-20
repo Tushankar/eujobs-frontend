@@ -1,3 +1,4 @@
+import { hiringPath } from '@/app/roles.js'
 import { useTranslation } from 'react-i18next'
 import { Link, Outlet, useParams } from 'react-router-dom'
 import { ArrowLeft, UserX } from 'lucide-react'
@@ -12,7 +13,7 @@ import ProfileTabs from '../components/ProfileTabs.jsx'
 import styles from './CandidateProfilePage.module.css'
 import { useMarkSeen } from '@/features/notifications/api.js'
 
-const LIST_PATH = '/recruiter/find-candidates'
+const listPath = () => hiringPath('find-candidates')
 
 /**
  * Shared layout of the candidate profile (M-026): summary, tabs (nested routes) and the evidence sidebar. Opening
@@ -36,7 +37,7 @@ export default function CandidateProfilePage() {
           title={t('discovery:profile.notFound')}
           description={t('discovery:profile.notFoundText')}
           action={
-            <Button as={Link} to={LIST_PATH} variant="outline">
+            <Button as={Link} to={listPath()} variant="outline">
               {t('discovery:profile.back')}
             </Button>
           }
@@ -52,7 +53,7 @@ export default function CandidateProfilePage() {
           <div className={styles.main}>
             <ProfileSummarySkeleton />
             <div className={styles.tabs}>
-              <ProfileTabs basePath={`${LIST_PATH}/${candidateId}`} />
+              <ProfileTabs basePath={`${listPath()}/${candidateId}`} />
             </div>
             <ProfileSectionSkeleton />
           </div>
@@ -70,7 +71,7 @@ export default function CandidateProfilePage() {
         <div className={`${styles.main} sticky-side`}>
           <ProfileSummary candidate={candidate} />
           <div className={styles.tabs}>
-            <ProfileTabs basePath={`${LIST_PATH}/${candidate.id}`} />
+            <ProfileTabs basePath={`${listPath()}/${candidate.id}`} />
           </div>
           <Outlet key={candidate.id} context={{ candidate }} />
         </div>
@@ -83,7 +84,7 @@ export default function CandidateProfilePage() {
 function BackLink() {
   const { t } = useTranslation()
   return (
-    <Link to={LIST_PATH} className={styles.back}>
+    <Link to={listPath()} className={styles.back}>
       <Icon as={ArrowLeft} size={14} strokeWidth={2} />
       {t('discovery:profile.back')}
     </Link>

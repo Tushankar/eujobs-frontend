@@ -1,3 +1,4 @@
+import { hiringPath } from '@/app/roles.js'
 import { useTranslation } from 'react-i18next'
 import { Link } from 'react-router-dom'
 import { ArrowUpRight } from 'lucide-react'
@@ -38,7 +39,7 @@ export default function JobTalentList({ jobId }) {
         <ul className={styles.list}>
           {talent.map((person) => (
             <li key={person.id}>
-              <Link to={`/recruiter/find-candidates/${person.id}?jobId=${jobId}`} className={styles.row} aria-label={t('jobs:details.openTalent', { name: person.fullName })}>
+              <Link to={`${hiringPath()}/find-candidates/${person.id}?jobId=${jobId}`} className={styles.row} aria-label={t('jobs:details.openTalent', { name: person.fullName })}>
                 <Avatar name={person.fullName} src={person.photoUrl ?? undefined} size={36} />
                 <span className={styles.text}>
                   <span className={styles.name}>{person.fullName}</span>

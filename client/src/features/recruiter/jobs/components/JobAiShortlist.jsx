@@ -1,3 +1,4 @@
+import { hiringPath } from '@/app/roles.js'
 import { useTranslation } from 'react-i18next'
 import { Link } from 'react-router-dom'
 import { ArrowUpRight, Sparkles, X } from 'lucide-react'
@@ -40,7 +41,7 @@ export default function JobAiShortlist({ jobId, state, onClose }) {
               <ol className={styles.items}>
                 {items.map((item, index) => (
                   <li key={item.applicationId} data-ai-shortlist-item={item.applicationId}>
-                    <Link to={`/recruiter/find-candidates/${item.candidate.id}?jobId=${jobId}`} className={styles.row}>
+                    <Link to={`${hiringPath()}/find-candidates/${item.candidate.id}?jobId=${jobId}`} className={styles.row}>
                       <span className={styles.rank}>{index + 1}</span>
                       <span className={list.text}>
                         <span className={list.name}>{item.candidate.fullName ?? t('common:deletedUser')}</span>

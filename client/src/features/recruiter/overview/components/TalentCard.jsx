@@ -1,3 +1,4 @@
+import { hiringPath } from '@/app/roles.js'
 import { useState } from 'react'
 import { useTranslation } from 'react-i18next'
 import { Link } from 'react-router-dom'
@@ -20,7 +21,7 @@ export default function TalentCard({ person, onToggleSaved }) {
   const text = useCandidateText()
   const [insightOpen, setInsightOpen] = useState(false)
   const matched = person.overlap?.matched ?? []
-  const profilePath = `/recruiter/find-candidates/${person.id}?jobId=${person.bestJob.id}`
+  const profilePath = `${hiringPath()}/find-candidates/${person.id}?jobId=${person.bestJob.id}`
 
   return (
     <article className={styles.card} data-candidate={person.id}>

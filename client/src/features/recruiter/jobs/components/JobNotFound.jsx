@@ -1,3 +1,4 @@
+import { hiringPath } from '@/app/roles.js'
 import { useTranslation } from 'react-i18next'
 import { Link } from 'react-router-dom'
 import { ArrowLeft, SearchX } from 'lucide-react'
@@ -14,7 +15,7 @@ export default function JobNotFound() {
       </span>
       <h1 className={styles.title}>{t('jobs:notFound.title')}</h1>
       <p className={styles.text}>{t('jobs:notFound.text')}</p>
-      <Button as={Link} to="/recruiter/jobs" leftIcon={<Icon as={ArrowLeft} size={13} />}>
+      <Button as={Link} to={hiringPath('jobs')} leftIcon={<Icon as={ArrowLeft} size={13} />}>
         {t('jobs:notFound.back')}
       </Button>
     </div>

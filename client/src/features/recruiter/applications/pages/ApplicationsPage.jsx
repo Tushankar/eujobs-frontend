@@ -1,3 +1,4 @@
+import { hiringPath } from '@/app/roles.js'
 import { useEffect, useRef, useState } from 'react'
 import { useTranslation } from 'react-i18next'
 import { Link, useParams, useSearchParams } from 'react-router-dom'
@@ -19,7 +20,7 @@ import { useGetCompanyApplicationQuery, useGetCompanyApplicationsQuery, useGetPi
 import ApplicationStageSelect from '../components/ApplicationStageSelect.jsx'
 import styles from './ApplicationsPage.module.css'
 
-const profilePath = (candidateId) => `/recruiter/find-candidates/${candidateId}`
+const profilePath = (candidateId) => `${hiringPath()}/find-candidates/${candidateId}`
 const STATUS_FILTERS = ['not_selected', 'withdrawn']
 
 /**

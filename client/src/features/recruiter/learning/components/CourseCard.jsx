@@ -1,3 +1,4 @@
+import { hiringPath } from '@/app/roles.js'
 import { useTranslation } from 'react-i18next'
 import { Link } from 'react-router-dom'
 import { ArrowRight, BookOpen } from 'lucide-react'
@@ -41,7 +42,7 @@ export default function CourseCard({ course }) {
         <div className={styles.actions}>
           <Button
             as={Link}
-            to={`/recruiter/learning/${course.id}`}
+            to={`${hiringPath()}/learning/${course.id}`}
             variant="outline"
             rightIcon={<Icon as={ArrowRight} size={13} />}
             aria-label={t(started ? 'card.continueLabel' : 'card.viewLabel', { title: course.title })}
