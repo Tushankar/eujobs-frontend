@@ -22,4 +22,14 @@ export const TOURS = {
     ],
     done: 'jobs/new',
   },
+  // 2026-11-20: agencies start with their clients and agreement, then post jobs and see placements.
+  agency: {
+    steps: [
+      { key: 'clients', to: 'clients', target: '[data-add-client]' },
+      { key: 'agreement', to: 'talent', target: '[data-tour="talent-tabs"]' },
+      { key: 'jobs', to: 'jobs', target: '[data-tour="job-create"]' },
+      { key: 'placements', to: 'placements', target: '[data-get-started], [data-tour="placements-tabs"]' },
+    ],
+    done: 'clients',
+  },
 }

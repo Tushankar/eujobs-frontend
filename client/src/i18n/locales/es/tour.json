@@ -94,5 +94,40 @@
         "pageText": "Filtra por empleo y cambia entre la vista de tablero y la de embudo."
       }
     }
+  },
+  "agency": {
+    "welcomeText": "Así pasas de una cuenta de agencia nueva a tu primera colocación. Te mostramos cuatro lugares para empezar.",
+    "doneText": "Añade las empresas para las que seleccionas. Las ofertas, los candidatos y las colocaciones vendrán después.",
+    "doneAction": "Añadir un cliente",
+    "steps": {
+      "clients": {
+        "title": "Añade tus clientes",
+        "summary": "Las empresas para las que seleccionas.",
+        "text": "Cada oferta de agencia es para un cliente. Añádelos una vez, con su logotipo y ciudad.",
+        "pageTitle": "Tus clientes",
+        "pageText": "Añade aquí un cliente. Vincúlalo a su página de EU Jobs si la tiene."
+      },
+      "agreement": {
+        "title": "Publica tu acuerdo",
+        "summary": "Lo que firman los candidatos para unirse.",
+        "text": "Los candidatos se unen a tu cartera aceptándolo. Sus reglas deciden lo que pueden hacer durante una colocación.",
+        "pageTitle": "Talento y acuerdo",
+        "pageText": "Abre Acuerdo para subir tu PDF, revisar sus reglas y publicarlo."
+      },
+      "jobs": {
+        "title": "Publica una oferta de agencia",
+        "summary": "Cliente, fechas y tarifa.",
+        "text": "Crea una oferta para un cliente con sus fechas, tarifa y contrato.",
+        "pageTitle": "Crear una oferta",
+        "pageText": "Empieza aquí. El paso de condiciones de agencia fija el cliente, las fechas y la tarifa."
+      },
+      "placements": {
+        "title": "Sigue tus colocaciones",
+        "summary": "En curso, próximas y terminadas.",
+        "text": "Contratar a alguien de tu cartera inicia una colocación. Termínala antes o vuelve a contratar desde aquí.",
+        "pageTitle": "Tus colocaciones",
+        "pageText": "Las colocaciones aparecen aquí cuando contratas a alguien de tu cartera."
+      }
+    }
   }
 }

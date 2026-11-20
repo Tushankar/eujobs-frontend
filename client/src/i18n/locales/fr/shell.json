@@ -77,6 +77,11 @@
       "name": "Espace administration",
       "navigation": "Navigation administration",
       "home": "Retour à la vue d’ensemble administration"
+    },
+    "agency": {
+      "name": "Espace agence",
+      "navigation": "Navigation de l’agence",
+      "home": "Retour à l’aperçu de l’agence"
     }
   },
   "sidebar": {

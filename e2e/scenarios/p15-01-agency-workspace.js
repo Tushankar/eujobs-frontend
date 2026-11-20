@@ -32,14 +32,14 @@ export default {
     if (!phone) {
       await clickText(page, 'Sign up as an agency', 'a')
       await waitForPath(page, '/agencies/signup')
-      await page.waitForFunction(() => document.querySelector('select[name="country"]')?.value)
+      // The country picker (a button carrying its value) is prefilled from the browser.
+      await page.waitForFunction(() => document.querySelector('button[name="country"]')?.value)
       ctx.check((await bodyText(page)).includes('Your role at the agency'), 'sign-up asks "Your role at the agency"')
       const email = uniqueEmail('p1501')
       await fill(page, 'input[name="fullName"]', 'Ada Agent')
       await fill(page, 'input[name="jobTitle"]', 'Agency director')
       await fill(page, 'input[name="email"]', email)
-      await page.select('select[name="country"]', 'GB')
-      await fill(page, 'input[name="phone"]', '020 7946 0958')
+      await fill(page, 'input[name="phone"]', '+44 20 7946 0958')
       await fill(page, 'input[name="password"]', TEST_PASSWORD)
       await fill(page, 'input[name="confirmPassword"]', TEST_PASSWORD)
       await page.$eval('input[name="acceptTerms"]', (box) => box.click())

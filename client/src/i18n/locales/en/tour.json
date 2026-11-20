@@ -94,5 +94,40 @@
         "pageText": "Filter by job, and switch between the board and funnel views."
       }
     }
+  },
+  "agency": {
+    "welcomeText": "Here's how to go from a new agency account to your first placement. We'll show you four places to start.",
+    "doneText": "Add the companies you recruit for. Jobs, candidates and placements follow from there.",
+    "doneAction": "Add a client",
+    "steps": {
+      "clients": {
+        "title": "Add your clients",
+        "summary": "The companies you recruit for.",
+        "text": "Every agency job is for a client. Add them once, with their logo and city.",
+        "pageTitle": "Your clients",
+        "pageText": "Add a client here. Link it to its EU Jobs page when it has one."
+      },
+      "agreement": {
+        "title": "Publish your agreement",
+        "summary": "What candidates sign to join.",
+        "text": "Candidates join your books by agreeing to it. Its rules decide what they may do during a placement.",
+        "pageTitle": "Talent and agreement",
+        "pageText": "Open Agreement to upload your PDF, check its rules and publish it."
+      },
+      "jobs": {
+        "title": "Post an agency job",
+        "summary": "Client, dates and pay rate.",
+        "text": "Create a job for a client with its dates, pay rate and contract.",
+        "pageTitle": "Create a job",
+        "pageText": "Start here. The agency terms step sets the client, dates and rate."
+      },
+      "placements": {
+        "title": "Follow your placements",
+        "summary": "Running, upcoming and over.",
+        "text": "Hiring someone on your books starts a placement. End it early or re-hire from here.",
+        "pageTitle": "Your placements",
+        "pageText": "Placements show here once you hire someone on your books."
+      }
+    }
   }
 }

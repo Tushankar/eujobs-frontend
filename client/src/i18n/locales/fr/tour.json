@@ -94,5 +94,40 @@
         "pageText": "Filtrez par offre et passez de la vue tableau à la vue entonnoir."
       }
     }
+  },
+  "agency": {
+    "welcomeText": "Voici comment passer d’un nouveau compte d’agence à votre premier placement. Nous vous montrons quatre points de départ.",
+    "doneText": "Ajoutez les entreprises pour lesquelles vous recrutez. Les offres, les candidats et les placements suivront.",
+    "doneAction": "Ajouter un client",
+    "steps": {
+      "clients": {
+        "title": "Ajoutez vos clients",
+        "summary": "Les entreprises pour lesquelles vous recrutez.",
+        "text": "Chaque offre d’agence est pour un client. Ajoutez-les une fois, avec leur logo et leur ville.",
+        "pageTitle": "Vos clients",
+        "pageText": "Ajoutez un client ici. Liez-le à sa page EU Jobs s’il en a une."
+      },
+      "agreement": {
+        "title": "Publiez votre accord",
+        "summary": "Ce que signent les candidats pour rejoindre.",
+        "text": "Les candidats rejoignent votre vivier en l’acceptant. Ses règles décident ce qu’ils peuvent faire pendant un placement.",
+        "pageTitle": "Talents et accord",
+        "pageText": "Ouvrez Accord pour téléverser votre PDF, vérifier ses règles et le publier."
+      },
+      "jobs": {
+        "title": "Publiez une offre d’agence",
+        "summary": "Client, dates et taux.",
+        "text": "Créez une offre pour un client avec ses dates, son taux et son contrat.",
+        "pageTitle": "Créer une offre",
+        "pageText": "Commencez ici. L’étape des conditions d’agence fixe le client, les dates et le taux."
+      },
+      "placements": {
+        "title": "Suivez vos placements",
+        "summary": "En cours, à venir et terminés.",
+        "text": "Embaucher une personne de votre vivier démarre un placement. Terminez-le plus tôt ou réembauchez d’ici.",
+        "pageTitle": "Vos placements",
+        "pageText": "Les placements apparaissent ici dès que vous embauchez une personne de votre vivier."
+      }
+    }
   }
 }

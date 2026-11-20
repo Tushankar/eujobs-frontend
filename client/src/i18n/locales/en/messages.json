@@ -3,12 +3,14 @@
     "title": "Messages",
     "description": {
       "candidate": "Conversations with companies about jobs and your applications.",
-      "recruiter": "Conversations with candidates and applicants."
+      "recruiter": "Conversations with candidates and applicants.",
+      "agency": "Conversations with candidates, applicants and the people on your books."
     },
     "empty": "No messages yet",
     "emptyText": {
       "candidate": "When a company writes to you, the conversation appears here.",
-      "recruiter": "Start a conversation from a candidate’s profile."
+      "recruiter": "Start a conversation from a candidate’s profile.",
+      "agency": "Start a conversation from a candidate’s profile."
     },
     "unread_one": "{{count}} unread",
     "unread_other": "{{count}} unread"

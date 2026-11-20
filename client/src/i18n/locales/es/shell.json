@@ -77,6 +77,11 @@
       "name": "Espacio de administración",
       "navigation": "Navegación de administración",
       "home": "Volver al resumen de administración"
+    },
+    "agency": {
+      "name": "Espacio de la agencia",
+      "navigation": "Navegación de la agencia",
+      "home": "Volver al resumen de la agencia"
     }
   },
   "sidebar": {

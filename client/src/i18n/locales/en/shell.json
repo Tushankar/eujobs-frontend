@@ -77,6 +77,11 @@
       "name": "Admin workspace",
       "navigation": "Admin navigation",
       "home": "Back to the admin overview"
+    },
+    "agency": {
+      "name": "Agency workspace",
+      "navigation": "Agency navigation",
+      "home": "Back to the agency overview"
     }
   },
   "sidebar": {

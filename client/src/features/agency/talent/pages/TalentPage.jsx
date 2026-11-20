@@ -131,13 +131,15 @@ export default function TalentPage() {
   return (
     <>
       <PageTitle title={t('agency:talent.title')} description={t('agency:talent.description')} />
-      <FilterChips
-        className={styles.tabs}
-        label={t('agency:talent.tabsLabel')}
-        options={TABS.map((id) => ({ id, label: t(`agency:talent.tabs.${id}`), count: id === 'agreement' || !data ? undefined : inTab(id).length }))}
-        value={tab}
-        onChange={(id) => setParams(id === 'books' ? {} : { tab: id }, { replace: true })}
-      />
+      <div data-tour="talent-tabs">
+        <FilterChips
+          className={styles.tabs}
+          label={t('agency:talent.tabsLabel')}
+          options={TABS.map((id) => ({ id, label: t(`agency:talent.tabs.${id}`), count: id === 'agreement' || !data ? undefined : inTab(id).length }))}
+          value={tab}
+          onChange={(id) => setParams(id === 'books' ? {} : { tab: id }, { replace: true })}
+        />
+      </div>
 
       {tab === 'agreement' ? (
         <AgreementPanel />

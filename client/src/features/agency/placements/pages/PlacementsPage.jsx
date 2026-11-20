@@ -213,13 +213,15 @@ export default function PlacementsPage() {
         />
       ) : (
         <>
-          <FilterChips
-            className={styles.tabs}
-            label={t('agency:placements.tabsLabel')}
-            options={TABS.map((id) => ({ id, label: t(`agency:placements.tabs.${id}`), count: data ? placements.filter((placement) => tabOf(placement) === id).length : undefined }))}
-            value={tab}
-            onChange={(id) => setParams(id === 'running' ? {} : { tab: id }, { replace: true })}
-          />
+          <div data-tour="placements-tabs">
+            <FilterChips
+              className={styles.tabs}
+              label={t('agency:placements.tabsLabel')}
+              options={TABS.map((id) => ({ id, label: t(`agency:placements.tabs.${id}`), count: data ? placements.filter((placement) => tabOf(placement) === id).length : undefined }))}
+              value={tab}
+              onChange={(id) => setParams(id === 'running' ? {} : { tab: id }, { replace: true })}
+            />
+          </div>
           {failure && (
             <p className={styles.failure} role="alert">
               {errorText.code(failure)}

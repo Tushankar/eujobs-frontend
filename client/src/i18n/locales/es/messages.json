@@ -3,12 +3,14 @@
     "title": "Mensajes",
     "description": {
       "candidate": "Conversaciones con empresas sobre ofertas y tus candidaturas.",
-      "recruiter": "Conversaciones con candidatos y personas que se han postulado."
+      "recruiter": "Conversaciones con candidatos y personas que se han postulado.",
+      "agency": "Conversaciones con candidatos, aspirantes y las personas de tu cartera."
     },
     "empty": "Aún no hay mensajes",
     "emptyText": {
       "candidate": "Cuando una empresa te escriba, la conversación aparecerá aquí.",
-      "recruiter": "Inicia una conversación desde el perfil de un candidato."
+      "recruiter": "Inicia una conversación desde el perfil de un candidato.",
+      "agency": "Inicia una conversación desde el perfil de un candidato."
     },
     "unread_one": "{{count}} sin leer",
     "unread_many": "{{count}} sin leer",
