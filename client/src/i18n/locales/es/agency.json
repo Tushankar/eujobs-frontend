@@ -280,5 +280,130 @@
     "missing": "Por añadir antes de publicar",
     "defaultHours": "Según el tipo de empleo",
     "noContract": "Ninguno (se aplica el acuerdo)"
+  },
+  "candidate": {
+    "title": "Agencias",
+    "description": "Tus colocaciones a través de agencias, las ofertas que te esperan y las agencias en cuya cartera estás.",
+    "tabsLabel": "Vistas de agencias",
+    "tabs": {
+      "placements": "Colocaciones",
+      "offers": "Ofertas",
+      "agencies": "Mis agencias"
+    },
+    "phasesLabel": "Fechas de colocación",
+    "phases": {
+      "running": "En curso",
+      "upcoming": "Próximas",
+      "over": "Terminadas"
+    },
+    "agencyTag": "Agencia",
+    "forClient": "Para {{client}}",
+    "confidentialClient": "Para un cliente confidencial",
+    "through": "A través de {{agency}}",
+    "rules": "Reglas de esta colocación",
+    "rulesIfAccepted": "Reglas si aceptas",
+    "rulesIntro": "EU Jobs aplica estas reglas, del contrato del empleo o del acuerdo de la agencia, citadas palabra por palabra.",
+    "close": "Cerrar",
+    "notice": {
+      "action": "Dar preaviso",
+      "title": "Dar preaviso en {{job}}",
+      "text": "Tu colocación termina tras el periodo de preaviso de tu contrato. No podrás deshacerlo.",
+      "period": "Periodo de preaviso: {{period}}",
+      "endsOn": "Tu último día será el {{date}}.",
+      "confirm": "Dar preaviso",
+      "given": "Preaviso dado el {{date}}"
+    },
+    "offer": {
+      "view": "Ver oferta",
+      "accept": "Aceptar",
+      "decline": "Rechazar",
+      "after": "Después de tu colocación como {{job}}",
+      "accepted": "Aceptaste la colocación como {{job}}."
+    },
+    "empty": {
+      "running": {
+        "title": "Nada en curso",
+        "text": "Las colocaciones aparecen aquí mientras duran."
+      },
+      "upcoming": {
+        "title": "Nada próximo",
+        "text": "Las colocaciones confirmadas que aún no han empezado aparecen aquí."
+      },
+      "over": {
+        "title": "Nada terminado aún",
+        "text": "Las colocaciones que han terminado aparecen aquí."
+      },
+      "offers": {
+        "title": "Sin ofertas",
+        "text": "Cuando una agencia te ofrezca otra colocación, aparecerá aquí para aceptarla o rechazarla."
+      },
+      "agencies": {
+        "title": "Aún no hay agencias",
+        "text": "Pide unirte a una agencia desde uno de sus empleos, o acepta la invitación de una agencia."
+      }
+    },
+    "start": {
+      "title": "Trabaja a través de agencias",
+      "text": "Las agencias colocan a personas en trabajos de corta duración para sus empresas clientes. Únete a la cartera de una agencia desde uno de sus empleos; cuando aceptes su acuerdo podrá colocarte.",
+      "action": "Buscar empleos de agencia"
+    },
+    "membership": {
+      "status": {
+        "requested": "Solicitud enviada",
+        "awaiting_agreement": "Acuerdo por leer",
+        "active": "En la cartera",
+        "declined": "Rechazada",
+        "ended": "Saliste"
+      },
+      "invited": "Te invitó",
+      "agreed": "Aceptaste la versión {{version}} el {{date}}",
+      "newVersion": "La versión {{version}} espera tu aceptación",
+      "read": "Leer acuerdo",
+      "readNew": "Leer la versión {{version}}",
+      "withdraw": "Retirar solicitud",
+      "decline": "Rechazar",
+      "leave": "Salir",
+      "leaveTitle": "¿Salir de la cartera de {{agency}}?",
+      "leaveText": "La agencia ya no podrá colocarte. Una colocación en curso continúa hasta su fin. Puedes pedir unirte de nuevo más tarde.",
+      "join": "Pedir unirte de nuevo"
+    },
+    "agreement": {
+      "back": "Agencias",
+      "title": "Acuerdo de {{agency}}",
+      "meta": "Versión {{version}} · publicada el {{date}}",
+      "open": "Abrir PDF",
+      "noPreview": "El PDF no se puede mostrar aquí. Ábrelo para leerlo.",
+      "rulesTitle": "Reglas que aplica EU Jobs",
+      "check": "He leído y acepto la versión {{version}} del acuerdo de {{agency}}.",
+      "signed": "Firmado como {{name}} · {{date}}",
+      "agree": "Acepto",
+      "decline": "Rechazar",
+      "required": "Marca la casilla para aceptar.",
+      "agreed": "Estás en la cartera de {{agency}}.",
+      "changed": "La agencia publicó la versión {{version}} mientras leías. Léela antes de aceptar.",
+      "already": "Ya aceptaste esta versión."
+    },
+    "lock": {
+      "title": "Puedes aceptar este empleo a partir del {{date}}",
+      "placement": "Tu colocación como {{job}} con {{agency}} ({{dates}})",
+      "otherPlacement": "Una de tus colocaciones",
+      "freeFrom": "Libre desde el {{date}}"
+    },
+    "join": {
+      "action": "Unirte a la cartera de {{agency}}",
+      "sent": "Solicitud enviada a {{agency}}",
+      "read": "Leer el acuerdo de {{agency}}",
+      "active": "En la cartera de {{agency}}",
+      "hint": "Una agencia solo puede colocarte cuando estás en su cartera y has aceptado su acuerdo."
+    },
+    "terms": {
+      "title": "Condiciones de la colocación",
+      "client": "Cliente",
+      "dates": "Fechas",
+      "hours": "Horas",
+      "pay": "Pago",
+      "days_one": "{{count}} día",
+      "days_other": "{{count}} días"
+    }
   }
 }

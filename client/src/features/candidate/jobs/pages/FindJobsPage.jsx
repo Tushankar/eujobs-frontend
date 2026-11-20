@@ -22,7 +22,7 @@ const DEBOUNCE_MS = 300
 /**
  * Find jobs (M-137, OD2, §3.6): the header country's jobs, or the Remote view, from the server with keyword search,
  * filters and sort; the list shows nine at a time. The page-level AI summary is gone (M-059). `?q=` fills the search
- * (the "See all" link of a job alert digest).
+ * (the "See all" link of a job alert digest), `?employmentType=` the job types.
  */
 export default function FindJobsPage() {
   const { t } = useTranslation()
@@ -31,7 +31,8 @@ export default function FindJobsPage() {
   const initialQuery = urlParams.get('q') ?? ''
   const [query, setQuery] = useState(initialQuery)
   const [debounced, setDebounced] = useState(initialQuery)
-  const [filters, setFilters] = useState(EMPTY_FILTERS)
+  // 2026-11-20: `?employmentType=agency` opens the Agency jobs (links from Agencies).
+  const [filters, setFilters] = useState(() => ({ ...EMPTY_FILTERS, employmentType: urlParams.get('employmentType')?.split(',').filter(Boolean) ?? [] }))
   const [sort, setSort] = useState('recommended')
   const [visible, setVisible] = useState(PAGE_SIZE)
   const [filtersOpen, setFiltersOpen] = useState(false)

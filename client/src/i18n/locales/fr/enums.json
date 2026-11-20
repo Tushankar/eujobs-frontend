@@ -28,7 +28,8 @@
     "full_time": "Temps plein",
     "part_time": "Temps partiel",
     "contract": "Contrat",
-    "internship": "Stage"
+    "internship": "Stage",
+    "agency": "Agence"
   },
   "jobLevel": {
     "junior": "Junior",
@@ -605,7 +606,18 @@
     "agency_member_agreed": "Accord accepté",
     "agency_member_left": "Départ du vivier",
     "placement_offer_answered": "Offre répondue",
-    "placement_notice_given": "Préavis donné"
+    "placement_notice_given": "Préavis donné",
+    "agency_invited": "Invitation d’agence",
+    "agency_request_accepted": "Demande acceptée",
+    "agency_membership_declined": "Réponse de l’agence",
+    "agency_removed": "Hors du vivier",
+    "agency_agreement_updated": "Nouvel accord",
+    "placement_confirmed": "Placement confirmé",
+    "placement_ended_early": "Placement terminé plus tôt",
+    "placement_offered": "Offre de réembauche",
+    "placement_offer_withdrawn": "Offre retirée",
+    "placement_starts_soon": "Début de placement",
+    "placement_ends_soon": "Fin de placement"
   },
   "interviewMode": {
     "video": "Appel vidéo",

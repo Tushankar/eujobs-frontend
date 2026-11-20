@@ -280,5 +280,130 @@
     "missing": "À ajouter avant de publier",
     "defaultHours": "Selon le type d’emploi",
     "noContract": "Aucun (l’accord s’applique)"
+  },
+  "candidate": {
+    "title": "Agences",
+    "description": "Vos placements via des agences, les offres qui vous attendent et les agences dont vous faites partie du vivier.",
+    "tabsLabel": "Vues des agences",
+    "tabs": {
+      "placements": "Placements",
+      "offers": "Offres",
+      "agencies": "Mes agences"
+    },
+    "phasesLabel": "Dates de placement",
+    "phases": {
+      "running": "En cours",
+      "upcoming": "À venir",
+      "over": "Terminés"
+    },
+    "agencyTag": "Agence",
+    "forClient": "Pour {{client}}",
+    "confidentialClient": "Pour un client confidentiel",
+    "through": "Via {{agency}}",
+    "rules": "Règles de ce placement",
+    "rulesIfAccepted": "Règles si vous acceptez",
+    "rulesIntro": "EU Jobs applique ces règles, issues du contrat de l’offre ou de l’accord de l’agence, citées mot pour mot.",
+    "close": "Fermer",
+    "notice": {
+      "action": "Donner son préavis",
+      "title": "Donner son préavis pour {{job}}",
+      "text": "Votre placement se termine après le préavis prévu par votre contrat. Vous ne pourrez pas revenir en arrière.",
+      "period": "Préavis : {{period}}",
+      "endsOn": "Votre dernier jour sera le {{date}}.",
+      "confirm": "Donner son préavis",
+      "given": "Préavis donné le {{date}}"
+    },
+    "offer": {
+      "view": "Voir l’offre",
+      "accept": "Accepter",
+      "decline": "Refuser",
+      "after": "Après votre placement comme {{job}}",
+      "accepted": "Vous avez accepté le placement comme {{job}}."
+    },
+    "empty": {
+      "running": {
+        "title": "Rien en cours",
+        "text": "Les placements apparaissent ici pendant qu’ils se déroulent."
+      },
+      "upcoming": {
+        "title": "Rien à venir",
+        "text": "Les placements confirmés qui n’ont pas encore commencé apparaissent ici."
+      },
+      "over": {
+        "title": "Rien de terminé",
+        "text": "Les placements terminés apparaissent ici."
+      },
+      "offers": {
+        "title": "Aucune offre",
+        "text": "Quand une agence vous propose un autre placement, il apparaît ici pour l’accepter ou le refuser."
+      },
+      "agencies": {
+        "title": "Aucune agence",
+        "text": "Demandez à rejoindre une agence depuis l’une de ses offres, ou acceptez l’invitation d’une agence."
+      }
+    },
+    "start": {
+      "title": "Travaillez via des agences",
+      "text": "Les agences placent des personnes sur des missions courtes pour leurs entreprises clientes. Rejoignez le vivier d’une agence depuis l’une de ses offres ; une fois son accord accepté, elle peut vous placer.",
+      "action": "Trouver des offres d’agence"
+    },
+    "membership": {
+      "status": {
+        "requested": "Demande envoyée",
+        "awaiting_agreement": "Accord à lire",
+        "active": "Dans le vivier",
+        "declined": "Refusée",
+        "ended": "Quitté"
+      },
+      "invited": "Vous a invité",
+      "agreed": "Vous avez accepté la version {{version}} le {{date}}",
+      "newVersion": "La version {{version}} attend votre accord",
+      "read": "Lire l’accord",
+      "readNew": "Lire la version {{version}}",
+      "withdraw": "Retirer la demande",
+      "decline": "Refuser",
+      "leave": "Quitter",
+      "leaveTitle": "Quitter le vivier de {{agency}} ?",
+      "leaveText": "L’agence ne pourra plus vous placer. Un placement en cours continue jusqu’à sa fin. Vous pourrez redemander à rejoindre plus tard.",
+      "join": "Redemander à rejoindre"
+    },
+    "agreement": {
+      "back": "Agences",
+      "title": "Accord de {{agency}}",
+      "meta": "Version {{version}} · publiée le {{date}}",
+      "open": "Ouvrir le PDF",
+      "noPreview": "Le PDF ne peut pas s’afficher ici. Ouvrez-le pour le lire.",
+      "rulesTitle": "Règles appliquées par EU Jobs",
+      "check": "J’ai lu et j’accepte la version {{version}} de l’accord de {{agency}}.",
+      "signed": "Signé en tant que {{name}} · {{date}}",
+      "agree": "J’accepte",
+      "decline": "Refuser",
+      "required": "Cochez la case pour accepter.",
+      "agreed": "Vous faites partie du vivier de {{agency}}.",
+      "changed": "L’agence a publié la version {{version}} pendant votre lecture. Lisez-la avant d’accepter.",
+      "already": "Vous avez déjà accepté cette version."
+    },
+    "lock": {
+      "title": "Vous pouvez prendre cette offre à partir du {{date}}",
+      "placement": "Votre placement comme {{job}} avec {{agency}} ({{dates}})",
+      "otherPlacement": "L’un de vos placements",
+      "freeFrom": "Libre à partir du {{date}}"
+    },
+    "join": {
+      "action": "Rejoindre le vivier de {{agency}}",
+      "sent": "Demande envoyée à {{agency}}",
+      "read": "Lire l’accord de {{agency}}",
+      "active": "Dans le vivier de {{agency}}",
+      "hint": "Une agence ne peut vous placer qu’une fois que vous êtes dans son vivier et avez accepté son accord."
+    },
+    "terms": {
+      "title": "Conditions du placement",
+      "client": "Client",
+      "dates": "Dates",
+      "hours": "Heures",
+      "pay": "Rémunération",
+      "days_one": "{{count}} jour",
+      "days_other": "{{count}} jours"
+    }
   }
 }

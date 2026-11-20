@@ -22,7 +22,8 @@ export default function EmailSwitches() {
           <ToggleRow
             key={category}
             label={t(`enums:emailCategory.${category}`)}
-            description={t(`notifications:settings.categories.${category}`)}
+            // 2026-11-20: candidates read what agency updates are for them.
+            description={t(`notifications:settings.categories.${category === 'agency_updates' && me.role === 'candidate' ? 'agencyUpdatesCandidate' : category}`)}
             checked={on}
             onChange={(checked) => save({ emailSwitches: { [category]: checked } })}
           />

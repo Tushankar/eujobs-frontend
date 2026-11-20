@@ -7,7 +7,8 @@
     "closed": "Not accepting applications",
     "sent": "Application sent. Track it in Applications.",
     "track": "Track your applications",
-    "consentNote": "Your information, shared with consent."
+    "consentNote": "Your information, shared with consent.",
+    "locked": "Free from {{date}}"
   },
   "gate": {
     "title": "Before you can apply",
@@ -32,7 +33,8 @@
     "coverNoteAi": "Write my cover note with AI",
     "consent": "I agree that {{company}} can see my profile and the CV I send for this application.",
     "cancel": "Cancel",
-    "submit": "Send application"
+    "submit": "Send application",
+    "joinAgency": "Also ask to join {{agency}}’s books"
   },
   "list": {
     "title": "Every step, in one place.",

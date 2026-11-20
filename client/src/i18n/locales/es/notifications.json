@@ -111,7 +111,21 @@
       "accepted": "{{candidate}} aceptó tu oferta para {{job}}",
       "declined": "{{candidate}} rechazó tu oferta para {{job}}"
     },
-    "placement_notice_given": "{{candidate}} dio preaviso en {{job}}: ahora termina el {{date}}"
+    "placement_notice_given": "{{candidate}} dio preaviso en {{job}}: ahora termina el {{date}}",
+    "agency_invited": "{{agency}} te invitó a unirte a su cartera",
+    "agency_request_accepted": "{{agency}} aceptó tu solicitud: lee y acepta su acuerdo",
+    "agency_membership_declined": {
+      "request": "{{agency}} rechazó tu solicitud para unirte a su cartera",
+      "invitation": "{{agency}} retiró su invitación para unirte a su cartera"
+    },
+    "agency_removed": "{{agency}} te quitó de su cartera",
+    "agency_agreement_updated": "{{agency}} publicó la versión {{version}} de su acuerdo",
+    "placement_confirmed": "Tu colocación como {{job}} con {{agency}} está confirmada: empieza el {{date}}",
+    "placement_ended_early": "{{agency}} terminó antes tu colocación como {{job}}: tu último día es el {{date}}",
+    "placement_offered": "{{agency}} te ofreció una nueva colocación como {{job}}",
+    "placement_offer_withdrawn": "{{agency}} retiró su oferta para {{job}}",
+    "placement_starts_soon": "Tu colocación como {{job}} con {{agency}} empieza mañana",
+    "placement_ends_soon": "Tu colocación como {{job}} con {{agency}} termina el {{date}}"
   },
   "settings": {
     "title": "Notificaciones por correo",
@@ -134,7 +148,8 @@
       "content_reports": "Alguien denuncia una oferta, un perfil, una empresa o un mensaje.",
       "failed_renewals": "Falla el pago de renovación de Plus de un candidato.",
       "admin_joined": "Un administrador invitado acepta la invitación.",
-      "agency_updates": "Personas que piden unirse a tu cartera, aceptan o se van, respuestas a ofertas de recontratación y preavisos."
+      "agency_updates": "Personas que piden unirse a tu cartera, aceptan o se van, respuestas a ofertas de recontratación y preavisos.",
+      "agencyUpdatesCandidate": "Agencias que te invitan o responden a tu solicitud, nuevas versiones de acuerdos, colocaciones confirmadas o terminadas antes, ofertas de recontratación y recordatorios antes de que una colocación empiece o termine."
     }
   }
 }

@@ -28,7 +28,8 @@
     "full_time": "Full-time",
     "part_time": "Part-time",
     "contract": "Contract",
-    "internship": "Internship"
+    "internship": "Internship",
+    "agency": "Agency"
   },
   "jobLevel": {
     "junior": "Junior",
@@ -605,7 +606,18 @@
     "agency_member_agreed": "Agreement accepted",
     "agency_member_left": "Left the books",
     "placement_offer_answered": "Offer answered",
-    "placement_notice_given": "Notice given"
+    "placement_notice_given": "Notice given",
+    "agency_invited": "Agency invitation",
+    "agency_request_accepted": "Request accepted",
+    "agency_membership_declined": "Agency answer",
+    "agency_removed": "Off the books",
+    "agency_agreement_updated": "New agreement",
+    "placement_confirmed": "Placement confirmed",
+    "placement_ended_early": "Placement ended early",
+    "placement_offered": "Re-hire offer",
+    "placement_offer_withdrawn": "Offer withdrawn",
+    "placement_starts_soon": "Placement starts",
+    "placement_ends_soon": "Placement ends"
   },
   "interviewMode": {
     "video": "Video call",

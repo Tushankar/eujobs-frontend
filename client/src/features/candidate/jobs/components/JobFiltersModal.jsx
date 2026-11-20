@@ -20,9 +20,11 @@ export default function JobFiltersModal({ open, onClose, filters, onChange, resu
   const countries = useCountryOptions().filter((option) => !option.isRemote)
   const groups = [
     ...(remote ? [] : [{ key: 'workPreference', options: (config?.enums.workPreference ?? []).filter((mode) => worldwide || mode !== 'remote') }]),
+    // 2026-11-20: job types, with Agency (every agency job, whatever its hours).
+    { key: 'employmentType', options: config ? [...config.enums.employmentType, 'agency'] : [] },
     { key: 'level', options: config?.enums.jobLevel ?? [] },
   ]
-  const enumOf = { workPreference: 'workPreference', level: 'jobLevel' }
+  const enumOf = { workPreference: 'workPreference', employmentType: 'employmentType', level: 'jobLevel' }
 
   function toggle(key, option) {
     const current = filters[key]

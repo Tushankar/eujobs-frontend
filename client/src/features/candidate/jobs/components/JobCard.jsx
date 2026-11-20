@@ -2,10 +2,11 @@ import { useState } from 'react'
 import { useTranslation } from 'react-i18next'
 import { useDispatch } from 'react-redux'
 import { Link } from 'react-router-dom'
-import { ArrowRight, ArrowUpRight, Bookmark, BriefcaseBusiness, ChartNoAxesColumnIncreasing, ChevronDown, Crown, Globe, MapPin, Plane } from 'lucide-react'
+import { ArrowRight, ArrowUpRight, Bookmark, BriefcaseBusiness, CalendarDays, ChartNoAxesColumnIncreasing, ChevronDown, Clock, Crown, Globe, MapPin, Plane } from 'lucide-react'
 import { openUpgrade } from '@/app/upgrade.js'
 import { cx } from '@/utils/cx.js'
 import { Button, CompanyLogo, Icon, IconButton, Skeleton } from '@/components/ui'
+import PillBadge from '@/components/common/PillBadge.jsx'
 import SkillPills from '@/components/common/SkillPills.jsx'
 import StatusBadge from '@/components/common/StatusBadge.jsx'
 import aiGlyph from '@/assets/icons/ai-glyph-blue.svg'
@@ -67,14 +68,26 @@ export default function JobCard({ job, onToggleSave }) {
         <div className={styles.headText}>
           <div className={styles.eyebrow}>
             <VerifiedCompany className={styles.company} name={company} verified={job.company.verified} />
+            {job.agency && <PillBadge tone="neutral">{t('agency:candidate.agencyTag')}</PillBadge>}
             <MatchBadge job={job} />
             {job.accepting === false && <StatusBadge tone="warning">{t('findJobs:card.notAccepting')}</StatusBadge>}
+            {/* 2026-11-20: the candidate's placements block this job until then. */}
+            {job.lock && (
+              <StatusBadge tone="warning" data-lock>
+                {t('agency:candidate.lock.freeFrom', { date: format.date(job.lock.freeFrom) })}
+              </StatusBadge>
+            )}
           </div>
           <h3 className={styles.title}>
             <Link to={detailsPath} className={styles.titleLink}>
               {job.title}
             </Link>
           </h3>
+          {job.agency && (
+            <p className={styles.client} data-agency-client>
+              {jobText.client(job)}
+            </p>
+          )}
         </div>
         <IconButton
           icon={Bookmark}
@@ -98,6 +111,20 @@ export default function JobCard({ job, onToggleSave }) {
           <Icon as={BriefcaseBusiness} size={12} />
           {t(`enums:employmentType.${job.employmentType}`)}
         </span>
+        {job.agency && (
+          <>
+            <span className={styles.metaItem} data-agency-dates>
+              <Icon as={CalendarDays} size={12} />
+              {jobText.dates(job.agency)}
+            </span>
+            {job.agency.hoursPerWeek && (
+              <span className={styles.metaItem}>
+                <Icon as={Clock} size={12} />
+                {t('agency:rules.hours', { count: job.agency.hoursPerWeek })}
+              </span>
+            )}
+          </>
+        )}
         {job.visaSponsorship && (
           <span className={styles.metaItem} data-visa-sponsorship>
             <Icon as={Plane} size={12} />
@@ -111,6 +138,11 @@ export default function JobCard({ job, onToggleSave }) {
           </span>
         )}
         {job.salary && <span className={styles.salary}>{jobText.salary(job)}</span>}
+        {job.agency?.rate && (
+          <span className={styles.salary} data-agency-rate>
+            {jobText.rate(job.agency)}
+          </span>
+        )}
       </div>
       {eligible && <p className={styles.eligible}>{t('findJobs:card.eligible', { countries: eligible })}</p>}
 

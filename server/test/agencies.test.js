@@ -178,7 +178,17 @@ describe('agency jobs', () => {
     const candidate = await listedCandidate()
     const found = (await api().get(`${v1}/jobs`).set(auth(candidate))).body.items.find((item) => item.id === draft.body.id)
     assert.equal(found.company.displayName, (await Company.findById(agency.companyId)).displayName)
-    assert.deepEqual(found.agency, { showClient: false, startDate: '2026-12-01', endDate: '2026-12-31', rate: { amountMinor: 1850, currency: 'GBP', period: 'hour' }, hoursPerWeek: 30 })
+    // 2026-11-20 (phase 5): a confidential client has no name either.
+    assert.deepEqual(found.agency, { showClient: false, startDate: '2026-12-01', endDate: '2026-12-31', rate: { amountMinor: 1850, currency: 'GBP', period: 'hour' }, hoursPerWeek: 30, client: null })
+    assert.deepEqual(found.agencyMembership, null)
+
+    // Shown, the client's name is on the card (and on the public list); the Agency job type finds it.
+    await api().put(`${v1}/recruiter/jobs/${draft.body.id}`).set(auth(agency)).send(jobBody({ agency: { ...terms(client.id), showClient: true } }))
+    const agencyOnly = (await api().get(`${v1}/jobs`).query({ employmentType: 'agency' }).set(auth(candidate))).body.items
+    assert.deepEqual(agencyOnly.map((item) => [item.id, item.agency.client]), [[draft.body.id, { name: 'Acme' }]])
+    assert.equal((await api().get(`${v1}/jobs`).query({ employmentType: 'contract' }).set(auth(candidate))).body.items.length, 0)
+    const publicList = (await api().get(`${v1}/landing/jobs`).query({ employmentType: 'agency' })).body
+    assert.deepEqual([publicList.counts.employmentType.agency, publicList.items.map((item) => item.agency.client)], [1, [{ name: 'Acme' }]])
 
     // A client with jobs stays.
     const del = await api().delete(`${v1}/agency/clients/${client.id}`).set(auth(agency))

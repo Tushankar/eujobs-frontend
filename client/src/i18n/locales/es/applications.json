@@ -7,7 +7,8 @@
     "closed": "No admite candidaturas",
     "sent": "Candidatura enviada. Síguela en Candidaturas.",
     "track": "Seguir tus candidaturas",
-    "consentNote": "Tu información, compartida con tu consentimiento."
+    "consentNote": "Tu información, compartida con tu consentimiento.",
+    "locked": "Libre desde el {{date}}"
   },
   "gate": {
     "title": "Antes de postularte",
@@ -32,7 +33,8 @@
     "coverNoteAi": "Redactar mi carta con IA",
     "consent": "Acepto que {{company}} vea mi perfil y el CV que envío con esta candidatura.",
     "cancel": "Cancelar",
-    "submit": "Enviar candidatura"
+    "submit": "Enviar candidatura",
+    "joinAgency": "Pedir también unirme a la cartera de {{agency}}"
   },
   "list": {
     "title": "Cada paso, en un solo lugar.",

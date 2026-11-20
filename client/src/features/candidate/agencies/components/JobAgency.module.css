@@ -1,0 +1,133 @@
+/* 2026-11-20: an agency job's terms, joining its books and the placement lock on the job page. */
+.terms {
+  padding-top: 32px;
+}
+
+.h2 {
+  font-family: var(--font-display);
+  font-size: 18px;
+  font-weight: 700;
+  line-height: 28px;
+  color: var(--foreground);
+}
+
+.rows {
+  display: flex;
+  flex-direction: column;
+  margin-top: 8px;
+}
+
+.row {
+  display: grid;
+  grid-template-columns: 120px 1fr;
+  gap: 12px;
+  padding: 10px 0;
+  font-size: 13px;
+  line-height: 20px;
+}
+
+.row + .row {
+  border-top: 1px solid var(--border);
+}
+
+.row dt {
+  color: var(--muted-foreground);
+}
+
+.row dd {
+  font-weight: 600;
+  color: var(--foreground);
+}
+
+.join {
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+}
+
+.state {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: 8px;
+  font-size: 13px;
+  line-height: 20px;
+  color: var(--foreground);
+}
+
+.hint {
+  font-size: 12px;
+  line-height: 18px;
+  color: var(--muted-foreground);
+}
+
+.error {
+  font-size: 12px;
+  line-height: 18px;
+  color: var(--destructive);
+}
+
+/* The same amber notice as "no longer accepting" on this page. */
+.lock {
+  margin-top: 16px;
+  padding: 14px 16px;
+  border-radius: var(--radius-xl);
+  background: light-dark(#fdf5e6, #3b2d11);
+  color: light-dark(#7a5a1c, #dbb161);
+}
+
+.lockTitle {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  font-size: 14px;
+  font-weight: 600;
+  line-height: 20px;
+}
+
+.blocks {
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+  margin-top: 10px;
+}
+
+.block {
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
+  font-size: 13px;
+  line-height: 20px;
+}
+
+.blockFrom {
+  font-weight: 600;
+}
+
+.blockRule {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: 6px;
+}
+
+.clause {
+  margin: 0;
+  padding: 8px 12px;
+  border-left: 3px solid currentColor;
+  border-radius: 0 var(--radius-md) var(--radius-md) 0;
+  background: var(--card);
+  color: var(--foreground);
+  overflow-wrap: anywhere;
+}
+
+.freeFrom {
+  font-size: 12px;
+}
+
+@media (max-width: 599px) {
+  .row {
+    grid-template-columns: 1fr;
+    gap: 2px;
+  }
+}

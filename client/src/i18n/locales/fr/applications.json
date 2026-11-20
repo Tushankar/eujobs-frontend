@@ -7,7 +7,8 @@
     "closed": "Candidatures closes",
     "sent": "Candidature envoyée. Suivez-la dans Candidatures.",
     "track": "Suivre vos candidatures",
-    "consentNote": "Vos informations, partagées avec votre consentement."
+    "consentNote": "Vos informations, partagées avec votre consentement.",
+    "locked": "Libre à partir du {{date}}"
   },
   "gate": {
     "title": "Avant de postuler",
@@ -32,7 +33,8 @@
     "coverNoteAi": "Rédiger ma lettre avec l’IA",
     "consent": "J’accepte que {{company}} puisse voir mon profil et le CV que j’envoie pour cette candidature.",
     "cancel": "Annuler",
-    "submit": "Envoyer la candidature"
+    "submit": "Envoyer la candidature",
+    "joinAgency": "Demander aussi à rejoindre le vivier de {{agency}}"
   },
   "list": {
     "title": "Chaque étape, au même endroit.",

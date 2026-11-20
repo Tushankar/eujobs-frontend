@@ -28,7 +28,8 @@
     "full_time": "Jornada completa",
     "part_time": "Media jornada",
     "contract": "Contrato temporal",
-    "internship": "Prácticas"
+    "internship": "Prácticas",
+    "agency": "Agencia"
   },
   "jobLevel": {
     "junior": "Junior",
@@ -605,7 +606,18 @@
     "agency_member_agreed": "Acuerdo aceptado",
     "agency_member_left": "Salida de la cartera",
     "placement_offer_answered": "Oferta respondida",
-    "placement_notice_given": "Preaviso dado"
+    "placement_notice_given": "Preaviso dado",
+    "agency_invited": "Invitación de agencia",
+    "agency_request_accepted": "Solicitud aceptada",
+    "agency_membership_declined": "Respuesta de la agencia",
+    "agency_removed": "Fuera de la cartera",
+    "agency_agreement_updated": "Nuevo acuerdo",
+    "placement_confirmed": "Colocación confirmada",
+    "placement_ended_early": "Colocación terminada antes",
+    "placement_offered": "Oferta de recontratación",
+    "placement_offer_withdrawn": "Oferta retirada",
+    "placement_starts_soon": "Inicio de colocación",
+    "placement_ends_soon": "Fin de colocación"
   },
   "interviewMode": {
     "video": "Videollamada",

@@ -1,12 +1,14 @@
 import { useTranslation } from 'react-i18next'
 import { Link, useParams } from 'react-router-dom'
-import { ArrowLeft, ArrowUpRight, Bookmark, BriefcaseBusiness, Check, ChevronRight, Globe, MapPin, Plane, SearchX } from 'lucide-react'
+import { ArrowLeft, ArrowUpRight, Bookmark, BriefcaseBusiness, CalendarDays, Check, ChevronRight, Globe, MapPin, Plane, SearchX } from 'lucide-react'
 import { cx } from '@/utils/cx.js'
 import { Button, CompanyLogo, Icon, Skeleton, SkeletonRegion } from '@/components/ui'
 import EmptyState from '@/components/common/EmptyState.jsx'
+import PillBadge from '@/components/common/PillBadge.jsx'
 import SkillPills from '@/components/common/SkillPills.jsx'
 import aiGlyph from '@/assets/icons/ai-glyph-blue.svg'
 import Translatable from '@/features/ai/components/Translatable.jsx'
+import { AgencyTerms, JoinAgency, LockBanner } from '@/features/candidate/agencies/components/JobAgency.jsx'
 import { ApplyButton } from '@/features/candidate/applications/components/ApplyFlow.jsx'
 import { MessageCompanyButton } from '@/features/messages/components/StartConversation.jsx'
 import ReportButton from '@/features/moderation/components/ReportButton.jsx'
@@ -165,6 +167,7 @@ export default function JobDetailsPage() {
           <strong>{t('findJobs:details.notAccepting')}</strong> {t('findJobs:details.notAcceptingText')}
         </div>
       )}
+      <LockBanner job={job} />
 
       <div className={styles.layout}>
         <article className={`${styles.article} sticky-side`}>
@@ -173,6 +176,7 @@ export default function JobDetailsPage() {
             <div className={styles.heroText}>
               <div className={styles.heroRow}>
                 <VerifiedCompany className={styles.company} name={company.displayName} verified={company.verified} />
+                {job.agency && <PillBadge tone="neutral">{t('agency:candidate.agencyTag')}</PillBadge>}
                 <MatchBadge job={job} />
               </div>
               <p className={styles.posted}>{[company.industry, job.publishedAt && t('findJobs:details.posted', { time: format.relative(job.publishedAt) })].filter(Boolean).join(' · ')}</p>
@@ -180,6 +184,7 @@ export default function JobDetailsPage() {
           </header>
 
           <h1 className={styles.title}>{job.title}</h1>
+          {job.agency && <p className={styles.posted}>{jobText.client(job)}</p>}
 
           <div className={styles.meta}>
             <span className={styles.metaItem}>
@@ -200,10 +205,18 @@ export default function JobDetailsPage() {
                 {t('findJobs:details.visa')}
               </span>
             )}
+            {job.agency && (
+              <span className={styles.metaItem}>
+                <Icon as={CalendarDays} size={14} />
+                {jobText.dates(job.agency)}
+              </span>
+            )}
             {job.salary && <span className={styles.salary}>{jobText.salary(job)}</span>}
+            {job.agency?.rate && <span className={styles.salary}>{jobText.rate(job.agency)}</span>}
           </div>
 
           <SkillEvidence job={job} />
+          {job.agency && <AgencyTerms job={job} />}
 
           {job.brief && (
             <section className={styles.section}>
@@ -237,6 +250,7 @@ export default function JobDetailsPage() {
                 {t(job.saved ? 'findJobs:details.saved' : 'findJobs:details.save')}
               </Button>
               {job.application && <MessageCompanyButton job={job} canStart={job.application.status !== 'withdrawn'} fullWidth />}
+              {job.agency && <JoinAgency job={job} />}
             </div>
             {job.application && <p className={styles.railText}>{t('applications:apply.sent')}</p>}
             <ReportButton targetType="job" targetId={job.id} size="sm" className={styles.report} />

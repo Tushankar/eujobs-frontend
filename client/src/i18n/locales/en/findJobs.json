@@ -41,7 +41,8 @@
     "show_one": "Show {{count}} job",
     "show_other": "Show {{count}} jobs",
     "visa": "Visa",
-    "visaSponsorship": "Offers visa sponsorship"
+    "visaSponsorship": "Offers visa sponsorship",
+    "employmentType": "Job type"
   },
   "card": {
     "save": "Save {{title}} at {{company}}",

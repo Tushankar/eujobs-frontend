@@ -71,6 +71,13 @@
   min-height: 33px;
 }
 
+/* 2026-11-20: an agency job's client, under its title. */
+.client {
+  font-size: 13px;
+  line-height: 18px;
+  color: var(--muted-foreground);
+}
+
 .metaItem {
   display: inline-flex;
   align-items: center;

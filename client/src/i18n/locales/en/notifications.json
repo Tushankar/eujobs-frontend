@@ -105,7 +105,21 @@
       "accepted": "{{candidate}} accepted your offer for {{job}}",
       "declined": "{{candidate}} declined your offer for {{job}}"
     },
-    "placement_notice_given": "{{candidate}} gave notice on {{job}}: it now ends on {{date}}"
+    "placement_notice_given": "{{candidate}} gave notice on {{job}}: it now ends on {{date}}",
+    "agency_invited": "{{agency}} invited you to join its books",
+    "agency_request_accepted": "{{agency}} accepted your request: read and agree to its agreement",
+    "agency_membership_declined": {
+      "request": "{{agency}} declined your request to join its books",
+      "invitation": "{{agency}} withdrew its invitation to join its books"
+    },
+    "agency_removed": "{{agency}} took you off its books",
+    "agency_agreement_updated": "{{agency}} published version {{version}} of its agreement",
+    "placement_confirmed": "Your placement as {{job}} with {{agency}} is confirmed: it starts on {{date}}",
+    "placement_ended_early": "{{agency}} ended your placement as {{job}} early: your last day is {{date}}",
+    "placement_offered": "{{agency}} offered you a new placement as {{job}}",
+    "placement_offer_withdrawn": "{{agency}} withdrew its offer for {{job}}",
+    "placement_starts_soon": "Your placement as {{job}} with {{agency}} starts tomorrow",
+    "placement_ends_soon": "Your placement as {{job}} with {{agency}} ends on {{date}}"
   },
   "settings": {
     "title": "Email notifications",
@@ -128,7 +142,8 @@
       "content_reports": "Someone reports a job, a profile, a company or a message.",
       "failed_renewals": "A candidate’s Plus renewal payment fails.",
       "admin_joined": "An invited admin accepts the invitation.",
-      "agency_updates": "People asking to join your books, agreeing or leaving, answers to re-hire offers and notice given."
+      "agency_updates": "People asking to join your books, agreeing or leaving, answers to re-hire offers and notice given.",
+      "agencyUpdatesCandidate": "Agencies inviting you or answering your request, new agreement versions, placements confirmed or ended early, re-hire offers and reminders before a placement starts or ends."
     }
   }
 }

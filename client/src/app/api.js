@@ -114,6 +114,9 @@ const TAG_TYPES = [
     'AgencyAgreement',
     'AgencyTalent',
     'AgencyPlacements',
+    // 2026-11-20 (phase 5): the candidate's agencies and placements
+    'CandidateAgencies',
+    'CandidatePlacements',
 ]
 
 /**

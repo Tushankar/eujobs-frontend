@@ -1,7 +1,7 @@
 import { useLayoutEffect, useRef, useState } from 'react'
 import { useGSAP } from '@gsap/react'
 import gsap from 'gsap'
-import { ArrowLeft, ArrowUpRight, Bookmark, BriefcaseBusiness, Globe, MapPin, Plane, SearchX } from 'lucide-react'
+import { ArrowLeft, ArrowUpRight, Bookmark, BriefcaseBusiness, CalendarDays, Globe, MapPin, Plane, SearchX } from 'lucide-react'
 import { useTranslation } from 'react-i18next'
 import { Link, useSearchParams } from 'react-router-dom'
 import { CompanyLogo, Icon, Skeleton, SkeletonRegion, Switch } from '@/components/ui'
@@ -18,7 +18,7 @@ import landing from '../components/landing/Landing.module.css'
 import shell from '../components/PublicShell.module.css'
 import styles from './PublicJobsPage.module.css'
 
-/* The landing page's six categories as tabs (one work mode or employment type at a time), after "All jobs". */
+/* The landing page's six categories (and Agency) as tabs (one work mode or employment type at a time), after "All jobs". */
 const TABS = [
   { group: 'workPreference', value: 'remote' },
   { group: 'workPreference', value: 'hybrid' },
@@ -26,6 +26,8 @@ const TABS = [
   { group: 'employmentType', value: 'full_time' },
   { group: 'employmentType', value: 'part_time' },
   { group: 'employmentType', value: 'contract' },
+  // 2026-11-20: every agency job (the landing's agency section links here).
+  { group: 'employmentType', value: 'agency' },
 ]
 const GROUPS = ['workPreference', 'employmentType']
 const REDUCE = '(prefers-reduced-motion: reduce)'
@@ -205,13 +207,16 @@ function JobRow({ job, active, onOpen }) {
       <CompanyLogo name={job.company.displayName} id={job.company.id} src={job.company.logoUrl ?? undefined} size={44} />
       <span className={styles.rowBody}>
         <span className={styles.rowTitle}>{job.title}</span>
-        <span className={styles.rowCompany}>{[job.company.displayName, text.place(job)].filter(Boolean).join(' · ')}</span>
+        <span className={styles.rowCompany}>{[job.company.displayName, job.agency && text.client(job), text.place(job)].filter(Boolean).join(' · ')}</span>
         <span className={styles.rowTags}>
+          {job.agency && <span>{t('agency:candidate.agencyTag')}</span>}
           {job.workPreference && <span>{t(`enums:workPreference.${job.workPreference}`)}</span>}
           {job.employmentType && <span>{t(`enums:employmentType.${job.employmentType}`)}</span>}
+          {job.agency && <span>{text.dates(job.agency)}</span>}
           {job.visaSponsorship && <span data-visa-sponsorship>{t('common:visaSponsorship')}</span>}
         </span>
         {salary && <span className={styles.rowSalary}>{salary}</span>}
+        {job.agency?.rate && <span className={styles.rowSalary}>{text.rate(job.agency)}</span>}
       </span>
       {job.publishedAt && (
         <time className={styles.rowAgo} dateTime={job.publishedAt}>
@@ -251,6 +256,11 @@ function JobDetail({ job, onBack }) {
       <h2 id="job-title" className={styles.detailTitle} data-part>
         {job.title}
       </h2>
+      {job.agency && (
+        <p className={styles.detailPosted} data-part>
+          {[t('agency:candidate.agencyTag'), text.client(job)].join(' · ')}
+        </p>
+      )}
       <ul className={styles.facts} data-part>
         {job.country !== 'REMOTE' && (
           <li>
@@ -274,7 +284,14 @@ function JobDetail({ job, onBack }) {
             {t('findJobs:details.visa')}
           </li>
         )}
+        {job.agency && (
+          <li>
+            <Icon as={CalendarDays} size={15} />
+            {text.dates(job.agency)}
+          </li>
+        )}
         {salary && <li className={styles.factSalary}>{salary}</li>}
+        {job.agency?.rate && <li className={styles.factSalary}>{text.rate(job.agency)}</li>}
       </ul>
       <div className={styles.actions} data-part>
         <Link to={signInFor(job)} className={styles.apply}>

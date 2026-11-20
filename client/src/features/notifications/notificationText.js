@@ -3,6 +3,7 @@ import { useTranslation } from 'react-i18next'
 import {
   BadgeCheck,
   Bell,
+  Building2,
   BriefcaseBusiness,
   CalendarClock,
   CreditCard,
@@ -65,6 +66,18 @@ export const NOTIFICATION_ICONS = {
   agency_member_left: Users,
   placement_offer_answered: CalendarClock,
   placement_notice_given: CalendarClock,
+  // 2026-11-20 (phase 5): the candidate's agencies and placements
+  agency_invited: Building2,
+  agency_request_accepted: Building2,
+  agency_membership_declined: Building2,
+  agency_removed: Building2,
+  agency_agreement_updated: FileText,
+  placement_confirmed: CalendarClock,
+  placement_ended_early: CalendarClock,
+  placement_offered: CalendarClock,
+  placement_offer_withdrawn: CalendarClock,
+  placement_starts_soon: CalendarClock,
+  placement_ends_soon: CalendarClock,
 }
 
 const PLURAL_TYPES = ['message', 'admin_content_report']
@@ -103,6 +116,7 @@ export function useNotificationText() {
       case 'account_decided':
       case 'cv_request_decided':
       case 'placement_offer_answered':
+      case 'agency_membership_declined':
         return t(`notifications:types.${type}.${params.decision}`, values)
       case 'content_restricted':
       case 'content_lifted':

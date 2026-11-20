@@ -1,4 +1,5 @@
 import aiNavIcon from '@/assets/icons/ai-nav.svg'
+import { useAgencyActionsBadge } from '@/features/candidate/agencies/api.js'
 import { useActiveApplicationsBadge } from '@/features/candidate/applications/api.js'
 import { useUnreadMessagesBadge } from '@/features/messages/api.js'
 import { useProfileCompletionBadge } from '@/features/candidate/profile/api.js'
@@ -24,6 +25,8 @@ export const WORKSPACES = {
       { key: 'overview', to: '', vuesax: 'element-3', end: true },
       { key: 'findJobs', to: 'jobs', vuesax: 'search-normal' },
       { key: 'applications', to: 'applications', vuesax: 'briefcase', badge: { useText: useActiveApplicationsBadge } },
+      // 2026-11-20: placements, re-hire offers and the agencies whose books the candidate is on.
+      { key: 'agencies', to: 'agencies', vuesax: 'buildings', badge: { useText: useAgencyActionsBadge } },
       { key: 'messages', to: 'messages', vuesax: 'messages-2', badge: { useText: useUnreadMessagesBadge } },
       { key: 'jobAlerts', to: 'job-alerts', vuesax: 'notification', entitlement: 'job_alerts' },
       { key: 'myProfile', to: 'profile', vuesax: 'profile-circle', badge: { useText: useProfileCompletionBadge } },

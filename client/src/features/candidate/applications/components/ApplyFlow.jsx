@@ -10,9 +10,11 @@ import { Button, Checkbox, Icon, Modal, SelectField, TextareaField } from '@/com
 import { useWriteCoverNoteMutation } from '@/features/ai/api.js'
 import AiFillButton from '@/features/ai/components/AiFillButton.jsx'
 import { lacksEntitlement } from '@/features/candidate/billing/usePlan.js'
+import { useJoinAgencyMutation } from '@/features/candidate/agencies/api.js'
 import { useGetCvVersionsQuery } from '@/features/candidate/cv/api.js'
 import { completenessIcon } from '@/features/candidate/profile/utils/completenessIcons.js'
 import { check, useErrorText, useFormState } from '@/lib/forms.js'
+import { useFormat } from '@/lib/preferences.js'
 import { useApplyMutation } from '../api.js'
 import styles from './ApplyFlow.module.css'
 
@@ -132,7 +134,10 @@ function ApplyDialog({ job, onClose, onApplied }) {
   const { data: config } = useGetConfigQuery()
   const { data: cv } = useGetCvVersionsQuery()
   const [apply, { isLoading }] = useApplyMutation()
-  const { values, set, errors, failure, run } = useFormState({ cvVersionId: '', coverNote: '', consent: false })
+  const { values, set, errors, failure, run } = useFormState({ cvVersionId: '', coverNote: '', consent: false, joinAgency: false })
+  const [joinAgency] = useJoinAgencyMutation()
+  // 2026-11-20: an agency job offers joining the agency's books when the candidate is not on them or asking.
+  const canJoin = Boolean(job.agency) && (!job.agencyMembership || ['declined', 'ended'].includes(job.agencyMembership.status))
   const max = config?.limits.application.coverNote.max
   const [writeCoverNote] = useWriteCoverNoteMutation()
   const company = job.company.displayName
@@ -146,6 +151,8 @@ function ApplyDialog({ job, onClose, onApplied }) {
       apply({ jobId: job.id, cvVersionId: cvVersionId || undefined, coverNote: values.coverNote.trim(), consent: values.consent }).unwrap(),
     )
     if (sent) {
+      // The application stands even if the request to join fails (e.g. sent meanwhile from another tab).
+      if (canJoin && values.joinAgency) await joinAgency(job.company.id).unwrap().catch(() => {})
       onApplied()
       // 2026-11-17: the "Application sent" success modal.
       dispatch(celebrate({ kind: 'applied', params: { job: job.title, company } }))
@@ -201,6 +208,11 @@ function ApplyDialog({ job, onClose, onApplied }) {
           label={t('applications:dialog.coverNoteAi')}
           data-cover-note-ai
         />
+        {canJoin && (
+          <Checkbox name="joinAgency" checked={values.joinAgency} onChange={(event) => set('joinAgency', event.target.checked)} data-join-agency>
+            {t('applications:dialog.joinAgency', { agency: company })}
+          </Checkbox>
+        )}
         <div>
           <Checkbox name="consent" checked={values.consent} onChange={(event) => set('consent', event.target.checked)} aria-invalid={errors.consent ? true : undefined}>
             {t('applications:dialog.consent', { company })}
@@ -234,11 +246,20 @@ export default function ApplyFlow({ job, onClose, onApplied }) {
 /** Apply now, or Applied (a link to Applications) once the candidate has an active application to the job. */
 export function ApplyButton({ job, size, fullWidth, className }) {
   const { t } = useTranslation()
+  const format = useFormat()
   const [open, setOpen] = useState(false)
   if (job.application) {
     return (
       <Button as={Link} to="/candidate/applications" variant="secondary" size={size} fullWidth={fullWidth} className={className} aria-label={t('applications:apply.appliedLabel', { title: job.title })} data-applied>
         {t('applications:apply.applied')}
+      </Button>
+    )
+  }
+  // 2026-11-20: the candidate's agency placements block this job until `freeFrom`.
+  if (job.lock) {
+    return (
+      <Button size={size} fullWidth={fullWidth} className={className} disabled data-apply-locked>
+        {t('applications:apply.locked', { date: format.date(job.lock.freeFrom) })}
       </Button>
     )
   }

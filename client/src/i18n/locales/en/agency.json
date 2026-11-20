@@ -277,5 +277,130 @@
     "missing": "To add before publishing",
     "defaultHours": "From the job type",
     "noContract": "None (the agreement applies)"
+  },
+  "candidate": {
+    "title": "Agencies",
+    "description": "Your placements through agencies, offers waiting for you and the agencies whose books you are on.",
+    "tabsLabel": "Agency views",
+    "tabs": {
+      "placements": "Placements",
+      "offers": "Offers",
+      "agencies": "My agencies"
+    },
+    "phasesLabel": "Placement dates",
+    "phases": {
+      "running": "Running",
+      "upcoming": "Upcoming",
+      "over": "Over"
+    },
+    "agencyTag": "Agency",
+    "forClient": "For {{client}}",
+    "confidentialClient": "For a confidential client",
+    "through": "Through {{agency}}",
+    "rules": "Rules of this placement",
+    "rulesIfAccepted": "Rules if you accept",
+    "rulesIntro": "EU Jobs applies these rules, from the job’s contract or the agency’s agreement, quoted word for word.",
+    "close": "Close",
+    "notice": {
+      "action": "Give notice",
+      "title": "Give notice on {{job}}",
+      "text": "Your placement ends after the notice period in your contract. You cannot take this back.",
+      "period": "Notice period: {{period}}",
+      "endsOn": "Your last day will be {{date}}.",
+      "confirm": "Give notice",
+      "given": "Notice given on {{date}}"
+    },
+    "offer": {
+      "view": "View offer",
+      "accept": "Accept",
+      "decline": "Decline",
+      "after": "After your placement as {{job}}",
+      "accepted": "You accepted the placement as {{job}}."
+    },
+    "empty": {
+      "running": {
+        "title": "Nothing running",
+        "text": "Placements show here while they run."
+      },
+      "upcoming": {
+        "title": "Nothing upcoming",
+        "text": "Confirmed placements that have not started yet show here."
+      },
+      "over": {
+        "title": "Nothing over yet",
+        "text": "Placements that have ended show here."
+      },
+      "offers": {
+        "title": "No offers",
+        "text": "When an agency offers you another placement, it shows here to accept or decline."
+      },
+      "agencies": {
+        "title": "No agencies yet",
+        "text": "Ask to join an agency from one of its jobs, or accept an agency’s invitation."
+      }
+    },
+    "start": {
+      "title": "Work through agencies",
+      "text": "Agencies place people on short-term work for their client companies. Join an agency’s books from one of its jobs; once you agree to its agreement it can place you.",
+      "action": "Find agency jobs"
+    },
+    "membership": {
+      "status": {
+        "requested": "Request sent",
+        "awaiting_agreement": "Agreement to read",
+        "active": "On the books",
+        "declined": "Declined",
+        "ended": "Left"
+      },
+      "invited": "Invited you",
+      "agreed": "You agreed to version {{version}} on {{date}}",
+      "newVersion": "Version {{version}} is waiting for your agreement",
+      "read": "Read agreement",
+      "readNew": "Read version {{version}}",
+      "withdraw": "Withdraw request",
+      "decline": "Decline",
+      "leave": "Leave",
+      "leaveTitle": "Leave {{agency}}’s books?",
+      "leaveText": "The agency can no longer place you. A placement that is running continues to its end. You can ask to join again later.",
+      "join": "Ask to join again"
+    },
+    "agreement": {
+      "back": "Agencies",
+      "title": "{{agency}} agreement",
+      "meta": "Version {{version}} · published {{date}}",
+      "open": "Open PDF",
+      "noPreview": "The PDF cannot be shown here. Open it to read it.",
+      "rulesTitle": "Rules EU Jobs applies",
+      "check": "I have read and agree to version {{version}} of {{agency}}’s agreement.",
+      "signed": "Signed as {{name}} · {{date}}",
+      "agree": "I agree",
+      "decline": "Decline",
+      "required": "Tick the box to agree.",
+      "agreed": "You are on {{agency}}’s books.",
+      "changed": "The agency published version {{version}} while you were reading. Read it before you agree.",
+      "already": "You already agreed to this version."
+    },
+    "lock": {
+      "title": "You can take this job from {{date}}",
+      "placement": "Your placement as {{job}} with {{agency}} ({{dates}})",
+      "otherPlacement": "One of your placements",
+      "freeFrom": "Free from {{date}}"
+    },
+    "join": {
+      "action": "Join {{agency}}’s books",
+      "sent": "Request sent to {{agency}}",
+      "read": "Read {{agency}}’s agreement",
+      "active": "On {{agency}}’s books",
+      "hint": "An agency can only place you once you are on its books and have agreed to its agreement."
+    },
+    "terms": {
+      "title": "Placement terms",
+      "client": "Client",
+      "dates": "Dates",
+      "hours": "Hours",
+      "pay": "Pay",
+      "days_one": "{{count}} day",
+      "days_other": "{{count}} days"
+    }
   }
 }

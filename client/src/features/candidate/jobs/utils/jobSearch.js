@@ -1,8 +1,8 @@
 /* Find jobs filters as state and as GET /jobs parameters (OD2, U25, P4-Q4, OQ-6i). */
-export const EMPTY_FILTERS = { workPreference: [], level: [], place: null, salaryMin: '', eligible: '', visaSponsorship: false }
+export const EMPTY_FILTERS = { workPreference: [], employmentType: [], level: [], place: null, salaryMin: '', eligible: '', visaSponsorship: false }
 
 export function countActiveFilters(filters) {
-  return filters.workPreference.length + filters.level.length + [filters.place, filters.salaryMin, filters.eligible, filters.visaSponsorship].filter(Boolean).length
+  return filters.workPreference.length + filters.employmentType.length + filters.level.length + [filters.place, filters.salaryMin, filters.eligible, filters.visaSponsorship].filter(Boolean).length
 }
 
 /** Empty values are left out; lists are comma-separated. */
@@ -11,6 +11,8 @@ export function searchParams({ query, filters, sort }) {
     q: query.trim(),
     sort,
     workPreference: filters.workPreference.join(','),
+    // 2026-11-20: job types, "agency" included.
+    employmentType: filters.employmentType.join(','),
     level: filters.level.join(','),
     placeId: filters.place?.placeId,
     salaryMin: filters.salaryMin,
