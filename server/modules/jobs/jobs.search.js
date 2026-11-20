@@ -141,14 +141,22 @@ export async function searchJobs(user, query) {
   return { items, total: items.length, page: 1, pageSize: items.length, view: { country: view, currency } }
 }
 
-/** M-053: Plus = jobs with a score ≥ Good, ranked; U8 (Free, and pairs without a score): at least 1 required skill. */
-export async function recommendedJobs(user, now = Date.now()) {
+/**
+ * M-053: Plus = jobs with a score ≥ Good, ranked; U8 (Free, and pairs without a score): at least 1 required skill.
+ * `excludeApplied` (the "For you" list and its Overview count, owner 2026-11-20): jobs the candidate applied to
+ * (not withdrawn, as the card's Applied button) are left out. AI insights and learning keep them.
+ */
+export async function recommendedJobs(user, { now = Date.now(), excludeApplied = false } = {}) {
   const jobs = await Job.find({ ...(await visibleFilter()), ...viewFilter(viewOf(user)) })
   const context = await cardContext(user, jobs)
-  const items = jobs.filter(context.relevant).sort(context.byScore)
+  const cards = jobs
+    .filter(context.relevant)
+    .sort(context.byScore)
+    .map((job) => ({ job, card: context.card(job) }))
+    .filter(({ card }) => !excludeApplied || !card.application)
   // M-053: "+N this week" = published in the last 7 days.
-  const newThisWeek = items.filter((job) => job.publishedAt && job.publishedAt.getTime() >= now - 7 * DAY_MS).length
-  return { items: items.map((job) => context.card(job)), total: items.length, newThisWeek, byScore: Boolean(context.scored) }
+  const newThisWeek = cards.filter(({ job }) => job.publishedAt && job.publishedAt.getTime() >= now - 7 * DAY_MS).length
+  return { items: cards.map(({ card }) => card), total: cards.length, newThisWeek, byScore: Boolean(context.scored) }
 }
 
 export async function isVisible(job) {
@@ -188,7 +196,7 @@ export function unsaveJob(user, jobId) {
 
 /** GET /candidate/overview: Recommended jobs (M-053), saved jobs and profile views (M-184). */
 export async function candidateOverview(user, now = Date.now()) {
-  const recommended = await recommendedJobs(user, now)
+  const recommended = await recommendedJobs(user, { now, excludeApplied: true })
   const [savedCount, last30, previous30] = await Promise.all([
     SavedJob.countDocuments({ candidateId: user._id }),
     ProfileView.countDocuments({ candidateId: user._id, at: { $gte: new Date(now - 30 * DAY_MS) } }),

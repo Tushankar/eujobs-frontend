@@ -23,7 +23,8 @@ export default {
       const view = (await api('/jobs', { token })).body
       ctx.check(view.view.country === me.pickerCountry, `the view is ${me.pickerCountry}`)
       const expected = view.items
-        .filter((job) => results.get(job.id)?.label)
+        // Owner 2026-11-20: jobs she applied to (not withdrawn) are left out of For you.
+        .filter((job) => results.get(job.id)?.label && !job.application)
         .sort((a, b) => results.get(b.id).score - results.get(a.id).score)
         .map((job) => job.id)
       ctx.check(expected.length > 0, `Emma has jobs at Good or above (${expected.length})`)

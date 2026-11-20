@@ -1,8 +1,11 @@
-import { signInWithForm, waitForText } from '../lib/flows.js'
+import { clickText, signInWithForm, waitForText } from '../lib/flows.js'
 import { embeddingOf, expectedRelevant, sarah, tick, toDate } from '../lib/matching.js'
 import { api, date, db } from '../lib/testApi.js'
 
 const HOUR_MS = 60 * 60 * 1000
+/** Find candidates has its cards on screen and is not loading new ones. */
+const cardsShown = (page) =>
+  page.waitForFunction(() => document.querySelector('[data-candidate]') && !document.querySelector('[aria-busy="true"]'), { timeout: 15_000 })
 const nightlyRun = async () => toDate((await db('jobruns', 'find', { filter: { name: 'relevance-nightly' } }))[0]?.lastRunAt)
 
 /**
@@ -24,6 +27,24 @@ export default {
     await page.goto(`${ctx.webUrl}/recruiter/jobs/${job.id}`, { waitUntil: 'networkidle0' })
     await waitForText(page, `${expected} relevant`)
     await ctx.screenshot(page, '1-relevant-count')
+
+    // "N relevant" on Jobs opens Find candidates with exactly those N; "Show all candidates" widens to the market.
+    await page.goto(`${ctx.webUrl}/recruiter/jobs`, { waitUntil: 'networkidle0' })
+    await page.click(`tr[data-recruiter-job="${job.id}"] a[href*="relevant=1"]`)
+    await page.waitForSelector('[data-relevant-view]', { timeout: 15_000 })
+    await cardsShown(page)
+    const relevantCards = await page.$$eval('[data-candidate]', (cards) => cards.length)
+    ctx.check(relevantCards === expected, `the relevant link lists ${relevantCards} candidates = ${expected}`)
+    await ctx.screenshot(page, '1b-relevant-list')
+    await clickText(page, 'Show all candidates', 'button')
+    await page.waitForFunction(() => !document.querySelector('[data-relevant-view]') && !location.search.includes('relevant='), { timeout: 15_000 })
+    await cardsShown(page)
+    ctx.check(!(await page.$('[data-relevant-view]')), 'Show all candidates leaves the relevant-only view')
+    // Show all is the picker country's market; a remote job's relevant list comes from the Remote market, so either can be longer.
+    const allCards = await page.$$eval('[data-candidate]', (cards) => cards.length)
+    const market = (await api(`/recruiter/candidates?jobId=${job.id}`, { token })).body.items.length
+    ctx.check(allCards === market, `Show all lists the ${market} candidates of the picker country (${allCards})`)
+    await page.goto(`${ctx.webUrl}/recruiter/jobs/${job.id}`, { waitUntil: 'networkidle0' })
 
     // Editing the brief changes the job text: a new embedding and a recount on the next tick.
     const before = await embeddingOf(job.id)

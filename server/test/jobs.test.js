@@ -1,5 +1,6 @@
 import assert from 'node:assert/strict'
 import { before, describe, it } from 'node:test'
+import { Application } from '../modules/applications/applications.model.js'
 import { CandidateProfile } from '../modules/candidates/candidates.model.js'
 import { Company } from '../modules/companies/companies.model.js'
 import { ProfileView } from '../modules/discovery/discovery.model.js'
@@ -12,7 +13,7 @@ import { api, auth, createUser, useTestDb } from './helpers/index.js'
 import { approvedRecruiter, jobBody, listedCandidate } from './helpers/market.js'
 import { useFakePlaces } from './helpers/places.js'
 
-useTestDb([User, Company, Job, SavedJob, CandidateProfile, ProfileView, JobRun])
+useTestDb([User, Company, Job, SavedJob, CandidateProfile, ProfileView, JobRun, Application])
 useFakePlaces()
 before(() => seedCatalog())
 
@@ -263,6 +264,26 @@ describe('candidate job browsing (M-043, M-044, M-052, M-053, OD2, U8, U25, P4-Q
 
     const overview = (await api().get('/api/v1/candidate/overview').set(auth(candidate))).body
     assert.deepEqual(overview, { recommended: { count: 1, newThisWeek: 1, byScore: false }, savedJobs: 1, profileViews: { last30: 0, previous30: 0 } })
+  })
+
+  it('leaves jobs the candidate applied to out of For you and its count; a withdrawn one comes back (owner 2026-11-20)', async () => {
+    const { user, company } = await approvedRecruiter()
+    const applied = await published(user, { requiredSkills: ['Figma', 'Design Systems'] })
+    const withdrawn = await published(user, { title: 'Research Lead', requiredSkills: ['Figma', 'User Research'], preferredSkills: [] })
+    const open = await published(user, { title: 'UI Designer', requiredSkills: ['Figma'], preferredSkills: [] })
+    const candidate = await listedCandidate({ profile: { skills: ['Figma', 'Design Systems', 'Prototyping'] } })
+    const application = (jobId, status) =>
+      Application.create({ candidateId: candidate._id, jobId, companyId: company._id, status, stageId: new User()._id, appliedAt: new Date(), consentAt: new Date() })
+    await application(applied.id, 'applied')
+    await application(withdrawn.id, 'withdrawn')
+
+    const forYou = (await api().get('/api/v1/jobs/recommended').set(auth(candidate))).body
+    assert.deepEqual(forYou.items.map((job) => job.id).sort(), [withdrawn.id, open.id].sort())
+    assert.deepEqual([forYou.total, forYou.newThisWeek], [2, 2])
+    assert.deepEqual((await api().get('/api/v1/candidate/overview').set(auth(candidate))).body.recommended, { count: 2, newThisWeek: 2, byScore: false })
+    // Find jobs still lists the applied job, with its application.
+    const found = (await findJobs(candidate)).body.items.find((job) => job.id === applied.id)
+    assert.equal(found.application.status, 'applied')
   })
 
   it('marks the company verified while it is approved and its recruiter active (P10-Q8)', async () => {

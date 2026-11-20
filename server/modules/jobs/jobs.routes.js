@@ -69,7 +69,7 @@ candidateRouter.get('/', validate({ query: schemas.searchQuery }), async (req, r
 })
 
 candidateRouter.get('/recommended', async (req, res) => {
-  res.json(await search.recommendedJobs(req.user))
+  res.json(await search.recommendedJobs(req.user, { excludeApplied: true }))
 })
 
 candidateRouter.get('/:id', jobParams, async (req, res) => {
