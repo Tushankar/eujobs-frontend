@@ -20,7 +20,7 @@ export default function ComparePanel({ selected }) {
   const only = (version, other) => snapshotOf(version).skills.filter((skill) => !keys(other).has(skill.toLocaleLowerCase()))
 
   return (
-    <Panel as="aside" padding={20} className={styles.panel} aria-labelledby="compare-heading" data-compare-panel>
+    <Panel as="aside" padding={20} className={`${styles.panel} sticky-side`} aria-labelledby="compare-heading" data-compare-panel>
       <h2 className={styles.heading} id="compare-heading">
         {t('compare.title')}
       </h2>

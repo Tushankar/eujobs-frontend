@@ -179,7 +179,7 @@ export default function CvVersionsPage() {
             <EmptyState icon={FileText} title={t('cv:history.empty')} description={t('cv:history.emptyLead')} />
           ) : (
             <>
-              <Panel padding={0} className={styles.versions}>
+              <Panel padding={0} className={`${styles.versions} sticky-side`}>
                 {versions.map((version) => (
                   <VersionRow
                     key={version.id}
