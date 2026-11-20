@@ -1,3 +1,4 @@
+import { isHiring, sideOf } from '../../config/enums.js'
 import { DateTime } from 'luxon'
 import { config } from '../../config/env.js'
 import { interpolate, t } from '../../lib/i18n.js'
@@ -24,7 +25,7 @@ export function formatWhen(user, startAt, minutes) {
 export function detailsLine(user, interview, { phone, candidateName } = {}) {
   const language = user.language ?? 'en'
   if (interview.mode === 'phone') {
-    return user.role === 'recruiter' ? label(language, 'details.phone_recruiter', { candidate: candidateName, phone: phone ?? '' }) : label(language, 'details.phone_candidate')
+    return isHiring(user.role) ? label(language, 'details.phone_recruiter', { candidate: candidateName, phone: phone ?? '' }) : label(language, 'details.phone_candidate')
   }
   return label(language, `details.${interview.mode}`, { address: interview.address ?? '', link: interview.link ?? '' })
 }
@@ -95,7 +96,7 @@ export function sendInterviewEmail(type, user, { interview, company, job, candid
     when,
     link,
     items,
-    intro: label(language, `intro.${user.role}`, { company, job, candidate: candidateName }),
+    intro: label(language, `intro.${sideOf(user.role)}`, { company, job, candidate: candidateName }),
     aiNotes: aiNotes ? label(language, 'aiNotesLine') : '',
     soon: hours ? label(language, `in${hours}h`) : '',
     released: type === 'interview_rescheduled' && when ? label(language, 'released', { when }) : '',

@@ -24,6 +24,8 @@ export const ERROR_STATUS = {
   CONFLICT: 409,
   IN_USE: 409,
   LOCKED: 409,
+  // 2026-11-20: an agency placement's rules keep the candidate from this job (params: blocks, freeFrom)
+  PLACEMENT_LOCKED: 409,
   OWNER_PROTECTED: 409,
   VALIDATION_FAILED: 422,
   FILE_TYPE_NOT_ALLOWED: 422,

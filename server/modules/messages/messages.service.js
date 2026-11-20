@@ -1,3 +1,4 @@
+import { sideOf } from '../../config/enums.js'
 import { LIMITS } from '../../config/limits.js'
 import { AppError, fieldError } from '../../lib/errors.js'
 import { signedUrl } from '../../lib/files.js'
@@ -67,7 +68,7 @@ async function conversationDtos(user, conversations) {
     lastMessageAt: conversation.lastMessageAt ?? null,
     lastMessagePreview: conversation.lastMessagePreview ?? '',
     lastMessageCard: conversation.lastMessageCard ?? null,
-    unread: conversation.unread[user.role],
+    unread: conversation.unread[sideOf(user.role)],
     // The other side deleted their account (P12-Q2, M-189): no more replies.
     closed: Boolean(conversation.closedAt),
   }))
@@ -103,7 +104,7 @@ export async function getMessages(user, company, id) {
   const conversation = await ownConversation(user, company, id)
   const messages = await Message.find({ conversationId: conversation._id }).sort({ createdAt: 1 })
   const [dto] = await conversationDtos(user, [conversation])
-  return { conversation: dto, items: messages.map((message) => messageDto(message, user.role)), cards: await cardsFor(user, conversation) }
+  return { conversation: dto, items: messages.map((message) => messageDto(message, sideOf(user.role))), cards: await cardsFor(user, conversation) }
 }
 
 /**
@@ -167,11 +168,11 @@ export async function replySuggestions(user, company, id) {
   const R = LIMITS.message.replySuggestions
   const latest = (await Message.find({ conversationId: conversation._id, ...TEXT_ONLY }).sort({ createdAt: -1 }).limit(R.messages)).reverse()
   const last = latest.at(-1)
-  if (conversation.closedAt || !last || last.senderRole === user.role) return { messageId: last ? String(last._id) : null, replies: [] }
+  if (conversation.closedAt || !last || last.senderRole === sideOf(user.role)) return { messageId: last ? String(last._id) : null, replies: [] }
   const input = {
     you: user.role === 'candidate' ? 'the candidate' : 'a recruiter at the company',
     ...(await replyContext(conversation)),
-    messages: latest.map((message) => ({ from: message.senderRole === user.role ? 'you' : 'them', text: message.body.slice(0, R.chars) })),
+    messages: latest.map((message) => ({ from: message.senderRole === sideOf(user.role) ? 'you' : 'them', text: message.body.slice(0, R.chars) })),
   }
   const { replies } = await write(PROMPTS.replySuggestions, { user, input, subjectId: conversation.candidateId })
   return { messageId: String(last._id), replies: replies.map((reply) => reply.trim()).filter(Boolean).slice(0, R.count) }
@@ -200,7 +201,7 @@ export async function messageDraft(user, company, { purpose, candidateId, jobId,
     const conversation = await ownConversation(user, company, conversationId)
     const R = LIMITS.message.replySuggestions
     const latest = (await Message.find({ conversationId: conversation._id, ...TEXT_ONLY }).sort({ createdAt: -1 }).limit(R.messages)).reverse()
-    facts = { ...(await replyContext(conversation)), messages: latest.map((message) => ({ from: message.senderRole === user.role ? 'you' : 'them', text: message.body.slice(0, R.chars) })) }
+    facts = { ...(await replyContext(conversation)), messages: latest.map((message) => ({ from: message.senderRole === sideOf(user.role) ? 'you' : 'them', text: message.body.slice(0, R.chars) })) }
     subjectId = conversation.candidateId
   } else if (purpose === 'status_update') {
     const application = await Application.findOne({ _id: applicationId, companyId: company._id })
@@ -243,7 +244,7 @@ export async function messageApplicant(user, company, applicationId, body) {
 /** Adds a message: the other side's unread count, its delayed email (U13) and, for a candidate's answer, a `message_reply` event. */
 async function addMessage(conversation, user, body) {
   if (conversation.closedAt) throw new AppError('CONFLICT', { params: { reason: 'conversation_closed' } })
-  const side = user.role
+  const side = sideOf(user.role)
   const previous = await Message.findOne({ conversationId: conversation._id, ...TEXT_ONLY }, 'senderRole').sort({ createdAt: -1 })
   const message = await Message.create({ conversationId: conversation._id, senderId: user._id, senderRole: side, body })
   await Conversation.updateOne(
@@ -274,10 +275,10 @@ async function notifyMessage(conversation, user) {
  * the other side; its own notification and email replace the new-message ones.
  */
 export async function addEvent(conversation, user, { kind, event, params = {}, interviewId, documentRequestId }) {
-  const message = await Message.create({ conversationId: conversation._id, senderId: user._id, senderRole: user.role, kind, event, params, interviewId, documentRequestId })
+  const message = await Message.create({ conversationId: conversation._id, senderId: user._id, senderRole: sideOf(user.role), kind, event, params, interviewId, documentRequestId })
   await Conversation.updateOne(
     { _id: conversation._id },
-    { $set: { lastMessageAt: message.createdAt, lastMessagePreview: '', lastMessageCard: `${kind}.${event}` }, $inc: { [`unread.${otherSide(user.role)}`]: 1 } },
+    { $set: { lastMessageAt: message.createdAt, lastMessagePreview: '', lastMessageCard: `${kind}.${event}` }, $inc: { [`unread.${otherSide(sideOf(user.role))}`]: 1 } },
   )
   return message
 }
@@ -323,19 +324,19 @@ export async function start(user, company, { candidateId, jobId, body }) {
   }
   const message = await addMessage(thread.conversation, user, body)
   const [dto] = await conversationDtos(user, [await Conversation.findById(thread.conversation._id)])
-  return { conversation: dto, message: messageDto(message, user.role) }
+  return { conversation: dto, message: messageDto(message, sideOf(user.role)) }
 }
 
 export async function send(user, company, id, body) {
   const message = await addMessage(await ownConversation(user, company, id), user, body)
-  return messageDto(message, user.role)
+  return messageDto(message, sideOf(user.role))
 }
 
 /** Marks the other side's messages read and clears this side's unread count. */
 export async function markRead(user, company, id) {
   const conversation = await ownConversation(user, company, id)
-  await Message.updateMany({ conversationId: conversation._id, senderRole: otherSide(user.role), readAt: null }, { readAt: new Date() })
-  await Conversation.updateOne({ _id: conversation._id }, { [`unread.${user.role}`]: 0 }, { timestamps: false })
+  await Message.updateMany({ conversationId: conversation._id, senderRole: otherSide(sideOf(user.role)), readAt: null }, { readAt: new Date() })
+  await Conversation.updateOne({ _id: conversation._id }, { [`unread.${sideOf(user.role)}`]: 0 }, { timestamps: false })
   // P11b-Q10: reading the conversation clears its notification too.
   await markSeen(user, { kind: 'conversation', id: conversation._id })
 }
@@ -343,6 +344,6 @@ export async function markRead(user, company, id) {
 /** M-094: unread messages across this user's threads (the candidate's own, or every thread of the recruiter's company). */
 export async function unreadCount(user, companyId) {
   const filter = user.role === 'candidate' ? { candidateId: user._id } : { companyId }
-  const [result] = await Conversation.aggregate([{ $match: filter }, { $group: { _id: null, total: { $sum: `$unread.${user.role}` } } }])
+  const [result] = await Conversation.aggregate([{ $match: filter }, { $group: { _id: null, total: { $sum: `$unread.${sideOf(user.role)}` } } }])
   return result?.total ?? 0
 }

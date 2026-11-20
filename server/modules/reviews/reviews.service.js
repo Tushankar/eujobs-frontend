@@ -1,3 +1,4 @@
+import { isHiring } from '../../config/enums.js'
 import { LIMITS } from '../../config/limits.js'
 import { actorFor, recordAudit } from '../../lib/audit.js'
 import { AppError } from '../../lib/errors.js'
@@ -28,7 +29,7 @@ async function titles(users) {
   const company = new Map(companies.map((entry) => [String(entry._id), entry.displayName]))
   return new Map(
     users.map((user) => {
-      const parts = user.role === 'recruiter' ? [user.jobTitle, company.get(String(user.companyId))] : [headline.get(String(user._id))]
+      const parts = isHiring(user.role) ? [user.jobTitle, company.get(String(user.companyId))] : [headline.get(String(user._id))]
       return [String(user._id), parts.filter(Boolean).join(' · ') || null]
     }),
   )

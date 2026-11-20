@@ -1,3 +1,4 @@
+import { HIRING_ROLES, isHiring } from '../../config/enums.js'
 import { Router } from 'express'
 import { validate } from '../../lib/validate.js'
 import { requireApprovedRecruiter, requireAuth, requireRole } from '../../middleware/auth.js'
@@ -13,13 +14,13 @@ import * as messages from './messages.service.js'
 const router = Router()
 const idParams = validate({ params: schemas.idParams })
 
-router.use(requireAuth, requireRole('candidate', 'recruiter'), (req, res, next) => (req.user.role === 'recruiter' ? requireApprovedRecruiter(req, res, next) : next()))
+router.use(requireAuth, requireRole('candidate', ...HIRING_ROLES), (req, res, next) => (isHiring(req.user.role) ? requireApprovedRecruiter(req, res, next) : next()))
 
 router.get('/', async (req, res) => {
   res.json(await messages.listConversations(req.user, req.company))
 })
 
-router.post('/', requireEntitlement('message_send'), requireEntitlement('outreach', ['recruiter']), validate({ body: schemas.startBody }), async (req, res) => {
+router.post('/', requireEntitlement('message_send'), requireEntitlement('outreach', HIRING_ROLES), validate({ body: schemas.startBody }), async (req, res) => {
   res.status(201).json(await messages.start(req.user, req.company, req.body))
 })
 
@@ -31,7 +32,7 @@ router.post('/:id/messages', idParams, requireEntitlement('message_send'), valid
   res.status(201).json(await messages.send(req.user, req.company, req.params.id, req.body.body))
 })
 
-router.get('/:id/reply-suggestions', idParams, requireEntitlement('ai', ['candidate', 'recruiter']), requireEntitlement('message_send'), async (req, res) => {
+router.get('/:id/reply-suggestions', idParams, requireEntitlement('ai', ['candidate', ...HIRING_ROLES]), requireEntitlement('message_send'), async (req, res) => {
   res.json(await messages.replySuggestions(req.user, req.company, req.params.id))
 })
 

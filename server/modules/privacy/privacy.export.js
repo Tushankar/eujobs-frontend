@@ -1,3 +1,4 @@
+import { AgencyMembership, AgencyPlacement } from '../agencies/agencies.model.js'
 import { access } from 'node:fs/promises'
 import { extname } from 'node:path'
 import { ZipArchive } from 'archiver'
@@ -138,8 +139,11 @@ async function candidateExport(user) {
     JobAlert.find({ candidateId: user._id }).lean(),
     ExplanationFeedback.find({ candidateId: user._id }).lean(),
   ])
+  const memberships = await AgencyMembership.find({ candidateId: user._id }).sort({ createdAt: 1 }).lean()
+  const placements = await AgencyPlacement.find({ candidateId: user._id }).sort({ createdAt: 1 }).lean()
+  const placementJobs = byId(await Job.find({ _id: { $in: placements.map((item) => item.jobId) } }, 'title').lean())
   const jobs = byId(await Job.find({ _id: { $in: [...applications, ...saved, ...feedback].map((item) => item.jobId) } }, 'title companyId').lean())
-  const companies = byId(await Company.find({ _id: { $in: [...[...jobs.values()].map((job) => job.companyId), ...requests.map((item) => item.companyId), ...downloads.map((item) => item.companyId)] } }, 'displayName').lean())
+  const companies = byId(await Company.find({ _id: { $in: [...[...jobs.values()].map((job) => job.companyId), ...requests.map((item) => item.companyId), ...downloads.map((item) => item.companyId), ...memberships.map((item) => item.companyId), ...placements.map((item) => item.companyId)] } }, 'displayName').lean())
   const companyName = (id) => companies.get(String(id))?.displayName ?? null
   const jobOf = (id) => jobs.get(String(id))
   const versionNumber = byId(cvVersions)
@@ -165,6 +169,29 @@ async function candidateExport(user) {
       history: history.map((entry) => ({ status: entry.status, at: entry.at })),
     })),
     'conversations.json': await conversations({ candidateId: user._id }, async (thread) => (await Company.findById(thread.companyId, 'displayName'))?.displayName ?? null),
+    // 2026-11-20: the agencies' books and every agreement version agreed to.
+    'agencies.json': memberships.map(({ companyId, status, requestedBy, acceptances, history, createdAt }) => ({
+      agency: companyName(companyId),
+      status,
+      requestedBy,
+      agreements: acceptances.map(({ version, name, at }) => ({ version, name, at })),
+      history: history.map(({ status: step, by, at }) => ({ status: step, by, at })),
+      startedAt: createdAt,
+    })),
+    'agency-placements.json': placements.map(({ companyId, jobId, client, status, startDate, endDate, hoursPerWeek, rules, sources, noticeGivenOn, endedEarlyOn, createdAt }) => ({
+      agency: companyName(companyId),
+      job: placementJobs.get(String(jobId))?.title ?? null,
+      client: client?.name ?? null,
+      status,
+      startDate,
+      endDate,
+      hoursPerWeek,
+      rules: rules ?? null,
+      sources: sources ?? null,
+      noticeGivenOn: noticeGivenOn ?? null,
+      endedEarlyOn: endedEarlyOn ?? null,
+      createdAt,
+    })),
     'saved-jobs.json': saved.map(({ jobId, createdAt }) => ({ job: jobOf(jobId)?.title ?? null, company: companyName(jobOf(jobId)?.companyId), savedAt: createdAt })),
     'job-alerts.json': alerts.map(({ name, keywords, location, country, language, frequency, active, createdAt }) => ({ name, keywords, location: location ?? null, country, language, frequency, active, createdAt })),
     'subscription.json': await subscription(user),

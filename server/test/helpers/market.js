@@ -27,9 +27,12 @@ export async function approvedRecruiter({ city = 'london', plus = true, ...field
   await user.save()
   // Approval creates the default stages (§3.12); the factory skips the review, so it creates them too.
   await createDefaultStages(company, user.language)
-  if (plus) await Subscription.create({ userId: user._id, planKey: 'recruiter_plus', status: 'active' })
+  if (plus) await Subscription.create({ userId: user._id, planKey: user.role === 'agency' ? 'agency_plus' : 'recruiter_plus', status: 'active' })
   return { user, company }
 }
+
+/** 2026-11-20: an approved agency with its company; on Agency Plus unless `plus: false`. */
+export const approvedAgency = (options = {}) => approvedRecruiter({ role: 'agency', ...options })
 
 /**
  * A candidate Find candidates can list (M-054): active, email verified, discoverable, consenting and with a

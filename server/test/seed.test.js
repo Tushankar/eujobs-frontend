@@ -34,11 +34,11 @@ useTestUploads()
 const counts = async () => Promise.all([Country, Plan, Permission, AdminRole, Faq, LegalDocument].map((Model) => Model.countDocuments()))
 
 describe('seed:catalog (U41)', () => {
-  it('is idempotent: 245 countries (6 disabled), 4 plans, 24 permissions, 3 roles, the FAQs and 3 legal texts × 3 languages', async () => {
+  it('is idempotent: 245 countries (6 disabled), 6 plans, 24 permissions, 3 roles, the FAQs and 3 legal texts × 3 languages', async () => {
     await seedCatalog()
     const published = (await LegalDocument.findOne({ doc: 'terms', language: 'en' })).publishedAt
     await seedCatalog()
-    assert.deepEqual(await counts(), [245, 4, 24, 3, FAQS.length, 9])
+    assert.deepEqual(await counts(), [245, 6, 24, 3, FAQS.length, 9])
     assert.deepEqual((await LegalDocument.findOne({ doc: 'terms', language: 'en' })).publishedAt, published)
     assert.equal(await LegalDocument.countDocuments({ isDraft: true, version: LEGAL_VERSION }), 9)
   })

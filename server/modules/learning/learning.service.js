@@ -1,3 +1,4 @@
+import { sideOf } from '../../config/enums.js'
 import { LIMITS } from '../../config/limits.js'
 import { AppError } from '../../lib/errors.js'
 import { signedUrl } from '../../lib/files.js'
@@ -29,7 +30,7 @@ async function enrollmentsOf(user, courseIds) {
 
 /** A course of the user's audience that is published, or that the user is enrolled in. */
 async function visibleCourse(user, id) {
-  const course = await Course.findOne({ _id: id, audience: user.role })
+  const course = await Course.findOne({ _id: id, audience: sideOf(user.role) })
   if (!course) throw new AppError('NOT_FOUND')
   const enrollment = (await enrollmentsOf(user, [course._id])).get(String(course._id))
   if (course.status !== 'published' && !enrollment) throw new AppError('NOT_FOUND')
@@ -94,7 +95,7 @@ export async function courseCards(user, courses) {
 export async function listCourses(user) {
   const enrolled = await Enrollment.find({ userId: user._id }, 'courseId')
   const courses = await Course.find({
-    audience: user.role,
+    audience: sideOf(user.role),
     $or: [{ status: 'published' }, { _id: { $in: enrolled.map((enrollment) => enrollment.courseId) } }],
   }).sort({ publishedAt: -1 })
   const items = await courseCards(user, courses)
@@ -161,7 +162,7 @@ export async function getLesson(user, id, lessonId) {
 
 /** POST /learning/enrollments: a free course only; paid courses go through Checkout (M-124). */
 export async function enrollFree(user, { courseId }) {
-  const course = await Course.findOne({ _id: courseId, audience: user.role, status: 'published' })
+  const course = await Course.findOne({ _id: courseId, audience: sideOf(user.role), status: 'published' })
   if (!course) throw new AppError('NOT_FOUND')
   if (!course.isFree) throw new AppError('FORBIDDEN')
   if (await Enrollment.exists({ userId: user._id, courseId })) throw new AppError('CONFLICT')

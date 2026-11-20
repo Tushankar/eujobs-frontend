@@ -2,6 +2,7 @@ import { Router } from 'express'
 import { config } from '../config/env.js'
 import { dbStatus } from '../lib/db.js'
 import adminRoutes from '../modules/admin/admin.routes.js'
+import * as agencyRoutes from '../modules/agencies/agencies.routes.js'
 import { adminDraftsRouter } from '../modules/ai/ai.adminDrafts.routes.js'
 import * as aiRoutes from '../modules/ai/ai.routes.js'
 import alertRoutes from '../modules/alerts/alerts.routes.js'
@@ -76,6 +77,8 @@ router.use('/candidate/saved-jobs', jobRoutes.savedRouter)
 router.use('/candidate/job-alerts', alertRoutes)
 router.use('/candidate/subscription', paymentRoutes.subscriptionRouter)
 router.use('/candidate/insights', aiRoutes.insightsRouter)
+router.use('/candidate/agencies', agencyRoutes.candidateRouter)
+router.use('/candidate/placements', agencyRoutes.candidatePlacementsRouter)
 router.use('/candidate', aiRoutes.candidateRouter)
 router.use('/candidate', candidateRoutes)
 router.use('/jobs', aiRoutes.jobSummaryRouter)
@@ -95,6 +98,10 @@ router.use('/recruiter/overview', discoveryRoutes.overviewRouter)
 router.use('/recruiter/overview', applicationRoutes.overviewRouter)
 router.use('/recruiter/applications', applicationRoutes.recruiterRouter)
 router.use('/recruiter/pipeline', applicationRoutes.pipelineRouter)
+router.use('/agency/clients', agencyRoutes.clientsRouter)
+router.use('/agency/agreement', agencyRoutes.agreementRouter)
+router.use('/agency/talent', agencyRoutes.talentRouter)
+router.use('/agency/placements', agencyRoutes.agencyPlacementsRouter)
 router.use('/skills', jobRoutes.skillsRouter)
 router.use('/conversations', messagesRoutes)
 router.use('/interviews', interviewRoutes.interviewsRouter)

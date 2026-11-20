@@ -1,3 +1,5 @@
+import { sideOf } from '../../config/enums.js'
+import { assertAllowed, hire, unhire } from '../agencies/placements.service.js'
 import mongoose from 'mongoose'
 import { AppError, fieldError } from '../../lib/errors.js'
 import { signedUrl } from '../../lib/files.js'
@@ -40,7 +42,8 @@ const historyEntry = (status, stage, actor, at = new Date()) => ({
   category: stage.category,
   at,
   actorId: actor._id,
-  actorType: actor.role,
+  // Agencies act as the hiring side (2026-11-20).
+  actorType: sideOf(actor.role),
 })
 
 /** The stage the application sits in; a removed one (after a withdrawal or rejection) lives on in the history (M-072). */
@@ -123,6 +126,8 @@ export async function apply(user, { jobId, cvVersionId, coverNote, consent }) {
   const job = await Job.findById(jobId)
   if (!job || job.status === 'draft') throw new AppError('NOT_FOUND')
   if (!(await isVisible(job))) throw new AppError('JOB_NOT_ACCEPTING')
+  // 2026-11-20: an agency placement's rules may keep the candidate from this job for now.
+  await assertAllowed(user._id, job)
 
   if (!consent) throw fieldError({ consent: 'required' })
   const cvId = await applicationCv(user, await loadProfile(user._id), cvVersionId)
@@ -159,6 +164,7 @@ export async function withdraw(user, id) {
   const application = await Application.findOne({ _id: id, candidateId: user._id })
   if (!application) throw new AppError('NOT_FOUND')
   if (application.status === 'withdrawn') throw new AppError('CONFLICT', { params: { status: application.status } })
+  if (application.status === 'hired') await unhire(application)
   const now = new Date()
   application.status = 'withdrawn'
   application.withdrawnAt = now
@@ -283,6 +289,9 @@ export async function moveToStage(user, company, id, stageId) {
   if (String(application.stageId) === String(stage._id) && application.status !== 'not_selected') return (await recruiterDtos(user, [application]))[0]
 
   const status = STATUS_OF_CATEGORY[stage.category]
+  // 2026-11-20: Hired on an agency job makes the placement; leaving Hired cancels one that has not started.
+  if (status === 'hired' && application.status !== 'hired') await hire(application, await Job.findById(application.jobId))
+  if (status !== 'hired' && application.status === 'hired') await unhire(application)
   application.stageId = stage._id
   application.status = status
   application.notSelectedAt = undefined
@@ -298,6 +307,7 @@ export async function moveToStage(user, company, id, stageId) {
 export async function reject(user, company, id, { notify }) {
   const application = await ownApplication(company, id)
   if (application.status === 'not_selected') throw new AppError('CONFLICT', { params: { status: application.status } })
+  if (application.status === 'hired') await unhire(application)
   const stage = await currentStage(application)
   const now = new Date()
   application.status = 'not_selected'

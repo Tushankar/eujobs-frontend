@@ -1,4 +1,4 @@
-import { EMAIL_CATEGORIES, NOTIFICATION_TYPES } from '../../config/enums.js'
+import { EMAIL_CATEGORIES, HIRING_ROLES, NOTIFICATION_TYPES, sideOf } from '../../config/enums.js'
 import { sendEmail } from '../../lib/mailer.js'
 import { effectivePermissions } from '../admin/admin.service.js'
 import { Application } from '../applications/applications.model.js'
@@ -26,10 +26,11 @@ const PAGE_PATHS = {
   verification: () => '/candidate/verification',
   profile: () => '/candidate/profile',
   billing: (role) => `/${role}/settings/billing`,
-  overview: () => '/recruiter',
+  // Recruiters under /recruiter, agencies under /agency (2026-11-20).
+  overview: (role) => `/${role}`,
   // §3.22: a recruiter's plan_ended opens Jobs (P11c-Q18).
-  jobs: () => '/recruiter/jobs',
-  review: () => '/recruiter/onboarding/review',
+  jobs: (role) => `/${role}/jobs`,
+  review: (role) => `/${role}/onboarding/review`,
   // 2026-11-17: a budget alert opens Admin › AI & matching › Usage.
   aiUsage: () => '/admin/ai-matching/usage',
 }
@@ -41,7 +42,7 @@ const PATHS = {
   conversation: (role, id) => `/${role}/messages/${id}`,
   job: (role, id) => `/${role}/jobs/${id}`,
   course: (role, id) => `/${role}/learning/${id}`,
-  candidate: (role, id) => `/recruiter/find-candidates/${id}`,
+  candidate: (role, id) => `/${role}/find-candidates/${id}`,
   account: (role, id) => `/admin/moderation/accounts/${id}`,
   submission: (role, id) => `/admin/moderation/verification/${id}`,
   case: (role, id) => `/admin/moderation/content/${id}`,
@@ -63,7 +64,7 @@ const AVAILABLE = {
   job: (user, id) => (user.role === 'candidate' ? jobDetails(user, id) : Job.exists({ _id: id, companyId: user.companyId })),
   course: (user, id) => Enrollment.exists({ userId: user._id, courseId: id }),
   candidate: (user, id) => accessibleCandidate(id, { _id: user.companyId }),
-  account: (user, id) => User.exists({ _id: id, role: 'recruiter' }),
+  account: (user, id) => User.exists({ _id: id, role: { $in: HIRING_ROLES } }),
   submission: (user, id) => VerificationSubmission.exists({ _id: id }),
   case: (user, id) => ModerationCase.exists({ _id: id }),
   payment: (user, id) => Payment.exists({ _id: id }),
@@ -85,7 +86,7 @@ async function isAvailable(user, target) {
  * updated instead: its parameters and time become the latest, and its count grows (P11b-Q6).
  */
 export async function notify(user, type, { params = {}, target, groupKey, permission, at = new Date() }) {
-  const fields = { type, params, target: { kind: target.kind, id: String(target.id) }, section: NOTIFICATION_TYPES[type].sections[user.role] ?? null, permission, at }
+  const fields = { type, params, target: { kind: target.kind, id: String(target.id) }, section: NOTIFICATION_TYPES[type].sections[sideOf(user.role)] ?? null, permission, at }
   if (!groupKey) return Notification.create({ userId: user._id, ...fields })
   return Notification.findOneAndUpdate(
     { userId: user._id, groupKey, readAt: null },
@@ -96,7 +97,7 @@ export async function notify(user, type, { params = {}, target, groupKey, permis
 
 /** The company's recruiter (the account the company's emails go to), or null. */
 export function companyRecruiter(companyId) {
-  return User.findOne({ companyId, role: 'recruiter', status: 'active' })
+  return User.findOne({ companyId, role: { $in: HIRING_ROLES }, status: 'active' })
 }
 
 /** Notifies the company's recruiter, if there is one. */

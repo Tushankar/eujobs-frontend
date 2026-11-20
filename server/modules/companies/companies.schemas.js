@@ -1,5 +1,5 @@
 import { z } from 'zod'
-import { ENUMS } from '../../config/enums.js'
+import { ENUMS, HIRING_ROLES } from '../../config/enums.js'
 import { LIMITS } from '../../config/limits.js'
 import { objectId } from '../../lib/validate.js'
 import { email, fullName } from '../auth/auth.schemas.js'
@@ -62,7 +62,7 @@ export const idParams = z.object({ id: objectId })
 
 /* Account review (P4-Q2) */
 export const REVIEW_STATUSES = ['pending_review', 'active', 'suspended', 'rejected']
-export const accountsQuery = z.object({ status: z.enum(REVIEW_STATUSES).default('pending_review') })
+export const accountsQuery = z.object({ status: z.enum(REVIEW_STATUSES).default('pending_review'), role: z.enum(HIRING_ROLES).default('recruiter') })
 export const accountParams = z.object({ userId: objectId })
 export const accountDecisionBody = z.object({
   decision: z.enum(ENUMS.accountDecision),

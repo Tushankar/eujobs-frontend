@@ -1,4 +1,5 @@
 import { config } from '../../config/env.js'
+import { HIRING_ROLES } from '../../config/enums.js'
 import { actorFor, recordAudit } from '../../lib/audit.js'
 import { AppError, fieldError } from '../../lib/errors.js'
 import { t } from '../../lib/i18n.js'
@@ -46,6 +47,7 @@ export async function allowedActions(admin, status) {
 
 const row = (user, company, logoUrl = null) => ({
   id: String(user._id),
+  role: user.role,
   fullName: user.fullName,
   email: user.email,
   status: user.status,
@@ -54,9 +56,9 @@ const row = (user, company, logoUrl = null) => ({
   createdAt: user.createdAt,
 })
 
-/** Pending review oldest first; the other statuses most recently changed first. */
-export async function listAccounts(admin, status) {
-  const users = await User.find({ role: 'recruiter', status }).sort(status === 'pending_review' ? {} : { updatedAt: -1 })
+/** Pending review oldest first; the other statuses most recently changed first. Recruiters or (2026-11-20) agencies. */
+export async function listAccounts(admin, status, role = 'recruiter') {
+  const users = await User.find({ role, status }).sort(status === 'pending_review' ? {} : { updatedAt: -1 })
   const found = await Company.find({ ownerUserId: { $in: users.map((user) => user._id) } })
   const companies = new Map(found.map((company) => [String(company.ownerUserId), company]))
   const logos = await logoUrls(found, admin._id)
@@ -69,13 +71,13 @@ export async function listAccounts(admin, status) {
 }
 
 /** Counts per status for the tab and the Moderation stats. */
-export async function accountCounts() {
-  const counts = await User.aggregate([{ $match: { role: 'recruiter', status: { $in: Object.keys(ACTIONS) } } }, { $group: { _id: '$status', count: { $sum: 1 } } }])
+export async function accountCounts(role = 'recruiter') {
+  const counts = await User.aggregate([{ $match: { role, status: { $in: Object.keys(ACTIONS) } } }, { $group: { _id: '$status', count: { $sum: 1 } } }])
   return Object.fromEntries(Object.keys(ACTIONS).map((status) => [status, counts.find((count) => count._id === status)?.count ?? 0]))
 }
 
 async function recruiter(userId) {
-  const user = await User.findOne({ _id: userId, role: 'recruiter', status: { $in: Object.keys(ACTIONS) } })
+  const user = await User.findOne({ _id: userId, role: { $in: HIRING_ROLES }, status: { $in: Object.keys(ACTIONS) } })
   if (!user) throw new AppError('NOT_FOUND')
   return user
 }
@@ -143,7 +145,9 @@ export async function decideAccount(admin, userId, { decision, reason }) {
     await File.updateMany({ _id: { $in: fileIds } }, { deleteAfter: new Date(now.getTime() + KYC_RETENTION_MS) })
   }
 
-  const link = decision === 'approved' ? `${config.clientOrigin}/recruiter/sign-in` : `${config.clientOrigin}/recruiter/onboarding/review`
+  // 2026-11-20: agencies sign in at /agencies/login and keep their onboarding under /agency.
+  const signIn = user.role === 'agency' ? '/agencies/login' : '/recruiter/sign-in'
+  const link = `${config.clientOrigin}${decision === 'approved' ? signIn : `/${user.role}/onboarding/review`}`
   // P11b-Q1, Q14: approved opens the Overview; rejected and suspended the review page (shown once the account is active again).
   await notify(user, 'account_decided', { params: { decision }, target: { kind: 'page', id: decision === 'approved' ? 'overview' : 'review' } })
   if (decision === 'approved') await celebrate(user, 'account_approved')

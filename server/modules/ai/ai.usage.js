@@ -123,7 +123,8 @@ export async function usageOverview(month = utcMonth()) {
 
 /** PUT /admin/ai/usage/settings */
 export async function updateUsageSettings(admin, body) {
-  await saveUsageSettings(body)
+  // A cap the screen does not send yet (Agency Plus, 2026-11-20) keeps its saved value.
+  await saveUsageSettings({ ...body, caps: { ...(await usageSettings()).caps, ...body.caps } })
   await checkBudgets()
   await recordAudit({ type: 'policy.ai_usage_updated', category: 'policy', actor: actorFor(admin), params: {} })
   return usageOverview()

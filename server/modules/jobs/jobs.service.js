@@ -1,6 +1,7 @@
 import { LIMITS } from '../../config/limits.js'
 import { scheduleTask } from '../../jobs/scheduler.js'
 import { addStandardNames } from '../../lib/ai.js'
+import { removeFiles, signedUrl, storeFile } from '../../lib/files.js'
 import { actorFor, recordAudit, SYSTEM_ACTOR } from '../../lib/audit.js'
 import { AppError, fieldError } from '../../lib/errors.js'
 import { paginate } from '../../lib/pages.js'
@@ -8,13 +9,16 @@ import { searchText, skillEntries } from '../../lib/skills.js'
 import { validationError } from '../../lib/validate.js'
 import { Company } from '../companies/companies.model.js'
 import { logoUrlsById } from '../companies/companies.service.js'
+import { File } from '../files/files.model.js'
 import { Country } from '../meta/meta.model.js'
 import { ModerationCase } from '../moderation/moderation.model.js'
 import { planState } from '../payments/payments.service.js'
 import { refreshRelevantCounts, scheduleRecompute } from '../matching/matching.service.js'
 import { resolvePlace } from '../places/places.service.js'
+import { AgencyClient } from '../agencies/agencies.model.js'
+import { checkedRules, EMPTY_RULES, readRules, rulesDto } from '../agencies/contracts.js'
 import { Job } from './jobs.model.js'
-import { jobBody } from './jobs.schemas.js'
+import { agencyTermsBody, jobBody } from './jobs.schemas.js'
 
 /*
  * Recruiter jobs (§3.7): the wizard draft (M-041), publish validation with the wizard step (M-039), status
@@ -34,6 +38,8 @@ const STEPS = {
   'preferred-skills': ['preferredSkills'],
   experience: ['level', 'experienceYears', 'requiredLanguages'],
   location: ['workPreference', 'placeId', 'remoteCountries', 'salary', 'visaSponsorship'],
+  // 2026-11-20: agency jobs only
+  agency: ['agency'],
 }
 
 /** Adds the wizard step to a field error that has none. */
@@ -57,6 +63,44 @@ function parseJob(body) {
   const result = jobBody.safeParse(body ?? {}, { reportInput: true })
   if (!result.success) throw validationError(result.error.issues)
   return result.data
+}
+
+/**
+ * M-131: a job's pay is in the job country's currency. A remote job pays in the currency the recruiter picks (any
+ * enabled country's, 2026-11-16), EUR (the REMOTE row's) when none is picked. `field` names the error.
+ */
+async function payCurrency(country, chosen, field) {
+  if (country === 'REMOTE' && chosen) {
+    if (!(await Country.exists({ currency: chosen, enabled: true }))) throw fieldError({ [field]: 'invalid' })
+    return chosen
+  }
+  return country ? (await Country.findOne({ code: country }, 'currency'))?.currency : undefined
+}
+
+// 2026-11-20: an agency job is full or part time (its length is in its dates).
+const AGENCY_EMPLOYMENT = ['full_time', 'part_time']
+
+/** An agency job's terms (2026-11-20): the agency's own client, dates in order, the rate in the job's pay currency. */
+async function agencyTerms(user, input, country, existing) {
+  if (user.role !== 'agency') {
+    if (input.agency) throw fieldError({ agency: 'not_allowed' })
+    return undefined
+  }
+  if (!AGENCY_EMPLOYMENT.includes(input.employmentType)) throw fieldError({ employmentType: 'not_allowed' })
+  const terms = input.agency ?? agencyTermsBody.parse({})
+  if (terms.clientId && !(await AgencyClient.exists({ _id: terms.clientId, companyId: user.companyId }))) throw fieldError({ 'agency.clientId': 'invalid' })
+  if (terms.startDate && terms.endDate && terms.endDate < terms.startDate) throw fieldError({ 'agency.endDate': 'before_start' })
+  const { amountMinor = null, period, currency: chosen } = terms.rate ?? {}
+  return {
+    clientId: terms.clientId ?? undefined,
+    showClient: terms.showClient,
+    startDate: terms.startDate ?? undefined,
+    endDate: terms.endDate ?? undefined,
+    rate: amountMinor !== null ? { amountMinor, period, currency: await payCurrency(country, chosen, 'agency.rate.currency') } : undefined,
+    hoursPerWeek: terms.hoursPerWeek ?? undefined,
+    // Attached and removed through its own endpoints.
+    contract: existing?.agency?.contract,
+  }
 }
 
 async function allowedCountryCodes() {
@@ -91,14 +135,7 @@ async function jobFields(user, input, existing) {
   const { min = null, max = null, period, currency: chosen } = input.salary ?? {}
   if (min !== null || max !== null) {
     if (min !== null && max !== null && max < min) throw fieldError({ 'salary.max': 'below_min' })
-    // M-131: locked to the job country's currency. A remote job pays in the currency the recruiter picks (any
-    // enabled country's, 2026-11-16), EUR (the REMOTE row's) when none is picked.
-    let currency = country ? (await Country.findOne({ code: country }, 'currency'))?.currency : undefined
-    if (country === 'REMOTE' && chosen) {
-      if (!(await Country.exists({ currency: chosen, enabled: true }))) throw fieldError({ 'salary.currency': 'invalid' })
-      currency = chosen
-    }
-    salary = { min: min ?? undefined, max: max ?? undefined, currency, period }
+    salary = { min: min ?? undefined, max: max ?? undefined, currency: await payCurrency(country, chosen, 'salary.currency'), period }
   }
 
   return {
@@ -117,6 +154,7 @@ async function jobFields(user, input, existing) {
     location,
     remoteCountries,
     salary,
+    agency: await agencyTerms(user, input, country, existing),
   }
 }
 
@@ -134,6 +172,13 @@ function assertPublishable(job) {
   if (job.experienceYears == null) fields.experienceYears = 'required'
   if (!job.workPreference) fields.workPreference = 'required'
   else if (job.workPreference !== 'remote' && !job.location?.placeId) fields.placeId = 'required'
+  // 2026-11-20: an agency job needs its client, both dates and the pay rate.
+  if (job.agency) {
+    for (const field of ['clientId', 'startDate', 'endDate']) if (!job.agency[field]) fields[`agency.${field}`] = 'required'
+    if (!job.agency.rate?.amountMinor) fields['agency.rate.amountMinor'] = 'required'
+    // An attached contract counts only with its rules confirmed.
+    if (job.agency.contract?.fileId && !job.agency.contract.confirmedAt) fields['agency.contract'] = 'rules_unconfirmed'
+  }
   if (Object.keys(fields).length) throw fieldError(fields, params)
 }
 
@@ -165,7 +210,30 @@ export function jobFieldsDto(job) {
     location: place(job.location),
     remoteCountries: job.remoteCountries,
     salary: salaryDto(job.salary),
+    agency: agencyDto(job.agency),
     publishedAt: job.publishedAt ?? null,
+  }
+}
+
+const contractDto = (contract) => ({
+  name: contract.name,
+  size: contract.size,
+  uploadedAt: contract.uploadedAt,
+  rules: rulesDto(contract.rules),
+  aiRules: contract.aiReadAt ? rulesDto(contract.aiRules) : null,
+  aiReadAt: contract.aiReadAt ?? null,
+  confirmedAt: contract.confirmedAt ?? null,
+})
+
+/** 2026-11-20: an agency job's terms as every role reads them (the client itself only where it may be shown), or null. */
+function agencyDto(terms) {
+  if (!terms) return null
+  return {
+    showClient: terms.showClient,
+    startDate: terms.startDate ?? null,
+    endDate: terms.endDate ?? null,
+    rate: terms.rate?.amountMinor ? { amountMinor: terms.rate.amountMinor, currency: terms.rate.currency ?? null, period: terms.rate.period } : null,
+    hoursPerWeek: terms.hoursPerWeek ?? null,
   }
 }
 
@@ -181,6 +249,14 @@ export function jobDto(job, company) {
     updatedAt: job.updatedAt,
     relevantCount: job.relevantCount,
     company: { id: String(company._id), displayName: company.displayName },
+    // The agency's own view also has the client and the attached contract (2026-11-20).
+    ...(job.agency && {
+      agency: {
+        ...agencyDto(job.agency),
+        clientId: job.agency.clientId ? String(job.agency.clientId) : null,
+        contract: job.agency.contract?.fileId ? contractDto(job.agency.contract) : null,
+      },
+    }),
   }
 }
 
@@ -316,11 +392,73 @@ export async function enforceFreeJobLimit() {
   }
 }
 
+/* ---------- 2026-11-20: an agency job's contract PDF ---------- */
+
+async function ownAgencyJob(company, id) {
+  const job = await ownJob(company, id)
+  if (!job.agency) throw new AppError('NOT_FOUND')
+  return job
+}
+
+/** One contract per job; a new upload replaces the earlier file. */
+export async function setContract(user, company, id, upload) {
+  const job = await ownAgencyJob(company, id)
+  const file = await storeFile({ ownerId: user._id, purpose: 'agency_contract', buffer: upload.buffer, ext: upload.ext, originalName: upload.originalname })
+  const previous = job.agency.contract?.fileId
+  // A new PDF starts with no rules; they are read or typed and confirmed again.
+  job.agency.contract = { fileId: file._id, name: upload.originalname, size: file.size, uploadedAt: new Date(), rules: EMPTY_RULES }
+  await job.save()
+  await removeFiles([previous])
+  return job
+}
+
+export async function removeContract(company, id) {
+  const job = await ownAgencyJob(company, id)
+  const previous = job.agency.contract?.fileId
+  job.agency.contract = undefined
+  await job.save()
+  await removeFiles([previous])
+  return job
+}
+
+function attachedContract(job) {
+  if (!job.agency.contract?.fileId) throw new AppError('NOT_FOUND')
+  return job.agency.contract
+}
+
+/** POST /recruiter/jobs/:id/contract/read (Agency Plus): AI proposes the contract's rules, to check and confirm. */
+export async function readContract(user, company, id) {
+  const job = await ownAgencyJob(company, id)
+  const contract = attachedContract(job)
+  const rules = await readRules(user, contract.fileId)
+  Object.assign(contract, { rules, aiRules: rules, aiReadAt: new Date(), confirmedAt: undefined })
+  await job.save()
+  return job
+}
+
+/** PUT /recruiter/jobs/:id/contract/rules: the agency's rules (typed or corrected), confirmed. */
+export async function confirmContractRules(company, id, body) {
+  const job = await ownAgencyJob(company, id)
+  const contract = attachedContract(job)
+  Object.assign(contract, { rules: await checkedRules(contract.fileId, body), confirmedAt: new Date() })
+  await job.save()
+  return job
+}
+
+/** GET /recruiter/jobs/:id/contract: a signed URL for the agency (U39). */
+export async function contractUrl(user, company, id) {
+  const job = await ownAgencyJob(company, id)
+  const file = job.agency.contract?.fileId && (await File.findById(job.agency.contract.fileId))
+  if (!file) throw new AppError('NOT_FOUND')
+  return { url: signedUrl(file, user._id), name: job.agency.contract.name }
+}
+
 /** M-038: only drafts can be deleted; published jobs are closed instead. */
 export async function deleteJob(company, id) {
   const job = await ownJob(company, id)
   if (job.status !== 'draft') throw new AppError('CONFLICT', { params: { status: job.status } })
   await job.deleteOne()
+  await removeFiles([job.agency?.contract?.fileId])
 }
 
 /** M-060: the wizard's "Quality checks" step runs these rules on the server. */

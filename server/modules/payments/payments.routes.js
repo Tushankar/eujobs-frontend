@@ -1,3 +1,4 @@
+import { isHiring } from '../../config/enums.js'
 import express, { Router } from 'express'
 import { auditedExport } from '../../lib/csv.js'
 import { AppError } from '../../lib/errors.js'
@@ -14,7 +15,7 @@ import * as payments from './payments.service.js'
 /** C, or an approved recruiter (R✓): the people who can buy and who have payment rows (§5). */
 function requireBuyer(req, res, next) {
   if (req.user.role === 'candidate') return requireVerifiedEmail(req, res, next)
-  if (req.user.role === 'recruiter') return requireApprovedRecruiter(req, res, next)
+  if (isHiring(req.user.role)) return requireApprovedRecruiter(req, res, next)
   throw new AppError('FORBIDDEN')
 }
 

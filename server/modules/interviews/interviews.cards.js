@@ -1,3 +1,4 @@
+import { HIRING_ROLES, isHiring } from '../../config/enums.js'
 import { LIMITS } from '../../config/limits.js'
 import { signedUrl } from '../../lib/files.js'
 import { ACTIVE_FILTER, Application } from '../applications/applications.model.js'
@@ -62,12 +63,12 @@ export function interviewDto(user, interview, { jobTitle, phone, otherTimeZone }
  * recruiter's) and (recruiter, phone interviews) the candidate's verified phone.
  */
 export async function interviewDtos(user, interviews) {
-  const recruiter = user.role === 'recruiter'
+  const recruiter = isHiring(user.role)
   const [jobs, others] = await Promise.all([
     Job.find({ _id: { $in: interviews.map((interview) => interview.jobId) } }, 'title'),
     recruiter
       ? User.find({ _id: { $in: interviews.map((interview) => interview.candidateId) } }, 'phone timezone')
-      : User.find({ companyId: { $in: interviews.map((interview) => interview.companyId) }, role: 'recruiter', status: 'active' }, 'companyId timezone'),
+      : User.find({ companyId: { $in: interviews.map((interview) => interview.companyId) }, role: { $in: HIRING_ROLES }, status: 'active' }, 'companyId timezone'),
   ])
   const titles = new Map(jobs.map((job) => [String(job._id), job.title]))
   const phoneOf = new Map(recruiter ? others.map((candidate) => [String(candidate._id), candidate.phone?.verifiedAt ? candidate.phone.e164 : null]) : [])
@@ -150,12 +151,12 @@ export async function cardsFor(user, conversation) {
   const [interviews, requests, applications] = await Promise.all([
     Interview.find({ conversationId: conversation._id }),
     DocumentRequest.find({ conversationId: conversation._id }),
-    user.role === 'recruiter' ? Application.find({ companyId: conversation.companyId, candidateId: conversation.candidateId, ...ACTIVE_FILTER }, 'jobId').sort({ appliedAt: -1 }) : [],
+    isHiring(user.role) ? Application.find({ companyId: conversation.companyId, candidateId: conversation.candidateId, ...ACTIVE_FILTER }, 'jobId').sort({ appliedAt: -1 }) : [],
   ])
   const titles = new Map((await Job.find({ _id: { $in: applications.map((application) => application.jobId) } }, 'title')).map((job) => [String(job._id), job.title]))
   return {
     interviews: await interviewDtos(user, interviews),
     documentRequests: await documentRequestDtos(user, requests),
-    ...(user.role === 'recruiter' && { activeApplications: applications.map((application) => ({ id: String(application._id), job: { id: String(application.jobId), title: titles.get(String(application.jobId)) ?? null } })) }),
+    ...(isHiring(user.role) && { activeApplications: applications.map((application) => ({ id: String(application._id), job: { id: String(application.jobId), title: titles.get(String(application.jobId)) ?? null } })) }),
   }
 }

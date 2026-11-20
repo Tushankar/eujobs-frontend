@@ -1,3 +1,4 @@
+import { sideOf } from '../../config/enums.js'
 import { randomInt } from 'node:crypto'
 import { LIMITS } from '../../config/limits.js'
 import { AppError } from '../../lib/errors.js'
@@ -15,7 +16,7 @@ import { Certificate, Course, Enrollment, QuizAttempt } from './learning.model.j
 const P = LIMITS.lessonProgress
 
 async function enrolledCourse(user, filter) {
-  const course = await Course.findOne({ ...filter, audience: user.role })
+  const course = await Course.findOne({ ...filter, audience: sideOf(user.role) })
   if (!course) throw new AppError('NOT_FOUND')
   const enrollment = await Enrollment.findOne({ userId: user._id, courseId: course._id })
   if (!enrollment) throw new AppError('FORBIDDEN')

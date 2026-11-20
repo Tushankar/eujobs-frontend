@@ -13,6 +13,22 @@ import { placeId } from '../places/places.schemas.js'
 const J = LIMITS.job
 const skills = (max) => z.array(z.string().trim().min(1).max(J.requiredSkills.itemMax)).max(max)
 const salaryAmount = z.number().int().min(J.salary.min).max(J.salary.max).nullable().default(null)
+const A = J.agency
+const day = z.iso.date().nullable().default(null)
+
+/* 2026-11-20: an agency job's terms; formats only, so a draft can be saved with them empty (publish rules in the service). */
+export const agencyTermsBody = z.object({
+  clientId: objectId.nullable().default(null),
+  showClient: z.boolean().default(true),
+  startDate: day,
+  endDate: day,
+  // `currency` is the agency's choice for remote jobs only, as for salary.
+  rate: z
+    .object({ amountMinor: z.number().int().min(A.rate.min).max(A.rate.max).nullable().default(null), period: z.enum(ENUMS.ratePeriod), currency: z.string().trim().toUpperCase().length(3).optional() })
+    .nullable()
+    .default(null),
+  hoursPerWeek: z.number().int().min(A.hoursPerWeek.min).max(A.hoursPerWeek.max).nullable().default(null),
+})
 
 export const jobBody = z.object({
   title: z.string().trim().min(J.title.min).max(J.title.max),
@@ -38,6 +54,8 @@ export const jobBody = z.object({
     .object({ min: salaryAmount, max: salaryAmount, period: z.enum(ENUMS.salaryPeriod), currency: z.string().trim().toUpperCase().length(3).optional() })
     .nullable()
     .default(null),
+  // Agencies only (2026-11-20); company jobs leave it out.
+  agency: agencyTermsBody.nullable().default(null),
 })
 
 export const jobParams = z.object({ id: objectId })

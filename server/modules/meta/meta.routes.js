@@ -1,5 +1,5 @@
 import { Router } from 'express'
-import { ENUMS } from '../../config/enums.js'
+import { ENUMS, isHiring, sideOf } from '../../config/enums.js'
 import { LIMITS } from '../../config/limits.js'
 import { validate } from '../../lib/validate.js'
 import { optionalAuth, requireAuth } from '../../middleware/auth.js'
@@ -30,15 +30,16 @@ router.get('/meta/languages', (req, res) => {
 })
 
 /**
- * M-116, §3.22: the signed-in recruiter's plans (in the company country's currency) or the candidate plans (in the
- * requested currency, else the user's, else EUR, Remote's currency). `role` picks the plans (the public pricing
- * page shows both); without it, the user's own.
+ * M-116, §3.22: the signed-in recruiter's or agency's plans (in the company country's currency) or the candidate plans
+ * (in the requested currency, else the user's, else EUR, Remote's currency). `role` picks the plans (the public pricing
+ * page shows them all); without it, the user's own.
  */
 router.get('/plans', optionalAuth, validate({ query: schemas.plansQuery }), async (req, res) => {
-  const recruiter = (req.query.role ?? req.user?.role) === 'recruiter'
+  const wanted = req.query.role ?? req.user?.role
+  const role = isHiring(wanted) ? wanted : 'candidate'
   // A requested currency is charged as such: the 8 of EU + UK, or USD (worldwide since 2026-11-16).
-  const currency = (req.query.currency && chargeCurrency(req.query.currency)) ?? (recruiter && req.user?.role === 'recruiter' ? await companyCurrency(req.user) : await meta.userCurrency(req.user)) ?? 'EUR'
-  res.json(list(await meta.listPlans(currency, req.query.language ?? req.user?.language ?? 'en', recruiter ? 'recruiter' : 'candidate')))
+  const currency = (req.query.currency && chargeCurrency(req.query.currency)) ?? (req.user?.role === role && isHiring(role) ? await companyCurrency(req.user) : await meta.userCurrency(req.user)) ?? 'EUR'
+  res.json(list(await meta.listPlans(currency, req.query.language ?? req.user?.language ?? 'en', role)))
 })
 
 router.get('/legal/:doc', validate({ params: schemas.legalParams, query: schemas.legalQuery }), async (req, res) => {
@@ -47,7 +48,7 @@ router.get('/legal/:doc', validate({ params: schemas.legalParams, query: schemas
 
 /** FAQs for the signed-in role, in the requested language or the user's own (M-200). */
 router.get('/help/faqs', requireAuth, validate({ query: schemas.faqQuery }), async (req, res) => {
-  res.json(list(await meta.listFaqs(req.user.role, req.query.language ?? req.user.language)))
+  res.json(list(await meta.listFaqs(sideOf(req.user.role), req.query.language ?? req.user.language)))
 })
 
 export default router

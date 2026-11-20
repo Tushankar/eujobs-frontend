@@ -1,3 +1,4 @@
+import { sideOf } from '../../config/enums.js'
 import { LIMITS } from '../../config/limits.js'
 import { skillId, skillSet } from '../../lib/skills.js'
 import { Application, PipelineStage } from '../applications/applications.model.js'
@@ -20,7 +21,7 @@ const ACTIVE = { $nin: ['withdrawn', 'not_selected'] }
 
 const availableCourses = async (user, filter = {}) => {
   const enrolled = (await Enrollment.find({ userId: user._id }, 'courseId')).map((enrollment) => enrollment.courseId)
-  return Course.find({ audience: user.role, status: 'published', _id: { $nin: enrolled }, ...filter })
+  return Course.find({ audience: sideOf(user.role), status: 'published', _id: { $nin: enrolled }, ...filter })
 }
 
 /** The candidate's gap skills, most demanded first, as [{ key, name, jobs }]. */

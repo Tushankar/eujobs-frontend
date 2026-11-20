@@ -13,7 +13,7 @@ import { signToken } from './auth.service.js'
 /* Devices and sign-in history (owner 2026-11-18): sessions, failed attempts, the new-device email and sign-outs. */
 const SEEN_EVERY_MS = 60 * 1000
 const HISTORY_LIMIT = 100
-const SETTINGS_PATH = { candidate: '/candidate/settings/data-account', recruiter: '/recruiter/settings/data-account', admin: '/admin/settings' }
+const SETTINGS_PATH = { candidate: '/candidate/settings/data-account', recruiter: '/recruiter/settings/data-account', admin: '/admin/settings', agency: '/agency/settings/data-account' }
 
 // geoip-lite loads its city database into memory, so only on the first sign-in.
 let geoip

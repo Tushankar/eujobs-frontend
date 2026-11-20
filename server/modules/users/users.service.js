@@ -1,3 +1,4 @@
+import { isHiring } from '../../config/enums.js'
 import bcrypt from 'bcryptjs'
 import { fieldError } from '../../lib/errors.js'
 import { AdminRole } from '../admin/admin.model.js'
@@ -72,7 +73,7 @@ export async function meDto(user) {
         Boolean(current.privacyVersion && current.privacyVersion !== legal.privacyVersion),
     },
   }
-  if (user.role === 'candidate' || user.role === 'recruiter') {
+  if (user.role === 'candidate' || isHiring(user.role)) {
     dto.tourPending = await tourPending(user)
     // 2026-11-17: success moments waiting for their modal.
     dto.celebrations = celebrationDtos(user)
@@ -83,8 +84,8 @@ export async function meDto(user) {
     Object.assign(dto, await planState(user._id))
     Object.assign(dto, await candidateSummary(user))
   }
-  if (user.role === 'recruiter') {
-    // §3.22: Free or Recruiter Plus, with its entitlement keys.
+  if (isHiring(user.role)) {
+    // §3.22: Free or Recruiter Plus (Agency Plus for agencies, 2026-11-20), with its entitlement keys.
     Object.assign(dto, await planState(user._id))
     dto.jobTitle = user.jobTitle ?? null
     dto.phone = { e164: user.phone?.e164 ?? null, verified: Boolean(user.phone?.verifiedAt) }
@@ -117,7 +118,7 @@ export async function meDto(user) {
  */
 async function tourPending(user) {
   if (user.tourFinishedAt) return false
-  if (user.role === 'recruiter') return !user.companyId || !(await Job.exists({ companyId: user.companyId }))
+  if (isHiring(user.role)) return !user.companyId || !(await Job.exists({ companyId: user.companyId }))
   return !(await CvVersion.exists({ userId: user._id })) && !(await Application.exists({ candidateId: user._id }))
 }
 

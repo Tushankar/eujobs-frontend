@@ -1,3 +1,4 @@
+import { HIRING_ROLES, isHiring } from '../../config/enums.js'
 import { Router } from 'express'
 import { validate } from '../../lib/validate.js'
 import { requireApprovedRecruiter, requireAuth, requireRole } from '../../middleware/auth.js'
@@ -7,7 +8,7 @@ import * as moderation from './moderation.service.js'
 
 /* POST /reports (candidates and approved recruiters) and /admin/moderation content cases (§5, M-164, M-167). */
 export const reportsRouter = Router()
-reportsRouter.use(requireAuth, requireRole('candidate', 'recruiter'), (req, res, next) => (req.user.role === 'recruiter' ? requireApprovedRecruiter(req, res, next) : next()))
+reportsRouter.use(requireAuth, requireRole('candidate', ...HIRING_ROLES), (req, res, next) => (isHiring(req.user.role) ? requireApprovedRecruiter(req, res, next) : next()))
 
 reportsRouter.post('/', validate({ body: schemas.reportBody }), async (req, res) => {
   res.status(201).json(await moderation.report(req.user, req.company, req.body))

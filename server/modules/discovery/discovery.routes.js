@@ -1,3 +1,4 @@
+import { HIRING_ROLES } from '../../config/enums.js'
 import { Router } from 'express'
 import { z } from 'zod'
 import { objectId, validate } from '../../lib/validate.js'
@@ -14,7 +15,7 @@ import * as discoveryService from './discovery.service.js'
  * the talent lists and CV requests answer 402 PLAN_REQUIRED.
  */
 const candidateParams = validate({ params: schemas.candidateParams })
-export const requireDiscovery = requireEntitlement('discovery', ['recruiter'])
+export const requireDiscovery = requireEntitlement('discovery', HIRING_ROLES)
 
 /** A candidate who applied to the company opens on Free; anyone else needs `discovery`. */
 async function applicantOrDiscovery(req, res, next) {
@@ -40,7 +41,7 @@ candidatesRouter.get('/:id/cv', ...candidate, async (req, res) => {
   res.json(await discoveryService.candidateCv(req.user, req.company, req.params.id))
 })
 
-candidatesRouter.post('/:id/cv-requests', candidateParams, requireEntitlement('outreach', ['recruiter']), validate({ body: schemas.cvRequestBody }), async (req, res) => {
+candidatesRouter.post('/:id/cv-requests', candidateParams, requireEntitlement('outreach', HIRING_ROLES), validate({ body: schemas.cvRequestBody }), async (req, res) => {
   await discoveryService.requestCv(req.user, req.company, req.params.id, req.body)
   res.status(201).json(await discoveryService.candidateCv(req.user, req.company, req.params.id))
 })

@@ -1,3 +1,4 @@
+import { isHiring, sideOf } from '../../config/enums.js'
 import { config } from '../../config/env.js'
 import { dailyJobs } from '../../jobs/scheduler.js'
 import { actorFor, recordAudit, SYSTEM_ACTOR } from '../../lib/audit.js'
@@ -29,7 +30,7 @@ export function isPaid(subscription) {
 }
 
 /** The paid plan of each role (§3.3, §3.22; M-117 superseded by Phase 11c). */
-export const PAID_PLAN = { candidate: 'plus', recruiter: 'recruiter_plus' }
+export const PAID_PLAN = { candidate: 'plus', recruiter: 'recruiter_plus', agency: 'agency_plus' }
 
 /** `me.plan` and `me.entitlements` (§3.3, §3.22), for candidates and recruiters. */
 export async function planState(userId) {
@@ -59,7 +60,7 @@ export async function companyCurrency(user) {
  * is billed monthly or, while the admin offers it, yearly (2026-11-13).
  */
 async function priceItem(user, kind, itemId, interval = 'month') {
-  const currency = kind === 'subscription' && user.role === 'recruiter' ? await companyCurrency(user) : ((await userCurrency(user)) ?? 'EUR')
+  const currency = kind === 'subscription' && isHiring(user.role) ? await companyCurrency(user) : ((await userCurrency(user)) ?? 'EUR')
   if (kind === 'subscription') {
     if (itemId !== PAID_PLAN[user.role]) throw fieldError({ itemId: 'not_allowed' })
     const plan = await Plan.findOne({ key: itemId })
@@ -69,7 +70,7 @@ async function priceItem(user, kind, itemId, interval = 'month') {
     if (!price) throw fieldError({ itemId: 'not_allowed' })
     return { kind, itemId, itemName: plan.name[user.language], amountMinor: price.amountMinor, currency, interval, stripePriceId: price.stripePriceId }
   }
-  const course = /^[a-f\d]{24}$/i.test(itemId) ? await Course.findOne({ _id: itemId, status: 'published', audience: user.role }) : null
+  const course = /^[a-f\d]{24}$/i.test(itemId) ? await Course.findOne({ _id: itemId, status: 'published', audience: sideOf(user.role) }) : null
   if (!course) throw new AppError('NOT_FOUND')
   // Free courses are enrolled without a payment (§5 POST /learning/enrollments).
   const price = course.isFree ? null : course.prices.find((entry) => entry.currency === currency)

@@ -90,6 +90,7 @@ export const EMAIL_CATEGORY = {
 export const EMAIL_CATEGORIES = {
   candidate: ['applications', 'messages', 'cv_requests', 'job_alerts', 'interviews'],
   recruiter: ['new_applications', 'messages', 'interviews'],
+  agency: ['new_applications', 'messages', 'interviews'],
   admin: ['account_reviews', 'verification', 'content_reports', 'failed_renewals', 'admin_joined'],
 }
 
@@ -172,8 +173,16 @@ export const PERMISSIONS = [
   { id: 'content.manage', group: 'governance' },
 ]
 
+/*
+ * 2026-11-20: agencies (their own role) use every hiring tool recruiters have. Records shared by both keep 'recruiter'
+ * as the hiring side's key (conversation sides, interview consent, notification sections, course audience).
+ */
+export const HIRING_ROLES = ['recruiter', 'agency']
+export const isHiring = (role) => HIRING_ROLES.includes(role)
+export const sideOf = (role) => (isHiring(role) ? 'recruiter' : role)
+
 export const ENUMS = {
-  role: ['candidate', 'recruiter', 'admin'],
+  role: ['candidate', 'recruiter', 'admin', 'agency'],
   userStatus: ['unverified', 'onboarding', 'pending_review', 'active', 'rejected', 'suspended', 'invited'],
   language: ['en', 'es', 'fr'],
   // Owner 2026-11-16: the colour theme an account picked (light is the default when none is saved).
@@ -184,6 +193,17 @@ export const ENUMS = {
   // M-040: also the tab and sort order
   jobStatus: ['published', 'paused', 'draft', 'closed'],
   salaryPeriod: ['year', 'month'],
+  // 2026-11-20: an agency job's pay rate
+  ratePeriod: ['hour', 'day'],
+  // 2026-11-20 (agencies): what a contract allows during an assignment, an agreement's state and a candidate's place on
+  // an agency's books
+  exclusivity: ['no_other_work', 'no_other_agency_work', 'no_same_client', 'free'],
+  agreementStatus: ['draft', 'published'],
+  membershipStatus: ['requested', 'awaiting_agreement', 'active', 'declined', 'ended'],
+  // A placement: a re-hire offer waiting for the candidate, or confirmed (its dates say upcoming, running or over)
+  placementStatus: ['offered', 'confirmed', 'declined', 'withdrawn', 'cancelled'],
+  // Where a placement rule comes from: the job's contract, the agreement the candidate agreed to, or the default
+  ruleSource: ['contract', 'agreement', 'default'],
   companySize: ['1_10', '11_50', '51_200', '201_500', '501_1000', '1000_plus'],
   availability: ['available_now', 'within_2_weeks', 'within_1_month', 'open_to_opportunities', 'not_looking'],
   languageLevel: ['a1', 'a2', 'b1', 'b2', 'c1', 'c2', 'native'],
@@ -239,7 +259,7 @@ export const ENUMS = {
   documentKind: ['id', 'right_to_work', 'degree', 'references', 'signed_offer', 'other'],
   documentRequestStatus: ['open', 'complete'],
   messageKind: ['text', 'interview', 'document_request'],
-  planKey: ['free', 'plus', 'recruiter_free', 'recruiter_plus'],
+  planKey: ['free', 'plus', 'recruiter_free', 'recruiter_plus', 'agency_free', 'agency_plus'],
   // 2026-11-13: paid plans bill monthly or yearly
   billingInterval: ['month', 'year'],
   // Plus (candidates): apply, message_send, job_alerts, ai. Recruiter Plus (§3.22): jobs_unlimited, discovery, outreach, ai,
@@ -295,6 +315,8 @@ export const ENUMS = {
     'report_triage',
     'blog_draft',
     'account_review_summary',
+    // 2026-11-20: an agency contract's rules
+    'contract_rules',
   ],
   emailType: Object.keys(EMAIL_TYPES),
   emailCategory: [...new Set(Object.values(EMAIL_CATEGORY))],
@@ -319,6 +341,10 @@ export const ENUMS = {
     'document_request',
     'document_attachment',
     'blog_cover',
+    // 2026-11-20: an agency's client logos and the contract PDF of an agency job
+    'client_logo',
+    'agency_contract',
+    'agency_agreement',
   ],
   reportType: ['marketplace_summary', 'skills_demand', 'platform_activity'],
   reportPeriod: ['this_week', 'last_week', 'last_month'],

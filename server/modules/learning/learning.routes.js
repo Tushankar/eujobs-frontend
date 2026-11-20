@@ -1,3 +1,4 @@
+import { HIRING_ROLES, isHiring } from '../../config/enums.js'
 import { Router } from 'express'
 import { validate } from '../../lib/validate.js'
 import { requireApprovedRecruiter, requireAuth, requireRole } from '../../middleware/auth.js'
@@ -14,8 +15,8 @@ import { suggestions } from './learning.suggestions.js'
 /** Candidates, and approved recruiters (R✓), learn (§5). */
 const learner = [
   requireAuth,
-  requireRole('candidate', 'recruiter'),
-  (req, res, next) => (req.user.role === 'recruiter' ? requireApprovedRecruiter(req, res, next) : next()),
+  requireRole('candidate', ...HIRING_ROLES),
+  (req, res, next) => (isHiring(req.user.role) ? requireApprovedRecruiter(req, res, next) : next()),
 ]
 const idParams = validate({ params: schemas.idParams })
 const lessonParams = validate({ params: schemas.lessonParams })

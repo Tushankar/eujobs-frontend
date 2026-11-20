@@ -1,4 +1,5 @@
 import { Router } from 'express'
+import { HIRING_ROLES } from '../../config/enums.js'
 import { validate } from '../../lib/validate.js'
 import { requireApprovedRecruiter, requireAuth, requireRole, requireVerifiedEmail } from '../../middleware/auth.js'
 import { requirePermission } from '../../middleware/permissions.js'
@@ -13,7 +14,7 @@ import * as companies from './companies.service.js'
 
 /** Onboarding is open from the email code onward (U37); every change answers with the onboarding state. */
 export const onboardingRouter = Router()
-onboardingRouter.use(requireAuth, requireRole('recruiter'), requireVerifiedEmail)
+onboardingRouter.use(requireAuth, requireRole(...HIRING_ROLES), requireVerifiedEmail)
 
 const answer = (work, status = 200) => async (req, res) => {
   await work(req)
@@ -65,7 +66,7 @@ export const adminRouter = Router()
 adminRouter.use(requireAuth, requireRole('admin'), requirePermission('moderation.manage'))
 
 adminRouter.get('/', validate({ query: schemas.accountsQuery }), async (req, res) => {
-  res.json({ ...(await review.listAccounts(req.user, req.query.status)), counts: await review.accountCounts() })
+  res.json({ ...(await review.listAccounts(req.user, req.query.status, req.query.role)), counts: await review.accountCounts(req.query.role) })
 })
 
 adminRouter.get('/:userId', validate({ params: schemas.accountParams }), async (req, res) => {

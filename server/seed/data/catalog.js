@@ -161,6 +161,18 @@ export const PLANS = [
   },
 ]
 
+/*
+ * 2026-11-20: agencies (their own role) get the recruiter plans' features under their own keys; Agency Plus starts at the
+ * Recruiter Plus prices and the admin changes them in Payments › Plans.
+ */
+const AGENCY_PAGE = { en: 'Agency page, clients and verification', es: 'Página de agencia, clientes y verificación', fr: 'Page agence, clients et vérification' }
+const asAgency = (key, name) => {
+  const plan = PLANS.find((entry) => entry.key === key.replace('agency', 'recruiter'))
+  const features = plan.features.map((feature) => (feature.en === 'Company page and verification' ? AGENCY_PAGE : feature))
+  return { ...plan, key, role: 'agency', name, features }
+}
+PLANS.push(asAgency('agency_free', { en: 'Free', es: 'Gratis', fr: 'Gratuit' }), asAgency('agency_plus', { en: 'Agency Plus', es: 'Agency Plus', fr: 'Agency Plus' }))
+
 // The three Figma roles (accessData.js) minus the dropped ids (§3.13). Names and descriptions are staff content.
 export const SYSTEM_ROLES = [
   {

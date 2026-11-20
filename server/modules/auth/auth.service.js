@@ -16,7 +16,7 @@ const BCRYPT_COST = 12
 const MINUTE_MS = 60 * 1000
 const HOUR_MS = 60 * MINUTE_MS
 const DAY_MS = 24 * HOUR_MS
-const SIGN_IN_PATH = { candidate: '/sign-in', recruiter: '/recruiter/sign-in', admin: '/admin/sign-in' }
+const SIGN_IN_PATH = { candidate: '/sign-in', recruiter: '/recruiter/sign-in', admin: '/admin/sign-in', agency: '/agencies/login' }
 
 // Top 10,000 passwords (P10), compared case-insensitively.
 const COMMON_PASSWORDS = new Set(
@@ -214,23 +214,26 @@ export async function registerCandidate(input) {
   await sendVerifyEmail(user)
 }
 
-/** U37, OQ-6h: returns the new user (a token is issued); a registered email is EMAIL_TAKEN. */
-export async function registerRecruiter(input) {
+/** U37, OQ-6h: returns the new recruiter or agency (2026-11-20; a token is issued); a registered email is EMAIL_TAKEN. */
+export async function registerRecruiter(input, role = 'recruiter') {
   const fields = await newAccountFields(input)
   const phone = normalizePhone(input.phone, input.country)
   if (await User.exists({ email: fields.email })) throw new AppError('EMAIL_TAKEN')
-  const user = await User.create({ ...fields, role: 'recruiter', status: 'unverified', jobTitle: input.jobTitle, phone: { e164: phone } })
+  const user = await User.create({ ...fields, role, status: 'unverified', jobTitle: input.jobTitle, phone: { e164: phone } })
   await sendEmailCode(user)
   return user
 }
 
 /* ---------- sign-in, verification, reset ---------- */
 
-/** M-005: one login; the admin portal is for admins only and admins sign in only there. */
+/**
+ * M-005: one login; the admin portal is for admins only and admins sign in only there. 2026-11-20: the same for the
+ * agency portal (/agencies/login) and agencies.
+ */
 export async function login({ email, password, portal, timezone }) {
   const user = await User.findOne({ email })
   if (!(await passwordMatches(user, password))) throw new AppError('INVALID_CREDENTIALS')
-  if ((portal === 'admin') !== (user.role === 'admin')) throw new AppError('INVALID_CREDENTIALS')
+  for (const own of ['admin', 'agency']) if ((portal === own) !== (user.role === own)) throw new AppError('INVALID_CREDENTIALS')
   if (user.role === 'candidate' && user.status === 'unverified') throw new AppError('EMAIL_UNVERIFIED')
   user.lastLoginAt = new Date()
   if (timezone) user.timezone = timezone

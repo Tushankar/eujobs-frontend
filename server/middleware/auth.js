@@ -1,5 +1,6 @@
 import jwt from 'jsonwebtoken'
 import { config } from '../config/env.js'
+import { isHiring } from '../config/enums.js'
 import { AppError } from '../lib/errors.js'
 import { Company } from '../modules/companies/companies.model.js'
 import { currentStep } from '../modules/companies/companies.service.js'
@@ -47,22 +48,28 @@ export function requireRole(...roles) {
   }
 }
 
-/** U37: a recruiter before the email code may only use code verify, code resend and /me. */
+/** U37: a recruiter or agency before the email code may only use code verify, code resend and /me. */
 export function requireVerifiedEmail(req, res, next) {
-  if (req.user.role === 'recruiter' && !req.user.emailVerifiedAt) throw new AppError('EMAIL_UNVERIFIED')
+  if (isHiring(req.user.role) && !req.user.emailVerifiedAt) throw new AppError('EMAIL_UNVERIFIED')
   next()
 }
 
 /**
- * M-151, M-165: recruiter workspace endpoints are for approved (active) recruiters; sets req.company.
- * Use after requireAuth.
+ * M-151, M-165: recruiter workspace endpoints are for approved (active) recruiters and agencies (2026-11-20); sets
+ * req.company. Use after requireAuth.
  */
 export async function requireApprovedRecruiter(req, res, next) {
   const { user } = req
-  if (user.role !== 'recruiter') throw new AppError('FORBIDDEN')
+  if (!isHiring(user.role)) throw new AppError('FORBIDDEN')
   if (!user.emailVerifiedAt) throw new AppError('EMAIL_UNVERIFIED')
   if (user.status === 'suspended') throw new AppError('ACCOUNT_SUSPENDED')
   if (user.status !== 'active') throw new AppError('RECRUITER_NOT_APPROVED', { params: { status: user.status, step: await currentStep(user) } })
   req.company = await Company.findById(user.companyId)
   next()
+}
+
+/** 2026-11-20: agency-only endpoints (clients); an approved agency, with req.company. Use after requireAuth. */
+export async function requireApprovedAgency(req, res, next) {
+  if (req.user.role !== 'agency') throw new AppError('FORBIDDEN')
+  return requireApprovedRecruiter(req, res, next)
 }

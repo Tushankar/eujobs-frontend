@@ -28,10 +28,13 @@ export const recruiterRegisterBody = z.object({
   phone: z.string().trim().min(1),
 })
 
+// 2026-11-20: an agency signs up with the same details as a recruiter (/agencies/signup).
+export const agencyRegisterBody = recruiterRegisterBody
+
 export const loginBody = z.object({
   email,
   password,
-  portal: z.enum(['candidate', 'recruiter', 'admin']),
+  portal: z.enum(['candidate', 'recruiter', 'admin', 'agency']),
   timezone: timezone.optional(),
   // 2026-11-18: the key of a browser that passed the sign-in second step before
   deviceToken: z.string().max(200).optional(),

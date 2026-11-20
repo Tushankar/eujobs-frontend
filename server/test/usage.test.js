@@ -45,7 +45,7 @@ const v1 = '/api/v1'
 const SETTINGS = {
   caps: { plus: { month: 40, year: 60 }, recruiter_plus: { month: 80, year: 120 } },
   featureLimits: { cv_draft: 5, cv_snapshot: 5 },
-  creditCosts: { cv_snapshot: 5, cv_draft: 5, interview_notes: 5, voice_profile: 3 },
+  creditCosts: { cv_snapshot: 5, cv_draft: 5, interview_notes: 5, voice_profile: 3, contract_rules: 5 },
   burstPerMinute: 10,
   skillNamesPerDay: 100,
   budgets: { openai: null, places: null },

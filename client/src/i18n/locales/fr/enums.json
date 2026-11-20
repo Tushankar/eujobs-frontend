@@ -2,7 +2,8 @@
   "role": {
     "candidate": "Candidat",
     "recruiter": "Recruteur",
-    "admin": "Administration"
+    "admin": "Administration",
+    "agency": "Agence"
   },
   "userStatus": {
     "unverified": "E-mail non confirmé",
@@ -44,6 +45,39 @@
   "salaryPeriod": {
     "year": "par an",
     "month": "par mois"
+  },
+  "ratePeriod": {
+    "hour": "de l’heure",
+    "day": "par jour"
+  },
+  "exclusivity": {
+    "no_other_work": "Aucun autre travail pendant une mission",
+    "no_other_agency_work": "Aucun travail via d’autres agences",
+    "no_same_client": "Aucun travail pour le même client par une autre voie",
+    "free": "Libre de travailler ailleurs"
+  },
+  "agreementStatus": {
+    "draft": "Brouillon",
+    "published": "Publié"
+  },
+  "membershipStatus": {
+    "requested": "Demandé",
+    "awaiting_agreement": "En attente de l’accord",
+    "active": "Dans le vivier",
+    "declined": "Refusé",
+    "ended": "Terminé"
+  },
+  "placementStatus": {
+    "offered": "Proposée",
+    "confirmed": "Confirmée",
+    "declined": "Refusée",
+    "withdrawn": "Retirée",
+    "cancelled": "Annulée"
+  },
+  "ruleSource": {
+    "contract": "Du contrat de l’emploi",
+    "agreement": "De l’accord d’agence",
+    "default": "Règle par défaut"
   },
   "companySize": {
     "1_10": "1 à 10 salariés",
@@ -168,7 +202,9 @@
     "free": "Gratuit",
     "plus": "Plus",
     "recruiter_free": "Gratuit",
-    "recruiter_plus": "Recruiter Plus"
+    "recruiter_plus": "Recruiter Plus",
+    "agency_free": "Gratuit",
+    "agency_plus": "Agency Plus"
   },
   "billingInterval": {
     "month": "Mensuel",
@@ -316,7 +352,8 @@
     "quiz_questions": "Questions du quiz",
     "report_triage": "Tri des signalements",
     "blog_draft": "Brouillon de blog",
-    "account_review_summary": "Résumé de vérification de compte"
+    "account_review_summary": "Résumé de vérification de compte",
+    "contract_rules": "Règles du contrat"
   },
   "emailType": {
     "interview_invitation": "Invitation à un entretien",
@@ -402,7 +439,10 @@
     "certificate_pdf": "Certificat PDF",
     "report_csv": "Rapport CSV",
     "export_zip": "Export des données",
-    "blog_cover": "Couverture d’article"
+    "blog_cover": "Couverture d’article",
+    "client_logo": "Logo du client",
+    "agency_contract": "Contrat d’agence",
+    "agency_agreement": "Accord d’agence"
   },
   "reportType": {
     "marketplace_summary": "Synthèse de la plateforme",

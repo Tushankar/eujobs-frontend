@@ -132,7 +132,7 @@ describe('admin › Payments › Plans', () => {
     const res = await api().get(`${v1}/admin/payments/plans`).set(auth(await finance()))
     assert.deepEqual(
       res.body.items.map((plan) => [plan.key, plan.paid]),
-      [['free', false], ['plus', true], ['recruiter_free', false], ['recruiter_plus', true]],
+      [['free', false], ['plus', true], ['recruiter_free', false], ['recruiter_plus', true], ['agency_free', false], ['agency_plus', true]],
     )
     const plus = res.body.items[1]
     assert.deepEqual(plus.prices.find((row) => row.currency === 'GBP'), { currency: 'GBP', monthlyMinor: 900, yearlyMinor: 9200, yearlyOverride: false })

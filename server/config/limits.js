@@ -75,7 +75,13 @@ export const LIMITS = {
     languages: { max: 10 },
     // OQ-6i, worldwide since 2026-11-16: a remote job's eligible countries (none = open worldwide).
     remoteCountries: { max: 60 },
+    // 2026-11-20: agency jobs (pay rate in minor units like salary; hours per week, empty = full time 40 / part time 20)
+    agency: { rate: { min: 1, max: 100_000_000 }, hoursPerWeek: { min: 1, max: 80 }, defaultHours: { full_time: 40, part_time: 20, contract: 40, internship: 40 } },
   },
+  // 2026-11-20: an agency's client list
+  agencyClient: { max: 500 },
+  // 2026-11-20: contract rules (days and hours) and the clause quoted for each; AI reads at most `textChars` of a contract
+  contractRules: { noticeDays: { max: 365 }, coolingOffDays: { max: 730 }, maxWeeklyHours: { min: 1, max: 80 }, clause: { max: 1000 }, textChars: 60_000 },
   // M-073, M-072, M-091, OD14
   application: { coverNote: { max: 2000 } },
   pipeline: { stages: { min: 2, max: 12 }, stageName: { min: 1, max: 24 } },
@@ -141,6 +147,10 @@ export const LIMITS = {
     document_attachment: { types: ['pdf', 'jpg', 'png'], maxBytes: 10 * MB },
     // 2026-11-13: blog post covers
     blog_cover: { types: ['jpg', 'png', 'webp'], maxBytes: 5 * MB },
+    // 2026-11-20: agencies
+    client_logo: { types: ['png', 'jpg', 'svg'], maxBytes: 2 * MB },
+    agency_contract: { types: ['pdf'], maxBytes: 10 * MB },
+    agency_agreement: { types: ['pdf'], maxBytes: 10 * MB },
   },
   // §3.23, P11d-Q3 … Q26: slots 2–3, each pickable until `pickCutoffMs` before its start; join from `joinEarlyMs` before
   // the start until `joinLateMs` after the end; reminders 24 h and 1 h before; signaling tickets live 2 minutes; the audio
@@ -197,13 +207,13 @@ export const LIMITS = {
     embeddingMaxChars: 32_000,
     skillNamesTimeoutMs: 8_000,
     usage: {
-      caps: { plus: { month: 40, year: 60 }, recruiter_plus: { month: 80, year: 120 } },
+      caps: { plus: { month: 40, year: 60 }, recruiter_plus: { month: 80, year: 120 }, agency_plus: { month: 80, year: 120 } },
       // The expensive (main-model, often uncached) features also have their own daily limit per user; each use still
       // counts once toward the cap above.
       featureLimits: { cv_draft: 5, cv_snapshot: 5 },
       // Weighted credits (owner 2026-11-17): what one text of a kind takes from the daily credits; kinds not listed
       // take 1. The main-model features cost about 20× a fast one, the voice profile about 7×.
-      creditCosts: { cv_snapshot: 5, cv_draft: 5, interview_notes: 5, voice_profile: 3 },
+      creditCosts: { cv_snapshot: 5, cv_draft: 5, interview_notes: 5, voice_profile: 3, contract_rules: 5 },
       creditCostMax: 50,
       burstPerMinute: 10,
       skillNamesPerDay: 100,

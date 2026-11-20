@@ -1,3 +1,4 @@
+import { HIRING_ROLES, isHiring } from '../../config/enums.js'
 import express, { Router } from 'express'
 import { LIMITS } from '../../config/limits.js'
 import { validate } from '../../lib/validate.js'
@@ -14,10 +15,10 @@ import * as interviews from './interviews.service.js'
  * Recruiter Plus (`interviews`) is needed to offer, reschedule, start AI notes (in the service) and request documents;
  * everything already under way works on Free, and candidates are never gated (P11d-Q22, Q27).
  */
-const parties = [requireAuth, requireRole('candidate', 'recruiter'), (req, res, next) => (req.user.role === 'recruiter' ? requireApprovedRecruiter(req, res, next) : next())]
-const recruiter = requireRole('recruiter')
+const parties = [requireAuth, requireRole('candidate', ...HIRING_ROLES), (req, res, next) => (isHiring(req.user.role) ? requireApprovedRecruiter(req, res, next) : next())]
+const recruiter = requireRole(...HIRING_ROLES)
 const candidate = requireRole('candidate')
-const plus = requireEntitlement('interviews', ['recruiter'])
+const plus = requireEntitlement('interviews', HIRING_ROLES)
 const idParams = validate({ params: schemas.idParams })
 
 export const interviewsRouter = Router()

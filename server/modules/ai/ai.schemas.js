@@ -27,7 +27,8 @@ const price = z.number().min(0).max(U.priceMax)
 const budget = z.number().positive().max(U.budgetMax).nullable()
 export const usageQuery = z.object({ month: z.string().regex(/^\d{4}-(0[1-9]|1[0-2])$/).optional() })
 export const usageSettingsBody = z.object({
-  caps: z.object({ plus: caps, recruiter_plus: caps }),
+  // Agency Plus (2026-11-20) is optional until the admin Usage screen shows it; left out, its stored cap is kept.
+  caps: z.object({ plus: caps, recruiter_plus: caps, agency_plus: caps.optional() }),
   featureLimits: z.object({ cv_draft: cap, cv_snapshot: cap }),
   // Weighted credits: what one text of a kind takes (kinds left out take 1).
   creditCosts: z.partialRecord(z.enum(ENUMS.aiKind), z.number().int().min(1).max(U.creditCostMax)),

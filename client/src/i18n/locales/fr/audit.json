@@ -94,7 +94,8 @@
     },
     "jobs": {
       "status_changed": "Statut de l’offre modifié : {{title}} ({{company}}), {{from}} → {{to}}",
-      "cv_downloaded": "CV téléchargé : {{candidate}}, version {{version}} ({{company}})"
+      "cv_downloaded": "CV téléchargé : {{candidate}}, version {{version}} ({{company}})",
+      "agreement_published": "Accord d’agence publié : {{company}}, version {{version}}"
     },
     "payments": {
       "payment_recorded": "Paiement {{reference}} : {{payer}}, {{item}} ({{amount}})",

@@ -85,7 +85,7 @@ export async function listPlans(currency, language, role) {
   return plans
     .sort((a, b) => ENUMS.planKey.indexOf(a.key) - ENUMS.planKey.indexOf(b.key))
     .map((plan) => {
-      const price = ['free', 'recruiter_free'].includes(plan.key) ? { currency, amountMinor: 0 } : plan.prices.find((entry) => entry.currency === currency)
+      const price = ['free', 'recruiter_free', 'agency_free'].includes(plan.key) ? { currency, amountMinor: 0 } : plan.prices.find((entry) => entry.currency === currency)
       // 2026-11-13: the yearly price while the admin offers it, and what it saves against 12 months.
       const yearly = plan.yearlyEnabled && price && plan.yearlyPrices.find((entry) => entry.currency === currency)
       return {

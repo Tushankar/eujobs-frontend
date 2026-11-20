@@ -1,3 +1,4 @@
+import { AgencyMembership, AgencyPlacement } from '../agencies/agencies.model.js'
 import bcrypt from 'bcryptjs'
 import { fieldError } from '../../lib/errors.js'
 import { removeFiles } from '../../lib/files.js'
@@ -91,6 +92,10 @@ export const COVERAGE = {
   ScheduledTask: 'pending tasks about the person\'s items deleted',
   Company: 'deleted recruiter: kept with the display name, logo and public profile; contact fields removed (M-189)',
   KycDocument: 'deleted with their files',
+  AgencyClient: 'deleted agency: kept (business details its past jobs name; no personal data), as the company (2026-11-20)',
+  AgencyAgreement: 'deleted agency: kept (the versions candidates agreed to; the business document of the agency)',
+  AgencyMembership: 'deleted candidate: deleted; deleted agency: ended (2026-11-20)',
+  AgencyPlacement: 'deleted candidate: deleted; deleted agency: open offers withdrawn, placements kept for the candidate (2026-11-20)',
   Job: 'deleted recruiter: closed, author removed (M-189)',
   PipelineStage: 'kept (the company\'s stages; past applications point at them)',
   Course: 'kept (admin content)',
@@ -245,6 +250,8 @@ async function eraseCandidate(user) {
   })
   await Promise.all([
     Application.deleteMany({ candidateId: user._id }),
+    AgencyMembership.deleteMany({ candidateId: user._id }),
+    AgencyPlacement.deleteMany({ candidateId: user._id }),
     SavedJob.deleteMany({ candidateId: user._id }),
     ExplanationFeedback.deleteMany({ candidateId: user._id }),
     AiCache.deleteMany({ subjectId: user._id }),
@@ -284,6 +291,12 @@ async function deleteRecruiter(user) {
     await Job.updateMany({ companyId: company._id, status: { $ne: 'closed' } }, { $set: { status: 'closed', closedAt: now } })
     await Job.updateMany({ companyId: company._id }, { $set: { createdBy: null } })
     await Conversation.updateMany({ companyId: company._id }, { $set: { closedAt: now } })
+    // 2026-11-20: an agency's candidates leave its books.
+    await AgencyMembership.updateMany(
+      { companyId: company._id, status: { $in: ['requested', 'awaiting_agreement', 'active'] } },
+      { $set: { status: 'ended', endedBy: 'agency' }, $push: { history: { status: 'ended', by: 'agency', at: now } } },
+    )
+    await AgencyPlacement.updateMany({ companyId: company._id, status: 'offered' }, { $set: { status: 'withdrawn', decidedAt: now } })
     const kyc = await KycDocument.find({ companyId: company._id }, 'fileId')
     await removeFiles(kyc.map((document) => document.fileId))
     await Promise.all([

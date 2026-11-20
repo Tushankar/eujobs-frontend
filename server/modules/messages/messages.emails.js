@@ -1,3 +1,4 @@
+import { HIRING_ROLES } from '../../config/enums.js'
 import { config } from '../../config/env.js'
 import { LIMITS } from '../../config/limits.js'
 import { ScheduledTask } from '../../jobs/models.js'
@@ -37,7 +38,7 @@ async function sendMessageEmail(payload, task, now) {
     return
   }
   const [recipient, company, candidate] = await Promise.all([
-    side === 'candidate' ? User.findById(conversation.candidateId) : User.findOne({ companyId: conversation.companyId, role: 'recruiter', status: 'active' }),
+    side === 'candidate' ? User.findById(conversation.candidateId) : User.findOne({ companyId: conversation.companyId, role: { $in: HIRING_ROLES }, status: 'active' }),
     Company.findById(conversation.companyId, 'displayName'),
     User.findById(conversation.candidateId, 'fullName'),
   ])

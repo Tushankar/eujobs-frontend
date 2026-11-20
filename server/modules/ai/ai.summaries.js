@@ -1,3 +1,4 @@
+import { isHiring } from '../../config/enums.js'
 import { AppError } from '../../lib/errors.js'
 import { accessibleCandidate } from '../discovery/discovery.service.js'
 import { Job } from '../jobs/jobs.model.js'
@@ -14,7 +15,7 @@ import { PROMPTS } from './ai.prompts.js'
 /** The job a reader may summarise: a candidate's visible (or saved or applied) job, a recruiter's own, any for an admin. */
 async function readableJob(user, id, company) {
   if (user.role === 'candidate') await jobDetails(user, id)
-  const job = await Job.findOne({ _id: id, ...(user.role === 'recruiter' && { companyId: company._id }) })
+  const job = await Job.findOne({ _id: id, ...(isHiring(user.role) && { companyId: company._id }) })
   if (!job) throw new AppError('NOT_FOUND')
   return job
 }

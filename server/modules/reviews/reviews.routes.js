@@ -1,6 +1,6 @@
 import { Router } from 'express'
 import { z } from 'zod'
-import { ENUMS } from '../../config/enums.js'
+import { ENUMS, HIRING_ROLES, isHiring } from '../../config/enums.js'
 import { LIMITS } from '../../config/limits.js'
 import { objectId, validate } from '../../lib/validate.js'
 import { requireApprovedRecruiter, requireAuth, requireRole } from '../../middleware/auth.js'
@@ -12,7 +12,7 @@ const reviewBody = z.object({ rating: z.number().int().min(1).max(5), text: z.st
 
 /* /me/review: an active candidate's or approved recruiter's own review. */
 export const ownRouter = Router()
-ownRouter.use(requireAuth, requireRole('candidate', 'recruiter'), (req, res, next) => (req.user.role === 'recruiter' ? requireApprovedRecruiter(req, res, next) : next()))
+ownRouter.use(requireAuth, requireRole('candidate', ...HIRING_ROLES), (req, res, next) => (isHiring(req.user.role) ? requireApprovedRecruiter(req, res, next) : next()))
 
 ownRouter.get('/', async (req, res) => {
   res.json(await reviews.getOwn(req.user))

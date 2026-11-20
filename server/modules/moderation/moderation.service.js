@@ -1,4 +1,5 @@
 import { config } from '../../config/env.js'
+import { sideOf } from '../../config/enums.js'
 import { LIMITS } from '../../config/limits.js'
 import { actorFor, recordAudit } from '../../lib/audit.js'
 import { AppError, fieldError } from '../../lib/errors.js'
@@ -50,7 +51,7 @@ async function reportTarget(user, company, { targetType, targetId }) {
   const message = await Message.findById(targetId)
   const conversation = message && (await Conversation.findById(message.conversationId))
   const mine = conversation && (user.role === 'candidate' ? conversation.candidateId.equals(user._id) : conversation.companyId.equals(company._id))
-  if (!mine || message.senderRole === user.role) throw new AppError('NOT_FOUND')
+  if (!mine || message.senderRole === sideOf(user.role)) throw new AppError('NOT_FOUND')
   const earlier = await Message.find({ conversationId: conversation._id, createdAt: { $lt: message.createdAt } })
     .sort({ createdAt: -1 })
     .limit(LIMITS.report.excerptEarlier)

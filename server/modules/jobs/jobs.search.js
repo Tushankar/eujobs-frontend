@@ -1,3 +1,4 @@
+import { HIRING_ROLES } from '../../config/enums.js'
 import { AppError } from '../../lib/errors.js'
 import { t } from '../../lib/i18n.js'
 import { matchesKeywords, searchText, skillOverlap } from '../../lib/skills.js'
@@ -22,7 +23,7 @@ const DAY_MS = 24 * 60 * 60 * 1000
 
 /** M-044: companies whose recruiter is approved and not suspended. */
 async function visibleCompanyIds() {
-  return (await User.find({ role: 'recruiter', status: 'active', companyId: { $ne: null } }, 'companyId')).map((user) => user.companyId)
+  return (await User.find({ role: { $in: HIRING_ROLES }, status: 'active', companyId: { $ne: null } }, 'companyId')).map((user) => user.companyId)
 }
 
 /** Published, not restricted (M-167), from an approved recruiter. */

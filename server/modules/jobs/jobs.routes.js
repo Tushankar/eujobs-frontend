@@ -3,6 +3,9 @@ import { z } from 'zod'
 import { objectId, validate } from '../../lib/validate.js'
 import { requireApprovedRecruiter, requireAuth, requireRole } from '../../middleware/auth.js'
 import { requirePermission } from '../../middleware/permissions.js'
+import { requireEntitlement } from '../../middleware/entitlements.js'
+import { upload } from '../../middleware/upload.js'
+import { rulesBody } from '../agencies/contracts.js'
 import { requireDiscovery } from '../discovery/discovery.routes.js'
 import { relevantTalent } from '../discovery/discovery.service.js'
 import { caseBody } from '../moderation/moderation.schemas.js'
@@ -41,6 +44,24 @@ recruiterRouter.put('/:id', jobParams, async (req, res) => {
 
 recruiterRouter.patch('/:id/status', jobParams, validate({ body: schemas.statusBody }), async (req, res) => {
   res.json(jobs.jobDto(await jobs.setStatus(req.company, req.params.id, req.body.status, req.user), req.company))
+})
+
+// 2026-11-20: an agency job's contract PDF (agencies only; other jobs answer 404).
+const agencyOnly = requireRole('agency')
+recruiterRouter.post('/:id/contract', jobParams, agencyOnly, upload('agency_contract'), async (req, res) => {
+  res.json(jobs.jobDto(await jobs.setContract(req.user, req.company, req.params.id, req.file), req.company))
+})
+recruiterRouter.delete('/:id/contract', jobParams, agencyOnly, async (req, res) => {
+  res.json(jobs.jobDto(await jobs.removeContract(req.company, req.params.id), req.company))
+})
+recruiterRouter.post('/:id/contract/read', jobParams, agencyOnly, requireEntitlement('ai', ['agency']), async (req, res) => {
+  res.json(jobs.jobDto(await jobs.readContract(req.user, req.company, req.params.id), req.company))
+})
+recruiterRouter.put('/:id/contract/rules', jobParams, agencyOnly, validate({ body: rulesBody }), async (req, res) => {
+  res.json(jobs.jobDto(await jobs.confirmContractRules(req.company, req.params.id, req.body), req.company))
+})
+recruiterRouter.get('/:id/contract', jobParams, agencyOnly, async (req, res) => {
+  res.json(await jobs.contractUrl(req.user, req.company, req.params.id))
 })
 
 recruiterRouter.delete('/:id', jobParams, async (req, res) => {

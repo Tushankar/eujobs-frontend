@@ -2,7 +2,8 @@
   "role": {
     "candidate": "Candidate",
     "recruiter": "Recruiter",
-    "admin": "Admin"
+    "admin": "Admin",
+    "agency": "Agency"
   },
   "userStatus": {
     "unverified": "Email not confirmed",
@@ -44,6 +45,39 @@
   "salaryPeriod": {
     "year": "per year",
     "month": "per month"
+  },
+  "ratePeriod": {
+    "hour": "per hour",
+    "day": "per day"
+  },
+  "exclusivity": {
+    "no_other_work": "No other work during an assignment",
+    "no_other_agency_work": "No work through other agencies",
+    "no_same_client": "No work for the same client elsewhere",
+    "free": "Free to work elsewhere"
+  },
+  "agreementStatus": {
+    "draft": "Draft",
+    "published": "Published"
+  },
+  "membershipStatus": {
+    "requested": "Requested",
+    "awaiting_agreement": "Waiting for agreement",
+    "active": "On the books",
+    "declined": "Declined",
+    "ended": "Ended"
+  },
+  "placementStatus": {
+    "offered": "Offered",
+    "confirmed": "Confirmed",
+    "declined": "Declined",
+    "withdrawn": "Withdrawn",
+    "cancelled": "Cancelled"
+  },
+  "ruleSource": {
+    "contract": "From the job contract",
+    "agreement": "From the agency agreement",
+    "default": "Default rule"
   },
   "companySize": {
     "1_10": "1–10 employees",
@@ -168,7 +202,9 @@
     "free": "Free",
     "plus": "Plus",
     "recruiter_free": "Free",
-    "recruiter_plus": "Recruiter Plus"
+    "recruiter_plus": "Recruiter Plus",
+    "agency_free": "Free",
+    "agency_plus": "Agency Plus"
   },
   "billingInterval": {
     "month": "Monthly",
@@ -316,7 +352,8 @@
     "quiz_questions": "Quiz questions",
     "report_triage": "Report triage",
     "blog_draft": "Blog draft",
-    "account_review_summary": "Account review summary"
+    "account_review_summary": "Account review summary",
+    "contract_rules": "Contract rules"
   },
   "emailType": {
     "interview_invitation": "Interview invitation",
@@ -402,7 +439,10 @@
     "certificate_pdf": "Certificate PDF",
     "report_csv": "Report CSV",
     "export_zip": "Data export",
-    "blog_cover": "Blog cover"
+    "blog_cover": "Blog cover",
+    "client_logo": "Client logo",
+    "agency_contract": "Agency contract",
+    "agency_agreement": "Agency agreement"
   },
   "reportType": {
     "marketplace_summary": "Marketplace summary",

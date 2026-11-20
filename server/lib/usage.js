@@ -55,7 +55,8 @@ export function clearUsageCache() {
 export async function usageSettings() {
   if (settingsCache && settingsCache.at > Date.now() - CACHE_MS) return settingsCache.value
   const stored = (await AppConfig.findOne({ key: SETTINGS_KEY }).lean())?.value ?? {}
-  const value = { ...DEFAULTS, ...stored }
+  // Caps saved before a plan existed (Agency Plus, 2026-11-20) keep that plan's default.
+  const value = { ...DEFAULTS, ...stored, caps: { ...DEFAULTS.caps, ...stored.caps } }
   settingsCache = { value, at: Date.now() }
   return value
 }

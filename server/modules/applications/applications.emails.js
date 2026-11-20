@@ -1,3 +1,4 @@
+import { HIRING_ROLES } from '../../config/enums.js'
 import { config } from '../../config/env.js'
 import { LIMITS } from '../../config/limits.js'
 import { ScheduledTask } from '../../jobs/models.js'
@@ -80,7 +81,7 @@ async function sendNewApplicationsEmail({ jobId }, task, now) {
   const [job, unsent] = await Promise.all([Job.findById(jobId, 'title companyId'), Application.find({ jobId, recruiterNotified: false }, 'status')])
   const ids = unsent.map((application) => application._id)
   const count = unsent.filter((application) => application.status !== 'withdrawn').length
-  const recruiter = await User.findOne({ companyId: job.companyId, role: 'recruiter', status: 'active' })
+  const recruiter = await User.findOne({ companyId: job.companyId, role: { $in: HIRING_ROLES }, status: 'active' })
   if (count > 0 && recruiter) {
     const countLabel = interpolate(t(recruiter.language, `labels.newApplications.${count === 1 ? 'one' : 'other'}`), { count })
     await sendEmail({

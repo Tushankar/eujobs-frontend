@@ -370,15 +370,16 @@ describe('admin totals by role (P11c-Q8, Q17, Q20)', () => {
     await Payment.create({ reference: 'LWM-900001', userId: plus._id, payerRole: 'recruiter', kind: 'subscription', amountMinor: 4900, currency: 'GBP', status: 'failed', paidAt: new Date() })
 
     const stats = (await api().get(`${v1}/admin/payments/stats`).set(auth(admin))).body
-    assert.deepEqual(stats.activeSubscribers, { total: 3, candidate: 2, recruiter: 1 })
+    assert.deepEqual(stats.activeSubscribers, { total: 3, candidate: 2, recruiter: 1, agency: 0 })
     assert.deepEqual(stats.mrr, {
       candidate: [
         { currency: 'GBP', amountMinor: 900 },
         { currency: 'EUR', amountMinor: 850 },
       ],
       recruiter: [{ currency: 'GBP', amountMinor: 4900 }],
+      agency: [],
     })
-    assert.deepEqual(stats.failedRenewals, { total: 1, candidate: 0, recruiter: 1 })
+    assert.deepEqual(stats.failedRenewals, { total: 1, candidate: 0, recruiter: 1, agency: 0 })
     const overview = (await api().get(`${v1}/admin/overview`).set(auth(admin))).body
     assert.deepEqual(overview.health.activeSubscribers, stats.activeSubscribers)
 

@@ -13,7 +13,7 @@ const price = { _id: false, currency: String, amountMinor: Number, stripePriceId
 const planSchema = new Schema(
   {
     key: { type: String, enum: ENUMS.planKey, required: true, unique: true },
-    role: { type: String, enum: ['candidate', 'recruiter'], required: true },
+    role: { type: String, enum: ['candidate', 'recruiter', 'agency'], required: true },
     name: localized,
     features: [{ _id: false, ...localized }],
     interval: { type: String, enum: ['month'], default: 'month' },
@@ -73,7 +73,7 @@ const paymentSchema = new Schema(
   {
     reference: { type: String, required: true, unique: true },
     userId: { type: Schema.Types.ObjectId, ref: 'User' },
-    payerRole: { type: String, enum: ['candidate', 'recruiter'] },
+    payerRole: { type: String, enum: ['candidate', 'recruiter', 'agency'] },
     payerName: String,
     kind: { type: String, enum: ENUMS.paymentKind, required: true },
     itemId: String,

@@ -1,3 +1,4 @@
+import { isHiring } from '../../config/enums.js'
 import { AppError } from '../../lib/errors.js'
 import { renderMarkdown } from '../../lib/markdown.js'
 import { Company } from '../companies/companies.model.js'
@@ -21,13 +22,13 @@ import { PROMPTS } from './ai.prompts.js'
 const SOURCES = {
   async job(user, { id, field }, company) {
     if (user.role === 'candidate') await jobDetails(user, id)
-    const job = await Job.findOne({ _id: id, ...(user.role === 'recruiter' && { companyId: company._id }) })
+    const job = await Job.findOne({ _id: id, ...(isHiring(user.role) && { companyId: company._id }) })
     if (!job) throw new AppError('NOT_FOUND')
     return field === 'responsibilities' ? job.responsibilities : [job.brief ?? '']
   },
   // A company's About as candidates see it on job details (its jobs are visible) or the recruiter's own company.
   async company(user, { id }, company) {
-    if (user.role === 'recruiter' && String(company._id) !== id) throw new AppError('NOT_FOUND')
+    if (isHiring(user.role) && String(company._id) !== id) throw new AppError('NOT_FOUND')
     const found = await Company.findById(id, 'description')
     if (!found) throw new AppError('NOT_FOUND')
     if (user.role === 'candidate') {
@@ -39,7 +40,7 @@ const SOURCES = {
   },
   // The recruiter's view of a candidate (P4-D11): the About and one work-history description.
   async candidate(user, { id, field, entryId }, company) {
-    if (user.role !== 'recruiter') throw new AppError('FORBIDDEN')
+    if (!isHiring(user.role)) throw new AppError('FORBIDDEN')
     await accessibleCandidate(id, company)
     const profile = await CandidateProfile.findOne({ userId: id })
     if (field === 'about') return [profile.about ?? '']

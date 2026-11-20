@@ -1,3 +1,4 @@
+import { HIRING_ROLES, isHiring } from '../../config/enums.js'
 import { Router } from 'express'
 import { validate } from '../../lib/validate.js'
 import { requireApprovedRecruiter, requireAuth, requireRole } from '../../middleware/auth.js'
@@ -21,9 +22,9 @@ const ai = requireEntitlement('ai')
 /** A Plus candidate or an approved Recruiter Plus recruiter (C+ai, R✓+ai). */
 const reader = [
   requireAuth,
-  requireRole('candidate', 'recruiter'),
-  (req, res, next) => (req.user.role === 'recruiter' ? requireApprovedRecruiter(req, res, next) : next()),
-  requireEntitlement('ai', ['candidate', 'recruiter']),
+  requireRole('candidate', ...HIRING_ROLES),
+  (req, res, next) => (isHiring(req.user.role) ? requireApprovedRecruiter(req, res, next) : next()),
+  requireEntitlement('ai', ['candidate', ...HIRING_ROLES]),
 ]
 const jobParams = validate({ params: schemas.jobParams })
 const jobQuery = validate({ query: schemas.jobQuery })
@@ -98,7 +99,7 @@ jobSummaryRouter.post('/:id/ai-summary', ...reader, jobParams, async (req, res) 
 
 /* GET /recruiter/candidates/:id/match (M-057): the narrative of Match insights; never a score (C6). */
 export const recruiterRouter = Router()
-recruiterRouter.get('/:id/match', requireAuth, requireApprovedRecruiter, requireEntitlement('ai', ['recruiter']), jobParams, validate({ query: schemas.feedbackParams }), async (req, res) => {
+recruiterRouter.get('/:id/match', requireAuth, requireApprovedRecruiter, requireEntitlement('ai', HIRING_ROLES), jobParams, validate({ query: schemas.feedbackParams }), async (req, res) => {
   res.json(await summaries.recruiterMatch(req.user, req.company, req.params.id, req.query.jobId))
 })
 
@@ -122,13 +123,13 @@ translateRouter.post('/', ...reader, validate({ body: schemas.translateBody }), 
 
 /* GET /ai/usage (2026-11-17): today's AI uses of a candidate or recruiter, their cap and when it resets. */
 export const usageRouter = Router()
-usageRouter.get('/usage', requireAuth, requireRole('candidate', 'recruiter'), async (req, res) => {
+usageRouter.get('/usage', requireAuth, requireRole('candidate', ...HIRING_ROLES), async (req, res) => {
   res.json(await usageLeft(req.user))
 })
 
 /* 2026-11-17 (phase 2): /recruiter/ai drafts for an approved Recruiter Plus recruiter; each is one AI use. */
 export const recruiterDraftsRouter = Router()
-recruiterDraftsRouter.use(requireAuth, requireApprovedRecruiter, requireEntitlement('ai', ['recruiter']))
+recruiterDraftsRouter.use(requireAuth, requireApprovedRecruiter, requireEntitlement('ai', HIRING_ROLES))
 recruiterDraftsRouter.post('/job-draft', validate({ body: schemas.jobDraftBody }), async (req, res) => {
   res.json(await drafts.jobDraft(req.user, req.body))
 })

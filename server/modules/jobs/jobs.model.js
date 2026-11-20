@@ -1,5 +1,6 @@
 import mongoose from 'mongoose'
 import { ENUMS } from '../../config/enums.js'
+import { rulesSchema } from '../agencies/contracts.js'
 import { placeSchema } from '../candidates/candidates.model.js'
 
 const { Schema } = mongoose
@@ -12,6 +13,25 @@ const { ObjectId } = Schema.Types
  * with the code form (lib/skills.js) is what overlap compares (M-034, M-052).
  */
 const skill = { _id: false, name: String, key: String, standard: String }
+
+/*
+ * 2026-11-20: an agency job's terms (absent on company jobs): the client it is for, whether candidates see the client's
+ * name, the dates ("YYYY-MM-DD"), the pay rate (minor units, the job country's currency), hours per week (empty: full
+ * time 40, part time 20) and the contract PDF the agency attached.
+ */
+const agencyTerms = new Schema(
+  {
+    clientId: { type: ObjectId, ref: 'AgencyClient' },
+    showClient: { type: Boolean, default: true },
+    startDate: String,
+    endDate: String,
+    rate: new Schema({ amountMinor: Number, currency: String, period: { type: String, enum: ENUMS.ratePeriod } }, { _id: false }),
+    hoursPerWeek: Number,
+    // The contract's rules count once confirmed (`confirmedAt`); `aiRules` is what AI proposed.
+    contract: new Schema({ fileId: ObjectId, name: String, size: Number, uploadedAt: Date, rules: rulesSchema, aiRules: rulesSchema, aiReadAt: Date, confirmedAt: Date }, { _id: false }),
+  },
+  { _id: false },
+)
 
 const jobSchema = new Schema(
   {
@@ -42,11 +62,13 @@ const jobSchema = new Schema(
     relevantComputedAt: Date,
     // OD14: when the recruiter was last emailed about new applications to this job.
     applicantsEmailedAt: Date,
+    agency: agencyTerms,
   },
   { timestamps: true },
 )
 jobSchema.index({ status: 1, country: 1 })
 jobSchema.index({ companyId: 1, status: 1 })
+jobSchema.index({ 'agency.clientId': 1 }, { sparse: true })
 
 /* M-065 */
 const savedJobSchema = new Schema(

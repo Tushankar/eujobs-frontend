@@ -1,3 +1,4 @@
+import { HIRING_ROLES, isHiring } from '../../config/enums.js'
 import { Router } from 'express'
 import { requireApprovedRecruiter, requireAuth, requireVerifiedEmail } from '../../middleware/auth.js'
 import { z } from 'zod'
@@ -27,7 +28,7 @@ router.patch('/', validate({ body: schemas.mePatchBody }), async (req, res) => {
 // (candidates and recruiters) and every role's unread notifications (the bell and the sidebar sections).
 router.get(
   '/counters',
-  (req, res, next) => (req.user.role === 'recruiter' ? requireApprovedRecruiter(req, res, next) : next()),
+  (req, res, next) => (isHiring(req.user.role) ? requireApprovedRecruiter(req, res, next) : next()),
   async (req, res) => {
     res.json(await users.counters(req.user))
   },
@@ -50,7 +51,7 @@ router.post('/celebrations/:id/seen', validate({ params: z.object({ id: objectId
 })
 
 router.post('/tour', async (req, res) => {
-  if (!['candidate', 'recruiter'].includes(req.user.role)) return res.status(204).end()
+  if (!['candidate', ...HIRING_ROLES].includes(req.user.role)) return res.status(204).end()
   await users.finishTour(req.user)
   res.json(await users.meDto(req.user))
 })

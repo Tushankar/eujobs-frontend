@@ -1,3 +1,4 @@
+import { HIRING_ROLES } from '../../config/enums.js'
 import { LIMITS } from '../../config/limits.js'
 import { AppError, fieldError } from '../../lib/errors.js'
 import { CandidateProfile } from '../candidates/candidates.model.js'
@@ -199,7 +200,7 @@ const sameDomain = (a, b) => Boolean(a && b && (a === b || a.endsWith(`.${b}`) |
  * number; cached per submitted details.
  */
 export async function accountSummary(admin, userId) {
-  const user = await User.findOne({ _id: userId, role: 'recruiter' })
+  const user = await User.findOne({ _id: userId, role: { $in: HIRING_ROLES } })
   if (!user) throw new AppError('NOT_FOUND')
   const company = await Company.findOne({ ownerUserId: user._id })
   const documents = company ? await KycDocument.find({ companyId: company._id }, 'type fileId') : []

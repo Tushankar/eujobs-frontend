@@ -1,3 +1,4 @@
+import { HIRING_ROLES } from '../../config/enums.js'
 import { csvAmount } from '../../lib/csv.js'
 import { AppError } from '../../lib/errors.js'
 import { t } from '../../lib/i18n.js'
@@ -19,7 +20,7 @@ import { searchText } from '../../lib/skills.js'
 async function payerCountries(userIds) {
   const [profiles, users] = await Promise.all([
     CandidateProfile.find({ userId: { $in: userIds } }, 'userId location'),
-    User.find({ _id: { $in: userIds }, role: 'recruiter' }, 'companyId'),
+    User.find({ _id: { $in: userIds }, role: { $in: HIRING_ROLES } }, 'companyId'),
   ])
   const companies = await Company.find({ _id: { $in: users.map((user) => user.companyId) } }, 'location')
   const companyCountry = new Map(companies.map((company) => [String(company._id), company.location?.countryCode]))
