@@ -271,7 +271,7 @@ export default {
     await clickText(page, 'Publish job', 'button')
     await page.waitForSelector('[role="dialog"]', { timeout: 10_000 }).catch(() => {})
     await pause(500)
-    const limit = await bodyText(page)
+    const limit = await page.$eval('[role="dialog"]', (dialog) => dialog.innerText).catch(() => '')
     expect(limit.includes('Agency Plus'), 'publishing a second job on Agency Free offers Agency Plus')
     expect(!limit.includes('Recruiter Plus'), 'the limit does not mention Recruiter Plus')
     ctx.note(`second job publish: ${limit.replace(/\s+/g, ' ').slice(0, 300)}`)

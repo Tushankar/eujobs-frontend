@@ -42,7 +42,7 @@ export default {
     const first = await completeCandidate('P1508A', { plus: false })
     const second = await completeCandidate('P1508B', { plus: false })
 
-    const handle = await ctx.newPage({ celebrations: true })
+    const handle = await ctx.newPage(null, { celebrations: true })
     const { page } = handle
     await signInWithForm(page, ctx.webUrl, '/agencies/login', agency.email, TEST_PASSWORD)
 
@@ -59,7 +59,7 @@ export default {
     const lead = await postJob(agency.token, jobBody({ title: 'Night Shift Lead', agency: terms(40, 60) }))
 
     // ---- Candidate: ask to join from the job page ----
-    const seeker = await ctx.newPage({ celebrations: true })
+    const seeker = await ctx.newPage(null, { celebrations: true })
     await signInWithForm(seeker.page, ctx.webUrl, '/sign-in', first.email, TEST_PASSWORD)
     await seeker.page.goto(`${ctx.webUrl}/candidate/jobs/${picker.id}`, { waitUntil: 'networkidle0' })
     await seeker.page.waitForSelector('[data-join-agency]', { timeout: 10_000 }).catch(() => issue('no Join button on the agency job'))

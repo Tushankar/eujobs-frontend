@@ -51,7 +51,8 @@ export const agencyApi = api.injectEndpoints({
     inviteTalent: build.mutation({
       query: (candidateId) => ({ url: '/agency/talent/invite', method: 'POST', body: { candidateId } }),
       invalidatesTags: ['AgencyTalent'],
-      onQueryStarted: celebrating((member) => ({ kind: 'books_invite_sent', params: { name: member.candidate.name ?? '' } })),
+      // Inviting someone who already asked accepts their request instead (the server answers with their request).
+      onQueryStarted: celebrating((member) => ({ kind: member.requestedBy === 'candidate' ? 'books_request_accepted' : 'books_invite_sent', params: { name: member.candidate.name ?? '' } })),
     }),
     // 2026-11-23: also the applications list, whose rows show each applicant's place on the books.
     talentAction: build.mutation({
