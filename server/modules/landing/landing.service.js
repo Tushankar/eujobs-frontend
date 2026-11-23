@@ -42,7 +42,7 @@ export async function landing(language) {
   const agencyJobs = jobs.filter((job) => job.agency).slice(0, AGENCY_JOBS)
   const shown = [...latest, ...agencyJobs]
   const companies = await Company.find({ _id: { $in: shown.map((job) => job.companyId) } }, 'displayName logoFileId')
-  const [logos, clients, faqs, reviews, posts] = await Promise.all([logoUrls(companies), agencyClients(agencyJobs), listFaqs('candidate', language), landingReviews(), latestPosts(language)])
+  const [logos, clients, faqs, reviews, posts] = await Promise.all([logoUrls(companies), agencyClients(shown), listFaqs('candidate', language), landingReviews(), latestPosts(language)])
   const companyById = new Map(companies.map((company) => [String(company._id), company]))
   const row = (job) => {
     const company = companyById.get(String(job.companyId))
@@ -58,6 +58,8 @@ export async function landing(language) {
       visaSponsorship: Boolean(job.visaSponsorship),
       salary: job.salary?.min != null || job.salary?.max != null ? job.salary.toObject() : null,
       publishedAt: job.publishedAt,
+      // The agency is the company; the client only where the agency shows it, as on /jobs.
+      agency: agencyCard(job, clients),
     }
   }
 
@@ -67,8 +69,7 @@ export async function landing(language) {
     // 2026-11-20: the /agencies page's live figures (open agency jobs, approved agencies).
     agencies: { jobs: jobs.filter((job) => job.agency).length, accounts: await User.countDocuments({ role: 'agency', status: 'active' }) },
     jobs: latest.map(row),
-    // The agency is the company; the client only where the agency shows it, as on /jobs.
-    agencyJobs: agencyJobs.map((job) => ({ ...row(job), agency: agencyCard(job, clients) })),
+    agencyJobs: agencyJobs.map(row),
     faqs,
     reviews,
     posts,

@@ -48,9 +48,9 @@ import { useCountUp } from './useLandingMotion.js'
 import styles from './Landing.module.css'
 
 /** A section title whose last words are in the brand blue. */
-function Title({ lead, accent, as: Tag = 'h2' }) {
+function Title({ lead, accent, as: Tag = 'h2', id }) {
   return (
-    <Tag className={styles.sectionTitle}>
+    <Tag id={id} className={styles.sectionTitle}>
       {lead} <span className={styles.accent}>{accent}</span>
     </Tag>
   )
@@ -174,13 +174,16 @@ export function Steps() {
   )
 }
 
-/** One job of Figma 396:14338 with live data (company logo, place, type, mode, years, salary, age). */
+/**
+ * One job of Figma 396:14338 with live data (company logo, place, type, mode, years, salary, age). An agency job
+ * (2026-11-23) adds its client, an Agency tag and its dates, and shows its pay rate instead of a salary, as on /jobs.
+ */
 function JobRow({ job }) {
   const { t } = useTranslation()
   const format = useFormat()
   const text = useJobText()
   const place = text.place(job)
-  const salary = text.salary(job)
+  const salary = job.agency ? job.agency.rate && text.rate(job.agency) : text.salary(job)
   return (
     <article className={styles.job}>
       <div className={styles.jobTop}>
@@ -189,11 +192,13 @@ function JobRow({ job }) {
           <h3 className={styles.jobTitle}>
             <Link to={`/jobs?job=${job.id}`}>{job.title}</Link>
           </h3>
-          <p className={styles.jobCompany}>{[job.company.name, place].filter(Boolean).join(' • ')}</p>
+          <p className={styles.jobCompany}>{[job.company.name, job.agency && text.client(job), place].filter(Boolean).join(' • ')}</p>
         </div>
         {job.publishedAt && <time className={styles.jobAgo} dateTime={job.publishedAt}>{format.relative(job.publishedAt)}</time>}
       </div>
       <ul className={styles.jobTags}>
+        {job.agency && <li data-agency-tag>{t('agency:candidate.agencyTag')}</li>}
+        {job.agency?.startDate && <li>{text.dates(job.agency)}</li>}
         {job.employmentType && <li>{t(`enums:employmentType.${job.employmentType}`)}</li>}
         {job.workPreference && <li>{t(`enums:workPreference.${job.workPreference}`)}</li>}
         {job.experienceYears != null && <li>{t('landing:vacancies.years', { count: job.experienceYears })}</li>}
@@ -248,6 +253,55 @@ export function Vacancies({ jobs }) {
           <ArrowPill to="/jobs">{t('landing:vacancies.all')}</ArrowPill>
         </div>
       )}
+    </section>
+  )
+}
+
+/**
+ * Phase 7 (owner 2026-11-23): the newest agency jobs in the job rows' look, right after the latest jobs, with a link
+ * to the Agency tab of /jobs. Left out while there are none.
+ */
+export function AgencyJobs({ jobs }) {
+  const { t } = useTranslation()
+  if (!jobs?.length) return null
+  return (
+    <section id="agency-jobs" className={`${styles.card} ${styles.section} ${styles.anchor}`} aria-labelledby="agency-jobs-title">
+      <InlineSvg svg={contours} className={styles.contours} motion="pattern" />
+      <div className={styles.sectionHead} data-reveal>
+        <Title id="agency-jobs-title" lead={t('landing:agencyJobs.titleLead')} accent={t('landing:agencyJobs.titleAccent')} />
+        <p className={styles.sectionText}>{t('landing:agencyJobs.text')}</p>
+      </div>
+      <div className={styles.jobs} data-stagger>
+        {jobs.map((job) => (
+          <JobRow key={job.id} job={job} />
+        ))}
+      </div>
+      <div className={styles.jobsMore}>
+        <ArrowPill to="/jobs?employmentType=agency">{t('landing:agencyJobs.all')}</ArrowPill>
+      </div>
+    </section>
+  )
+}
+
+/** Phase 7 (owner 2026-11-23): the "For agencies" band, a navy text band (no photo) to /agencies and agency sign-up. */
+export function AgencyBand() {
+  const { t } = useTranslation()
+  return (
+    <section className={styles.agencyBand} aria-labelledby="agency-band-title" data-agency-band>
+      <div className={styles.agencyBandCopy} data-reveal>
+        <h2 id="agency-band-title" className={styles.ctaTitle}>
+          {t('landing:agencyBand.title')}
+        </h2>
+        <p className={styles.agencyBandText}>{t('landing:agencyBand.text')}</p>
+      </div>
+      <div className={styles.agencyBandActions}>
+        <ArrowPill to="/agencies" white>
+          {t('landing:agencyBand.learnMore')}
+        </ArrowPill>
+        <Link to="/agencies/signup" className={styles.agencyBandLink}>
+          {t('landing:agencyBand.signUp')}
+        </Link>
+      </div>
     </section>
   )
 }
