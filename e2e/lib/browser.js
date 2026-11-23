@@ -21,13 +21,24 @@ export function launchChrome() {
  * A checked page. Success modals (2026-11-17) are off unless `celebrations`: they cover the page after applying,
  * publishing and so on, which the older scenarios do not expect.
  */
-export async function openPage(context, viewport, { celebrations = false } = {}) {
+export async function openPage(context, viewport, { celebrations = false, moveNotes = false } = {}) {
   const page = await context.newPage()
   await page.setViewport(VIEWPORTS[viewport])
   if (!celebrations) {
     await page.evaluateOnNewDocument(() => {
       try {
         localStorage.setItem('eujobs.e2e.celebrations', 'off')
+      } catch {
+        // about:blank has no storage.
+      }
+    })
+  }
+  // 2026-11-23: the note step before a stage move is off unless `moveNotes`, for the same reason (older scenarios move
+  // stages without expecting a dialog).
+  if (!moveNotes) {
+    await page.evaluateOnNewDocument(() => {
+      try {
+        localStorage.setItem('eujobs.e2e.moveNotes', 'off')
       } catch {
         // about:blank has no storage.
       }

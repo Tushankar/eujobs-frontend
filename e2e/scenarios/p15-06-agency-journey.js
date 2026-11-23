@@ -36,7 +36,8 @@ export default {
     const agency = await submittedAgency('P1506')
     const me = (await api('/me', { token: agency.token })).body
     await decide(me.id, 'approved')
-    const handle = await ctx.newPage()
+    // 2026-11-23: the agency moves stages through the note step (owner: "before moving, show notes").
+    const handle = await ctx.newPage(null, { moveNotes: true })
     const { page } = handle
     handle.allow(409, '/api/v1/recruiter/applications')
     handle.allow(422, '/api/v1/recruiter/applications')
@@ -188,10 +189,23 @@ export default {
     if (application) {
       const select = `[data-stage-select="${application.id}"] select`
       await chooseStage(page, select, 'Hired').catch((error) => issue(`no Hired option: ${error.message}`))
-      await pause(1500)
-      const tooEarly = await bodyText(page)
-      expect(tooEarly.includes('not on your books yet'), 'Hired too early says the candidate is not on the books yet')
+      // The note step: Applied → Hired, no notes yet, an optional note, then Move.
+      const step = await page.waitForSelector('[data-move-note]', { timeout: 10_000 }).catch(() => null)
+      expect(Boolean(step), 'choosing a stage opens the note step before the move')
+      if (step) {
+        const stepText = await page.$eval('[role="dialog"]', (dialog) => dialog.innerText)
+        expect(stepText.includes(`Move ${candidate.fullName} to Hired`) && stepText.includes('No notes yet'), 'the note step names the move and shows the notes (none yet)')
+        await fill(page, 'textarea[name="moveNote"]', 'Strong fit for the Harbour Logistics shifts.')
+        await ctx.screenshot(page, '18a-agency-move-note')
+        await page.click('[data-move-confirm]')
+        await pause(1500)
+      }
+      const tooEarly = await page.$eval('[role="dialog"]', (dialog) => dialog.innerText).catch(() => bodyText(page))
+      expect(tooEarly.includes('not on your books yet'), 'Hired too early says the candidate is not on the books yet (inside the step)')
+      expect(tooEarly.includes('Note saved'), 'the note is kept when the move is refused (no second copy on retry)')
       await ctx.screenshot(page, '18-agency-hired-too-early')
+      await clickText(page, 'Cancel', '[role="dialog"] button').catch(() => {})
+      await pause(400)
       // Accept the join request right from the row.
       await page.click('[data-books-accept]').catch(() => issue('no Accept on the application row'))
       await page.waitForFunction(() => document.querySelector('[data-books]')?.dataset.books === 'awaiting_agreement', { timeout: 10_000 }).catch(() => issue('accepting from the row did not update it'))
@@ -227,7 +241,13 @@ export default {
     if (application) {
       const select = `[data-stage-select="${application.id}"] select`
       await chooseStage(page, select, 'Hired')
-      await pause(1500)
+      await page.waitForSelector('[data-move-note-item]', { timeout: 10_000 }).catch(() => issue('the note from before is not in the step'))
+      const notesShown = await page.$eval('[data-move-note-item]', (items) => items.map((item) => item.innerText))
+      expect(notesShown.some((note) => note.includes('Strong fit for the Harbour Logistics shifts.')), 'the note step shows the earlier note with its date')
+      await ctx.screenshot(page, '21b-agency-move-with-note')
+      await page.click('[data-move-confirm]')
+      await page.waitForSelector('[data-move-note]', { hidden: true, timeout: 10_000 }).catch(() => issue('the step did not close after the move'))
+      await pause(1000)
       await ctx.screenshot(page, '22-agency-hired')
     }
     await page.goto(`${ctx.webUrl}/agency/placements?tab=upcoming`, { waitUntil: 'networkidle0' })
