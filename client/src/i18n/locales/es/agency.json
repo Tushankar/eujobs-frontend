@@ -247,7 +247,7 @@
     "rulesOnAccept": "Las reglas se fijan cuando el candidato acepta.",
     "end": "Terminar antes",
     "endTitle": "Terminar antes la colocación de {{name}}",
-    "endText": "Elige el nuevo último día (como pronto hoy). Las reglas que cuentan desde el fin cuentan desde ese día.",
+    "endText": "Elige el nuevo último día (como pronto hoy, o su primer día si aún no ha empezado). Las reglas que cuentan desde el fin cuentan desde ese día.",
     "endDate": "Último día",
     "endDateInvalid": "Elige un día desde hoy hasta antes del fin actual.",
     "rehire": "Volver a contratar",
@@ -386,6 +386,8 @@
       },
       "invited": "Te invitó",
       "agreed": "Aceptaste la versión {{version}} el {{date}}",
+      "leftOn": "Saliste el {{date}}",
+      "removedOn": "La agencia te retiró de su cartera el {{date}}",
       "newVersion": "La versión {{version}} espera tu aceptación",
       "read": "Leer acuerdo",
       "readNew": "Leer la versión {{version}}",
@@ -414,6 +416,7 @@
     },
     "lock": {
       "title": "Puedes aceptar este empleo a partir del {{date}}",
+      "never": "No puedes aceptar este empleo: termina antes de que quedes libre el {{date}}",
       "placement": "Tu colocación como {{job}} con {{agency}} ({{dates}})",
       "otherPlacement": "Una de tus colocaciones",
       "freeFrom": "Libre desde el {{date}}"
@@ -445,6 +448,7 @@
       "awaiting": "Puedes postularte. Acepta el acuerdo de {{agency}} para ser colocado.",
       "pending": "Puedes postularte. {{agency}} publicó un nuevo acuerdo (versión {{version}}): acéptalo antes de tu próxima colocación.",
       "blocked": "Tu colocación actual no te permite tomar esta oferta hasta el {{date}}. Mira el motivo arriba.",
+      "blockedNever": "Este empleo termina antes de que tu colocación actual te deje libre el {{date}}, así que no puedes aceptarlo. Mira el motivo arriba.",
       "readAgreement": "Leer el acuerdo",
       "ifPlaced": "Si te colocan en esta oferta",
       "ifPlacedShort": "Si te colocan",

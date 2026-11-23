@@ -153,7 +153,9 @@ describe('the books', () => {
     // Either side ends it; the candidate can ask again.
     const ended = await api().post(`${v1}/candidate/agencies/memberships/${request.id}/end`).set(auth(candidate))
     assert.deepEqual([ended.body.status, ended.body.endedBy], ['ended', 'candidate'])
+    assert.ok(Date.parse(ended.body.endedAt) <= Date.now(), 'an ended membership says when it ended')
     assert.equal((await join(candidate, company)).body.status, 'requested')
+    assert.equal((await api().get(`${v1}/candidate/agencies`).set(auth(candidate))).body.items[0].endedAt, null)
     const mine = (await api().get(`${v1}/candidate/agencies`).set(auth(candidate))).body.items
     assert.deepEqual(mine.map((item) => [item.status, item.acceptedVersion]), [['requested', 2]])
   })

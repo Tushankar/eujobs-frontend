@@ -262,13 +262,17 @@ function Agencies({ memberships, onLeave }) {
       <ul className={styles.card}>
         {memberships.map((membership) => {
           const agreementPath = `/candidate/agencies/memberships/${membership.id}/agreement`
-          const detail = membership.needsAgreement && membership.acceptedVersion
-            ? t('agency:candidate.membership.newVersion', { version: membership.agreement.version })
-            : membership.acceptedVersion
-              ? t('agency:candidate.membership.agreed', { version: membership.acceptedVersion, date: format.date(membership.acceptedAt) })
-              : membership.requestedBy === 'agency' && membership.status === 'awaiting_agreement'
-                ? t('agency:candidate.membership.invited')
-                : membership.agency.industry
+          // 2026-11-23: a membership that ended says when, not the agreement it once had.
+          const detail =
+            membership.status === 'ended' && membership.endedAt
+              ? t(membership.endedBy === 'agency' ? 'agency:candidate.membership.removedOn' : 'agency:candidate.membership.leftOn', { date: format.date(membership.endedAt) })
+              : membership.needsAgreement && membership.acceptedVersion
+                ? t('agency:candidate.membership.newVersion', { version: membership.agreement.version })
+                : membership.acceptedVersion
+                  ? t('agency:candidate.membership.agreed', { version: membership.acceptedVersion, date: format.date(membership.acceptedAt) })
+                  : membership.requestedBy === 'agency' && membership.status === 'awaiting_agreement'
+                    ? t('agency:candidate.membership.invited')
+                    : membership.agency.industry
           return (
             <li key={membership.id} className={styles.row} data-membership={membership.agency.displayName}>
               <CompanyLogo name={membership.agency.displayName} id={membership.agency.id} src={membership.agency.logoUrl ?? undefined} size={40} />

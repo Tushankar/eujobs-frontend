@@ -32,7 +32,7 @@ function Eligibility({ job, result }) {
   let link = null
   if (!result.allowed) {
     tone = 'blocked'
-    text = t('agency:candidate.before.blocked', { date: format.date(result.freeFrom) })
+    text = t(job.agency.endDate && result.freeFrom > job.agency.endDate ? 'agency:candidate.before.blockedNever' : 'agency:candidate.before.blocked', { date: format.date(result.freeFrom) })
   } else if (status === 'active' && agreementPending) {
     text = t('agency:candidate.before.pending', { agency, version: agreementVersion })
   } else if (status === 'active') {

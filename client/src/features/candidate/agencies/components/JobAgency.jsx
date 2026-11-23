@@ -101,7 +101,10 @@ export function LockBanner({ job }) {
     <section className={styles.lock} role="status" data-lock-banner>
       <p className={styles.lockTitle}>
         <Icon as={CalendarClock} size={16} />
-        {t('agency:candidate.lock.title', { date: format.date(result.freeFrom) })}
+        {/* 2026-11-23: a job that ends before the candidate is free can never be taken; say so instead of a date. */}
+        {job.agency?.endDate && result.freeFrom > job.agency.endDate
+          ? t('agency:candidate.lock.never', { date: format.date(result.freeFrom) })
+          : t('agency:candidate.lock.title', { date: format.date(result.freeFrom) })}
       </p>
       <ul className={styles.blocks}>
         {result.blocks.map((block) => {

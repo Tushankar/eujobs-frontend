@@ -173,6 +173,8 @@ async function candidateDtos(user, memberships) {
       agreement: current ? { version: current.version, publishedAt: current.publishedAt } : null,
       ...agreementState(membership, current),
       endedBy: membership.endedBy ?? null,
+      // 2026-11-23: when the candidate left (or was taken off) the books, for "You left on …".
+      endedAt: membership.status === 'ended' ? (membership.history.findLast((entry) => entry.status === 'ended')?.at ?? null) : null,
       updatedAt: membership.updatedAt,
     }
   })

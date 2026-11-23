@@ -164,6 +164,7 @@ export default {
     const before = await seeker.page.$eval('[data-placement-rules]', (section) => section.innerText).catch(() => '')
     ctx.note(`Before you apply: ${before.replace(/\s+/g, ' ').slice(0, 400)}`)
     await seeker.page.$eval('[data-placement-rules]', (section) => section.scrollIntoView({ block: 'start' })).catch(() => {})
+    await pause(900) // the job page fades sections in as they scroll into view
     await ctx.screenshot(seeker.page, '14-candidate-before-apply')
     await clickApply(seeker.page)
     await seeker.page.waitForSelector('[data-apply-dialog]')
@@ -258,6 +259,16 @@ export default {
     await page.goto(`${ctx.webUrl}/agency/jobs/${second.id}/edit?step=9`, { waitUntil: 'networkidle0' })
     await pause(800)
     await ctx.screenshot(page, '30-free-second-job')
+    // Agency Free keeps 1 live job: publishing a second one must offer Agency Plus (not Recruiter Plus).
+    handle.allow(402, '/api/v1/recruiter/jobs')
+    await clickText(page, 'Publish job', 'button')
+    await page.waitForSelector('[role="dialog"]', { timeout: 10_000 }).catch(() => {})
+    await pause(500)
+    const limit = await bodyText(page)
+    expect(limit.includes('Agency Plus'), 'publishing a second job on Agency Free offers Agency Plus')
+    expect(!limit.includes('Recruiter Plus'), 'the limit does not mention Recruiter Plus')
+    ctx.note(`second job publish: ${limit.replace(/\s+/g, ' ').slice(0, 300)}`)
+    await ctx.screenshot(page, '31-free-limit')
     ctx.note(`page issues: ${[...handle.issues, ...seeker.issues].join(' | ') || 'none'}`)
   },
 }

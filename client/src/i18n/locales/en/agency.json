@@ -135,15 +135,15 @@
   "rules": {
     "title": "Contract rules",
     "labels": {
-      "exclusivity": "Other work during an assignment",
+      "exclusivity": "Other work during a placement",
       "noticeDays": "Notice to end early",
       "coolingOffDays": "Cooling-off at the client",
       "maxWeeklyHours": "Most hours a week"
     },
     "help": {
-      "exclusivity": "What the candidate may do while an assignment runs.",
-      "noticeDays": "Days of notice the candidate gives to end an assignment early.",
-      "coolingOffDays": "Days after an assignment before they may work for that client directly or through another agency.",
+      "exclusivity": "What the candidate may do while a placement runs.",
+      "noticeDays": "Days of notice the candidate gives to end a placement early.",
+      "coolingOffDays": "Days after a placement before they may work for that client directly or through another agency.",
       "maxWeeklyHours": "The most hours a week across all their jobs."
     },
     "notStated": "Not stated",
@@ -244,7 +244,7 @@
     "rulesOnAccept": "The rules are set when the candidate accepts.",
     "end": "End early",
     "endTitle": "End {{name}}'s placement early",
-    "endText": "Pick the new last day (today at the soonest). Rules that count from the end count from this day.",
+    "endText": "Pick the new last day (today at the soonest, or its first day if it has not started). Rules that count from the end count from this day.",
     "endDate": "Last day",
     "endDateInvalid": "Choose a day from today up to before the current end.",
     "rehire": "Re-hire",
@@ -383,6 +383,8 @@
       },
       "invited": "Invited you",
       "agreed": "You agreed to version {{version}} on {{date}}",
+      "leftOn": "You left on {{date}}",
+      "removedOn": "The agency took you off its books on {{date}}",
       "newVersion": "Version {{version}} is waiting for your agreement",
       "read": "Read agreement",
       "readNew": "Read version {{version}}",
@@ -411,6 +413,7 @@
     },
     "lock": {
       "title": "You can take this job from {{date}}",
+      "never": "You can’t take this job: it ends before you are free on {{date}}",
       "placement": "Your placement as {{job}} with {{agency}} ({{dates}})",
       "otherPlacement": "One of your placements",
       "freeFrom": "Free from {{date}}"
@@ -441,6 +444,7 @@
       "awaiting": "You can apply. Accept {{agency}}’s agreement to be placed.",
       "pending": "You can apply. {{agency}} published a new agreement (version {{version}}): accept it before your next placement.",
       "blocked": "Your current placement keeps you from this job until {{date}}. See why above.",
+      "blockedNever": "This job ends before your current placement frees you on {{date}}, so you can’t take it. See why above.",
       "readAgreement": "Read the agreement",
       "ifPlaced": "If you’re placed on this job",
       "ifPlacedShort": "If you’re placed",

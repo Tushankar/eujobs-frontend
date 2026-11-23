@@ -22,6 +22,7 @@ const TABS = ['running', 'upcoming', 'offered', 'over']
 const PHASE_TONE = { running: 'success', upcoming: 'info', over: 'neutral' }
 const tabOf = (placement) => (placement.status === 'offered' ? 'offered' : placement.phase)
 const todayText = () => new Date().toISOString().slice(0, 10)
+const dayBefore = (key) => new Date(Date.parse(key) - 86_400_000).toISOString().slice(0, 10)
 
 /** Dates of a placement: start → end, and the earlier real end (notice, agency end) when there is one. */
 function useDates() {
@@ -80,7 +81,10 @@ function PlacementDetails({ placement, onClose }) {
 function EndDialog({ placement, onClose }) {
   const { t } = useTranslation()
   const errorText = useErrorText()
-  const [date, setDate] = useState(todayText())
+  // 2026-11-23: the end must fall on or after the start (an upcoming placement) and before its current end.
+  const first = placement.startDate > todayText() ? placement.startDate : todayText()
+  const last = dayBefore(placement.effectiveEnd ?? placement.endDate)
+  const [date, setDate] = useState(first)
   const [error, setError] = useState(null)
   const [end, { isLoading }] = useEndPlacementMutation()
   async function submit(event) {
@@ -115,7 +119,8 @@ function EndDialog({ placement, onClose }) {
           label={t('agency:placements.endDate')}
           name="endDate"
           value={date}
-          min={todayText()}
+          min={first}
+          max={last}
           onChange={setDate}
           error={error && (error.data?.error?.fields?.endDate ? t('agency:placements.endDateInvalid') : errorText.code(error))}
         />
@@ -125,12 +130,14 @@ function EndDialog({ placement, onClose }) {
 }
 
 /** Offer the same person another of the agency's published jobs (its dates, rate and contract). */
-function RehireDialog({ placement, onClose }) {
+function RehireDialog({ placement, placements, onClose }) {
   const { t } = useTranslation()
   const format = useFormat()
   const errorText = useErrorText()
   const { data: jobs } = useGetRecruiterJobsQuery()
-  const open = (jobs?.items ?? []).filter((job) => job.status === 'published' && job.agency && job.agency.startDate >= todayText())
+  // 2026-11-23: not a job this person already holds or was offered (the server refuses those as already placed).
+  const taken = new Set(placements.filter((other) => other.candidate.id === placement.candidate.id && ['offered', 'confirmed'].includes(other.status)).map((other) => other.job.id))
+  const open = (jobs?.items ?? []).filter((job) => job.status === 'published' && job.agency && job.agency.startDate >= todayText() && !taken.has(job.id))
   const [jobId, setJobId] = useState('')
   const [error, setError] = useState(null)
   const [rehire, { isLoading }] = useRehireMutation()
@@ -308,7 +315,7 @@ export default function PlacementsPage() {
       )}
       <PlacementDetails placement={details} onClose={() => setDetails(null)} />
       {dialog?.kind === 'end' && <EndDialog placement={dialog.placement} onClose={() => setDialog(null)} />}
-      {dialog?.kind === 'rehire' && <RehireDialog placement={dialog.placement} onClose={() => setDialog(null)} />}
+      {dialog?.kind === 'rehire' && <RehireDialog placement={dialog.placement} placements={placements} onClose={() => setDialog(null)} />}
       <ConfirmDialog
         open={Boolean(nextOffer)}
         title={t('agency:ranking.offerTitle', { name: nextOffer?.placement.candidate.name, job: nextOffer?.job.title })}

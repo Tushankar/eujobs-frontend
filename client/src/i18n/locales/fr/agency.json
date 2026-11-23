@@ -136,15 +136,15 @@
   "rules": {
     "title": "Règles du contrat",
     "labels": {
-      "exclusivity": "Autre travail pendant une mission",
+      "exclusivity": "Autre travail pendant un placement",
       "noticeDays": "Préavis pour terminer plus tôt",
       "coolingOffDays": "Délai de carence chez le client",
       "maxWeeklyHours": "Heures maximales par semaine"
     },
     "help": {
-      "exclusivity": "Ce que le candidat peut faire pendant une mission.",
-      "noticeDays": "Jours de préavis que le candidat donne pour terminer une mission plus tôt.",
-      "coolingOffDays": "Jours après une mission avant de pouvoir travailler pour ce client directement ou via une autre agence.",
+      "exclusivity": "Ce que le candidat peut faire pendant un placement.",
+      "noticeDays": "Jours de préavis que le candidat donne pour terminer un placement plus tôt.",
+      "coolingOffDays": "Jours après un placement avant de pouvoir travailler pour ce client directement ou via une autre agence.",
       "maxWeeklyHours": "Le maximum d’heures par semaine, tous emplois confondus."
     },
     "notStated": "Non précisé",
@@ -247,7 +247,7 @@
     "rulesOnAccept": "Les règles sont fixées quand le candidat accepte.",
     "end": "Terminer plus tôt",
     "endTitle": "Terminer plus tôt le placement de {{name}}",
-    "endText": "Choisissez le nouveau dernier jour (aujourd’hui au plus tôt). Les règles qui comptent depuis la fin comptent depuis ce jour.",
+    "endText": "Choisissez le nouveau dernier jour (aujourd’hui au plus tôt, ou son premier jour s’il n’a pas commencé). Les règles qui comptent depuis la fin comptent depuis ce jour.",
     "endDate": "Dernier jour",
     "endDateInvalid": "Choisissez un jour à partir d’aujourd’hui et avant la fin actuelle.",
     "rehire": "Réembaucher",
@@ -386,6 +386,8 @@
       },
       "invited": "Vous a invité",
       "agreed": "Vous avez accepté la version {{version}} le {{date}}",
+      "leftOn": "Vous avez quitté son vivier le {{date}}",
+      "removedOn": "L’agence vous a retiré de son vivier le {{date}}",
       "newVersion": "La version {{version}} attend votre accord",
       "read": "Lire l’accord",
       "readNew": "Lire la version {{version}}",
@@ -414,6 +416,7 @@
     },
     "lock": {
       "title": "Vous pouvez prendre cette offre à partir du {{date}}",
+      "never": "Vous ne pouvez pas prendre cette offre : elle se termine avant que vous soyez libre le {{date}}",
       "placement": "Votre placement comme {{job}} avec {{agency}} ({{dates}})",
       "otherPlacement": "L’un de vos placements",
       "freeFrom": "Libre à partir du {{date}}"
@@ -445,6 +448,7 @@
       "awaiting": "Vous pouvez postuler. Acceptez l’accord de {{agency}} pour être placé.",
       "pending": "Vous pouvez postuler. {{agency}} a publié un nouvel accord (version {{version}}) : acceptez-le avant votre prochain placement.",
       "blocked": "Votre placement en cours vous empêche de prendre cette offre jusqu’au {{date}}. Voir pourquoi plus haut.",
+      "blockedNever": "Cette offre se termine avant que votre placement actuel vous libère le {{date}} : vous ne pouvez donc pas la prendre. Voyez pourquoi plus haut.",
       "readAgreement": "Lire l’accord",
       "ifPlaced": "Si vous êtes placé sur cette offre",
       "ifPlacedShort": "Si vous êtes placé",

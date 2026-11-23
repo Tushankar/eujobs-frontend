@@ -18,10 +18,10 @@ function monthGrid(firstKey) {
 
 /**
  * 2026-11-23 (owner: "calendar picker"): a date field that shows the date in the app's format (e.g. "28 Nov 2026")
- * and opens a month calendar. `value` and `onChange` use 'YYYY-MM-DD' ('' when empty); days before `min` are off.
+ * and opens a month calendar. `value` and `onChange` use 'YYYY-MM-DD' ('' when empty); days before `min` and after `max` are off.
  * Keyboard: arrows move a day or a week, Page Up/Down a month, Home/End the week, Enter picks, Escape closes.
  */
-export default function DatePicker({ label, hint, error, name, value, onChange, min, placeholder, className, id, disabled }) {
+export default function DatePicker({ label, hint, error, name, value, onChange, min, max, placeholder, className, id, disabled }) {
   const { t } = useTranslation()
   const format = useFormat()
   const { language } = usePreferences()
@@ -39,7 +39,7 @@ export default function DatePicker({ label, hint, error, name, value, onChange, 
   const monthLabel = new Intl.DateTimeFormat(language, { month: 'long', year: 'numeric', timeZone: 'UTC' }).format(fromKey(monthStart(focusKey)))
   const days = monthGrid(monthStart(focusKey))
   const today = todayKey()
-  const blocked = (key) => Boolean(min && key < min)
+  const blocked = (key) => Boolean((min && key < min) || (max && key > max))
 
   function openCalendar() {
     setFocusKey(value || (min && min > today ? min : today))

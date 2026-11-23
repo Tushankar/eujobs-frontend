@@ -52,7 +52,7 @@
     "day": "per day"
   },
   "exclusivity": {
-    "no_other_work": "No other work during an assignment",
+    "no_other_work": "No other work during a placement",
     "no_other_agency_work": "No work through other agencies",
     "no_same_client": "No work for the same client elsewhere",
     "free": "Free to work elsewhere"
