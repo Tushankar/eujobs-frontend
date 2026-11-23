@@ -117,3 +117,14 @@
   opacity: 0.5;
   pointer-events: none;
 }
+
+/* 2026-11-23: why a drop was refused. */
+.moveFailure {
+  margin: 0 0 16px;
+  padding: 10px 14px;
+  border: 1px solid var(--destructive);
+  border-radius: var(--radius-lg);
+  font-size: 13px;
+  line-height: 20px;
+  color: var(--destructive);
+}

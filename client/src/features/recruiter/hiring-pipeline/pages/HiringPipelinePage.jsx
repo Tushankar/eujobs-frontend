@@ -1,4 +1,5 @@
 import { hiringPath } from '@/app/roles.js'
+import { useState } from 'react'
 import { useTranslation } from 'react-i18next'
 import { useLocation, useNavigate, useSearchParams } from 'react-router-dom'
 import { Columns3, Layers, Settings2 } from 'lucide-react'
@@ -14,6 +15,7 @@ import ManageStagesModal from '../components/ManageStagesModal.jsx'
 import PipelineColumn, { PipelineColumnSkeleton } from '../components/PipelineColumn.jsx'
 import PipelineFunnel from '../components/PipelineFunnel.jsx'
 import { useInterviewMove } from '@/features/interviews/useInterviewMove.js'
+import { useErrorText } from '@/lib/forms.js'
 import { useStageMove } from '../useStageMove.js'
 import styles from './HiringPipelinePage.module.css'
 
@@ -55,7 +57,13 @@ export default function HiringPipelinePage() {
   const applications = data?.items ?? []
   // P11d-A6: a drop into or out of an Interview stage keeps the interview consistent.
   const interviewMove = useInterviewMove()
-  const move = useStageMove(applications, (application, stageId) => interviewMove.request(application, stageId, stages))
+  // 2026-11-23: a refused drop says why (it used to fail silently).
+  const errorText = useErrorText()
+  const [moveFailure, setMoveFailure] = useState(null)
+  const move = useStageMove(applications, (application, stageId) => {
+    setMoveFailure(null)
+    Promise.resolve(interviewMove.request(application, stageId, stages)).catch((error) => setMoveFailure({ error, name: application.candidate?.fullName ?? '' }))
+  })
   const opened = applications.find((application) => application.id === params.get('application'))
   const funnelStages = funnel?.items ?? []
   // `boardLoading`: nothing to show yet. `busy`: another job's applications are loading; the board stays, dimmed.
@@ -90,6 +98,13 @@ export default function HiringPipelinePage() {
           </Button>
         }
       />
+
+      {moveFailure && (
+        <p className={styles.moveFailure} role="alert" data-move-failure>
+          {moveFailure.name ? `${moveFailure.name}: ` : ''}
+          {errorText.code(moveFailure.error)}
+        </p>
+      )}
 
       <div className={styles.summary} data-tour="pipeline-filters">
         <SelectField variant="filter"

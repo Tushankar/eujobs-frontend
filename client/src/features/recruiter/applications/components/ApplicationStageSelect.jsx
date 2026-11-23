@@ -64,7 +64,11 @@ export default function ApplicationStageSelect({ application, candidateName, job
               setAlsoCancel(true)
               setMessage('')
               setRejecting(true)
-            } else interviewMove.request(application, next, stages, candidateName)
+            } else {
+              // 2026-11-23: a refused move (e.g. Hired before the candidate is on an agency's books) says why.
+              setFailure(null)
+              Promise.resolve(interviewMove.request(application, next, stages, candidateName)).catch(setFailure)
+            }
           }}
         />
         {canMessage && (

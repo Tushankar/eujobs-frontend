@@ -115,6 +115,9 @@ const EXTENSION_ALIASES = { jpeg: 'jpg' }
 
 /** M-185, before uploading: a wrong extension, an empty file or one over the size limit, as an i18n key. */
 export function checkUpload(file, rule) {
+  // 2026-11-23: a file chosen before GET /meta/config has its rules used to throw here and upload nothing, with no
+  // message. Without the rules the server's own check (always run) answers instead.
+  if (!rule) return null
   const name = file.name.toLowerCase()
   const ext = name.includes('.') ? name.slice(name.lastIndexOf('.') + 1) : ''
   if (!rule.types.includes(EXTENSION_ALIASES[ext] ?? ext)) return 'wrongType'
