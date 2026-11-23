@@ -159,7 +159,9 @@
     "valueHours": "Heures par semaine",
     "clause": "Clause",
     "clauseHint": "Copiée mot pour mot depuis le PDF.",
-    "changedFromAi": "Modifié par rapport à l’IA"
+    "changedFromAi": "Modifié par rapport à l’IA",
+    "unitDays": "jours",
+    "unitHours": "heures par semaine"
   },
   "contract": {
     "title": "Contrat (facultatif)",
@@ -186,7 +188,35 @@
     "rateNoCurrency": "Taux de rémunération",
     "ratePeriod": "Payé",
     "hoursPerWeek": "Heures par semaine (facultatif)",
-    "hoursHint": "Laissé vide, un emploi à {{type}} compte pour {{count}} heures par semaine."
+    "hoursHint": "Laissé vide, un emploi à {{type}} compte pour {{count}} heures par semaine.",
+    "sectionClient": "Client",
+    "sectionDates": "Dates",
+    "sectionPay": "Rémunération et heures",
+    "sectionContract": "Règles de cette offre",
+    "contractHint": "Votre accord fixe les règles de toutes vos offres. Ajoutez ici un contrat seulement si cette offre a besoin de règles différentes : ses règles confirmées passent en premier pour les missions de cette offre.",
+    "visibility": "Les candidats voient",
+    "visibilityName": "Le nom du client",
+    "visibilityConfidential": "Client confidentiel",
+    "quickLength": "Durée rapide",
+    "length": {
+      "week": "1 semaine",
+      "twoWeeks": "2 semaines",
+      "month": "1 mois",
+      "threeMonths": "3 mois"
+    },
+    "lengthNeedsStart": "Choisissez d’abord une date de début.",
+    "duration": {
+      "weeks_one": "{{count}} semaine",
+      "weeks_other": "{{count}} semaines",
+      "days_one": "{{count}} jour",
+      "days_other": "{{count}} jours"
+    },
+    "perHour": "de l’heure",
+    "perDay": "par jour",
+    "weekly": "Environ {{amount}} par semaine pour {{hours}} heures",
+    "hoursSuffix": "heures par semaine",
+    "clientSearchEmpty": "Aucun client pour l’instant. Ajoutez les entreprises pour lesquelles vous recrutez.",
+    "contractAfterSave": "Vous pourrez joindre un contrat pour cette offre une fois la première étape enregistrée."
   },
   "placements": {
     "title": "Placements",
@@ -425,5 +455,15 @@
       "offered": "Proposé",
       "placed": "Placé"
     }
+  },
+  "jobRules": {
+    "applies": "Votre accord, version {{version}}, s’applique à cette offre :",
+    "noAgreementTitle": "Aucun accord publié",
+    "noAgreementText": "Les candidats rejoignent votre vivier en acceptant votre accord, et seules les personnes de votre vivier peuvent être placées. Publiez-le dans Talents › Accord avant de recruter pour cette offre.",
+    "defaultExclusivity": "Aucune autre offre d’agence en même temps",
+    "order": "Pour chaque règle : d’abord le contrat confirmé de cette offre, puis votre accord, puis la règle par défaut.",
+    "openAgreement": "Ouvrir votre accord",
+    "uploadAgreement": "Téléverser votre accord",
+    "scope": "Cet accord couvre toutes vos offres. Une offre peut aussi avoir son propre contrat (offre › Conditions d’agence) : ses règles confirmées passent avant celles-ci pour les missions de cette offre."
   }
 }

@@ -1,0 +1,190 @@
+/* DatePicker (2026-11-23): the field button in the shared control shell, and a quiet month calendar under it. */
+.root {
+  position: relative;
+}
+
+.trigger {
+  width: 100%;
+  justify-content: space-between;
+  gap: 10px;
+  font: inherit;
+  font-size: 14px;
+  text-align: left;
+  cursor: pointer;
+}
+
+.trigger:focus-visible {
+  outline: 2px solid var(--ring);
+  outline-offset: 2px;
+}
+
+.trigger:disabled {
+  cursor: not-allowed;
+}
+
+.value {
+  color: var(--foreground);
+}
+
+.placeholder {
+  color: var(--text-placeholder);
+}
+
+.icon {
+  flex-shrink: 0;
+  color: var(--muted-foreground);
+}
+
+.popover {
+  position: absolute;
+  z-index: 40;
+  top: calc(100% + 6px);
+  left: 0;
+  width: 300px;
+  padding: 14px;
+  border: 1px solid var(--border);
+  border-radius: var(--radius-xl);
+  background: var(--card);
+  box-shadow: 0 16px 40px rgba(16, 24, 40, 0.14);
+  animation: picker-in var(--duration-base) var(--ease-out);
+}
+
+@keyframes picker-in {
+  from {
+    opacity: 0;
+    transform: translateY(-4px);
+  }
+}
+
+.head {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 8px;
+}
+
+.month {
+  margin: 0;
+  font-size: 14px;
+  font-weight: 700;
+  color: var(--foreground);
+}
+
+.nav {
+  display: grid;
+  place-items: center;
+  width: 32px;
+  height: 32px;
+  border: 1px solid var(--border);
+  border-radius: var(--radius-full);
+  background: var(--card);
+  color: var(--foreground);
+  cursor: pointer;
+}
+
+.nav:hover {
+  background: var(--muted);
+}
+
+.weekdays,
+.grid {
+  display: grid;
+  grid-template-columns: repeat(7, minmax(0, 1fr));
+  gap: 2px;
+}
+
+.weekdays {
+  margin-top: 12px;
+  font-size: 11px;
+  font-weight: 600;
+  text-align: center;
+  color: var(--muted-foreground);
+}
+
+.weekdays span {
+  padding: 4px 0;
+}
+
+.grid {
+  margin-top: 4px;
+}
+
+.day {
+  height: 36px;
+  border: 1px solid transparent;
+  border-radius: var(--radius-full);
+  background: none;
+  font: inherit;
+  font-size: 13px;
+  font-weight: 500;
+  color: var(--foreground);
+  cursor: pointer;
+}
+
+.day:hover:not(:disabled) {
+  background: var(--muted);
+}
+
+.day:focus-visible {
+  outline: 2px solid var(--ring);
+  outline-offset: 1px;
+}
+
+.outside {
+  color: var(--text-faint);
+}
+
+.today {
+  border-color: var(--border-strong);
+  font-weight: 700;
+}
+
+.selected,
+.selected:hover:not(:disabled) {
+  border-color: transparent;
+  background: var(--brand-gradient);
+  color: #fff;
+}
+
+.day:disabled {
+  color: var(--text-faint);
+  text-decoration: line-through;
+  cursor: not-allowed;
+  opacity: 0.6;
+}
+
+.foot {
+  display: flex;
+  justify-content: space-between;
+  margin-top: 10px;
+  padding-top: 10px;
+  border-top: 1px solid var(--border);
+}
+
+.link {
+  padding: 4px 2px;
+  border: 0;
+  background: none;
+  font: inherit;
+  font-size: 13px;
+  font-weight: 600;
+  color: var(--primary);
+  cursor: pointer;
+}
+
+.link:disabled {
+  color: var(--text-faint);
+  cursor: not-allowed;
+}
+
+@media (max-width: 599px) {
+  .popover {
+    width: min(300px, calc(100vw - 48px));
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .popover {
+    animation: none;
+  }
+}

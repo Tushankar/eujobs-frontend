@@ -71,5 +71,12 @@
     "europe": "UE y Reino Unido",
     "world": "Resto del mundo"
   },
-  "visaSponsorship": "Patrocinio de visado"
+  "visaSponsorship": "Patrocinio de visado",
+  "datePicker": {
+    "choose": "Elige una fecha",
+    "previous": "Mes anterior",
+    "next": "Mes siguiente",
+    "today": "Hoy",
+    "clear": "Borrar"
+  }
 }

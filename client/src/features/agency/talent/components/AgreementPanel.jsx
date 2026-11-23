@@ -183,6 +183,10 @@ export default function AgreementPanel() {
             <FileLink file={current.file} />
           </div>
           <RulesList rules={current.rules} />
+          {/* 2026-11-23: how this agreement and a job's own contract fit together. */}
+          <p className={styles.lead} data-agreement-scope>
+            {t('agency:jobRules.scope')}
+          </p>
         </Panel>
       )}
 

@@ -71,5 +71,12 @@
     "europe": "EU & UK",
     "world": "Rest of the world"
   },
-  "visaSponsorship": "Visa sponsorship"
+  "visaSponsorship": "Visa sponsorship",
+  "datePicker": {
+    "choose": "Choose a date",
+    "previous": "Previous month",
+    "next": "Next month",
+    "today": "Today",
+    "clear": "Clear"
+  }
 }

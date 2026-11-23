@@ -48,7 +48,7 @@ function CompanyLink({ value, onChange }) {
 }
 
 /** Add or edit a client: name, industry, city, the EU Jobs company it is, and (once saved) its logo. */
-export default function ClientDialog({ client, open, onClose }) {
+export default function ClientDialog({ client, open, onClose, onSaved }) {
   const { t } = useTranslation()
   const errorText = useErrorText()
   const { data: config } = useGetConfigQuery()
@@ -79,7 +79,9 @@ export default function ClientDialog({ client, open, onClose }) {
     if (Object.keys(nextErrors).length) return
     const body = { name: values.name.trim(), industry: values.industry.trim() || null, placeId: values.place?.placeId ?? null, linkedCompanyId: values.linked?.id ?? null }
     try {
-      await (client ? update({ id: client.id, body }) : create(body)).unwrap()
+      const saved = await (client ? update({ id: client.id, body }) : create(body)).unwrap()
+      // 2026-11-23: the job wizard picks a client added from it.
+      onSaved?.(saved)
       onClose()
     } catch (error) {
       setErrors(serverFieldErrors(error))

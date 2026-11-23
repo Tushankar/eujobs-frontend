@@ -119,7 +119,8 @@
   },
   "preview": {
     "title": "Preview",
-    "hint": "How candidates will see this job"
+    "hint": "How candidates will see this job",
+    "agencyHours": "{{count}} hours a week"
   },
   "fields": {
     "title": "Job title",
@@ -245,5 +246,11 @@
     "title": "We couldn’t find that job",
     "text": "It may have been removed, or the link may be incorrect. Your other jobs are still in the Jobs list.",
     "back": "Back to jobs"
+  },
+  "ai": {
+    "stepMark": "AI",
+    "stepTitle": "Drafted by AI: check it before you publish",
+    "banner": "AI drafted this step. Check it and change anything before you publish; a field’s AI mark goes once you edit it.",
+    "field": "AI draft"
   }
 }

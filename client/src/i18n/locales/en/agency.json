@@ -156,7 +156,9 @@
     "valueHours": "Hours a week",
     "clause": "Clause",
     "clauseHint": "Copied word for word from the PDF.",
-    "changedFromAi": "Changed from AI"
+    "changedFromAi": "Changed from AI",
+    "unitDays": "days",
+    "unitHours": "hours a week"
   },
   "contract": {
     "title": "Contract (optional)",
@@ -183,7 +185,35 @@
     "rateNoCurrency": "Pay rate",
     "ratePeriod": "Paid",
     "hoursPerWeek": "Hours per week (optional)",
-    "hoursHint": "Left empty, a {{type}} job counts as {{count}} hours a week."
+    "hoursHint": "Left empty, a {{type}} job counts as {{count}} hours a week.",
+    "sectionClient": "Client",
+    "sectionDates": "Dates",
+    "sectionPay": "Pay and hours",
+    "sectionContract": "Rules for this job",
+    "contractHint": "Your agreement sets the rules for every job. Add a contract here only when this job needs different rules: its confirmed rules come first for placements on this job.",
+    "visibility": "Candidates see",
+    "visibilityName": "The client’s name",
+    "visibilityConfidential": "Confidential client",
+    "quickLength": "Quick length",
+    "length": {
+      "week": "1 week",
+      "twoWeeks": "2 weeks",
+      "month": "1 month",
+      "threeMonths": "3 months"
+    },
+    "lengthNeedsStart": "Pick a start date first.",
+    "duration": {
+      "weeks_one": "{{count}} week",
+      "weeks_other": "{{count}} weeks",
+      "days_one": "{{count}} day",
+      "days_other": "{{count}} days"
+    },
+    "perHour": "per hour",
+    "perDay": "per day",
+    "weekly": "About {{amount}} a week at {{hours}} hours",
+    "hoursSuffix": "hours a week",
+    "clientSearchEmpty": "No clients yet. Add the companies you recruit for.",
+    "contractAfterSave": "You can attach a contract for this job after the first step is saved."
   },
   "placements": {
     "title": "Placements",
@@ -420,5 +450,15 @@
       "offered": "Offered",
       "placed": "Placed"
     }
+  },
+  "jobRules": {
+    "applies": "Your agreement, version {{version}}, applies to this job:",
+    "noAgreementTitle": "No agreement published yet",
+    "noAgreementText": "Candidates join your books by agreeing to your agreement, and only people on your books can be placed. Publish it in Talent › Agreement before you hire for this job.",
+    "defaultExclusivity": "No other agency job at the same time",
+    "order": "For each rule: this job’s confirmed contract comes first, then your agreement, then the default.",
+    "openAgreement": "Open your agreement",
+    "uploadAgreement": "Upload your agreement",
+    "scope": "This agreement covers all your jobs. A job can also have its own contract (job › Agency terms): its confirmed rules come before these for that job’s placements."
   }
 }

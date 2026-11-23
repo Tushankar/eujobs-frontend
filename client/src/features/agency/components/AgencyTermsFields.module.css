@@ -1,39 +1,327 @@
-.stack {
+/*
+ * The job wizard's Agency terms (owner layout 2026-11-23): sections divided by hairlines, neutral controls, pill
+ * switches for two-way choices; colour only on the chosen option.
+ */
+.sections {
   display: flex;
   flex-direction: column;
-  gap: 18px;
+}
+
+.section {
+  display: flex;
+  flex-direction: column;
+  gap: 14px;
+  padding: 22px 0;
+}
+
+.section:first-child {
+  padding-top: 0;
+}
+
+.section + .section {
+  border-top: 1px solid var(--border);
+}
+
+.sectionTitle {
+  margin: 0;
+  font-size: 15px;
+  font-weight: 700;
+  line-height: 22px;
+  color: var(--foreground);
 }
 
 .pair {
   display: grid;
   grid-template-columns: repeat(2, minmax(0, 1fr));
-  align-items: end;
+  align-items: start;
   gap: 16px;
 }
 
-.addClient {
-  padding-bottom: 12px;
-  font-size: 13px;
-  font-weight: 600;
-}
-
-.addClient a {
-  color: var(--primary);
-}
-
 .note {
-  margin-top: -10px;
+  margin: 0;
   font-size: 12px;
   line-height: 18px;
   color: var(--muted-foreground);
 }
 
+/* Client picker */
+.pickerRoot {
+  width: 100%;
+}
+
+.picker {
+  width: 100%;
+  justify-content: space-between;
+  gap: 10px;
+  min-height: 52px;
+  padding-block: 8px;
+  font: inherit;
+  text-align: left;
+  cursor: pointer;
+}
+
+.picker:focus-visible {
+  outline: 2px solid var(--ring);
+  outline-offset: 2px;
+}
+
+.pickerChosen,
+.option {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  min-width: 0;
+}
+
+.pickerText {
+  display: flex;
+  flex: 1;
+  flex-direction: column;
+  min-width: 0;
+}
+
+.pickerName {
+  overflow: hidden;
+  font-size: 14px;
+  font-weight: 600;
+  line-height: 20px;
+  color: var(--foreground);
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+.pickerMeta {
+  overflow: hidden;
+  font-size: 12px;
+  line-height: 18px;
+  color: var(--muted-foreground);
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+.pickerPlaceholder {
+  font-size: 14px;
+  color: var(--text-placeholder);
+}
+
+.chevron {
+  flex-shrink: 0;
+  color: var(--muted-foreground);
+}
+
+.pickerPanel {
+  width: 100%;
+  padding: 6px;
+}
+
+.pickerEmpty {
+  margin: 0;
+  padding: 12px;
+  font-size: 13px;
+  line-height: 20px;
+  color: var(--muted-foreground);
+}
+
+.option {
+  width: 100%;
+  padding: 8px 10px;
+  border: 0;
+  border-radius: var(--radius-lg);
+  background: none;
+  font: inherit;
+  text-align: left;
+  cursor: pointer;
+}
+
+.option:hover,
+.option:focus-visible {
+  background: var(--muted);
+  outline: none;
+}
+
+.optionActive {
+  background: var(--muted);
+}
+
+.optionCheck {
+  flex-shrink: 0;
+  color: var(--primary);
+}
+
+.addOption {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  width: 100%;
+  margin-top: 4px;
+  padding: 10px;
+  border: 0;
+  border-top: 1px solid var(--border);
+  border-radius: 0 0 var(--radius-lg) var(--radius-lg);
+  background: none;
+  font: inherit;
+  font-size: 14px;
+  font-weight: 600;
+  color: var(--primary);
+  cursor: pointer;
+}
+
+.addOption:hover {
+  background: var(--muted);
+}
+
+/* Two-way pill switches (who sees the client, per hour or per day) */
+.visibility,
+.lengths {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: 8px 14px;
+}
+
+.visibilityLabel,
+.periodLabel {
+  font-size: 13px;
+  font-weight: 600;
+  color: var(--foreground);
+}
+
+.segmented {
+  display: inline-flex;
+  padding: 3px;
+  border: 1px solid var(--border-strong);
+  border-radius: var(--radius-full);
+  background: var(--card);
+}
+
+.segment {
+  min-height: 34px;
+  padding: 0 16px;
+  border: 0;
+  border-radius: var(--radius-full);
+  background: none;
+  font: inherit;
+  font-size: 13px;
+  font-weight: 600;
+  color: var(--muted-foreground);
+  white-space: nowrap;
+  cursor: pointer;
+  transition:
+    background var(--transition),
+    color var(--transition);
+}
+
+.segment:hover {
+  color: var(--foreground);
+}
+
+.segment:focus-visible {
+  outline: 2px solid var(--ring);
+  outline-offset: 1px;
+}
+
+.segmentActive,
+.segmentActive:hover {
+  background: var(--foreground);
+  color: var(--background);
+}
+
+/* Quick lengths */
+.chips {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 8px;
+}
+
+.chip {
+  min-height: 32px;
+  padding: 0 14px;
+  border: 1px solid var(--border-strong);
+  border-radius: var(--radius-full);
+  background: var(--card);
+  font: inherit;
+  font-size: 13px;
+  font-weight: 600;
+  color: var(--foreground);
+  cursor: pointer;
+}
+
+.chip:hover:not(:disabled) {
+  background: var(--muted);
+}
+
+.chip:focus-visible {
+  outline: 2px solid var(--ring);
+  outline-offset: 1px;
+}
+
+.chip:disabled {
+  color: var(--text-faint);
+  cursor: not-allowed;
+}
+
+.chipActive,
+.chipActive:hover:not(:disabled) {
+  border-color: var(--foreground);
+  background: var(--muted);
+}
+
+.length {
+  font-size: 13px;
+  font-weight: 600;
+  color: var(--muted-foreground);
+}
+
+/* Pay and hours */
+.payRow {
+  display: grid;
+  grid-template-columns: minmax(0, 1fr) auto;
+  align-items: start;
+  gap: 16px;
+}
+
+.period {
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+}
+
+/* Lines the switch up with the rate input under its label. */
+.period .segmented {
+  min-height: 44px;
+  align-items: center;
+}
+
+.currency {
+  font-size: 14px;
+  font-weight: 600;
+  color: var(--muted-foreground);
+}
+
+.suffix {
+  font-size: 13px;
+  color: var(--muted-foreground);
+  white-space: nowrap;
+}
+
+.hours {
+  max-width: 360px;
+}
+
+.estimate {
+  margin: 0;
+  font-size: 13px;
+  font-weight: 600;
+  color: var(--foreground);
+}
+
 @media (max-width: 599px) {
-  .pair {
-    grid-template-columns: 1fr;
+  .pair,
+  .payRow {
+    grid-template-columns: minmax(0, 1fr);
   }
 
-  .addClient {
-    padding-bottom: 0;
+  .hours {
+    max-width: none;
   }
 }

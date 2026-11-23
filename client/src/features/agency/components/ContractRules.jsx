@@ -1,4 +1,4 @@
-import { useState } from 'react'
+import { useId, useState } from 'react'
 import { useTranslation } from 'react-i18next'
 import { useGetConfigQuery } from '@/app/api.js'
 import PillBadge from '@/components/common/PillBadge.jsx'
@@ -56,6 +56,7 @@ function toBody(values) {
  * last is the primary one); `onSubmit(body, intent)` runs with the one pressed.
  */
 export function RulesEditor({ rules, errors = {}, onSubmit, actions, busy }) {
+  const uid = useId()
   const { t } = useTranslation()
   const errorText = useErrorText()
   const { data: config } = useGetConfigQuery()
@@ -87,42 +88,57 @@ export function RulesEditor({ rules, errors = {}, onSubmit, actions, busy }) {
 
   return (
     <div className={styles.editor} role="group" aria-label={t('agency:rules.title')} data-rules-editor>
-      {RULES.map((name) => (
-        <fieldset key={name} className={styles.fieldset}>
-          <legend className={styles.legend}>{t(`agency:rules.labels.${name}`)}</legend>
-          <p className={styles.help}>{t(`agency:rules.help.${name}`)}</p>
-          <div className={styles.fields}>
-            {name === 'exclusivity' ? (
-              <SelectField
-                label={t('agency:rules.value')}
-                name={`${name}.value`}
-                value={values[name].value}
-                onChange={set(name, 'value')}
-                options={[{ value: '', label: t('agency:rules.notStated') }, ...(config?.enums.exclusivity ?? []).map((key) => ({ value: key, label: t(`enums:exclusivity.${key}`) }))]}
-              />
-            ) : (
-              <TextField
-                label={t(name === 'maxWeeklyHours' ? 'agency:rules.valueHours' : 'agency:rules.valueDays')}
-                name={`${name}.value`}
-                inputMode="numeric"
-                placeholder={t('agency:rules.notStated')}
-                value={values[name].value}
-                onChange={set(name, 'value')}
-                error={errorOf(`${name}.value`)}
+      {RULES.map((name) => {
+        const value = values[name].value.trim()
+        // 2026-11-23 (owner: "aligned and professional"): the clause only once there is a rule to quote.
+        const showClause = value !== '' || values[name].clause.trim() !== '' || Boolean(errors[`${name}.clause`])
+        return (
+          <fieldset key={name} className={styles.fieldset} aria-labelledby={`${uid}-${name}`} data-rule-editor={name}>
+            <div className={styles.ruleHead}>
+              <div className={styles.ruleText}>
+                <p id={`${uid}-${name}`} className={styles.legend}>
+                  {t(`agency:rules.labels.${name}`)}
+                </p>
+                <p className={styles.help}>{t(`agency:rules.help.${name}`)}</p>
+              </div>
+              <div className={styles.ruleValue}>
+                {name === 'exclusivity' ? (
+                  <SelectField
+                    aria-label={t('agency:rules.value')}
+                    name={`${name}.value`}
+                    value={values[name].value}
+                    onChange={set(name, 'value')}
+                    options={[{ value: '', label: t('agency:rules.notStated') }, ...(config?.enums.exclusivity ?? []).map((key) => ({ value: key, label: t(`enums:exclusivity.${key}`) }))]}
+                  />
+                ) : (
+                  <TextField
+                    aria-label={t(name === 'maxWeeklyHours' ? 'agency:rules.valueHours' : 'agency:rules.valueDays')}
+                    name={`${name}.value`}
+                    inputMode="numeric"
+                    placeholder={t('agency:rules.notStated')}
+                    rightSlot={<span className={styles.unit}>{t(name === 'maxWeeklyHours' ? 'agency:rules.unitHours' : 'agency:rules.unitDays')}</span>}
+                    value={values[name].value}
+                    onChange={set(name, 'value')}
+                    error={errorOf(`${name}.value`)}
+                  />
+                )}
+              </div>
+            </div>
+            {showClause && (
+              <TextareaField
+                className={styles.clauseField}
+                label={t('agency:rules.clause')}
+                hint={t('agency:rules.clauseHint')}
+                name={`${name}.clause`}
+                rows={3}
+                value={values[name].clause}
+                onChange={set(name, 'clause')}
+                error={errorOf(`${name}.clause`)}
               />
             )}
-            <TextareaField
-              label={t('agency:rules.clause')}
-              hint={t('agency:rules.clauseHint')}
-              name={`${name}.clause`}
-              rows={2}
-              value={values[name].clause}
-              onChange={set(name, 'clause')}
-              error={errorOf(`${name}.clause`)}
-            />
-          </div>
-        </fieldset>
-      ))}
+          </fieldset>
+        )
+      })}
       <div className={styles.actions}>
         {actions.map((action, index) => (
           <Button

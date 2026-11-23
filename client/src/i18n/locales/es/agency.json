@@ -159,7 +159,9 @@
     "valueHours": "Horas a la semana",
     "clause": "Cláusula",
     "clauseHint": "Copiada tal cual del PDF.",
-    "changedFromAi": "Cambiado respecto a la IA"
+    "changedFromAi": "Cambiado respecto a la IA",
+    "unitDays": "días",
+    "unitHours": "horas a la semana"
   },
   "contract": {
     "title": "Contrato (opcional)",
@@ -186,7 +188,35 @@
     "rateNoCurrency": "Tarifa",
     "ratePeriod": "Pago",
     "hoursPerWeek": "Horas a la semana (opcional)",
-    "hoursHint": "Si lo dejas vacío, un empleo a {{type}} cuenta como {{count}} horas a la semana."
+    "hoursHint": "Si lo dejas vacío, un empleo a {{type}} cuenta como {{count}} horas a la semana.",
+    "sectionClient": "Cliente",
+    "sectionDates": "Fechas",
+    "sectionPay": "Pago y horas",
+    "sectionContract": "Reglas de esta oferta",
+    "contractHint": "Tu acuerdo fija las reglas de todas tus ofertas. Añade aquí un contrato solo si esta oferta necesita reglas distintas: sus reglas confirmadas van primero en las asignaciones de esta oferta.",
+    "visibility": "Los candidatos ven",
+    "visibilityName": "El nombre del cliente",
+    "visibilityConfidential": "Cliente confidencial",
+    "quickLength": "Duración rápida",
+    "length": {
+      "week": "1 semana",
+      "twoWeeks": "2 semanas",
+      "month": "1 mes",
+      "threeMonths": "3 meses"
+    },
+    "lengthNeedsStart": "Elige primero una fecha de inicio.",
+    "duration": {
+      "weeks_one": "{{count}} semana",
+      "weeks_other": "{{count}} semanas",
+      "days_one": "{{count}} día",
+      "days_other": "{{count}} días"
+    },
+    "perHour": "por hora",
+    "perDay": "por día",
+    "weekly": "Unos {{amount}} a la semana con {{hours}} horas",
+    "hoursSuffix": "horas a la semana",
+    "clientSearchEmpty": "Aún no hay clientes. Añade las empresas para las que seleccionas.",
+    "contractAfterSave": "Podrás adjuntar un contrato para esta oferta cuando se guarde el primer paso."
   },
   "placements": {
     "title": "Colocaciones",
@@ -425,5 +455,15 @@
       "offered": "Ofrecida",
       "placed": "Colocada"
     }
+  },
+  "jobRules": {
+    "applies": "Tu acuerdo, versión {{version}}, se aplica a esta oferta:",
+    "noAgreementTitle": "Aún no has publicado un acuerdo",
+    "noAgreementText": "Los candidatos se unen a tu cartera aceptando tu acuerdo, y solo puedes asignar a personas de tu cartera. Publícalo en Talento › Acuerdo antes de contratar para esta oferta.",
+    "defaultExclusivity": "Ninguna otra oferta de agencia al mismo tiempo",
+    "order": "Para cada regla: primero el contrato confirmado de esta oferta, después tu acuerdo y, por último, la regla por defecto.",
+    "openAgreement": "Abrir tu acuerdo",
+    "uploadAgreement": "Subir tu acuerdo",
+    "scope": "Este acuerdo cubre todas tus ofertas. Una oferta también puede tener su propio contrato (oferta › Condiciones de agencia): sus reglas confirmadas van antes que estas en las asignaciones de esa oferta."
   }
 }
