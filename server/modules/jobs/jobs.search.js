@@ -14,7 +14,7 @@ import { Country } from '../meta/meta.model.js'
 import { planState } from '../payments/payments.service.js'
 import { User } from '../users/users.model.js'
 import { Job, SavedJob } from './jobs.model.js'
-import { jobFieldsDto } from './jobs.service.js'
+import { agencyDto, jobFieldsDto } from './jobs.service.js'
 
 /*
  * Candidate job browsing (§3.8, M-043, M-044, M-052, M-053 with U8, M-137, OD2, U25, P4-Q4). The header
@@ -66,7 +66,7 @@ export async function agencyClients(jobs) {
 
 /** An agency job's terms with the client's name, or null where the agency keeps the client confidential. */
 export function agencyCard(job, clients) {
-  const fields = jobFieldsDto(job).agency
+  const fields = agencyDto(job.agency)
   if (!fields) return null
   const client = job.agency.showClient && clients.get(String(job.agency.clientId))
   return { ...fields, client: client ? { name: client.name } : null }

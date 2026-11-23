@@ -226,7 +226,7 @@ const contractDto = (contract) => ({
 })
 
 /** 2026-11-20: an agency job's terms as every role reads them (the client itself only where it may be shown), or null. */
-function agencyDto(terms) {
+export function agencyDto(terms) {
   if (!terms) return null
   return {
     showClient: terms.showClient,
