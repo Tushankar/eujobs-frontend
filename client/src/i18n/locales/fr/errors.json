@@ -1,6 +1,7 @@
 {
   "AUTH_REQUIRED": "Votre session a expiré. Veuillez vous reconnecter.",
   "INVALID_CREDENTIALS": "L’adresse e-mail ou le mot de passe est incorrect.",
+  "WRONG_PORTAL": "Ce compte se connecte depuis un autre espace. Choisissez-le ci-dessus.",
   "EMAIL_UNVERIFIED": "Confirmez d’abord votre adresse e-mail.",
   "ACCOUNT_SUSPENDED": "Ce compte est suspendu.",
   "RECRUITER_NOT_APPROVED": "Disponible une fois votre compte recruteur approuvé.",

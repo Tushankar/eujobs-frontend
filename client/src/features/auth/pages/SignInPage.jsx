@@ -44,20 +44,20 @@ export default function SignInPage({ workspace = 'candidate' }) {
   // 2026-11-18: a correct password on an unrecognised browser (or any admin sign-in) asks for a second step.
   const [verification, setVerification] = useState(null)
 
+  // The portal the last sign-in used: the chosen tile, or the account's own after "Sign in as …" (2026-11-23).
+  const [usedPortal, setUsedPortal] = useState(workspace)
+
   async function finish({ token, me }) {
     await signIn(token, me)
-    const wrongPortal = workspace !== 'admin' && me.role !== workspace
+    const wrongPortal = usedPortal !== 'admin' && me.role !== usedPortal
     navigate(landingPath(me, searchParams.get('next')), { replace: true, state: wrongPortal ? { notice: 'wrongPortal' } : undefined })
   }
 
-  async function handleSubmit(event) {
-    event.preventDefault()
-    const nextErrors = compact({ email: check.email(values.email), password: check.required(values.password) })
-    setErrors(nextErrors)
+  async function submit(portal) {
+    setUsedPortal(portal)
     setFailure(null)
-    if (Object.keys(nextErrors).length > 0) return
     try {
-      const result = await login({ ...values, portal: workspace, timezone: browserTimeZone() }).unwrap()
+      const result = await login({ ...values, portal, timezone: browserTimeZone() }).unwrap()
       if (result.verification) setVerification(result.verification)
       else await finish(result)
     } catch (error) {
@@ -66,7 +66,17 @@ export default function SignInPage({ workspace = 'candidate' }) {
     }
   }
 
+  function handleSubmit(event) {
+    event.preventDefault()
+    const nextErrors = compact({ email: check.email(values.email), password: check.required(values.password) })
+    setErrors(nextErrors)
+    setFailure(null)
+    if (Object.keys(nextErrors).length === 0) submit(workspace)
+  }
+
   const failureCode = failure && errorCode(failure)
+  // 2026-11-23: the right password on the wrong tile (agency vs the others) names the account's own workspace.
+  const ownWorkspace = failureCode === 'WRONG_PORTAL' && failure.data?.error?.params?.role
 
   if (verification) {
     return (
@@ -95,7 +105,15 @@ export default function SignInPage({ workspace = 'candidate' }) {
             <ResendVerification email={values.email} />
           </FormAlert>
         )}
-        {failureCode && failureCode !== 'EMAIL_UNVERIFIED' && failureCode !== 'VALIDATION_FAILED' && <FormAlert title={t('auth:signIn.failedTitle')}>{errorText.code(failure)}</FormAlert>}
+        {ownWorkspace && (
+          <FormAlert title={t('auth:signIn.failedTitle')}>
+            <span>{t('auth:signIn.wrongPortal', { workspace: t(`auth:portals.${ownWorkspace}`) })}</span>
+            <Button type="button" variant="outline" size="sm" className={styles.wrongPortalAction} loading={isLoading} onClick={() => submit(ownWorkspace)} data-wrong-portal={ownWorkspace}>
+              {t('auth:signIn.wrongPortalAction', { workspace: t(`auth:portals.${ownWorkspace}`) })}
+            </Button>
+          </FormAlert>
+        )}
+        {failureCode && !ownWorkspace && failureCode !== 'EMAIL_UNVERIFIED' && failureCode !== 'VALIDATION_FAILED' && <FormAlert title={t('auth:signIn.failedTitle')}>{errorText.code(failure)}</FormAlert>}
         <TextField
           label={t('auth:fields.email')}
           name="email"

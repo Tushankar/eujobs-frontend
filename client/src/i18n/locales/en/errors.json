@@ -1,6 +1,7 @@
 {
   "AUTH_REQUIRED": "Your session has ended. Please sign in again.",
   "INVALID_CREDENTIALS": "The email address or password is not right.",
+  "WRONG_PORTAL": "This account signs in under another workspace. Choose it above.",
   "EMAIL_UNVERIFIED": "Confirm your email address first.",
   "ACCOUNT_SUSPENDED": "This account is suspended.",
   "RECRUITER_NOT_APPROVED": "This opens once your recruiter account is approved.",

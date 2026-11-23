@@ -228,12 +228,14 @@ export async function registerRecruiter(input, role = 'recruiter') {
 
 /**
  * M-005: one login; the admin portal is for admins only and admins sign in only there. 2026-11-20: the same for the
- * agency portal (/agencies/login) and agencies.
+ * agency portal (/agencies/login) and agencies. 2026-11-23: with the right password, an agency on another page, or
+ * anyone else on the agency page, is told its account type (WRONG_PORTAL); the admin page stays silent.
  */
 export async function login({ email, password, portal, timezone }) {
   const user = await User.findOne({ email })
   if (!(await passwordMatches(user, password))) throw new AppError('INVALID_CREDENTIALS')
-  for (const own of ['admin', 'agency']) if ((portal === own) !== (user.role === own)) throw new AppError('INVALID_CREDENTIALS')
+  if ((portal === 'admin') !== (user.role === 'admin')) throw new AppError('INVALID_CREDENTIALS')
+  if ((portal === 'agency') !== (user.role === 'agency')) throw new AppError('WRONG_PORTAL', { params: { role: user.role } })
   if (user.role === 'candidate' && user.status === 'unverified') throw new AppError('EMAIL_UNVERIFIED')
   user.lastLoginAt = new Date()
   if (timezone) user.timezone = timezone

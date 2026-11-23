@@ -64,8 +64,13 @@ describe('agency accounts (sign-up, sign-in, review)', () => {
     const { user: agency } = await approvedAgency()
     const { user: recruiter } = await approvedRecruiter()
     const candidate = await createUser()
-    for (const portal of ['candidate', 'recruiter']) assert.equal(code(await login(agency.email, portal)), 'INVALID_CREDENTIALS')
-    for (const user of [recruiter, candidate]) assert.equal(code(await login(user.email, 'agency')), 'INVALID_CREDENTIALS')
+    // 2026-11-23: with the right password the answer names the account type (and is not a failed sign-in) …
+    const answer = (res) => [res.status, code(res), res.body.error?.params?.role]
+    for (const portal of ['candidate', 'recruiter']) assert.deepEqual(answer(await login(agency.email, portal)), [403, 'WRONG_PORTAL', 'agency'])
+    for (const user of [recruiter, candidate]) assert.deepEqual(answer(await login(user.email, 'agency')), [403, 'WRONG_PORTAL', user.role])
+    // … a wrong password still says nothing, and the admin page stays silent about other accounts.
+    assert.equal(code(await api().post(`${v1}/auth/login`).send({ email: recruiter.email, password: 'Wrong-pass-123', portal: 'agency' })), 'INVALID_CREDENTIALS')
+    assert.equal(code(await login(agency.email, 'admin')), 'INVALID_CREDENTIALS')
     const res = await finishLogin(await login(agency.email, 'agency'))
     assert.deepEqual([res.status, res.body.me.role], [200, 'agency'])
   })

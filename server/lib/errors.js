@@ -5,6 +5,8 @@
 export const ERROR_STATUS = {
   AUTH_REQUIRED: 401,
   INVALID_CREDENTIALS: 401,
+  // 2026-11-23: right password, wrong sign-in tile (agency vs the others); params: role
+  WRONG_PORTAL: 403,
   EMAIL_UNVERIFIED: 403,
   ACCOUNT_SUSPENDED: 403,
   RECRUITER_NOT_APPROVED: 403,

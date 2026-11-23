@@ -49,3 +49,10 @@
   line-height: 18px;
   color: var(--primary-hover);
 }
+
+/* 2026-11-23: "Sign in as …" under the wrong-tile message. */
+.wrongPortalAction {
+  display: flex;
+  width: fit-content;
+  margin-top: 10px;
+}

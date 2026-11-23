@@ -1,6 +1,7 @@
 {
   "AUTH_REQUIRED": "Tu sesión ha terminado. Vuelve a iniciar sesión.",
   "INVALID_CREDENTIALS": "El correo electrónico o la contraseña no son correctos.",
+  "WRONG_PORTAL": "Esta cuenta inicia sesión en otro espacio de trabajo. Elígelo arriba.",
   "EMAIL_UNVERIFIED": "Primero confirma tu correo electrónico.",
   "ACCOUNT_SUSPENDED": "Esta cuenta está suspendida.",
   "RECRUITER_NOT_APPROVED": "Estará disponible cuando se apruebe tu cuenta de reclutador.",
