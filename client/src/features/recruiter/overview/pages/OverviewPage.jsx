@@ -5,7 +5,7 @@ import { Link } from 'react-router-dom'
 import { ArrowRight, BriefcaseBusiness, Bookmark, FileText, Plus } from 'lucide-react'
 import { useGetMeQuery } from '@/app/api.js'
 import PlanButton from '@/features/candidate/billing/components/PlanButton.jsx'
-import { lacksEntitlement } from '@/features/candidate/billing/usePlan.js'
+import { lacksEntitlement, usePaidPlanName } from '@/features/candidate/billing/usePlan.js'
 import EmptyState from '@/components/common/EmptyState.jsx'
 import PageTitle from '@/components/common/PageTitle.jsx'
 import StatCard from '@/components/common/StatCard.jsx'
@@ -39,6 +39,7 @@ export default function OverviewPage() {
   // P11b-Q10: opening this item marks its notifications read.
   useMarkSeen('page', 'overview')
   const { t } = useTranslation()
+  const plan = usePaidPlanName()
   const { data: me } = useGetMeQuery()
   const { data: overview, isLoading: overviewLoading } = useGetRecruiterOverviewQuery()
   // P11c-Q15: the talent list needs Recruiter Plus; its count (Recommended candidates) stays.
@@ -94,7 +95,7 @@ export default function OverviewPage() {
       </div>
       {talentLocked ? (
         <div className={styles.talentLocked}>
-          <p className={styles.talentEmpty}>{t('discovery:locked.talent')}</p>
+          <p className={styles.talentEmpty}>{t('discovery:locked.talent', { plan })}</p>
           <PlanButton variant="outline" size="sm" entitlement="discovery" roles={HIRING_ROLES}>
             {t('discovery:locked.seeCandidates')}
           </PlanButton>

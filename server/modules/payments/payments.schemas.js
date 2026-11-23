@@ -8,7 +8,8 @@ export const itemQuery = z.object({
   interval: z.enum(ENUMS.billingInterval).default('month'),
 })
 
-// The page to return to after Checkout: a path inside the buyer's own workspace (checked in the service).
-export const checkoutBody = itemQuery.extend({ from: z.string().max(300).regex(/^\/(candidate|recruiter)(\/[\w\-./?=&%]*)?$/) })
+// The page to return to after Checkout: a path inside the buyer's own workspace (checked in the service; /agency
+// since 2026-11-23 — agencies' checkouts were refused here).
+export const checkoutBody = itemQuery.extend({ from: z.string().max(300).regex(/^\/(candidate|recruiter|agency)(\/[\w\-./?=&%]*)?$/) })
 
 export const sessionParams = z.object({ id: z.string().regex(/^cs_(test|live)_\w+$/) })

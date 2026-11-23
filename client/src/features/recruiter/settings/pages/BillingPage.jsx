@@ -8,6 +8,7 @@ import SettingsCard from '../components/SettingsCard.jsx'
 import SettingsLayout from '../components/SettingsLayout.jsx'
 import styles from './BillingPage.module.css'
 import { useMarkSeen } from '@/features/notifications/api.js'
+import { usePaidPlanName } from '@/features/candidate/billing/usePlan.js'
 
 /**
  * Settings > Billing: Recruiter Plus (§3.22: the Free upsell, or its status, renewal date and the Stripe Customer
@@ -17,21 +18,22 @@ export default function BillingPage() {
   // P11b-Q10: opening this item marks its notifications read.
   useMarkSeen('page', 'billing')
   const { t } = useTranslation('billing')
+  const plan = usePaidPlanName()
   const { data: payments = [], isLoading } = useGetMyPaymentsQuery()
 
   return (
     <SettingsLayout>
       <SettingsCard title={t('page.planTitle')}>
-        <p className={styles.lead}>{t('recruiter.planDescription')}</p>
+        <p className={styles.lead}>{t('recruiter.planDescription', { plan })}</p>
         <PlanCard />
       </SettingsCard>
       <SettingsCard title={t('page.historyTitle')}>
-        <p className={styles.lead}>{t('recruiter.lead')}</p>
+        <p className={styles.lead}>{t('recruiter.lead', { plan })}</p>
         <div className={styles.table}>
           {isLoading || payments.length > 0 ? (
             <PaymentsTable payments={payments} loading={isLoading} />
           ) : (
-            <EmptyState icon={CreditCard} title={t('page.emptyTitle')} description={t('recruiter.emptyDescription')} />
+            <EmptyState icon={CreditCard} title={t('page.emptyTitle')} description={t('recruiter.emptyDescription', { plan })} />
           )}
         </div>
       </SettingsCard>

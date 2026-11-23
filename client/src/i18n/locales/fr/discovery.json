@@ -12,7 +12,7 @@
     "empty": "Aucun candidat ne correspond à cette recherche",
     "emptyText": "Essayez un autre nom, poste ou compétence, ou effacez les filtres.",
     "clear": "Effacer la recherche et les filtres",
-    "applicantsOnly": "Avec l’offre gratuite, vous voyez les personnes qui ont postulé à vos offres d’emploi. Recruiter Plus ajoute la recherche, les filtres et tous les candidats de votre marché.",
+    "applicantsOnly": "Avec l’offre gratuite, vous voyez les personnes qui ont postulé à vos offres d’emploi. {{plan}} ajoute la recherche, les filtres et tous les candidats de votre marché.",
     "relevantView": "Seuls les candidats pertinents pour {{job}} sont affichés.",
     "showAll": "Voir tous les candidats"
   },
@@ -309,7 +309,7 @@
     "noRolesText": "Les offres publiées apparaissent ici. Créez une offre pour commencer à rencontrer des talents pertinents."
   },
   "locked": {
-    "talent": "Recruiter Plus affiche les candidats dont les compétences correspondent à vos postes.",
+    "talent": "{{plan}} affiche les candidats dont les compétences correspondent à vos postes.",
     "seeCandidates": "Voir les candidats"
   }
 }

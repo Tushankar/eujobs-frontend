@@ -147,3 +147,46 @@
   font-weight: 600;
   color: var(--foreground);
 }
+
+/* 2026-11-23: the logo with a spinner over it while it uploads or is removed. */
+.logoBox {
+  position: relative;
+  display: inline-flex;
+  flex-shrink: 0;
+}
+
+.logoSpinner {
+  position: absolute;
+  inset: 0;
+  display: grid;
+  place-items: center;
+  border-radius: var(--radius-lg);
+  background: color-mix(in srgb, var(--card) 70%, transparent);
+  color: var(--primary);
+}
+
+.logoSpinner svg {
+  animation: logo-spin 0.8s linear infinite;
+}
+
+@keyframes logo-spin {
+  to {
+    transform: rotate(360deg);
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .logoSpinner svg {
+    animation-duration: 2.4s;
+  }
+}
+
+.upload[data-disabled] {
+  color: var(--muted-foreground);
+  cursor: progress;
+}
+
+.removeLogo:disabled {
+  opacity: 0.5;
+  cursor: progress;
+}

@@ -157,7 +157,7 @@
       "description": "Close your jobs and permanently delete your account and personal data. Payment records are kept for accounting with your name removed.",
       "action": "Delete account",
       "confirmTitle": "Delete your recruiter account?",
-      "confirmBody": "Your jobs are closed and your KYC documents, candidate notes, shortlist and activity are deleted. A Recruiter Plus plan is cancelled at once, without a refund. Candidates keep their applications and conversations under your company’s display name. Payment records are kept with your name removed. You will be signed out. This can’t be undone.",
+      "confirmBody": "Your jobs are closed and your KYC documents, candidate notes, shortlist and activity are deleted. A {{plan}} plan is cancelled at once, without a refund. Candidates keep their applications and conversations under your company’s display name. Payment records are kept with your name removed. You will be signed out. This can’t be undone.",
       "password": "Enter your current password to confirm."
     }
   },

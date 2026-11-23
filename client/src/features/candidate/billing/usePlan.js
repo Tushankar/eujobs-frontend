@@ -1,3 +1,4 @@
+import { useTranslation } from 'react-i18next'
 import { HIRING_ROLES, isHiring } from '@/app/roles.js'
 import { useGetCountriesQuery } from '@/app/api.js'
 import { usePreferences } from '@/lib/preferences.js'
@@ -6,6 +7,13 @@ import { useGetPlansQuery } from './api.js'
 /** The Checkout item of each role's paid plan: Plus (M-124), Recruiter Plus (§3.22) and Agency Plus (2026-11-20). */
 const PAID_PLAN = { recruiter: 'recruiter_plus', agency: 'agency_plus' }
 export const planItem = (role) => ({ kind: 'subscription', itemId: PAID_PLAN[role] ?? 'plus' })
+
+/** 2026-11-23: the signed-in user's paid plan name for `{{plan}}` in shared hiring texts (Recruiter Plus, Agency Plus). */
+export function usePaidPlanName() {
+  const { t } = useTranslation()
+  const { me } = usePreferences()
+  return t(`enums:planKey.${planItem(me?.role).itemId}`)
+}
 
 /**
  * True when `me` has one of `roles` and lacks the entitlement (M-118 lock chips, §3.22). Entitlement keys belong to

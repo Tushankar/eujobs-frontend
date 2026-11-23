@@ -34,7 +34,7 @@
     },
     "discovery": {
       "title": "Crea tu preselección",
-      "lead": "Las preselecciones, la búsqueda y la comparación de candidatos forman parte de Recruiter Plus. Los candidatos que ya preseleccionaste se conservan."
+      "lead": "Las preselecciones, la búsqueda y la comparación de candidatos forman parte de {{plan}}. Los candidatos que ya preseleccionaste se conservan."
     }
   },
   "return": {
@@ -88,11 +88,11 @@
     }
   },
   "recruiter": {
-    "lead": "Las facturas de Recruiter Plus y los pagos de cursos de este espacio de trabajo, con el recibo o la factura de Stripe de cada uno.",
-    "emptyDescription": "Aquí aparecen las facturas de Recruiter Plus y los cursos de pago que compres en Formación para reclutadores.",
-    "planDescription": "Recruiter Plus añade ofertas activas ilimitadas, Buscar candidatos, iniciar conversaciones y solicitar CV, y las herramientas de IA. Gestionas el plan, tu tarjeta y tus facturas en Stripe.",
-    "upgradeDescription": "Recruiter Plus añade ofertas activas ilimitadas, Buscar candidatos, iniciar conversaciones y solicitar CV, y las herramientas de IA.",
-    "upgradeNeeds": "{{feature}} forma parte de Recruiter Plus. Añade ofertas activas ilimitadas, Buscar candidatos, iniciar conversaciones y solicitar CV, y las herramientas de IA."
+    "lead": "Las facturas de {{plan}} y los pagos de cursos de este espacio de trabajo, con el recibo o la factura de Stripe de cada uno.",
+    "emptyDescription": "Aquí aparecen las facturas de {{plan}} y los cursos de pago que compres en Formación para reclutadores.",
+    "planDescription": "{{plan}} añade ofertas activas ilimitadas, Buscar candidatos, iniciar conversaciones y solicitar CV, y las herramientas de IA. Gestionas el plan, tu tarjeta y tus facturas en Stripe.",
+    "upgradeDescription": "{{plan}} añade ofertas activas ilimitadas, Buscar candidatos, iniciar conversaciones y solicitar CV, y las herramientas de IA.",
+    "upgradeNeeds": "{{feature}} forma parte de {{plan}}. Añade ofertas activas ilimitadas, Buscar candidatos, iniciar conversaciones y solicitar CV, y las herramientas de IA."
   },
   "table": {
     "caption": "Pagos",

@@ -210,17 +210,20 @@ export default function ProductTour({ workspace }) {
   const navigate = useNavigate()
   const { pathname } = useLocation()
   const { me } = usePreferences()
-  const open = useSelector((state) => state.tour.open)
+  // 2026-11-23: the purchase dialog (opened by a button or by any 402 on a page the tour opens) pauses the tour: its
+  // spotlight layer sits above dialogs and blocks clicks, so the dialog was stuck behind it. It resumes on close.
+  const upgradeOpen = useSelector((state) => state.upgrade.open)
+  const open = useSelector((state) => state.tour.open) && !upgradeOpen
   const [finishTour] = useFinishTourMutation()
   const [view, setView] = useState(START)
   const autoOpened = useRef(false)
   const tour = TOURS[workspace.id]
 
   useEffect(() => {
-    if (autoOpened.current || !me?.tourPending || me.legal?.acceptRequired || pathname !== workspace.basePath) return
+    if (autoOpened.current || !me?.tourPending || me.legal?.acceptRequired || upgradeOpen || pathname !== workspace.basePath) return
     autoOpened.current = true
     dispatch(startTour())
-  }, [me, pathname, workspace.basePath, dispatch])
+  }, [me, pathname, workspace.basePath, upgradeOpen, dispatch])
 
   function close() {
     dispatch(endTour())

@@ -34,7 +34,7 @@
     },
     "discovery": {
       "title": "Constituez votre short-list",
-      "lead": "Les short-lists, la recherche et la comparaison de candidats font partie de Recruiter Plus. Les candidats déjà ajoutés à votre short-list sont conservés."
+      "lead": "Les short-lists, la recherche et la comparaison de candidats font partie de {{plan}}. Les candidats déjà ajoutés à votre short-list sont conservés."
     }
   },
   "return": {
@@ -88,11 +88,11 @@
     }
   },
   "recruiter": {
-    "lead": "Les factures Recruiter Plus et les paiements de formations de cet espace de travail, avec le reçu ou la facture Stripe de chacun.",
-    "emptyDescription": "Les factures Recruiter Plus et les formations payantes que vous achetez dans Formation recruteurs apparaissent ici.",
-    "planDescription": "Recruiter Plus ajoute les offres d’emploi actives illimitées, Trouver des candidats, les nouvelles conversations et demandes de CV, et les outils d’IA. Vous gérez l’abonnement, votre carte et vos factures sur Stripe.",
-    "upgradeDescription": "Recruiter Plus ajoute les offres d’emploi actives illimitées, Trouver des candidats, les nouvelles conversations et demandes de CV, et les outils d’IA.",
-    "upgradeNeeds": "{{feature}} fait partie de Recruiter Plus. Il ajoute les offres d’emploi actives illimitées, Trouver des candidats, les nouvelles conversations et demandes de CV, et les outils d’IA."
+    "lead": "Les factures {{plan}} et les paiements de formations de cet espace de travail, avec le reçu ou la facture Stripe de chacun.",
+    "emptyDescription": "Les factures {{plan}} et les formations payantes que vous achetez dans Formation recruteurs apparaissent ici.",
+    "planDescription": "{{plan}} ajoute les offres d’emploi actives illimitées, Trouver des candidats, les nouvelles conversations et demandes de CV, et les outils d’IA. Vous gérez l’abonnement, votre carte et vos factures sur Stripe.",
+    "upgradeDescription": "{{plan}} ajoute les offres d’emploi actives illimitées, Trouver des candidats, les nouvelles conversations et demandes de CV, et les outils d’IA.",
+    "upgradeNeeds": "{{feature}} fait partie de {{plan}}. Il ajoute les offres d’emploi actives illimitées, Trouver des candidats, les nouvelles conversations et demandes de CV, et les outils d’IA."
   },
   "table": {
     "caption": "Paiements",

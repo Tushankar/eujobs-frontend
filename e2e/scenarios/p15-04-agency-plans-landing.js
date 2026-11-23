@@ -1,8 +1,9 @@
 import { openAsAdmin } from '../lib/admins.js'
 import { approvedAgency, dayFromToday } from '../lib/agencies.js'
-import { bodyText, clickText, fill, finishLoginStep, responseTo, waitForPath, waitForText } from '../lib/flows.js'
+import { fixture } from '../fixtures/make.js'
+import { bodyText, chooseFile, clickText, fill, finishLoginStep, responseTo, signInWithForm, waitForPath, waitForText } from '../lib/flows.js'
 import { approvedRecruiter, jobBody, postJob } from '../lib/recruiters.js'
-import { api, TEST_PASSWORD } from '../lib/testApi.js'
+import { api, db, TEST_PASSWORD } from '../lib/testApi.js'
 
 /**
  * P15-04 (agencies, phase 7): a visitor's landing page with the Agency jobs section (client or confidential client,
@@ -127,6 +128,31 @@ export default {
     if (step) await finishLoginStep(signIn.page, recruiter.email, step.method)
     await waitForPath(signIn.page, () => location.pathname.startsWith('/recruiter') && !location.pathname.includes('sign-in'))
     ctx.assertClean(signIn.issues, 'wrong-tile sign-in')
+
+    // 6c. (2026-11-23) A Free agency: a client logo shows in the open dialog right after the upload, and Upgrade names
+    // Agency Plus and reaches Stripe's Checkout (the /agency return page used to be refused).
+    const free = await approvedAgency('P1504F')
+    await db('subscriptions', 'deleteMany', { filter: { userId: { $oid: free.userId } } })
+    await api('/agency/clients', { method: 'POST', token: free.token, body: { name: 'Harbour Freight' } })
+    const workspace = await ctx.newPage()
+    await signInWithForm(workspace.page, ctx.webUrl, '/agencies/login', free.email, TEST_PASSWORD)
+    await workspace.page.goto(`${ctx.webUrl}/agency/clients`, { waitUntil: 'networkidle0' })
+    await workspace.page.click('[data-client="Harbour Freight"] button')
+    await chooseFile(workspace.page, '#client-form input[type="file"]', fixture('kyc-registration.png'))
+    await workspace.page.waitForFunction(() => document.querySelector('#client-form img')?.complete, { timeout: 20_000 })
+    ctx.check((await bodyText(workspace.page)).includes('Replace logo'), 'the open dialog shows the new logo and offers Replace')
+    await ctx.screenshot(workspace.page, '6c-client-logo')
+    await workspace.page.keyboard.press('Escape')
+
+    await workspace.page.goto(`${ctx.webUrl}/agency/shortlists`, { waitUntil: 'networkidle0' })
+    await clickText(workspace.page, 'Upgrade to Agency Plus', 'button')
+    await workspace.page.waitForSelector('[data-checkout-summary]')
+    const dialog = await workspace.page.$eval('[role="dialog"]', (element) => element.innerText)
+    ctx.check(!dialog.includes('Recruiter Plus'), 'the purchase dialog never says Recruiter Plus to an agency')
+    await ctx.screenshot(workspace.page, '6d-agency-checkout')
+    await clickText(workspace.page, 'Continue to secure payment', '[role="dialog"] button')
+    await workspace.page.waitForFunction(() => location.hostname === 'checkout.stripe.com', { timeout: 30_000 })
+    ctx.check(true, 'Agency Plus reaches Stripe Checkout')
 
     // 7. Admin: the agency plans, the Agency MRR line and the Agency Plus caps (read only).
     const admin = await ctx.newPage()

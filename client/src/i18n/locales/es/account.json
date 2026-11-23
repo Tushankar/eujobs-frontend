@@ -162,7 +162,7 @@
       "description": "Cierra tus empleos y elimina para siempre tu cuenta y tus datos personales. Los registros de pago se conservan para la contabilidad sin tu nombre.",
       "action": "Eliminar la cuenta",
       "confirmTitle": "¿Eliminar tu cuenta de reclutador?",
-      "confirmBody": "Tus empleos se cierran y se eliminan tus documentos KYC, las notas sobre candidatos, la lista de preseleccionados y la actividad. Un plan Recruiter Plus se cancela de inmediato, sin reembolso. Los candidatos conservan sus candidaturas y conversaciones con el nombre visible de tu empresa. Los registros de pago se conservan sin tu nombre. Se cerrará tu sesión. Esta acción no se puede deshacer.",
+      "confirmBody": "Tus empleos se cierran y se eliminan tus documentos KYC, las notas sobre candidatos, la lista de preseleccionados y la actividad. Un plan {{plan}} se cancela de inmediato, sin reembolso. Los candidatos conservan sus candidaturas y conversaciones con el nombre visible de tu empresa. Los registros de pago se conservan sin tu nombre. Se cerrará tu sesión. Esta acción no se puede deshacer.",
       "password": "Introduce tu contraseña actual para confirmar."
     }
   },

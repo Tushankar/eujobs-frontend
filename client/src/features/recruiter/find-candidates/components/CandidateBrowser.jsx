@@ -5,7 +5,7 @@ import { useSearchParams } from 'react-router-dom'
 import { Button, Skeleton, SkeletonRegion } from '@/components/ui'
 import { tableState } from '@/components/common/tableState.js'
 import PlanButton from '@/features/candidate/billing/components/PlanButton.jsx'
-import { lacksEntitlement } from '@/features/candidate/billing/usePlan.js'
+import { lacksEntitlement, usePaidPlanName } from '@/features/candidate/billing/usePlan.js'
 import { usePreferences } from '@/lib/preferences.js'
 import { cx } from '@/utils/cx.js'
 import { useShortlistToggle } from '../api.js'
@@ -31,6 +31,7 @@ const SKELETON_CARDS = 6
  */
 export default function CandidateBrowser({ useList, notice, extra, empty }) {
   const { t } = useTranslation()
+  const plan = usePaidPlanName()
   const { me } = usePreferences()
   const locked = lacksEntitlement(me, 'discovery', RECRUITER)
   const [query, setQuery] = useState('')
@@ -113,7 +114,7 @@ export default function CandidateBrowser({ useList, notice, extra, empty }) {
           <SortSelect options={SORTS.map((value) => ({ value, label: t(`discovery:sort.${value}`) }))} value={sort} onChange={setSort} label={t('discovery:sort.label')} />
         )}
       </div>
-      {locked && <p className={styles.view}>{t('discovery:find.applicantsOnly')}</p>}
+      {locked && <p className={styles.view}>{t('discovery:find.applicantsOnly', { plan })}</p>}
       {relevantOnly && (
         <p className={styles.relevantView} data-relevant-view>
           <span>{t('discovery:find.relevantView', { job: job.title })}</span>

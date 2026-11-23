@@ -89,6 +89,12 @@ export default function CheckoutDialog({ item, from, description, plan, onClose 
       }
     >
       <div className={styles.body}>
+        {/* 2026-11-23: first, so a failure is never hidden below the plan's features. */}
+        {failure && (
+          <p className={styles.failure} role="alert" data-checkout-failure>
+            {errorText.code(failure)}
+          </p>
+        )}
         {yearly && (
           <div className={styles.periods} role="radiogroup" aria-label={t('checkout.period')}>
             {['month', 'year'].map((value) => (
@@ -141,7 +147,6 @@ export default function CheckoutDialog({ item, from, description, plan, onClose 
         )}
         {plan && <PlanFeatures plan={plan} />}
         <p className={styles.note}>{t('checkout.note')}</p>
-        <div role="alert">{failure && <p className={styles.failure}>{errorText.code(failure)}</p>}</div>
       </div>
     </Modal>
   )

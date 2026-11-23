@@ -34,7 +34,7 @@
     },
     "discovery": {
       "title": "Build your shortlist",
-      "lead": "Shortlists, search and Compare candidates are part of Recruiter Plus. Candidates you shortlisted before are kept."
+      "lead": "Shortlists, search and Compare candidates are part of {{plan}}. Candidates you shortlisted before are kept."
     }
   },
   "return": {
@@ -88,11 +88,11 @@
     }
   },
   "recruiter": {
-    "lead": "Recruiter Plus invoices and course payments from this workspace, with the Stripe receipt or invoice for each.",
-    "emptyDescription": "Recruiter Plus invoices and the paid courses you buy in Recruiter learning appear here.",
-    "planDescription": "Recruiter Plus adds unlimited active jobs, Find candidates, starting conversations and CV requests, and the AI tools. You manage it, your card and your invoices on Stripe.",
-    "upgradeDescription": "Recruiter Plus adds unlimited active jobs, Find candidates, starting conversations and CV requests, and the AI tools.",
-    "upgradeNeeds": "{{feature}} is part of Recruiter Plus. It adds unlimited active jobs, Find candidates, starting conversations and CV requests, and the AI tools."
+    "lead": "{{plan}} invoices and course payments from this workspace, with the Stripe receipt or invoice for each.",
+    "emptyDescription": "{{plan}} invoices and the paid courses you buy in Recruiter learning appear here.",
+    "planDescription": "{{plan}} adds unlimited active jobs, Find candidates, starting conversations and CV requests, and the AI tools. You manage it, your card and your invoices on Stripe.",
+    "upgradeDescription": "{{plan}} adds unlimited active jobs, Find candidates, starting conversations and CV requests, and the AI tools.",
+    "upgradeNeeds": "{{feature}} is part of {{plan}}. It adds unlimited active jobs, Find candidates, starting conversations and CV requests, and the AI tools."
   },
   "table": {
     "caption": "Payments",

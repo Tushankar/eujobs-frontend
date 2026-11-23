@@ -162,7 +162,7 @@
       "description": "Ferme vos offres et supprime définitivement votre compte et vos données personnelles. Les paiements sont conservés pour la comptabilité, sans votre nom.",
       "action": "Supprimer le compte",
       "confirmTitle": "Supprimer votre compte recruteur ?",
-      "confirmBody": "Vos offres sont fermées, et vos documents KYC, vos notes sur les candidats, votre short-list et votre activité sont supprimés. Un plan Recruiter Plus est résilié immédiatement, sans remboursement. Les candidats conservent leurs candidatures et leurs conversations sous le nom public de votre entreprise. Les paiements sont conservés sans votre nom. Vous serez déconnecté. Cette action est irréversible.",
+      "confirmBody": "Vos offres sont fermées, et vos documents KYC, vos notes sur les candidats, votre short-list et votre activité sont supprimés. Un plan {{plan}} est résilié immédiatement, sans remboursement. Les candidats conservent leurs candidatures et leurs conversations sous le nom public de votre entreprise. Les paiements sont conservés sans votre nom. Vous serez déconnecté. Cette action est irréversible.",
       "password": "Saisissez votre mot de passe actuel pour confirmer."
     }
   },

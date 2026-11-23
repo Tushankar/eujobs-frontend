@@ -142,7 +142,10 @@ export default {
     await fill(page, 'input[name="title"]', 'Forklift Driver')
     await fill(page, '[data-job-ai-draft] textarea', `Three weeks of night cover for Acme Logistics from ${dayFromToday(14)} to ${dayFromToday(35)}, 15.50 an hour, 38 hours a week, forklift licence needed.`)
     await page.click('[data-job-ai-draft-button]')
-    await page.waitForSelector('[data-job-ai-filled]', { timeout: 60_000 })
+    // The filled line, or the AI's own failure message (limit, pause, busy, error), whichever comes first.
+    await page.waitForSelector('[data-job-ai-filled], [data-job-ai-draft] [data-ai-state]:not([data-ai-state="loading"])', { timeout: 90_000 })
+    const aiState = await page.$eval('[data-job-ai-draft]', (panel) => panel.querySelector('[data-ai-state]:not([data-ai-state="loading"])')?.innerText ?? null)
+    if (aiState) throw new Error(`the job post writer failed: ${aiState}`)
     const filled = (await page.$eval('[data-job-ai-filled]', (line) => line.dataset.jobAiFilled)).split(',')
     ctx.check(['clientId', 'startDate', 'endDate', 'rateAmount', 'hoursPerWeek'].every((field) => filled.includes(field)), `the agency terms were filled (${filled.join(', ')})`)
     await handle.checkOverflow()
@@ -153,6 +156,8 @@ export default {
     ctx.check(!forYou.includes('Warehouse Operative') && !forYou.includes('Night Picker'), `For you leaves out blocked agency jobs (${forYou.join(', ') || 'none'})`)
     const adaForYou = ok(await api('/jobs/recommended', { token: people.Ada.token }), 'for you').items.map((job) => job.title)
     ctx.check(adaForYou.includes('Night Picker'), 'a free candidate still gets the agency jobs')
+    // The agency signs out first (the sign-in page sends a signed-in user to their workspace).
+    await page.evaluate(() => localStorage.clear())
     await openAs(ctx, handle, people.Cleo.email, '/candidate?tab=for-you')
     await page.waitForSelector('main')
     ctx.check(!(await bodyText(page)).includes('Night Picker'), 'Overview For you in the browser')

@@ -11,7 +11,7 @@
     "empty": "No candidates match this search",
     "emptyText": "Try a different name, role or skill, or clear the filters.",
     "clear": "Clear search and filters",
-    "applicantsOnly": "On Free you see the people who applied to your jobs. Recruiter Plus adds search, filters and every candidate in your market.",
+    "applicantsOnly": "On Free you see the people who applied to your jobs. {{plan}} adds search, filters and every candidate in your market.",
     "relevantView": "Showing only the candidates relevant to {{job}}.",
     "showAll": "Show all candidates"
   },
@@ -299,7 +299,7 @@
     "noRolesText": "Published jobs appear here. Create a job to start meeting relevant talent."
   },
   "locked": {
-    "talent": "Recruiter Plus shows the candidates whose listed skills match your roles.",
+    "talent": "{{plan}} shows the candidates whose listed skills match your roles.",
     "seeCandidates": "See candidates"
   }
 }

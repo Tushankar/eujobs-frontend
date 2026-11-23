@@ -4,7 +4,7 @@ import { Link } from 'react-router-dom'
 import { ArrowUpRight } from 'lucide-react'
 import { Avatar, Icon, Skeleton, SkeletonRegion } from '@/components/ui'
 import PlanButton from '@/features/candidate/billing/components/PlanButton.jsx'
-import { lacksEntitlement } from '@/features/candidate/billing/usePlan.js'
+import { lacksEntitlement, usePaidPlanName } from '@/features/candidate/billing/usePlan.js'
 import { usePreferences } from '@/lib/preferences.js'
 import { useGetRelevantTalentQuery } from '../api.js'
 import styles from './JobTalentList.module.css'
@@ -17,6 +17,7 @@ const SKELETON_ROWS = 3
  */
 export default function JobTalentList({ jobId }) {
   const { t } = useTranslation()
+  const plan = usePaidPlanName()
   const { me } = usePreferences()
   const locked = lacksEntitlement(me, 'discovery', HIRING_ROLES)
   const { data, isLoading } = useGetRelevantTalentQuery(jobId, { skip: !me || locked })
@@ -26,7 +27,7 @@ export default function JobTalentList({ jobId }) {
       <h3 className={styles.heading}>{t('jobs:details.talent')}</h3>
       {locked ? (
         <div className={styles.locked}>
-          <p className={styles.empty}>{t('discovery:locked.talent')}</p>
+          <p className={styles.empty}>{t('discovery:locked.talent', { plan })}</p>
           <PlanButton variant="outline" size="sm" entitlement="discovery" roles={HIRING_ROLES}>
             {t('discovery:locked.seeCandidates')}
           </PlanButton>

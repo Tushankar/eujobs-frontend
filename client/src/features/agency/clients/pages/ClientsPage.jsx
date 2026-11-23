@@ -141,7 +141,8 @@ export default function ClientsPage() {
         </>
       )}
 
-      {editing && <ClientDialog open client={editing.id ? editing : null} onClose={() => setEditing(null)} />}
+      {/* 2026-11-23: the client is read from the live list, so a new logo shows in the open dialog at once. */}
+      {editing && <ClientDialog open client={editing.id ? (clients.find((client) => client.id === editing.id) ?? editing) : null} onClose={() => setEditing(null)} />}
       <ConfirmDialog
         open={Boolean(deleting)}
         title={t('agency:clients.deleteTitle', { name: deleting?.name })}

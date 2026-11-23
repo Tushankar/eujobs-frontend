@@ -15,6 +15,7 @@ import { User } from '../modules/users/users.model.js'
 import { seedCatalog } from '../seed/catalog.js'
 import { PLUS_PRICES } from '../seed/data/catalog.js'
 import { api, auth, createUser, mailTo, useTestDb } from './helpers/index.js'
+import { approvedAgency } from './helpers/market.js'
 
 useTestDb([User, Company, Subscription, Payment, Counter, StripeEvent, Course, Enrollment, Notification])
 before(() => seedCatalog())
@@ -176,6 +177,21 @@ describe('Checkout and Portal sessions (U40, C13, M-121; real test-mode Stripe)'
     // A second Checkout reuses the customer.
     const again = await api().post('/api/v1/payments/checkout-sessions').set(auth(user)).send({ kind: 'subscription', itemId: 'plus', from: '/candidate' })
     assert.equal((await stripe().checkout.sessions.retrieve(again.body.id)).customer, fresh.stripeCustomerId)
+  })
+
+  // 2026-11-23: an agency's return page is under /agency (the pattern allowed only /candidate and /recruiter).
+  it('creates an Agency Plus Checkout that returns to the agency workspace', async () => {
+    const { user } = await approvedAgency({ plus: false })
+    const res = await api().post('/api/v1/payments/checkout-sessions').set(auth(user)).send({ kind: 'subscription', itemId: 'agency_plus', interval: 'year', from: '/agency/jobs/new' })
+    assert.equal(res.status, 201)
+    customers.push((await User.findById(user._id)).stripeCustomerId)
+    const session = await stripe().checkout.sessions.retrieve(res.body.id, { expand: ['line_items'] })
+    const gbp = (await Plan.findOne({ key: 'agency_plus' })).yearlyPrices.find((price) => price.currency === 'GBP')
+    assert.equal(session.line_items.data[0].price.id, gbp.stripePriceId)
+    assert.ok(session.success_url.includes('/agency/checkout/return?session_id={CHECKOUT_SESSION_ID}&from=%2Fagency%2Fjobs%2Fnew'))
+    // Still only its own workspace.
+    const outside = await api().post('/api/v1/payments/checkout-sessions').set(auth(user)).send({ kind: 'subscription', itemId: 'agency_plus', from: '/recruiter/jobs' })
+    assert.deepEqual(outside.body.error.fields, { from: 'invalid' })
   })
 
   it('refuses a return page outside the buyer workspace and a second paid subscription', async () => {

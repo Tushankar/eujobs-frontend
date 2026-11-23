@@ -10,6 +10,7 @@ import { downloadFromApi } from '@/lib/download.js'
 import { check, compact, serverFieldErrors, useErrorText } from '@/lib/forms.js'
 import { usePreferences } from '@/lib/preferences.js'
 import { cx } from '@/utils/cx.js'
+import { usePaidPlanName } from '@/features/candidate/billing/usePlan.js'
 import { useDeleteAccountMutation } from '../api.js'
 import SettingRow, { SettingsSection } from './SettingRow.jsx'
 import styles from './DataControls.module.css'
@@ -20,6 +21,7 @@ import styles from './DataControls.module.css'
  */
 export default function DataControls() {
   const { t } = useTranslation()
+  const plan = usePaidPlanName()
   const errorText = useErrorText()
   const navigate = useNavigate()
   const { me } = usePreferences()
@@ -119,7 +121,7 @@ export default function DataControls() {
         }
       >
         <form id="delete-account" className={styles.confirm} onSubmit={handleDelete} noValidate>
-          <p className={styles.confirmText}>{t(`${deleteKey}.confirmBody`)}</p>
+          <p className={styles.confirmText}>{t(`${deleteKey}.confirmBody`, { plan })}</p>
           <PasswordField
             label={t('account:password.current')}
             hint={t(`${deleteKey}.password`)}

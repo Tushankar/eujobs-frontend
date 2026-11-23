@@ -1,6 +1,6 @@
 import { useState } from 'react'
 import { useTranslation } from 'react-i18next'
-import { X } from 'lucide-react'
+import { LoaderCircle, X } from 'lucide-react'
 import { errorCode, useGetConfigQuery } from '@/app/api.js'
 import { Button, CompanyLogo, Icon, Modal, TextField } from '@/components/ui'
 import CityField from '@/components/common/CityField.jsx'
@@ -65,7 +65,9 @@ export default function ClientDialog({ client, open, onClose }) {
   const [create, { isLoading: creating }] = useCreateClientMutation()
   const [update, { isLoading: updating }] = useUpdateClientMutation()
   const [uploadLogo, { isLoading: uploading }] = useUploadClientLogoMutation()
-  const [removeLogo] = useRemoveClientLogoMutation()
+  const [removeLogo, { isLoading: removing }] = useRemoveClientLogoMutation()
+  // 2026-11-23: a spinner on the logo while it uploads or is removed.
+  const logoBusy = uploading || removing
   const [logoProblem, setLogoProblem] = useState('')
   const set = (name) => (event) => setValues((current) => ({ ...current, [name]: event.target.value }))
 
@@ -115,14 +117,21 @@ export default function ClientDialog({ client, open, onClose }) {
       <form id="client-form" className={styles.form} onSubmit={handleSubmit} noValidate>
         {client && (
           <div className={styles.logoRow}>
-            <CompanyLogo name={client.name} src={client.logoUrl ?? undefined} size={48} />
+            <span className={styles.logoBox} aria-busy={logoBusy || undefined} data-logo-busy={logoBusy || undefined}>
+              <CompanyLogo name={client.name} src={client.logoUrl ?? undefined} size={48} />
+              {logoBusy && (
+                <span className={styles.logoSpinner}>
+                  <Icon as={LoaderCircle} size={20} />
+                </span>
+              )}
+            </span>
             <div className={styles.logoActions}>
-              <label className={styles.upload}>
-                <input type="file" accept={logoRule?.types.map((type) => `.${type}`).join(',')} onChange={handleLogo} disabled={uploading} />
-                {t(client.logoUrl ? 'agency:clients.dialog.replaceLogo' : 'agency:clients.dialog.addLogo')}
+              <label className={styles.upload} data-disabled={logoBusy || undefined}>
+                <input type="file" accept={logoRule?.types.map((type) => `.${type}`).join(',')} onChange={handleLogo} disabled={logoBusy} />
+                {uploading ? t('company:logo.uploading') : t(client.logoUrl ? 'agency:clients.dialog.replaceLogo' : 'agency:clients.dialog.addLogo')}
               </label>
-              {client.logoUrl && (
-                <button type="button" className={styles.removeLogo} onClick={() => removeLogo(client.id)}>
+              {client.logoUrl && !uploading && (
+                <button type="button" className={styles.removeLogo} onClick={() => removeLogo(client.id)} disabled={logoBusy}>
                   {t('agency:clients.dialog.removeLogo')}
                 </button>
               )}

@@ -9,7 +9,7 @@ import IntervalSwitch from '@/features/payments/components/IntervalSwitch.jsx'
 import { bestSaving } from '@/features/payments/bestSaving.js'
 import PlanPrice from '@/features/payments/components/PlanPrice.jsx'
 import { usePreferences } from '@/lib/preferences.js'
-import { lacksEntitlement, usePlan } from '../usePlan.js'
+import { lacksEntitlement, usePaidPlanName, usePlan } from '../usePlan.js'
 import { cx } from '@/utils/cx.js'
 import styles from './RequirePlan.module.css'
 
@@ -69,13 +69,14 @@ export function PlanGate({ entitlement }) {
   const { t } = useTranslation('billing')
   const { me } = usePreferences()
   const { plans, plus, free, item, loading } = usePlan()
+  const paidPlan = usePaidPlanName()
   const [checkingOut, setCheckingOut] = useState(false)
   const [interval, setInterval] = useState('month')
   const saving = bestSaving(plans)
 
   return (
     <>
-      <PageTitle eyebrow={loading ? <Skeleton width={48} height={8} /> : plus?.name} title={t(`gate.${entitlement}.title`)} description={t(`gate.${entitlement}.lead`)} />
+      <PageTitle eyebrow={loading ? <Skeleton width={48} height={8} /> : plus?.name} title={t(`gate.${entitlement}.title`)} description={t(`gate.${entitlement}.lead`, { plan: paidPlan })} />
       {loading && (
         <SkeletonRegion className={styles.plans}>
           {[false, true].map((featured) => (
