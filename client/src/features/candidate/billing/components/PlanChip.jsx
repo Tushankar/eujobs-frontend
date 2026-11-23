@@ -3,6 +3,7 @@ import { Crown } from 'lucide-react'
 import { cx } from '@/utils/cx.js'
 import { Icon } from '@/components/ui'
 import { usePreferences } from '@/lib/preferences.js'
+import { planItem } from '../usePlan.js'
 import styles from './PlanChip.module.css'
 
 /**
