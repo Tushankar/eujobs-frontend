@@ -1,6 +1,9 @@
 import { useTranslation } from 'react-i18next'
-import { useGetMeQuery } from '@/app/api.js'
+import { useGetConfigQuery, useGetMeQuery } from '@/app/api.js'
+import { currentRole } from '@/app/roles.js'
 import { CompanyLogo } from '@/components/ui'
+import { useGetClientsQuery } from '@/features/agency/api.js'
+import { useDuration } from '@/features/agency/useDuration.js'
 import { useJobText } from '@/lib/jobText.js'
 import { useJobPreview } from '../utils/useJobPreview.js'
 import styles from './JobPreviewCard.module.css'
@@ -12,10 +15,26 @@ export default function JobPreviewCard({ values, companyName, className }) {
   const { t } = useTranslation()
   const jobText = useJobText()
   const { data: me } = useGetMeQuery()
-  const { preview } = useJobPreview(values)
+  const { preview, currency } = useJobPreview(values)
+  // 2026-11-23: an agency job shows what its candidates see: the client (or "confidential"), dates and length, rate, hours.
+  const agency = currentRole() === 'agency'
+  const duration = useDuration()
+  const { data: config } = useGetConfigQuery()
+  const { data: clients } = useGetClientsQuery(undefined, { skip: !agency })
+  const client = agency && clients?.items.find((entry) => entry.id === values.clientId)
+  const rateAmount = Number(String(values.rateAmount ?? '').trim())
+  const rate = agency && currency && rateAmount > 0 ? jobText.rate({ rate: { amountMinor: Math.round(rateAmount * 100), currency, period: values.ratePeriod } }) : ''
+  const hours = agency ? (String(values.hoursPerWeek ?? '').trim() === '' ? config?.limits.job.agency.defaultHours[values.employmentType] : Number(values.hoursPerWeek)) : null
+  const agencyFacts = agency
+    ? [
+        values.startDate && values.endDate && `${jobText.dates({ startDate: values.startDate, endDate: values.endDate })} · ${duration(values.startDate, values.endDate)}`,
+        hours > 0 && t('jobs:preview.agencyHours', { count: hours }),
+      ].filter(Boolean)
+    : []
   const where = [jobText.place(preview), preview.workPreference && t(`enums:workPreference.${preview.workPreference}`)].filter(Boolean).join(' · ')
-  const salary = jobText.salary(preview)
+  const salary = agency ? rate : jobText.salary(preview)
   const tags = [
+    agency && t('agency:candidate.agencyTag'),
     preview.employmentType && t(`enums:employmentType.${preview.employmentType}`),
     preview.level && t(`enums:jobLevel.${preview.level}`),
     preview.visaSponsorship && t('jobs:posting.visa'),
@@ -36,10 +55,22 @@ export default function JobPreviewCard({ values, companyName, className }) {
             <div className={styles.titles}>
               <p className={preview.title ? styles.jobTitle : styles.placeholder}>{preview.title || t('jobs:review.untitled')}</p>
               <p className={styles.company}>{companyName}</p>
+              {agency && (
+                <p className={styles.meta} data-preview-client>
+                  {values.showClient && client ? t('agency:candidate.forClient', { client: client.name }) : t('agency:candidate.confidentialClient')}
+                </p>
+              )}
               {where && <p className={styles.meta}>{where}</p>}
             </div>
           </div>
           {salary && <p className={styles.salary}>{salary}</p>}
+          {agencyFacts.length > 0 && (
+            <ul className={styles.facts} data-preview-agency>
+              {agencyFacts.map((fact) => (
+                <li key={fact}>{fact}</li>
+              ))}
+            </ul>
+          )}
           {tags.length > 0 && (
             <ul className={styles.tags}>
               {tags.map((tag) => (

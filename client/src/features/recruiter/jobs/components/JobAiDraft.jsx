@@ -120,7 +120,7 @@ function DraftPreview({ values, agency }) {
  * optional notes, AI drafts the description, responsibilities, skills, level, years and languages. It fills only the
  * fields the recruiter left empty, never overwriting their own text, and says which it filled.
  */
-export default function JobAiDraft({ values, setValue }) {
+export default function JobAiDraft({ values, setValue, onDrafted }) {
   const { t } = useTranslation()
   const { data: config } = useGetConfigQuery()
   const [notes, setNotes] = useState('')
@@ -141,6 +141,8 @@ export default function JobAiDraft({ values, setValue }) {
       fields.forEach((field) => setValue(field, draft[field]))
       if (fields.includes('rateAmount') && draft.ratePeriod) setValue('ratePeriod', draft.ratePeriod)
       setFilled(fields)
+      // 2026-11-23: the wizard marks the steps these fields are on.
+      onDrafted?.(fields)
       // A client the notes name that is not on the Clients list yet.
       if (!values.clientId && answer.agency?.unknownClient) setUnknownClient(answer.agency.unknownClient)
     } catch {

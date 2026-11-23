@@ -108,3 +108,16 @@
   border-style: dashed;
   color: var(--muted-foreground);
 }
+
+/* An agency job's dates, length and hours (2026-11-23). */
+.facts {
+  display: flex;
+  flex-direction: column;
+  gap: 4px;
+  margin: 0;
+  padding: 0;
+  list-style: none;
+  font-size: 13px;
+  line-height: 18px;
+  color: var(--muted-foreground);
+}

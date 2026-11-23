@@ -1,7 +1,7 @@
 import { HIRING_ROLES } from '@/app/roles.js'
 import { useEffect, useRef, useState } from 'react'
 import { useTranslation } from 'react-i18next'
-import { ArrowLeft, ArrowRight, Check } from 'lucide-react'
+import { ArrowLeft, ArrowRight, Check, Sparkles } from 'lucide-react'
 import { errorCode, useGetConfigQuery } from '@/app/api.js'
 import { scrollActiveIntoView, trackRowEdges } from '@/hooks/scrollActiveIntoView.js'
 import { cx } from '@/utils/cx.js'
@@ -14,6 +14,14 @@ import JobStepFields from './JobStepFields.jsx'
 import styles from './JobWizard.module.css'
 
 const READ_ONLY_STEPS = ['quality', 'review']
+// 2026-11-23: the fields the AI draft can fill, by the step that shows them (for the step list's AI marks).
+const AI_STEP_FIELDS = {
+  responsibilities: ['brief', 'responsibilities'],
+  'required-skills': ['requiredSkills'],
+  'preferred-skills': ['preferredSkills'],
+  experience: ['level', 'experienceYears', 'requiredLanguages'],
+  agency: ['clientId', 'startDate', 'endDate', 'rateAmount', 'hoursPerWeek'],
+}
 
 /**
  * The 9-step Create a job form (§3.7). Owns the values, the current step and the errors; the page saves.
@@ -31,6 +39,9 @@ export default function JobWizard({ initialValues, initialStep = 0, reachable = 
   const [errors, setErrors] = useState(initialErrors)
   const [failure, setFailure] = useState(null)
   const [busy, setBusy] = useState(false)
+  // Fields the AI draft filled and nobody has edited since (2026-11-23).
+  const [aiFields, setAiFields] = useState(() => new Set())
+  const aiStep = (id) => Boolean(AI_STEP_FIELDS[id]?.some((field) => aiFields.has(field)))
   const headingRef = useRef(null)
   const changedStep = useRef(false)
   const stepsRef = useRef(null)
@@ -62,6 +73,7 @@ export default function JobWizard({ initialValues, initialStep = 0, reachable = 
   /** `errorField` names the error a value clears when it differs from the value's name (the city clears placeId). */
   function setValue(name, value, errorField = name) {
     setValues((currentValues) => ({ ...currentValues, [name]: value }))
+    setAiFields((current) => (current.has(name) ? new Set([...current].filter((field) => field !== name)) : current))
     setErrors((currentErrors) => (currentErrors[errorField] ? { ...currentErrors, [errorField]: undefined } : currentErrors))
   }
 
@@ -143,6 +155,13 @@ export default function JobWizard({ initialValues, initialStep = 0, reachable = 
                   >
                     <span className={styles.stepNumber}>{done ? <Icon as={Check} size={12} strokeWidth={3} /> : index + 1}</span>
                     <span className={styles.stepLabel}>{t(`jobs:steps.${id}`)}</span>
+                    {aiStep(id) && (
+                      <span className={styles.aiMark} title={t('jobs:ai.stepTitle')} data-ai-step={id}>
+                        <Icon as={Sparkles} size={11} />
+                        {t('jobs:ai.stepMark')}
+                        <span className="sr-only"> · {t('jobs:ai.stepTitle')}</span>
+                      </span>
+                    )}
                   </button>
                 </li>
               )
@@ -159,8 +178,24 @@ export default function JobWizard({ initialValues, initialStep = 0, reachable = 
           </div>
 
           <div className={styles.body}>
+            {aiStep(current) && (
+              <p className={styles.aiBanner} role="note" data-ai-banner>
+                <Icon as={Sparkles} size={15} />
+                {t('jobs:ai.banner')}
+              </p>
+            )}
             {config && (
-              <JobStepFields step={current} values={values} bind={bind} errorOf={errorOf} setValue={setValue} companyName={companyName} choosesStatus={finishActions.length > 1} job={job} />
+              <JobStepFields
+                step={current}
+                values={values}
+                bind={bind}
+                errorOf={errorOf}
+                setValue={setValue}
+                onAiDrafted={(fields) => setAiFields((existing) => new Set([...existing, ...fields]))}
+                companyName={companyName}
+                choosesStatus={finishActions.length > 1}
+                job={job}
+              />
             )}
           </div>
 

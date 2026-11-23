@@ -253,7 +253,6 @@
   "ai": {
     "stepMark": "IA",
     "stepTitle": "Rédigé par l’IA : vérifiez avant de publier",
-    "banner": "L’IA a rédigé cette étape. Vérifiez-la et modifiez ce qu’il faut avant de publier ; la marque IA d’un champ disparaît dès que vous le modifiez.",
-    "field": "Brouillon IA"
+    "banner": "L’IA a rédigé cette étape. Vérifiez-la et modifiez ce qu’il faut avant de publier ; la marque IA disparaît dès que vous modifiez ces champs."
   }
 }

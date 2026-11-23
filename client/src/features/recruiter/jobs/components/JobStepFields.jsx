@@ -51,7 +51,7 @@ function useCurrencyOptions() {
  * The fields (or read-only content) of one wizard step. `bind(name)` returns value/onChange/error props;
  * `errorOf(name)` the translated error of a field set with setValue.
  */
-export default function JobStepFields({ step, values, bind, errorOf, setValue, companyName, choosesStatus, job }) {
+export default function JobStepFields({ step, values, bind, errorOf, setValue, onAiDrafted, companyName, choosesStatus, job }) {
   const { t } = useTranslation()
   const jobText = useJobText()
   const { data: config } = useGetConfigQuery()
@@ -75,7 +75,7 @@ export default function JobStepFields({ step, values, bind, errorOf, setValue, c
             />
           </div>
           {/* 2026-11-17: the job post writer fills the later steps' empty fields. */}
-          <JobAiDraft values={values} setValue={setValue} />
+          <JobAiDraft values={values} setValue={setValue} onDrafted={onAiDrafted} />
         </div>
       )
     case 'responsibilities':

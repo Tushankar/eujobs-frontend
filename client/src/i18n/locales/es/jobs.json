@@ -253,7 +253,6 @@
   "ai": {
     "stepMark": "IA",
     "stepTitle": "Redactado por IA: revísalo antes de publicar",
-    "banner": "La IA redactó este paso. Revísalo y cambia lo que haga falta antes de publicar; la marca de IA de un campo desaparece al editarlo.",
-    "field": "Borrador IA"
+    "banner": "La IA redactó este paso. Revísalo y cambia lo que haga falta antes de publicar; la marca de IA desaparece cuando editas estos campos."
   }
 }
