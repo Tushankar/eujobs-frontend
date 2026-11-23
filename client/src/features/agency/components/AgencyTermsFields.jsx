@@ -54,7 +54,7 @@ function ClientPicker({ value, onChange, error }) {
 
   return (
     <>
-      <Field id="agency-client" label={t('agency:terms.client')} error={error}>
+      <Field id="agency-client" error={error}>
         {({ describedBy, invalid }) => (
           <Dropdown
             align="start"
@@ -66,6 +66,7 @@ function ClientPicker({ value, onChange, error }) {
                 id="agency-client"
                 type="button"
                 className={cx(fieldStyles.control, styles.picker, invalid && fieldStyles.invalid)}
+                aria-labelledby="terms-client agency-client"
                 aria-invalid={invalid || undefined}
                 aria-describedby={describedBy}
                 data-client-picker
@@ -175,9 +176,9 @@ export default function AgencyTermsFields({ values, bind, setValue, errorOf, cur
           />
         </div>
         <p className={styles.note} data-client-shown>
-          {values.showClient && client ? t('agency:candidate.forClient', { client: client.name }) : t('agency:candidate.confidentialClient')}
-          {' · '}
-          {t('agency:terms.showClientHint')}
+          {t('agency:terms.visibility')}: {values.showClient && client ? t('agency:candidate.forClient', { client: client.name }) : t('agency:candidate.confidentialClient')}
+          {'. '}
+          {t('agency:terms.agencyAlwaysShows')}
         </p>
       </section>
 

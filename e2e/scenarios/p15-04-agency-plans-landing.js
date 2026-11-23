@@ -138,6 +138,8 @@ export default {
     await signInWithForm(workspace.page, ctx.webUrl, '/agencies/login', free.email, TEST_PASSWORD)
     await workspace.page.goto(`${ctx.webUrl}/agency/clients`, { waitUntil: 'networkidle0' })
     await workspace.page.click('[data-client="Harbour Freight"] button')
+    // The upload rules come with /meta/config; a file chosen before they arrive is checked against nothing.
+    await workspace.page.waitForFunction(() => document.querySelector('#client-form input[type="file"]')?.accept)
     await chooseFile(workspace.page, '#client-form input[type="file"]', fixture('kyc-registration.png'))
     await workspace.page.waitForFunction(() => document.querySelector('#client-form img')?.complete, { timeout: 20_000 })
     ctx.check((await bodyText(workspace.page)).includes('Replace logo'), 'the open dialog shows the new logo and offers Replace')

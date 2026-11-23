@@ -216,7 +216,8 @@
     "weekly": "Unos {{amount}} a la semana con {{hours}} horas",
     "hoursSuffix": "horas a la semana",
     "clientSearchEmpty": "Aún no hay clientes. Añade las empresas para las que seleccionas.",
-    "contractAfterSave": "Podrás adjuntar un contrato para esta oferta cuando se guarde el primer paso."
+    "contractAfterSave": "Podrás adjuntar un contrato para esta oferta cuando se guarde el primer paso.",
+    "agencyAlwaysShows": "El nombre de tu agencia siempre se muestra."
   },
   "placements": {
     "title": "Colocaciones",

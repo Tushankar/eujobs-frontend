@@ -216,7 +216,8 @@
     "weekly": "Environ {{amount}} par semaine pour {{hours}} heures",
     "hoursSuffix": "heures par semaine",
     "clientSearchEmpty": "Aucun client pour l’instant. Ajoutez les entreprises pour lesquelles vous recrutez.",
-    "contractAfterSave": "Vous pourrez joindre un contrat pour cette offre une fois la première étape enregistrée."
+    "contractAfterSave": "Vous pourrez joindre un contrat pour cette offre une fois la première étape enregistrée.",
+    "agencyAlwaysShows": "Le nom de votre agence apparaît toujours."
   },
   "placements": {
     "title": "Placements",

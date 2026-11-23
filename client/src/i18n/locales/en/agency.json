@@ -213,7 +213,8 @@
     "weekly": "About {{amount}} a week at {{hours}} hours",
     "hoursSuffix": "hours a week",
     "clientSearchEmpty": "No clients yet. Add the companies you recruit for.",
-    "contractAfterSave": "You can attach a contract for this job after the first step is saved."
+    "contractAfterSave": "You can attach a contract for this job after the first step is saved.",
+    "agencyAlwaysShows": "Your agency’s name always shows."
   },
   "placements": {
     "title": "Placements",
