@@ -4,7 +4,7 @@ import { uploadAs } from '../lib/candidates.js'
 import { fixture } from '../fixtures/make.js'
 import { clickText, signInWithForm } from '../lib/flows.js'
 import { jobBody, postJob } from '../lib/recruiters.js'
-import { api, date, db, TEST_PASSWORD } from '../lib/testApi.js'
+import { api, TEST_PASSWORD } from '../lib/testApi.js'
 
 const pause = (ms) => new Promise((resolve) => setTimeout(resolve, ms))
 const NONE = { value: null, clause: null }
