@@ -14,7 +14,7 @@ const sameSkill = (a, b) => a.toLocaleLowerCase() === b.toLocaleLowerCase()
  * (M-034): suggestions are the market's most-used skills from the server (P4-D5). A skill cannot be in both
  * lists (M-033), so `excluded` holds the other list.
  */
-export default function SkillPicker({ label, hint, error, value, onChange, excluded = [], max }) {
+export default function SkillPicker({ label, hint, error, value, onChange, excluded = [], max, className }) {
   const { t } = useTranslation()
   const id = useId()
   const [draft, setDraft] = useState('')
@@ -47,7 +47,7 @@ export default function SkillPicker({ label, hint, error, value, onChange, exclu
   const full = max != null && value.length >= max
 
   return (
-    <Field id={id} label={label} hint={hint} error={error || problem || undefined}>
+    <Field id={id} label={label} hint={hint} error={error || problem || undefined} className={className}>
       {({ describedBy, invalid }) => (
         <>
           <div className={styles.inputRow}>

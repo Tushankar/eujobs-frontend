@@ -141,3 +141,24 @@
     transform: scaleY(0);
   }
 }
+
+/*
+ * 2026-11-23 (owner: "show with stars which fields AI filled"): a field the job AI draft filled and nobody changed
+ * yet. A small pill after its label (or legend, or section title); the text comes from --ai-mark, set by the wizard.
+ */
+.ai-filled > label::after,
+.ai-filled > legend::after,
+h3.ai-filled::after {
+  content: var(--ai-mark, "✦ AI");
+  display: inline-block;
+  margin-left: 8px;
+  padding: 0 7px;
+  border: 1px solid var(--border-strong);
+  border-radius: var(--radius-full);
+  font-size: 11px;
+  font-weight: 600;
+  line-height: 18px;
+  color: var(--primary);
+  vertical-align: 1px;
+  white-space: nowrap;
+}

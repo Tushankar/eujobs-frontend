@@ -255,6 +255,7 @@
   "ai": {
     "stepMark": "AI",
     "stepTitle": "Drafted by AI: check it before you publish",
-    "banner": "AI drafted this step. Check it and change anything before you publish; the AI mark goes once you edit these fields."
+    "banner": "AI drafted this step. Check it and change anything before you publish; the AI mark goes once you edit these fields.",
+    "fieldMark": "AI"
   }
 }

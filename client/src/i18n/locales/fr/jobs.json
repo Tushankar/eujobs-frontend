@@ -258,6 +258,7 @@
   "ai": {
     "stepMark": "IA",
     "stepTitle": "Rédigé par l’IA : vérifiez avant de publier",
-    "banner": "L’IA a rédigé cette étape. Vérifiez-la et modifiez ce qu’il faut avant de publier ; la marque IA disparaît dès que vous modifiez ces champs."
+    "banner": "L’IA a rédigé cette étape. Vérifiez-la et modifiez ce qu’il faut avant de publier ; la marque IA disparaît dès que vous modifiez ces champs.",
+    "fieldMark": "IA"
   }
 }

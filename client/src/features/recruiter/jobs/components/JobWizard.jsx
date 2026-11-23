@@ -1,3 +1,4 @@
+import { AiFieldsContext } from '../aiFilled.js'
 import { HIRING_ROLES } from '@/app/roles.js'
 import { useEffect, useRef, useState } from 'react'
 import { useTranslation } from 'react-i18next'
@@ -177,7 +178,7 @@ export default function JobWizard({ initialValues, initialStep = 0, reachable = 
             </h2>
           </div>
 
-          <div className={styles.body}>
+          <div className={styles.body} style={{ '--ai-mark': JSON.stringify(`✦ ${t('jobs:ai.fieldMark')}`) }}>
             {aiStep(current) && (
               <p className={styles.aiBanner} role="note" data-ai-banner>
                 <Icon as={Sparkles} size={15} />
@@ -185,6 +186,7 @@ export default function JobWizard({ initialValues, initialStep = 0, reachable = 
               </p>
             )}
             {config && (
+              <AiFieldsContext.Provider value={aiFields}>
               <JobStepFields
                 step={current}
                 values={values}
@@ -196,6 +198,7 @@ export default function JobWizard({ initialValues, initialStep = 0, reachable = 
                 choosesStatus={finishActions.length > 1}
                 job={job}
               />
+              </AiFieldsContext.Provider>
             )}
           </div>
 

@@ -9,7 +9,7 @@ import styles from './JobStepFields.module.css'
 import CountryField from '@/components/common/CountryField.jsx'
 
 /** M-035, P4-D6: required languages, each with a minimum level; unique codes, at most `max`. */
-export function LanguageRequirements({ value, onChange, max, error }) {
+export function LanguageRequirements({ value, onChange, max, error, className }) {
   const { t } = useTranslation()
   const format = useFormat()
   const { language } = usePreferences()
@@ -23,7 +23,7 @@ export function LanguageRequirements({ value, onChange, max, error }) {
   const update = (index, change) => onChange(value.map((row, i) => (i === index ? { ...row, ...change } : row)))
 
   return (
-    <fieldset className={styles.listField}>
+    <fieldset className={className ? `${styles.listField} ${className}` : styles.listField}>
       <legend className={styles.listLegend}>{t('jobs:fields.languages')}</legend>
       <p className={styles.note}>{t('jobs:fields.languagesHint')}</p>
       {value.map((row, index) => (

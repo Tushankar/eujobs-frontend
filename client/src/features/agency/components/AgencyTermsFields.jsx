@@ -8,6 +8,7 @@ import { addDays, shiftMonth } from '@/utils/calendarDays.js'
 import { cx } from '@/utils/cx.js'
 import ClientDialog from '../clients/components/ClientDialog.jsx'
 import { useGetClientsQuery } from '../api.js'
+import { useAiFilled } from '@/features/recruiter/jobs/aiFilled.js'
 import { useDuration } from '../useDuration.js'
 import ContractCard from './ContractCard.jsx'
 import JobRules from './JobRules.jsx'
@@ -141,6 +142,7 @@ function ClientPicker({ value, onChange, error }) {
  */
 export default function AgencyTermsFields({ values, bind, setValue, errorOf, currency, job }) {
   const { t } = useTranslation()
+  const aiFilled = useAiFilled()
   const format = useFormat()
   const { language } = usePreferences()
   const { data: config } = useGetConfigQuery()
@@ -158,7 +160,7 @@ export default function AgencyTermsFields({ values, bind, setValue, errorOf, cur
   return (
     <div className={styles.sections}>
       <section className={styles.section} aria-labelledby="terms-client">
-        <h3 id="terms-client" className={styles.sectionTitle}>
+        <h3 id="terms-client" className={cx(styles.sectionTitle, aiFilled('clientId'))}>
           {t('agency:terms.sectionClient')}
         </h3>
         <ClientPicker value={values.clientId} onChange={(id) => setValue('clientId', id)} error={errorOf('clientId')} />
@@ -187,8 +189,8 @@ export default function AgencyTermsFields({ values, bind, setValue, errorOf, cur
           {t('agency:terms.sectionDates')}
         </h3>
         <div className={styles.pair}>
-          <DatePicker label={t('agency:terms.startDate')} name="startDate" value={values.startDate} onChange={(key) => setValue('startDate', key)} error={errorOf('startDate')} />
-          <DatePicker label={t('agency:terms.endDate')} name="endDate" value={values.endDate} min={values.startDate || undefined} onChange={(key) => setValue('endDate', key)} error={errorOf('endDate')} />
+          <DatePicker className={aiFilled('startDate')} label={t('agency:terms.startDate')} name="startDate" value={values.startDate} onChange={(key) => setValue('startDate', key)} error={errorOf('startDate')} />
+          <DatePicker className={aiFilled('endDate')} label={t('agency:terms.endDate')} name="endDate" value={values.endDate} min={values.startDate || undefined} onChange={(key) => setValue('endDate', key)} error={errorOf('endDate')} />
         </div>
         <div className={styles.lengths}>
           <span className={styles.visibilityLabel}>{t('agency:terms.quickLength')}</span>
@@ -224,7 +226,7 @@ export default function AgencyTermsFields({ values, bind, setValue, errorOf, cur
         </h3>
         <div className={styles.payRow}>
           <TextField
-            className={styles.rate}
+            className={cx(styles.rate, aiFilled('rateAmount'))}
             label={currency ? t('agency:terms.rate', { currency }) : t('agency:terms.rateNoCurrency')}
             hint={currency ? undefined : t('jobs:fields.salaryNeedsPlace')}
             inputMode="decimal"
@@ -244,7 +246,7 @@ export default function AgencyTermsFields({ values, bind, setValue, errorOf, cur
           </div>
         </div>
         <TextField
-          className={styles.hours}
+          className={cx(styles.hours, aiFilled('hoursPerWeek'))}
           label={t('agency:terms.hoursPerWeek')}
           hint={defaultHours ? t('agency:terms.hoursHint', { count: defaultHours, type: t(`enums:employmentType.${values.employmentType}`).toLowerCase() }) : undefined}
           inputMode="numeric"

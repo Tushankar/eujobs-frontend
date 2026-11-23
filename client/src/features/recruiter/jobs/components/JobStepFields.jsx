@@ -1,3 +1,4 @@
+import { useAiFilled } from '../aiFilled.js'
 import { useTranslation } from 'react-i18next'
 import { currentRole } from '@/app/roles.js'
 import { CircleAlert, CircleCheck } from 'lucide-react'
@@ -61,6 +62,7 @@ function useCurrencyOptions() {
  */
 export default function JobStepFields({ step, values, bind, errorOf, setValue, onAiDrafted, companyName, choosesStatus, job }) {
   const { t } = useTranslation()
+  const aiFilled = useAiFilled()
   const jobText = useJobText()
   const { data: config } = useGetConfigQuery()
   const { preview, currency, remote } = useJobPreview(values)
@@ -93,13 +95,14 @@ export default function JobStepFields({ step, values, bind, errorOf, setValue, o
     case 'responsibilities':
       return (
         <div className={styles.stack}>
-          <TextareaField label={t('jobs:fields.brief')} hint={t('jobs:fields.briefHint')} rows={5} {...bind('brief')} />
-          <TextareaField label={t('jobs:fields.responsibilities')} hint={t('jobs:fields.responsibilitiesHint', { max: J?.responsibilities.max })} rows={5} {...bind('responsibilities')} />
+          <TextareaField className={aiFilled('brief')} label={t('jobs:fields.brief')} hint={t('jobs:fields.briefHint')} rows={5} {...bind('brief')} />
+          <TextareaField className={aiFilled('responsibilities')} label={t('jobs:fields.responsibilities')} hint={t('jobs:fields.responsibilitiesHint', { max: J?.responsibilities.max })} rows={5} {...bind('responsibilities')} />
         </div>
       )
     case 'required-skills':
       return (
         <SkillPicker
+          className={aiFilled('requiredSkills')}
           label={t('jobs:fields.requiredSkills')}
           hint={t('jobs:fields.requiredSkillsHint')}
           error={errorOf('requiredSkills')}
@@ -112,6 +115,7 @@ export default function JobStepFields({ step, values, bind, errorOf, setValue, o
     case 'preferred-skills':
       return (
         <SkillPicker
+          className={aiFilled('preferredSkills')}
           label={t('jobs:fields.preferredSkills')}
           hint={t('jobs:fields.preferredSkillsHint')}
           error={errorOf('preferredSkills')}
@@ -125,10 +129,10 @@ export default function JobStepFields({ step, values, bind, errorOf, setValue, o
       return (
         <div className={styles.stack}>
           <div className={styles.pair}>
-            <SelectField label={t('jobs:fields.level')} placeholder={t('jobs:fields.levelPlaceholder')} options={enumOptions('jobLevel')} {...bind('level')} />
-            <TextField label={t('jobs:fields.experienceYears')} inputMode="numeric" placeholder={t('jobs:fields.experiencePlaceholder')} {...bind('experienceYears')} />
+            <SelectField className={aiFilled('level')} label={t('jobs:fields.level')} placeholder={t('jobs:fields.levelPlaceholder')} options={enumOptions('jobLevel')} {...bind('level')} />
+            <TextField className={aiFilled('experienceYears')} label={t('jobs:fields.experienceYears')} inputMode="numeric" placeholder={t('jobs:fields.experiencePlaceholder')} {...bind('experienceYears')} />
           </div>
-          <LanguageRequirements value={values.requiredLanguages} max={J?.languages.max ?? 0} error={errorOf('requiredLanguages')} onChange={(rows) => setValue('requiredLanguages', rows)} />
+          <LanguageRequirements className={aiFilled('requiredLanguages')} value={values.requiredLanguages} max={J?.languages.max ?? 0} error={errorOf('requiredLanguages')} onChange={(rows) => setValue('requiredLanguages', rows)} />
         </div>
       )
     case 'location':
