@@ -208,8 +208,10 @@
     "duration": {
       "weeks_one": "{{count}} semana",
       "weeks_other": "{{count}} semanas",
+      "weeks_many": "{{count}} semanas",
       "days_one": "{{count}} día",
-      "days_other": "{{count}} días"
+      "days_other": "{{count}} días",
+      "days_many": "{{count}} días"
     },
     "perHour": "por hora",
     "perDay": "por día",
@@ -463,12 +465,15 @@
         },
         "noticeDays_one": "Para dejarla antes, avisa con {{count}} día de antelación.",
         "noticeDays_other": "Para dejarla antes, avisa con {{count}} días de antelación.",
+        "noticeDays_many": "Para dejarla antes, avisa con {{count}} días de antelación.",
         "noticeDaysNone": "No se indica un plazo de preaviso.",
         "coolingOffDays_one": "Al terminar, espera {{count}} día antes de trabajar para {{client}} directamente o con otra agencia.",
         "coolingOffDays_other": "Al terminar, espera {{count}} días antes de trabajar para {{client}} directamente o con otra agencia.",
+        "coolingOffDays_many": "Al terminar, espera {{count}} días antes de trabajar para {{client}} directamente o con otra agencia.",
         "coolingOffDaysNone": "No hay periodo de espera al terminar.",
         "maxWeeklyHours_one": "Como máximo {{count}} hora a la semana en todos tus trabajos.",
         "maxWeeklyHours_other": "Como máximo {{count}} horas a la semana en todos tus trabajos.",
+        "maxWeeklyHours_many": "Como máximo {{count}} horas a la semana en todos tus trabajos.",
         "maxWeeklyHoursNone": "No se indica un límite de horas semanales."
       },
       "short": {
@@ -480,10 +485,13 @@
         },
         "noticeDays_one": "{{count}} día de preaviso para dejarla",
         "noticeDays_other": "{{count}} días de preaviso para dejarla",
+        "noticeDays_many": "{{count}} días de preaviso para dejarla",
         "coolingOffDays_one": "{{count}} día antes de volver a trabajar para {{client}}",
         "coolingOffDays_other": "{{count}} días antes de volver a trabajar para {{client}}",
+        "coolingOffDays_many": "{{count}} días antes de volver a trabajar para {{client}}",
         "maxWeeklyHours_one": "como máximo {{count}} hora a la semana",
-        "maxWeeklyHours_other": "como máximo {{count}} horas a la semana"
+        "maxWeeklyHours_other": "como máximo {{count}} horas a la semana",
+        "maxWeeklyHours_many": "como máximo {{count}} horas a la semana"
       }
     }
   },

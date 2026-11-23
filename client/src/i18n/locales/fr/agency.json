@@ -208,8 +208,10 @@
     "duration": {
       "weeks_one": "{{count}} semaine",
       "weeks_other": "{{count}} semaines",
+      "weeks_many": "{{count}} semaines",
       "days_one": "{{count}} jour",
-      "days_other": "{{count}} jours"
+      "days_other": "{{count}} jours",
+      "days_many": "{{count}} jours"
     },
     "perHour": "de l’heure",
     "perDay": "par jour",
@@ -463,12 +465,15 @@
         },
         "noticeDays_one": "Pour partir plus tôt, donnez {{count}} jour de préavis.",
         "noticeDays_other": "Pour partir plus tôt, donnez {{count}} jours de préavis.",
+        "noticeDays_many": "Pour partir plus tôt, donnez {{count}} jours de préavis.",
         "noticeDaysNone": "Aucun préavis n’est indiqué.",
         "coolingOffDays_one": "Après le placement, attendez {{count}} jour avant de travailler pour {{client}} directement ou via une autre agence.",
         "coolingOffDays_other": "Après le placement, attendez {{count}} jours avant de travailler pour {{client}} directement ou via une autre agence.",
+        "coolingOffDays_many": "Après le placement, attendez {{count}} jours avant de travailler pour {{client}} directement ou via une autre agence.",
         "coolingOffDaysNone": "Aucun délai d’attente après le placement.",
         "maxWeeklyHours_one": "Au plus {{count}} heure par semaine, tous travaux confondus.",
         "maxWeeklyHours_other": "Au plus {{count}} heures par semaine, tous travaux confondus.",
+        "maxWeeklyHours_many": "Au plus {{count}} heures par semaine, tous travaux confondus.",
         "maxWeeklyHoursNone": "Aucune limite d’heures par semaine n’est indiquée."
       },
       "short": {
@@ -480,10 +485,13 @@
         },
         "noticeDays_one": "{{count}} jour de préavis pour partir",
         "noticeDays_other": "{{count}} jours de préavis pour partir",
+        "noticeDays_many": "{{count}} jours de préavis pour partir",
         "coolingOffDays_one": "{{count}} jour avant de retravailler pour {{client}}",
         "coolingOffDays_other": "{{count}} jours avant de retravailler pour {{client}}",
+        "coolingOffDays_many": "{{count}} jours avant de retravailler pour {{client}}",
         "maxWeeklyHours_one": "au plus {{count}} heure par semaine",
-        "maxWeeklyHours_other": "au plus {{count}} heures par semaine"
+        "maxWeeklyHours_other": "au plus {{count}} heures par semaine",
+        "maxWeeklyHours_many": "au plus {{count}} heures par semaine"
       }
     }
   },
