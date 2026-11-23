@@ -281,6 +281,9 @@
         "text": "Le suivi des candidatures, la recherche de candidats, la messagerie et les entretiens des recruteurs."
       }
     },
-    "plans": "Offres pour les agences"
+    "plans": "Offres pour les agences",
+    "withPlan": "Avec {{plan}}",
+    "compare": "Comparer les offres",
+    "plansEmpty": "Les offres ne sont pas disponibles pour le moment. Vous pouvez vous inscrire et choisir une offre plus tard."
   }
 }

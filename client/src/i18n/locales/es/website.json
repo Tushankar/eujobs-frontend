@@ -281,6 +281,9 @@
         "text": "El proceso de selección, la búsqueda de candidatos, los mensajes y las entrevistas que usan los reclutadores."
       }
     },
-    "plans": "Planes para agencias"
+    "plans": "Planes para agencias",
+    "withPlan": "Con {{plan}}",
+    "compare": "Comparar planes",
+    "plansEmpty": "Los planes no están disponibles ahora mismo. Puedes registrarte y elegir un plan más tarde."
   }
 }

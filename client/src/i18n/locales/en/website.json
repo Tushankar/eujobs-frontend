@@ -277,6 +277,9 @@
         "text": "The pipeline, candidate search, messages and interviews that recruiters use."
       }
     },
-    "plans": "Agency plans"
+    "plans": "Agency plans",
+    "withPlan": "With {{plan}}",
+    "compare": "Compare plans",
+    "plansEmpty": "Plans are not available right now. You can sign up and pick a plan later."
   }
 }
