@@ -87,6 +87,13 @@
         "title": "No requests",
         "text": "Candidates who ask to join, and people you invite, show here until they agree."
       }
+    },
+    "next": {
+      "pick": "Pick a job to rank everyone on your books for it and offer them a placement.",
+      "post": "Post an agency job to place the people on your books.",
+      "postAction": "Post a job",
+      "publish": "Publish one of your agency jobs to offer placements to the people on your books.",
+      "publishAction": "Open your jobs"
     }
   },
   "agreement": {

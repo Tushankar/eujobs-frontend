@@ -88,6 +88,13 @@
         "title": "Aucune demande",
         "text": "Les candidats qui demandent à rejoindre et ceux que vous invitez apparaissent ici jusqu’à leur accord."
       }
+    },
+    "next": {
+      "pick": "Choisissez une offre pour classer tout votre vivier et proposer un placement.",
+      "post": "Publiez une offre d’agence pour placer les personnes de votre vivier.",
+      "postAction": "Publier une offre",
+      "publish": "Publiez l’une de vos offres d’agence pour proposer des placements aux personnes de votre vivier.",
+      "publishAction": "Ouvrir vos offres"
     }
   },
   "agreement": {

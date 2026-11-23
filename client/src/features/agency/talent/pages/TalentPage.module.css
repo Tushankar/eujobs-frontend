@@ -8,6 +8,14 @@
   margin-bottom: 16px;
 }
 
+/* 2026-11-23: what to do with the people on the books, under the job picker. */
+.hint {
+  margin-top: 6px;
+  font-size: 12px;
+  line-height: 18px;
+  color: var(--muted-foreground);
+}
+
 .card {
   border: 1px solid var(--border);
   border-radius: var(--radius-xl);

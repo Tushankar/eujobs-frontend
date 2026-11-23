@@ -88,6 +88,13 @@
         "title": "No hay solicitudes",
         "text": "Los candidatos que piden unirse y las personas que invitas aparecen aquí hasta que aceptan."
       }
+    },
+    "next": {
+      "pick": "Elige una oferta para ordenar a toda tu cartera según ella y ofrecerles una colocación.",
+      "post": "Publica una oferta de agencia para colocar a las personas de tu cartera.",
+      "postAction": "Publicar una oferta",
+      "publish": "Publica una de tus ofertas de agencia para ofrecer colocaciones a las personas de tu cartera.",
+      "publishAction": "Abrir tus ofertas"
     }
   },
   "agreement": {

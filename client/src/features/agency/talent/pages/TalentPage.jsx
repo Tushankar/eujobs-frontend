@@ -118,6 +118,12 @@ export default function TalentPage() {
   const members = data?.items ?? []
   const inTab = (id) => members.filter((member) => IN_TAB[id]?.includes(member.status))
   const noAgreement = agreement && !agreement.current
+  /*
+   * 2026-11-23 (owner: "I have invited him, now what?"): with people on the books and no job picked, say what comes next.
+   * Placements need a published agency job: pick one to rank and offer, publish a draft, or post one first.
+   */
+  const published = rankable.filter((job) => job.status === 'published')
+  const nextStep = tab !== 'books' || rankFor || noAgreement || !jobs || !data || inTab('books').length === 0 ? null : published.length > 0 ? 'pick' : rankable.length > 0 ? 'publish' : 'post'
 
   async function run(member, action) {
     if (action === 'end' && ending?.id !== member.id) return setEnding(member)
@@ -173,6 +179,19 @@ export default function TalentPage() {
                 value={rankFor}
                 onChange={(event) => setParams(event.target.value ? { jobId: event.target.value } : {}, { replace: true })}
               />
+              {nextStep === 'pick' && (
+                <p className={styles.hint} data-books-hint="pick">
+                  {t('agency:talent.next.pick')}
+                </p>
+              )}
+            </div>
+          )}
+          {(nextStep === 'post' || nextStep === 'publish') && (
+            <div className={styles.banner} data-books-hint={nextStep}>
+              <p>{t(`agency:talent.next.${nextStep}`)}</p>
+              <Button as={Link} to={hiringPath(nextStep === 'post' ? 'jobs/new' : 'jobs')} size="sm">
+                {t(`agency:talent.next.${nextStep}Action`)}
+              </Button>
             </div>
           )}
           {rankFor ? (
