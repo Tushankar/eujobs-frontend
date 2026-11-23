@@ -37,8 +37,12 @@ async function assertOnBooks(companyId, candidateId) {
 
 /** Each rule from the job's confirmed contract, else the agreement version agreed to, else the default exclusivity. */
 async function placementRules(job, candidateId) {
+  return rulesFrom(job, await agreedAgreement(job.companyId, candidateId))
+}
+
+/** The rules from the job's confirmed contract, else `agreement`, else the default exclusivity, with their sources. */
+function rulesFrom(job, agreement) {
   const contract = job.agency.contract?.confirmedAt ? job.agency.contract.rules : null
-  const agreement = await agreedAgreement(job.companyId, candidateId)
   const rules = {}
   const sources = {}
   for (const name of RULES) {
@@ -327,7 +331,30 @@ export async function giveNotice(user, id) {
 export async function checkJob(user, jobId) {
   const job = await Job.findOne({ _id: jobId, status: { $ne: 'draft' } })
   if (!job) throw new AppError('NOT_FOUND')
-  return checkTarget(user._id, await jobTarget(job))
+  const result = await checkTarget(user._id, await jobTarget(job))
+  if (!job.agency) return result
+  /*
+   * 2026-11-23 (owner: "before applying it does not show if I am eligible or what the job's rules are"): the rules a
+   * placement on this job would follow (as placementRules: the job's contract, else the agreement the candidate agreed
+   * to, else the agency's current one, which they would accept on joining), and where they stand with the agency.
+   */
+  const [agreed, current, membership] = await Promise.all([
+    agreedAgreement(job.companyId, user._id),
+    currentAgreement(job.companyId),
+    AgencyMembership.findOne({ companyId: job.companyId, candidateId: user._id }, 'status acceptances'),
+  ])
+  const { rules, sources } = rulesFrom(job, agreed ?? current)
+  const status = membership && !['declined', 'ended'].includes(membership.status) ? membership.status : 'none'
+  return {
+    ...result,
+    rules: Object.fromEntries(RULES.map((name) => [name, { value: rules[name].value ?? null, clause: rules[name].clause ?? null, source: sources[name] ?? null }])),
+    books: {
+      status,
+      agreementVersion: current?.version ?? null,
+      // On the books but the agency published a newer version since: they accept it before a placement.
+      agreementPending: status === 'active' && Boolean(current) && membership.acceptances.at(-1)?.version !== current.version,
+    },
+  }
 }
 
 /*

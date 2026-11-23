@@ -156,6 +156,29 @@ describe('hiring makes a placement', () => {
 })
 
 describe('the rule check', () => {
+  // 2026-11-23 (owner): before applying, the candidate sees the rules a placement on the job would follow, and where they stand.
+  it('previews the rules a placement on an agency job would follow and the candidate\'s place on the books', async () => {
+    const notice = { value: 7, clause: 'Notice of seven days ends an Assignment early.' }
+    const { user: owner, company } = await agency(agreementRules({ noticeDays: notice }))
+    const { user: recruiter } = await approvedRecruiter()
+    const job = await agencyJob(owner, (await client(owner, { name: 'Acme' })).id)
+    const candidate = await listedCandidate()
+
+    const before = await check(candidate, job.id)
+    assert.equal(before.allowed, true)
+    assert.deepEqual(before.books, { status: 'none', agreementVersion: 1, agreementPending: false })
+    assert.deepEqual(before.rules, {
+      exclusivity: { value: 'no_other_agency_work', clause: null, source: 'default' },
+      noticeDays: { ...notice, source: 'agreement' },
+      coolingOffDays: { value: null, clause: null, source: null },
+      maxWeeklyHours: { value: null, clause: null, source: null },
+    })
+    await onBooks(candidate, company)
+    assert.deepEqual((await check(candidate, job.id)).books, { status: 'active', agreementVersion: 1, agreementPending: false })
+    // A company job has no agency rules to preview.
+    assert.equal((await check(candidate, (await companyJob(recruiter)).id)).rules, undefined)
+  })
+
   it('by default blocks other agency jobs whose dates overlap, never company jobs', async () => {
     const { company: first } = await agency()
     const { user: other } = await agency()
