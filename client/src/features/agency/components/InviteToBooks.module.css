@@ -4,18 +4,28 @@
   gap: 8px;
 }
 
+/* 2026-11-23: where the candidate stands with the books, centred above "Open in Talent". */
 .state {
   display: flex;
-  flex-wrap: wrap;
   align-items: center;
-  justify-content: space-between;
-  gap: 8px;
+  justify-content: center;
+  gap: 6px;
+  margin: 2px 0 0;
   font-size: 13px;
   font-weight: 600;
+  line-height: 20px;
 }
 
-.state a {
+.success {
+  color: var(--success-fg);
+}
+
+.info {
   color: var(--primary);
+}
+
+.warning {
+  color: var(--warning-fg);
 }
 
 .failure {

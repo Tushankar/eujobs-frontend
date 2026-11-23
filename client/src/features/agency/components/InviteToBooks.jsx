@@ -1,10 +1,9 @@
 import { useState } from 'react'
 import { useTranslation } from 'react-i18next'
 import { Link } from 'react-router-dom'
-import { UserPlus } from 'lucide-react'
+import { CircleCheck, Clock, Users, UserPlus } from 'lucide-react'
 import { errorCode } from '@/app/api.js'
 import { hiringPath } from '@/app/roles.js'
-import PillBadge from '@/components/common/PillBadge.jsx'
 import { Button, Icon } from '@/components/ui'
 import { useErrorText } from '@/lib/forms.js'
 import { usePreferences } from '@/lib/preferences.js'
@@ -12,6 +11,7 @@ import { useGetBooksQuery, useInviteTalentMutation, useTalentActionMutation } fr
 import styles from './InviteToBooks.module.css'
 
 const TONE = { active: 'success', awaiting_agreement: 'info', requested: 'warning' }
+const STATE_ICON = { active: CircleCheck, awaiting_agreement: Clock, requested: Clock }
 
 /**
  * 2026-11-20: on a candidate's profile, for agencies: where they stand with the agency's books, and the action that
@@ -40,11 +40,17 @@ export default function InviteToBooks({ candidateId }) {
 
   return (
     <div className={styles.root} data-books-state={member?.status ?? 'none'}>
+      {/* 2026-11-23 (owner: align it): the place on the books as a line, then a full-width button like the others. */}
       {open && (
-        <p className={styles.state}>
-          <PillBadge tone={TONE[member.status]}>{t(`enums:membershipStatus.${member.status}`)}</PillBadge>
-          <Link to={hiringPath(member.status === 'active' ? 'talent' : 'talent?tab=requests')}>{t('agency:invite.openTalent')}</Link>
-        </p>
+        <>
+          <p className={`${styles.state} ${styles[TONE[member.status]]}`}>
+            <Icon as={STATE_ICON[member.status]} size={14} />
+            {t(`enums:membershipStatus.${member.status}`)}
+          </p>
+          <Button as={Link} to={hiringPath(member.status === 'active' ? 'talent' : 'talent?tab=requests')} variant="outline" fullWidth leftIcon={<Icon as={Users} size={14} />}>
+            {t('agency:invite.openTalent')}
+          </Button>
+        </>
       )}
       {!open && (
         <Button variant="outline" fullWidth leftIcon={<Icon as={UserPlus} size={14} />} loading={inviting} onClick={() => run(() => invite(candidateId))} data-invite-books>
