@@ -1,6 +1,6 @@
 import { approvedAgency, dayFromToday, publishAgreement } from '../lib/agencies.js'
 import { completeCandidate } from '../lib/applicants.js'
-import { bodyText, fill, signInWithForm, waitForPath, waitForText } from '../lib/flows.js'
+import { bodyText, clickText, fill, signInWithForm, waitForPath, waitForText } from '../lib/flows.js'
 import { openAs } from '../lib/payments.js'
 import { jobBody, postJob } from '../lib/recruiters.js'
 import { api, date, db, mailTo, TEST_PASSWORD } from '../lib/testApi.js'
@@ -98,7 +98,7 @@ export default {
     await page.click(`[data-ranked="${first}"] [data-offer-placement]`)
     await waitForText(page, `Offer Warehouse Operative to ${first}?`)
     await ctx.screenshot(page, '3-offer-dialog')
-    await page.click('[role="dialog"] button:last-of-type')
+    await clickText(page, 'Send offer', '[role="dialog"] button')
     await page.waitForFunction((name) => document.querySelector(`[data-ranked="${name}"]`)?.innerText.includes('Offered'), {}, first)
     const offeredTo = Object.values(people).find((person) => person.fullName === first)
     const offers = ok(await api('/candidate/placements?view=offered', { token: offeredTo.token }), 'offers').items
