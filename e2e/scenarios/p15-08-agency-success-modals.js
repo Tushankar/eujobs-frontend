@@ -141,21 +141,20 @@ export default {
     await modal(page, 'books_invite_sent', ['Invite sent', second.fullName], '05-agency-invite-sent')
     expect((await page.$eval('[data-books-state]', (box) => box.dataset.booksState).catch(() => null)) === 'awaiting_agreement', 'the profile then shows them as invited')
 
-    // ---- Agency: offer the first candidate a placement (re-hire after one that is over) ----
-    const now = date(Date.now())
-    await db('agencyplacements', 'insertOne', {
-      doc: {
-        companyId: { $oid: company.id }, candidateId: { $oid: first.id }, jobId: { $oid: picker.id }, status: 'confirmed',
-        startDate: dayFromToday(-40), endDate: dayFromToday(-10), hoursPerWeek: 40,
-        rules: { exclusivity: { value: 'no_other_agency_work' }, noticeDays: { value: 7 }, coolingOffDays: { value: null }, maxWeeklyHours: { value: null } },
-        sources: { exclusivity: 'agreement' }, confirmedAt: now, createdAt: now, updatedAt: now,
-      },
-    })
-    await page.goto(`${ctx.webUrl}/agency/placements?tab=over`, { waitUntil: 'networkidle0' })
-    await clickText(page, 'Re-hire', `[data-placement="${first.fullName}"] button`)
-    await page.waitForSelector('[role="dialog"] select')
-    await page.select('[role="dialog"] select', lead.id).catch(() => issue('Night Shift Lead is not offered for the re-hire'))
-    await clickText(page, 'Send offer', '[role="dialog"] button')
+    // ---- Agency: the job picker (the app's own list), then Offer placement from "Everyone on the books" ----
+    // Owner 2026-11-23: "Everyone on the books, I cannot hire him; on the job I can". Both views now offer.
+    await page.goto(`${ctx.webUrl}/agency/talent`, { waitUntil: 'networkidle0' })
+    await page.click('[data-rank-for]')
+    const pickerOptions = await page.$$eval('[data-rank-option]', (options) => options.map((option) => option.dataset.rankOption))
+    expect(pickerOptions[0] === 'everyone' && pickerOptions.includes('Night Shift Lead'), `the job picker lists Everyone, then the jobs (${pickerOptions.join(', ')})`)
+    await ctx.screenshot(page, '05b-agency-job-picker')
+    await page.keyboard.press('Escape')
+    await page.waitForSelector(`[data-member="${first.fullName}"] [data-offer-from-books]`, { timeout: 10_000 }).catch(() => issue('no Offer placement in Everyone on the books'))
+    await page.click(`[data-member="${first.fullName}"] [data-offer-from-books]`)
+    await page.waitForSelector('[data-offer-job="Night Shift Lead"]')
+    await page.click('[data-offer-job="Night Shift Lead"]')
+    await ctx.screenshot(page, '05c-agency-offer-dialog')
+    await page.click('[data-send-offer]')
     await modal(page, 'placement_offer_sent', ['Offer sent', first.fullName, 'Night Shift Lead'], '06-agency-offer-sent')
 
     // ---- Candidate: accept the offer ----
