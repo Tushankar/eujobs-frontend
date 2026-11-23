@@ -43,7 +43,7 @@ beforeEach(async () => {
 
 const v1 = '/api/v1'
 const SETTINGS = {
-  caps: { plus: { month: 40, year: 60 }, recruiter_plus: { month: 80, year: 120 } },
+  caps: { plus: { month: 40, year: 60 }, recruiter_plus: { month: 80, year: 120 }, agency_plus: { month: 80, year: 120 } },
   featureLimits: { cv_draft: 5, cv_snapshot: 5 },
   creditCosts: { cv_snapshot: 5, cv_draft: 5, interview_notes: 5, voice_profile: 3, contract_rules: 5 },
   burstPerMinute: 10,
@@ -103,10 +103,24 @@ describe('daily AI caps by plan and billing interval', () => {
 
   it('follows the caps the admin saves', async () => {
     const admin = await owner()
-    assert.equal((await saveSettings(admin, { caps: { plus: { month: 5, year: 9 }, recruiter_plus: { month: 7, year: 12 } } })).status, 200)
+    const caps = { plus: { month: 5, year: 9 }, recruiter_plus: { month: 7, year: 12 }, agency_plus: { month: 11, year: 15 } }
+    assert.equal((await saveSettings(admin, { caps })).status, 200)
     assert.equal((await usageLeft(await candidate('year'))).limit, 9)
-    const refused = await saveSettings(admin, { caps: { plus: { month: 0, year: 9 }, recruiter_plus: { month: 7, year: 12 } } })
+    const refused = await saveSettings(admin, { caps: { ...caps, plus: { month: 0, year: 9 } } })
     assert.equal(refused.status, 422)
+  })
+
+  // Phase 7 (2026-11-23): the Usage screen edits Agency Plus too; an agency without it gets the Agency Plus monthly cap.
+  it('applies the Agency Plus caps the admin saves and needs them in every save', async () => {
+    const admin = await owner()
+    const caps = { plus: { month: 40, year: 60 }, recruiter_plus: { month: 80, year: 120 }, agency_plus: { month: 11, year: 15 } }
+    assert.equal((await saveSettings(admin, { caps })).status, 200)
+    const yearly = await createUser({ role: 'agency' })
+    await Subscription.create({ userId: yearly._id, planKey: 'agency_plus', status: 'active', interval: 'year' })
+    assert.deepEqual([(await usageLeft(yearly)).limit, (await usageLeft(await createUser({ role: 'agency' }))).limit], [15, 11])
+    assert.equal((await overview(admin)).settings.caps.agency_plus.month, 11)
+    const { agency_plus: _left, ...withoutAgency } = caps
+    assert.equal((await saveSettings(admin, { caps: withoutAgency })).status, 422)
   })
 })
 

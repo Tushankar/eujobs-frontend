@@ -98,7 +98,8 @@
     "loadError": "Impossible de charger les offres. Actualisez la page.",
     "roles": {
       "candidate": "Candidats",
-      "recruiter": "Recruteurs"
+      "recruiter": "Recruteurs",
+      "agency": "Agences"
     },
     "edit": "Modifier",
     "view": "Voir",

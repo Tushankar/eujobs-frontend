@@ -98,7 +98,8 @@
     "loadError": "No hemos podido cargar los planes. Actualiza la página.",
     "roles": {
       "candidate": "Candidatos",
-      "recruiter": "Reclutadores"
+      "recruiter": "Reclutadores",
+      "agency": "Agencias"
     },
     "edit": "Editar",
     "view": "Ver",

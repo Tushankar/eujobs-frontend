@@ -162,14 +162,92 @@ export const PLANS = [
 ]
 
 /*
- * 2026-11-20: agencies (their own role) get the recruiter plans' features under their own keys; Agency Plus starts at the
- * Recruiter Plus prices and the admin changes them in Payments › Plans.
+ * 2026-11-20: agencies (their own role) get the recruiter plans' entitlements under their own keys; Agency Plus starts
+ * at the Recruiter Plus prices and the admin changes them in Payments › Plans. 2026-11-23 (phase 7): their own feature
+ * lists. `previousFeatures` is what seed:catalog gave them before (the recruiter lists): a stored plan that still has
+ * exactly those gets the new lists, one an admin has edited keeps its own.
  */
 const AGENCY_PAGE = { en: 'Agency page, clients and verification', es: 'Página de agencia, clientes y verificación', fr: 'Page agence, clients et vérification' }
+const AGENCY_FEATURES = {
+  agency_free: [
+    {
+      en: '1 active job at a time, unlimited drafts',
+      es: '1 oferta activa a la vez y borradores ilimitados',
+      fr: '1 offre active à la fois, brouillons illimités',
+    },
+    { en: 'Receive and review applications', es: 'Recibe y revisa candidaturas', fr: 'Recevez et examinez les candidatures' },
+    {
+      en: 'Hiring pipeline and replies to applicants',
+      es: 'Proceso de selección y respuestas a los candidatos',
+      fr: 'Suivi des recrutements et réponses aux candidats',
+    },
+    AGENCY_PAGE,
+    {
+      en: 'Talent on your books, with your own versioned agreement',
+      es: 'Talento en tu cartera, con tu propio acuerdo versionado',
+      fr: 'Des talents dans votre vivier, avec votre propre contrat versionné',
+    },
+    {
+      en: 'Placements: offers, re-hires, notice and overlap checks',
+      es: 'Asignaciones: ofertas, recontrataciones, preaviso y control de solapamientos',
+      fr: 'Missions : offres, réembauches, préavis et contrôle des chevauchements',
+    },
+    {
+      en: 'Ending-soon alerts with the next jobs that fit',
+      es: 'Avisos de fin próximo con las siguientes ofertas que encajan',
+      fr: 'Alertes de fin de mission avec les prochaines offres adaptées',
+    },
+    { en: 'Recruiter learning', es: 'Formación para reclutadores', fr: 'Formation pour recruteurs' },
+  ],
+  agency_plus: [
+    { en: 'Unlimited active jobs', es: 'Ofertas activas ilimitadas', fr: 'Offres actives illimitées' },
+    {
+      en: 'Find candidates: search, profiles, shortlist, notes and Compare',
+      es: 'Buscar candidatos: búsqueda, perfiles, preseleccionados, notas y comparación',
+      fr: 'Trouver des candidats : recherche, profils, short-list, notes et comparaison',
+    },
+    {
+      en: 'Start conversations, invite candidates to your books and request CVs',
+      es: 'Inicia conversaciones, invita a candidatos a tu cartera y solicita CV',
+      fr: 'Démarrez des conversations, invitez des candidats dans votre vivier et demandez des CV',
+    },
+    {
+      en: 'AI reads your agreement and contracts and suggests the rules',
+      es: 'La IA lee tu acuerdo y tus contratos y propone las reglas',
+      fr: 'L’IA lit votre contrat-cadre et vos contrats et propose les règles',
+    },
+    {
+      en: 'AI reasons when ranking your talent for a job',
+      es: 'Motivos de la IA al clasificar tu talento para una oferta',
+      fr: 'Explications de l’IA lors du classement de vos talents pour une offre',
+    },
+    {
+      en: 'AI job summaries, match insights and translations',
+      es: 'Resúmenes de ofertas con IA, análisis de compatibilidad y traducciones',
+      fr: 'Résumés d’offres par IA, analyses de compatibilité et traductions',
+    },
+    {
+      en: 'Schedule interviews: offer 2–3 time slots, with calendar invites',
+      es: 'Programa entrevistas: ofrece de 2 a 3 horarios, con invitaciones de calendario',
+      fr: 'Planifiez des entretiens : proposez 2 ou 3 créneaux, avec invitations d’agenda',
+    },
+    { en: 'In-app video interviews', es: 'Entrevistas por vídeo en la aplicación', fr: 'Entretiens vidéo dans l’application' },
+    {
+      en: "AI interview notes (with both people's consent)",
+      es: 'Notas de entrevista con IA (con el consentimiento de ambas personas)',
+      fr: 'Notes d’entretien par IA (avec le consentement des deux personnes)',
+    },
+    {
+      en: 'Request documents securely in chat',
+      es: 'Solicita documentos de forma segura en el chat',
+      fr: 'Demandez des documents en toute sécurité dans la messagerie',
+    },
+  ],
+}
 const asAgency = (key, name) => {
   const plan = PLANS.find((entry) => entry.key === key.replace('agency', 'recruiter'))
-  const features = plan.features.map((feature) => (feature.en === 'Company page and verification' ? AGENCY_PAGE : feature))
-  return { ...plan, key, role: 'agency', name, features }
+  const previousFeatures = plan.features.map((feature) => (feature.en === 'Company page and verification' ? AGENCY_PAGE : feature))
+  return { ...plan, key, role: 'agency', name, features: AGENCY_FEATURES[key], previousFeatures }
 }
 PLANS.push(asAgency('agency_free', { en: 'Free', es: 'Gratis', fr: 'Gratuit' }), asAgency('agency_plus', { en: 'Agency Plus', es: 'Agency Plus', fr: 'Agency Plus' }))
 

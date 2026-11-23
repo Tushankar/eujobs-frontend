@@ -20,6 +20,7 @@ import { User } from '../users/users.model.js'
  * owner, since there is no viewer; logo files are not access-logged (files.routes.js).
  */
 const LATEST_JOBS = 6
+const AGENCY_JOBS = 4
 
 async function logoUrls(companies) {
   const files = await File.find({ _id: { $in: companies.map((company) => company.logoFileId).filter(Boolean) } })
@@ -35,33 +36,39 @@ function countBy(jobs, field) {
 }
 
 export async function landing(language) {
-  const jobs = await Job.find(await visibleFilter(), 'title companyId employmentType workPreference experienceYears country location salary publishedAt visaSponsorship agency.startDate').sort({ publishedAt: -1 })
+  const jobs = await Job.find(await visibleFilter(), 'title companyId employmentType workPreference experienceYears country location salary publishedAt visaSponsorship agency').sort({ publishedAt: -1 })
   const latest = jobs.slice(0, LATEST_JOBS)
-  const companies = await Company.find({ _id: { $in: latest.map((job) => job.companyId) } }, 'displayName logoFileId')
-  const [logos, faqs, reviews, posts] = await Promise.all([logoUrls(companies), listFaqs('candidate', language), landingReviews(), latestPosts(language)])
+  // Phase 7 (2026-11-23): the newest agency jobs for the landing's own section (hidden there when none).
+  const agencyJobs = jobs.filter((job) => job.agency).slice(0, AGENCY_JOBS)
+  const shown = [...latest, ...agencyJobs]
+  const companies = await Company.find({ _id: { $in: shown.map((job) => job.companyId) } }, 'displayName logoFileId')
+  const [logos, clients, faqs, reviews, posts] = await Promise.all([logoUrls(companies), agencyClients(agencyJobs), listFaqs('candidate', language), landingReviews(), latestPosts(language)])
   const companyById = new Map(companies.map((company) => [String(company._id), company]))
+  const row = (job) => {
+    const company = companyById.get(String(job.companyId))
+    return {
+      id: String(job._id),
+      title: job.title,
+      company: { name: company?.displayName ?? '', logoUrl: logos.get(String(job.companyId)) ?? null },
+      country: job.country,
+      location: job.location ? { city: job.location.city, countryCode: job.location.countryCode } : null,
+      employmentType: job.employmentType ?? null,
+      workPreference: job.workPreference ?? null,
+      experienceYears: job.experienceYears ?? null,
+      visaSponsorship: Boolean(job.visaSponsorship),
+      salary: job.salary?.min != null || job.salary?.max != null ? job.salary.toObject() : null,
+      publishedAt: job.publishedAt,
+    }
+  }
 
   return {
     total: jobs.length,
     counts: { workPreference: countBy(jobs, 'workPreference'), employmentType: countBy(jobs, 'employmentType') },
     // 2026-11-20: the /agencies page's live figures (open agency jobs, approved agencies).
     agencies: { jobs: jobs.filter((job) => job.agency).length, accounts: await User.countDocuments({ role: 'agency', status: 'active' }) },
-    jobs: latest.map((job) => {
-      const company = companyById.get(String(job.companyId))
-      return {
-        id: String(job._id),
-        title: job.title,
-        company: { name: company?.displayName ?? '', logoUrl: logos.get(String(job.companyId)) ?? null },
-        country: job.country,
-        location: job.location ? { city: job.location.city, countryCode: job.location.countryCode } : null,
-        employmentType: job.employmentType ?? null,
-        workPreference: job.workPreference ?? null,
-        experienceYears: job.experienceYears ?? null,
-        visaSponsorship: Boolean(job.visaSponsorship),
-        salary: job.salary?.min != null || job.salary?.max != null ? job.salary.toObject() : null,
-        publishedAt: job.publishedAt,
-      }
-    }),
+    jobs: latest.map(row),
+    // The agency is the company; the client only where the agency shows it, as on /jobs.
+    agencyJobs: agencyJobs.map((job) => ({ ...row(job), agency: agencyCard(job, clients) })),
     faqs,
     reviews,
     posts,

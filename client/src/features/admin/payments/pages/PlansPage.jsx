@@ -12,7 +12,7 @@ import PaymentsTabs from '../components/PaymentsTabs.jsx'
 import PlanEditor from '../components/PlanEditor.jsx'
 import styles from './PlansPage.module.css'
 
-const ROLES = ['candidate', 'recruiter']
+const ROLES = ['candidate', 'recruiter', 'agency']
 // The plan cards quote one currency; the editor shows them all.
 const REFERENCE_CURRENCY = 'EUR'
 
@@ -81,7 +81,7 @@ export default function PlansPage() {
       {isError && <NoticeBanner>{t('plans.loadError')}</NoticeBanner>}
       {!plans && !isError && (
         <SkeletonRegion className={`${styles.role} ${styles.grid}`}>
-          {[0, 1, 2, 3].map((index) => (
+          {[0, 1, 2, 3, 4, 5].map((index) => (
             <Skeleton key={index} height={190} />
           ))}
         </SkeletonRegion>

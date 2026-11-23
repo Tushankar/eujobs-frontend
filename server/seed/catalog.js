@@ -22,6 +22,9 @@ async function upsertExactly(Model, key, rows) {
   await Model.deleteMany({ [key]: { $nin: rows.map((row) => row[key]) } })
 }
 
+const featureText = (features) => JSON.stringify(features.map(({ en, es, fr }) => [en, es, fr]))
+const sameFeatures = (a = [], b) => featureText(a) === featureText(b)
+
 /**
  * U40, P6, §3.22: a Stripe Product per paid plan with a monthly and a yearly Price per currency. A plan's stored prices
  * are kept; missing ones (a new plan, or yearly prices added on 2026-11-13) come from the data, yearly at the plan's
@@ -33,6 +36,11 @@ async function seedPlans() {
     const stored = await Plan.findOne({ key: plan.key }).lean()
     const fields = { role: plan.role, entitlements: plan.entitlements, interval: plan.interval }
     const created = { name: plan.name, features: plan.features }
+    // 2026-11-23: a plan whose stored features are still the data's earlier list gets the new one (the agency plans).
+    if (stored && plan.previousFeatures && sameFeatures(stored.features, plan.previousFeatures)) {
+      fields.features = plan.features
+      delete created.features
+    }
     if (plan.prices.length) {
       const productId = (productIds[plan.key] = await ensureProduct(plan))
       const percent = stored?.yearlyDiscountPercent ?? 15

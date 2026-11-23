@@ -14,12 +14,12 @@ import landing from '../components/landing/Landing.module.css'
 import shell from '../components/PublicShell.module.css'
 import styles from './PricingPage.module.css'
 
-const ROLES = ['candidate', 'recruiter']
-const SIGN_UP = { candidate: '/sign-up', recruiter: '/recruiter/sign-up' }
+const ROLES = ['candidate', 'recruiter', 'agency']
+const SIGN_UP = { candidate: '/sign-up', recruiter: '/recruiter/sign-up', agency: '/agencies/signup' }
 const TRUST = ['vat', 'stripe', 'cancel']
 
 /**
- * /pricing (the nav's "Pricing Plan", 2026-11-13): the real plans of GET /plans for candidates or recruiters, priced in
+ * /pricing (the nav's "Pricing Plan", 2026-11-13): the real plans of GET /plans for candidates, recruiters or agencies (2026-11-23), priced in
  * the visitor's currency (EUR without one), monthly or yearly. Quiet cards: the paid plan is marked by a firm edge and
  * a "Recommended" label, not by colour (owner, 2026-11-13).
  */
@@ -27,7 +27,7 @@ export default function PricingPage() {
   const { t, i18n } = useTranslation()
   const [params, setParams] = useSearchParams()
   const [interval, setInterval] = useState('month')
-  const role = params.get('for') === 'recruiter' ? 'recruiter' : 'candidate'
+  const role = ROLES.includes(params.get('for')) ? params.get('for') : 'candidate'
   const { currentData: plans, isError } = useGetPublicPlansQuery({ role, language: i18n.language })
   useDocumentTitle(t('website:pricing.title'))
   const saving = bestSaving(plans)
@@ -50,7 +50,7 @@ export default function PricingPage() {
                   role="tab"
                   aria-selected={entry === role}
                   className={entry === role ? `${shell.tab} ${shell.tabActive}` : shell.tab}
-                  onClick={() => setParams(entry === 'recruiter' ? { for: 'recruiter' } : {}, { replace: true })}
+                  onClick={() => setParams(entry === 'candidate' ? {} : { for: entry }, { replace: true })}
                 >
                   {t(`website:pricing.${entry}`)}
                 </button>

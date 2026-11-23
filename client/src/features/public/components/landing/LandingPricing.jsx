@@ -21,15 +21,15 @@ import { ArrowPill } from './LandingHero.jsx'
 
 gsap.registerPlugin(useGSAP, ScrollTrigger, DrawSVGPlugin)
 
-const ROLES = ['candidate', 'recruiter']
-const SIGN_UP = { candidate: '/sign-up', recruiter: '/recruiter/sign-up' }
+const ROLES = ['candidate', 'recruiter', 'agency']
+const SIGN_UP = { candidate: '/sign-up', recruiter: '/recruiter/sign-up', agency: '/agencies/signup' }
 const TRUST = ['vat', 'stripe', 'cancel']
 const REDUCE = '(prefers-reduced-motion: reduce)'
 const ease = 'power3.out'
 
 /**
- * Pricing on the landing page (owner 2026-11-13): the real plans of GET /plans (the same as /pricing) for job seekers
- * or recruiters, monthly or yearly, in a compact split: intro and controls on the left, the plan cards on the right.
+ * Pricing on the landing page (owner 2026-11-13): the real plans of GET /plans (the same as /pricing) for job seekers,
+ * recruiters or agencies (2026-11-23), monthly or yearly, in a compact split: intro and controls on the left, the plan cards on the right.
  * Motion: the cards rise in once on scroll while their prices settle and the ticks draw themselves; the recommended
  * card catches a slow light sweep; switching role or period re-animates only what changed. Reduce motion: fades only.
  */
@@ -140,7 +140,7 @@ export default function LandingPricing() {
           ))}
         </ul>
         <div className={styles.pricingDetails}>
-          <ArrowPill to={role === 'recruiter' ? '/pricing?for=recruiter' : '/pricing'}>{t('landing:pricing.details')}</ArrowPill>
+          <ArrowPill to={role === 'candidate' ? '/pricing' : `/pricing?for=${role}`}>{t('landing:pricing.details')}</ArrowPill>
         </div>
       </div>
 

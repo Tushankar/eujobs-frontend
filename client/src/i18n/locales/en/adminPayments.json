@@ -98,7 +98,8 @@
     "loadError": "We could not load the plans. Please refresh.",
     "roles": {
       "candidate": "Job seekers",
-      "recruiter": "Recruiters"
+      "recruiter": "Recruiters",
+      "agency": "Agencies"
     },
     "edit": "Edit",
     "view": "View",

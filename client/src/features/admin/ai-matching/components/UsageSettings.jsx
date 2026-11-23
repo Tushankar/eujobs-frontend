@@ -6,7 +6,7 @@ import { Button, Panel, TextField } from '@/components/ui'
 import { useSaveAiUsageSettingsMutation } from '../api.js'
 import styles from '../pages/UsagePage.module.css'
 
-const PLANS = ['plus', 'recruiter_plus']
+const PLANS = ['plus', 'recruiter_plus', 'agency_plus']
 const INTERVALS = ['month', 'year']
 // The expensive features with their own daily limit per user (2026-11-17).
 const FEATURES = ['cv_draft', 'cv_snapshot']
