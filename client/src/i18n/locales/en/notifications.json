@@ -119,7 +119,12 @@
     "placement_offered": "{{agency}} offered you a new placement as {{job}}",
     "placement_offer_withdrawn": "{{agency}} withdrew its offer for {{job}}",
     "placement_starts_soon": "Your placement as {{job}} with {{agency}} starts tomorrow",
-    "placement_ends_soon": "Your placement as {{job}} with {{agency}} ends on {{date}}"
+    "placement_ends_soon": "Your placement as {{job}} with {{agency}} ends on {{date}}",
+    "placement_ending_soon": {
+      "fits_one": "{{candidate}}'s placement as {{job}} ends on {{date}}: {{count}} of your jobs fits next",
+      "fits_other": "{{candidate}}'s placement as {{job}} ends on {{date}}: {{count}} of your jobs fit next",
+      "none": "{{candidate}}'s placement as {{job}} ends on {{date}}: none of your open jobs fits next yet"
+    }
   },
   "settings": {
     "title": "Email notifications",

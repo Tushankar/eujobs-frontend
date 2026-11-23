@@ -125,7 +125,13 @@
     "placement_offered": "{{agency}} vous a proposé un nouveau placement comme {{job}}",
     "placement_offer_withdrawn": "{{agency}} a retiré son offre pour {{job}}",
     "placement_starts_soon": "Votre placement comme {{job}} avec {{agency}} commence demain",
-    "placement_ends_soon": "Votre placement comme {{job}} avec {{agency}} se termine le {{date}}"
+    "placement_ends_soon": "Votre placement comme {{job}} avec {{agency}} se termine le {{date}}",
+    "placement_ending_soon": {
+      "fits_one": "Le placement de {{candidate}} comme {{job}} se termine le {{date}} : {{count}} de vos offres lui convient ensuite",
+      "fits_many": "Le placement de {{candidate}} comme {{job}} se termine le {{date}} : {{count}} de vos offres lui conviennent ensuite",
+      "fits_other": "Le placement de {{candidate}} comme {{job}} se termine le {{date}} : {{count}} de vos offres lui conviennent ensuite",
+      "none": "Le placement de {{candidate}} comme {{job}} se termine le {{date}} : aucune de vos offres ouvertes ne lui convient encore"
+    }
   },
   "settings": {
     "title": "Notifications par e-mail",

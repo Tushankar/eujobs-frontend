@@ -4,6 +4,7 @@ import { z } from 'zod'
 import { objectId, validate } from '../../lib/validate.js'
 import { requireApprovedRecruiter, requireAuth } from '../../middleware/auth.js'
 import { hasEntitlement, planRequired, requireEntitlement } from '../../middleware/entitlements.js'
+import { AgencyMembership } from '../agencies/agencies.model.js'
 import { Application } from '../applications/applications.model.js'
 import { planState } from '../payments/payments.service.js'
 import * as schemas from './discovery.schemas.js'
@@ -17,9 +18,12 @@ import * as discoveryService from './discovery.service.js'
 const candidateParams = validate({ params: schemas.candidateParams })
 export const requireDiscovery = requireEntitlement('discovery', HIRING_ROLES)
 
-/** A candidate who applied to the company opens on Free; anyone else needs `discovery`. */
+/** A candidate who applied to the company (or is on the agency's books, 2026-11-23) opens on Free; anyone else needs `discovery`. */
 async function applicantOrDiscovery(req, res, next) {
-  if (!(await Application.exists({ companyId: req.company._id, candidateId: req.params.id })) && !(await hasEntitlement(req.user, 'discovery'))) {
+  const known =
+    (await Application.exists({ companyId: req.company._id, candidateId: req.params.id })) ||
+    (await AgencyMembership.exists({ companyId: req.company._id, candidateId: req.params.id, status: 'active' }))
+  if (!known && !(await hasEntitlement(req.user, 'discovery'))) {
     throw planRequired('discovery')
   }
   next()

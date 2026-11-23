@@ -66,6 +66,7 @@ export const NOTIFICATION_ICONS = {
   agency_member_left: Users,
   placement_offer_answered: CalendarClock,
   placement_notice_given: CalendarClock,
+  placement_ending_soon: CalendarClock,
   // 2026-11-20 (phase 5): the candidate's agencies and placements
   agency_invited: Building2,
   agency_request_accepted: Building2,
@@ -118,6 +119,9 @@ export function useNotificationText() {
       case 'placement_offer_answered':
       case 'agency_membership_declined':
         return t(`notifications:types.${type}.${params.decision}`, values)
+      // Phase 6 (2026-11-23): how many of the agency's jobs fit the person next.
+      case 'placement_ending_soon':
+        return params.next ? t(`notifications:types.${type}.fits`, { ...values, count: params.next }) : t(`notifications:types.${type}.none`, values)
       case 'content_restricted':
       case 'content_lifted':
         return t(`notifications:types.${type}.${params.content}`, values)

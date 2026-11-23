@@ -79,20 +79,25 @@ function StartConversationDialog({ body, initialBody = '', title, description, o
   )
 }
 
-/** Recruiter outreach from a candidate profile (M-085, M-088): the template in the recruiter's UI language. */
-export function MessageCandidateButton({ candidate, job }) {
+/**
+ * Recruiter outreach from a candidate profile (M-085, M-088): the template in the recruiter's UI language. `onBooks`
+ * (2026-11-23, owner): an agency starts a chat with someone on its books on any plan.
+ */
+export function MessageCandidateButton({ candidate, job, onBooks = false, ...buttonProps }) {
   const { t } = useTranslation()
   const existing = useExistingConversation(candidate.id)
   const [open, setOpen] = useState(false)
   const firstName = candidate.fullName.split(' ')[0]
-  if (existing) return <OpenConversationLink conversation={existing} fullWidth />
+  const props = { fullWidth: true, ...buttonProps }
+  if (existing) return <OpenConversationLink conversation={existing} {...props} />
   if (!candidate.canStartConversation) return null
+  const StartButton = onBooks ? Button : PlanButton
   return (
     <>
       {/* §3.22: starting a conversation needs Recruiter Plus (`outreach`); an existing thread opens above. */}
-      <PlanButton entitlement="outreach" roles={HIRING_ROLES} variant="outline" fullWidth leftIcon={messageIcon} data-start-conversation onClick={() => setOpen(true)}>
+      <StartButton {...(!onBooks && { entitlement: 'outreach', roles: HIRING_ROLES })} variant="outline" leftIcon={messageIcon} data-start-conversation onClick={() => setOpen(true)} {...props}>
         {t('messages:outreach.button')}
-      </PlanButton>
+      </StartButton>
       {open && (
         <StartConversationDialog
           body={{ candidateId: candidate.id, ...(job && { jobId: job.id }) }}

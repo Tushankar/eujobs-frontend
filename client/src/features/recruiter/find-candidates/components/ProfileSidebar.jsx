@@ -80,7 +80,7 @@ export default function ProfileSidebar({ candidate, jobs, job, onJobChange, onTo
           >
             {t(candidate.shortlisted ? 'discovery:profile.removeShortlist' : 'discovery:profile.addShortlist')}
           </PlanButton>
-          <MessageCandidateButton candidate={candidate} job={job} />
+          <MessageCandidateButton candidate={candidate} job={job} onBooks={Boolean(candidate.onBooks)} />
           {/* 2026-11-20: agencies invite candidates onto their books. */}
           <InviteToBooks candidateId={candidate.id} />
           <ReportButton targetType="candidate_profile" targetId={candidate.id} size="sm" fullWidth />

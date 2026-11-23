@@ -1,4 +1,5 @@
 import AgencyJobSummary from '@/features/agency/components/AgencyJobSummary.jsx'
+import BooksRanking from '@/features/agency/talent/components/BooksRanking.jsx'
 import { hiringPath } from '@/app/roles.js'
 import { useEffect, useState } from 'react'
 import { useTranslation } from 'react-i18next'
@@ -74,6 +75,8 @@ export default function JobDetailsPage() {
           </h2>
           {job ? <JobPosting job={job} /> : <JobPostingSkeleton />}
           <JobApplicantsList jobId={jobId} />
+          {/* Phase 6 (2026-11-23): an agency job ranks the agency's own books first. */}
+          {job?.agency && <BooksRanking jobId={jobId} inJob />}
           <JobTalentList jobId={jobId} />
         </section>
 

@@ -354,7 +354,8 @@
     "report_triage": "Tri des signalements",
     "blog_draft": "Brouillon de blog",
     "account_review_summary": "Résumé de vérification de compte",
-    "contract_rules": "Règles du contrat"
+    "contract_rules": "Règles du contrat",
+    "talent_ranking": "Raisons du classement des talents"
   },
   "emailType": {
     "interview_invitation": "Invitation à un entretien",
@@ -617,7 +618,8 @@
     "placement_offered": "Offre de réembauche",
     "placement_offer_withdrawn": "Offre retirée",
     "placement_starts_soon": "Début de placement",
-    "placement_ends_soon": "Fin de placement"
+    "placement_ends_soon": "Fin de placement",
+    "placement_ending_soon": "Placement bientôt terminé"
   },
   "interviewMode": {
     "video": "Appel vidéo",

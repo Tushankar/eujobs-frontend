@@ -261,6 +261,10 @@
         }
       ],
       "action": "Abrir el acuerdo"
+    },
+    "next": {
+      "title": "Encaja después",
+      "none": "Ninguno de tus empleos publicados que empiezan después del {{date}} le encaja todavía."
     }
   },
   "invite": {
@@ -398,6 +402,28 @@
       "days_one": "{{count}} día",
       "days_other": "{{count}} días",
       "days_many": "{{count}} días"
+    }
+  },
+  "ranking": {
+    "title": "Lo mejor de tu cartera",
+    "text": "Personas de tu cartera, primero quien mejor encaja con este empleo. Quien esté en una colocación durante estas fechas queda fuera.",
+    "reasons": "Motivos con IA",
+    "disclaimer": "La IA escribió estas líneas a partir de cada perfil; el orden viene de la puntuación de coincidencia. Revisa el perfil antes de ofrecer.",
+    "offer": "Ofrecer colocación",
+    "offerTitle": "¿Ofrecer {{job}} a {{name}}?",
+    "offerText": "Del {{start}} al {{end}}, con la tarifa y el contrato de este empleo. Acepta o rechaza en su página de Agencias, y tus reglas se comprueban de nuevo cuando acepta.",
+    "publishFirst": "Publica este empleo para ofrecerlo a alguien de tu cartera.",
+    "hidden_one": "{{count}} persona de tu cartera está en una colocación durante estas fechas.",
+    "hidden_many": "{{count}} personas de tu cartera están en una colocación durante estas fechas.",
+    "hidden_other": "{{count}} personas de tu cartera están en una colocación durante estas fechas.",
+    "empty": "Todavía no hay nadie en tu cartera.",
+    "openTalent": "Abrir Talento",
+    "allBusy": "Todas las personas de tu cartera están en una colocación durante estas fechas.",
+    "rankFor": "Ordenar para un empleo",
+    "everyone": "Toda la cartera",
+    "state": {
+      "offered": "Ofrecida",
+      "placed": "Colocada"
     }
   }
 }

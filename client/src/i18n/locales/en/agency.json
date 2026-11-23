@@ -258,6 +258,10 @@
         }
       ],
       "action": "Open the agreement"
+    },
+    "next": {
+      "title": "Fits next",
+      "none": "None of your published jobs starting after {{date}} fits them yet."
     }
   },
   "invite": {
@@ -394,6 +398,27 @@
       "pay": "Pay",
       "days_one": "{{count}} day",
       "days_other": "{{count}} days"
+    }
+  },
+  "ranking": {
+    "title": "Best from your books",
+    "text": "People on your books, best match for this job first. Anyone on a placement during these dates is left out.",
+    "reasons": "AI reasons",
+    "disclaimer": "AI wrote these lines from each profile; the order comes from the match score. Check the profile before you offer.",
+    "offer": "Offer placement",
+    "offerTitle": "Offer {{job}} to {{name}}?",
+    "offerText": "{{start}} to {{end}}, with this job's rate and contract. They accept or decline on their Agencies page, and your rules are checked again when they accept.",
+    "publishFirst": "Publish this job to offer it to someone on your books.",
+    "hidden_one": "{{count}} person on your books is on a placement during these dates.",
+    "hidden_other": "{{count}} people on your books are on a placement during these dates.",
+    "empty": "Nobody is on your books yet.",
+    "openTalent": "Open Talent",
+    "allBusy": "Everyone on your books is on a placement during these dates.",
+    "rankFor": "Rank for a job",
+    "everyone": "Everyone on the books",
+    "state": {
+      "offered": "Offered",
+      "placed": "Placed"
     }
   }
 }

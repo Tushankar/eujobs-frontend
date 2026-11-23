@@ -47,7 +47,7 @@ const today = () => new Date().toISOString().slice(0, 10)
 
 /** `text` with each of `names` (whole words, any case) replaced by "the client". */
 function withoutNames(text, names) {
-  return names.filter((name) => name.length >= 2).reduce((out, name) => out.replace(new RegExp(`(?<![\p{L}\p{N}])${escape(name)}(?![\p{L}\p{N}])`, 'giu'), 'the client'), text)
+  return names.filter((name) => name.length >= 2).reduce((out, name) => out.replace(new RegExp(`(?<![\\p{L}\\p{N}])${escape(name)}(?![\\p{L}\\p{N}])`, 'giu'), 'the client'), text)
 }
 
 /**

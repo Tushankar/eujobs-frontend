@@ -101,8 +101,17 @@
       "preferredSkills": "compétences appréciées",
       "level": "niveau",
       "experienceYears": "années d’expérience",
-      "requiredLanguages": "langues"
-    }
+      "requiredLanguages": "langues",
+      "clientId": "client",
+      "startDate": "date de début",
+      "endDate": "date de fin",
+      "rateAmount": "tarif",
+      "hoursPerWeek": "heures par semaine"
+    },
+    "agencyText": "À partir de l'intitulé, du type de contrat et de quelques notes, l'IA rédige la description, les responsabilités, les compétences, le niveau, les années et les langues, ainsi que le client, les dates, le tarif et les heures indiqués dans vos notes. Elle ne remplit que les champs vides et ne nomme jamais le client dans le texte ; relisez chaque étape avant de publier.",
+    "agencyNotesPlaceholder": "ex. 3 semaines de nuit pour Acme à partir de lundi, 14,50 € de l'heure, 38 heures par semaine, CACES chariot",
+    "unknownClient": "{{name}} n'est pas encore dans votre liste de Clients. Ajoutez-le, puis choisissez-le dans Conditions d'agence.",
+    "addClient": "Ajouter un client"
   },
   "preview": {
     "title": "Aperçu",

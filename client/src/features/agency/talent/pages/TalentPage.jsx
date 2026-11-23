@@ -8,11 +8,13 @@ import EmptyState from '@/components/common/EmptyState.jsx'
 import FilterChips from '@/components/common/FilterChips.jsx'
 import PageTitle from '@/components/common/PageTitle.jsx'
 import PillBadge from '@/components/common/PillBadge.jsx'
-import { Avatar, Button, Dropdown, IconButton, Skeleton, SkeletonRegion } from '@/components/ui'
+import { Avatar, Button, Dropdown, IconButton, SelectField, Skeleton, SkeletonRegion } from '@/components/ui'
+import { useGetRecruiterJobsQuery } from '@/features/recruiter/jobs/api.js'
 import { useErrorText } from '@/lib/forms.js'
 import { useFormat } from '@/lib/preferences.js'
 import { useGetAgreementQuery, useGetTalentQuery, useTalentActionMutation } from '../../api.js'
 import AgreementPanel from '../components/AgreementPanel.jsx'
+import BooksRanking from '../components/BooksRanking.jsx'
 import styles from './TalentPage.module.css'
 
 const TABS = ['books', 'requests', 'agreement']
@@ -109,6 +111,10 @@ export default function TalentPage() {
   const [busyId, setBusyId] = useState(null)
   const [failure, setFailure] = useState(null)
   const [ending, setEnding] = useState(null)
+  // Phase 6: On the books can rank everyone for one of the agency's open agency jobs (?jobId).
+  const { data: jobs } = useGetRecruiterJobsQuery(undefined, { skip: tab !== 'books' })
+  const rankable = (jobs?.items ?? []).filter((job) => job.agency && job.status !== 'closed')
+  const rankFor = tab === 'books' && rankable.some((job) => job.id === params.get('jobId')) ? params.get('jobId') : ''
   const members = data?.items ?? []
   const inTab = (id) => members.filter((member) => IN_TAB[id]?.includes(member.status))
   const noAgreement = agreement && !agreement.current
@@ -158,7 +164,20 @@ export default function TalentPage() {
               {errorText.code(failure)}
             </p>
           )}
-          {isLoading ? (
+          {tab === 'books' && rankable.length > 0 && inTab('books').length > 0 && (
+            <div className={styles.rankFor}>
+              <SelectField
+                label={t('agency:ranking.rankFor')}
+                name="rankFor"
+                options={[{ value: '', label: t('agency:ranking.everyone') }, ...rankable.map((job) => ({ value: job.id, label: job.title }))]}
+                value={rankFor}
+                onChange={(event) => setParams(event.target.value ? { jobId: event.target.value } : {}, { replace: true })}
+              />
+            </div>
+          )}
+          {rankFor ? (
+            <BooksRanking key={rankFor} jobId={rankFor} />
+          ) : isLoading ? (
             <RowsSkeleton />
           ) : visible.length === 0 ? (
             <EmptyState

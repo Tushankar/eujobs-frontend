@@ -354,7 +354,8 @@
     "report_triage": "Report triage",
     "blog_draft": "Blog draft",
     "account_review_summary": "Account review summary",
-    "contract_rules": "Contract rules"
+    "contract_rules": "Contract rules",
+    "talent_ranking": "Talent ranking reasons"
   },
   "emailType": {
     "interview_invitation": "Interview invitation",
@@ -617,7 +618,8 @@
     "placement_offered": "Re-hire offer",
     "placement_offer_withdrawn": "Offer withdrawn",
     "placement_starts_soon": "Placement starts",
-    "placement_ends_soon": "Placement ends"
+    "placement_ends_soon": "Placement ends",
+    "placement_ending_soon": "Placement ending soon"
   },
   "interviewMode": {
     "video": "Video call",

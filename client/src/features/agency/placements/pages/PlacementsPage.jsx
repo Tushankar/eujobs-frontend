@@ -3,6 +3,7 @@ import { useTranslation } from 'react-i18next'
 import { Link, useSearchParams } from 'react-router-dom'
 import { CalendarClock } from 'lucide-react'
 import { hiringPath } from '@/app/roles.js'
+import ConfirmDialog from '@/components/common/ConfirmDialog.jsx'
 import EmptyState from '@/components/common/EmptyState.jsx'
 import FilterChips from '@/components/common/FilterChips.jsx'
 import GetStartedCard from '@/components/common/GetStartedCard.jsx'
@@ -12,7 +13,8 @@ import { Avatar, Button, Modal, SelectField, Skeleton, SkeletonRegion, TextField
 import { useGetRecruiterJobsQuery } from '@/features/recruiter/jobs/api.js'
 import { useErrorText } from '@/lib/forms.js'
 import { useFormat } from '@/lib/preferences.js'
-import { useEndPlacementMutation, useGetPlacementsQuery, useRehireMutation, useWithdrawOfferMutation } from '../../api.js'
+import MatchBadge from '@/features/candidate/jobs/components/MatchBadge.jsx'
+import { useEndPlacementMutation, useGetPlacementsQuery, useOfferPlacementMutation, useRehireMutation, useWithdrawOfferMutation } from '../../api.js'
 import { RulesList } from '../../components/ContractRules.jsx'
 import styles from './PlacementsPage.module.css'
 
@@ -180,15 +182,50 @@ function RehireDialog({ placement, onClose }) {
   )
 }
 
+/**
+ * Phase 6 (owner 2026-11-23): under a running placement that ends within 7 days, the agency's published jobs that fit
+ * the person next (from the day after it ends), each with Offer placement.
+ */
+function FitsNext({ placement, onOffer }) {
+  const { t } = useTranslation()
+  const format = useFormat()
+  return (
+    <div className={styles.next} data-fits-next>
+      <span className={styles.nextTitle}>{t('agency:placements.next.title')}</span>
+      {placement.next.length === 0 ? (
+        <span className={styles.meta}>{t('agency:placements.next.none', { date: format.date(placement.effectiveEnd) })}</span>
+      ) : (
+        <ul className={styles.nextList}>
+          {placement.next.map((job) => (
+            <li key={job.id} className={styles.nextRow} data-next-job={job.title}>
+              <Link to={hiringPath(`jobs/${job.id}`)} className={styles.nextJob}>
+                <span className={styles.name}>{job.title}</span>
+                <span className={styles.meta}>{t('agency:placements.range', { start: format.date(job.startDate), end: format.date(job.endDate) })}</span>
+              </Link>
+              {job.match && <MatchBadge job={job} />}
+              <Button size="sm" variant="outline" onClick={() => onOffer(placement, job)} data-offer-next>
+                {t('agency:ranking.offer')}
+              </Button>
+            </li>
+          ))}
+        </ul>
+      )}
+    </div>
+  )
+}
+
 /** 2026-11-20: Agency › Placements: running, upcoming, re-hire offers and placements that are over. */
 export default function PlacementsPage() {
   const { t } = useTranslation()
   const errorText = useErrorText()
+  const format = useFormat()
   const dates = useDates()
   const [params, setParams] = useSearchParams()
   const tab = TABS.includes(params.get('tab')) ? params.get('tab') : 'running'
   const { data, isLoading } = useGetPlacementsQuery()
   const [withdraw] = useWithdrawOfferMutation()
+  const [offerPlacement] = useOfferPlacementMutation()
+  const [nextOffer, setNextOffer] = useState(null)
   const [details, setDetails] = useState(null)
   const [dialog, setDialog] = useState(null)
   const [failure, setFailure] = useState(null)
@@ -271,6 +308,7 @@ export default function PlacementsPage() {
                         </Button>
                       )}
                     </div>
+                    {placement.next && <FitsNext placement={placement} onOffer={(from, job) => setNextOffer({ placement: from, job })} />}
                   </li>
                 ))}
               </ul>
@@ -281,6 +319,19 @@ export default function PlacementsPage() {
       <PlacementDetails placement={details} onClose={() => setDetails(null)} />
       {dialog?.kind === 'end' && <EndDialog placement={dialog.placement} onClose={() => setDialog(null)} />}
       {dialog?.kind === 'rehire' && <RehireDialog placement={dialog.placement} onClose={() => setDialog(null)} />}
+      <ConfirmDialog
+        open={Boolean(nextOffer)}
+        title={t('agency:ranking.offerTitle', { name: nextOffer?.placement.candidate.name, job: nextOffer?.job.title })}
+        description={nextOffer ? t('agency:ranking.offerText', { start: format.date(nextOffer.job.startDate), end: format.date(nextOffer.job.endDate) }) : ''}
+        confirmLabel={t('agency:placements.sendOffer')}
+        onConfirm={() => {
+          const { placement, job } = nextOffer
+          setNextOffer(null)
+          setFailure(null)
+          offerPlacement({ jobId: job.id, candidateId: placement.candidate.id }).unwrap().catch(setFailure)
+        }}
+        onClose={() => setNextOffer(null)}
+      />
     </>
   )
 }

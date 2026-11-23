@@ -2,6 +2,12 @@
   margin-bottom: 20px;
 }
 
+/* Phase 6: the job the books are ranked for */
+.rankFor {
+  max-width: 360px;
+  margin-bottom: 16px;
+}
+
 .card {
   border: 1px solid var(--border);
   border-radius: var(--radius-xl);

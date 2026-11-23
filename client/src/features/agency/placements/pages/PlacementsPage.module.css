@@ -126,3 +126,56 @@
     gap: 2px;
   }
 }
+
+/* Phase 6: what fits the person next, under a placement that ends within 7 days */
+.next {
+  display: flex;
+  flex-basis: 100%;
+  flex-direction: column;
+  gap: 8px;
+  margin-left: 54px;
+  padding: 12px 14px;
+  border: 1px solid var(--border);
+  border-radius: var(--radius-lg);
+  background: var(--card);
+}
+
+.nextTitle {
+  font-size: 12px;
+  font-weight: 700;
+  line-height: 18px;
+  color: var(--foreground);
+}
+
+.nextList {
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+  margin: 0;
+  padding: 0;
+  list-style: none;
+}
+
+.nextRow {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: 8px 12px;
+}
+
+.nextJob {
+  display: flex;
+  flex: 1;
+  flex-direction: column;
+  min-width: 160px;
+}
+
+.nextJob:hover .name {
+  color: var(--primary);
+}
+
+@media (max-width: 640px) {
+  .next {
+    margin-left: 0;
+  }
+}

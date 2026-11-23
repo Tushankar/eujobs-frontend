@@ -101,8 +101,17 @@
       "preferredSkills": "habilidades valoradas",
       "level": "nivel",
       "experienceYears": "años de experiencia",
-      "requiredLanguages": "idiomas"
-    }
+      "requiredLanguages": "idiomas",
+      "clientId": "cliente",
+      "startDate": "fecha de inicio",
+      "endDate": "fecha de fin",
+      "rateAmount": "tarifa",
+      "hoursPerWeek": "horas semanales"
+    },
+    "agencyText": "A partir del título, el tipo de empleo y unas notas, la IA redacta la descripción, las responsabilidades, las habilidades, el nivel, los años y los idiomas, además del cliente, las fechas, la tarifa y las horas que den tus notas. Solo rellena los campos vacíos y nunca nombra al cliente en el texto; revisa cada paso antes de publicar.",
+    "agencyNotesPlaceholder": "p. ej. 3 semanas de turno de noche para Acme desde el lunes, 14,50 € la hora, 38 horas a la semana, carné de carretilla",
+    "unknownClient": "{{name}} aún no está en tu lista de Clientes. Añádelo y elígelo en Condiciones de agencia.",
+    "addClient": "Añadir un cliente"
   },
   "preview": {
     "title": "Vista previa",

@@ -261,6 +261,10 @@
         }
       ],
       "action": "Ouvrir l’accord"
+    },
+    "next": {
+      "title": "Convient ensuite",
+      "none": "Aucune de vos offres publiées qui commencent après le {{date}} ne lui convient encore."
     }
   },
   "invite": {
@@ -398,6 +402,28 @@
       "days_one": "{{count}} jour",
       "days_other": "{{count}} jours",
       "days_many": "{{count}} jours"
+    }
+  },
+  "ranking": {
+    "title": "Le meilleur de votre vivier",
+    "text": "Les personnes de votre vivier, la meilleure correspondance pour cette offre en premier. Toute personne en placement pendant ces dates est écartée.",
+    "reasons": "Raisons par IA",
+    "disclaimer": "L'IA a écrit ces lignes à partir de chaque profil ; l'ordre vient du score de correspondance. Vérifiez le profil avant de proposer.",
+    "offer": "Proposer un placement",
+    "offerTitle": "Proposer {{job}} à {{name}} ?",
+    "offerText": "Du {{start}} au {{end}}, avec le tarif et le contrat de cette offre. La personne accepte ou refuse depuis sa page Agences, et vos règles sont vérifiées à nouveau lorsqu'elle accepte.",
+    "publishFirst": "Publiez cette offre pour la proposer à quelqu'un de votre vivier.",
+    "hidden_one": "{{count}} personne de votre vivier est en placement pendant ces dates.",
+    "hidden_many": "{{count}} personnes de votre vivier sont en placement pendant ces dates.",
+    "hidden_other": "{{count}} personnes de votre vivier sont en placement pendant ces dates.",
+    "empty": "Personne n'est encore dans votre vivier.",
+    "openTalent": "Ouvrir Talents",
+    "allBusy": "Tout votre vivier est en placement pendant ces dates.",
+    "rankFor": "Classer pour une offre",
+    "everyone": "Tout le vivier",
+    "state": {
+      "offered": "Proposé",
+      "placed": "Placé"
     }
   }
 }

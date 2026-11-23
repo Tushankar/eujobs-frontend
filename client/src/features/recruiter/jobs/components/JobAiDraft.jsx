@@ -1,7 +1,9 @@
 import { useState } from 'react'
 import { useTranslation } from 'react-i18next'
+import { Link } from 'react-router-dom'
 import { Sparkles } from 'lucide-react'
 import { useGetConfigQuery } from '@/app/api.js'
+import { currentRole, hiringPath } from '@/app/roles.js'
 import { Icon, TextareaField } from '@/components/ui'
 import { useDraftJobMutation } from '@/features/ai/api.js'
 import AiButton from '@/features/ai/components/AiButton.jsx'
@@ -20,8 +22,27 @@ const EMPTY = {
   requiredLanguages: (value) => value.length === 0,
 }
 
+// Phase 6 (2026-11-23): an agency's draft also fills its terms; the rate's period goes with the amount.
+const AGENCY_EMPTY = {
+  clientId: (value) => !value,
+  startDate: (value) => !value,
+  endDate: (value) => !value,
+  rateAmount: (value) => !String(value).trim(),
+  hoursPerWeek: (value) => !String(value).trim(),
+}
+
+const agencyValues = (terms) => ({
+  clientId: terms.clientId ?? '',
+  startDate: terms.startDate ?? '',
+  endDate: terms.endDate ?? '',
+  rateAmount: terms.rate ? String(terms.rate.amount) : '',
+  ratePeriod: terms.rate?.period,
+  hoursPerWeek: terms.hoursPerWeek == null ? '' : String(terms.hoursPerWeek),
+})
+
 /** The draft as form values (strings for text inputs). */
 const asValues = (draft) => ({
+  ...(draft.agency && agencyValues(draft.agency)),
   brief: draft.brief,
   responsibilities: draft.responsibilities.join('\n'),
   requiredSkills: draft.requiredSkills,
@@ -41,16 +62,24 @@ export default function JobAiDraft({ values, setValue }) {
   const { data: config } = useGetConfigQuery()
   const [notes, setNotes] = useState('')
   const [filled, setFilled] = useState(null)
+  const [unknownClient, setUnknownClient] = useState(null)
   const [draftJob, state] = useDraftJobMutation()
+  const agency = currentRole() === 'agency'
+  const empty = agency ? { ...EMPTY, ...AGENCY_EMPTY } : EMPTY
   const titleReady = values.title.trim().length >= (config?.limits.job.title.min ?? 3)
 
   async function handleDraft() {
     setFilled(null)
+    setUnknownClient(null)
     try {
-      const draft = asValues(await draftJob({ title: values.title.trim(), employmentType: values.employmentType, notes: notes.trim() }).unwrap())
-      const fields = Object.keys(EMPTY).filter((field) => EMPTY[field](values[field]) && !EMPTY[field](draft[field]))
+      const answer = await draftJob({ title: values.title.trim(), employmentType: values.employmentType, notes: notes.trim() }).unwrap()
+      const draft = asValues(answer)
+      const fields = Object.keys(empty).filter((field) => empty[field](values[field]) && !empty[field](draft[field]))
       fields.forEach((field) => setValue(field, draft[field]))
+      if (fields.includes('rateAmount') && draft.ratePeriod) setValue('ratePeriod', draft.ratePeriod)
       setFilled(fields)
+      // A client the notes name that is not on the Clients list yet.
+      if (!values.clientId && answer.agency?.unknownClient) setUnknownClient(answer.agency.unknownClient)
     } catch {
       // AiStatus shows the failure (limit, pause, unavailable).
     }
@@ -64,11 +93,11 @@ export default function JobAiDraft({ values, setValue }) {
         </h3>
         <AiUsesLeft />
       </div>
-      <p className={styles.text}>{t('jobs:aiDraft.text')}</p>
+      <p className={styles.text}>{t(agency ? 'jobs:aiDraft.agencyText' : 'jobs:aiDraft.text')}</p>
       <TextareaField
         label={t('jobs:aiDraft.notes')}
         hint={t('jobs:aiDraft.notesHint')}
-        placeholder={t('jobs:aiDraft.notesPlaceholder')}
+        placeholder={t(agency ? 'jobs:aiDraft.agencyNotesPlaceholder' : 'jobs:aiDraft.notesPlaceholder')}
         rows={3}
         maxLength={config?.limits.ai?.notes?.max}
         value={notes}
@@ -86,6 +115,14 @@ export default function JobAiDraft({ values, setValue }) {
             {filled.length
               ? t('jobs:aiDraft.filled', { fields: filled.map((field) => t(`jobs:aiDraft.fields.${field}`)).join(', ') })
               : t('jobs:aiDraft.nothing')}
+          </p>
+        )}
+        {unknownClient && (
+          <p className={styles.text} role="status" data-job-ai-unknown-client>
+            {t('jobs:aiDraft.unknownClient', { name: unknownClient })}{' '}
+            <Link to={hiringPath('clients')} target="_blank" rel="noreferrer">
+              {t('jobs:aiDraft.addClient')}
+            </Link>
           </p>
         )}
       </AiStatus>
