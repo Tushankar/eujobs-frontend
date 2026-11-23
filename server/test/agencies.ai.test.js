@@ -22,12 +22,13 @@ import { textPdf } from './helpers/fixtures.js'
 import { api, attach, auth, mailTo, useTestDb, useTestUploads } from './helpers/index.js'
 import { approvedAgency, jobBody, listedCandidate } from './helpers/market.js'
 import { useFakePlaces } from './helpers/places.js'
+import { EmailLog } from '../lib/mail/emailLog.model.js'
 
 /*
  * 2026-11-23 (agencies, phase 6): AI for agencies — the books ranked per job (with AI reasons and a direct offer), the
  * ending-soon alert with what fits next, agency jobs in For you, the agency job post writer, and chats with the books.
  */
-useTestDb([
+useTestDb([EmailLog, 
   User, Company, PipelineStage, File, AgencyClient, AgencyAgreement, AgencyMembership, AgencyPlacement, Job, CandidateProfile, Subscription, Application,
   Notification, MatchResult, AiCache, AiUsage, ApiUsage, Conversation, Message,
 ])

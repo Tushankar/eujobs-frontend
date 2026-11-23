@@ -17,10 +17,11 @@ import { imagePdf, textPdf } from './helpers/fixtures.js'
 import { api, attach, auth, createUser, mailTo, useTestDb, useTestUploads } from './helpers/index.js'
 import { approvedAgency, approvedRecruiter, jobBody, listedCandidate } from './helpers/market.js'
 import { useFakePlaces } from './helpers/places.js'
+import { EmailLog } from '../lib/mail/emailLog.model.js'
 
 /* 2026-11-20 (agencies, phase 2): the agency agreement and contract rules (AI proposes, the agency confirms) and the books. */
 
-useTestDb([User, Company, PipelineStage, File, AuditEvent, AgencyClient, AgencyAgreement, AgencyMembership, Job, CandidateProfile, Subscription, Application, AiCache, AiUsage])
+useTestDb([EmailLog, User, Company, PipelineStage, File, AuditEvent, AgencyClient, AgencyAgreement, AgencyMembership, Job, CandidateProfile, Subscription, Application, AiCache, AiUsage])
 useTestUploads()
 useFakePlaces()
 before(() => seedCatalog())

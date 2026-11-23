@@ -18,10 +18,11 @@ import { textPdf } from './helpers/fixtures.js'
 import { api, attach, auth, useTestDb, useTestUploads } from './helpers/index.js'
 import { applicantCandidate, approvedAgency, approvedRecruiter, jobBody, listedCandidate } from './helpers/market.js'
 import { useFakePlaces } from './helpers/places.js'
+import { EmailLog } from '../lib/mail/emailLog.model.js'
 
 /* 2026-11-20 (agencies, phase 3): placements and the rule check that decides whether a candidate may take a job. */
 
-useTestDb([User, Company, PipelineStage, File, AgencyClient, AgencyAgreement, AgencyMembership, AgencyPlacement, Job, CandidateProfile, CvVersion, VerificationSubmission, Subscription, Application])
+useTestDb([EmailLog, User, Company, PipelineStage, File, AgencyClient, AgencyAgreement, AgencyMembership, AgencyPlacement, Job, CandidateProfile, CvVersion, VerificationSubmission, Subscription, Application])
 useTestUploads()
 useFakePlaces()
 before(() => seedCatalog())

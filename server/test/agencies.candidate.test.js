@@ -17,10 +17,11 @@ import { textPdf } from './helpers/fixtures.js'
 import { api, attach, auth, mailTo, useTestDb, useTestUploads } from './helpers/index.js'
 import { approvedAgency, jobBody, listedCandidate } from './helpers/market.js'
 import { useFakePlaces } from './helpers/places.js'
+import { EmailLog } from '../lib/mail/emailLog.model.js'
 
 /* 2026-11-20 (agencies, phase 5): what the candidate sees and hears: job cards, the counter, notifications, reminders. */
 
-useTestDb([User, Company, PipelineStage, File, AgencyClient, AgencyAgreement, AgencyMembership, AgencyPlacement, Job, CandidateProfile, Subscription, Application, Notification])
+useTestDb([EmailLog, User, Company, PipelineStage, File, AgencyClient, AgencyAgreement, AgencyMembership, AgencyPlacement, Job, CandidateProfile, Subscription, Application, Notification])
 useTestUploads()
 useFakePlaces()
 before(() => seedCatalog())

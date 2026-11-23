@@ -19,10 +19,11 @@ import { image, textPdf } from './helpers/fixtures.js'
 import { api, attach, auth, createUser, finishLogin, mailTo, PASSWORD, testEmail, useTestDb, useTestUploads } from './helpers/index.js'
 import { approvedAgency, approvedRecruiter, jobBody, listedCandidate } from './helpers/market.js'
 import { useFakePlaces } from './helpers/places.js'
+import { EmailLog } from '../lib/mail/emailLog.model.js'
 
 /* 2026-11-20 (agencies, phase 1): the agency role, its sign-up and review, clients, agency jobs and the shared hiring tools. */
 
-useTestDb([User, Company, KycDocument, PipelineStage, VerificationCode, File, AuditEvent, AgencyClient, Job, CandidateProfile, Subscription, Conversation, Message])
+useTestDb([EmailLog, User, Company, KycDocument, PipelineStage, VerificationCode, File, AuditEvent, AgencyClient, Job, CandidateProfile, Subscription, Conversation, Message])
 useTestUploads()
 useFakePlaces()
 before(() => seedCatalog())
