@@ -5,6 +5,7 @@
     "home": "Home",
     "about": "About Us",
     "jobs": "Jobs",
+    "agencies": "Agencies",
     "faq": "FAQ",
     "contact": "Contact Us",
     "signIn": "Login",
@@ -79,6 +80,18 @@
     "empty": "No open jobs right now. New roles appear here as soon as companies publish them.",
     "all": "See all jobs"
   },
+  "agencyJobs": {
+    "titleLead": "Short-Term Work Through",
+    "titleAccent": "Agencies",
+    "text": "Temporary and contract roles that agencies fill for their client companies. Join the agency’s books and start on set dates.",
+    "all": "See all agency jobs"
+  },
+  "agencyBand": {
+    "title": "Run an agency? Place your talent here.",
+    "text": "Post short-term jobs for your clients, keep candidates on your books with your own agreement, and follow every placement from start to end.",
+    "learnMore": "Learn more",
+    "signUp": "Sign up as an agency"
+  },
   "career": {
     "title": "Launch Your Career With Opportunities Made for You",
     "text": "Search roles across industries with real-time listings, personalized job alerts, and companies that you can trust.",
@@ -102,6 +115,8 @@
     "signIn": "Login",
     "signUp": "Create account",
     "recruiters": "For recruiters",
+    "agencies": "Agencies",
+    "agencySignIn": "Agency sign in",
     "privacy": "Privacy Policy",
     "terms": "Terms & Conditions",
     "imprint": "Imprint",

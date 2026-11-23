@@ -5,6 +5,7 @@
     "home": "Inicio",
     "about": "Nosotros",
     "jobs": "Empleos",
+    "agencies": "Agencias",
     "faq": "Preguntas",
     "contact": "Contacto",
     "signIn": "Iniciar sesión",
@@ -83,6 +84,18 @@
     "empty": "Ahora mismo no hay empleos abiertos. Los nuevos puestos aparecen aquí en cuanto las empresas los publican.",
     "all": "Ver todos los empleos"
   },
+  "agencyJobs": {
+    "titleLead": "Trabajo temporal a través de",
+    "titleAccent": "agencias",
+    "text": "Puestos temporales y por contrato que las agencias cubren para sus empresas cliente. Únete a la cartera de la agencia y empieza en fechas fijas.",
+    "all": "Ver todas las ofertas de agencias"
+  },
+  "agencyBand": {
+    "title": "¿Diriges una agencia? Coloca aquí a tu talento.",
+    "text": "Publica trabajos temporales para tus clientes, mantén a los candidatos en tu cartera con tu propio acuerdo y sigue cada asignación de principio a fin.",
+    "learnMore": "Más información",
+    "signUp": "Regístrate como agencia"
+  },
   "career": {
     "title": "Impulsa tu carrera con oportunidades hechas para ti",
     "text": "Busca puestos de todos los sectores con ofertas en tiempo real, alertas de empleo personalizadas y empresas de confianza.",
@@ -106,6 +119,8 @@
     "signIn": "Iniciar sesión",
     "signUp": "Crear cuenta",
     "recruiters": "Para reclutadores",
+    "agencies": "Agencias",
+    "agencySignIn": "Acceso de agencias",
     "privacy": "Política de privacidad",
     "terms": "Términos y condiciones",
     "imprint": "Aviso legal",

@@ -5,6 +5,7 @@
     "home": "Accueil",
     "about": "À propos",
     "jobs": "Offres",
+    "agencies": "Agences",
     "faq": "FAQ",
     "contact": "Contact",
     "signIn": "Connexion",
@@ -83,6 +84,18 @@
     "empty": "Aucune offre ouverte pour le moment. Les nouveaux postes apparaissent ici dès leur publication.",
     "all": "Voir toutes les offres"
   },
+  "agencyJobs": {
+    "titleLead": "Missions courtes via des",
+    "titleAccent": "agences",
+    "text": "Des postes temporaires et en contrat que les agences pourvoient pour leurs entreprises clientes. Rejoignez le vivier de l’agence et commencez à des dates fixes.",
+    "all": "Voir toutes les offres d’agences"
+  },
+  "agencyBand": {
+    "title": "Vous dirigez une agence ? Placez vos talents ici.",
+    "text": "Publiez des missions courtes pour vos clients, gardez les candidats dans votre vivier avec votre propre contrat et suivez chaque mission du début à la fin.",
+    "learnMore": "En savoir plus",
+    "signUp": "Inscrire mon agence"
+  },
   "career": {
     "title": "Lancez votre carrière avec des opportunités faites pour vous",
     "text": "Trouvez des postes dans tous les secteurs grâce aux offres en temps réel, aux alertes personnalisées et à des entreprises de confiance.",
@@ -106,6 +119,8 @@
     "signIn": "Connexion",
     "signUp": "Créer un compte",
     "recruiters": "Recruteurs",
+    "agencies": "Agences",
+    "agencySignIn": "Connexion agence",
     "privacy": "Politique de confidentialité",
     "terms": "Conditions générales",
     "imprint": "Mentions légales",
