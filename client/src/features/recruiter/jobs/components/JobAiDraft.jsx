@@ -9,6 +9,8 @@ import { useDraftJobMutation } from '@/features/ai/api.js'
 import AiButton from '@/features/ai/components/AiButton.jsx'
 import AiStatus from '@/features/ai/components/AiStatus.jsx'
 import AiUsesLeft from '@/features/ai/components/AiUsesLeft.jsx'
+import { useJobText } from '@/lib/jobText.js'
+import { useFormat } from '@/lib/preferences.js'
 import styles from './JobAiDraft.module.css'
 
 // The form fields a draft can fill, in wizard order, with the value they count as empty.
@@ -51,6 +53,67 @@ const asValues = (draft) => ({
   experienceYears: String(draft.experienceYears),
   requiredLanguages: draft.requiredLanguages,
 })
+
+const lines = (text) =>
+  String(text ?? '')
+    .split('\n')
+    .map((line) => line.trim())
+    .filter(Boolean)
+const skillNames = (skills) => skills.map((skill) => (typeof skill === 'string' ? skill : skill.name)).filter(Boolean)
+
+/**
+ * 2026-11-23: what the posting holds now in the fields a draft fills. Those fields live on the later steps, so
+ * without this the owner saw "nothing" after drafting.
+ */
+function DraftPreview({ values, agency }) {
+  const { t } = useTranslation()
+  const format = useFormat()
+  const text = useJobText()
+  const responsibilities = lines(values.responsibilities)
+  const required = skillNames(values.requiredSkills)
+  const preferred = skillNames(values.preferredSkills)
+  const details = [
+    values.level && t(`enums:jobLevel.${values.level}`),
+    String(values.experienceYears).trim() !== '' && `${t('jobs:fields.experienceYears')}: ${values.experienceYears}`,
+  ].filter(Boolean)
+  const languages = values.requiredLanguages.map(({ code }) => format.languageName(code))
+  const terms = agency
+    ? [values.startDate && values.endDate && text.dates({ startDate: values.startDate, endDate: values.endDate }), String(values.hoursPerWeek).trim() && t('jobs:aiDraft.previewHours', { count: Number(values.hoursPerWeek) })].filter(Boolean)
+    : []
+  const rows = [
+    [t('jobs:fields.brief'), values.brief.trim() && <p key="brief" className={styles.previewBrief}>{values.brief.trim()}</p>],
+    [
+      t('jobs:fields.responsibilities'),
+      responsibilities.length > 0 && (
+        <ul key="responsibilities" className={styles.previewList}>
+          {responsibilities.map((line, index) => (
+            <li key={`${index}-${line}`}>{line}</li>
+          ))}
+        </ul>
+      ),
+    ],
+    [t('jobs:fields.requiredSkills'), required.join(' · ')],
+    [t('jobs:fields.preferredSkills'), preferred.join(' · ')],
+    [t('jobs:fields.level'), details.join(' · ')],
+    [t('jobs:aiDraft.previewLanguages'), languages.join(' · ')],
+    [t('jobs:aiDraft.previewDates'), terms.join(' · ')],
+  ].filter(([, value]) => value)
+  if (!rows.length) return null
+  return (
+    <div className={styles.preview} data-job-ai-preview>
+      <p className={styles.previewTitle}>{t('jobs:aiDraft.previewTitle')}</p>
+      <dl className={styles.previewRows}>
+        {rows.map(([label, value]) => (
+          <div key={label} className={styles.previewRow}>
+            <dt>{label}</dt>
+            <dd>{value}</dd>
+          </div>
+        ))}
+      </dl>
+      <p className={styles.text}>{t('jobs:aiDraft.previewHint')}</p>
+    </div>
+  )
+}
 
 /**
  * The job post writer (owner 2026-11-17) on the wizard's first step: from the title, the employment type and a few
@@ -117,6 +180,7 @@ export default function JobAiDraft({ values, setValue }) {
               : t('jobs:aiDraft.nothing')}
           </p>
         )}
+        {filled && <DraftPreview values={values} agency={agency} />}
         {unknownClient && (
           <p className={styles.text} role="status" data-job-ai-unknown-client>
             {t('jobs:aiDraft.unknownClient', { name: unknownClient })}{' '}

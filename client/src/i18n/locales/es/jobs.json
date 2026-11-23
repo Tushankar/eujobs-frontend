@@ -93,7 +93,12 @@
     "action": "Redactar con IA",
     "needTitle": "Añade primero un título.",
     "filled": "Rellenado: {{fields}}. Revísalo en los siguientes pasos.",
-    "nothing": "Todos los campos ya tienen tu texto, así que no se ha cambiado nada.",
+    "nothing": "Tu oferta ya tiene texto en todos los campos que rellena la IA, así que este borrador no ha cambiado nada. Está en los siguientes pasos: pulsa Continuar para revisarlo.",
+    "previewTitle": "En tu oferta ahora",
+    "previewHint": "Pulsa Continuar para revisar y editar cada paso antes de publicar.",
+    "previewLanguages": "Idiomas",
+    "previewDates": "Fechas",
+    "previewHours": "{{count}} horas a la semana",
     "fields": {
       "brief": "descripción",
       "responsibilities": "responsabilidades",

@@ -46,3 +46,75 @@
   line-height: 20px;
   color: var(--foreground);
 }
+
+/* 2026-11-23: what the posting holds now, under the result line. */
+.preview {
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+  margin-top: 4px;
+  padding: 16px;
+  border: 1px solid var(--border);
+  border-radius: var(--radius-lg);
+}
+
+.previewTitle {
+  margin: 0;
+  font-size: 14px;
+  font-weight: 700;
+  color: var(--foreground);
+}
+
+.previewRows {
+  display: flex;
+  flex-direction: column;
+  margin: 0;
+}
+
+.previewRow {
+  display: grid;
+  grid-template-columns: minmax(0, 160px) minmax(0, 1fr);
+  gap: 4px 16px;
+  padding: 10px 0;
+}
+
+.previewRow + .previewRow {
+  border-top: 1px solid var(--border);
+}
+
+.previewRow dt {
+  font-size: 13px;
+  font-weight: 600;
+  color: var(--muted-foreground);
+}
+
+.previewRow dd {
+  margin: 0;
+  font-size: 13px;
+  line-height: 20px;
+  color: var(--foreground);
+}
+
+.previewBrief {
+  margin: 0;
+  white-space: pre-line;
+}
+
+.previewList {
+  margin: 0;
+  padding-left: 18px;
+}
+
+.previewList li + li {
+  margin-top: 4px;
+}
+
+@media (max-width: 599px) {
+  .preview {
+    padding: 12px;
+  }
+
+  .previewRow {
+    grid-template-columns: minmax(0, 1fr);
+  }
+}

@@ -92,7 +92,12 @@
     "action": "Draft with AI",
     "needTitle": "Add a job title first.",
     "filled": "Filled: {{fields}}. Review them in the next steps.",
-    "nothing": "Every field already has your text, so nothing was changed.",
+    "nothing": "Your posting already has text in every field the AI fills, so this draft changed nothing. It is in the next steps: press Continue to review it.",
+    "previewTitle": "In your posting now",
+    "previewHint": "Press Continue to review and edit each step before you publish.",
+    "previewLanguages": "Languages",
+    "previewDates": "Dates",
+    "previewHours": "{{count}} hours a week",
     "fields": {
       "brief": "description",
       "responsibilities": "responsibilities",

@@ -148,6 +148,9 @@ export default {
     if (aiState) throw new Error(`the job post writer failed: ${aiState}`)
     const filled = (await page.$eval('[data-job-ai-filled]', (line) => line.dataset.jobAiFilled)).split(',')
     ctx.check(['clientId', 'startDate', 'endDate', 'rateAmount', 'hoursPerWeek'].every((field) => filled.includes(field)), `the agency terms were filled (${filled.join(', ')})`)
+    // 2026-11-23: the drafted text shows on this step too (it lives on the later steps; the owner saw "nothing").
+    const preview = await page.$eval('[data-job-ai-preview]', (panel) => panel.innerText)
+    ctx.check(preview.includes('In your posting now') && preview.includes('Responsibilities'), 'the draft is previewed under the button')
     await handle.checkOverflow()
     await ctx.screenshot(page, '7-ai-job-draft')
 

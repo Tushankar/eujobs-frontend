@@ -93,7 +93,12 @@
     "action": "Rédiger avec l’IA",
     "needTitle": "Ajoutez d’abord un intitulé.",
     "filled": "Rempli : {{fields}}. Vérifiez-les aux étapes suivantes.",
-    "nothing": "Tous les champs contiennent déjà votre texte : rien n’a été modifié.",
+    "nothing": "Votre offre contient déjà du texte dans chaque champ que l’IA remplit : ce brouillon n’a rien changé. Il se trouve dans les étapes suivantes : appuyez sur Continuer pour le relire.",
+    "previewTitle": "Dans votre offre maintenant",
+    "previewHint": "Appuyez sur Continuer pour relire et modifier chaque étape avant de publier.",
+    "previewLanguages": "Langues",
+    "previewDates": "Dates",
+    "previewHours": "{{count}} heures par semaine",
     "fields": {
       "brief": "description",
       "responsibilities": "responsabilités",
