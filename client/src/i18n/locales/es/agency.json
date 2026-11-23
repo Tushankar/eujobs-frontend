@@ -308,7 +308,10 @@
     "next": {
       "title": "Encaja después",
       "none": "Ninguno de tus empleos publicados que empiezan después del {{date}} le encaja todavía."
-    }
+    },
+    "waitingFor": "Esperando a que {{name}} acepte · enviada el {{date}}",
+    "withdrawTitle": "¿Retirar la oferta a {{name}}?",
+    "withdrawText": "Ya no podrá aceptar {{job}}. Recibirá una notificación de que se ha retirado."
   },
   "invite": {
     "invite": "Invitar a tu cartera",

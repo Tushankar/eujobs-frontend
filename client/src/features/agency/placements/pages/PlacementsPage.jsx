@@ -231,6 +231,7 @@ export default function PlacementsPage() {
   const tab = TABS.includes(params.get('tab')) ? params.get('tab') : 'running'
   const { data, isLoading } = useGetPlacementsQuery()
   const [withdraw] = useWithdrawOfferMutation()
+  const [withdrawing, setWithdrawing] = useState(null)
   const [offerPlacement] = useOfferPlacementMutation()
   const [nextOffer, setNextOffer] = useState(null)
   const [details, setDetails] = useState(null)
@@ -285,6 +286,12 @@ export default function PlacementsPage() {
                       <span className={styles.name}>{placement.candidate.name ?? t('common:deletedUser')}</span>
                       <span className={styles.meta}>{[placement.job.title, placement.client?.name].filter(Boolean).join(' · ')}</span>
                       <span className={styles.meta}>{dates(placement)}</span>
+                      {/* 2026-11-23 (owner screenshot): an open offer says who it waits for and since when. */}
+                      {placement.status === 'offered' && (
+                        <span className={styles.waiting} data-offer-waiting>
+                          {t('agency:placements.waitingFor', { name: placement.candidate.name ?? t('common:deletedUser'), date: format.date(placement.createdAt) })}
+                        </span>
+                      )}
                     </button>
                     {placement.phase && <PillBadge tone={PHASE_TONE[placement.phase]}>{t(`agency:placements.phase.${placement.phase}`)}</PillBadge>}
                     {placement.status === 'offered' && <PillBadge tone="info">{t('enums:placementStatus.offered')}</PillBadge>}
@@ -300,7 +307,7 @@ export default function PlacementsPage() {
                         </Button>
                       )}
                       {placement.status === 'offered' && (
-                        <Button size="sm" variant="ghost" onClick={() => withdraw(placement.id).unwrap().catch(setFailure)}>
+                        <Button size="sm" variant="outline" onClick={() => setWithdrawing(placement)} data-withdraw-offer>
                           {t('agency:placements.withdraw')}
                         </Button>
                       )}
@@ -316,6 +323,25 @@ export default function PlacementsPage() {
       <PlacementDetails placement={details} onClose={() => setDetails(null)} />
       {dialog?.kind === 'end' && <EndDialog placement={dialog.placement} onClose={() => setDialog(null)} />}
       {dialog?.kind === 'rehire' && <RehireDialog placement={dialog.placement} placements={placements} onClose={() => setDialog(null)} />}
+      <ConfirmDialog
+        open={Boolean(withdrawing)}
+        title={t('agency:placements.withdrawTitle', { name: withdrawing?.candidate.name ?? '' })}
+        description={t('agency:placements.withdrawText', { job: withdrawing?.job.title ?? '' })}
+        confirmLabel={t('agency:placements.withdraw')}
+        tone="danger"
+        onConfirm={() => {
+          const { id } = withdrawing
+          setFailure(null)
+          withdraw(id)
+            .unwrap()
+            .then(() => setWithdrawing(null))
+            .catch((error) => {
+              setWithdrawing(null)
+              setFailure(error)
+            })
+        }}
+        onClose={() => setWithdrawing(null)}
+      />
       <ConfirmDialog
         open={Boolean(nextOffer)}
         title={t('agency:ranking.offerTitle', { name: nextOffer?.placement.candidate.name, job: nextOffer?.job.title })}

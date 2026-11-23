@@ -308,7 +308,10 @@
     "next": {
       "title": "Convient ensuite",
       "none": "Aucune de vos offres publiées qui commencent après le {{date}} ne lui convient encore."
-    }
+    },
+    "waitingFor": "En attente de l’acceptation de {{name}} · envoyée le {{date}}",
+    "withdrawTitle": "Retirer l’offre faite à {{name}} ?",
+    "withdrawText": "Cette personne ne pourra plus accepter {{job}}. Elle reçoit une notification du retrait."
   },
   "invite": {
     "invite": "Inviter dans votre vivier",

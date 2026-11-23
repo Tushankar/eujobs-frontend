@@ -157,6 +157,22 @@ export default {
     await page.click('[data-send-offer]')
     await modal(page, 'placement_offer_sent', ['Offer sent', first.fullName, 'Night Shift Lead'], '06-agency-offer-sent')
 
+    // Owner 2026-11-23 (screenshot of Placements › Offers): the tab underline under "Offers" once the counts load, and
+    // the open offer saying who it waits for.
+    await page.goto(`${ctx.webUrl}/agency/placements?tab=offered`, { waitUntil: 'networkidle0' })
+    await page.waitForSelector(`[data-placement="${first.fullName}"]`, { timeout: 10_000 })
+    await pause(600)
+    const underline = await page.evaluate(() => {
+      const active = document.querySelector('[data-tour="placements-tabs"] [aria-pressed="true"]')
+      const tray = active?.parentElement
+      return { x: parseFloat(tray?.style.getPropertyValue('--indicator-x')), w: parseFloat(tray?.style.getPropertyValue('--indicator-w')), left: active?.offsetLeft, width: active?.offsetWidth }
+    })
+    expect(Math.abs(underline.x - underline.left) <= 1 && Math.abs(underline.w - underline.width) <= 1, `the tab underline sits under "Offers" (${JSON.stringify(underline)})`)
+    const waiting = await page.$eval(`[data-placement="${first.fullName}"] [data-offer-waiting]`, (line) => line.innerText).catch(() => '')
+    expect(waiting.startsWith(`Waiting for ${first.fullName} to accept`), `the offer says who it waits for ("${waiting}")`)
+    expect(Boolean(await page.$(`[data-placement="${first.fullName}"] [data-withdraw-offer]`)), 'Withdraw offer is a button on the offer')
+    await ctx.screenshot(page, '06b-agency-offers-tab')
+
     // ---- Candidate: accept the offer ----
     await seeker.page.goto(`${ctx.webUrl}/candidate/agencies?tab=offers`, { waitUntil: 'networkidle0' })
     await seeker.page.waitForSelector('[data-view-offer]', { timeout: 10_000 }).catch(() => issue('the candidate has no offer to view'))

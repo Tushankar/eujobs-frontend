@@ -303,7 +303,10 @@
     "next": {
       "title": "Fits next",
       "none": "None of your published jobs starting after {{date}} fits them yet."
-    }
+    },
+    "waitingFor": "Waiting for {{name}} to accept · sent {{date}}",
+    "withdrawTitle": "Withdraw the offer to {{name}}?",
+    "withdrawText": "They can no longer accept {{job}}. They get a notification that it was withdrawn."
   },
   "invite": {
     "invite": "Invite to your books",

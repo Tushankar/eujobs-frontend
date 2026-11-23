@@ -55,6 +55,15 @@
   color: var(--muted-foreground);
 }
 
+/* 2026-11-23: an open offer, who it waits for and since when. */
+.waiting {
+  margin-top: 2px;
+  font-size: 12px;
+  font-weight: 600;
+  line-height: 18px;
+  color: var(--primary);
+}
+
 .actions {
   display: flex;
   gap: 8px;

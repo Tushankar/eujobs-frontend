@@ -28,8 +28,20 @@ export function useActiveIndicator(trayRef, activeKey) {
     const stopEdges = trackRowEdges(tray)
     const observer = new ResizeObserver(place)
     observer.observe(tray)
+    /*
+     * 2026-11-23 (owner screenshot: the Placements underline sat between "Upcoming" and "Offers"): the options grow when
+     * their counts load while a full-width tray keeps its size, so each option is watched too, and options added later.
+     */
+    const watchOptions = () => [...tray.children].forEach((option) => observer.observe(option))
+    watchOptions()
+    const added = new MutationObserver(() => {
+      watchOptions()
+      place()
+    })
+    added.observe(tray, { childList: true })
     return () => {
       observer.disconnect()
+      added.disconnect()
       stopEdges()
     }
   }, [trayRef, activeKey])
