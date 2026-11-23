@@ -137,7 +137,8 @@ export default function JobCard({ job, onToggleSave }) {
             {t('findJobs:card.level', { level: t(`enums:jobLevel.${job.level}`), years: job.experienceYears ?? 0 })}
           </span>
         )}
-        {job.salary && <span className={styles.salary}>{jobText.salary(job)}</span>}
+        {/* 2026-11-20: an agency job shows its pay rate instead of a salary. */}
+        {job.salary && !job.agency && <span className={styles.salary}>{jobText.salary(job)}</span>}
         {job.agency?.rate && (
           <span className={styles.salary} data-agency-rate>
             {jobText.rate(job.agency)}

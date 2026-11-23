@@ -100,9 +100,9 @@ export async function unhire(application) {
 
 /* ---------- DTOs ---------- */
 
-async function placementDtos(placements, viewerId) {
+async function placementDtos(placements, viewerId, { candidate = false } = {}) {
   const [jobs, companies, candidates] = await Promise.all([
-    Job.find({ _id: { $in: placements.map((placement) => placement.jobId) } }, 'title agency.rate'),
+    Job.find({ _id: { $in: placements.map((placement) => placement.jobId) } }, 'title agency.rate agency.showClient'),
     Company.find({ _id: { $in: placements.map((placement) => placement.companyId) } }, 'displayName logoFileId'),
     User.find({ _id: { $in: placements.map((placement) => placement.candidateId) } }, 'fullName'),
   ])
@@ -115,6 +115,8 @@ async function placementDtos(placements, viewerId) {
     const company = companyOf.get(String(placement.companyId))
     const confirmed = placement.status === 'confirmed'
     const phase = confirmed ? phaseOf(placement) : null
+    // 2026-11-20 (phase 5): a candidate's open offer keeps a confidential client hidden until they accept.
+    const hideClient = candidate && placement.status === 'offered' && job?.agency?.showClient === false
     return {
       id: String(placement._id),
       status: placement.status,
@@ -122,7 +124,7 @@ async function placementDtos(placements, viewerId) {
       job: { id: String(placement.jobId), title: job?.title ?? null },
       agency: { id: String(placement.companyId), displayName: company?.displayName ?? null, logoUrl: logos.get(String(placement.companyId)) ?? null },
       candidate: { id: String(placement.candidateId), name: nameOf.get(String(placement.candidateId)) ?? null },
-      client: placement.client?.name ? { id: String(placement.client.clientId), name: placement.client.name } : null,
+      client: placement.client?.name && !hideClient ? { id: String(placement.client.clientId), name: placement.client.name } : null,
       startDate: placement.startDate,
       endDate: placement.endDate,
       effectiveEnd: confirmed ? effectiveEnd(placement) : null,
@@ -213,7 +215,7 @@ export async function myPlacements(user, view) {
     const job = await Job.findById(placement.jobId)
     if (job) placement.set(await placementRules(job, user._id))
   }
-  return { items: await placementDtos(placements, user._id) }
+  return { items: await placementDtos(placements, user._id, { candidate: true }) }
 }
 
 async function myPlacement(user, id) {

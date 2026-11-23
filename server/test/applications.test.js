@@ -481,7 +481,7 @@ describe('counters, KPI, funnel and momentum (M-082, M-083, M-094, M-170, M-178)
     const second = await publish((await Company.findOne({ ownerUserId: recruiter._id })), recruiter, { title: 'UX Researcher' })
     const user = await applicantCandidate()
     const counters = async (who) => (await api().get(`${v1}/me/counters`).set(auth(who))).body
-    assert.deepEqual(await counters(user), { unreadMessages: 0, activeApplications: 0, notifications: { unread: 0, sections: {} } })
+    assert.deepEqual(await counters(user), { unreadMessages: 0, activeApplications: 0, agencyActions: 0, notifications: { unread: 0, sections: {} } })
     const one = await applied(user, job)
     const two = await applied(user, second)
     assert.equal((await counters(user)).activeApplications, 2)

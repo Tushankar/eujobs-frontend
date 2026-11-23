@@ -69,7 +69,7 @@ describe('starting conversations (M-084, M-085, U28)', () => {
     assert.equal(res.status, 201)
     assert.deepEqual([res.body.conversation.job.title, res.body.conversation.counterpart.name, res.body.message.mine], [job.title, candidate.fullName, true])
     assert.equal(await RecruiterActivity.countDocuments({ companyId: company._id, candidateId: candidate._id, type: 'outreach' }), 1)
-    assert.deepEqual(await counters(candidate), { unreadMessages: 1, activeApplications: 0, notifications: { unread: 1, sections: { messages: 1 } } })
+    assert.deepEqual(await counters(candidate), { unreadMessages: 1, activeApplications: 0, agencyActions: 0, notifications: { unread: 1, sections: { messages: 1 } } })
     assert.deepEqual(await counters(recruiter), { unreadMessages: 0, notifications: { unread: 0, sections: {} } })
 
     // A second "start" adds to the same thread (one per company and candidate) and is not a new outreach.

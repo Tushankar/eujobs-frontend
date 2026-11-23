@@ -150,6 +150,9 @@ describe('placements, from the candidate side', () => {
     assert.equal((await counters(candidate)).agencyActions, 1)
     const offers = (await api().get(`${v1}/candidate/placements`).query({ view: 'offered' }).set(auth(candidate))).body.items
     assert.deepEqual([offers[0].id, offers[0].rules.exclusivity.value, offers[0].sources.exclusivity], [offer.id, 'no_other_agency_work', 'default'])
+    // A confidential client stays hidden on the offer.
+    await Job.updateOne({ _id: next.id }, { 'agency.showClient': false })
+    assert.equal((await api().get(`${v1}/candidate/placements`).query({ view: 'offered' }).set(auth(candidate))).body.items[0].client, null)
     assert.equal(await AgencyPlacement.exists({ _id: offer.id, rules: { $exists: true } }), null)
     await api().post(`${v1}/agency/placements/${offer.id}/withdraw`).set(auth(owner))
 

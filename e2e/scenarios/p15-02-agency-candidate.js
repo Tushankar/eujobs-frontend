@@ -111,7 +111,9 @@ export default {
     await ctx.screenshot(page, '5-agreement')
     await page.click('[data-agree]')
     await waitForText(page, `You are on ${companyA.displayName}’s books.`)
-    ctx.check((await bodyText(page)).includes('On the books'), 'agreed: on the books')
+    // The list refetches after agreeing.
+    await waitForText(page, 'On the books')
+    ctx.check(true, 'agreed: on the books')
 
     // 6. Hired: the placement is confirmed (bell, email) and shows under Upcoming with its rules.
     const [hired] = await db('pipelinestages', 'find', { filter: { companyId: { $oid: companyA.id }, category: 'hired' } })

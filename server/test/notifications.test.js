@@ -371,9 +371,9 @@ describe('email switches (P11b-Q3, Q12)', () => {
   it('each role sees its own categories, on by default; PATCH saves them', async () => {
     const candidate = await createUser()
     const me = (await get(candidate, '/me')).body
-    assert.deepEqual(me.emailSwitches, { applications: true, messages: true, cv_requests: true, job_alerts: true, interviews: true })
+    assert.deepEqual(me.emailSwitches, { applications: true, messages: true, cv_requests: true, job_alerts: true, interviews: true, agency_updates: true })
     const saved = await api().patch(`${v1}/me/notifications`).set(auth(candidate)).send({ emailSwitches: { messages: false } })
-    assert.deepEqual(saved.body.emailSwitches, { applications: true, messages: false, cv_requests: true, job_alerts: true, interviews: true })
+    assert.deepEqual(saved.body.emailSwitches, { applications: true, messages: false, cv_requests: true, job_alerts: true, interviews: true, agency_updates: true })
     const again = await api().patch(`${v1}/me/notifications`).set(auth(candidate)).send({ emailSwitches: { job_alerts: false } })
     assert.equal(again.body.emailSwitches.messages, false, 'other categories keep their value')
 
@@ -415,7 +415,7 @@ describe('email switches (P11b-Q3, Q12)', () => {
     await User.collection.updateOne({ _id: on._id }, { $set: { notifyEmail: true } })
     await migrateEmailToggle()
     const [offRow, onRow] = await Promise.all([User.collection.findOne({ _id: off._id }), User.collection.findOne({ _id: on._id })])
-    assert.deepEqual([offRow.emailOff, offRow.notifyEmail], [['applications', 'messages', 'cv_requests', 'job_alerts', 'interviews'], undefined])
+    assert.deepEqual([offRow.emailOff, offRow.notifyEmail], [['applications', 'messages', 'cv_requests', 'job_alerts', 'interviews', 'agency_updates'], undefined])
     assert.deepEqual([onRow.emailOff, onRow.notifyEmail], [undefined, undefined])
   })
 })

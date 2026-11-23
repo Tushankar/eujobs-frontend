@@ -201,7 +201,8 @@ function JobRow({ job, active, onOpen }) {
   const { t } = useTranslation()
   const format = useFormat()
   const text = useJobText()
-  const salary = text.salary(job)
+  // 2026-11-20: an agency job shows its pay rate instead of a salary.
+  const salary = !job.agency && text.salary(job)
   return (
     <button type="button" className={cx(styles.row, active && styles.rowActive)} aria-current={active || undefined} onClick={onOpen}>
       <CompanyLogo name={job.company.displayName} id={job.company.id} src={job.company.logoUrl ?? undefined} size={44} />
@@ -233,7 +234,7 @@ function JobDetail({ job, onBack }) {
   const format = useFormat()
   const text = useJobText()
   const { company } = job
-  const salary = text.salary(job)
+  const salary = !job.agency && text.salary(job)
   const eligible = text.eligible(job)
   const conditions = [
     ...job.requiredLanguages.map((language) => t('findJobs:details.languageLevel', { language: format.languageName(language.code), level: t(`enums:languageLevel.${language.minLevel}`) })),

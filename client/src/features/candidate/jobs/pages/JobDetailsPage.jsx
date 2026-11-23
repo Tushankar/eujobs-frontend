@@ -211,7 +211,7 @@ export default function JobDetailsPage() {
                 {jobText.dates(job.agency)}
               </span>
             )}
-            {job.salary && <span className={styles.salary}>{jobText.salary(job)}</span>}
+            {job.salary && !job.agency && <span className={styles.salary}>{jobText.salary(job)}</span>}
             {job.agency?.rate && <span className={styles.salary}>{jobText.rate(job.agency)}</span>}
           </div>
 
