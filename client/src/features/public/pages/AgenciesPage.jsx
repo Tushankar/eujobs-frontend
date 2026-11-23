@@ -69,7 +69,7 @@ function PlanSnapshot({ plans, interval, onInterval, saving }) {
               </ul>
             </>
           )}
-          <Link to={SIGN_UP} className={cx(pricing.cta, pricing.ctaPrimary, styles.snapshotCta)}>
+          <Link to={SIGN_UP} className={cx(pricing.cta, styles.gradientCta, styles.snapshotCta)}>
             {t('website:pricing.startPaid')}
           </Link>
           <a href="#agencies-plans" className={styles.snapshotCompare}>
@@ -196,7 +196,7 @@ export default function AgenciesPage() {
                   </div>
                   <div className={styles.planBuy}>
                     <PlanPrice plan={plan} interval={interval} size="lg" />
-                    <Link to={SIGN_UP} className={cx(pricing.cta, styles.planCta, paid && pricing.ctaPrimary)}>
+                    <Link to={SIGN_UP} className={cx(pricing.cta, styles.planCta, paid && styles.gradientCta)}>
                       {t(paid ? 'website:pricing.startPaid' : 'website:pricing.startFree')}
                     </Link>
                   </div>
