@@ -32,6 +32,15 @@ const PRIMARY = {
   candidate_hired: (role, params) => `${hiringBase(role)}/jobs/${params.jobId}`,
   company_submitted: () => null,
   first_alert: () => null,
+  // 2026-11-23 (agencies): the books, the agreement and placement offers, on both sides.
+  books_invite_sent: (role) => `${hiringBase(role)}/talent?tab=requests`,
+  books_request_accepted: (role) => `${hiringBase(role)}/talent?tab=requests`,
+  agreement_published: (role) => `${hiringBase(role)}/find-candidates`,
+  agreement_version_published: (role) => `${hiringBase(role)}/talent`,
+  placement_offer_sent: (role) => `${hiringBase(role)}/placements?tab=offered`,
+  books_join_requested: () => '/candidate/jobs?employmentType=agency',
+  agreement_agreed: () => '/candidate/jobs?employmentType=agency',
+  placement_accepted: () => '/candidate/agencies',
 }
 
 /** The texts of one moment: role-specific steps where the moment differs per role. */
@@ -46,6 +55,7 @@ function useContent() {
       plan: params.planKey ? t(`enums:planKey.${params.planKey}`) : '',
       category: params.category ? t(`enums:verificationCategory.${params.category}`).toLowerCase() : '',
       when: params.startAt ? format.dateTime(params.startAt) : '',
+      start: params.startDate ? format.date(params.startDate) : '',
       frequency: params.frequency ? t(`jobAlerts:frequency.${params.frequency}`).toLowerCase() : '',
     }
     // Some moments word their steps per role; asking for a key that does not exist would log a missing-key error.

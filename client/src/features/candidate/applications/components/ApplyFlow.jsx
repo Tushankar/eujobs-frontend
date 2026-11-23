@@ -153,7 +153,7 @@ function ApplyDialog({ job, onClose, onApplied }) {
     )
     if (sent) {
       // The application stands even if the request to join fails (e.g. sent meanwhile from another tab).
-      if (canJoin && values.joinAgency) await joinAgency(job.company.id).unwrap().catch(() => {})
+      if (canJoin && values.joinAgency) await joinAgency({ companyId: job.company.id, quiet: true }).unwrap().catch(() => {})
       onApplied()
       // 2026-11-17: the "Application sent" success modal.
       dispatch(celebrate({ kind: 'applied', params: { job: job.title, company } }))

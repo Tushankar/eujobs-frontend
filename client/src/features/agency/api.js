@@ -1,10 +1,25 @@
 import { api, formData } from '@/app/api.js'
+import { celebrate } from '@/app/celebrate.js'
 
 /*
  * 2026-11-20: the agency's own API: clients, the agreement (versions and rules), the candidates on the books,
  * placements, and a job's contract. Every change refreshes what shows it.
  */
 const JOB_CHANGES = ['RecruiterJobs', 'RecruiterOverview']
+
+/*
+ * 2026-11-23 (owner: "when I invite and all, show a proper modal: invite sent…"): the success modal after an action that
+ * worked, from whichever button ran it. `moment(data, arg)` names it (or null for none).
+ */
+const celebrating = (moment) => async (arg, { dispatch, queryFulfilled }) => {
+  try {
+    const next = moment((await queryFulfilled).data, arg)
+    if (next) dispatch(celebrate(next))
+  } catch {
+    // The button that ran it shows the failure.
+  }
+}
+const offerSent = celebrating((placement) => ({ kind: 'placement_offer_sent', params: { name: placement.candidate.name ?? '', job: placement.job.title ?? '' } }))
 
 export const agencyApi = api.injectEndpoints({
   endpoints: (build) => ({
@@ -22,14 +37,26 @@ export const agencyApi = api.injectEndpoints({
     uploadAgreement: build.mutation({ query: (file) => ({ url: '/agency/agreement', method: 'POST', body: formData(file) }), invalidatesTags: ['AgencyAgreement'] }),
     readAgreement: build.mutation({ query: () => ({ url: '/agency/agreement/draft/read', method: 'POST' }), invalidatesTags: ['AgencyAgreement', 'Me'] }),
     saveAgreementRules: build.mutation({ query: (rules) => ({ url: '/agency/agreement/draft/rules', method: 'PUT', body: rules }), invalidatesTags: ['AgencyAgreement'] }),
-    publishAgreement: build.mutation({ query: () => ({ url: '/agency/agreement/draft/publish', method: 'POST' }), invalidatesTags: ['AgencyAgreement', 'AgencyTalent'] }),
+    publishAgreement: build.mutation({
+      query: () => ({ url: '/agency/agreement/draft/publish', method: 'POST' }),
+      invalidatesTags: ['AgencyAgreement', 'AgencyTalent'],
+      onQueryStarted: celebrating(({ current }) => current && { kind: current.version > 1 ? 'agreement_version_published' : 'agreement_published', params: { version: current.version, count: current.onBooks } }),
+    }),
     deleteAgreementDraft: build.mutation({ query: () => ({ url: '/agency/agreement/draft', method: 'DELETE' }), invalidatesTags: ['AgencyAgreement'] }),
 
     // The books
     getTalent: build.query({ query: () => '/agency/talent', providesTags: ['AgencyTalent'] }),
-    inviteTalent: build.mutation({ query: (candidateId) => ({ url: '/agency/talent/invite', method: 'POST', body: { candidateId } }), invalidatesTags: ['AgencyTalent'] }),
+    inviteTalent: build.mutation({
+      query: (candidateId) => ({ url: '/agency/talent/invite', method: 'POST', body: { candidateId } }),
+      invalidatesTags: ['AgencyTalent'],
+      onQueryStarted: celebrating((member) => ({ kind: 'books_invite_sent', params: { name: member.candidate.name ?? '' } })),
+    }),
     // 2026-11-23: also the applications list, whose rows show each applicant's place on the books.
-    talentAction: build.mutation({ query: ({ id, action }) => ({ url: `/agency/talent/${id}/${action}`, method: 'POST' }), invalidatesTags: ['AgencyTalent', 'AgencyAgreement', 'CompanyApplications'] }),
+    talentAction: build.mutation({
+      query: ({ id, action }) => ({ url: `/agency/talent/${id}/${action}`, method: 'POST' }),
+      invalidatesTags: ['AgencyTalent', 'AgencyAgreement', 'CompanyApplications'],
+      onQueryStarted: celebrating((member, { action }) => action === 'accept' && { kind: 'books_request_accepted', params: { name: member.candidate.name ?? '' } }),
+    }),
     // Phase 6: the books ranked for one agency job, and AI reasons beside them (Agency Plus)
     getTalentRanking: build.query({ query: (jobId) => ({ url: '/agency/talent/ranking', params: { jobId } }), providesTags: ['AgencyTalent', 'AgencyPlacements'] }),
     talentReasons: build.mutation({ query: (jobId) => ({ url: '/agency/talent/ranking/reasons', method: 'POST', body: { jobId } }), invalidatesTags: ['AiUsage'] }),
@@ -37,9 +64,9 @@ export const agencyApi = api.injectEndpoints({
     // Placements
     getPlacements: build.query({ query: () => '/agency/placements', providesTags: ['AgencyPlacements'] }),
     endPlacement: build.mutation({ query: ({ id, endDate }) => ({ url: `/agency/placements/${id}/end`, method: 'POST', body: { endDate } }), invalidatesTags: ['AgencyPlacements'] }),
-    rehire: build.mutation({ query: ({ id, jobId }) => ({ url: `/agency/placements/${id}/rehire`, method: 'POST', body: { jobId } }), invalidatesTags: ['AgencyPlacements'] }),
+    rehire: build.mutation({ query: ({ id, jobId }) => ({ url: `/agency/placements/${id}/rehire`, method: 'POST', body: { jobId } }), invalidatesTags: ['AgencyPlacements'], onQueryStarted: offerSent }),
     // Phase 6: an offer straight to someone on the books
-    offerPlacement: build.mutation({ query: (body) => ({ url: '/agency/placements/offer', method: 'POST', body }), invalidatesTags: ['AgencyPlacements'] }),
+    offerPlacement: build.mutation({ query: (body) => ({ url: '/agency/placements/offer', method: 'POST', body }), invalidatesTags: ['AgencyPlacements'], onQueryStarted: offerSent }),
     withdrawOffer: build.mutation({ query: (id) => ({ url: `/agency/placements/${id}/withdraw`, method: 'POST' }), invalidatesTags: ['AgencyPlacements'] }),
 
     // A job's contract

@@ -145,5 +145,85 @@
       "New matching jobs arrive by email ({{frequency}})",
       "Edit or pause it any time in Job alerts"
     ]
+  },
+  "books_invite_sent": {
+    "title": "Invite sent!",
+    "message": "{{name}} is invited to join your books.",
+    "steps": [
+      "They get an email and a notification",
+      "They read your agreement and accept it",
+      "Then you can place them on your jobs"
+    ],
+    "primary": "View requests"
+  },
+  "books_request_accepted": {
+    "title": "Request accepted",
+    "message": "{{name}} can now join your books.",
+    "steps": [
+      "They get an email and a notification",
+      "They read your agreement and accept it",
+      "Then you can place them on your jobs"
+    ],
+    "primary": "View requests"
+  },
+  "agreement_published": {
+    "title": "Your agreement is live!",
+    "message": "Version {{version}} is what candidates agree to when they join your books.",
+    "steps": [
+      "Candidates read it before they join",
+      "Its rules show on your jobs before anyone applies",
+      "Invite people from Find candidates"
+    ],
+    "primary": "Find candidates"
+  },
+  "agreement_version_published": {
+    "title": "Version {{version}} is live!",
+    "message": "People on your books ({{count}}) are asked to agree to version {{version}}.",
+    "steps": [
+      "They get an email and a notification",
+      "You can place them again once they agree",
+      "Running placements keep the rules they started with"
+    ],
+    "primary": "View your books"
+  },
+  "placement_offer_sent": {
+    "title": "Offer sent!",
+    "message": "{{name}} is offered {{job}}.",
+    "steps": [
+      "They get an email and a notification",
+      "They accept or decline it in Agencies",
+      "Accepted offers become placements"
+    ],
+    "primary": "View offers"
+  },
+  "books_join_requested": {
+    "title": "Request sent!",
+    "message": "You asked to join {{agency}}’s books.",
+    "steps": [
+      "{{agency}} reviews your request",
+      "Then you read and accept its agreement",
+      "Once on its books, it can place you on its jobs"
+    ],
+    "primary": "Browse agency jobs"
+  },
+  "agreement_agreed": {
+    "title": "You’re on the books!",
+    "message": "You agreed to version {{version}} of {{agency}}’s agreement.",
+    "steps": [
+      "{{agency}} can now place you on its jobs",
+      "Each job shows its rules before you apply",
+      "You can leave its books any time from Agencies"
+    ],
+    "primary": "Browse agency jobs"
+  },
+  "placement_accepted": {
+    "title": "Placement confirmed!",
+    "message": "You start as {{job}} with {{agency}} on {{start}}.",
+    "steps": [
+      "We remind you the day before you start",
+      "Its rules apply while it runs",
+      "Give notice from Agencies if you need to leave early"
+    ],
+    "primary": "View placements"
   }
 }

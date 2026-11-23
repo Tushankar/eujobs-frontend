@@ -145,5 +145,85 @@
       "Les nouvelles offres arrivent par e-mail ({{frequency}})",
       "Modifiez-la ou mettez-la en pause à tout moment dans Alertes emploi"
     ]
+  },
+  "books_invite_sent": {
+    "title": "Invitation envoyée !",
+    "message": "Vous avez invité {{name}} à rejoindre votre vivier.",
+    "steps": [
+      "La personne reçoit un e-mail et une notification",
+      "Elle lit votre accord et l’accepte",
+      "Vous pouvez ensuite la placer sur vos offres"
+    ],
+    "primary": "Voir les demandes"
+  },
+  "books_request_accepted": {
+    "title": "Demande acceptée",
+    "message": "{{name}} peut maintenant rejoindre votre vivier.",
+    "steps": [
+      "La personne reçoit un e-mail et une notification",
+      "Elle lit votre accord et l’accepte",
+      "Vous pouvez ensuite la placer sur vos offres"
+    ],
+    "primary": "Voir les demandes"
+  },
+  "agreement_published": {
+    "title": "Votre accord est publié !",
+    "message": "La version {{version}} est ce que les candidats acceptent en rejoignant votre vivier.",
+    "steps": [
+      "Les candidats le lisent avant de rejoindre",
+      "Ses règles s’affichent sur vos offres avant toute candidature",
+      "Invitez des personnes depuis Trouver des candidats"
+    ],
+    "primary": "Trouver des candidats"
+  },
+  "agreement_version_published": {
+    "title": "La version {{version}} est publiée !",
+    "message": "Les personnes de votre vivier ({{count}}) sont invitées à accepter la version {{version}}.",
+    "steps": [
+      "Elles reçoivent un e-mail et une notification",
+      "Vous pouvez les placer à nouveau dès qu’elles l’acceptent",
+      "Les placements en cours gardent leurs règles"
+    ],
+    "primary": "Voir votre vivier"
+  },
+  "placement_offer_sent": {
+    "title": "Offre envoyée !",
+    "message": "Vous avez proposé {{job}} à {{name}}.",
+    "steps": [
+      "La personne reçoit un e-mail et une notification",
+      "Elle l’accepte ou la refuse dans Agences",
+      "Une offre acceptée devient un placement"
+    ],
+    "primary": "Voir les offres"
+  },
+  "books_join_requested": {
+    "title": "Demande envoyée !",
+    "message": "Vous avez demandé à rejoindre le vivier de {{agency}}.",
+    "steps": [
+      "{{agency}} examine votre demande",
+      "Vous lisez ensuite son accord et l’acceptez",
+      "Une fois dans son vivier, elle peut vous placer sur ses offres"
+    ],
+    "primary": "Voir les offres d’agence"
+  },
+  "agreement_agreed": {
+    "title": "Vous êtes dans le vivier !",
+    "message": "Vous avez accepté la version {{version}} de l’accord de {{agency}}.",
+    "steps": [
+      "{{agency}} peut maintenant vous placer sur ses offres",
+      "Chaque offre affiche ses règles avant de postuler",
+      "Vous pouvez quitter son vivier à tout moment depuis Agences"
+    ],
+    "primary": "Voir les offres d’agence"
+  },
+  "placement_accepted": {
+    "title": "Placement confirmé !",
+    "message": "Vous commencez comme {{job}} avec {{agency}} le {{start}}.",
+    "steps": [
+      "Nous vous le rappelons la veille du début",
+      "Ses règles s’appliquent pendant sa durée",
+      "Donnez un préavis depuis Agences si vous devez partir plus tôt"
+    ],
+    "primary": "Voir les placements"
   }
 }

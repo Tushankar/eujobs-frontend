@@ -145,5 +145,85 @@
       "Los empleos nuevos llegan por correo ({{frequency}})",
       "Edítala o páusala cuando quieras en Alertas de empleo"
     ]
+  },
+  "books_invite_sent": {
+    "title": "¡Invitación enviada!",
+    "message": "Has invitado a {{name}} a unirse a tu cartera.",
+    "steps": [
+      "Recibe un correo y una notificación",
+      "Lee tu acuerdo y lo acepta",
+      "Después puedes colocarle en tus ofertas"
+    ],
+    "primary": "Ver solicitudes"
+  },
+  "books_request_accepted": {
+    "title": "Solicitud aceptada",
+    "message": "{{name}} ya puede unirse a tu cartera.",
+    "steps": [
+      "Recibe un correo y una notificación",
+      "Lee tu acuerdo y lo acepta",
+      "Después puedes colocarle en tus ofertas"
+    ],
+    "primary": "Ver solicitudes"
+  },
+  "agreement_published": {
+    "title": "¡Tu acuerdo está publicado!",
+    "message": "La versión {{version}} es lo que aceptan los candidatos al unirse a tu cartera.",
+    "steps": [
+      "Los candidatos lo leen antes de unirse",
+      "Sus reglas aparecen en tus ofertas antes de postularse",
+      "Invita a personas desde Buscar candidatos"
+    ],
+    "primary": "Buscar candidatos"
+  },
+  "agreement_version_published": {
+    "title": "¡La versión {{version}} está publicada!",
+    "message": "Se pide a las personas de tu cartera ({{count}}) que acepten la versión {{version}}.",
+    "steps": [
+      "Reciben un correo y una notificación",
+      "Puedes volver a colocarlas cuando la acepten",
+      "Las colocaciones en curso mantienen sus reglas"
+    ],
+    "primary": "Ver tu cartera"
+  },
+  "placement_offer_sent": {
+    "title": "¡Oferta enviada!",
+    "message": "Has ofrecido {{job}} a {{name}}.",
+    "steps": [
+      "Recibe un correo y una notificación",
+      "La acepta o la rechaza en Agencias",
+      "Las ofertas aceptadas se convierten en colocaciones"
+    ],
+    "primary": "Ver ofertas"
+  },
+  "books_join_requested": {
+    "title": "¡Solicitud enviada!",
+    "message": "Pediste unirte a la cartera de {{agency}}.",
+    "steps": [
+      "{{agency}} revisa tu solicitud",
+      "Después lees y aceptas su acuerdo",
+      "Una vez en su cartera, puede colocarte en sus ofertas"
+    ],
+    "primary": "Ver ofertas de agencia"
+  },
+  "agreement_agreed": {
+    "title": "¡Ya estás en la cartera!",
+    "message": "Aceptaste la versión {{version}} del acuerdo de {{agency}}.",
+    "steps": [
+      "{{agency}} ya puede colocarte en sus ofertas",
+      "Cada oferta muestra sus reglas antes de postularte",
+      "Puedes salir de su cartera cuando quieras desde Agencias"
+    ],
+    "primary": "Ver ofertas de agencia"
+  },
+  "placement_accepted": {
+    "title": "¡Colocación confirmada!",
+    "message": "Empiezas como {{job}} con {{agency}} el {{start}}.",
+    "steps": [
+      "Te lo recordamos el día antes de empezar",
+      "Sus reglas se aplican mientras dura",
+      "Da preaviso desde Agencias si necesitas terminar antes"
+    ],
+    "primary": "Ver colocaciones"
   }
 }
