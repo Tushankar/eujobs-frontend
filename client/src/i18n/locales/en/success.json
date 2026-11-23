@@ -225,5 +225,25 @@
       "Give notice from Agencies if you need to leave early"
     ],
     "primary": "View placements"
+  },
+  "account_approved_agency": {
+    "title": "Your agency is approved!",
+    "message": "Welcome to EU Jobs. Set up your agency in three steps.",
+    "steps": [
+      "Add the clients you recruit for",
+      "Publish the agreement candidates sign to join your books",
+      "Post your first agency job"
+    ],
+    "primary": "Add your clients"
+  },
+  "candidate_hired_agency": {
+    "title": "Placement confirmed!",
+    "message": "{{name}} is placed on {{job}}.",
+    "steps": [
+      "They get an email and a notification",
+      "It shows under Placements until it ends",
+      "End it early or re-hire them from there"
+    ],
+    "primary": "View placements"
   }
 }

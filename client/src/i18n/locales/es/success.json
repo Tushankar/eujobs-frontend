@@ -225,5 +225,25 @@
       "Da preaviso desde Agencias si necesitas terminar antes"
     ],
     "primary": "Ver colocaciones"
+  },
+  "account_approved_agency": {
+    "title": "¡Tu agencia está aprobada!",
+    "message": "Te damos la bienvenida a EU Jobs. Configura tu agencia en tres pasos.",
+    "steps": [
+      "Añade los clientes para los que seleccionas",
+      "Publica el acuerdo que firman los candidatos para entrar en tu cartera",
+      "Publica tu primera oferta de agencia"
+    ],
+    "primary": "Añadir clientes"
+  },
+  "candidate_hired_agency": {
+    "title": "¡Colocación confirmada!",
+    "message": "{{name}} está colocado en {{job}}.",
+    "steps": [
+      "Recibe un correo y una notificación",
+      "Aparece en Colocaciones hasta que termine",
+      "Desde ahí puedes terminarla antes o volver a contratar"
+    ],
+    "primary": "Ver colocaciones"
   }
 }

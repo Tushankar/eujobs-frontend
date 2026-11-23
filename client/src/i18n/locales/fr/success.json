@@ -225,5 +225,25 @@
       "Donnez un préavis depuis Agences si vous devez partir plus tôt"
     ],
     "primary": "Voir les placements"
+  },
+  "account_approved_agency": {
+    "title": "Votre agence est approuvée !",
+    "message": "Bienvenue sur EU Jobs. Configurez votre agence en trois étapes.",
+    "steps": [
+      "Ajoutez les clients pour lesquels vous recrutez",
+      "Publiez l’accord que les candidats signent pour rejoindre votre vivier",
+      "Publiez votre première offre d’agence"
+    ],
+    "primary": "Ajouter vos clients"
+  },
+  "candidate_hired_agency": {
+    "title": "Placement confirmé !",
+    "message": "{{name}} est placé sur {{job}}.",
+    "steps": [
+      "La personne reçoit un e-mail et une notification",
+      "Il apparaît dans Placements jusqu’à sa fin",
+      "Vous pouvez y mettre fin plus tôt ou réembaucher"
+    ],
+    "primary": "Voir les placements"
   }
 }

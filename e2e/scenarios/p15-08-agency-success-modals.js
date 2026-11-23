@@ -26,7 +26,15 @@ export default {
     // The modal of `kind`: its text is noted and checked for `includes`, then it is closed.
     async function modal(page, kind, includes, shot) {
       const found = await page.waitForSelector(`[data-success-kind="${kind}"]`, { timeout: 10_000 }).catch(() => null)
-      if (!found) return issue(`no "${kind}" success modal`)
+      if (!found) {
+        await ctx.screenshot(page, `missing-${kind}`)
+        const seen = await page.evaluate(() => ({
+          off: localStorage.getItem('eujobs.e2e.celebrations'),
+          dialogs: [...document.querySelectorAll('[role="dialog"]')].map((box) => box.innerText.slice(0, 160)),
+          alerts: [...document.querySelectorAll('[role="alert"]')].map((box) => box.innerText),
+        }))
+        return issue(`no "${kind}" success modal: ${JSON.stringify(seen)} | page issues: ${pages.flatMap((one) => one.issues).join(' | ')}`)
+      }
       await pause(900) // the burst and the drawn check
       const text = await page.$eval(`[data-success-kind="${kind}"]`, (box) => box.innerText.replace(/\s+/g, ' ').trim())
       ctx.note(`${kind}: ${text.slice(0, 220)}`)
@@ -36,15 +44,37 @@ export default {
       await page.waitForSelector(`[data-success-kind="${kind}"]`, { hidden: true, timeout: 5_000 }).catch(() => issue(`the ${kind} modal does not close`))
     }
 
+    // Moments waiting from before (approved, profile complete) open on the first page after sign-in; a user reads and
+    // closes them first, so does this. Returns their texts.
+    async function closeWaiting(page) {
+      const texts = []
+      for (let round = 0; round < 4; round += 1) {
+        const box = await page.waitForSelector('[data-success-kind]', { timeout: 3_000 }).catch(() => null)
+        if (!box) break
+        await pause(700)
+        texts.push(await box.evaluate((element) => `${element.dataset.successKind}: ${element.innerText.replace(/\s+/g, ' ').slice(0, 160)}`))
+        await page.click('[data-success-close]')
+        await pause(500)
+      }
+      return texts
+    }
+
     const agency = await approvedAgency('P1508')
     const company = (await api('/me', { token: agency.token })).body.company
     const acme = (await api('/agency/clients', { method: 'POST', token: agency.token, body: { name: 'Acme Ports' } })).body
     const first = await completeCandidate('P1508A', { plus: false })
     const second = await completeCandidate('P1508B', { plus: false })
 
+    const pages = []
     const handle = await ctx.newPage(null, { celebrations: true })
+    pages.push(handle)
     const { page } = handle
     await signInWithForm(page, ctx.webUrl, '/agencies/login', agency.email, TEST_PASSWORD)
+    await ctx.screenshot(page, '00-agency-welcome')
+    const welcome = await closeWaiting(page)
+    ctx.note(`agency moments after sign-in: ${welcome.join(' | ') || 'none'}`)
+    const approved = welcome.find((text) => text.startsWith('account_approved'))
+    if (approved) expect(approved.includes('Your agency is approved') && !approved.includes('Your company is approved'), 'an approved agency reads "Your agency is approved", not the company text')
 
     // ---- Agency: publish the agreement (the draft and its rules are ready) ----
     await uploadAs(agency.token, '/agency/agreement', fixture('agency-agreement.pdf'), 'application/pdf')
@@ -60,7 +90,9 @@ export default {
 
     // ---- Candidate: ask to join from the job page ----
     const seeker = await ctx.newPage(null, { celebrations: true })
+    pages.push(seeker)
     await signInWithForm(seeker.page, ctx.webUrl, '/sign-in', first.email, TEST_PASSWORD)
+    ctx.note(`candidate moments after sign-in: ${(await closeWaiting(seeker.page)).join(' | ') || 'none'}`)
     await seeker.page.goto(`${ctx.webUrl}/candidate/jobs/${picker.id}`, { waitUntil: 'networkidle0' })
     await seeker.page.waitForSelector('[data-join-agency]', { timeout: 10_000 }).catch(() => issue('no Join button on the agency job'))
     await seeker.page.click('[data-join-agency]')

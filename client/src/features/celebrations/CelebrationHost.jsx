@@ -41,6 +41,8 @@ const PRIMARY = {
   books_join_requested: () => '/candidate/jobs?employmentType=agency',
   agreement_agreed: () => '/candidate/jobs?employmentType=agency',
   placement_accepted: () => '/candidate/agencies',
+  account_approved_agency: (role) => `${hiringBase(role)}/clients`,
+  candidate_hired_agency: (role) => `${hiringBase(role)}/placements?tab=upcoming`,
 }
 
 /** The texts of one moment: role-specific steps where the moment differs per role. */
@@ -48,8 +50,10 @@ function useContent() {
   const { t, i18n } = useTranslation('success')
   const format = useFormat()
   const { me } = usePreferences()
-  return ({ kind, params }) => {
+  return ({ kind: moment, params }) => {
     const role = isHiring(me?.role) ? 'recruiter' : 'candidate'
+    // 2026-11-23: an agency reads its own version of a hiring moment where one exists ("Your agency is approved!").
+    const kind = me?.role === 'agency' && i18n.exists(`${moment}_agency.title`, { ns: 'success' }) ? `${moment}_agency` : moment
     const values = {
       ...params,
       plan: params.planKey ? t(`enums:planKey.${params.planKey}`) : '',
@@ -62,7 +66,7 @@ function useContent() {
     const roleKey = `${kind}.steps.${role}`
     const steps = t(i18n.exists(roleKey, { ns: 'success' }) ? roleKey : `${kind}.steps`, { ...values, returnObjects: true })
     // Links use the real role (an agency works under /agency); texts use the hiring side.
-    const to = PRIMARY[kind]?.(me?.role, params)
+    const to = (PRIMARY[kind] ?? PRIMARY[moment])?.(me?.role, params)
     return {
       title: t(`${kind}.title`, values),
       message: i18n.exists(`${kind}.message`, { ns: 'success' }) ? t(`${kind}.message`, values) : '',
