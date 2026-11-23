@@ -12,7 +12,7 @@ import { Avatar, Button, Dropdown, IconButton, SelectField, Skeleton, SkeletonRe
 import { useGetRecruiterJobsQuery } from '@/features/recruiter/jobs/api.js'
 import { useErrorText } from '@/lib/forms.js'
 import { useFormat } from '@/lib/preferences.js'
-import { useGetAgreementQuery, useGetTalentQuery, useTalentActionMutation } from '../../api.js'
+import { useGetAgreementQuery, useGetBooksQuery, useTalentActionMutation } from '../../api.js'
 import AgreementPanel from '../components/AgreementPanel.jsx'
 import BooksRanking from '../components/BooksRanking.jsx'
 import styles from './TalentPage.module.css'
@@ -105,7 +105,7 @@ export default function TalentPage() {
   const errorText = useErrorText()
   const [params, setParams] = useSearchParams()
   const tab = TABS.includes(params.get('tab')) ? params.get('tab') : 'books'
-  const { data, isLoading } = useGetTalentQuery()
+  const { data, isLoading } = useGetBooksQuery()
   const { data: agreement } = useGetAgreementQuery()
   const [act] = useTalentActionMutation()
   const [busyId, setBusyId] = useState(null)

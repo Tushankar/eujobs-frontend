@@ -1,13 +1,13 @@
 import { hiringPath } from '@/app/roles.js'
 import { useGetRecruiterJobsQuery } from '@/features/recruiter/jobs/api.js'
-import { useGetAgreementQuery, useGetClientsQuery, useGetPlacementsQuery, useGetTalentQuery } from './api.js'
+import { useGetAgreementQuery, useGetClientsQuery, useGetPlacementsQuery, useGetBooksQuery } from './api.js'
 
 /** The agency's setup, live: each step done or not, what it waits for, and where to do it. */
 export function useAgencySetup() {
   const clients = useGetClientsQuery()
   const agreement = useGetAgreementQuery()
   const jobs = useGetRecruiterJobsQuery()
-  const talent = useGetTalentQuery()
+  const talent = useGetBooksQuery()
   const placements = useGetPlacementsQuery()
   const loading = [clients, agreement, jobs, talent, placements].some((query) => query.isLoading)
   const hasClient = (clients.data?.items ?? []).length > 0

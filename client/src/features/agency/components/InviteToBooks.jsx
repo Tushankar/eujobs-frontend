@@ -8,7 +8,7 @@ import PillBadge from '@/components/common/PillBadge.jsx'
 import { Button, Icon } from '@/components/ui'
 import { useErrorText } from '@/lib/forms.js'
 import { usePreferences } from '@/lib/preferences.js'
-import { useGetTalentQuery, useInviteTalentMutation, useTalentActionMutation } from '../api.js'
+import { useGetBooksQuery, useInviteTalentMutation, useTalentActionMutation } from '../api.js'
 import styles from './InviteToBooks.module.css'
 
 const TONE = { active: 'success', awaiting_agreement: 'info', requested: 'warning' }
@@ -21,7 +21,7 @@ export default function InviteToBooks({ candidateId }) {
   const { t } = useTranslation()
   const errorText = useErrorText()
   const { me } = usePreferences()
-  const { data } = useGetTalentQuery(undefined, { skip: me?.role !== 'agency' })
+  const { data } = useGetBooksQuery(undefined, { skip: me?.role !== 'agency' })
   const [invite, { isLoading: inviting }] = useInviteTalentMutation()
   const [act, { isLoading: accepting }] = useTalentActionMutation()
   const [failure, setFailure] = useState(null)

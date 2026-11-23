@@ -45,7 +45,9 @@ export const agencyApi = api.injectEndpoints({
     deleteAgreementDraft: build.mutation({ query: () => ({ url: '/agency/agreement/draft', method: 'DELETE' }), invalidatesTags: ['AgencyAgreement'] }),
 
     // The books
-    getTalent: build.query({ query: () => '/agency/talent', providesTags: ['AgencyTalent'] }),
+    // 2026-11-23: not "getTalent": that name is the recruiter Overview's list on the same api (one cache entry, so the
+    // Overview read the agency's books as candidates and crashed).
+    getBooks: build.query({ query: () => '/agency/talent', providesTags: ['AgencyTalent'] }),
     inviteTalent: build.mutation({
       query: (candidateId) => ({ url: '/agency/talent/invite', method: 'POST', body: { candidateId } }),
       invalidatesTags: ['AgencyTalent'],
@@ -92,7 +94,7 @@ export const {
   useSaveAgreementRulesMutation,
   usePublishAgreementMutation,
   useDeleteAgreementDraftMutation,
-  useGetTalentQuery,
+  useGetBooksQuery,
   useInviteTalentMutation,
   useTalentActionMutation,
   useGetTalentRankingQuery,
