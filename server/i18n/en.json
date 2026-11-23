@@ -138,6 +138,36 @@
       ],
       "action": "Open account status"
     },
+    "agency_approved": {
+      "subject": "Your agency account is approved",
+      "heading": "Welcome to EU Jobs",
+      "body": [
+        "Hi {{name}},",
+        "An administrator reviewed {{company}} and approved your agency account. Your agency workspace is now open: add your clients, post jobs for them and take candidates onto your books."
+      ],
+      "action": "Sign in"
+    },
+    "agency_rejected": {
+      "subject": "Your agency account needs changes",
+      "heading": "Your account was not approved yet",
+      "body": [
+        "Hi {{name}},",
+        "An administrator reviewed {{company}} and could not approve your agency account.",
+        "Reason: {{reason}}",
+        "You can update your details or documents and submit them again."
+      ],
+      "action": "Review and resubmit"
+    },
+    "agency_suspended": {
+      "subject": "Your agency account is suspended",
+      "heading": "Account suspended",
+      "body": [
+        "Hi {{name}},",
+        "An administrator suspended your agency account for {{company}}. Your agency jobs are hidden from candidates while it is suspended.",
+        "Reason: {{reason}}"
+      ],
+      "action": "Open account status"
+    },
     "cv_request": {
       "subject": "CV request from {{company}}",
       "heading": "CV request",

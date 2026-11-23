@@ -138,6 +138,36 @@
       ],
       "action": "Ver el estado de la cuenta"
     },
+    "agency_approved": {
+      "subject": "Tu cuenta de agencia está aprobada",
+      "heading": "Te damos la bienvenida a EU Jobs",
+      "body": [
+        "Hola, {{name}}:",
+        "Un administrador revisó {{company}} y aprobó tu cuenta de agencia. Tu espacio de agencia ya está abierto: añade tus clientes, publica ofertas para ellos e incorpora candidatos a tu cartera."
+      ],
+      "action": "Iniciar sesión"
+    },
+    "agency_rejected": {
+      "subject": "Tu cuenta de agencia necesita cambios",
+      "heading": "Tu cuenta todavía no está aprobada",
+      "body": [
+        "Hola, {{name}}:",
+        "Un administrador revisó {{company}} y no pudo aprobar tu cuenta de agencia.",
+        "Motivo: {{reason}}",
+        "Puedes actualizar tus datos o documentos y enviarlos de nuevo."
+      ],
+      "action": "Revisar y reenviar"
+    },
+    "agency_suspended": {
+      "subject": "Tu cuenta de agencia está suspendida",
+      "heading": "Cuenta suspendida",
+      "body": [
+        "Hola, {{name}}:",
+        "Un administrador suspendió tu cuenta de agencia de {{company}}. Mientras esté suspendida, tus ofertas de agencia no se muestran a los candidatos.",
+        "Motivo: {{reason}}"
+      ],
+      "action": "Ver el estado de la cuenta"
+    },
     "cv_request": {
       "subject": "Solicitud de CV de {{company}}",
       "heading": "Solicitud de CV",

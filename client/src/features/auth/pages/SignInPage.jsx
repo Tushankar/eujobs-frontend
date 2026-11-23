@@ -15,7 +15,7 @@ import FormAlert from '../components/FormAlert.jsx'
 import LoginVerification from '../components/LoginVerification.jsx'
 import ResendVerification from '../components/ResendVerification.jsx'
 import WorkspacePicker from '../components/WorkspacePicker.jsx'
-import { ADMIN_CHOICES, AGENCY_CHOICES, SIGN_IN_CHOICES } from '../data/workspaceChoices.js'
+import { ADMIN_CHOICES, SIGN_IN_CHOICES } from '../data/workspaceChoices.js'
 import { useFormState } from '../utils/useFormState.js'
 import styles from './SignInPage.module.css'
 
@@ -25,7 +25,7 @@ const PORTALS = {
   recruiter: { choices: SIGN_IN_CHOICES, signUpPath: '/recruiter/sign-up' },
   admin: { choices: ADMIN_CHOICES, hero: { brand: true } },
   // 2026-11-20: agencies sign in only here (/agencies/login).
-  agency: { choices: AGENCY_CHOICES, signUpPath: '/agencies/signup' },
+  agency: { choices: SIGN_IN_CHOICES, signUpPath: '/agencies/signup' },
 }
 
 /**

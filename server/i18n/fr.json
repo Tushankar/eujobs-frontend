@@ -138,6 +138,36 @@
       ],
       "action": "Voir l’état du compte"
     },
+    "agency_approved": {
+      "subject": "Votre compte agence est approuvé",
+      "heading": "Bienvenue sur EU Jobs",
+      "body": [
+        "Bonjour {{name}},",
+        "Un administrateur a examiné {{company}} et approuvé votre compte agence. Votre espace agence est ouvert : ajoutez vos clients, publiez des offres pour eux et accueillez des candidats dans votre vivier."
+      ],
+      "action": "Se connecter"
+    },
+    "agency_rejected": {
+      "subject": "Votre compte agence doit être complété",
+      "heading": "Votre compte n’est pas encore approuvé",
+      "body": [
+        "Bonjour {{name}},",
+        "Un administrateur a examiné {{company}} et n’a pas pu approuver votre compte agence.",
+        "Motif : {{reason}}",
+        "Vous pouvez mettre à jour vos informations ou vos documents, puis les soumettre à nouveau."
+      ],
+      "action": "Vérifier et soumettre à nouveau"
+    },
+    "agency_suspended": {
+      "subject": "Votre compte agence est suspendu",
+      "heading": "Compte suspendu",
+      "body": [
+        "Bonjour {{name}},",
+        "Un administrateur a suspendu votre compte agence pour {{company}}. Pendant la suspension, vos offres d’agence ne sont pas visibles par les candidats.",
+        "Motif : {{reason}}"
+      ],
+      "action": "Voir l’état du compte"
+    },
     "cv_request": {
       "subject": "Demande de CV de {{company}}",
       "heading": "Demande de CV",

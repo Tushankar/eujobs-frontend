@@ -17,7 +17,7 @@ import CreateAccountButton from '../components/CreateAccountButton.jsx'
 import FormAlert from '../components/FormAlert.jsx'
 import TermsConsent from '../components/TermsConsent.jsx'
 import WorkspacePicker from '../components/WorkspacePicker.jsx'
-import { AGENCY_CHOICES, SIGN_UP_CHOICES } from '../data/workspaceChoices.js'
+import { SIGN_UP_CHOICES } from '../data/workspaceChoices.js'
 import hintStyles from '../components/compactHint.module.css'
 import { useFormState } from '../utils/useFormState.js'
 import styles from './RecruiterSignUpPage.module.css'
@@ -95,7 +95,7 @@ export default function RecruiterSignUpPage({ role = 'recruiter' }) {
   return (
     <AuthLayout logoTo={signInPath}>
       <AuthIntro title={t('auth:signUp.title')} lead={t('auth:signUp.lead')} />
-      <WorkspacePicker choices={agency ? AGENCY_CHOICES : SIGN_UP_CHOICES} activeId={role} helper={t(`auth:signIn.helper.${role}`)} />
+      <WorkspacePicker choices={SIGN_UP_CHOICES} activeId={role} helper={t(`auth:signIn.helper.${role}`)} />
 
       <h2 className={styles.heading}>{t(`auth:${agency ? 'agencySignUp' : 'recruiterSignUp'}.heading`)}</h2>
       <p className={styles.description}>{t(`auth:${agency ? 'agencySignUp' : 'recruiterSignUp'}.description`)}</p>

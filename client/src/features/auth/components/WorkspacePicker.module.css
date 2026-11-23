@@ -11,7 +11,8 @@
 
 .choices {
   display: grid;
-  grid-template-columns: repeat(2, minmax(0, 1fr));
+  /* Candidate, Recruiter, Agency (2026-11-23) */
+  grid-template-columns: repeat(3, minmax(0, 1fr));
   gap: 12px;
   padding-top: 12px;
 }
