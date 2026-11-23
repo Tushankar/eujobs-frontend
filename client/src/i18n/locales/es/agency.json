@@ -526,7 +526,9 @@
       "placed": "Colocada"
     },
     "aiSummary": "Resumen de IA",
-    "everyoneMeta": "Gestiona a las personas de tu cartera"
+    "everyoneMeta": "Gestiona a las personas de tu cartera",
+    "writing": "Escribiendo…",
+    "reasonsAgain": "Volver a escribir"
   },
   "jobRules": {
     "applies": "Tu acuerdo, versión {{version}}, se aplica a esta oferta:",

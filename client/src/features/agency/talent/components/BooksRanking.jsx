@@ -34,7 +34,7 @@ function RankingSkeleton() {
 }
 
 /** One person: who, the match, the AI reason once asked, and Offer placement + Message while they are free. */
-function RankingRow({ item, job, reason, onOffer }) {
+function RankingRow({ item, job, reason, writing, onOffer }) {
   const { t } = useTranslation()
   const format = useFormat()
   const { candidate } = item
@@ -63,13 +63,24 @@ function RankingRow({ item, job, reason, onOffer }) {
         {candidate.name && <MessageCandidateButton candidate={{ id: candidate.id, fullName: candidate.name, canStartConversation: true }} job={job} onBooks size="sm" fullWidth={false} />}
       </div>
       {/* 2026-11-23 (owner: "show the AI summary in each"): its own labelled box across the row, once AI reasons ran. */}
-      {reason && (
-        <div className={styles.summary} data-ranked-reason>
+      {/* 2026-11-23 (owner: "a glitch after generating"): the box is there while AI writes, then its text fades in, so the row does not jump. */}
+      {(reason || (writing && item.state === 'free')) && (
+        <div className={styles.summary} data-ranked-reason={reason ? '' : undefined} data-ranked-writing={!reason || undefined} aria-busy={!reason || undefined}>
           <span className={styles.summaryLabel}>
             <Icon as={Sparkles} size={13} />
             {t('agency:ranking.aiSummary')}
+            {!reason && <span className={styles.writing}>{t('agency:ranking.writing')}</span>}
           </span>
-          <p className={styles.summaryText}>{reason}</p>
+          {reason ? (
+            <p key={reason} className={styles.summaryText}>
+              {reason}
+            </p>
+          ) : (
+            <span className={styles.summaryLines} aria-hidden="true">
+              <Skeleton width="92%" height={12} />
+              <Skeleton width="64%" height={12} />
+            </span>
+          )}
         </div>
       )}
     </li>
@@ -114,14 +125,13 @@ export default function BooksRanking({ jobId, inJob = false }) {
         </h3>
         {free > 0 && (
           <AiButton variant="outline" size="sm" leftIcon={<Icon as={Sparkles} size={13} />} loading={reasons.isLoading} onClick={() => askReasons(jobId).catch(() => {})} data-ranking-reasons>
-            {t('agency:ranking.reasons')}
+            {t(reasons.data ? 'agency:ranking.reasonsAgain' : 'agency:ranking.reasons')}
           </AiButton>
         )}
       </div>
       <p className={styles.note}>{t('agency:ranking.text')}</p>
-      <AiStatus isLoading={false} error={reasons.error} onRetry={() => askReasons(jobId).catch(() => {})}>
-        {reasons.data && <p className={styles.note}>{t('agency:ranking.disclaimer')}</p>}
-      </AiStatus>
+      {/* Only a failure shows here; the disclaimer sits under the list so nothing above the rows moves. */}
+      {reasons.error && <AiStatus isLoading={false} error={reasons.error} onRetry={() => askReasons(jobId).catch(() => {})} />}
       {job && job.status !== 'published' && items.length > 0 && <p className={styles.note}>{t('agency:ranking.publishFirst')}</p>}
       {failure && (
         <p className={styles.failure} role="alert">
@@ -138,9 +148,16 @@ export default function BooksRanking({ jobId, inJob = false }) {
       ) : (
         <ul className={styles.list}>
           {items.map((item) => (
-            <RankingRow key={item.membershipId} item={item} job={job} reason={reasonOf.get(item.membershipId)} onOffer={setOffer} />
+            <RankingRow key={item.membershipId} item={item} job={job} reason={reasonOf.get(item.membershipId)} writing={reasons.isLoading} onOffer={setOffer} />
           ))}
         </ul>
+      )}
+      {reasons.data && !reasons.isLoading && items.length > 0 && (
+        <AiStatus isLoading={false} error={null}>
+          <p className={styles.note} data-ranking-disclaimer>
+            {t('agency:ranking.disclaimer')}
+          </p>
+        </AiStatus>
       )}
       {data?.hidden > 0 && items.length > 0 && (
         <p className={styles.note} data-ranking-hidden>

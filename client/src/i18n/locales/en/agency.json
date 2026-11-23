@@ -513,7 +513,9 @@
       "placed": "Placed"
     },
     "aiSummary": "AI summary",
-    "everyoneMeta": "Manage the people on your books"
+    "everyoneMeta": "Manage the people on your books",
+    "writing": "Writing…",
+    "reasonsAgain": "Write again"
   },
   "jobRules": {
     "applies": "Your agreement, version {{version}}, applies to this job:",

@@ -137,6 +137,37 @@
   color: var(--foreground);
 }
 
+/* While AI writes: two soft lines about the height of a summary, so the row keeps its size when the text lands. */
+.summaryLines {
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+  padding: 4px 0;
+}
+
+.writing {
+  font-weight: 500;
+  color: var(--muted-foreground);
+}
+
+.writing::before {
+  content: '·';
+  margin-right: 6px;
+}
+
+@media (prefers-reduced-motion: no-preference) {
+  .summaryText {
+    animation: summary-in var(--duration-base) var(--ease-out);
+  }
+}
+
+@keyframes summary-in {
+  from {
+    opacity: 0;
+    transform: translateY(2px);
+  }
+}
+
 @media (max-width: 599px) {
   .summary {
     margin-left: 0;

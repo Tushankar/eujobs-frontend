@@ -87,8 +87,25 @@ export default {
     await ctx.screenshot(page, '1-books-ranking')
 
     // 2. AI reasons (Agency Plus, real OpenAI): one line per person.
+    // Owner 2026-11-23 ("a glitch after generating"): the summary boxes are there while AI writes, and the list barely
+    // moves when the text lands.
+    const listHeight = () => page.$eval('[data-books-ranking] ul', (list) => list.getBoundingClientRect().height)
     await page.click('[data-ranking-reasons]')
+    const writing = await page.waitForSelector('[data-ranked-writing]', { timeout: 5_000 }).catch(() => null)
+    ctx.check(Boolean(writing), 'each person shows an "AI summary · Writing…" box while AI writes')
+    const whileWriting = await listHeight()
+    await ctx.screenshot(page, '2a-ai-writing')
     await page.waitForSelector('[data-ranked-reason]', { timeout: 60_000 })
+    await new Promise((resolve) => setTimeout(resolve, 400))
+    const jump = Math.abs((await listHeight()) - whileWriting)
+    ctx.note(`list height while writing ${Math.round(whileWriting)}px, after ${Math.round(whileWriting + jump)}px`)
+    ctx.check(jump <= 60, `the list barely moves when the summaries land (${Math.round(jump)}px)`)
+    const disclaimerBelow = await page.$eval('[data-books-ranking]', (section) => {
+      const note = section.querySelector('[data-ranking-disclaimer]')
+      const list = section.querySelector('ul')
+      return Boolean(note && list && note.getBoundingClientRect().top > list.getBoundingClientRect().bottom)
+    })
+    ctx.check(disclaimerBelow, 'the AI disclaimer sits under the list, not above it')
     const reasons = await page.$$eval('[data-ranked-reason] p', (lines) => lines.map((line) => line.textContent.trim()))
     ctx.check(reasons.length === 2 && reasons.every((line) => line.length > 10), `AI reasons for both (${reasons.length})`)
     await ctx.screenshot(page, '2-ai-reasons')

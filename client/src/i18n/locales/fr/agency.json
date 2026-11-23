@@ -526,7 +526,9 @@
       "placed": "Placé"
     },
     "aiSummary": "Résumé IA",
-    "everyoneMeta": "Gérez les personnes de votre vivier"
+    "everyoneMeta": "Gérez les personnes de votre vivier",
+    "writing": "Rédaction…",
+    "reasonsAgain": "Réécrire"
   },
   "jobRules": {
     "applies": "Votre accord, version {{version}}, s’applique à cette offre :",
