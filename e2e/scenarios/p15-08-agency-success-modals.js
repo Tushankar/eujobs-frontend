@@ -126,6 +126,14 @@ export default {
     await seeker.page.click('[data-agree]')
     await modal(seeker.page, 'agreement_agreed', ['on the books', 'version 1', company.displayName], '04-candidate-agreed')
 
+    // ---- Agency: Talent says what to do next with someone on the books (owner 2026-11-23: "now what?") ----
+    await page.goto(`${ctx.webUrl}/agency/talent`, { waitUntil: 'networkidle0' })
+    const hint = await page.waitForSelector('[data-books-hint]', { timeout: 10_000 }).catch(() => null)
+    const hintKind = hint && (await hint.evaluate((element) => element.dataset.booksHint))
+    expect(hintKind === 'pick', `Talent shows the next step for someone on the books (${hintKind ?? 'none'})`)
+    ctx.note(`Talent next step: ${hint ? await hint.evaluate((element) => element.innerText) : '-'}`)
+    await ctx.screenshot(page, '04b-agency-talent-next-step')
+
     // ---- Agency: invite someone else from their profile ----
     await page.goto(`${ctx.webUrl}/agency/find-candidates/${second.id}`, { waitUntil: 'networkidle0' })
     await page.waitForSelector('[data-invite-books]', { timeout: 10_000 }).catch(() => issue('no "Invite to your books" on the profile'))
