@@ -155,15 +155,17 @@ export default {
     await ctx.screenshot(page, '7-ai-job-draft')
 
     // 8. For you: Cleo is blocked from both agency jobs until day 21, so neither is suggested to her.
-    const forYou = ok(await api('/jobs/recommended', { token: people.Cleo.token }), 'for you').items.map((job) => job.title)
-    ctx.check(!forYou.includes('Warehouse Operative') && !forYou.includes('Night Picker'), `For you leaves out blocked agency jobs (${forYou.join(', ') || 'none'})`)
-    const adaForYou = ok(await api('/jobs/recommended', { token: people.Ada.token }), 'for you').items.map((job) => job.title)
-    ctx.check(adaForYou.includes('Night Picker'), 'a free candidate still gets the agency jobs')
+    // By id: other scenarios in the same run post jobs with the same titles (P15-02 has its own Night Picker).
+    const forYou = ok(await api('/jobs/recommended', { token: people.Cleo.token }), 'for you').items.map((job) => job.id)
+    ctx.check(!forYou.includes(warehouse.id) && !forYou.includes(nightPicker.id), 'For you leaves out blocked agency jobs')
+    const adaForYou = ok(await api('/jobs/recommended', { token: people.Ada.token }), 'for you').items.map((job) => job.id)
+    ctx.check(adaForYou.includes(nightPicker.id), 'a free candidate still gets the agency jobs')
     // The agency signs out first (the sign-in page sends a signed-in user to their workspace).
     await page.evaluate(() => localStorage.clear())
     await openAs(ctx, handle, people.Cleo.email, '/candidate?tab=for-you')
     await page.waitForSelector('main')
-    ctx.check(!(await bodyText(page)).includes('Night Picker'), 'Overview For you in the browser')
+    await new Promise((resolve) => setTimeout(resolve, 800))
+    ctx.check(!(await page.$(`a[href*="${nightPicker.id}"]`)), 'Overview For you in the browser')
     await ctx.screenshot(page, '8-for-you-blocked')
   },
 }

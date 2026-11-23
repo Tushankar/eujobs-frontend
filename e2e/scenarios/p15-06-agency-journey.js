@@ -18,7 +18,7 @@ const pause = (ms) => new Promise((resolve) => setTimeout(resolve, ms))
  */
 export default {
   name: 'P15-06 Agency journey',
-  viewports: ['D'],
+  viewports: ['D', 'M'],
   async run(ctx) {
     const issue = (text) => ctx.note(`ISSUE: ${text}`)
     const expect = (ok, text) => (ok ? ctx.note(`ok: ${text}`) : issue(text))
@@ -153,7 +153,7 @@ export default {
     await seeker.page.goto(`${ctx.webUrl}/candidate/jobs`, { waitUntil: 'networkidle0' })
     await pause(500)
     // The list is ranked by match; a search for the title finds the new agency job.
-    await fill(seeker.page, 'input[type="search"]', 'Warehouse Operative')
+    await fill(seeker.page, 'form[role="search"] input', 'Warehouse Operative')
     await seeker.page.keyboard.press('Enter')
     await pause(1500)
     const findJobs = await bodyText(seeker.page)

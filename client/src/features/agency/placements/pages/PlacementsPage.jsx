@@ -9,7 +9,7 @@ import EmptyState from '@/components/common/EmptyState.jsx'
 import FilterChips from '@/components/common/FilterChips.jsx'
 import PageTitle from '@/components/common/PageTitle.jsx'
 import PillBadge from '@/components/common/PillBadge.jsx'
-import { Avatar, Button, Modal, SelectField, Skeleton, SkeletonRegion, TextField } from '@/components/ui'
+import { Avatar, Button, DatePicker, Modal, SelectField, Skeleton, SkeletonRegion } from '@/components/ui'
 import { useGetRecruiterJobsQuery } from '@/features/recruiter/jobs/api.js'
 import { useErrorText } from '@/lib/forms.js'
 import { useFormat } from '@/lib/preferences.js'
@@ -110,13 +110,13 @@ function EndDialog({ placement, onClose }) {
       }
     >
       <form id="end-placement" onSubmit={submit} noValidate>
-        <TextField
-          type="date"
+        {/* 2026-11-23: the same calendar as every other agency date (it was the browser's date box). */}
+        <DatePicker
           label={t('agency:placements.endDate')}
           name="endDate"
           value={date}
           min={todayText()}
-          onChange={(event) => setDate(event.target.value)}
+          onChange={setDate}
           error={error && (error.data?.error?.fields?.endDate ? t('agency:placements.endDateInvalid') : errorText.code(error))}
         />
       </form>
