@@ -83,9 +83,9 @@ function PlanSnapshot({ plans, interval, onInterval, saving }) {
 
 /**
  * /agencies (2026-11-20; layout picked by the owner 2026-11-23): a navy brand-gradient hero with what an agency gets,
- * the sign-up and sign-in buttons, the live figures (open agency jobs, agencies on the site; only when there are some)
- * and a compact card of the Agency plans; then How it works beside What your agency gets; then the full plan cards
- * with every feature line, in two columns.
+ * the sign-up and sign-in buttons, the live figures (open agency jobs, agencies on the site; only when there are some),
+ * How it works, and a compact card of the Agency plans; then What your agency gets in two columns; then the full plan
+ * cards with every feature line, in two columns.
  */
 export default function AgenciesPage() {
   const { t, i18n } = useTranslation()
@@ -130,44 +130,43 @@ export default function AgenciesPage() {
               {live.join(' · ')}
             </p>
           )}
+          {/* Owner 2026-11-23: How it works sits in the hero, beside the plan card, instead of its own panel. */}
+          <section className={styles.heroSteps} aria-labelledby="agencies-how">
+            <h2 id="agencies-how" className={styles.heroStepsTitle}>
+              {t('website:agencies.how.title')}
+            </h2>
+            <ol className={styles.steps}>
+              {t('website:agencies.how.steps', { returnObjects: true }).map((step, index) => (
+                <li key={step.title} className={styles.step}>
+                  <span className={styles.number}>{index + 1}</span>
+                  <span className={styles.stepText}>
+                    <span className={styles.stepTitle}>{step.title}</span>
+                    <span className={styles.stepBody}>{step.text}</span>
+                  </span>
+                </li>
+              ))}
+            </ol>
+          </section>
         </div>
         {hasPlans && !isError && <PlanSnapshot plans={plans} interval={interval} onInterval={setInterval} saving={saving} />}
       </section>
 
-      <div className={`${landing.card} ${shell.panel} ${styles.about}`}>
-        <section aria-labelledby="agencies-how">
-          <h2 id="agencies-how" className={styles.sectionTitle}>
-            {t('website:agencies.how.title')}
-          </h2>
-          <ol className={styles.steps}>
-            {t('website:agencies.how.steps', { returnObjects: true }).map((step, index) => (
-              <li key={step.title} className={styles.step}>
-                <span className={styles.number}>{index + 1}</span>
-                <span className={styles.stepText}>
-                  <span className={styles.stepTitle}>{step.title}</span>
-                  <span className={styles.stepBody}>{step.text}</span>
-                </span>
-              </li>
-            ))}
-          </ol>
-        </section>
-        <section aria-labelledby="agencies-features">
-          <h2 id="agencies-features" className={styles.sectionTitle}>
-            {t('website:agencies.features.title')}
-          </h2>
-          <ul className={styles.features}>
-            {FEATURES.map(({ key, icon }) => (
-              <li key={key} className={styles.feature}>
-                <Icon as={icon} size={20} className={styles.featureIcon} />
-                <span className={styles.featureText}>
-                  <span className={styles.featureTitle}>{t(`website:agencies.features.${key}.title`)}</span>
-                  <span className={styles.featureBody}>{t(`website:agencies.features.${key}.text`)}</span>
-                </span>
-              </li>
-            ))}
-          </ul>
-        </section>
-      </div>
+      <section className={`${landing.card} ${shell.panel}`} aria-labelledby="agencies-features">
+        <h2 id="agencies-features" className={styles.sectionTitle}>
+          {t('website:agencies.features.title')}
+        </h2>
+        <ul className={styles.features}>
+          {FEATURES.map(({ key, icon }) => (
+            <li key={key} className={styles.feature}>
+              <Icon as={icon} size={20} className={styles.featureIcon} />
+              <span className={styles.featureText}>
+                <span className={styles.featureTitle}>{t(`website:agencies.features.${key}.title`)}</span>
+                <span className={styles.featureBody}>{t(`website:agencies.features.${key}.text`)}</span>
+              </span>
+            </li>
+          ))}
+        </ul>
+      </section>
 
       <section id="agencies-plans" className={`${landing.card} ${shell.panel} ${landing.anchor}`} aria-labelledby="agencies-plans-title">
         <header className={styles.plansHead}>

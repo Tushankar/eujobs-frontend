@@ -10,7 +10,7 @@
   position: relative;
   display: grid;
   grid-template-columns: minmax(0, 1fr) minmax(0, 400px);
-  align-items: center;
+  align-items: start;
   gap: 48px;
   overflow: hidden;
   padding: 48px;
@@ -282,41 +282,38 @@
   outline-color: var(--primary);
 }
 
-/* ---------- How it works + What your agency gets ---------- */
+/* ---------- How it works, in the hero (owner 2026-11-23) ---------- */
 
-.about {
-  display: grid;
-  grid-template-columns: repeat(2, minmax(0, 1fr));
-  gap: 48px;
+.heroSteps {
+  align-self: stretch;
+  margin-top: 16px;
+  padding-top: 24px;
+  border-top: 1px solid rgba(255, 255, 255, 0.22);
 }
 
-.sectionTitle {
+.heroStepsTitle {
   margin: 0;
-  font-size: 22px;
-  font-weight: 600;
-  line-height: 30px;
-  color: var(--foreground);
+  font-size: 15px;
+  font-weight: 700;
+  color: #fff;
 }
 
-.steps,
-.features {
+.steps {
   display: flex;
   flex-direction: column;
-  margin: 12px 0 0;
+  margin: 6px 0 0;
   padding: 0;
   list-style: none;
 }
 
-.step,
-.feature {
+.step {
   display: flex;
   gap: 14px;
-  padding: 14px 0;
+  padding: 12px 0;
 }
 
-.step + .step,
-.feature + .feature {
-  border-top: 1px solid var(--border);
+.step + .step {
+  border-top: 1px solid rgba(255, 255, 255, 0.14);
 }
 
 .number {
@@ -325,17 +322,11 @@
   place-items: center;
   width: 28px;
   height: 28px;
-  border: 1px solid var(--border-strong);
+  border: 1px solid rgba(255, 255, 255, 0.6);
   border-radius: 999px;
   font-size: 13px;
   font-weight: 700;
-  color: var(--foreground);
-}
-
-.featureIcon {
-  flex-shrink: 0;
-  margin: 2px 4px 0;
-  color: var(--muted-foreground);
+  color: #fff;
 }
 
 .stepText,
@@ -345,14 +336,61 @@
   gap: 2px;
 }
 
-.stepTitle,
+.stepTitle {
+  font-size: 15px;
+  font-weight: 700;
+  color: #fff;
+}
+
+.stepBody {
+  font-size: 14px;
+  line-height: 21px;
+  color: #dce5ff;
+}
+
+/* ---------- What your agency gets, in two columns ---------- */
+
+.sectionTitle {
+  margin: 0;
+  font-size: 22px;
+  font-weight: 600;
+  line-height: 30px;
+  color: var(--foreground);
+}
+
+.features {
+  display: grid;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  column-gap: 48px;
+  margin: 12px 0 0;
+  padding: 0;
+  list-style: none;
+}
+
+.feature {
+  display: flex;
+  gap: 14px;
+  padding: 16px 0;
+  border-top: 1px solid var(--border);
+}
+
+/* The first row of the two columns has no line above it. */
+.feature:nth-child(-n + 2) {
+  border-top: 0;
+}
+
+.featureIcon {
+  flex-shrink: 0;
+  margin: 2px 4px 0;
+  color: var(--muted-foreground);
+}
+
 .featureTitle {
   font-size: 15px;
   font-weight: 700;
   color: var(--foreground);
 }
 
-.stepBody,
 .featureBody {
   font-size: 14px;
   line-height: 22px;
@@ -424,9 +462,12 @@
     letter-spacing: -1.2px;
   }
 
-  .about {
+  .features {
     grid-template-columns: minmax(0, 1fr);
-    gap: 32px;
+  }
+
+  .feature:nth-child(2) {
+    border-top: 1px solid var(--border);
   }
 }
 
