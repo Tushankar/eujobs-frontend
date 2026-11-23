@@ -5,7 +5,8 @@ import { useNavigate, useParams, useSearchParams } from 'react-router-dom'
 import { celebrate } from '@/app/celebrate.js'
 import { useGetConfigQuery, useGetMeQuery } from '@/app/api.js'
 import PageTitle from '@/components/common/PageTitle.jsx'
-import { useCreateJobMutation, useGetRecruiterJobQuery, usePublishLock, useSetJobStatusMutation, useUpdateJobMutation } from '../api.js'
+import { Skeleton, SkeletonRegion } from '@/components/ui'
+import { recruiterJobsApi, useCreateJobMutation, useGetRecruiterJobQuery, usePublishLock, useSetJobStatusMutation, useUpdateJobMutation } from '../api.js'
 import JobNotFound from '../components/JobNotFound.jsx'
 import JobWizard from '../components/JobWizard.jsx'
 import { EMPTY_VALUES, jobSteps, jobToValues, validateAll, valuesToBody } from '../utils/jobForm.js'
@@ -28,9 +29,12 @@ function NewJob() {
   const navigate = useNavigate()
   const { data: me } = useGetMeQuery()
   const [createJob] = useCreateJobMutation()
+  const dispatch = useDispatch()
 
   async function createDraft(values, nextStep) {
     const job = await createJob(valuesToBody(values)).unwrap()
+    // 2026-11-23: the edit page opens on the draft just made, not on a blank screen while it loads it again.
+    dispatch(recruiterJobsApi.util.upsertQueryData('getRecruiterJob', job.id, job))
     navigate(`${hiringPath()}/jobs/${job.id}/edit?step=${nextStep}`, { replace: true })
   }
 
@@ -63,7 +67,13 @@ function EditJob({ jobId }) {
   const dispatch = useDispatch()
   const publishLocked = usePublishLock()
   if (error) return <JobNotFound />
-  if (!job || !config) return null
+  if (!job || !config)
+    return (
+      <SkeletonRegion className={styles.wizard}>
+        <Skeleton width="40%" height={28} />
+        <Skeleton height={420} />
+      </SkeletonRegion>
+    )
 
   const draft = job.status === 'draft'
   const initialValues = jobToValues(job)

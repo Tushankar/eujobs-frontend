@@ -155,6 +155,29 @@ describe('hiring makes a placement', () => {
   })
 })
 
+describe('applications on agency jobs', () => {
+  // 2026-11-23 (owner): the agency sees where each applicant stands on its books before it tries Hired.
+  it('carry the applicant\'s place on the books, and Hired explains what is missing', async () => {
+    const { user: owner, company } = await agency()
+    const job = await agencyJob(owner, (await client(owner, { name: 'Acme' })).id)
+    const candidate = await listedCandidate()
+    await applicationTo(candidate, job)
+    const books = async () => (await api().get(`${v1}/recruiter/applications`).set(auth(owner))).body.items[0].books
+    assert.deepEqual(await books(), { id: null, status: 'none', agreementPending: false })
+
+    const joined = (await api().post(`${v1}/candidate/agencies/${company._id}/join`).set(auth(candidate))).body
+    assert.deepEqual(await books(), { id: joined.id, status: 'requested', agreementPending: false })
+    const [application] = (await api().get(`${v1}/recruiter/applications`).set(auth(owner))).body.items
+    const refused = await move(owner, await Application.findById(application.id), 'hired')
+    assert.deepEqual([refused.status, refused.body.error.params.reason], [409, 'not_on_books'])
+
+    await api().post(`${v1}/agency/talent/${joined.id}/accept`).set(auth(owner))
+    assert.equal((await books()).status, 'awaiting_agreement')
+    await api().post(`${v1}/candidate/agencies/memberships/${joined.id}/agree`).set(auth(candidate)).send({ version: 1 })
+    assert.deepEqual(await books(), { id: joined.id, status: 'active', agreementPending: false })
+  })
+})
+
 describe('the rule check', () => {
   // 2026-11-23 (owner): before applying, the candidate sees the rules a placement on the job would follow, and where they stand.
   it('previews the rules a placement on an agency job would follow and the candidate\'s place on the books', async () => {

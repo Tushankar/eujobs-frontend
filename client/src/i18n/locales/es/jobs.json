@@ -195,6 +195,10 @@
     "salary_range": {
       "ok": "Los candidatos ven una horquilla salarial completa.",
       "warn": "No se muestra una horquilla salarial completa. Los puestos con horquilla suelen atraer a candidatos más relevantes."
+    },
+    "pay_rate": {
+      "ok": "La tarifa está indicada, así que los candidatos ven lo que paga la colocación.",
+      "warn": "Aún no hay tarifa. Añádela en Condiciones de agencia: los candidatos deciden por la tarifa."
     }
   },
   "review": {
@@ -207,7 +211,8 @@
     "salary": "Salario",
     "notSet": "Sin definir",
     "none": "Ninguno",
-    "notShown": "No se muestra"
+    "notShown": "No se muestra",
+    "payRate": "Tarifa"
   },
   "posting": {
     "noBrief": "Aún no se ha añadido un resumen del puesto. Usa Editar puesto para añadirlo.",

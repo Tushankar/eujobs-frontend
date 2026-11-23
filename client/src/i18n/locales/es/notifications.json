@@ -79,7 +79,10 @@
     "account_decided": {
       "approved": "Tu cuenta de reclutador fue aprobada",
       "rejected": "Tu cuenta de reclutador no fue aprobada",
-      "suspended": "Tu cuenta de reclutador fue suspendida"
+      "suspended": "Tu cuenta de reclutador fue suspendida",
+      "agency_approved": "Tu cuenta de agencia fue aprobada",
+      "agency_rejected": "Tu cuenta de agencia no fue aprobada",
+      "agency_suspended": "Tu cuenta de agencia fue suspendida"
     },
     "application_new": "{{candidate}} se postuló a {{job}}",
     "application_withdrawn": "{{candidate}} retiró su candidatura a {{job}}",

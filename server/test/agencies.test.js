@@ -212,6 +212,17 @@ describe('agency jobs', () => {
     assert.deepEqual([del.status, del.body.error.params], [409, { reason: 'client_has_jobs', jobs: 1 }])
   })
 
+  // 2026-11-23 (agency journey): an agency job pays its rate and keeps no salary; its quality check is the rate.
+  it('keeps no salary on an agency job and checks its pay rate instead', async () => {
+    const { user: agency } = await approvedAgency()
+    const client = (await addClient(agency, { name: 'Acme' })).body
+    const created = await createJob(agency, jobBody({ agency: terms(client.id) }))
+    assert.equal(created.body.salary, null)
+    const quality = async (body) => (await api().post(`${v1}/recruiter/jobs/quality-checks`).set(auth(agency)).send(body)).body.items.at(-1)
+    assert.deepEqual(await quality({ title: 'Picker', agency: terms(client.id) }), { key: 'pay_rate', ok: true, params: {} })
+    assert.deepEqual(await quality({ title: 'Picker', agency: { ...terms(client.id), rate: null } }), { key: 'pay_rate', ok: false, params: {} })
+  })
+
   it('checks the agency terms', async () => {
     const { user: agency } = await approvedAgency()
     const { user: other } = await approvedAgency()
@@ -331,11 +342,18 @@ describe('plans and landing (phase 7)', () => {
   it('replaces the earlier copied features on reseed, but keeps an admin’s own', async () => {
     const data = Object.fromEntries(PLANS.map((plan) => [plan.key, plan]))
     const own = [{ en: 'Our own line', es: 'Nuestra línea', fr: 'Notre ligne' }]
-    await Plan.updateOne({ key: 'agency_free' }, { $set: { features: data.agency_free.previousFeatures } })
+    const [recruiterCopy, firstLists] = data.agency_free.previousFeatures
+    await Plan.updateOne({ key: 'agency_free' }, { $set: { features: recruiterCopy } })
     await Plan.updateOne({ key: 'agency_plus' }, { $set: { features: own } })
     await seedCatalog()
-    const stored = Object.fromEntries((await Plan.find({ key: { $in: ['agency_free', 'agency_plus'] } }).lean()).map((plan) => [plan.key, plan.features.map(({ en }) => en)]))
-    assert.deepEqual(stored, { agency_free: data.agency_free.features.map(({ en }) => en), agency_plus: ['Our own line'] })
+    const stored = Object.fromEntries((await Plan.find({ key: { $in: ['agency_free', 'agency_plus'] } }).lean()).map((plan) => [plan.key, plan.features]))
+    assert.deepEqual(stored.agency_free.map(({ en }) => en), data.agency_free.features.map(({ en }) => en))
+    assert.deepEqual(stored.agency_plus.map(({ en }) => en), ['Our own line'])
+    // 2026-11-23: the first agency lists ("Asignaciones" / "Missions") are replaced too, with the app's own words.
+    await Plan.updateOne({ key: 'agency_free' }, { $set: { features: firstLists } })
+    await seedCatalog()
+    const placements = (await Plan.findOne({ key: 'agency_free' }).lean()).features.find((feature) => feature.en.startsWith('Placements:'))
+    assert.deepEqual([placements.es.split(':')[0], placements.fr.split(' :')[0]], ['Colocaciones', 'Placements'])
     await Plan.updateOne({ key: 'agency_plus' }, { $set: { features: data.agency_plus.features } })
   })
 })

@@ -120,3 +120,11 @@
   align-items: flex-start;
   gap: 6px;
 }
+
+/* 2026-11-23: the job title with the applicant's place on an agency's books under it. */
+.jobCell {
+  display: flex;
+  flex-direction: column;
+  align-items: flex-start;
+  gap: 6px;
+}

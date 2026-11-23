@@ -113,8 +113,10 @@ export function useNotificationText() {
       billing: params.interval && t(`billing:page.billing.${params.interval}`),
     }
     switch (type) {
-      case 'verification_decided':
+      // 2026-11-23: an agency's account decision speaks of its agency account.
       case 'account_decided':
+        return t(`notifications:types.account_decided.${me?.role === 'agency' ? 'agency_' : ''}${params.decision}`, values)
+      case 'verification_decided':
       case 'cv_request_decided':
       case 'placement_offer_answered':
       case 'agency_membership_declined':

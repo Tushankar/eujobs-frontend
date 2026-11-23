@@ -17,6 +17,7 @@ import { useGetRecruiterJobsQuery } from '@/features/recruiter/jobs/api.js'
 import { useFormat } from '@/lib/preferences.js'
 import { foldText } from '@/lib/text.js'
 import { useGetCompanyApplicationQuery, useGetCompanyApplicationsQuery, useGetPipelineQuery } from '../api.js'
+import BooksChip from '@/features/agency/components/BooksChip.jsx'
 import ApplicationStageSelect from '../components/ApplicationStageSelect.jsx'
 import styles from './ApplicationsPage.module.css'
 
@@ -96,7 +97,18 @@ export default function ApplicationsPage() {
         </Link>
       ),
     },
-    { key: 'job', header: t('applications:recruiter.job'), width: '25%', render: (row) => <span className={styles.cell}>{row.job.title}</span> },
+    {
+      key: 'job',
+      header: t('applications:recruiter.job'),
+      width: '25%',
+      // 2026-11-23: an agency job also shows the applicant's place on the books.
+      render: (row) => (
+        <span className={styles.jobCell}>
+          <span className={styles.cell}>{row.job.title}</span>
+          {row.books && <BooksChip books={row.books} />}
+        </span>
+      ),
+    },
     { key: 'applied', header: t('applications:recruiter.applied'), width: '14%', render: (row) => <span className={styles.cell}>{format.date(row.appliedAt)}</span> },
     {
       key: 'stage',

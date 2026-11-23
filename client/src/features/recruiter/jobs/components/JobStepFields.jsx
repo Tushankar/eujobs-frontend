@@ -2,7 +2,7 @@ import { useTranslation } from 'react-i18next'
 import { currentRole } from '@/app/roles.js'
 import { CircleAlert, CircleCheck } from 'lucide-react'
 import { useGetConfigQuery, useGetCountriesQuery } from '@/app/api.js'
-import { Checkbox, Icon, SelectField, TextareaField, TextField } from '@/components/ui'
+import { Checkbox, Icon, SelectField, Skeleton, SkeletonRegion, TextareaField, TextField } from '@/components/ui'
 import CityField from '@/components/common/CityField.jsx'
 import { useJobText } from '@/lib/jobText.js'
 import { useGetQualityChecksQuery } from '../api.js'
@@ -20,10 +20,18 @@ const AGENCY_EMPLOYMENT = ['full_time', 'part_time']
 /** M-060: the server's quality rules for the current values, with translated results. */
 function QualityChecks({ values }) {
   const { t } = useTranslation()
-  const { data: checks = [] } = useGetQualityChecksQuery(valuesToBody(values))
+  const { data: checks = [], isLoading } = useGetQualityChecksQuery(valuesToBody(values))
   return (
     <div>
       <p className={styles.note}>{t('jobs:quality.intro')}</p>
+      {/* 2026-11-23: placeholders while the server checks (the step was blank). */}
+      {isLoading && (
+        <SkeletonRegion className={styles.checks}>
+          {[0, 1, 2, 3, 4].map((row) => (
+            <Skeleton key={row} height={20} width={`${70 + (row % 3) * 8}%`} />
+          ))}
+        </SkeletonRegion>
+      )}
       <ul className={styles.checks}>
         {checks.map((check) => (
           <li key={check.key} className={styles.check} data-check={check.key} data-ok={check.ok}>
@@ -56,6 +64,10 @@ export default function JobStepFields({ step, values, bind, errorOf, setValue, o
   const jobText = useJobText()
   const { data: config } = useGetConfigQuery()
   const { preview, currency, remote } = useJobPreview(values)
+  // 2026-11-23: an agency job pays its rate (Agency terms) and has no salary: the rate shows where a salary would.
+  const agency = currentRole() === 'agency'
+  const rateAmount = Number(String(values.rateAmount ?? '').trim())
+  const pay = agency ? (currency && rateAmount > 0 ? jobText.rate({ rate: { amountMinor: Math.round(rateAmount * 100), currency, period: values.ratePeriod } }) : '') : jobText.salary(preview)
   const enumOptions = (name) => (config?.enums[name] ?? []).map((key) => ({ value: key, label: t(`enums:${name}.${key}`) }))
   const currencies = useCurrencyOptions()
   const J = config?.limits.job
@@ -134,6 +146,10 @@ export default function JobStepFields({ step, values, bind, errorOf, setValue, o
             )}
           </div>
           {remote && <EligibleCountries value={values.remoteCountries} error={errorOf('remoteCountries')} onChange={(codes) => setValue('remoteCountries', codes)} />}
+          {/* An agency sets its pay rate in Agency terms; a remote agency job still picks the currency it pays in. */}
+          {agency && remote && <SelectField label={t('agency:terms.rateCurrency')} options={currencies} {...bind('salaryCurrency')} />}
+          {!agency && (
+          <>
           <div className={styles.pair}>
             <TextField
               label={currency ? t('jobs:fields.salaryMin', { currency }) : t('jobs:fields.salaryNoCurrency')}
@@ -149,6 +165,8 @@ export default function JobStepFields({ step, values, bind, errorOf, setValue, o
             {remote && <SelectField label={t('jobs:fields.salaryCurrency')} hint={t('jobs:fields.salaryCurrencyHint')} options={currencies} {...bind('salaryCurrency')} />}
           </div>
           <p className={styles.note}>{t('jobs:fields.salaryNote')}</p>
+          </>
+          )}
           <Checkbox name="visaSponsorship" checked={values.visaSponsorship} onChange={(event) => setValue('visaSponsorship', event.target.checked)}>
             {t('jobs:fields.visaSponsorship')}
           </Checkbox>
@@ -163,7 +181,7 @@ export default function JobStepFields({ step, values, bind, errorOf, setValue, o
         <div className={styles.preview}>
           <h3 className={styles.previewTitle}>{preview.title || t('jobs:review.untitled')}</h3>
           <p className={styles.previewMeta}>
-            {[companyName, jobText.place(preview), jobText.salary(preview), preview.employmentType && t(`enums:employmentType.${preview.employmentType}`), preview.level && t(`enums:jobLevel.${preview.level}`)]
+            {[companyName, jobText.place(preview), pay, preview.employmentType && t(`enums:employmentType.${preview.employmentType}`), preview.level && t(`enums:jobLevel.${preview.level}`)]
               .filter(Boolean)
               .join(' · ')}
           </p>
@@ -188,8 +206,8 @@ export default function JobStepFields({ step, values, bind, errorOf, setValue, o
               <dd>{preview.requiredSkills.length || t('jobs:review.none')}</dd>
             </div>
             <div>
-              <dt>{t('jobs:review.salary')}</dt>
-              <dd>{jobText.salary(preview) || t('jobs:review.notShown')}</dd>
+              <dt>{t(agency ? 'jobs:review.payRate' : 'jobs:review.salary')}</dt>
+              <dd>{pay || t(agency ? 'jobs:review.notSet' : 'jobs:review.notShown')}</dd>
             </div>
           </dl>
         </div>

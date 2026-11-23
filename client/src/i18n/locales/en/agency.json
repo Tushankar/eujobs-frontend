@@ -214,7 +214,8 @@
     "hoursSuffix": "hours a week",
     "clientSearchEmpty": "No clients yet. Add the companies you recruit for.",
     "contractAfterSave": "You can attach a contract for this job after the first step is saved.",
-    "agencyAlwaysShows": "Your agency’s name always shows."
+    "agencyAlwaysShows": "Your agency’s name always shows.",
+    "rateCurrency": "Pay rate currency"
   },
   "placements": {
     "title": "Placements",
@@ -545,5 +546,14 @@
     "jobsText": "An agency job is always for one of your clients, so add a client first. Here is the whole flow.",
     "placementsTitle": "No placements yet",
     "placementsText": "A placement starts when you hire someone from your books on an agency job. Here is what comes before it."
+  },
+  "booksChip": {
+    "none": "Not on your books",
+    "requested": "Asked to join your books",
+    "awaiting_agreement": "Agreement not accepted yet",
+    "agreementPending": "New agreement to accept",
+    "active": "On your books",
+    "accept": "Accept",
+    "howTo": "How to add them"
   }
 }

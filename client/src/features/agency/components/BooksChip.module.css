@@ -1,0 +1,33 @@
+/* An applicant's place on the agency's books (2026-11-23): a pill and, when it helps, one small action. */
+.chip {
+  display: inline-flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: 4px 8px;
+}
+
+.action {
+  padding: 0;
+  border: 0;
+  background: none;
+  font: inherit;
+  font-size: 12px;
+  font-weight: 600;
+  color: var(--primary);
+  cursor: pointer;
+}
+
+.action:hover {
+  text-decoration: underline;
+}
+
+.action:disabled {
+  color: var(--muted-foreground);
+  cursor: progress;
+}
+
+.error {
+  flex-basis: 100%;
+  font-size: 12px;
+  color: var(--destructive);
+}

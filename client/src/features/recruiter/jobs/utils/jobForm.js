@@ -114,7 +114,8 @@ export function valuesToBody(values) {
     workPreference: values.workPreference || null,
     placeId: !remote && values.place ? values.place.placeId : null,
     remoteCountries: remote ? values.remoteCountries : [],
-    salary: min == null && max == null ? null : { min, max, period: values.salaryPeriod, ...(remote && { currency: values.salaryCurrency }) },
+    // 2026-11-23: an agency job pays its rate and keeps no salary.
+    salary: currentRole() === 'agency' || (min == null && max == null) ? null : { min, max, period: values.salaryPeriod, ...(remote && { currency: values.salaryCurrency }) },
     ...(currentRole() === 'agency' && { agency: agencyBody(values) }),
   }
 }

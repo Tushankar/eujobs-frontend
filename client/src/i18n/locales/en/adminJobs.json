@@ -12,7 +12,7 @@
     "role": "Role",
     "company": "Company",
     "country": "Country",
-    "salary": "Salary",
+    "salary": "Pay",
     "status": "Status",
     "actions": "Actions"
   },

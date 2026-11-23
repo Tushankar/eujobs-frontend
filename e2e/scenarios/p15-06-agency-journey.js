@@ -152,8 +152,12 @@ export default {
     await signInWithForm(seeker.page, ctx.webUrl, '/sign-in', candidate.email, TEST_PASSWORD)
     await seeker.page.goto(`${ctx.webUrl}/candidate/jobs`, { waitUntil: 'networkidle0' })
     await pause(500)
+    // The list is ranked by match; a search for the title finds the new agency job.
+    await fill(seeker.page, 'input[type="search"]', 'Warehouse Operative')
+    await seeker.page.keyboard.press('Enter')
+    await pause(1500)
     const findJobs = await bodyText(seeker.page)
-    expect(findJobs.includes('Warehouse Operative'), 'Find jobs lists the new agency job')
+    expect(findJobs.includes('Warehouse Operative'), 'Find jobs finds the new agency job')
     await ctx.screenshot(seeker.page, '13-candidate-find-jobs')
     await seeker.page.goto(`${ctx.webUrl}/candidate/jobs/${jobId}`, { waitUntil: 'networkidle0' })
     await seeker.page.waitForSelector('[data-placement-rules]', { timeout: 10_000 }).catch(() => issue('no "Before you apply" on the agency job'))
@@ -175,7 +179,8 @@ export default {
     await pause(500)
     const applications = await bodyText(page)
     expect(applications.includes(candidate.fullName), 'the agency sees the application')
-    ctx.note(`does the application row say the candidate asked to join the books? ${/join|books|request/i.test(applications)}`)
+    const chip = await page.$eval('[data-books]', (element) => element.dataset.books).catch(() => null)
+    expect(chip === 'requested', `the application row shows the join request (books: ${chip})`)
     await ctx.screenshot(page, '17-agency-applications')
     const [appDoc] = await db('applications', 'find', { filter: { candidateId: { $oid: candidate.id }, jobId: { $oid: jobId } } })
     const application = appDoc && { id: String(appDoc._id.$oid ?? appDoc._id) }
@@ -184,15 +189,19 @@ export default {
       await chooseStage(page, select, 'Hired').catch((error) => issue(`no Hired option: ${error.message}`))
       await pause(1500)
       const tooEarly = await bodyText(page)
-      ctx.note(`Hired before the books/agreement shows: ${(tooEarly.match(/[^\n]*(books|agreement|agree)[^\n]*/i) ?? ['(no explanation shown)'])[0]}`)
+      expect(tooEarly.includes('not on your books yet'), 'Hired too early says the candidate is not on the books yet')
       await ctx.screenshot(page, '18-agency-hired-too-early')
+      // Accept the join request right from the row.
+      await page.click('[data-books-accept]').catch(() => issue('no Accept on the application row'))
+      await page.waitForFunction(() => document.querySelector('[data-books]')?.dataset.books === 'awaiting_agreement', { timeout: 10_000 }).catch(() => issue('accepting from the row did not update it'))
+      await ctx.screenshot(page, '18b-agency-accepted-from-row')
     } else issue('could not find the application through the API')
 
     await page.goto(`${ctx.webUrl}/agency/talent?tab=requests`, { waitUntil: 'networkidle0' })
     await page.waitForSelector(`[data-member="${candidate.fullName}"]`, { timeout: 10_000 }).catch(() => issue('the join request is not in Talent › Requests'))
+    // Already accepted from the application row: Talent says it waits for the agreement.
+    await waitForText(page, 'Waiting for them to agree').catch(() => issue('Talent does not show the accepted request as waiting for the agreement'))
     await ctx.screenshot(page, '19-agency-requests')
-    await clickText(page, 'Accept', `[data-member="${candidate.fullName}"] button`)
-    await waitForText(page, 'Waiting for them to agree').catch(() => issue('accepting does not say it waits for the agreement'))
 
     // ---- 7. The candidate agrees ----
     await seeker.page.goto(`${ctx.webUrl}/candidate/agencies?tab=agencies`, { waitUntil: 'networkidle0' })

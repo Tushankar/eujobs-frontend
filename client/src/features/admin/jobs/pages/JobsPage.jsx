@@ -16,6 +16,7 @@ import JobSummaryDialog from '@/features/ai/components/JobSummaryDialog.jsx'
 import JobStatusBadge from '@/features/recruiter/jobs/components/JobStatusBadge.jsx'
 import { countryChoices, useCountryOptions } from '@/lib/countries.js'
 import { check, useErrorText, useFormState } from '@/lib/forms.js'
+import { useJobText } from '@/lib/jobText.js'
 import { useFormat, usePreferences } from '@/lib/preferences.js'
 import { useUrlFilters } from '@/lib/useUrlFilters.js'
 import { useGetAdminJobSummaryQuery, useGetAdminJobsQuery, useOpenJobCaseMutation, useRegenerateAdminJobSummaryMutation } from '../api.js'
@@ -110,6 +111,8 @@ export default function JobsPage() {
   const { search: query } = useLocation()
   const navigate = useNavigate()
   const format = useFormat()
+  // 2026-11-23: an agency job shows its pay rate in the Pay column.
+  const jobText = useJobText()
   const { me } = usePreferences()
   const countries = useCountryOptions()
   const { params, setFilter, search, setSearch, clearFilters } = useUrlFilters()
@@ -128,7 +131,7 @@ export default function JobsPage() {
     { key: 'title', header: t('columns.role'), width: 220, skeleton: 'text', render: (job) => <span className={styles.title}>{job.title}</span> },
     { key: 'company', header: t('columns.company'), width: 160, skeleton: 'logo', render: (job) => <CompanyCell name={job.company.displayName} id={job.company.id} logoUrl={job.company.logoUrl} /> },
     { key: 'country', header: t('columns.country'), width: 120, render: (job) => <span className={styles.muted}>{job.country ? format.country(job.country) : '—'}</span> },
-    { key: 'salary', header: t('columns.salary'), width: 150, render: (job) => <span className={styles.muted}>{job.salary ? format.salary(job.salary) : '—'}</span> },
+    { key: 'salary', header: t('columns.salary'), width: 150, render: (job) => <span className={styles.muted}>{job.agency?.rate ? jobText.rate(job.agency) : job.salary ? format.salary(job.salary) : '—'}</span> },
     { key: 'status', header: t('columns.status'), width: 110, skeleton: 'pill', render: (job) => <JobStatusBadge status={job.status} restricted={Boolean(job.restricted)} /> },
     {
       key: 'actions',

@@ -164,7 +164,7 @@ export const PLANS = [
 /*
  * 2026-11-20: agencies (their own role) get the recruiter plans' entitlements under their own keys; Agency Plus starts
  * at the Recruiter Plus prices and the admin changes them in Payments › Plans. 2026-11-23 (phase 7): their own feature
- * lists. `previousFeatures` is what seed:catalog gave them before (the recruiter lists): a stored plan that still has
+ * lists. `previousFeatures` are the lists seed:catalog gave them before (the recruiter lists, then the first agency lists): a stored plan that still has
  * exactly those gets the new lists, one an admin has edited keeps its own.
  */
 const AGENCY_PAGE = { en: 'Agency page, clients and verification', es: 'Página de agencia, clientes y verificación', fr: 'Page agence, clients et vérification' }
@@ -189,8 +189,8 @@ const AGENCY_FEATURES = {
     },
     {
       en: 'Placements: offers, re-hires, notice and overlap checks',
-      es: 'Asignaciones: ofertas, recontrataciones, preaviso y control de solapamientos',
-      fr: 'Missions : offres, réembauches, préavis et contrôle des chevauchements',
+      es: 'Colocaciones: ofertas, recontrataciones, preaviso y control de solapamientos',
+      fr: 'Placements : offres, réembauches, préavis et contrôle des chevauchements',
     },
     {
       en: 'Ending-soon alerts with the next jobs that fit',
@@ -244,10 +244,13 @@ const AGENCY_FEATURES = {
     },
   ],
 }
+// The first agency lists (2026-11-23 morning) named a placement "asignación" / "mission"; the app says colocación / placement.
+const FIRST_PLACEMENTS_LINE = { es: 'Asignaciones: ofertas, recontrataciones, preaviso y control de solapamientos', fr: 'Missions : offres, réembauches, préavis et contrôle des chevauchements' }
 const asAgency = (key, name) => {
   const plan = PLANS.find((entry) => entry.key === key.replace('agency', 'recruiter'))
-  const previousFeatures = plan.features.map((feature) => (feature.en === 'Company page and verification' ? AGENCY_PAGE : feature))
-  return { ...plan, key, role: 'agency', name, features: AGENCY_FEATURES[key], previousFeatures }
+  const recruiterCopy = plan.features.map((feature) => (feature.en === 'Company page and verification' ? AGENCY_PAGE : feature))
+  const firstLists = AGENCY_FEATURES[key].map((feature) => (feature.en.startsWith('Placements:') ? { ...feature, ...FIRST_PLACEMENTS_LINE } : feature))
+  return { ...plan, key, role: 'agency', name, features: AGENCY_FEATURES[key], previousFeatures: [recruiterCopy, firstLists] }
 }
 PLANS.push(asAgency('agency_free', { en: 'Free', es: 'Gratis', fr: 'Gratuit' }), asAgency('agency_plus', { en: 'Agency Plus', es: 'Agency Plus', fr: 'Agency Plus' }))
 

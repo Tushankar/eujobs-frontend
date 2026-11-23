@@ -133,7 +133,8 @@ async function jobFields(user, input, existing) {
 
   let salary
   const { min = null, max = null, period, currency: chosen } = input.salary ?? {}
-  if (min !== null || max !== null) {
+  // 2026-11-23: an agency job pays its rate (agency terms) and never shows a salary, so it keeps none.
+  if ((min !== null || max !== null) && user.role !== 'agency') {
     if (min !== null && max !== null && max < min) throw fieldError({ 'salary.max': 'below_min' })
     salary = { min: min ?? undefined, max: max ?? undefined, currency: await payCurrency(country, chosen, 'salary.currency'), period }
   }
@@ -472,7 +473,10 @@ export function qualityChecks(values) {
     { key: 'brief_length', ok: (values.brief ?? '').length >= QUALITY.briefLength, params: { min: QUALITY.briefLength } },
     { key: 'responsibilities', ok: responsibilities >= QUALITY.responsibilities, params: { min: QUALITY.responsibilities, count: responsibilities } },
     { key: 'required_skills', ok: skills >= min && skills <= max, params: { min, max, count: skills } },
-    { key: 'salary_range', ok: values.salary?.min != null && values.salary?.max != null, params: {} },
+    // 2026-11-23: an agency job is checked for its pay rate, not a salary it never shows.
+    values.agency
+      ? { key: 'pay_rate', ok: Boolean(values.agency.rate?.amountMinor), params: {} }
+      : { key: 'salary_range', ok: values.salary?.min != null && values.salary?.max != null, params: {} },
   ]
 }
 

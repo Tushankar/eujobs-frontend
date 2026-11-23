@@ -37,7 +37,7 @@ async function seedPlans() {
     const fields = { role: plan.role, entitlements: plan.entitlements, interval: plan.interval }
     const created = { name: plan.name, features: plan.features }
     // 2026-11-23: a plan whose stored features are still the data's earlier list gets the new one (the agency plans).
-    if (stored && plan.previousFeatures && sameFeatures(stored.features, plan.previousFeatures)) {
+    if (stored && plan.previousFeatures?.some((earlier) => sameFeatures(stored.features, earlier))) {
       fields.features = plan.features
       delete created.features
     }

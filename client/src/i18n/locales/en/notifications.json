@@ -75,7 +75,10 @@
     "account_decided": {
       "approved": "Your recruiter account was approved",
       "rejected": "Your recruiter account was not approved",
-      "suspended": "Your recruiter account was suspended"
+      "suspended": "Your recruiter account was suspended",
+      "agency_approved": "Your agency account was approved",
+      "agency_rejected": "Your agency account was not approved",
+      "agency_suspended": "Your agency account was suspended"
     },
     "application_new": "{{candidate}} applied to {{job}}",
     "application_withdrawn": "{{candidate}} withdrew their application to {{job}}",

@@ -194,6 +194,10 @@
     "salary_range": {
       "ok": "A full salary range is visible to candidates.",
       "warn": "No full salary range is shown. Roles with a range usually attract more relevant applicants."
+    },
+    "pay_rate": {
+      "ok": "The pay rate is set, so candidates see what the placement pays.",
+      "warn": "No pay rate yet. Add it in Agency terms: candidates decide on the rate."
     }
   },
   "review": {
@@ -206,7 +210,8 @@
     "salary": "Salary",
     "notSet": "Not set",
     "none": "None",
-    "notShown": "Not shown"
+    "notShown": "Not shown",
+    "payRate": "Pay rate"
   },
   "posting": {
     "noBrief": "No brief has been added yet. Use Edit role to add one.",

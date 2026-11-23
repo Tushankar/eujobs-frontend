@@ -195,6 +195,10 @@
     "salary_range": {
       "ok": "Une fourchette de salaire complète est visible par les candidats.",
       "warn": "Aucune fourchette de salaire complète n’est affichée. Les postes avec une fourchette attirent généralement des candidats plus pertinents."
+    },
+    "pay_rate": {
+      "ok": "Le tarif est indiqué : les candidats voient ce que paie le placement.",
+      "warn": "Pas encore de tarif. Ajoutez-le dans Conditions d’agence : les candidats choisissent selon le tarif."
     }
   },
   "review": {
@@ -207,7 +211,8 @@
     "salary": "Salaire",
     "notSet": "Non défini",
     "none": "Aucune",
-    "notShown": "Non affiché"
+    "notShown": "Non affiché",
+    "payRate": "Tarif"
   },
   "posting": {
     "noBrief": "Aucune présentation n’a encore été ajoutée. Utilisez Modifier le poste pour en ajouter une.",

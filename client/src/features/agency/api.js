@@ -28,7 +28,8 @@ export const agencyApi = api.injectEndpoints({
     // The books
     getTalent: build.query({ query: () => '/agency/talent', providesTags: ['AgencyTalent'] }),
     inviteTalent: build.mutation({ query: (candidateId) => ({ url: '/agency/talent/invite', method: 'POST', body: { candidateId } }), invalidatesTags: ['AgencyTalent'] }),
-    talentAction: build.mutation({ query: ({ id, action }) => ({ url: `/agency/talent/${id}/${action}`, method: 'POST' }), invalidatesTags: ['AgencyTalent', 'AgencyAgreement'] }),
+    // 2026-11-23: also the applications list, whose rows show each applicant's place on the books.
+    talentAction: build.mutation({ query: ({ id, action }) => ({ url: `/agency/talent/${id}/${action}`, method: 'POST' }), invalidatesTags: ['AgencyTalent', 'AgencyAgreement', 'CompanyApplications'] }),
     // Phase 6: the books ranked for one agency job, and AI reasons beside them (Agency Plus)
     getTalentRanking: build.query({ query: (jobId) => ({ url: '/agency/talent/ranking', params: { jobId } }), providesTags: ['AgencyTalent', 'AgencyPlacements'] }),
     talentReasons: build.mutation({ query: (jobId) => ({ url: '/agency/talent/ranking/reasons', method: 'POST', body: { jobId } }), invalidatesTags: ['AiUsage'] }),

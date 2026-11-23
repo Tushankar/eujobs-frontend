@@ -37,7 +37,7 @@ export default function JobDetailsPage() {
   if (!job && !isLoading) return null
 
   // While the job loads, the page keeps its layout with placeholders for the job's own text.
-  const meta = job && [job.company.displayName, jobText.place(job), job.workPreference && t(`enums:workPreference.${job.workPreference}`), jobText.salary(job)].filter(Boolean).join(' · ')
+  const meta = job && [job.company.displayName, jobText.place(job), job.workPreference && t(`enums:workPreference.${job.workPreference}`), job.agency ? jobText.rate(job.agency) : jobText.salary(job)].filter(Boolean).join(' · ')
 
   return (
     <>

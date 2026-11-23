@@ -52,7 +52,7 @@
     "day": "por día"
   },
   "exclusivity": {
-    "no_other_work": "Ningún otro trabajo durante una asignación",
+    "no_other_work": "Ningún otro trabajo durante una colocación",
     "no_other_agency_work": "Ningún trabajo a través de otras agencias",
     "no_same_client": "Ningún trabajo para el mismo cliente por otra vía",
     "free": "Libre para trabajar en otro sitio"

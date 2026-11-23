@@ -3,6 +3,7 @@ import { Clock, MessageSquareText, Sparkles } from 'lucide-react'
 import { Avatar, Icon, Skeleton } from '@/components/ui'
 import PillBadge from '@/components/common/PillBadge.jsx'
 import InterviewStatus from '@/features/interviews/components/InterviewStatus.jsx'
+import BooksChip from '@/features/agency/components/BooksChip.jsx'
 import ApplicationStageSelect from '@/features/recruiter/applications/components/ApplicationStageSelect.jsx'
 import CoverNote from '@/features/recruiter/applications/components/CoverNote.jsx'
 import { useFormat } from '@/lib/preferences.js'
@@ -58,6 +59,7 @@ export default function ApplicantCard({ application, stages, dragging, onDragSta
           </button>
         )}
       </div>
+      {application.books && <BooksChip books={application.books} />}
       <InterviewStatus interview={application.interview} />
       <div className={styles.footer}>
         <ApplicationStageSelect

@@ -193,7 +193,7 @@
     "sectionDates": "Dates",
     "sectionPay": "Rémunération et heures",
     "sectionContract": "Règles de cette offre",
-    "contractHint": "Votre accord fixe les règles de toutes vos offres. Ajoutez ici un contrat seulement si cette offre a besoin de règles différentes : ses règles confirmées passent en premier pour les missions de cette offre.",
+    "contractHint": "Votre accord fixe les règles de toutes vos offres. Ajoutez ici un contrat seulement si cette offre a besoin de règles différentes : ses règles confirmées passent en premier pour les placements de cette offre.",
     "visibility": "Les candidats voient",
     "visibilityName": "Le nom du client",
     "visibilityConfidential": "Client confidentiel",
@@ -217,7 +217,8 @@
     "hoursSuffix": "heures par semaine",
     "clientSearchEmpty": "Aucun client pour l’instant. Ajoutez les entreprises pour lesquelles vous recrutez.",
     "contractAfterSave": "Vous pourrez joindre un contrat pour cette offre une fois la première étape enregistrée.",
-    "agencyAlwaysShows": "Le nom de votre agence apparaît toujours."
+    "agencyAlwaysShows": "Le nom de votre agence apparaît toujours.",
+    "rateCurrency": "Devise du tarif"
   },
   "placements": {
     "title": "Placements",
@@ -442,8 +443,8 @@
       "noAgreement": "Vous pouvez postuler. {{agency}} n’a pas encore publié son accord : elle ne peut placer personne avant de le faire.",
       "requested": "Vous pouvez postuler. Votre demande pour rejoindre le vivier de {{agency}} attend la réponse de l’agence.",
       "awaiting": "Vous pouvez postuler. Acceptez l’accord de {{agency}} pour être placé.",
-      "pending": "Vous pouvez postuler. {{agency}} a publié un nouvel accord (version {{version}}) : acceptez-le avant votre prochaine mission.",
-      "blocked": "Votre mission en cours vous empêche de prendre cette offre jusqu’au {{date}}. Voir pourquoi plus haut.",
+      "pending": "Vous pouvez postuler. {{agency}} a publié un nouvel accord (version {{version}}) : acceptez-le avant votre prochain placement.",
+      "blocked": "Votre placement en cours vous empêche de prendre cette offre jusqu’au {{date}}. Voir pourquoi plus haut.",
       "readAgreement": "Lire l’accord",
       "ifPlaced": "Si vous êtes placé sur cette offre",
       "ifPlacedShort": "Si vous êtes placé",
@@ -451,26 +452,26 @@
       "summaryBooks": "Pour être placé, vous devez aussi faire partie du vivier de {{agency}} et accepter son accord.",
       "rules": {
         "exclusivity": {
-          "no_other_work": "Pendant la mission ({{dates}}), vous ne pouvez prendre aucun autre travail rémunéré.",
-          "no_other_agency_work": "Pendant la mission ({{dates}}), vous ne pouvez pas prendre d’autres offres d’agence. Les autres travaux restent possibles.",
-          "no_same_client": "Pendant la mission, vous ne pouvez pas travailler pour {{client}} en dehors de cette agence. Les autres travaux restent possibles.",
-          "free": "Vous êtes libre de prendre d’autres travaux pendant la mission."
+          "no_other_work": "Pendant le placement ({{dates}}), vous ne pouvez prendre aucun autre travail rémunéré.",
+          "no_other_agency_work": "Pendant le placement ({{dates}}), vous ne pouvez pas prendre d’autres offres d’agence. Les autres travaux restent possibles.",
+          "no_same_client": "Pendant le placement, vous ne pouvez pas travailler pour {{client}} en dehors de cette agence. Les autres travaux restent possibles.",
+          "free": "Vous êtes libre de prendre d’autres travaux pendant le placement."
         },
         "noticeDays_one": "Pour partir plus tôt, donnez {{count}} jour de préavis.",
         "noticeDays_other": "Pour partir plus tôt, donnez {{count}} jours de préavis.",
         "noticeDaysNone": "Aucun préavis n’est indiqué.",
-        "coolingOffDays_one": "Après la mission, attendez {{count}} jour avant de travailler pour {{client}} directement ou via une autre agence.",
-        "coolingOffDays_other": "Après la mission, attendez {{count}} jours avant de travailler pour {{client}} directement ou via une autre agence.",
-        "coolingOffDaysNone": "Aucun délai d’attente après la mission.",
+        "coolingOffDays_one": "Après le placement, attendez {{count}} jour avant de travailler pour {{client}} directement ou via une autre agence.",
+        "coolingOffDays_other": "Après le placement, attendez {{count}} jours avant de travailler pour {{client}} directement ou via une autre agence.",
+        "coolingOffDaysNone": "Aucun délai d’attente après le placement.",
         "maxWeeklyHours_one": "Au plus {{count}} heure par semaine, tous travaux confondus.",
         "maxWeeklyHours_other": "Au plus {{count}} heures par semaine, tous travaux confondus.",
         "maxWeeklyHoursNone": "Aucune limite d’heures par semaine n’est indiquée."
       },
       "short": {
         "exclusivity": {
-          "no_other_work": "aucun autre travail rémunéré pendant la mission",
-          "no_other_agency_work": "aucune autre offre d’agence pendant la mission",
-          "no_same_client": "pas de travail pour {{client}} hors de cette agence pendant la mission",
+          "no_other_work": "aucun autre travail rémunéré pendant le placement",
+          "no_other_agency_work": "aucune autre offre d’agence pendant le placement",
+          "no_same_client": "pas de travail pour {{client}} hors de cette agence pendant le placement",
           "free": "autres travaux autorisés"
         },
         "noticeDays_one": "{{count}} jour de préavis pour partir",
@@ -512,7 +513,7 @@
     "order": "Pour chaque règle : d’abord le contrat confirmé de cette offre, puis votre accord, puis la règle par défaut.",
     "openAgreement": "Ouvrir votre accord",
     "uploadAgreement": "Téléverser votre accord",
-    "scope": "Cet accord couvre toutes vos offres. Une offre peut aussi avoir son propre contrat (offre › Conditions d’agence) : ses règles confirmées passent avant celles-ci pour les missions de cette offre."
+    "scope": "Cet accord couvre toutes vos offres. Une offre peut aussi avoir son propre contrat (offre › Conditions d’agence) : ses règles confirmées passent avant celles-ci pour les placements de cette offre."
   },
   "setup": {
     "title": "Configurez votre agence",
@@ -528,7 +529,7 @@
       },
       "agreement": {
         "title": "Publiez votre accord",
-        "text": "Les candidats rejoignent votre vivier en l’acceptant, et ses règles protègent chaque mission."
+        "text": "Les candidats rejoignent votre vivier en l’acceptant, et ses règles protègent chaque placement."
       },
       "job": {
         "title": "Publiez une offre d’agence",
@@ -541,14 +542,23 @@
         "locked": "Publiez d’abord votre accord : les candidats rejoignent votre vivier en l’acceptant."
       },
       "placement": {
-        "title": "Faites votre première mission",
-        "text": "Passez une personne de votre vivier à Embauché sur une offre d’agence ; la mission suit les dates de l’offre.",
+        "title": "Faites votre premier placement",
+        "text": "Passez une personne de votre vivier à Embauché sur une offre d’agence ; le placement suit les dates de l’offre.",
         "locked": "Publiez d’abord une offre d’agence et ayez quelqu’un dans votre vivier."
       }
     },
     "jobsTitle": "Publiez votre première offre d’agence",
     "jobsText": "Une offre d’agence est toujours pour l’un de vos clients : ajoutez d’abord un client. Voici tout le parcours.",
-    "placementsTitle": "Aucune mission pour l’instant",
-    "placementsText": "Une mission commence quand vous embauchez une personne de votre vivier sur une offre d’agence. Voici ce qui vient avant."
+    "placementsTitle": "Aucun placement pour l’instant",
+    "placementsText": "Un placement commence quand vous embauchez une personne de votre vivier sur une offre d’agence. Voici ce qui vient avant."
+  },
+  "booksChip": {
+    "none": "Pas dans votre vivier",
+    "requested": "A demandé à rejoindre votre vivier",
+    "awaiting_agreement": "Accord pas encore accepté",
+    "agreementPending": "Nouvel accord à accepter",
+    "active": "Dans votre vivier",
+    "accept": "Accepter",
+    "howTo": "Comment l’ajouter"
   }
 }

@@ -1,4 +1,6 @@
 import { sideOf } from '../../config/enums.js'
+import { AgencyMembership } from '../agencies/agencies.model.js'
+import { currentAgreement } from '../agencies/agreements.service.js'
 import { assertAllowed, hire, unhire } from '../agencies/placements.service.js'
 import mongoose from 'mongoose'
 import { AppError, fieldError } from '../../lib/errors.js'
@@ -188,6 +190,32 @@ const stageOf = (application, stages) => {
 }
 
 /**
+ * 2026-11-23 (owner, agency journey): each applicant's membership of the agency's books, by candidate id, for the
+ * agency's applications and pipeline (Hired needs an active membership with the current agreement agreed).
+ */
+async function agencyBooks(applications, jobById) {
+  const agencyRows = applications.filter((application) => jobById.get(String(application.jobId))?.agency)
+  if (!agencyRows.length) return new Map()
+  const companyId = agencyRows[0].companyId
+  const [memberships, current] = await Promise.all([
+    AgencyMembership.find({ companyId, candidateId: { $in: agencyRows.map((application) => application.candidateId) } }, 'candidateId status acceptances'),
+    currentAgreement(companyId),
+  ])
+  return new Map(
+    memberships
+      .filter((membership) => !['declined', 'ended'].includes(membership.status))
+      .map((membership) => [
+        String(membership.candidateId),
+        {
+          id: String(membership._id),
+          status: membership.status,
+          agreementPending: membership.status === 'active' && Boolean(current) && membership.acceptances.at(-1)?.version !== current.version,
+        },
+      ]),
+  )
+}
+
+/**
  * Table and board rows: the candidate as a card, the job, the stage (M-069, M-077), the company's note count on the
  * candidate and every dated stage step, for the Hiring pipeline's candidate panel.
  */
@@ -206,6 +234,7 @@ async function recruiterDtos(viewer, applications) {
   const profileById = new Map(profiles.map((profile) => [String(profile.userId), profile]))
   const jobById = new Map(jobs.map((job) => [String(job._id), job]))
   const stageById = new Map(stages.map((stage) => [String(stage._id), stage]))
+  const booksOf = await agencyBooks(applications, jobById)
 
   return applications.map((application) => {
     const candidate = userById.get(String(application.candidateId))
@@ -223,6 +252,8 @@ async function recruiterDtos(viewer, applications) {
       // P11d-A6: the latest interview, shown on the card and used by the move prompts.
       interview: interviews.get(String(application._id)) ?? null,
       job: { id: String(job._id), title: job.title },
+      // 2026-11-23: on an agency job, where the applicant stands on the agency's books (null on company jobs).
+      books: job.agency ? (booksOf.get(String(application.candidateId)) ?? { id: null, status: 'none', agreementPending: false }) : null,
       candidate: {
         id: String(candidate._id),
         fullName: candidate.fullName,

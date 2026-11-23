@@ -136,15 +136,15 @@
   "rules": {
     "title": "Reglas del contrato",
     "labels": {
-      "exclusivity": "Otro trabajo durante una asignación",
+      "exclusivity": "Otro trabajo durante una colocación",
       "noticeDays": "Preaviso para terminar antes",
       "coolingOffDays": "Periodo de espera en el cliente",
       "maxWeeklyHours": "Máximo de horas a la semana"
     },
     "help": {
-      "exclusivity": "Lo que el candidato puede hacer mientras dura una asignación.",
-      "noticeDays": "Días de preaviso que da el candidato para terminar una asignación antes.",
-      "coolingOffDays": "Días tras una asignación antes de poder trabajar para ese cliente directamente o con otra agencia.",
+      "exclusivity": "Lo que el candidato puede hacer mientras dura una colocación.",
+      "noticeDays": "Días de preaviso que da el candidato para terminar una colocación antes.",
+      "coolingOffDays": "Días tras una colocación antes de poder trabajar para ese cliente directamente o con otra agencia.",
       "maxWeeklyHours": "El máximo de horas a la semana sumando todos sus trabajos."
     },
     "notStated": "No indicado",
@@ -193,7 +193,7 @@
     "sectionDates": "Fechas",
     "sectionPay": "Pago y horas",
     "sectionContract": "Reglas de esta oferta",
-    "contractHint": "Tu acuerdo fija las reglas de todas tus ofertas. Añade aquí un contrato solo si esta oferta necesita reglas distintas: sus reglas confirmadas van primero en las asignaciones de esta oferta.",
+    "contractHint": "Tu acuerdo fija las reglas de todas tus ofertas. Añade aquí un contrato solo si esta oferta necesita reglas distintas: sus reglas confirmadas van primero en las colocaciones de esta oferta.",
     "visibility": "Los candidatos ven",
     "visibilityName": "El nombre del cliente",
     "visibilityConfidential": "Cliente confidencial",
@@ -217,7 +217,8 @@
     "hoursSuffix": "horas a la semana",
     "clientSearchEmpty": "Aún no hay clientes. Añade las empresas para las que seleccionas.",
     "contractAfterSave": "Podrás adjuntar un contrato para esta oferta cuando se guarde el primer paso.",
-    "agencyAlwaysShows": "El nombre de tu agencia siempre se muestra."
+    "agencyAlwaysShows": "El nombre de tu agencia siempre se muestra.",
+    "rateCurrency": "Moneda de la tarifa"
   },
   "placements": {
     "title": "Colocaciones",
@@ -437,18 +438,18 @@
     "before": {
       "title": "Antes de postularte",
       "theClient": "el cliente",
-      "ok": "Puedes postularte y ser asignado a esta oferta.",
-      "notOnBooks": "Puedes postularte. Para ser asignado, únete a la cartera de {{agency}} y acepta su acuerdo (versión {{version}}).",
+      "ok": "Puedes postularte y ser colocado a esta oferta.",
+      "notOnBooks": "Puedes postularte. Para ser colocado, únete a la cartera de {{agency}} y acepta su acuerdo (versión {{version}}).",
       "noAgreement": "Puedes postularte. {{agency}} aún no ha publicado su acuerdo, así que no puede asignar a nadie hasta que lo haga.",
       "requested": "Puedes postularte. Tu solicitud para unirte a la cartera de {{agency}} está pendiente de la agencia.",
-      "awaiting": "Puedes postularte. Acepta el acuerdo de {{agency}} para ser asignado.",
-      "pending": "Puedes postularte. {{agency}} publicó un nuevo acuerdo (versión {{version}}): acéptalo antes de tu próxima asignación.",
-      "blocked": "Tu asignación actual no te permite tomar esta oferta hasta el {{date}}. Mira el motivo arriba.",
+      "awaiting": "Puedes postularte. Acepta el acuerdo de {{agency}} para ser colocado.",
+      "pending": "Puedes postularte. {{agency}} publicó un nuevo acuerdo (versión {{version}}): acéptalo antes de tu próxima colocación.",
+      "blocked": "Tu colocación actual no te permite tomar esta oferta hasta el {{date}}. Mira el motivo arriba.",
       "readAgreement": "Leer el acuerdo",
-      "ifPlaced": "Si te asignan a esta oferta",
-      "ifPlacedShort": "Si te asignan",
+      "ifPlaced": "Si te colocan en esta oferta",
+      "ifPlacedShort": "Si te colocan",
       "readClause": "Leer la cláusula",
-      "summaryBooks": "Para ser asignado también debes estar en la cartera de {{agency}} y aceptar su acuerdo.",
+      "summaryBooks": "Para ser colocado también debes estar en la cartera de {{agency}} y aceptar su acuerdo.",
       "rules": {
         "exclusivity": {
           "no_other_work": "Mientras dure ({{dates}}) no puedes aceptar ningún otro trabajo remunerado.",
@@ -512,7 +513,7 @@
     "order": "Para cada regla: primero el contrato confirmado de esta oferta, después tu acuerdo y, por último, la regla por defecto.",
     "openAgreement": "Abrir tu acuerdo",
     "uploadAgreement": "Subir tu acuerdo",
-    "scope": "Este acuerdo cubre todas tus ofertas. Una oferta también puede tener su propio contrato (oferta › Condiciones de agencia): sus reglas confirmadas van antes que estas en las asignaciones de esa oferta."
+    "scope": "Este acuerdo cubre todas tus ofertas. Una oferta también puede tener su propio contrato (oferta › Condiciones de agencia): sus reglas confirmadas van antes que estas en las colocaciones de esa oferta."
   },
   "setup": {
     "title": "Configura tu agencia",
@@ -528,7 +529,7 @@
       },
       "agreement": {
         "title": "Publica tu acuerdo",
-        "text": "Los candidatos se unen a tu cartera aceptándolo, y sus reglas protegen cada asignación."
+        "text": "Los candidatos se unen a tu cartera aceptándolo, y sus reglas protegen cada colocación."
       },
       "job": {
         "title": "Publica una oferta de agencia",
@@ -541,14 +542,23 @@
         "locked": "Publica primero tu acuerdo: los candidatos se unen a tu cartera aceptándolo."
       },
       "placement": {
-        "title": "Haz tu primera asignación",
-        "text": "Pasa a Contratado a alguien de tu cartera en una oferta de agencia; la asignación sigue las fechas de la oferta.",
+        "title": "Haz tu primera colocación",
+        "text": "Pasa a Contratado a alguien de tu cartera en una oferta de agencia; la colocación sigue las fechas de la oferta.",
         "locked": "Publica primero una oferta de agencia y ten a alguien en tu cartera."
       }
     },
     "jobsTitle": "Publica tu primera oferta de agencia",
     "jobsText": "Una oferta de agencia siempre es para uno de tus clientes, así que añade primero un cliente. Este es todo el proceso.",
-    "placementsTitle": "Aún no hay asignaciones",
-    "placementsText": "Una asignación empieza cuando contratas a alguien de tu cartera en una oferta de agencia. Esto es lo que va antes."
+    "placementsTitle": "Aún no hay colocaciones",
+    "placementsText": "Una colocación empieza cuando contratas a alguien de tu cartera en una oferta de agencia. Esto es lo que va antes."
+  },
+  "booksChip": {
+    "none": "No está en tu cartera",
+    "requested": "Pidió unirse a tu cartera",
+    "awaiting_agreement": "Acuerdo aún sin aceptar",
+    "agreementPending": "Nuevo acuerdo por aceptar",
+    "active": "En tu cartera",
+    "accept": "Aceptar",
+    "howTo": "Cómo añadirle"
   }
 }

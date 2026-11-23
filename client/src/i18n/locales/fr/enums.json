@@ -52,7 +52,7 @@
     "day": "par jour"
   },
   "exclusivity": {
-    "no_other_work": "Aucun autre travail pendant une mission",
+    "no_other_work": "Aucun autre travail pendant un placement",
     "no_other_agency_work": "Aucun travail via d’autres agences",
     "no_same_client": "Aucun travail pour le même client par une autre voie",
     "free": "Libre de travailler ailleurs"
