@@ -4,6 +4,8 @@ import { AppError } from '../../lib/errors.js'
 import { skillOverlap } from '../../lib/skills.js'
 import { Application } from '../applications/applications.model.js'
 import { CandidateProfile } from '../candidates/candidates.model.js'
+import { AgencyClient } from '../agencies/agencies.model.js'
+import { clientNameKey } from '../agencies/agencies.service.js'
 import { Company } from '../companies/companies.model.js'
 import { Job } from '../jobs/jobs.model.js'
 import { MatchResult } from '../matching/matching.model.js'
@@ -39,15 +41,55 @@ async function companyFacts(user) {
   return company && { name: company.displayName, industry: company.industry ?? null, size: company.size ?? null, city: company.location?.city ?? null, about: company.description?.slice(0, 600) || null }
 }
 
+const DAY = /^\d{4}-\d{2}-\d{2}$/
+const validDay = (day) => DAY.test(day) && new Date(`${day}T00:00:00Z`).toISOString().slice(0, 10) === day
+const today = () => new Date().toISOString().slice(0, 10)
+
+/** `text` with each of `names` (whole words, any case) replaced by "the client". */
+function withoutNames(text, names) {
+  return names.filter((name) => name.length >= 2).reduce((out, name) => out.replace(new RegExp(`(?<![\p{L}\p{N}])${escape(name)}(?![\p{L}\p{N}])`, 'giu'), 'the client'), text)
+}
+
+/**
+ * Phase 6 (owner 2026-11-23): an agency's draft also reads the client, dates, pay rate and hours from the notes. The
+ * client is one of the agency's own (by the AI's ref, else the normalised name); a client not on the list comes back
+ * as `unknownClient` for the agency to add first. Dates must be real days from today on, the end not before the start;
+ * the rate and hours stay within the form's limits. Anything else is left out.
+ */
+function agencyTerms(draft, clients) {
+  const A = J.agency
+  const client = clients.find((entry) => entry.ref === draft.clientRef) ?? (draft.clientName.trim() && clients.find((entry) => entry.nameKey === clientNameKey(draft.clientName)))
+  const startDate = validDay(draft.startDate) && draft.startDate >= today() ? draft.startDate : null
+  const endDate = startDate && validDay(draft.endDate) && draft.endDate >= startDate ? draft.endDate : null
+  const amountMinor = Math.round(draft.rate * 100)
+  const rate = draft.ratePeriod !== 'none' && amountMinor >= A.rate.min && amountMinor <= A.rate.max ? { amount: amountMinor / 100, period: draft.ratePeriod } : null
+  const hours = draft.hoursPerWeek >= A.hoursPerWeek.min && draft.hoursPerWeek <= A.hoursPerWeek.max ? draft.hoursPerWeek : null
+  return {
+    clientId: client ? String(client.id) : null,
+    unknownClient: client ? null : clip(draft.clientName, LIMITS.company.name.max) || null,
+    startDate,
+    endDate,
+    rate,
+    hoursPerWeek: hours,
+  }
+}
+
 /** POST /recruiter/ai/job-draft: brief, responsibilities, skills, level, years and languages for a title. */
 export async function jobDraft(user, { title, employmentType, notes }) {
   const input = { title, employmentType, notes: notes || null, company: await companyFacts(user) }
-  const draft = await write(PROMPTS.jobDraft, { user, input })
+  const agency = user.role === 'agency'
+  const clients = agency ? (await AgencyClient.find({ companyId: user.companyId }, 'name nameKey')).map((client, index) => ({ ref: `c${index + 1}`, id: client._id, name: client.name, nameKey: client.nameKey })) : []
+  if (agency) Object.assign(input, { today: today(), clients: clients.map(({ ref, name }) => ({ ref, name })) })
+  const draft = await write(agency ? PROMPTS.agencyJobDraft : PROMPTS.jobDraft, { user, input })
+  const terms = agency ? agencyTerms(draft, clients) : null
+  // The client's name never reaches the posting's text, so a confidential client stays hidden.
+  const clientNames = terms ? [draft.clientName.trim(), ...(terms.clientId ? [clients.find((entry) => String(entry.id) === terms.clientId).name] : [])] : []
   const requiredSkills = names(draft.requiredSkills, J.requiredSkills)
   const codes = new Set()
   return {
-    brief: clip(draft.brief, J.brief.max),
-    responsibilities: names(draft.responsibilities, J.responsibilities),
+    ...(terms && { agency: terms }),
+    brief: clip(withoutNames(draft.brief, clientNames), J.brief.max),
+    responsibilities: names(draft.responsibilities.map((item) => withoutNames(item, clientNames)), J.responsibilities),
     requiredSkills,
     preferredSkills: names(draft.preferredSkills, J.preferredSkills, requiredSkills),
     level: draft.level,

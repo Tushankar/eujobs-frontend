@@ -603,7 +603,11 @@
         "accepted": "{{candidate}} a accepté votre offre pour {{job}}.",
         "declined": "{{candidate}} a refusé votre offre pour {{job}}."
       },
-      "placement_notice_given": "{{candidate}} a donné son préavis pour {{job}}. Le placement se termine désormais le {{date}}."
+      "placement_notice_given": "{{candidate}} a donné son préavis pour {{job}}. Le placement se termine désormais le {{date}}.",
+      "placement_ending_soon": {
+        "fits": "Le placement de {{candidate}} comme {{job}} se termine le {{date}}. Vos offres ouvertes qui lui conviennent ensuite : {{jobs}}. Proposez-en une depuis Placements.",
+        "none": "Le placement de {{candidate}} comme {{job}} se termine le {{date}}. Aucune de vos offres d'agence publiées qui commencent après ne lui convient encore."
+      }
     },
     "candidateSummary": {
       "agency_invited": "{{agency}} vous a invité à rejoindre son vivier. Lisez son accord pour accepter.",

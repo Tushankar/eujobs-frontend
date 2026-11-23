@@ -15,6 +15,7 @@ const PAGE = {
   agency_member_left: { id: 'talent', path: 'talent' },
   placement_offer_answered: { id: 'placements', path: 'placements?tab=upcoming' },
   placement_notice_given: { id: 'placements', path: 'placements' },
+  placement_ending_soon: { id: 'placements', path: 'placements' },
 }
 
 const CANDIDATE_PAGE = {
@@ -37,7 +38,12 @@ const longDay = (language, day) => new Intl.DateTimeFormat(language, { dateStyle
 /** Bell + email for `user`; `key` is the email summary's text key. An email that fails must not undo what was done. */
 async function tell(user, type, params, page, key, link) {
   await notify(user, type, { params, target: { kind: 'page', id: page.id } })
-  const values = { ...params, ...(params.date && { date: longDay(user.language, params.date) }) }
+  const values = {
+    ...params,
+    ...(params.date && { date: longDay(user.language, params.date) }),
+    // Phase 6: a list of job titles reads as one phrase ("A, B and C").
+    ...(Array.isArray(params.jobs) && { jobs: new Intl.ListFormat(user.language, { type: 'conjunction' }).format(params.jobs) }),
+  }
   try {
     await sendEmail({
       type: 'agency_update',
@@ -56,7 +62,8 @@ export async function tellAgency(companyId, type, params) {
   const agency = await companyRecruiter(companyId)
   if (!agency) return
   const page = PAGE[type]
-  await tell(agency, type, params, page, `email.agencySummary.${type}${params.decision ? `.${params.decision}` : ''}`, `${config.clientOrigin}/agency/${page.path}`)
+  const variant = params.decision ?? params.variant
+  await tell(agency, type, params, page, `email.agencySummary.${type}${variant ? `.${variant}` : ''}`, `${config.clientOrigin}/agency/${page.path}`)
 }
 
 /** Tells the candidate `candidateId` about `type`; `params` name the agency (and job, version, date, decision). */

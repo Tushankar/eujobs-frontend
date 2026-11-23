@@ -603,7 +603,11 @@
         "accepted": "{{candidate}} accepted your offer for {{job}}.",
         "declined": "{{candidate}} declined your offer for {{job}}."
       },
-      "placement_notice_given": "{{candidate}} gave notice on {{job}}. The placement now ends on {{date}}."
+      "placement_notice_given": "{{candidate}} gave notice on {{job}}. The placement now ends on {{date}}.",
+      "placement_ending_soon": {
+        "fits": "{{candidate}}'s placement as {{job}} ends on {{date}}. Your open jobs that fit them next: {{jobs}}. Offer one from Placements.",
+        "none": "{{candidate}}'s placement as {{job}} ends on {{date}}. None of your published agency jobs starting after that fits them yet."
+      }
     },
     "candidateSummary": {
       "agency_invited": "{{agency}} invited you to join its books. Read its agreement to accept.",

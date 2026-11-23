@@ -150,6 +150,8 @@ export const NOTIFICATION_TYPES = {
   agency_member_left: { sections: { recruiter: 'talent' } },
   placement_offer_answered: { sections: { recruiter: 'placements' } },
   placement_notice_given: { sections: { recruiter: 'placements' } },
+  // Phase 6 (2026-11-23): 7 days before a placement ends, with the jobs that fit the person next
+  placement_ending_soon: { sections: { recruiter: 'placements' } },
   // 2026-11-20 (phase 5): the candidate's agencies and placements (sidebar Agencies)
   agency_invited: { sections: { candidate: 'agencies' } },
   agency_request_accepted: { sections: { candidate: 'agencies' } },
@@ -338,6 +340,8 @@ export const ENUMS = {
     'account_review_summary',
     // 2026-11-20: an agency contract's rules
     'contract_rules',
+    // 2026-11-23 (phase 6): the reasons beside an agency's on-books talent ranked for a job
+    'talent_ranking',
   ],
   emailType: Object.keys(EMAIL_TYPES),
   emailCategory: [...new Set(Object.values(EMAIL_CATEGORY))],

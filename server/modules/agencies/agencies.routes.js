@@ -8,6 +8,7 @@ import * as agencies from './agencies.service.js'
 import * as agreements from './agreements.service.js'
 import * as books from './books.service.js'
 import * as placements from './placements.service.js'
+import * as ranking from './ranking.service.js'
 import { rulesBody } from './contracts.js'
 
 /* /agency/clients (2026-11-20): an approved agency's clients. Updates replace the whole client (PUT). */
@@ -63,6 +64,13 @@ const membershipParams = validate({ params: schemas.clientParams })
 talentRouter.get('/', validate({ query: schemas.talentQuery }), async (req, res) => {
   res.json(await books.listTalent(req.company, req.query.status))
 })
+// Phase 6 (2026-11-23): the books ranked for one agency job; AI reasons are an Agency Plus feature. Before /:id routes.
+talentRouter.get('/ranking', validate({ query: schemas.rankingQuery }), async (req, res) => {
+  res.json(await ranking.rankTalent(req.company, req.query.jobId))
+})
+talentRouter.post('/ranking/reasons', requireEntitlement('ai', ['agency']), validate({ body: schemas.rankingBody }), async (req, res) => {
+  res.json(await ranking.rankingReasons(req.user, req.company, req.body.jobId))
+})
 talentRouter.post('/invite', validate({ body: schemas.inviteBody }), async (req, res) => {
   res.status(201).json(await books.invite(req.user, req.company, req.body.candidateId))
 })
@@ -105,6 +113,10 @@ agencyPlacementsRouter.use(requireAuth, requireApprovedAgency)
 
 agencyPlacementsRouter.get('/', validate({ query: schemas.placementsQuery }), async (req, res) => {
   res.json(await placements.agencyPlacements(req.user, req.company, req.query.view))
+})
+// Phase 6: before /:id routes.
+agencyPlacementsRouter.post('/offer', validate({ body: schemas.offerBody }), async (req, res) => {
+  res.status(201).json(await placements.offerPlacement(req.user, req.company, req.body))
 })
 agencyPlacementsRouter.post('/:id/end', membershipParams, validate({ body: schemas.endBody }), async (req, res) => {
   res.json(await placements.endEarly(req.user, req.company, req.params.id, req.body.endDate))

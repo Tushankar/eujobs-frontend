@@ -30,3 +30,8 @@ export const placementsQuery = z.object({ view: z.enum(['offered', 'upcoming', '
 export const endBody = z.object({ endDate: z.iso.date() })
 export const rehireBody = z.object({ jobId: objectId })
 export const checkQuery = z.object({ jobId: objectId })
+
+/* Phase 6 (2026-11-23): a direct offer, and the on-books ranking for a job */
+export const offerBody = z.object({ jobId: objectId, candidateId: objectId })
+export const rankingQuery = z.object({ jobId: objectId })
+export const rankingBody = z.object({ jobId: objectId })

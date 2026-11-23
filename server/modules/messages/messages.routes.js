@@ -1,8 +1,10 @@
 import { HIRING_ROLES, isHiring } from '../../config/enums.js'
 import { Router } from 'express'
+import mongoose from 'mongoose'
 import { validate } from '../../lib/validate.js'
 import { requireApprovedRecruiter, requireAuth, requireRole } from '../../middleware/auth.js'
 import { requireEntitlement } from '../../middleware/entitlements.js'
+import { AgencyMembership } from '../agencies/agencies.model.js'
 import * as schemas from './messages.schemas.js'
 import * as messages from './messages.service.js'
 
@@ -14,13 +16,21 @@ import * as messages from './messages.service.js'
 const router = Router()
 const idParams = validate({ params: schemas.idParams })
 
+// 2026-11-23 (owner): an agency starts a chat with someone on its books on any plan; anyone else needs `outreach`.
+const outreach = requireEntitlement('outreach', HIRING_ROLES)
+async function outreachUnlessOnBooks(req, res, next) {
+  const candidateId = req.body?.candidateId
+  if (req.user.role === 'agency' && mongoose.isValidObjectId(candidateId) && (await AgencyMembership.exists({ companyId: req.company._id, candidateId, status: 'active' }))) return next()
+  return outreach(req, res, next)
+}
+
 router.use(requireAuth, requireRole('candidate', ...HIRING_ROLES), (req, res, next) => (isHiring(req.user.role) ? requireApprovedRecruiter(req, res, next) : next()))
 
 router.get('/', async (req, res) => {
   res.json(await messages.listConversations(req.user, req.company))
 })
 
-router.post('/', requireEntitlement('message_send'), requireEntitlement('outreach', HIRING_ROLES), validate({ body: schemas.startBody }), async (req, res) => {
+router.post('/', requireEntitlement('message_send'), outreachUnlessOnBooks, validate({ body: schemas.startBody }), async (req, res) => {
   res.status(201).json(await messages.start(req.user, req.company, req.body))
 })
 

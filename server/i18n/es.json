@@ -603,7 +603,11 @@
         "accepted": "{{candidate}} aceptó tu oferta para {{job}}.",
         "declined": "{{candidate}} rechazó tu oferta para {{job}}."
       },
-      "placement_notice_given": "{{candidate}} dio preaviso en {{job}}. La colocación termina ahora el {{date}}."
+      "placement_notice_given": "{{candidate}} dio preaviso en {{job}}. La colocación termina ahora el {{date}}.",
+      "placement_ending_soon": {
+        "fits": "La colocación de {{candidate}} como {{job}} termina el {{date}}. Tus empleos abiertos que le encajan después: {{jobs}}. Ofrécele uno desde Colocaciones.",
+        "none": "La colocación de {{candidate}} como {{job}} termina el {{date}}. Ninguno de tus empleos de agencia publicados que empiezan después le encaja todavía."
+      }
     },
     "candidateSummary": {
       "agency_invited": "{{agency}} te invitó a unirte a su cartera. Lee su acuerdo para aceptar.",

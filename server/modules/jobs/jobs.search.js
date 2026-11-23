@@ -22,6 +22,8 @@ import { jobFieldsDto } from './jobs.service.js'
  * also see the score and label (C6) and get For you and Recommended ranked by score.
  */
 const DAY_MS = 24 * 60 * 60 * 1000
+// Phase 6 (owner 2026-11-23): For you lifts jobs of agencies the candidate is on the books of by this many score points (one skill unscored).
+const AGENCY_LIFT = 5
 
 /** M-044: companies whose recruiter is approved and not suspended. */
 async function visibleCompanyIds() {
@@ -107,6 +109,13 @@ async function cardContext(user, jobs) {
     relevant: (job) => relevantPair(job, { skills }, result(job)),
     // Scored jobs first by score, then by overlap and recency (U8).
     byScore: (a, b) => (result(b)?.score ?? -1) - (result(a)?.score ?? -1) || skillOverlap(skills, b).matched.length - skillOverlap(skills, a).matched.length || newest(a, b),
+    // Phase 6: For you's order, with jobs of the candidate's own agencies a little higher.
+    forYou: (a, b) => {
+      const lift = (job) => (job.agency && memberships.get(String(job.companyId))?.status === 'active' ? 1 : 0)
+      const score = (job) => (result(job) ? result(job).score + AGENCY_LIFT * lift(job) : -1)
+      const skillCount = (job) => skillOverlap(skills, job).matched.length + lift(job)
+      return score(b) - score(a) || skillCount(b) - skillCount(a) || newest(a, b)
+    },
     card(job) {
       const company = byId.get(String(job.companyId))
       const { matched, total } = skillOverlap(skills, job)
@@ -180,17 +189,19 @@ export async function searchJobs(user, query) {
 
 /**
  * M-053: Plus = jobs with a score ≥ Good, ranked; U8 (Free, and pairs without a score): at least 1 required skill.
- * `excludeApplied` (the "For you" list and its Overview count, owner 2026-11-20): jobs the candidate applied to
- * (not withdrawn, as the card's Applied button) are left out. AI insights and learning keep them.
+ * `forYou` (the "For you" list and its Overview count): jobs the candidate applied to (not withdrawn, as the card's
+ * Applied button, owner 2026-11-20) and agency jobs their placements block until a later day (phase 6, owner
+ * 2026-11-23) are left out; jobs of agencies they are on the books of rank a little higher. AI insights and learning
+ * keep the plain ranking.
  */
-export async function recommendedJobs(user, { now = Date.now(), excludeApplied = false } = {}) {
+export async function recommendedJobs(user, { now = Date.now(), forYou = false } = {}) {
   const jobs = await Job.find({ ...(await visibleFilter()), ...viewFilter(viewOf(user)) })
   const context = await cardContext(user, jobs)
   const cards = jobs
     .filter(context.relevant)
-    .sort(context.byScore)
+    .sort(forYou ? context.forYou : context.byScore)
     .map((job) => ({ job, card: context.card(job) }))
-    .filter(({ card }) => !excludeApplied || !card.application)
+    .filter(({ card }) => !forYou || (!card.application && !(card.agency && card.lock)))
   // M-053: "+N this week" = published in the last 7 days.
   const newThisWeek = cards.filter(({ job }) => job.publishedAt && job.publishedAt.getTime() >= now - 7 * DAY_MS).length
   return { items: cards.map(({ card }) => card), total: cards.length, newThisWeek, byScore: Boolean(context.scored) }
@@ -233,7 +244,7 @@ export function unsaveJob(user, jobId) {
 
 /** GET /candidate/overview: Recommended jobs (M-053), saved jobs and profile views (M-184). */
 export async function candidateOverview(user, now = Date.now()) {
-  const recommended = await recommendedJobs(user, { now, excludeApplied: true })
+  const recommended = await recommendedJobs(user, { now, forYou: true })
   const [savedCount, last30, previous30] = await Promise.all([
     SavedJob.countDocuments({ candidateId: user._id }),
     ProfileView.countDocuments({ candidateId: user._id, at: { $gte: new Date(now - 30 * DAY_MS) } }),

@@ -5,6 +5,7 @@ import { signedUrl } from '../../lib/files.js'
 import { t } from '../../lib/i18n.js'
 import { sendEmail } from '../../lib/mailer.js'
 import { matchesKeywords, searchText, skillOverlap, skillSet } from '../../lib/skills.js'
+import { AgencyMembership } from '../agencies/agencies.model.js'
 import { ACTIVE_FILTER, Application, PipelineStage } from '../applications/applications.model.js'
 import { CandidateProfile } from '../candidates/candidates.model.js'
 import { CvAccessRequest, CvVersion } from '../cv/cv.model.js'
@@ -196,9 +197,11 @@ export async function listCandidates(user, company, query, entitlements) {
 export async function accessibleCandidate(id, company, applicationFilter = {}) {
   const [entry] = await listableCandidates([id])
   if (entry) return entry
-  if (await Application.exists({ candidateId: id, companyId: company._id, ...applicationFilter })) {
+  // 2026-11-23 (owner): someone on the agency's books is reachable like an applicant.
+  const viaBooks = Boolean(await AgencyMembership.exists({ companyId: company._id, candidateId: id, status: 'active' }))
+  if (viaBooks || (await Application.exists({ candidateId: id, companyId: company._id, ...applicationFilter }))) {
     const [user, profile] = await Promise.all([User.findOne({ _id: id, role: 'candidate', status: 'active' }), CandidateProfile.findOne({ userId: id, 'restricted.at': null })])
-    if (user && profile) return { user, profile, viaApplication: true }
+    if (user && profile) return { user, profile, viaApplication: true, viaBooks }
   }
   throw new AppError('NOT_FOUND')
 }
@@ -223,7 +226,9 @@ export async function candidateProfile(user, company, id, jobId) {
     // M-071: one stage select per application; the profile of a non-applicant has none.
     applications: applications.map((application) => ({ id: String(application._id), status: application.status, stageId: String(application.stageId), appliedAt: application.appliedAt, coverNote: application.coverNote ?? '', job: { id: String(application.jobId), title: jobTitles.get(String(application.jobId)) } })),
     // A new conversation needs a listable candidate or an application that is not withdrawn (P7-C2, owner change).
-    canStartConversation: !entry.viaApplication || applications.some((application) => application.status !== 'withdrawn'),
+    canStartConversation: !entry.viaApplication || entry.viaBooks || applications.some((application) => application.status !== 'withdrawn'),
+    // 2026-11-23: on the agency's books, a chat starts on any agency plan (owner).
+    onBooks: entry.viaBooks ?? Boolean(company && (await AgencyMembership.exists({ companyId: company._id, candidateId: entry.user._id, status: 'active' }))),
     // C24: course certificates show wherever the profile is visible (they do not verify skills, M-026).
     courseCertificates: (await badgesOf([entry.user._id]))(entry.user._id),
     // Owner 2026-11-05: the courses the candidate takes or finished here (progress only, no payment details).

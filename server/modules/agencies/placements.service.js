@@ -3,13 +3,17 @@ import { dailyJobs } from '../../jobs/scheduler.js'
 import { Company } from '../companies/companies.model.js'
 import { logoUrls } from '../companies/companies.service.js'
 import { Job } from '../jobs/jobs.model.js'
+import { skillOverlap } from '../../lib/skills.js'
+import { CandidateProfile } from '../candidates/candidates.model.js'
+import { agencyClients } from '../jobs/jobs.search.js'
+import { resultsBy } from '../matching/matching.service.js'
 import { User } from '../users/users.model.js'
 import { AgencyClient, AgencyMembership, AgencyPlacement } from './agencies.model.js'
 import { currentAgreement } from './agreements.service.js'
 import { tellAgency, tellCandidate } from './agencies.notify.js'
 import { agreedAgreement } from './books.service.js'
 import { RULES, rulesDto } from './contracts.js'
-import { addDays, checkTarget, effectiveEnd, hoursOf, jobTarget, phaseOf, today } from './lock.js'
+import { addDays, checkTarget, checkWith, effectiveEnd, hoursOf, jobTarget, phaseOf, targetOf, today } from './lock.js'
 
 /*
  * 2026-11-20: placements. Hired on an agency job creates a confirmed placement; a re-hire is offered and confirmed when
@@ -153,8 +157,13 @@ function filtered(placements, view) {
 
 /** GET /agency/placements?view=: newest start first. */
 export async function agencyPlacements(user, company, view) {
-  const placements = await AgencyPlacement.find({ companyId: company._id, status: { $in: ['offered', 'confirmed'] } }).sort({ startDate: -1, createdAt: -1 })
-  const items = await placementDtos(filtered(placements, view), user._id)
+  const placements = filtered(await AgencyPlacement.find({ companyId: company._id, status: { $in: ['offered', 'confirmed'] } }).sort({ startDate: -1, createdAt: -1 }), view)
+  const items = await placementDtos(placements, user._id)
+  // Phase 6: a running placement that ends within the agency's alert window shows what fits that person next.
+  const alertDay = addDays(today(), AGENCY_ENDS_SOON_DAYS)
+  for (const [index, placement] of placements.entries()) {
+    if (placement.status === 'confirmed' && phaseOf(placement) === 'running' && effectiveEnd(placement) <= alertDay) items[index].next = await nextFitsOf(placement)
+  }
   return { items, total: items.length, page: 1, pageSize: items.length }
 }
 
@@ -176,21 +185,72 @@ export async function endEarly(user, company, id, endDate) {
   return dtoOf(placement, user._id)
 }
 
+/** An offer of `job` (published, the agency's own) to a candidate on the books; the checks run now and again on accept. */
+async function offer(user, company, job, candidateId, previousId) {
+  if (await AgencyPlacement.exists({ candidateId, jobId: job._id, status: { $in: ['offered', 'confirmed'] } })) throw new AppError('CONFLICT', { params: { reason: 'already_placed' } })
+  await assertOnBooks(company._id, candidateId)
+  await assertAllowed(candidateId, job)
+  const placement = await AgencyPlacement.create({ ...(await fromJob(job, candidateId)), ...(previousId && { previousId }), status: 'offered' })
+  await tellCandidate(candidateId, 'placement_offered', { agency: company.displayName, job: job.title })
+  return dtoOf(placement, user._id)
+}
+
+async function publishedAgencyJob(company, jobId) {
+  const job = await Job.findOne({ _id: jobId, companyId: company._id, status: 'published', agency: { $ne: null } })
+  if (!job) throw fieldError({ jobId: 'invalid' })
+  return job
+}
+
 /**
  * POST /agency/placements/:id/rehire { jobId }: after a placement is over, the agency offers the same person another of
- * its published agency jobs (its dates, rate and contract). The checks run now and again when the candidate accepts.
+ * its published agency jobs (its dates, rate and contract).
  */
 export async function offerRehire(user, company, id, jobId) {
   const previous = await ownPlacement(company, id)
   if (previous.status !== 'confirmed' || phaseOf(previous) !== 'over') throw new AppError('CONFLICT', { params: { reason: 'not_over' } })
-  const job = await Job.findOne({ _id: jobId, companyId: company._id, status: 'published', agency: { $ne: null } })
-  if (!job) throw fieldError({ jobId: 'invalid' })
-  if (await AgencyPlacement.exists({ candidateId: previous.candidateId, jobId: job._id, status: { $in: ['offered', 'confirmed'] } })) throw new AppError('CONFLICT', { params: { reason: 'already_placed' } })
-  await assertOnBooks(company._id, previous.candidateId)
-  await assertAllowed(previous.candidateId, job)
-  const placement = await AgencyPlacement.create({ ...(await fromJob(job, previous.candidateId)), previousId: previous._id, status: 'offered' })
-  await tellCandidate(previous.candidateId, 'placement_offered', { agency: company.displayName, job: job.title })
-  return dtoOf(placement, user._id)
+  return offer(user, company, await publishedAgencyJob(company, jobId), previous.candidateId, previous._id)
+}
+
+/** POST /agency/placements/offer { jobId, candidateId } (phase 6): an offer straight to someone on the books. */
+export async function offerPlacement(user, company, { jobId, candidateId }) {
+  return offer(user, company, await publishedAgencyJob(company, jobId), candidateId)
+}
+
+/*
+ * Phase 6: what fits a person next. The agency's own published agency jobs starting on or after `freeFrom`, that the
+ * person may take (rule check) and was not offered yet, best match first (the stored score, else required-skill overlap).
+ */
+const NEXT_FITS = 3
+
+async function nextFits(companyId, candidateId, freeFrom, confirmed) {
+  const [jobs, taken, profile] = await Promise.all([
+    Job.find({ companyId, status: 'published', 'agency.startDate': { $gte: freeFrom } }),
+    AgencyPlacement.find({ candidateId, status: { $in: ['offered', 'confirmed'] } }, 'jobId'),
+    CandidateProfile.findOne({ userId: candidateId }, 'skills'),
+  ])
+  const takenIds = new Set(taken.map((placement) => String(placement.jobId)))
+  const open = jobs.filter((job) => !takenIds.has(String(job._id)))
+  if (!open.length) return []
+  const [clients, results] = await Promise.all([agencyClients(open), resultsBy({ candidateId }, open.map((job) => job._id))])
+  const overlap = (job) => skillOverlap(profile?.skills ?? [], job).matched.length
+  return open
+    .filter((job) => checkWith(confirmed, targetOf(job, clients.get(String(job.agency.clientId)))).allowed)
+    .map((job) => ({ job, result: results.get(String(job._id)) ?? null }))
+    .sort((a, b) => (b.result?.score ?? -1) - (a.result?.score ?? -1) || overlap(b.job) - overlap(a.job) || a.job.agency.startDate.localeCompare(b.job.agency.startDate))
+    .slice(0, NEXT_FITS)
+    .map(({ job, result }) => ({
+      id: String(job._id),
+      title: job.title,
+      startDate: job.agency.startDate,
+      endDate: job.agency.endDate,
+      match: result ? { score: result.score, label: result.label ?? null } : null,
+    }))
+}
+
+/** The next fits of a confirmed placement: jobs from the day after it really ends. */
+async function nextFitsOf(placement) {
+  const confirmed = await AgencyPlacement.find({ candidateId: placement.candidateId, status: 'confirmed' })
+  return nextFits(placement.companyId, placement.candidateId, addDays(effectiveEnd(placement), 1), confirmed)
 }
 
 /** POST /agency/placements/:id/withdraw: an offer the candidate has not answered. */
@@ -275,12 +335,31 @@ export async function checkJob(user, jobId) {
  * earlier end is reminded too). Each day is reminded once; a new end date is reminded again.
  */
 const ENDS_SOON_DAYS = 3
+// Phase 6: the agency hears 7 days before the effective end, with the jobs that fit the person next.
+const AGENCY_ENDS_SOON_DAYS = 7
+
+/** The agency's ending-soon alert for one placement whose effective end is `endsOn`. */
+async function alertAgency(placement, endsOn) {
+  // Marked first, so a failing notice is not sent twice.
+  await AgencyPlacement.updateOne({ _id: placement._id }, { remindedAgencyEndOn: endsOn })
+  const [job, candidate, next] = await Promise.all([Job.findById(placement.jobId, 'title'), User.findById(placement.candidateId, 'fullName'), nextFitsOf(placement)])
+  await tellAgency(placement.companyId, 'placement_ending_soon', {
+    candidate: candidate?.fullName ?? null,
+    job: job?.title ?? '',
+    date: endsOn,
+    next: next.length,
+    jobs: next.map((entry) => entry.title),
+    variant: next.length ? 'fits' : 'none',
+  })
+}
 
 export async function sendPlacementReminders() {
   const tomorrow = addDays(today(), 1)
   const endsOn = addDays(today(), ENDS_SOON_DAYS)
-  const placements = await AgencyPlacement.find({ status: 'confirmed', $or: [{ startDate: tomorrow, remindedStartOn: null }, { endDate: { $gte: endsOn }, startDate: { $lte: endsOn } }] })
+  const agencyEndsOn = addDays(today(), AGENCY_ENDS_SOON_DAYS)
+  const placements = await AgencyPlacement.find({ status: 'confirmed', $or: [{ startDate: tomorrow, remindedStartOn: null }, { endDate: { $gte: endsOn }, startDate: { $lte: agencyEndsOn } }] })
   for (const placement of placements) {
+    if (effectiveEnd(placement) === agencyEndsOn && placement.remindedAgencyEndOn !== agencyEndsOn) await alertAgency(placement, agencyEndsOn)
     const due = [
       placement.startDate === tomorrow && !placement.remindedStartOn && { type: 'placement_starts_soon', date: tomorrow, mark: { remindedStartOn: tomorrow } },
       effectiveEnd(placement) === endsOn && placement.remindedEndOn !== endsOn && { type: 'placement_ends_soon', date: endsOn, mark: { remindedEndOn: endsOn } },

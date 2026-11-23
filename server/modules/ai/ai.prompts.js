@@ -1,3 +1,4 @@
+import { ENUMS } from '../../config/enums.js'
 import { LIMITS } from '../../config/limits.js'
 
 /*
@@ -118,6 +119,29 @@ preferredSkills: 2 to 5 nice-to-have skills in the same form, none repeating a r
 level and experienceYears (a whole number from ${J.experienceYears.min} to ${J.experienceYears.max}): what the title and notes suggest; mid and 3 when nothing does.
 languages: only languages the notes ask for or the role plainly needs, as ISO 639-1 codes with a minimum CEFR level (or native); usually none.`,
   },
+  // 2026-11-23 (phase 6): the agency's job post writer: the same draft plus the client, dates, pay rate and hours.
+  get agencyJobDraft() {
+    const base = PROMPTS.jobDraft
+    return {
+      kind: base.kind,
+      schema: object({
+        ...base.schema.properties,
+        clientRef: text,
+        clientName: text,
+        startDate: text,
+        endDate: text,
+        rate: { type: 'number' },
+        ratePeriod: { type: 'string', enum: [...ENUMS.ratePeriod, 'none'] },
+        hoursPerWeek: { type: 'integer' },
+      }),
+      instructions: `${base.instructions}
+This is a short-term job an agency fills for one of its clients. Also read the notes for these terms, and only from the notes (never guess them):
+clientRef and clientName: the client the notes name. clientRef is the ref of the matching entry in clients (same company, even when written shorter or with a different legal suffix), else an empty string; clientName is the client as the notes write it, else an empty string. Never name the client in brief or responsibilities: write "the client" or describe the kind of business instead.
+startDate and endDate: as YYYY-MM-DD, using today (given) for dates such as "next Monday" or "for 3 weeks"; empty strings when the notes give no dates.
+rate and ratePeriod: the pay rate as a plain number in the job's currency and whether it is per hour or per day; 0 and none when the notes give no rate.
+hoursPerWeek: the weekly hours the notes give, else 0.`,
+    }
+  },
   // 2026-11-17: the company description writer, from the company's own details only (no website fetching).
   companyDescription: {
     kind: 'company_description',
@@ -131,6 +155,13 @@ Write the "About the company" text candidates read on job postings, from the com
     schema: object({ items: { type: 'array', items: object({ applicationId: text, reason: text }) } }),
     instructions: `${DRAFT_RULES}
 Rank the job's new applicants for a first review, strongest fit first, using only the evidence given per applicant (matching and missing required skills, years of experience, headline, location, the match score and the cover note). Return at most ${LIMITS.ai.shortlist.size} applicants, each with its applicationId copied exactly and one sentence of at most 25 words naming the main reason (or the main gap) from that evidence. This helps the recruiter decide whom to read first; it is not a hiring decision.`,
+  },
+  // 2026-11-23 (phase 6): one line beside each person of an agency's on-books talent ranked for a job (the code orders them).
+  talentRanking: {
+    kind: 'talent_ranking',
+    schema: object({ items: { type: 'array', items: object({ membershipId: text, reason: text }) } }),
+    instructions: `${DRAFT_RULES}
+The people are on the agency's books and are listed best match first for one of its short-term jobs; keep that order. For each person write one sentence of at most 20 words naming the main reason they fit (or the main gap), using only their evidence (matching and missing required skills, years of experience, headline, location, work preference and the match score). Copy each membershipId exactly and return every person once. This helps the agency decide whom to offer the job first; it is not a hiring decision.`,
   },
   // 2026-11-17: "Draft with AI" for a recruiter's message: a first message, a status update or a reply.
   messageDraft: {

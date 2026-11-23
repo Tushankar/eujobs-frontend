@@ -248,6 +248,7 @@ async function eraseCandidate(user) {
     status: 'pending',
     $or: [{ 'payload.applicationId': { $in: applicationIds.map(String) } }, { 'payload.conversationId': { $in: conversationIds.map(String) } }],
   })
+  const membershipIds = (await AgencyMembership.find({ candidateId: user._id }, '_id')).map((membership) => String(membership._id))
   await Promise.all([
     Application.deleteMany({ candidateId: user._id }),
     AgencyMembership.deleteMany({ candidateId: user._id }),
@@ -257,6 +258,8 @@ async function eraseCandidate(user) {
     AiCache.deleteMany({ subjectId: user._id }),
     // 2026-11-17: an AI shortlist naming one of the candidate's applications (it is made again on the next click).
     AiCache.deleteMany({ kind: 'applicant_shortlist', 'output.items.applicationId': { $in: applicationIds.map(String) } }),
+    // 2026-11-23 (phase 6): AI reasons of an agency's ranking naming one of the candidate's memberships.
+    AiCache.deleteMany({ kind: 'talent_ranking', 'output.items.membershipId': { $in: membershipIds } }),
     Embedding.deleteMany({ ownerType: 'candidate', ownerId: user._id }),
     MatchResult.deleteMany({ candidateId: user._id }),
     ShortlistEntry.deleteMany({ candidateId: user._id }),
