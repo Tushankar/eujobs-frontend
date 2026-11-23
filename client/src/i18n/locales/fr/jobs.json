@@ -116,7 +116,28 @@
     "agencyText": "À partir de l'intitulé, du type de contrat et de quelques notes, l'IA rédige la description, les responsabilités, les compétences, le niveau, les années et les langues, ainsi que le client, les dates, le tarif et les heures indiqués dans vos notes. Elle ne remplit que les champs vides et ne nomme jamais le client dans le texte ; relisez chaque étape avant de publier.",
     "agencyNotesPlaceholder": "ex. 3 semaines de nuit pour Acme à partir de lundi, 14,50 € de l'heure, 38 heures par semaine, CACES chariot",
     "unknownClient": "{{name}} n'est pas encore dans votre liste de Clients. Ajoutez-le, puis choisissez-le dans Conditions d'agence.",
-    "addClient": "Ajouter un client"
+    "addClient": "Ajouter un client",
+    "onlyDifferent": "Votre offre a déjà du texte dans ces champs, rien n’a donc été remplacé. L’IA a écrit une autre version : comparez-la ci-dessous.",
+    "compareTitle": "L’IA a écrit autre chose ({{total}})",
+    "compareText": "Rien ne change tant que vous ne choisissez pas. Les champs repris portent la marque ✦ IA pour que vous les relisiez.",
+    "now": "Actuel",
+    "aiVersion": "IA",
+    "use": "Utiliser la version de l’IA",
+    "useAll": "Utiliser toutes les versions de l’IA",
+    "fieldNames": {
+      "brief": "Description",
+      "responsibilities": "Responsabilités",
+      "requiredSkills": "Compétences requises",
+      "preferredSkills": "Compétences souhaitées",
+      "level": "Niveau",
+      "experienceYears": "Années d’expérience",
+      "requiredLanguages": "Langues",
+      "clientId": "Client",
+      "startDate": "Date de début",
+      "endDate": "Date de fin",
+      "rateAmount": "Taux",
+      "hoursPerWeek": "Heures par semaine"
+    }
   },
   "preview": {
     "title": "Aperçu",

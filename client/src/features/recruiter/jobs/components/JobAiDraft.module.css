@@ -118,3 +118,115 @@
     grid-template-columns: minmax(0, 1fr);
   }
 }
+
+/* 2026-11-23 (owner chose "compare and pick per field"): what the posting has beside the AI's version. */
+.compare {
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+  margin-top: 4px;
+  padding: 16px;
+  border: 1px solid var(--border);
+  border-radius: var(--radius-lg);
+  container-type: inline-size;
+}
+
+.compareHead {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: flex-start;
+  justify-content: space-between;
+  gap: 10px 16px;
+}
+
+.compareList {
+  display: flex;
+  flex-direction: column;
+  margin: 0;
+  padding: 0;
+  list-style: none;
+}
+
+.compareRow {
+  display: grid;
+  grid-template-columns: minmax(0, 140px) minmax(0, 1fr) auto;
+  align-items: start;
+  gap: 10px 16px;
+  padding: 14px 0;
+}
+
+.compareRow + .compareRow {
+  border-top: 1px solid var(--border);
+}
+
+.compareLabel {
+  font-size: 13px;
+  font-weight: 600;
+  line-height: 20px;
+  color: var(--muted-foreground);
+}
+
+.compareValues {
+  display: grid;
+  grid-template-columns: minmax(0, 1fr) minmax(0, 1fr);
+  gap: 10px;
+}
+
+.compareValue {
+  display: flex;
+  flex-direction: column;
+  gap: 4px;
+  min-width: 0;
+  padding: 10px 12px;
+  border: 1px solid var(--border);
+  border-radius: var(--radius-md);
+  font-size: 13px;
+  line-height: 20px;
+  color: var(--foreground);
+  overflow-wrap: anywhere;
+}
+
+.compareValue + .compareValue {
+  background: var(--muted);
+}
+
+.compareTag {
+  display: inline-flex;
+  align-items: center;
+  gap: 4px;
+  font-size: 11px;
+  font-weight: 700;
+  line-height: 16px;
+  letter-spacing: 0.02em;
+  text-transform: uppercase;
+  color: var(--muted-foreground);
+}
+
+.compareValue + .compareValue .compareTag {
+  color: var(--primary);
+}
+
+.compareNow {
+  color: var(--muted-foreground);
+}
+
+.compareClamp {
+  display: -webkit-box;
+  overflow: hidden;
+  -webkit-line-clamp: 4;
+  -webkit-box-orient: vertical;
+}
+
+@container (max-width: 620px) {
+  .compareRow {
+    grid-template-columns: minmax(0, 1fr);
+  }
+
+  .compareValues {
+    grid-template-columns: minmax(0, 1fr);
+  }
+
+  .compareRow > button {
+    justify-self: start;
+  }
+}

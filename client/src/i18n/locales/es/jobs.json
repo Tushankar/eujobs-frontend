@@ -116,7 +116,28 @@
     "agencyText": "A partir del título, el tipo de empleo y unas notas, la IA redacta la descripción, las responsabilidades, las habilidades, el nivel, los años y los idiomas, además del cliente, las fechas, la tarifa y las horas que den tus notas. Solo rellena los campos vacíos y nunca nombra al cliente en el texto; revisa cada paso antes de publicar.",
     "agencyNotesPlaceholder": "p. ej. 3 semanas de turno de noche para Acme desde el lunes, 14,50 € la hora, 38 horas a la semana, carné de carretilla",
     "unknownClient": "{{name}} aún no está en tu lista de Clientes. Añádelo y elígelo en Condiciones de agencia.",
-    "addClient": "Añadir un cliente"
+    "addClient": "Añadir un cliente",
+    "onlyDifferent": "Tu oferta ya tiene texto en estos campos, así que no se ha sustituido nada. La IA ha escrito otra versión: compárala abajo.",
+    "compareTitle": "La IA ha escrito algo distinto ({{total}})",
+    "compareText": "Nada cambia hasta que elijas. Los campos que uses llevan la marca ✦ IA para que los revises.",
+    "now": "Ahora",
+    "aiVersion": "IA",
+    "use": "Usar la versión de la IA",
+    "useAll": "Usar todas las versiones de la IA",
+    "fieldNames": {
+      "brief": "Descripción",
+      "responsibilities": "Responsabilidades",
+      "requiredSkills": "Habilidades obligatorias",
+      "preferredSkills": "Habilidades deseables",
+      "level": "Nivel",
+      "experienceYears": "Años de experiencia",
+      "requiredLanguages": "Idiomas",
+      "clientId": "Cliente",
+      "startDate": "Fecha de inicio",
+      "endDate": "Fecha de fin",
+      "rateAmount": "Tarifa",
+      "hoursPerWeek": "Horas por semana"
+    }
   },
   "preview": {
     "title": "Vista previa",

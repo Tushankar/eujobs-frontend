@@ -11,6 +11,7 @@ import AiStatus from '@/features/ai/components/AiStatus.jsx'
 import AiUsesLeft from '@/features/ai/components/AiUsesLeft.jsx'
 import { useJobText } from '@/lib/jobText.js'
 import { useFormat } from '@/lib/preferences.js'
+import JobAiCompare from './JobAiCompare.jsx'
 import styles from './JobAiDraft.module.css'
 
 // The form fields a draft can fill, in wizard order, with the value they count as empty.
@@ -60,6 +61,16 @@ const lines = (text) =>
     .map((line) => line.trim())
     .filter(Boolean)
 const skillNames = (skills) => skills.map((skill) => (typeof skill === 'string' ? skill : skill.name)).filter(Boolean)
+
+/** A field's value in a form two values can be compared by (skills by name, languages by code and level). */
+const comparable = (field, value, period) => {
+  if (field === 'requiredSkills' || field === 'preferredSkills') return skillNames(value).map((name) => name.toLowerCase()).join('|')
+  if (field === 'requiredLanguages') return value.map(({ code, level }) => `${code}:${level}`).join('|')
+  if (field === 'responsibilities') return lines(value).join('|')
+  if (field === 'rateAmount') return `${Number(value)}/${period}`
+  if (field === 'hoursPerWeek' || field === 'experienceYears') return String(Number(value))
+  return String(value ?? '').trim()
+}
 
 /**
  * 2026-11-23: what the posting holds now in the fields a draft fills. Those fields live on the later steps, so
@@ -125,6 +136,8 @@ export default function JobAiDraft({ values, setValue, onDrafted }) {
   const { data: config } = useGetConfigQuery()
   const [notes, setNotes] = useState('')
   const [filled, setFilled] = useState(null)
+  // 2026-11-23: fields that already had text where the AI wrote something else, to compare and pick.
+  const [compare, setCompare] = useState(null)
   const [unknownClient, setUnknownClient] = useState(null)
   const [draftJob, state] = useDraftJobMutation()
   const agency = currentRole() === 'agency'
@@ -133,6 +146,7 @@ export default function JobAiDraft({ values, setValue, onDrafted }) {
 
   async function handleDraft() {
     setFilled(null)
+    setCompare(null)
     setUnknownClient(null)
     try {
       const answer = await draftJob({ title: values.title.trim(), employmentType: values.employmentType, notes: notes.trim() }).unwrap()
@@ -141,6 +155,10 @@ export default function JobAiDraft({ values, setValue, onDrafted }) {
       fields.forEach((field) => setValue(field, draft[field]))
       if (fields.includes('rateAmount') && draft.ratePeriod) setValue('ratePeriod', draft.ratePeriod)
       setFilled(fields)
+      const differ = Object.keys(empty).filter(
+        (field) => !fields.includes(field) && !empty[field](values[field]) && !empty[field](draft[field]) && comparable(field, values[field], values.ratePeriod) !== comparable(field, draft[field], draft.ratePeriod),
+      )
+      setCompare({ draft, fields: differ })
       // 2026-11-23: the wizard marks the steps these fields are on.
       onDrafted?.(fields)
       // A client the notes name that is not on the Clients list yet.
@@ -149,6 +167,16 @@ export default function JobAiDraft({ values, setValue, onDrafted }) {
       // AiStatus shows the failure (limit, pause, unavailable).
     }
   }
+
+  /** Takes the AI's version of the picked fields (the rate's period goes with the amount) and marks them. */
+  function takeVersion(picked) {
+    picked.forEach((field) => setValue(field, compare.draft[field]))
+    if (picked.includes('rateAmount') && compare.draft.ratePeriod) setValue('ratePeriod', compare.draft.ratePeriod)
+    onDrafted?.(picked)
+    setFilled((done) => [...(done ?? []), ...picked])
+    setCompare((current) => ({ ...current, fields: current.fields.filter((field) => !picked.includes(field)) }))
+  }
+  const differing = compare?.fields ?? []
 
   return (
     <section className={styles.panel} aria-labelledby="job-ai-draft" data-job-ai-draft>
@@ -179,10 +207,13 @@ export default function JobAiDraft({ values, setValue, onDrafted }) {
           <p className={styles.done} role="status" data-job-ai-filled={filled.join(',')}>
             {filled.length
               ? t('jobs:aiDraft.filled', { fields: filled.map((field) => t(`jobs:aiDraft.fields.${field}`)).join(', ') })
-              : t('jobs:aiDraft.nothing')}
+              : differing.length
+                ? t('jobs:aiDraft.onlyDifferent')
+                : t('jobs:aiDraft.nothing')}
           </p>
         )}
-        {filled && <DraftPreview values={values} agency={agency} />}
+        {compare && <JobAiCompare fields={differing} values={values} draft={compare.draft} agency={agency} onUse={(field) => takeVersion([field])} onUseAll={() => takeVersion(differing)} />}
+        {filled && differing.length === 0 && <DraftPreview values={values} agency={agency} />}
         {unknownClient && (
           <p className={styles.text} role="status" data-job-ai-unknown-client>
             {t('jobs:aiDraft.unknownClient', { name: unknownClient })}{' '}

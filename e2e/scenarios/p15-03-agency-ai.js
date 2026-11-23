@@ -175,6 +175,44 @@ export default {
     await handle.checkOverflow()
     await ctx.screenshot(page, '7-ai-job-draft')
 
+    // Owner 2026-11-23 ("I gave notes and Draft with AI did nothing"): a second draft over filled fields offers the
+    // AI's version beside what is there, field by field; nothing changes until a click.
+    await fill(page, '[data-job-ai-draft] textarea', `Night cover for Acme Logistics from ${dayFromToday(14)} to ${dayFromToday(35)}, 16 an hour, 30 hours a week.`)
+    await page.click('[data-job-ai-draft-button]')
+    await page.waitForSelector('[data-job-ai-compare], [data-job-ai-filled]', { timeout: 90_000 })
+    await new Promise((resolve) => setTimeout(resolve, 500))
+    const offered = await page.$$eval('[data-ai-compare]', (rows) => rows.map((row) => row.dataset.aiCompare))
+    ctx.check(offered.includes('rateAmount') && offered.includes('hoursPerWeek'), `the second draft offers the new pay rate and hours to compare (${offered.join(', ')})`)
+    await ctx.screenshot(page, '7a-ai-compare')
+    if (offered.includes('rateAmount')) {
+      await page.click('[data-ai-use="rateAmount"]')
+      await new Promise((resolve) => setTimeout(resolve, 300))
+      const stillOffered = await page.$$eval('[data-ai-compare]', (rows) => rows.map((row) => row.dataset.aiCompare))
+      ctx.check(!stillOffered.includes('rateAmount'), 'Use AI’s version takes the pay rate and leaves the rest to choose')
+    }
+
+    // Owner 2026-11-23: "show in which fields, with stars, what AI analysed". Each field the draft filled carries a
+    // "✦ AI" pill after its label, on its own step.
+    const heading = () => page.$eval('form h2', (title) => title.textContent.trim()).catch(() => '')
+    const marked = () => page.$$eval('.ai-filled', (fields) => fields.map((field) => (field.querySelector(':scope > label, :scope > legend')?.textContent ?? field.textContent).trim()))
+    await clickText(page, 'Continue', 'button')
+    await page.waitForFunction(() => document.querySelector('form h2')?.textContent.trim() === 'Responsibilities', { timeout: 15_000 }).catch(() => {})
+    const onResponsibilities = await marked()
+    ctx.check(onResponsibilities.length >= 2, `the description and responsibilities carry the AI mark (${onResponsibilities.join(', ')})`)
+    const pill = await page.$eval('.ai-filled > label', (label) => getComputedStyle(label, '::after').content).catch(() => '')
+    ctx.check(pill.includes('AI'), `the mark reads "✦ AI" (${pill})`)
+    await ctx.screenshot(page, '7b-ai-marks-responsibilities')
+    for (let tries = 0; tries < 6 && (await heading()) !== 'Agency terms'; tries += 1) {
+      await clickText(page, 'Continue', 'button')
+      await new Promise((resolve) => setTimeout(resolve, 1200))
+    }
+    if ((await heading()) === 'Agency terms') {
+      const onTerms = await marked()
+      ctx.note(`AI-marked agency terms: ${onTerms.join(' | ')}`)
+      ctx.check(['Client', 'Start date', 'End date', 'Hours per week'].every((name) => onTerms.some((label) => label.startsWith(name))) && onTerms.some((label) => label.startsWith('Pay rate')), 'client, dates, pay rate and hours carry the AI mark')
+      await ctx.screenshot(page, '7c-ai-marks-agency-terms')
+    } else ctx.note(`could not reach Agency terms to check its marks (stopped on "${await heading()}")`)
+
     // 8. For you: Cleo is blocked from both agency jobs until day 21, so neither is suggested to her.
     // By id: other scenarios in the same run post jobs with the same titles (P15-02 has its own Night Picker).
     const forYou = ok(await api('/jobs/recommended', { token: people.Cleo.token }), 'for you').items.map((job) => job.id)

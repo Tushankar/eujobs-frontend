@@ -115,7 +115,28 @@
     "agencyText": "From the title, the employment type and a few notes, AI drafts the description, responsibilities, skills, level, years and languages, plus the client, dates, pay rate and hours your notes give. It only fills fields you left empty and never names the client in the text; review every step before you publish.",
     "agencyNotesPlaceholder": "e.g. 3 weeks of night cover for Acme from next Monday, €14.50 an hour, 38 hours a week, forklift licence",
     "unknownClient": "{{name}} is not on your Clients list yet. Add it, then pick it in Agency terms.",
-    "addClient": "Add a client"
+    "addClient": "Add a client",
+    "onlyDifferent": "Your posting already has text in these fields, so nothing was replaced. The AI wrote a different version: compare it below.",
+    "compareTitle": "The AI wrote something different ({{total}})",
+    "compareText": "Nothing changes until you choose. Fields you take get the ✦ AI mark so you can review them.",
+    "now": "Now",
+    "aiVersion": "AI",
+    "use": "Use AI’s version",
+    "useAll": "Use all AI versions",
+    "fieldNames": {
+      "brief": "Description",
+      "responsibilities": "Responsibilities",
+      "requiredSkills": "Required skills",
+      "preferredSkills": "Preferred skills",
+      "level": "Level",
+      "experienceYears": "Years of experience",
+      "requiredLanguages": "Languages",
+      "clientId": "Client",
+      "startDate": "Start date",
+      "endDate": "End date",
+      "rateAmount": "Pay rate",
+      "hoursPerWeek": "Hours per week"
+    }
   },
   "preview": {
     "title": "Preview",

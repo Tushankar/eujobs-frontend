@@ -1,6 +1,6 @@
 import { approvedAgency, dayFromToday, publishAgreement, submittedAgency } from '../lib/agencies.js'
 import { openAsAdmin, sidebarLabels } from '../lib/admins.js'
-import { onboardedCandidate } from '../lib/candidates.js'
+import { onboardedCandidate, uploadAs } from '../lib/candidates.js'
 import { bodyText, chooseFile, clickText, fill, signInWithForm, waitForPath, waitForSettled, waitForText } from '../lib/flows.js'
 import { fixture } from '../fixtures/make.js'
 import { jobBody, postJob } from '../lib/recruiters.js'
@@ -118,6 +118,25 @@ export default {
     ctx.check((await bodyText(page)).includes('Agency terms') || (await bodyText(page)).includes('Client'), 'the wizard opens the agency step')
     await handle.checkOverflow()
     await ctx.screenshot(page, '8-wizard-agency-step')
+
+    // Owner 2026-11-23: "Save and confirm does not show if the rules are confirmed; which rules does the job use?"
+    await uploadAs(agency.token, `/recruiter/jobs/${job.id}/contract`, fixture('agency-agreement.pdf'), 'application/pdf')
+    await page.reload({ waitUntil: 'networkidle0' })
+    await page.waitForSelector('[data-contract-status]')
+    ctx.check((await page.$eval('[data-contract-status]', (line) => line.dataset.contractStatus)) === 'todo', 'an attached contract says it is not confirmed yet')
+    const before = await page.$eval('[data-job-rules]', (card) => card.innerText).catch(() => '')
+    ctx.check(before.includes('until you confirm'), 'Rules for this job says the agreement applies until the contract is confirmed')
+    await page.select('select[name="exclusivity.value"]', 'free')
+    await page.click('[data-rules-action="confirm"]')
+    await page.waitForSelector('[data-contract-status="confirmed"]', { timeout: 10_000 }).catch(() => {})
+    const status = await page.$eval('[data-contract-status]', (line) => line.innerText).catch(() => '')
+    ctx.check(status.startsWith('Rules confirmed'), `Save and confirm shows the rules are confirmed ("${status.split('\n')[0]}")`)
+    await page.waitForSelector('[data-job-rules-from="contract"]', { timeout: 10_000 }).catch(() => {})
+    const after = await page.$eval('[data-job-rules]', (card) => card.innerText).catch(() => '')
+    ctx.check(after.includes('own contract applies'), 'Rules for this job then says the job contract applies')
+    await page.$eval('[data-contract-status]', (line) => line.scrollIntoView({ block: 'center' }))
+    await new Promise((resolve) => setTimeout(resolve, 600))
+    await ctx.screenshot(page, '8b-contract-confirmed')
 
     // 7. A candidate asks to join: accepted in Talent › Requests, then agrees; the bell says so.
     const candidate = await onboardedCandidate('P1501')
