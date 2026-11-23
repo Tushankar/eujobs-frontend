@@ -433,6 +433,53 @@
       "days_one": "{{count}} jour",
       "days_other": "{{count}} jours",
       "days_many": "{{count}} jours"
+    },
+    "before": {
+      "title": "Avant de postuler",
+      "theClient": "le client",
+      "ok": "Vous pouvez postuler et être placé sur cette offre.",
+      "notOnBooks": "Vous pouvez postuler. Pour être placé, rejoignez le vivier de {{agency}} et acceptez son accord (version {{version}}).",
+      "noAgreement": "Vous pouvez postuler. {{agency}} n’a pas encore publié son accord : elle ne peut placer personne avant de le faire.",
+      "requested": "Vous pouvez postuler. Votre demande pour rejoindre le vivier de {{agency}} attend la réponse de l’agence.",
+      "awaiting": "Vous pouvez postuler. Acceptez l’accord de {{agency}} pour être placé.",
+      "pending": "Vous pouvez postuler. {{agency}} a publié un nouvel accord (version {{version}}) : acceptez-le avant votre prochaine mission.",
+      "blocked": "Votre mission en cours vous empêche de prendre cette offre jusqu’au {{date}}. Voir pourquoi plus haut.",
+      "readAgreement": "Lire l’accord",
+      "ifPlaced": "Si vous êtes placé sur cette offre",
+      "ifPlacedShort": "Si vous êtes placé",
+      "readClause": "Lire la clause",
+      "summaryBooks": "Pour être placé, vous devez aussi faire partie du vivier de {{agency}} et accepter son accord.",
+      "rules": {
+        "exclusivity": {
+          "no_other_work": "Pendant la mission ({{dates}}), vous ne pouvez prendre aucun autre travail rémunéré.",
+          "no_other_agency_work": "Pendant la mission ({{dates}}), vous ne pouvez pas prendre d’autres offres d’agence. Les autres travaux restent possibles.",
+          "no_same_client": "Pendant la mission, vous ne pouvez pas travailler pour {{client}} en dehors de cette agence. Les autres travaux restent possibles.",
+          "free": "Vous êtes libre de prendre d’autres travaux pendant la mission."
+        },
+        "noticeDays_one": "Pour partir plus tôt, donnez {{count}} jour de préavis.",
+        "noticeDays_other": "Pour partir plus tôt, donnez {{count}} jours de préavis.",
+        "noticeDaysNone": "Aucun préavis n’est indiqué.",
+        "coolingOffDays_one": "Après la mission, attendez {{count}} jour avant de travailler pour {{client}} directement ou via une autre agence.",
+        "coolingOffDays_other": "Après la mission, attendez {{count}} jours avant de travailler pour {{client}} directement ou via une autre agence.",
+        "coolingOffDaysNone": "Aucun délai d’attente après la mission.",
+        "maxWeeklyHours_one": "Au plus {{count}} heure par semaine, tous travaux confondus.",
+        "maxWeeklyHours_other": "Au plus {{count}} heures par semaine, tous travaux confondus.",
+        "maxWeeklyHoursNone": "Aucune limite d’heures par semaine n’est indiquée."
+      },
+      "short": {
+        "exclusivity": {
+          "no_other_work": "aucun autre travail rémunéré pendant la mission",
+          "no_other_agency_work": "aucune autre offre d’agence pendant la mission",
+          "no_same_client": "pas de travail pour {{client}} hors de cette agence pendant la mission",
+          "free": "autres travaux autorisés"
+        },
+        "noticeDays_one": "{{count}} jour de préavis pour partir",
+        "noticeDays_other": "{{count}} jours de préavis pour partir",
+        "coolingOffDays_one": "{{count}} jour avant de retravailler pour {{client}}",
+        "coolingOffDays_other": "{{count}} jours avant de retravailler pour {{client}}",
+        "maxWeeklyHours_one": "au plus {{count}} heure par semaine",
+        "maxWeeklyHours_other": "au plus {{count}} heures par semaine"
+      }
     }
   },
   "ranking": {

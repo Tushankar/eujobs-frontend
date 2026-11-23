@@ -17,6 +17,7 @@ import { check, useErrorText, useFormState } from '@/lib/forms.js'
 import { useFormat } from '@/lib/preferences.js'
 import { useApplyMutation } from '../api.js'
 import styles from './ApplyFlow.module.css'
+import { PlacementSummary } from '@/features/candidate/agencies/components/PlacementRules.jsx'
 
 /** The checklist share as a ring, with "done/total" in the middle. */
 function ProgressRing({ done, total }) {
@@ -208,6 +209,7 @@ function ApplyDialog({ job, onClose, onApplied }) {
           label={t('applications:dialog.coverNoteAi')}
           data-cover-note-ai
         />
+        {job.agency && <PlacementSummary job={job} />}
         {canJoin && (
           <Checkbox name="joinAgency" checked={values.joinAgency} onChange={(event) => set('joinAgency', event.target.checked)} data-join-agency>
             {t('applications:dialog.joinAgency', { agency: company })}

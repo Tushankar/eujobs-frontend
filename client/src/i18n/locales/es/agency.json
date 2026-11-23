@@ -433,6 +433,53 @@
       "days_one": "{{count}} día",
       "days_other": "{{count}} días",
       "days_many": "{{count}} días"
+    },
+    "before": {
+      "title": "Antes de postularte",
+      "theClient": "el cliente",
+      "ok": "Puedes postularte y ser asignado a esta oferta.",
+      "notOnBooks": "Puedes postularte. Para ser asignado, únete a la cartera de {{agency}} y acepta su acuerdo (versión {{version}}).",
+      "noAgreement": "Puedes postularte. {{agency}} aún no ha publicado su acuerdo, así que no puede asignar a nadie hasta que lo haga.",
+      "requested": "Puedes postularte. Tu solicitud para unirte a la cartera de {{agency}} está pendiente de la agencia.",
+      "awaiting": "Puedes postularte. Acepta el acuerdo de {{agency}} para ser asignado.",
+      "pending": "Puedes postularte. {{agency}} publicó un nuevo acuerdo (versión {{version}}): acéptalo antes de tu próxima asignación.",
+      "blocked": "Tu asignación actual no te permite tomar esta oferta hasta el {{date}}. Mira el motivo arriba.",
+      "readAgreement": "Leer el acuerdo",
+      "ifPlaced": "Si te asignan a esta oferta",
+      "ifPlacedShort": "Si te asignan",
+      "readClause": "Leer la cláusula",
+      "summaryBooks": "Para ser asignado también debes estar en la cartera de {{agency}} y aceptar su acuerdo.",
+      "rules": {
+        "exclusivity": {
+          "no_other_work": "Mientras dure ({{dates}}) no puedes aceptar ningún otro trabajo remunerado.",
+          "no_other_agency_work": "Mientras dure ({{dates}}) no puedes aceptar otras ofertas de agencia. Otros trabajos sí.",
+          "no_same_client": "Mientras dure no puedes trabajar para {{client}} fuera de esta agencia. Otros trabajos sí.",
+          "free": "Puedes aceptar otros trabajos mientras dure."
+        },
+        "noticeDays_one": "Para dejarla antes, avisa con {{count}} día de antelación.",
+        "noticeDays_other": "Para dejarla antes, avisa con {{count}} días de antelación.",
+        "noticeDaysNone": "No se indica un plazo de preaviso.",
+        "coolingOffDays_one": "Al terminar, espera {{count}} día antes de trabajar para {{client}} directamente o con otra agencia.",
+        "coolingOffDays_other": "Al terminar, espera {{count}} días antes de trabajar para {{client}} directamente o con otra agencia.",
+        "coolingOffDaysNone": "No hay periodo de espera al terminar.",
+        "maxWeeklyHours_one": "Como máximo {{count}} hora a la semana en todos tus trabajos.",
+        "maxWeeklyHours_other": "Como máximo {{count}} horas a la semana en todos tus trabajos.",
+        "maxWeeklyHoursNone": "No se indica un límite de horas semanales."
+      },
+      "short": {
+        "exclusivity": {
+          "no_other_work": "ningún otro trabajo remunerado mientras dure",
+          "no_other_agency_work": "ninguna otra oferta de agencia mientras dure",
+          "no_same_client": "no trabajar para {{client}} fuera de esta agencia mientras dure",
+          "free": "otros trabajos permitidos"
+        },
+        "noticeDays_one": "{{count}} día de preaviso para dejarla",
+        "noticeDays_other": "{{count}} días de preaviso para dejarla",
+        "coolingOffDays_one": "{{count}} día antes de volver a trabajar para {{client}}",
+        "coolingOffDays_other": "{{count}} días antes de volver a trabajar para {{client}}",
+        "maxWeeklyHours_one": "como máximo {{count}} hora a la semana",
+        "maxWeeklyHours_other": "como máximo {{count}} horas a la semana"
+      }
     }
   },
   "ranking": {

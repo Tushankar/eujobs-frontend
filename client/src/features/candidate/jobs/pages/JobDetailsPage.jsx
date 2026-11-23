@@ -9,6 +9,7 @@ import SkillPills from '@/components/common/SkillPills.jsx'
 import aiGlyph from '@/assets/icons/ai-glyph-blue.svg'
 import Translatable from '@/features/ai/components/Translatable.jsx'
 import { AgencyTerms, JoinAgency, LockBanner } from '@/features/candidate/agencies/components/JobAgency.jsx'
+import { PlacementRules } from '@/features/candidate/agencies/components/PlacementRules.jsx'
 import { ApplyButton } from '@/features/candidate/applications/components/ApplyFlow.jsx'
 import { MessageCompanyButton } from '@/features/messages/components/StartConversation.jsx'
 import ReportButton from '@/features/moderation/components/ReportButton.jsx'
@@ -217,6 +218,8 @@ export default function JobDetailsPage() {
 
           <SkillEvidence job={job} />
           {job.agency && <AgencyTerms job={job} />}
+          {/* 2026-11-23: eligibility and the rules a placement would follow, before applying. */}
+          {job.agency && <PlacementRules job={job} />}
 
           {job.brief && (
             <section className={styles.section}>

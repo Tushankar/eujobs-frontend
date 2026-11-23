@@ -429,6 +429,53 @@
       "pay": "Pay",
       "days_one": "{{count}} day",
       "days_other": "{{count}} days"
+    },
+    "before": {
+      "title": "Before you apply",
+      "theClient": "the client",
+      "ok": "You can apply and be placed on this job.",
+      "notOnBooks": "You can apply. To be placed, join {{agency}}’s books and accept its agreement (version {{version}}).",
+      "noAgreement": "You can apply. {{agency}} has not published its agreement yet, so it cannot place anyone until it does.",
+      "requested": "You can apply. Your request to join {{agency}}’s books is waiting for the agency.",
+      "awaiting": "You can apply. Accept {{agency}}’s agreement to be placed.",
+      "pending": "You can apply. {{agency}} published a new agreement (version {{version}}): accept it before your next placement.",
+      "blocked": "Your current placement keeps you from this job until {{date}}. See why above.",
+      "readAgreement": "Read the agreement",
+      "ifPlaced": "If you’re placed on this job",
+      "ifPlacedShort": "If you’re placed",
+      "readClause": "Read the clause",
+      "summaryBooks": "To be placed you also need to be on {{agency}}’s books and accept its agreement.",
+      "rules": {
+        "exclusivity": {
+          "no_other_work": "While it runs ({{dates}}) you can’t take any other paid work.",
+          "no_other_agency_work": "While it runs ({{dates}}) you can’t take other agency jobs. Other work is fine.",
+          "no_same_client": "While it runs you can’t work for {{client}} outside this agency. Other work is fine.",
+          "free": "You’re free to take other work while it runs."
+        },
+        "noticeDays_one": "To leave early, give {{count}} day’s notice.",
+        "noticeDays_other": "To leave early, give {{count}} days’ notice.",
+        "noticeDaysNone": "No notice period is stated.",
+        "coolingOffDays_one": "After it ends, wait {{count}} day before working for {{client}} directly or through another agency.",
+        "coolingOffDays_other": "After it ends, wait {{count}} days before working for {{client}} directly or through another agency.",
+        "coolingOffDaysNone": "No waiting period after it ends.",
+        "maxWeeklyHours_one": "At most {{count}} hour a week across all your work.",
+        "maxWeeklyHours_other": "At most {{count}} hours a week across all your work.",
+        "maxWeeklyHoursNone": "No weekly hours limit is stated."
+      },
+      "short": {
+        "exclusivity": {
+          "no_other_work": "no other paid work while it runs",
+          "no_other_agency_work": "no other agency jobs while it runs",
+          "no_same_client": "no work for {{client}} outside this agency while it runs",
+          "free": "other work allowed"
+        },
+        "noticeDays_one": "{{count}} day’s notice to leave early",
+        "noticeDays_other": "{{count}} days’ notice to leave early",
+        "coolingOffDays_one": "{{count}} day before working for {{client}} again",
+        "coolingOffDays_other": "{{count}} days before working for {{client}} again",
+        "maxWeeklyHours_one": "at most {{count}} hour a week",
+        "maxWeeklyHours_other": "at most {{count}} hours a week"
+      }
     }
   },
   "ranking": {

@@ -1,0 +1,170 @@
+/* 2026-11-23: "Before you apply" on an agency job, and its short version in the apply dialog. */
+.before {
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+  padding-top: 32px;
+}
+
+.h2 {
+  margin: 0;
+  font-family: var(--font-display);
+  font-size: 18px;
+  font-weight: 700;
+  line-height: 28px;
+  color: var(--foreground);
+}
+
+.eligibility {
+  display: flex;
+  align-items: flex-start;
+  gap: 10px;
+  padding: 12px 14px;
+  border: 1px solid var(--border);
+  border-radius: var(--radius-lg);
+  background: var(--card);
+}
+
+.mark {
+  display: grid;
+  flex-shrink: 0;
+  place-items: center;
+  width: 22px;
+  height: 22px;
+  border-radius: var(--radius-full);
+  font-size: 12px;
+  font-weight: 800;
+  color: #fff;
+}
+
+.ok .mark {
+  background: var(--success, #1f9d55);
+}
+
+.todo .mark {
+  background: var(--warning, #b7791f);
+}
+
+.blocked .mark {
+  background: var(--destructive);
+}
+
+.eligibilityText {
+  margin: 0;
+  font-size: 14px;
+  line-height: 21px;
+  color: var(--foreground);
+}
+
+.eligibilityText a {
+  font-weight: 600;
+  color: var(--primary);
+}
+
+.ifPlaced {
+  margin: 4px 0 0;
+  font-size: 13px;
+  font-weight: 700;
+  color: var(--foreground);
+}
+
+.rules {
+  display: flex;
+  flex-direction: column;
+  margin: 0;
+  padding: 0;
+  list-style: none;
+}
+
+.rule {
+  display: flex;
+  flex-direction: column;
+  gap: 4px;
+  padding: 12px 0;
+}
+
+.rule + .rule {
+  border-top: 1px solid var(--border);
+}
+
+.label {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: 6px 8px;
+  margin: 0;
+  font-size: 13px;
+  font-weight: 600;
+  color: var(--muted-foreground);
+}
+
+.text,
+.muted {
+  margin: 0;
+  font-size: 14px;
+  line-height: 21px;
+}
+
+.text {
+  font-weight: 600;
+  color: var(--foreground);
+}
+
+.muted {
+  color: var(--muted-foreground);
+}
+
+.toggle summary {
+  width: fit-content;
+  font-size: 12px;
+  font-weight: 600;
+  color: var(--primary);
+  cursor: pointer;
+}
+
+.toggle[open] summary {
+  margin-bottom: 6px;
+}
+
+.clause {
+  margin: 0;
+  padding: 8px 12px;
+  border-left: 3px solid var(--border-strong);
+  border-radius: 0 var(--radius-md) var(--radius-md) 0;
+  background: var(--muted);
+  font-size: 13px;
+  line-height: 20px;
+  color: var(--foreground);
+  overflow-wrap: anywhere;
+}
+
+.summary {
+  display: flex;
+  flex-direction: column;
+  gap: 4px;
+  padding: 12px 14px;
+  border: 1px solid var(--border);
+  border-radius: var(--radius-lg);
+  background: var(--muted);
+}
+
+.summaryTitle {
+  margin: 0;
+  font-size: 13px;
+  font-weight: 700;
+  color: var(--foreground);
+}
+
+.summaryText {
+  margin: 0;
+  font-size: 13px;
+  line-height: 20px;
+  color: var(--foreground);
+}
+
+.hint {
+  margin: 0;
+  font-size: 12px;
+  line-height: 18px;
+  color: var(--muted-foreground);
+}
