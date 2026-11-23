@@ -4,7 +4,7 @@ import { Lock } from 'lucide-react'
 import { openUpgrade } from '@/app/upgrade.js'
 import { Button, Icon } from '@/components/ui'
 import { usePreferences } from '@/lib/preferences.js'
-import { lacksEntitlement } from '../usePlan.js'
+import { lacksEntitlement, planItem } from '../usePlan.js'
 
 /**
  * A paid action (M-118, §3.22, P11c-Q5): for a user of `roles` without the entitlement it keeps its label, shows a lock

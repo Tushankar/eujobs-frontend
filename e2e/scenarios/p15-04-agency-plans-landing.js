@@ -1,8 +1,8 @@
 import { openAsAdmin } from '../lib/admins.js'
 import { approvedAgency, dayFromToday } from '../lib/agencies.js'
-import { bodyText, clickText, waitForPath, waitForText } from '../lib/flows.js'
-import { jobBody, postJob } from '../lib/recruiters.js'
-import { api } from '../lib/testApi.js'
+import { bodyText, clickText, fill, finishLoginStep, responseTo, waitForPath, waitForText } from '../lib/flows.js'
+import { approvedRecruiter, jobBody, postJob } from '../lib/recruiters.js'
+import { api, TEST_PASSWORD } from '../lib/testApi.js'
 
 /**
  * P15-04 (agencies, phase 7): a visitor's landing page with the Agency jobs section (client or confidential client,
@@ -104,6 +104,29 @@ export default {
       await page.evaluate(() => localStorage.setItem('lwm-pref-theme', 'light'))
       ctx.assertClean(handle.issues, 'dark landing')
     }
+
+    // 6b. (2026-11-23) Every sign-in picker offers Agency; a recruiter on the Agency tile with the right password is
+    // told its account type and signs in as a recruiter from the same form.
+    const recruiter = await approvedRecruiter('P1504R')
+    const signIn = await ctx.newPage()
+    signIn.allow(403, '/api/v1/auth/login')
+    await signIn.page.goto(`${ctx.webUrl}/agencies/login`, { waitUntil: 'networkidle0' })
+    const tiles = await signIn.page.$$eval('[role="radiogroup"] [role="radio"]', (els) => els.map((el) => el.textContent.trim()))
+    ctx.check(tiles.join() === 'Candidate,Recruiter,Agency', `the picker offers every workspace (${tiles.join(', ')})`)
+    await fill(signIn.page, 'input[name="email"]', recruiter.email)
+    await fill(signIn.page, 'input[name="password"]', TEST_PASSWORD)
+    const refused = responseTo(signIn.page, '/api/v1/auth/login', 'POST')
+    await signIn.page.click('button[type="submit"]')
+    ctx.check((await refused).status() === 403, 'the agency tile refuses a recruiter')
+    await signIn.page.waitForSelector('[data-wrong-portal="recruiter"]')
+    ctx.check((await bodyText(signIn.page)).includes('This is a Recruiter account. Choose Recruiter to sign in.'), 'the message names the account type')
+    await ctx.screenshot(signIn.page, '6-wrong-tile')
+    const login = responseTo(signIn.page, '/api/v1/auth/login', 'POST')
+    await signIn.page.click('[data-wrong-portal="recruiter"]')
+    const step = (await (await login).json().catch(() => null))?.verification
+    if (step) await finishLoginStep(signIn.page, recruiter.email, step.method)
+    await waitForPath(signIn.page, () => location.pathname.startsWith('/recruiter') && !location.pathname.includes('sign-in'))
+    ctx.assertClean(signIn.issues, 'wrong-tile sign-in')
 
     // 7. Admin: the agency plans, the Agency MRR line and the Agency Plus caps (read only).
     const admin = await ctx.newPage()
