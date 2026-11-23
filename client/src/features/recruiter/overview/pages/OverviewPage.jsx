@@ -1,4 +1,5 @@
-import { HIRING_ROLES, hiringPath } from '@/app/roles.js'
+import { currentRole, HIRING_ROLES, hiringPath } from '@/app/roles.js'
+import AgencySetup from '@/features/agency/components/AgencySetup.jsx'
 import { useState } from 'react'
 import { useTranslation } from 'react-i18next'
 import { Link } from 'react-router-dom'
@@ -72,6 +73,9 @@ export default function OverviewPage() {
         description={t('discovery:overview.description')}
         actions={<div className={styles.actions}>{createButton}</div>}
       />
+
+      {/* 2026-11-23: an agency's setup, in order, until every step is done. */}
+      {currentRole() === 'agency' && <AgencySetup hideWhenDone className={styles.setup} />}
 
       <div className={styles.stats}>
         {stats.map(({ key, to, value, ...stat }) => (

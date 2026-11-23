@@ -465,5 +465,42 @@
     "openAgreement": "Ouvrir votre accord",
     "uploadAgreement": "Téléverser votre accord",
     "scope": "Cet accord couvre toutes vos offres. Une offre peut aussi avoir son propre contrat (offre › Conditions d’agence) : ses règles confirmées passent avant celles-ci pour les missions de cette offre."
+  },
+  "setup": {
+    "title": "Configurez votre agence",
+    "text": "Faites-les dans l’ordre : chaque étape ouvre la page où la faire, et la suivante se débloque une fois terminée.",
+    "progress": "{{done}} sur {{total}} faites",
+    "start": "Commencer",
+    "open": "Ouvrir",
+    "done": "Fait",
+    "steps": {
+      "client": {
+        "title": "Ajoutez un client",
+        "text": "Les entreprises pour lesquelles vous recrutez. Chaque offre d’agence est pour un client."
+      },
+      "agreement": {
+        "title": "Publiez votre accord",
+        "text": "Les candidats rejoignent votre vivier en l’acceptant, et ses règles protègent chaque mission."
+      },
+      "job": {
+        "title": "Publiez une offre d’agence",
+        "text": "Choisissez le client, les dates, le tarif et les heures, puis publiez.",
+        "locked": "Ajoutez d’abord un client : chaque offre d’agence est pour un client."
+      },
+      "books": {
+        "title": "Constituez votre vivier",
+        "text": "Invitez des candidats, ou acceptez ceux qui demandent à rejoindre en postulant.",
+        "locked": "Publiez d’abord votre accord : les candidats rejoignent votre vivier en l’acceptant."
+      },
+      "placement": {
+        "title": "Faites votre première mission",
+        "text": "Passez une personne de votre vivier à Embauché sur une offre d’agence ; la mission suit les dates de l’offre.",
+        "locked": "Publiez d’abord une offre d’agence et ayez quelqu’un dans votre vivier."
+      }
+    },
+    "jobsTitle": "Publiez votre première offre d’agence",
+    "jobsText": "Une offre d’agence est toujours pour l’un de vos clients : ajoutez d’abord un client. Voici tout le parcours.",
+    "placementsTitle": "Aucune mission pour l’instant",
+    "placementsText": "Une mission commence quand vous embauchez une personne de votre vivier sur une offre d’agence. Voici ce qui vient avant."
   }
 }

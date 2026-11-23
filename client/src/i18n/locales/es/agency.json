@@ -465,5 +465,42 @@
     "openAgreement": "Abrir tu acuerdo",
     "uploadAgreement": "Subir tu acuerdo",
     "scope": "Este acuerdo cubre todas tus ofertas. Una oferta también puede tener su propio contrato (oferta › Condiciones de agencia): sus reglas confirmadas van antes que estas en las asignaciones de esa oferta."
+  },
+  "setup": {
+    "title": "Configura tu agencia",
+    "text": "Hazlo en este orden: cada paso abre la página donde se hace, y el siguiente se desbloquea al terminar.",
+    "progress": "{{done}} de {{total}} hechos",
+    "start": "Empezar",
+    "open": "Abrir",
+    "done": "Hecho",
+    "steps": {
+      "client": {
+        "title": "Añade un cliente",
+        "text": "Las empresas para las que seleccionas. Cada oferta de agencia es para un cliente."
+      },
+      "agreement": {
+        "title": "Publica tu acuerdo",
+        "text": "Los candidatos se unen a tu cartera aceptándolo, y sus reglas protegen cada asignación."
+      },
+      "job": {
+        "title": "Publica una oferta de agencia",
+        "text": "Elige el cliente, las fechas, la tarifa y las horas, y publícala.",
+        "locked": "Añade primero un cliente: cada oferta de agencia es para un cliente."
+      },
+      "books": {
+        "title": "Incorpora personas a tu cartera",
+        "text": "Invita a candidatos o acepta a quienes piden unirse al postularse.",
+        "locked": "Publica primero tu acuerdo: los candidatos se unen a tu cartera aceptándolo."
+      },
+      "placement": {
+        "title": "Haz tu primera asignación",
+        "text": "Pasa a Contratado a alguien de tu cartera en una oferta de agencia; la asignación sigue las fechas de la oferta.",
+        "locked": "Publica primero una oferta de agencia y ten a alguien en tu cartera."
+      }
+    },
+    "jobsTitle": "Publica tu primera oferta de agencia",
+    "jobsText": "Una oferta de agencia siempre es para uno de tus clientes, así que añade primero un cliente. Este es todo el proceso.",
+    "placementsTitle": "Aún no hay asignaciones",
+    "placementsText": "Una asignación empieza cuando contratas a alguien de tu cartera en una oferta de agencia. Esto es lo que va antes."
   }
 }

@@ -460,5 +460,42 @@
     "openAgreement": "Open your agreement",
     "uploadAgreement": "Upload your agreement",
     "scope": "This agreement covers all your jobs. A job can also have its own contract (job › Agency terms): its confirmed rules come before these for that job’s placements."
+  },
+  "setup": {
+    "title": "Set up your agency",
+    "text": "Do these in order: each step opens the page where you do it, and the next one unlocks when it is done.",
+    "progress": "{{done}} of {{total}} done",
+    "start": "Start",
+    "open": "Open",
+    "done": "Done",
+    "steps": {
+      "client": {
+        "title": "Add a client",
+        "text": "The companies you recruit for. Every agency job is for one client."
+      },
+      "agreement": {
+        "title": "Publish your agreement",
+        "text": "Candidates join your books by agreeing to it, and its rules protect each placement."
+      },
+      "job": {
+        "title": "Post an agency job",
+        "text": "Pick the client, the dates, the pay rate and the hours, then publish.",
+        "locked": "Add a client first: every agency job is for one client."
+      },
+      "books": {
+        "title": "Get people on your books",
+        "text": "Invite candidates, or accept the people who ask to join when they apply.",
+        "locked": "Publish your agreement first: candidates join your books by agreeing to it."
+      },
+      "placement": {
+        "title": "Make your first placement",
+        "text": "Move someone on your books to Hired on an agency job; the placement runs on the job’s dates.",
+        "locked": "Post an agency job and get someone on your books first."
+      }
+    },
+    "jobsTitle": "Post your first agency job",
+    "jobsText": "An agency job is always for one of your clients, so add a client first. Here is the whole flow.",
+    "placementsTitle": "No placements yet",
+    "placementsText": "A placement starts when you hire someone from your books on an agency job. Here is what comes before it."
   }
 }

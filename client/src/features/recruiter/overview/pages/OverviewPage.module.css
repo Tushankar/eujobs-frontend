@@ -113,3 +113,8 @@
 .talentLocked .talentEmpty {
   padding-top: 0;
 }
+
+/* 2026-11-23: an agency's setup checklist above the stats. */
+.setup {
+  margin-bottom: 24px;
+}

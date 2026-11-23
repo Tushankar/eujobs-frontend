@@ -2,11 +2,11 @@ import { useState } from 'react'
 import { useTranslation } from 'react-i18next'
 import { Link, useSearchParams } from 'react-router-dom'
 import { CalendarClock } from 'lucide-react'
+import AgencySetup from '../../components/AgencySetup.jsx'
 import { hiringPath } from '@/app/roles.js'
 import ConfirmDialog from '@/components/common/ConfirmDialog.jsx'
 import EmptyState from '@/components/common/EmptyState.jsx'
 import FilterChips from '@/components/common/FilterChips.jsx'
-import GetStartedCard from '@/components/common/GetStartedCard.jsx'
 import PageTitle from '@/components/common/PageTitle.jsx'
 import PillBadge from '@/components/common/PillBadge.jsx'
 import { Avatar, Button, Modal, SelectField, Skeleton, SkeletonRegion, TextField } from '@/components/ui'
@@ -237,17 +237,7 @@ export default function PlacementsPage() {
     <>
       <PageTitle title={t('agency:placements.title')} description={t('agency:placements.description')} />
       {none ? (
-        <GetStartedCard
-          id="placements-start-title"
-          title={t('agency:placements.start.title')}
-          text={t('agency:placements.start.text')}
-          steps={t('agency:placements.start.steps', { returnObjects: true })}
-          action={
-            <Button as={Link} to={hiringPath('talent?tab=agreement')}>
-              {t('agency:placements.start.action')}
-            </Button>
-          }
-        />
+        <AgencySetup title={t('agency:setup.placementsTitle')} text={t('agency:setup.placementsText')} />
       ) : (
         <>
           <div data-tour="placements-tabs">

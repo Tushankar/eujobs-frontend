@@ -1,4 +1,5 @@
-import { hiringPath } from '@/app/roles.js'
+import { currentRole, hiringPath } from '@/app/roles.js'
+import AgencySetup from '@/features/agency/components/AgencySetup.jsx'
 import { useState } from 'react'
 import { useTranslation } from 'react-i18next'
 import { Link } from 'react-router-dom'
@@ -70,7 +71,9 @@ export default function JobsPage() {
     <>
       <PageTitle title={t('jobs:page.title')} description={t('jobs:page.description')} actions={!noJobs && <div className={styles.actions}>{createButton}</div>} />
 
-      {noJobs ? (
+      {noJobs && currentRole() === 'agency' ? (
+        <AgencySetup className={styles.start} title={t('agency:setup.jobsTitle')} text={t('agency:setup.jobsText')} />
+      ) : noJobs ? (
         <GetStartedCard
           id="jobs-start-title"
           className={styles.start}
