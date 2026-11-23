@@ -5,7 +5,7 @@
   "type": "module",
   "scripts": {
     "dev": "vite",
-    "build": "node scripts/check-i18n.js && vite build",
+    "build": "node scripts/check-i18n.js && node scripts/check-endpoints.js && vite build",
     "check:i18n": "node scripts/check-i18n.js",
     "lint": "oxlint",
     "preview": "vite preview"

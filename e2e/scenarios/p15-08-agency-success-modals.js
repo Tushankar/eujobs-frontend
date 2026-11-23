@@ -71,6 +71,21 @@ export default {
     await clickText(page, 'Accept', `[data-member="${first.fullName}"] button`)
     await modal(page, 'books_request_accepted', ['Request accepted', first.fullName], '03-agency-request-accepted')
 
+    // Owner 2026-11-23 (production crash "reading 'id'" on /agency): after the books are loaded, the Overview's talent
+    // cards (Agency Plus) must not read the books as candidates. Client-side navigation keeps the cache, as a user would.
+    // The sidebar link (hidden in the menu on a phone), clicked through the DOM: an in-app navigation either way.
+    const linked = await page.evaluate(() => {
+      const link = [...document.querySelectorAll('a[href="/agency"]')].find((element) => element.textContent.includes('Overview'))
+      link?.click()
+      return Boolean(link)
+    })
+    if (!linked) issue('no Overview link in the agency navigation')
+    await page.waitForFunction(() => location.pathname === '/agency', { timeout: 10_000 }).catch(() => {})
+    await pause(1500)
+    const crashed = (await page.$eval('body', (body) => body.innerText).catch(() => '')).includes('Unexpected Application Error')
+    expect(!crashed, 'the agency Overview opens after the Talent page (no crash)')
+    await ctx.screenshot(page, '03b-agency-overview')
+
     // ---- Candidate: agree to the agreement ----
     await seeker.page.goto(`${ctx.webUrl}/candidate/agencies?tab=agencies`, { waitUntil: 'networkidle0' })
     await clickText(seeker.page, 'Read agreement', 'a')
