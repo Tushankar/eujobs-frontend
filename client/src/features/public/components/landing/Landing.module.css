@@ -1070,6 +1070,82 @@
   }
 }
 
+/* ---------- For agencies band (phase 7, owner 2026-11-23): navy, text only ---------- */
+
+.agencyBand {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 32px;
+  padding: 44px 50px;
+  border-radius: 16px;
+  background: var(--brand-gradient);
+  color: #fff;
+}
+
+.agencyBandCopy {
+  max-width: 640px;
+}
+
+.agencyBand .ctaTitle {
+  max-width: 560px;
+}
+
+.agencyBandText {
+  max-width: 520px;
+  margin: 14px 0 0;
+  font-size: 13px;
+  line-height: 19.2px;
+  color: #dce5ff;
+}
+
+.agencyBandActions {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: 12px;
+  flex-shrink: 0;
+}
+
+.agencyBandLink {
+  display: inline-flex;
+  align-items: center;
+  min-height: 40px;
+  padding: 0 18px;
+  border: 1px solid rgba(255, 255, 255, 0.55);
+  border-radius: 999px;
+  font-size: 13px;
+  font-weight: 500;
+  color: #fff;
+  white-space: nowrap;
+  transition: background var(--transition), border-color var(--transition);
+}
+
+.agencyBandLink:hover {
+  border-color: #fff;
+  background: rgba(255, 255, 255, 0.1);
+}
+
+.agencyBandLink:focus-visible {
+  outline: 2px solid #fff;
+  outline-offset: 2px;
+}
+
+@media (max-width: 899px) {
+  .agencyBand {
+    flex-direction: column;
+    align-items: flex-start;
+    gap: 24px;
+    padding: 40px 24px;
+  }
+}
+
+@media (max-width: 599px) {
+  .agencyBand {
+    padding: 32px 16px;
+  }
+}
+
 /* ---------- Footer (396:14876, 396:14910) ---------- */
 
 .footer {

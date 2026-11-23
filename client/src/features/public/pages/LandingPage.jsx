@@ -4,7 +4,7 @@ import { useLocation } from 'react-router-dom'
 import { useDocumentTitle } from '@/components/layout/useDocumentTitle.js'
 import { useGetLandingQuery } from '../api.js'
 import LandingHero from '../components/landing/LandingHero.jsx'
-import { CallToAction, CareerBanner, Categories, Faq, Footer, Steps, TrustedStrip, Vacancies } from '../components/landing/LandingSections.jsx'
+import { AgencyBand, AgencyJobs, CallToAction, CareerBanner, Categories, Faq, Footer, Steps, TrustedStrip, Vacancies } from '../components/landing/LandingSections.jsx'
 import LandingPricing from '../components/landing/LandingPricing.jsx'
 import { Blogs, Testimonials } from '../components/landing/LandingStories.jsx'
 import styles from '../components/landing/Landing.module.css'
@@ -41,6 +41,9 @@ export default function LandingPage() {
         <Categories counts={data?.counts} />
         <Steps />
         {isError ? <p className={`${styles.card} ${styles.empty}`}>{t('landing:loadError')}</p> : <Vacancies jobs={data?.jobs ?? null} />}
+        {/* Phase 7 (2026-11-23): agency jobs (only when there are some), then the "For agencies" band. */}
+        <AgencyJobs jobs={data?.agencyJobs} />
+        <AgencyBand />
         <CareerBanner />
         <Testimonials reviews={data?.reviews} />
         <LandingPricing />

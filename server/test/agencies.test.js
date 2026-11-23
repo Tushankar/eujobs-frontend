@@ -10,9 +10,10 @@ import { Company, KycDocument } from '../modules/companies/companies.model.js'
 import { File } from '../modules/files/files.model.js'
 import { Job } from '../modules/jobs/jobs.model.js'
 import { Conversation, Message } from '../modules/messages/messages.model.js'
-import { Subscription } from '../modules/payments/payments.model.js'
+import { Plan, Subscription } from '../modules/payments/payments.model.js'
 import { User } from '../modules/users/users.model.js'
 import { seedCatalog } from '../seed/catalog.js'
+import { PLANS } from '../seed/data/catalog.js'
 import { PLACES } from '../seed/data/places.js'
 import { image, textPdf } from './helpers/fixtures.js'
 import { api, attach, auth, createUser, finishLogin, mailTo, PASSWORD, testEmail, useTestDb, useTestUploads } from './helpers/index.js'
@@ -272,5 +273,53 @@ describe('admin and public figures (phase 4)', () => {
     await setStatus(agency, job.id, 'published')
     const { agencies } = (await api().get(`${v1}/landing`)).body
     assert.deepEqual(agencies, { jobs: 1, accounts: 1 })
+  })
+})
+
+describe('plans and landing (phase 7)', () => {
+  it('lists the newest agency jobs on the landing page with the client only where it is shown', async () => {
+    assert.deepEqual((await api().get(`${v1}/landing`)).body.agencyJobs, [])
+    const { user: agency } = await approvedAgency()
+    const { user: recruiter } = await approvedRecruiter()
+    const acme = (await addClient(agency, { name: 'Acme' })).body
+    const ids = []
+    // Published a minute apart (index 0 oldest), the company job last.
+    const publishedAt = (minutesAgo) => new Date(Date.now() - minutesAgo * 60_000)
+    for (const [index, showClient] of [true, false, true, true, true].entries()) {
+      const job = (await createJob(agency, jobBody({ title: `Agency role ${index}`, agency: terms(acme.id, { showClient }) }))).body
+      await setStatus(agency, job.id, 'published')
+      await Job.updateOne({ _id: job.id }, { publishedAt: publishedAt(10 - index) })
+      ids.unshift(job.id)
+    }
+    const company = (await createJob(recruiter, jobBody({ title: 'Company role' }))).body
+    await setStatus(recruiter, company.id, 'published')
+
+    const body = (await api().get(`${v1}/landing`)).body
+    // The four newest agency jobs, newest first; the oldest (index 0) and the company job are left out.
+    assert.deepEqual(body.agencyJobs.map((job) => job.id), ids.slice(0, 4))
+    const confidential = body.agencyJobs.find((job) => job.title === 'Agency role 1')
+    assert.deepEqual(confidential.agency, { showClient: false, startDate: '2026-12-01', endDate: '2026-12-31', rate: { amountMinor: 1850, currency: 'GBP', period: 'hour' }, hoursPerWeek: 30, client: null })
+    assert.deepEqual(body.agencyJobs.find((job) => job.title === 'Agency role 4').agency.client, { name: 'Acme' })
+    assert.equal(confidential.company.name, (await Company.findById(agency.companyId)).displayName)
+    // The latest jobs carry the agency terms too; a company job has none.
+    assert.deepEqual(body.jobs.map((job) => [job.title, Boolean(job.agency)]).slice(0, 2), [['Company role', false], ['Agency role 4', true]])
+  })
+
+  it('gives the agency plans their own features', async () => {
+    const [free, plus] = (await api().get(`${v1}/plans`).query({ role: 'agency', language: 'en' })).body.items
+    assert.ok(free.features.includes('Talent on your books, with your own versioned agreement'))
+    assert.ok(plus.features.includes('AI reads your agreement and contracts and suggests the rules'))
+    assert.ok(!free.features.includes('Company page and verification'))
+  })
+
+  it('replaces the earlier copied features on reseed, but keeps an admin’s own', async () => {
+    const data = Object.fromEntries(PLANS.map((plan) => [plan.key, plan]))
+    const own = [{ en: 'Our own line', es: 'Nuestra línea', fr: 'Notre ligne' }]
+    await Plan.updateOne({ key: 'agency_free' }, { $set: { features: data.agency_free.previousFeatures } })
+    await Plan.updateOne({ key: 'agency_plus' }, { $set: { features: own } })
+    await seedCatalog()
+    const stored = Object.fromEntries((await Plan.find({ key: { $in: ['agency_free', 'agency_plus'] } }).lean()).map((plan) => [plan.key, plan.features.map(({ en }) => en)]))
+    assert.deepEqual(stored, { agency_free: data.agency_free.features.map(({ en }) => en), agency_plus: ['Our own line'] })
+    await Plan.updateOne({ key: 'agency_plus' }, { $set: { features: data.agency_plus.features } })
   })
 })
