@@ -522,7 +522,8 @@
     "state": {
       "offered": "Ofrecida",
       "placed": "Colocada"
-    }
+    },
+    "aiSummary": "Resumen de IA"
   },
   "jobRules": {
     "applies": "Tu acuerdo, versión {{version}}, se aplica a esta oferta:",

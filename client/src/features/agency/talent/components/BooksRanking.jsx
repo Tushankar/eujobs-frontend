@@ -48,11 +48,6 @@ function RankingRow({ item, job, reason, onOffer }) {
           {candidate.name ?? t('common:deletedUser')}
         </Link>
         <span className={styles.meta}>{[candidate.headline, place].filter(Boolean).join(' · ') || t('agency:talent.noDetails')}</span>
-        {reason && (
-          <span className={styles.reason} data-ranked-reason>
-            {reason}
-          </span>
-        )}
       </div>
       <div className={styles.badges}>
         <MatchBadge job={item} />
@@ -67,6 +62,16 @@ function RankingRow({ item, job, reason, onOffer }) {
         )}
         {candidate.name && <MessageCandidateButton candidate={{ id: candidate.id, fullName: candidate.name, canStartConversation: true }} job={job} onBooks size="sm" fullWidth={false} />}
       </div>
+      {/* 2026-11-23 (owner: "show the AI summary in each"): its own labelled box across the row, once AI reasons ran. */}
+      {reason && (
+        <div className={styles.summary} data-ranked-reason>
+          <span className={styles.summaryLabel}>
+            <Icon as={Sparkles} size={13} />
+            {t('agency:ranking.aiSummary')}
+          </span>
+          <p className={styles.summaryText}>{reason}</p>
+        </div>
+      )}
     </li>
   )
 }

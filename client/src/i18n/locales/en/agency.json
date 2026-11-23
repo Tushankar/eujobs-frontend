@@ -509,7 +509,8 @@
     "state": {
       "offered": "Offered",
       "placed": "Placed"
-    }
+    },
+    "aiSummary": "AI summary"
   },
   "jobRules": {
     "applies": "Your agreement, version {{version}}, applies to this job:",

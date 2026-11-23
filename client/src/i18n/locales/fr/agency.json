@@ -522,7 +522,8 @@
     "state": {
       "offered": "Proposé",
       "placed": "Placé"
-    }
+    },
+    "aiSummary": "Résumé IA"
   },
   "jobRules": {
     "applies": "Votre accord, version {{version}}, s’applique à cette offre :",

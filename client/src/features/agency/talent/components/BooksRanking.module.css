@@ -107,10 +107,40 @@
   color: var(--muted-foreground);
 }
 
-.reason {
+/* 2026-11-23: the AI summary of one person, across the row under the name (neutral, no tinted tile). */
+.summary {
+  display: flex;
+  flex-basis: 100%;
+  flex-direction: column;
+  gap: 4px;
+  margin-left: 54px;
+  padding: 10px 12px;
+  border: 1px solid var(--border);
+  border-radius: var(--radius-lg);
+  background: var(--muted);
+}
+
+.summaryLabel {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  font-size: 12px;
+  font-weight: 600;
+  line-height: 16px;
+  color: var(--muted-foreground);
+}
+
+.summaryText {
+  margin: 0;
   font-size: 13px;
-  line-height: 19px;
+  line-height: 20px;
   color: var(--foreground);
+}
+
+@media (max-width: 599px) {
+  .summary {
+    margin-left: 0;
+  }
 }
 
 .badges {

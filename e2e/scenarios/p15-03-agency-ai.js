@@ -89,7 +89,7 @@ export default {
     // 2. AI reasons (Agency Plus, real OpenAI): one line per person.
     await page.click('[data-ranking-reasons]')
     await page.waitForSelector('[data-ranked-reason]', { timeout: 60_000 })
-    const reasons = await page.$$eval('[data-ranked-reason]', (lines) => lines.map((line) => line.textContent.trim()))
+    const reasons = await page.$$eval('[data-ranked-reason] p', (lines) => lines.map((line) => line.textContent.trim()))
     ctx.check(reasons.length === 2 && reasons.every((line) => line.length > 10), `AI reasons for both (${reasons.length})`)
     await ctx.screenshot(page, '2-ai-reasons')
 
