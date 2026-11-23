@@ -149,9 +149,9 @@ export default {
     await ctx.screenshot(page, '7-ai-job-draft')
 
     // 8. For you: Cleo is blocked from both agency jobs until day 21, so neither is suggested to her.
-    const forYou = ok(await api('/candidate/jobs/recommended', { token: people.Cleo.token }), 'for you').items.map((job) => job.title)
+    const forYou = ok(await api('/jobs/recommended', { token: people.Cleo.token }), 'for you').items.map((job) => job.title)
     ctx.check(!forYou.includes('Warehouse Operative') && !forYou.includes('Night Picker'), `For you leaves out blocked agency jobs (${forYou.join(', ') || 'none'})`)
-    const adaForYou = ok(await api('/candidate/jobs/recommended', { token: people.Ada.token }), 'for you').items.map((job) => job.title)
+    const adaForYou = ok(await api('/jobs/recommended', { token: people.Ada.token }), 'for you').items.map((job) => job.title)
     ctx.check(adaForYou.includes('Night Picker'), 'a free candidate still gets the agency jobs')
     await openAs(ctx, handle, people.Cleo.email, '/candidate?tab=for-you')
     await page.waitForSelector('main')

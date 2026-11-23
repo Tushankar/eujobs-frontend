@@ -165,7 +165,7 @@ describe('the books ranked for a job', () => {
     const reasons = await api().post(`${v1}/agency/talent/ranking/reasons`).set(auth(owner)).send({ jobId: job.id })
     assert.equal(reasons.status, 200, JSON.stringify(reasons.body))
     assert.deepEqual(reasons.body.items, [{ membershipId, reason: 'Both required skills and five years.' }])
-    const input = JSON.stringify(requests('talent_ranking')[0].input)
+    const input = requests('talent_ranking')[0].input
     assert.ok(!input.includes('Ada') && !input.includes('Lovelace'), 'no names reach OpenAI')
     assert.ok(input.includes('"matchScore":77'))
     await api().post(`${v1}/agency/talent/ranking/reasons`).set(auth(owner)).send({ jobId: job.id })
@@ -242,7 +242,7 @@ describe('For you', () => {
     await onBooks(candidate, mineCompany)
     await placementFor(candidate, otherCompany, { start: 0, end: 10 })
 
-    const forYou = (await api().get(`${v1}/candidate/jobs/recommended`).set(auth(candidate))).body
+    const forYou = (await api().get(`${v1}/jobs/recommended`).set(auth(candidate))).body
     const titles = forYou.items.map((item) => item.title)
     assert.ok(!titles.includes('Blocked job'))
     assert.ok(titles.indexOf('Own agency job') < titles.indexOf('Other agency job'), titles.join(', '))
@@ -306,8 +306,8 @@ describe('agency job post writer', () => {
     assert.equal(res.body.brief, 'You will cover the the client night shift. the client values care.')
     assert.deepEqual(res.body.responsibilities, ['Pick orders for the client', 'Load vans'])
     const input = requests('job_draft')[0].input
-    assert.match(JSON.stringify(input), /"clients":\[\{"ref":"c1","name":"Acme Logistics Ltd"\},\{"ref":"c2","name":"Globex"\}\]/)
-    assert.match(JSON.stringify(input), new RegExp(`"today":"${today()}"`))
+    assert.match(input, /"clients":\[\{"ref":"c1","name":"Acme Logistics Ltd"\},\{"ref":"c2","name":"Globex"\}\]/)
+    assert.match(input, new RegExp(`"today":"${today()}"`))
 
     // A client not on the list, dates in the past or reversed, a rate and hours out of range: left out.
     reply = { clientRef: 'c9', clientName: 'Initech', startDate: day(-2), endDate: day(10), rate: 0, ratePeriod: 'none', hoursPerWeek: 200 }
