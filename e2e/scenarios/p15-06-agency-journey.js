@@ -211,6 +211,13 @@ export default {
     await clickText(seeker.page, 'Read agreement', 'a').catch(() => issue('no "Read agreement" link for the candidate'))
     await seeker.page.waitForSelector('[data-agree]', { timeout: 10_000 })
     await seeker.page.$eval('input[name="agree"]', (box) => box.click())
+    // Owner 2026-11-23 (screenshot): the rules beside the PDF were squeezed to a word per line. Each value needs room.
+    const narrowest = await seeker.page.$$eval('[data-rules] dd', (cells) => Math.min(...cells.map((cell) => cell.getBoundingClientRect().width)))
+    expect(narrowest >= 240, `the agreement rules have room for their values (narrowest ${Math.round(narrowest)}px)`)
+    if (ctx.viewport === 'D') {
+      const pinned = await seeker.page.$eval('[data-agreement-page] form', (side) => getComputedStyle(side).position)
+      expect(pinned === 'sticky', `the rules column stays in view while the page scrolls (${pinned})`)
+    }
     await ctx.screenshot(seeker.page, '21-candidate-agreement')
     await seeker.page.click('[data-agree]')
     await waitForText(seeker.page, 'books').catch(() => issue('agreeing gives no confirmation'))

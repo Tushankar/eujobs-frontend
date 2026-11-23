@@ -128,7 +128,7 @@ export default function AgreementPage() {
       </header>
 
       <div className={styles.layout}>
-        <section className={styles.document} aria-label={agreement.file.name}>
+        <section className={`${styles.document} sticky-side`} aria-label={agreement.file.name}>
           <div className={styles.bar}>
             <Icon as={FileText} size={15} />
             <span className={styles.fileName} title={agreement.file.name}>
@@ -154,7 +154,7 @@ export default function AgreementPage() {
           )}
         </section>
 
-        <form className={styles.side} onSubmit={submit} noValidate>
+        <form className={`${styles.side} sticky-side`} onSubmit={submit} noValidate>
           <h2 className={styles.h2}>{t('agency:candidate.agreement.rulesTitle')}</h2>
           <p className={styles.note}>{t('agency:candidate.rulesIntro')}</p>
           <RulesList rules={agreement.rules} />
