@@ -24,6 +24,26 @@ const AI_STEP_FIELDS = {
   agency: ['clientId', 'startDate', 'endDate', 'rateAmount', 'hoursPerWeek'],
 }
 
+const aiMemory = new Map()
+const JUST_CREATED_MS = 60_000
+
+/** The AI-filled fields of this job; a job saved from "new" a moment ago takes over the new form's marks. */
+function recallAiFields(jobId, initialStep) {
+  if (!jobId) {
+    // A fresh Create a job starts clean.
+    if (initialStep === 0) aiMemory.delete('new')
+    return new Set(aiMemory.get('new')?.fields ?? [])
+  }
+  if (aiMemory.has(jobId)) return new Set(aiMemory.get(jobId).fields)
+  const fresh = aiMemory.get('new')
+  aiMemory.delete('new')
+  return fresh && Date.now() - fresh.at < JUST_CREATED_MS ? new Set(fresh.fields) : new Set()
+}
+
+function rememberAiFields(jobId, fields) {
+  aiMemory.set(jobId ?? 'new', { fields: [...fields], at: Date.now() })
+}
+
 /**
  * The 9-step Create a job form (§3.7). Owns the values, the current step and the errors; the page saves.
  * `onContinue(values, nextStep)` runs after a step passes its checks (the server draft, P4-D7) and
@@ -40,8 +60,10 @@ export default function JobWizard({ initialValues, initialStep = 0, reachable = 
   const [errors, setErrors] = useState(initialErrors)
   const [failure, setFailure] = useState(null)
   const [busy, setBusy] = useState(false)
-  // Fields the AI draft filled and nobody has edited since (2026-11-23).
-  const [aiFields, setAiFields] = useState(() => new Set())
+  // Fields the AI draft filled and nobody has edited since (2026-11-23). Kept per job across the wizard's remount when
+  // a new job's first Continue opens it as a saved draft (/jobs/new → /jobs/:id/edit), else the marks were lost.
+  const [aiFields, setAiFields] = useState(() => recallAiFields(job?.id, initialStep))
+  useEffect(() => rememberAiFields(job?.id, aiFields), [job?.id, aiFields])
   const aiStep = (id) => Boolean(AI_STEP_FIELDS[id]?.some((field) => aiFields.has(field)))
   const headingRef = useRef(null)
   const changedStep = useRef(false)

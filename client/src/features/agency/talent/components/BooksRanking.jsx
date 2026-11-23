@@ -78,7 +78,8 @@ function RankingRow({ item, job, reason, writing, onOffer }) {
           ) : (
             <span className={styles.summaryLines} aria-hidden="true">
               <Skeleton width="92%" height={12} />
-              <Skeleton width="64%" height={12} />
+              <Skeleton width="84%" height={12} />
+              <Skeleton width="56%" height={12} className={styles.phoneLine} />
             </span>
           )}
         </div>

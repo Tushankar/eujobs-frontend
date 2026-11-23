@@ -173,7 +173,8 @@ export default {
     await clickText(page, me.fullName, `[data-placement="${me.fullName}"] button`)
     await waitForText(page, 'Rules of this placement')
     const details = await bodyText(page)
-    ctx.check(details.includes('From the agency agreement') && details.includes('Default rule'), 'rules name their source')
+    // 2026-11-23: this job's contract was confirmed above (exclusivity "free"), so that rule now comes from the contract.
+    ctx.check(details.includes('From the job contract') && details.includes('From the agency agreement'), 'rules name their source (the job contract first, then the agreement)')
     await ctx.screenshot(page, '11-placement')
 
     // 9. The admin: Moderation › Accounts › Agencies and Admin › Agencies.

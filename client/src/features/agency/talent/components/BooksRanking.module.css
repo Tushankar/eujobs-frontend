@@ -145,6 +145,17 @@
   padding: 4px 0;
 }
 
+/* A summary runs to about two lines on a wide row and three on a phone; the placeholder matches (2026-11-23). */
+.summaryLines .phoneLine {
+  display: none;
+}
+
+@media (max-width: 599px) {
+  .summaryLines .phoneLine {
+    display: block;
+  }
+}
+
 .writing {
   font-weight: 500;
   color: var(--muted-foreground);

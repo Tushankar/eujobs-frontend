@@ -196,7 +196,9 @@ export default {
     const heading = () => page.$eval('form h2', (title) => title.textContent.trim()).catch(() => '')
     const marked = () => page.$$eval('.ai-filled', (fields) => fields.map((field) => (field.querySelector(':scope > label, :scope > legend')?.textContent ?? field.textContent).trim()))
     await clickText(page, 'Continue', 'button')
-    await page.waitForFunction(() => document.querySelector('form h2')?.textContent.trim() === 'Responsibilities', { timeout: 15_000 }).catch(() => {})
+    // The first Continue saves the new job and reopens it as a draft (/edit): the marks must come along.
+    await page.waitForFunction(() => /\/jobs\/[a-f0-9]{24}\/edit/.test(location.pathname) && document.querySelector('form h2')?.textContent.trim() === 'Responsibilities', { timeout: 15_000 }).catch(() => {})
+    await page.waitForSelector('.ai-filled > label', { timeout: 5_000 }).catch(() => {})
     const onResponsibilities = await marked()
     ctx.check(onResponsibilities.length >= 2, `the description and responsibilities carry the AI mark (${onResponsibilities.join(', ')})`)
     const pill = await page.$eval('.ai-filled > label', (label) => getComputedStyle(label, '::after').content).catch(() => '')
