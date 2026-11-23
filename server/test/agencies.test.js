@@ -82,8 +82,19 @@ describe('agency accounts (sign-up, sign-in, review)', () => {
 
     const res = await api().post(`${v1}/admin/moderation/accounts/${agency._id}/decision`).set(auth(owner)).send({ decision: 'approved' })
     assert.deepEqual([res.status, res.body.status], [200, 'active'])
-    assert.match(mailTo(agency.email, 'recruiter_approved')[0].params.link, /\/agencies\/login$/)
+    const [approved] = mailTo(agency.email, 'recruiter_approved')
+    assert.match(approved.params.link, /\/agencies\/login$/)
+    // 2026-11-23: the agency's own wording, not the recruiter's.
+    assert.equal(approved.subject, 'Your agency account is approved')
+    assert.ok(approved.text.includes('Your agency workspace is now open') && !approved.text.includes('recruiter'))
     assert.equal(await PipelineStage.countDocuments({ companyId: (await Company.findOne({ ownerUserId: agency._id }))._id }), 6)
+
+    // Rejected and suspended agencies get the agency texts too, in their language.
+    await api().post(`${v1}/admin/moderation/accounts/${agency._id}/decision`).set(auth(owner)).send({ decision: 'suspended', reason: 'Documents expired' })
+    assert.equal(mailTo(agency.email, 'recruiter_suspended')[0].subject, 'Your agency account is suspended')
+    const french = await createUser({ role: 'agency', status: 'pending_review', language: 'fr' })
+    await api().post(`${v1}/admin/moderation/accounts/${french._id}/decision`).set(auth(owner)).send({ decision: 'rejected', reason: 'Nom illisible' })
+    assert.equal(mailTo(french.email, 'recruiter_rejected')[0].subject, 'Votre compte agence doit être complété')
   })
 
   it('gives agencies the Agency plans and their entitlements', async () => {

@@ -46,9 +46,10 @@ async function skipReason(type, emailClass, to, userId) {
 
 /**
  * Sends one email and logs the outcome; returns the logged status. Never throws on a send failure. `ical`
- * ({ method, content }) attaches a calendar invite (§3.23), which mail apps show as "Add to calendar".
+ * ({ method, content }) attaches a calendar invite (§3.23), which mail apps show as "Add to calendar". `template`
+ * (2026-11-23) renders another text under the same type, e.g. an agency's account decision as `agency_approved`.
  */
-export async function sendEmail({ type, to, userId, language = 'en', params = {}, ical }) {
+export async function sendEmail({ type, template = type, to, userId, language = 'en', params = {}, ical }) {
   const emailClass = EMAIL_TYPES[type]
   const log = (status, error) => EmailLog.create({ type, class: emailClass, userId, to, language, status, error })
 
@@ -58,7 +59,7 @@ export async function sendEmail({ type, to, userId, language = 'en', params = {}
     return skipped
   }
 
-  const message = { from: config.mailFrom, to, ...renderEmail(type, language, params), ...(ical && { icalEvent: { method: ical.method, filename: 'invite.ics', content: ical.content } }) }
+  const message = { from: config.mailFrom, to, ...renderEmail(template, language, params), ...(ical && { icalEvent: { method: ical.method, filename: 'invite.ics', content: ical.content } }) }
   try {
     if (transport) await transport.sendMail(message)
     else capturedMail.push({ type, to, language, params, subject: message.subject, text: message.text, html: message.html, ical: ical ?? null, at: new Date() })

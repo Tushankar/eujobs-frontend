@@ -153,6 +153,8 @@ export async function decideAccount(admin, userId, { decision, reason }) {
   if (decision === 'approved') await celebrate(user, 'account_approved')
   await sendEmail({
     type: `recruiter_${decision}`,
+    // 2026-11-23: an agency's email speaks of its agency account and workspace.
+    template: `${user.role === 'agency' ? 'agency' : 'recruiter'}_${decision}`,
     to: user.email,
     userId: user._id,
     language: user.language,
