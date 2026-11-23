@@ -76,7 +76,7 @@ export default function MoveNoteDialog({ candidateId, candidateName, jobTitle, f
         <section className={styles.notes} aria-labelledby="move-notes-title">
           <div className={styles.notesHead}>
             <h3 id="move-notes-title" className={styles.notesTitle}>
-              {t('applications:moveNote.notes', { count: notes.length })}
+              {t('applications:moveNote.notes', { total: notes.length })}
             </h3>
             {candidateId && notes.length > SHOWN && (
               <Link to={hiringPath(`find-candidates/${candidateId}/notes`)} className={styles.all} onClick={onClose}>

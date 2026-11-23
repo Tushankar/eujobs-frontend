@@ -276,5 +276,15 @@
     "applicationsSeries": "Candidatures",
     "shortlistedSeries": "Short-list",
     "summary": "{{period}}. Candidatures : {{applications}}. Short-list : {{shortlisted}}."
+  },
+  "moveNote": {
+    "title": "Déplacer {{name}} vers {{stage}}",
+    "move": "Déplacer",
+    "notes": "Notes ({{total}})",
+    "all": "Voir toutes les notes",
+    "none": "Pas encore de notes.",
+    "add": "Ajouter une note (facultatif)",
+    "hint": "Pourquoi ce déplacement ? Seule votre équipe voit les notes.",
+    "saved": "Note enregistrée. Cliquez sur Déplacer pour réessayer."
   }
 }

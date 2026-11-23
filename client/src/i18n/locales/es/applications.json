@@ -276,5 +276,15 @@
     "applicationsSeries": "Candidaturas",
     "shortlistedSeries": "Preseleccionados",
     "summary": "{{period}}. Candidaturas: {{applications}}. Preseleccionados: {{shortlisted}}."
+  },
+  "moveNote": {
+    "title": "Mover a {{name}} a {{stage}}",
+    "move": "Mover",
+    "notes": "Notas ({{total}})",
+    "all": "Ver todas las notas",
+    "none": "Aún no hay notas.",
+    "add": "Añadir una nota (opcional)",
+    "hint": "¿Por qué lo mueves? Solo tu equipo ve las notas.",
+    "saved": "Nota guardada. Pulsa Mover para intentarlo de nuevo."
   }
 }

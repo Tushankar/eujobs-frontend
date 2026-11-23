@@ -24,7 +24,7 @@ const NOT_SELECTED = 'not_selected'
  * application has no select (M-076). With messaging (2026-11-17): the reject can carry a personal message (typed or
  * drafted by AI), and "Send an update" beside the select messages the applicant about their current stage.
  */
-export default function ApplicationStageSelect({ application, candidateName, jobTitle, stages, variant, label }) {
+export default function ApplicationStageSelect({ application, candidateName, candidateId, jobTitle, stages, variant, label }) {
   const { t } = useTranslation()
   const [reject] = useRejectApplicationMutation()
   const [cancelInterview] = useCancelInterviewMutation()
@@ -67,7 +67,7 @@ export default function ApplicationStageSelect({ application, candidateName, job
             } else {
               // 2026-11-23: a refused move (e.g. Hired before the candidate is on an agency's books) says why.
               setFailure(null)
-              Promise.resolve(interviewMove.request(application, next, stages, candidateName)).catch(setFailure)
+              Promise.resolve(interviewMove.request(application, next, stages, candidateName, candidateId)).catch(setFailure)
             }
           }}
         />

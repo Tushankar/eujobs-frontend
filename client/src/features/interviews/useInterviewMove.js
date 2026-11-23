@@ -47,14 +47,38 @@ export function useMoveTo() {
   }
 }
 
-/** `request(application, stageId, stages, candidateName?)`: the interview-aware stage move. */
-export function useInterviewMove() {
+/** The browser checks turn the note step off for older scenarios (e2e/lib/browser.js); real users never set this. */
+function moveNotesOff() {
+  try {
+    return localStorage.getItem('eujobs.e2e.moveNotes') === 'off'
+  } catch {
+    return false
+  }
+}
+
+/** The move after the note step: the interview prompts (leave / schedule), else the move itself. */
+export function useContinueMove() {
   const moveTo = useMoveTo()
-  function request(application, stageId, stages, candidateName) {
-    const from = application.stage?.category
+  return (application, stageId, stages, candidateName) => {
+    const from = application.stage?.category ?? stages.find((stage) => stage.id === application.stageId)?.category
     const to = stages.find((stage) => stage.id === stageId)?.category
     if (from === 'interview' && to !== 'interview' && application.interview?.active) return setPrompt({ kind: 'leave', application, stageId, to })
     return moveTo(application, stageId, from === 'interview' && to === 'interview' ? null : to, candidateName)
+  }
+}
+
+/**
+ * `request(application, stageId, stages, candidateName?, candidateId?)`: the interview-aware stage move. 2026-11-23
+ * (owner: "before moving, show notes"): it first opens the note step (the candidate's notes and an optional note),
+ * whose Move runs the rest. A move to the stage the card is already in does nothing.
+ */
+export function useInterviewMove() {
+  const continueMove = useContinueMove()
+  function request(application, stageId, stages, candidateName, candidateId) {
+    const current = application.stage?.id ?? application.stageId
+    if (stageId === current && application.status !== 'not_selected') return undefined
+    if (moveNotesOff()) return continueMove(application, stageId, stages, candidateName)
+    return setPrompt({ kind: 'note', application, stageId, stages, candidateName, candidateId: candidateId ?? application.candidate?.id ?? application.candidateId })
   }
   return { request }
 }

@@ -47,6 +47,7 @@ function CompanyApplications({ candidate }) {
               stages={pipeline.items}
               variant="card"
               candidateName={candidate.fullName}
+              candidateId={candidate.id}
               jobTitle={application.job.title}
               label={t('applications:profile.stage', { job: application.job.title })}
             />

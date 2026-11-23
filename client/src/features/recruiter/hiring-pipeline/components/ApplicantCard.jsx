@@ -58,8 +58,9 @@ export default function ApplicantCard({ application, stages, dragging, onDragSta
             {application.noteCount}
           </button>
         )}
+        {/* 2026-11-23 (owner: alignment): the place on the books sits in the badge row, not on a line of its own. */}
+        {application.books && <BooksChip books={application.books} />}
       </div>
-      {application.books && <BooksChip books={application.books} />}
       <InterviewStatus interview={application.interview} />
       <div className={styles.footer}>
         <ApplicationStageSelect
@@ -71,7 +72,7 @@ export default function ApplicantCard({ application, stages, dragging, onDragSta
           label={t('applications:board.move', { name: candidate.fullName })}
         />
         <p className={styles.activity}>
-          <Icon as={Clock} size={10} />
+          <Icon as={Clock} size={11} className={styles.activityIcon} />
           {t('applications:board.appliedFor', { job: job.title, date: format.date(application.appliedAt) })}
         </p>
       </div>

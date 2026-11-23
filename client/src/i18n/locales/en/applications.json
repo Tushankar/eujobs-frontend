@@ -268,5 +268,15 @@
     "applicationsSeries": "Applications",
     "shortlistedSeries": "Shortlisted",
     "summary": "{{period}}. Applications: {{applications}}. Shortlisted: {{shortlisted}}."
+  },
+  "moveNote": {
+    "title": "Move {{name}} to {{stage}}",
+    "move": "Move",
+    "notes": "Notes ({{total}})",
+    "all": "See all notes",
+    "none": "No notes yet.",
+    "add": "Add a note (optional)",
+    "hint": "Why are you moving them? Only your team sees notes.",
+    "saved": "Note saved. Press Move to try the move again."
   }
 }
