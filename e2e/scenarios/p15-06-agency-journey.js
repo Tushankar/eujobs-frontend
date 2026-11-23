@@ -193,6 +193,9 @@ export default {
       const step = await page.waitForSelector('[data-move-note]', { timeout: 10_000 }).catch(() => null)
       expect(Boolean(step), 'choosing a stage opens the note step before the move')
       if (step) {
+        // The notes load first (a skeleton while they do).
+        await page.waitForFunction(() => document.querySelector('[data-move-note]') && !document.querySelector('[data-move-note] [data-skeleton]'), { timeout: 10_000 }).catch(() => {})
+        await pause(300)
         const stepText = await page.$eval('[role="dialog"]', (dialog) => dialog.innerText)
         expect(stepText.includes(`Move ${candidate.fullName} to Hired`) && stepText.includes('No notes yet'), 'the note step names the move and shows the notes (none yet)')
         await fill(page, 'textarea[name="moveNote"]', 'Strong fit for the Harbour Logistics shifts.')
@@ -242,7 +245,7 @@ export default {
       const select = `[data-stage-select="${application.id}"] select`
       await chooseStage(page, select, 'Hired')
       await page.waitForSelector('[data-move-note-item]', { timeout: 10_000 }).catch(() => issue('the note from before is not in the step'))
-      const notesShown = await page.$eval('[data-move-note-item]', (items) => items.map((item) => item.innerText))
+      const notesShown = await page.$$eval('[data-move-note-item]', (items) => items.map((item) => item.innerText))
       expect(notesShown.some((note) => note.includes('Strong fit for the Harbour Logistics shifts.')), 'the note step shows the earlier note with its date')
       await ctx.screenshot(page, '21b-agency-move-with-note')
       await page.click('[data-move-confirm]')

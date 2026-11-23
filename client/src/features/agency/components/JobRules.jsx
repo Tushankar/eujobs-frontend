@@ -4,6 +4,7 @@ import { ArrowUpRight, FileText } from 'lucide-react'
 import { hiringPath } from '@/app/roles.js'
 import PillBadge from '@/components/common/PillBadge.jsx'
 import { Icon, Skeleton, SkeletonRegion } from '@/components/ui'
+import { useFormat } from '@/lib/preferences.js'
 import { useGetAgreementQuery } from '../api.js'
 import { RULES, useRuleText } from '../rules.js'
 import styles from './JobRules.module.css'
@@ -16,7 +17,9 @@ import styles from './JobRules.module.css'
 export default function JobRules({ job }) {
   const { t } = useTranslation()
   const ruleText = useRuleText()
+  const format = useFormat()
   const { data, isLoading } = useGetAgreementQuery()
+  const attached = job?.agency?.contract ?? null
   const agreement = data?.current ?? null
   const contract = job?.agency?.contract?.confirmedAt ? job.agency.contract.rules : null
 
@@ -39,11 +42,21 @@ export default function JobRules({ job }) {
 
   return (
     <div className={styles.card} data-job-rules>
-      {agreement ? (
-        <p className={styles.lead}>
+      {/* 2026-11-23 (owner: "the top already shows details; I uploaded an optional contract, which does it use?"): say which applies. */}
+      {contract ? (
+        <p className={styles.lead} data-job-rules-from="contract">
+          <Icon as={FileText} size={16} className={styles.icon} />
+          <span>
+            {t('agency:jobRules.contractApplies', { date: format.date(attached.confirmedAt) })} <span className={styles.file}>{attached.name}</span>
+            <span className={styles.sub}>{agreement ? t('agency:jobRules.contractGaps', { version: agreement.version }) : t('agency:jobRules.contractGapsDefault')}</span>
+          </span>
+        </p>
+      ) : agreement ? (
+        <p className={styles.lead} data-job-rules-from="agreement">
           <Icon as={FileText} size={16} className={styles.icon} />
           <span>
             {t('agency:jobRules.applies', { version: agreement.version })} <span className={styles.file}>{agreement.file.name}</span>
+            <span className={styles.sub}>{t(attached ? 'agency:jobRules.untilConfirmed' : 'agency:jobRules.contractOptional')}</span>
           </span>
         </p>
       ) : (

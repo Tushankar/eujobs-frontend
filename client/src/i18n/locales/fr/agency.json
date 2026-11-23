@@ -182,7 +182,11 @@
     "confirm": "Confirmer les règles",
     "confirmAgain": "Enregistrer et confirmer",
     "confirmed": "Règles confirmées",
-    "toConfirm": "Règles à confirmer"
+    "toConfirm": "Règles à confirmer",
+    "confirmedOn": "Règles confirmées le {{when}}",
+    "confirmedText": "Elles s’appliquent aux placements de cette offre. Ce que le contrat laisse vide vient de votre accord.",
+    "notConfirmed": "Pas encore confirmé",
+    "notConfirmedText": "Tant que vous n’avez pas confirmé, les règles de votre accord s’appliquent et l’offre ne peut pas être publiée."
   },
   "terms": {
     "client": "Client",
@@ -541,7 +545,12 @@
     "order": "Pour chaque règle : d’abord le contrat confirmé de cette offre, puis votre accord, puis la règle par défaut.",
     "openAgreement": "Ouvrir votre accord",
     "uploadAgreement": "Téléverser votre accord",
-    "scope": "Cet accord couvre toutes vos offres. Une offre peut aussi avoir son propre contrat (offre › Conditions d’agence) : ses règles confirmées passent avant celles-ci pour les placements de cette offre."
+    "scope": "Cet accord couvre toutes vos offres. Une offre peut aussi avoir son propre contrat (offre › Conditions d’agence) : ses règles confirmées passent avant celles-ci pour les placements de cette offre.",
+    "contractApplies": "Le contrat propre à cette offre s’applique (confirmé le {{date}}) :",
+    "contractGaps": "Les règles qu’il laisse vides viennent de votre accord, version {{version}}.",
+    "contractGapsDefault": "Les règles qu’il laisse vides suivent la règle par défaut.",
+    "untilConfirmed": "Vous avez joint un contrat ci-dessous : votre accord s’applique jusqu’à ce que vous confirmiez ses règles.",
+    "contractOptional": "Facultatif : joignez un contrat ci-dessous pour fixer des règles différentes pour cette offre."
   },
   "setup": {
     "title": "Configurez votre agence",

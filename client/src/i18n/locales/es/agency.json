@@ -182,7 +182,11 @@
     "confirm": "Confirmar reglas",
     "confirmAgain": "Guardar y confirmar",
     "confirmed": "Reglas confirmadas",
-    "toConfirm": "Reglas por confirmar"
+    "toConfirm": "Reglas por confirmar",
+    "confirmedOn": "Reglas confirmadas el {{when}}",
+    "confirmedText": "Se aplican a las colocaciones de esta oferta. Lo que el contrato deja vacío viene de tu acuerdo.",
+    "notConfirmed": "Aún sin confirmar",
+    "notConfirmedText": "Hasta que confirmes, se aplican las reglas de tu acuerdo y la oferta no se puede publicar."
   },
   "terms": {
     "client": "Cliente",
@@ -541,7 +545,12 @@
     "order": "Para cada regla: primero el contrato confirmado de esta oferta, después tu acuerdo y, por último, la regla por defecto.",
     "openAgreement": "Abrir tu acuerdo",
     "uploadAgreement": "Subir tu acuerdo",
-    "scope": "Este acuerdo cubre todas tus ofertas. Una oferta también puede tener su propio contrato (oferta › Condiciones de agencia): sus reglas confirmadas van antes que estas en las colocaciones de esa oferta."
+    "scope": "Este acuerdo cubre todas tus ofertas. Una oferta también puede tener su propio contrato (oferta › Condiciones de agencia): sus reglas confirmadas van antes que estas en las colocaciones de esa oferta.",
+    "contractApplies": "Se aplica el contrato propio de esta oferta (confirmado el {{date}}):",
+    "contractGaps": "Las reglas que deja vacías vienen de tu acuerdo, versión {{version}}.",
+    "contractGapsDefault": "Las reglas que deja vacías siguen la opción por defecto.",
+    "untilConfirmed": "Has adjuntado un contrato abajo: tu acuerdo se aplica hasta que confirmes sus reglas.",
+    "contractOptional": "Opcional: adjunta un contrato abajo para fijar reglas distintas para esta oferta."
   },
   "setup": {
     "title": "Configura tu agencia",

@@ -1,6 +1,7 @@
 import { useState } from 'react'
 import { useTranslation } from 'react-i18next'
-import { FileText, Sparkles } from 'lucide-react'
+import { CircleAlert, CircleCheck, FileText, Sparkles } from 'lucide-react'
+import { cx } from '@/utils/cx.js'
 import { errorCode, useGetConfigQuery } from '@/app/api.js'
 import PillBadge from '@/components/common/PillBadge.jsx'
 import { Icon } from '@/components/ui'
@@ -32,6 +33,7 @@ export default function ContractCard({ job, error }) {
   const [busy, setBusy] = useState(null)
   const [fieldErrors, setFieldErrors] = useState({})
   const [problem, setProblem] = useState('')
+  const [justConfirmed, setJustConfirmed] = useState(false)
   const contract = job.agency?.contract
 
   async function handleFile(file) {
@@ -55,6 +57,7 @@ export default function ContractCard({ job, error }) {
     setProblem('')
     try {
       await confirm({ jobId: job.id, rules }).unwrap()
+      setJustConfirmed(true)
     } catch (failure) {
       if (errorCode(failure) === 'VALIDATION_FAILED') setFieldErrors(serverFieldErrors(failure))
       else setProblem(errorText.code(failure))
@@ -106,6 +109,14 @@ export default function ContractCard({ job, error }) {
             onSubmit={handleConfirm}
             actions={[{ intent: 'confirm', label: t(contract.confirmedAt ? 'agency:contract.confirmAgain' : 'agency:contract.confirm') }]}
           />
+          {/* 2026-11-23 (owner: "Save and confirm does not show if the rules are confirmed"): the state right by the button. */}
+          <p className={cx(styles.status, contract.confirmedAt ? styles.statusDone : styles.statusTodo, justConfirmed && styles.statusFresh)} role="status" data-contract-status={contract.confirmedAt ? 'confirmed' : 'todo'}>
+            <Icon as={contract.confirmedAt ? CircleCheck : CircleAlert} size={16} className={styles.statusIcon} />
+            <span>
+              <strong>{contract.confirmedAt ? t('agency:contract.confirmedOn', { when: format.dateTime(contract.confirmedAt) }) : t('agency:contract.notConfirmed')}</strong>
+              <span className={styles.statusText}>{t(contract.confirmedAt ? 'agency:contract.confirmedText' : 'agency:contract.notConfirmedText')}</span>
+            </span>
+          </p>
         </>
       ) : (
         <div className={styles.fileRow}>

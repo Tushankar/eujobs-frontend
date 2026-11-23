@@ -179,7 +179,11 @@
     "confirm": "Confirm rules",
     "confirmAgain": "Save and confirm",
     "confirmed": "Rules confirmed",
-    "toConfirm": "Rules to confirm"
+    "toConfirm": "Rules to confirm",
+    "confirmedOn": "Rules confirmed {{when}}",
+    "confirmedText": "They apply to this job’s placements. Anything the contract leaves empty comes from your agreement.",
+    "notConfirmed": "Not confirmed yet",
+    "notConfirmedText": "Until you confirm, your agreement’s rules apply, and the job can’t be published."
   },
   "terms": {
     "client": "Client",
@@ -528,7 +532,12 @@
     "order": "For each rule: this job’s confirmed contract comes first, then your agreement, then the default.",
     "openAgreement": "Open your agreement",
     "uploadAgreement": "Upload your agreement",
-    "scope": "This agreement covers all your jobs. A job can also have its own contract (job › Agency terms): its confirmed rules come before these for that job’s placements."
+    "scope": "This agreement covers all your jobs. A job can also have its own contract (job › Agency terms): its confirmed rules come before these for that job’s placements.",
+    "contractApplies": "This job’s own contract applies (confirmed {{date}}):",
+    "contractGaps": "Rules it leaves empty come from your agreement, version {{version}}.",
+    "contractGapsDefault": "Rules it leaves empty follow the default.",
+    "untilConfirmed": "You attached a contract below: your agreement applies until you confirm its rules.",
+    "contractOptional": "Optional: attach a contract below to set different rules for this job."
   },
   "setup": {
     "title": "Set up your agency",

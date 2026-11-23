@@ -32,6 +32,16 @@
   overflow-wrap: anywhere;
 }
 
+/* Which document applies, and what fills the gaps (2026-11-23). */
+.sub {
+  display: block;
+  margin-top: 2px;
+  font-size: 12px;
+  font-weight: 400;
+  line-height: 18px;
+  color: var(--muted-foreground);
+}
+
 .missing {
   padding: 12px 14px;
   border: 1px solid var(--border-strong);
