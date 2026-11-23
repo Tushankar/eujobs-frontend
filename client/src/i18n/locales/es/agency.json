@@ -90,12 +90,14 @@
       }
     },
     "next": {
-      "pick": "Elige una oferta para ordenar a toda tu cartera según ella y ofrecerles una colocación.",
+      "pick": "Pulsa Ofrecer colocación en cualquiera de abajo, o elige primero una oferta para ordenar a todos según ella.",
       "post": "Publica una oferta de agencia para colocar a las personas de tu cartera.",
       "postAction": "Publicar una oferta",
       "publish": "Publica una de tus ofertas de agencia para ofrecer colocaciones a las personas de tu cartera.",
       "publishAction": "Abrir tus ofertas"
-    }
+    },
+    "offerTitle": "Ofrecer una colocación a {{name}}",
+    "offerText": "Elige una de tus ofertas de agencia publicadas. Recibe un correo y una notificación, y la acepta o la rechaza en Agencias."
   },
   "agreement": {
     "upload": "Subir el acuerdo (PDF)",
@@ -523,7 +525,8 @@
       "offered": "Ofrecida",
       "placed": "Colocada"
     },
-    "aiSummary": "Resumen de IA"
+    "aiSummary": "Resumen de IA",
+    "everyoneMeta": "Gestiona a las personas de tu cartera"
   },
   "jobRules": {
     "applies": "Tu acuerdo, versión {{version}}, se aplica a esta oferta:",

@@ -108,8 +108,12 @@ export default {
 
     // 4. Talent › On the books: rank everyone for a picked job.
     await page.goto(`${ctx.webUrl}/agency/talent`, { waitUntil: 'networkidle0' })
-    await page.waitForSelector('select[name="rankFor"]')
-    await page.select('select[name="rankFor"]', nightPicker.id)
+    // 2026-11-23: the job picker is the app's own list (it was the browser's select).
+    await page.waitForSelector('[data-rank-for]')
+    await page.click('[data-rank-for]')
+    await page.waitForSelector('[data-rank-option="Night Picker"]')
+    await ctx.screenshot(page, '4a-job-picker-open')
+    await page.click('[data-rank-option="Night Picker"]')
     await page.waitForSelector('[data-books-ranking] [data-ranked]')
     const forNight = await page.$$eval('[data-books-ranking] [data-ranked]', (rows) => rows.map((row) => row.dataset.ranked))
     // Night Picker starts on day 10: Dev (free from day 8) fits, Cleo (to day 20) does not.

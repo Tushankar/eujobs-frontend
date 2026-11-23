@@ -90,12 +90,14 @@
       }
     },
     "next": {
-      "pick": "Choisissez une offre pour classer tout votre vivier et proposer un placement.",
+      "pick": "Cliquez sur Proposer un placement pour n’importe qui ci-dessous, ou choisissez d’abord une offre pour classer tout le monde.",
       "post": "Publiez une offre d’agence pour placer les personnes de votre vivier.",
       "postAction": "Publier une offre",
       "publish": "Publiez l’une de vos offres d’agence pour proposer des placements aux personnes de votre vivier.",
       "publishAction": "Ouvrir vos offres"
-    }
+    },
+    "offerTitle": "Proposer un placement à {{name}}",
+    "offerText": "Choisissez l’une de vos offres d’agence publiées. La personne reçoit un e-mail et une notification, et l’accepte ou la refuse dans Agences."
   },
   "agreement": {
     "upload": "Téléverser l’accord (PDF)",
@@ -523,7 +525,8 @@
       "offered": "Proposé",
       "placed": "Placé"
     },
-    "aiSummary": "Résumé IA"
+    "aiSummary": "Résumé IA",
+    "everyoneMeta": "Gérez les personnes de votre vivier"
   },
   "jobRules": {
     "applies": "Votre accord, version {{version}}, s’applique à cette offre :",

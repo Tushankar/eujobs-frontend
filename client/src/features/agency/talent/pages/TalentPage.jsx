@@ -8,13 +8,15 @@ import EmptyState from '@/components/common/EmptyState.jsx'
 import FilterChips from '@/components/common/FilterChips.jsx'
 import PageTitle from '@/components/common/PageTitle.jsx'
 import PillBadge from '@/components/common/PillBadge.jsx'
-import { Avatar, Button, Dropdown, IconButton, SelectField, Skeleton, SkeletonRegion } from '@/components/ui'
+import { Avatar, Button, Dropdown, IconButton, Skeleton, SkeletonRegion } from '@/components/ui'
 import { useGetRecruiterJobsQuery } from '@/features/recruiter/jobs/api.js'
 import { useErrorText } from '@/lib/forms.js'
 import { useFormat } from '@/lib/preferences.js'
 import { useGetAgreementQuery, useGetBooksQuery, useTalentActionMutation } from '../../api.js'
 import AgreementPanel from '../components/AgreementPanel.jsx'
 import BooksRanking from '../components/BooksRanking.jsx'
+import JobPicker from '../components/JobPicker.jsx'
+import OfferFromBooks from '../components/OfferFromBooks.jsx'
 import styles from './TalentPage.module.css'
 
 const TABS = ['books', 'requests', 'agreement']
@@ -37,7 +39,7 @@ function RowsSkeleton() {
 }
 
 /** One candidate row: who, where, the agreement state and the actions of this tab. */
-function TalentRow({ member, onAction, busy }) {
+function TalentRow({ member, onAction, busy, onOffer }) {
   const { t } = useTranslation()
   const format = useFormat()
   const { candidate } = member
@@ -73,6 +75,12 @@ function TalentRow({ member, onAction, busy }) {
             {t('agency:talent.withdraw')}
           </Button>
         </>
+      )}
+      {/* 2026-11-23: offer a placement from the list of everyone, not only from a job's ranking. */}
+      {member.status === 'active' && onOffer && (
+        <Button size="sm" disabled={member.needsAgreement} onClick={() => onOffer(member)} data-offer-from-books>
+          {t('agency:ranking.offer')}
+        </Button>
       )}
       {member.status === 'active' && (
         <Dropdown panelClassName={styles.menuPanel} trigger={(props) => <IconButton icon={Settings2} label={t('agency:talent.manage', { name: candidate.name })} {...props} />}>
@@ -111,6 +119,7 @@ export default function TalentPage() {
   const [busyId, setBusyId] = useState(null)
   const [failure, setFailure] = useState(null)
   const [ending, setEnding] = useState(null)
+  const [offering, setOffering] = useState(null)
   // Phase 6: On the books can rank everyone for one of the agency's open agency jobs (?jobId).
   const { data: jobs } = useGetRecruiterJobsQuery(undefined, { skip: tab !== 'books' })
   const rankable = (jobs?.items ?? []).filter((job) => job.agency && job.status !== 'closed')
@@ -172,13 +181,7 @@ export default function TalentPage() {
           )}
           {tab === 'books' && rankable.length > 0 && inTab('books').length > 0 && (
             <div className={styles.rankFor}>
-              <SelectField
-                label={t('agency:ranking.rankFor')}
-                name="rankFor"
-                options={[{ value: '', label: t('agency:ranking.everyone') }, ...rankable.map((job) => ({ value: job.id, label: job.title }))]}
-                value={rankFor}
-                onChange={(event) => setParams(event.target.value ? { jobId: event.target.value } : {}, { replace: true })}
-              />
+              <JobPicker jobs={rankable} value={rankFor} onChange={(id) => setParams(id ? { jobId: id } : {}, { replace: true })} />
               {nextStep === 'pick' && (
                 <p className={styles.hint} data-books-hint="pick">
                   {t('agency:talent.next.pick')}
@@ -213,7 +216,7 @@ export default function TalentPage() {
             <section className={styles.card} aria-label={t(`agency:talent.tabs.${tab}`)}>
               <ul className={styles.list}>
                 {visible.map((member) => (
-                  <TalentRow key={member.id} member={member} onAction={run} busy={busyId === member.id} />
+                  <TalentRow key={member.id} member={member} onAction={run} busy={busyId === member.id} onOffer={tab === 'books' && published.length > 0 ? setOffering : undefined} />
                 ))}
               </ul>
             </section>
@@ -221,6 +224,7 @@ export default function TalentPage() {
         </>
       )}
 
+      {offering && <OfferFromBooks member={offering} jobs={published} onClose={() => setOffering(null)} />}
       <ConfirmDialog
         open={Boolean(ending)}
         title={t('agency:talent.removeTitle', { name: ending?.candidate.name })}
