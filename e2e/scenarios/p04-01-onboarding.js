@@ -26,7 +26,7 @@ export default {
     await fill(page, 'input[name="legalName"]', 'Nordlicht Studio GmbH')
     await fill(page, 'input[name="website"]', 'nordlicht.example.com')
     await fill(page, 'input[name="businessEmail"]', 'hello@nordlicht.example.com')
-    await fill(page, 'input[name="industry"]', 'Diseño de producto')
+    await page.select('select[name="sector"]', 'it_software')
     await page.select('select[name="size"]', '11_50')
     await page.type('input[name="companyCity"]', 'Berlin')
     await page.waitForSelector('[role="option"]')

@@ -9,7 +9,8 @@ import { api, db, login as apiLogin, mailTo, TEST_PASSWORD, uniqueEmail } from '
 export const COMPANY = {
   website: 'example-studio.example.com',
   businessEmail: 'hello@example-studio.example.com',
-  industry: 'Design services',
+  // 2026-11-24: a sector instead of a typed industry.
+  sector: 'it_software',
   size: '11_50',
   businessAddress: '1 Sample Street',
 }
@@ -101,6 +102,7 @@ export function jobBody({ city = 'london', ...overrides } = {}) {
   return {
     title: 'Senior Product Designer',
     employmentType: 'full_time',
+    sector: 'it_software',
     brief: 'Lead the design of our hiring tools, from research to shipped product, with a small and kind team.',
     responsibilities: ['Run research', 'Design flows', 'Ship with engineers'],
     requiredSkills: ['Figma', 'Design Systems'],

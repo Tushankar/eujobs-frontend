@@ -39,8 +39,8 @@ export default {
     await ctx.screenshot(page, '3-placements-empty')
 
     // 2. A client and the agreement: the setup moves on to the job.
-    const acme = (await api('/agency/clients', { method: 'POST', token: agency.token, body: { name: 'Acme Ports', industry: 'Logistics' } })).body
-    await api('/agency/clients', { method: 'POST', token: agency.token, body: { name: 'Northwind Retail', industry: 'Retail' } })
+    const acme = (await api('/agency/clients', { method: 'POST', token: agency.token, body: { name: 'Acme Ports', sector: 'logistics_transport' } })).body
+    await api('/agency/clients', { method: 'POST', token: agency.token, body: { name: 'Northwind Retail', sector: 'retail_ecommerce' } })
     await publishAgreement(agency.token)
     await page.goto(`${ctx.webUrl}/agency`, { waitUntil: 'networkidle0' })
     await page.waitForSelector('[data-agency-setup="job"]')

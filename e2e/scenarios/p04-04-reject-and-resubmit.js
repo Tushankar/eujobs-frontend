@@ -37,7 +37,7 @@ export default {
 
     await clickText(page, 'Edit details', 'a')
     await waitForPath(page, '/recruiter/onboarding/company')
-    await fill(page, 'input[name="industry"]', 'Product design studio')
+    await page.select('select[name="sector"]', 'arts_culture')
     await clickText(page, 'Continue', 'button[type="submit"]')
     await waitForPath(page, '/recruiter/onboarding/kyc')
     await page.goto(`${ctx.webUrl}/recruiter/onboarding/review`, { waitUntil: 'networkidle0' })
@@ -45,7 +45,7 @@ export default {
     await waitForText(page, 'Under review')
     await ctx.screenshot(page, '3-pending-again')
     const state = (await api('/recruiter/onboarding', { token: recruiter.token })).body
-    ctx.check(state.status === 'pending_review' && state.company.industry === 'Product design studio', 'pending again with the edited company')
+    ctx.check(state.status === 'pending_review' && state.company.sector === 'arts_culture', 'pending again with the edited company')
     ctx.assertClean(handle.issues, 'resubmit')
   },
 }

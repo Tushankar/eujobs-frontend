@@ -27,7 +27,7 @@ export default {
     ctx.check(!(await page.$('input[name="legalName"]')), 'the legal name is not editable')
 
     await fill(page, 'input[name="displayName"]', 'Northlight')
-    await fill(page, 'input[name="industry"]', 'Product design')
+    await page.select('select[name="sector"]', 'arts_culture')
     await page.select('select[name="size"]', '51_200')
     await fill(page, 'input[name="companyCity"]', 'Manchester')
     await page.waitForSelector('[role="option"]')

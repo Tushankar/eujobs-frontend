@@ -74,7 +74,7 @@ export default {
     await page.click('[data-add-client]')
     await page.waitForSelector('#client-form')
     await fill(page, '#client-form input[name="name"]', 'Acme Logistics')
-    await fill(page, '#client-form input[name="industry"]', 'Logistics')
+    await page.select('#client-form select[name="sector"]', 'logistics_transport')
     await page.click('button[form="client-form"]')
     await page.waitForSelector('[data-client="Acme Logistics"]')
     await handle.checkOverflow()
