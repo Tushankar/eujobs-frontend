@@ -123,6 +123,13 @@ server {
     # Lesson videos go up to 500 MB.
     client_max_body_size 510m;
 
+    # perf 2026-11-24: compress JSON and text answers (this server block's own setting; Debian's http-level
+    # "gzip on" alone leaves gzip_types at text/html, so JSON went uncompressed).
+    gzip on;
+    gzip_proxied any;
+    gzip_min_length 1024;
+    gzip_types application/json text/css application/javascript image/svg+xml;
+
     location / {
         proxy_pass http://127.0.0.1:$PORT;
         proxy_http_version 1.1;

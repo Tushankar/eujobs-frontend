@@ -154,6 +154,18 @@ section.panel {
   margin-top: 18px;
 }
 
+/* 2026-11-24: the sector filter beside "Visa sponsorship only". */
+.barFilters {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: 8px 16px;
+}
+
+.sectorFilter {
+  min-width: 200px;
+}
+
 .visaSwitch {
   display: inline-flex;
   align-items: center;

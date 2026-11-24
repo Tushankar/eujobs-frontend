@@ -2,7 +2,7 @@ import { useState } from 'react'
 import { useTranslation } from 'react-i18next'
 import { useDispatch } from 'react-redux'
 import { Link } from 'react-router-dom'
-import { ArrowRight, ArrowUpRight, Bookmark, BriefcaseBusiness, CalendarDays, ChartNoAxesColumnIncreasing, ChevronDown, Clock, Crown, Globe, MapPin, Plane } from 'lucide-react'
+import { ArrowRight, ArrowUpRight, Bookmark, BriefcaseBusiness, CalendarDays, ChartNoAxesColumnIncreasing, ChevronDown, Clock, Crown, Globe, Layers, MapPin, Plane } from 'lucide-react'
 import { openUpgrade } from '@/app/upgrade.js'
 import { cx } from '@/utils/cx.js'
 import { Button, CompanyLogo, Icon, IconButton, Skeleton } from '@/components/ui'
@@ -14,6 +14,7 @@ import JobSummaryButton from '@/features/ai/components/JobSummaryButton.jsx'
 import { ApplyButton } from '@/features/candidate/applications/components/ApplyFlow.jsx'
 import { lacksEntitlement, usePlan } from '@/features/candidate/billing/usePlan.js'
 import { useJobText } from '@/lib/jobText.js'
+import { useSectors } from '@/lib/sectors.js'
 import VerifiedCompany from '@/components/common/VerifiedCompany.jsx'
 import { useFormat, usePreferences } from '@/lib/preferences.js'
 import { useBackState } from '@/lib/urlState.js'
@@ -55,6 +56,7 @@ export default function JobCard({ job, onToggleSave }) {
   const { t } = useTranslation()
   const format = useFormat()
   const jobText = useJobText()
+  const sectors = useSectors()
   const { me } = usePreferences()
   const [whyOpen, setWhyOpen] = useState(false)
   const whyId = `why-${job.id}`
@@ -114,6 +116,13 @@ export default function JobCard({ job, onToggleSave }) {
           <Icon as={BriefcaseBusiness} size={12} />
           {t(`enums:employmentType.${job.employmentType}`)}
         </span>
+        {/* 2026-11-24: the kind of work. */}
+        {sectors.name(job.sector) && (
+          <span className={styles.metaItem} data-job-sector={job.sector}>
+            <Icon as={Layers} size={12} />
+            {sectors.name(job.sector)}
+          </span>
+        )}
         {job.agency && (
           <>
             <span className={styles.metaItem} data-agency-dates>

@@ -3,15 +3,21 @@ import { z } from 'zod'
 import { ENUMS, JOB_TYPES } from '../../config/enums.js'
 import { validate } from '../../lib/validate.js'
 import { sectorKey } from '../jobs/jobs.schemas.js'
-import { placesNearPerIp } from '../../middleware/rateLimit.js'
+import { landingPerIp, placesNearPerIp } from '../../middleware/rateLimit.js'
 import { cityNear } from '../places/places.service.js'
 import { landing, publicJobs } from './landing.service.js'
 
 const router = Router()
 
+// perf 2026-11-24: a generous per-IP limit on the public reads, and a minute of browser caching for the two answers that
+// are the same for every visitor (the language and filters are in the URL, no session is read).
+router.use(landingPerIp)
+const PUBLIC_MINUTE = 'public, max-age=60'
+
 /** GET /landing: the public home page's live data (no session needed). */
 router.get('/', validate({ query: z.object({ language: z.enum(ENUMS.language).default('en') }) }), async (req, res) => {
-  res.json(await landing(req.query.language))
+  const body = await landing(req.query.language)
+  res.set('Cache-Control', PUBLIC_MINUTE).json(body)
 })
 
 const keywords = z.string().trim().max(200).default('')
@@ -31,7 +37,8 @@ router.get(
     }),
   }),
   async (req, res) => {
-    res.json(await publicJobs(req.query))
+    const body = await publicJobs(req.query)
+    res.set('Cache-Control', PUBLIC_MINUTE).json(body)
   },
 )
 

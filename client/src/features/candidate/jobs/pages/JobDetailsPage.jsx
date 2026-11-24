@@ -1,6 +1,6 @@
 import { useTranslation } from 'react-i18next'
 import { Link, useParams } from 'react-router-dom'
-import { ArrowLeft, ArrowUpRight, Bookmark, BriefcaseBusiness, CalendarDays, Check, ChevronRight, Globe, MapPin, Plane, SearchX } from 'lucide-react'
+import { ArrowLeft, ArrowUpRight, Bookmark, BriefcaseBusiness, CalendarDays, Check, ChevronRight, Globe, Layers, MapPin, Plane, SearchX } from 'lucide-react'
 import { cx } from '@/utils/cx.js'
 import { Button, CompanyLogo, Icon, Skeleton, SkeletonRegion } from '@/components/ui'
 import EmptyState from '@/components/common/EmptyState.jsx'
@@ -205,6 +205,12 @@ export default function JobDetailsPage() {
               <Icon as={BriefcaseBusiness} size={14} />
               {t(`enums:employmentType.${job.employmentType}`)}
             </span>
+            {sectors.name(job.sector) && (
+              <span className={styles.metaItem} data-job-sector={job.sector}>
+                <Icon as={Layers} size={14} />
+                {sectors.name(job.sector)}
+              </span>
+            )}
             {job.visaSponsorship && (
               <span className={styles.metaItem} data-visa-sponsorship>
                 <Icon as={Plane} size={14} />

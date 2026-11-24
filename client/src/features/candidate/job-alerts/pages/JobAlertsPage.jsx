@@ -11,6 +11,7 @@ import LoadError from '@/components/common/LoadError.jsx'
 import PageTitle from '@/components/common/PageTitle.jsx'
 import { PlanGate } from '@/features/candidate/billing/components/RequirePlan.jsx'
 import { useFormat } from '@/lib/preferences.js'
+import { useSectors } from '@/lib/sectors.js'
 import { useDeleteJobAlertMutation, useGetJobAlertsQuery, useUpdateJobAlertMutation } from '../api.js'
 import JobAlertModal from '../components/JobAlertModal.jsx'
 import styles from './JobAlertsPage.module.css'
@@ -22,6 +23,7 @@ import styles from './JobAlertsPage.module.css'
  */
 export default function JobAlertsPage() {
   const { t } = useTranslation()
+  const sectors = useSectors()
   const format = useFormat()
   const dispatch = useDispatch()
   const { data, isLoading, isError, isFetching, refetch } = useGetJobAlertsQuery()
@@ -83,6 +85,8 @@ export default function JobAlertsPage() {
             {alerts.map((alert) => {
               const active = alert.active && !paused
               const where = alert.location ? t('common:city.value', { city: alert.location.city, country: format.country(alert.location.countryCode) }) : format.country(alert.country)
+              // 2026-11-24: the alert's sectors after its keywords.
+              const criteria = [alert.keywords, ...alert.sectors.map((key) => sectors.name(key)).filter(Boolean)].filter(Boolean).join(' · ')
               return (
                 <li key={alert.id} className={styles.card} data-alert={alert.id} data-alert-name={alert.name}>
                   <span className={cx(styles.tile, !active && styles.tilePaused)}>
@@ -98,6 +102,11 @@ export default function JobAlertsPage() {
                         </button>
                       )}
                     </h2>
+                    {criteria && (
+                      <p className={styles.meta} data-alert-criteria>
+                        {criteria}
+                      </p>
+                    )}
                     <p className={styles.meta}>{[t(`jobAlerts:frequency.${alert.frequency}`), where, t(active ? 'jobAlerts:active' : 'jobAlerts:paused')].join(' · ')}</p>
                   </div>
                   {!paused && (

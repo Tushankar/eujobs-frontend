@@ -41,6 +41,7 @@ import { CompanyLogo, Skeleton, SkeletonRegion } from '@/components/ui'
 import { check, useErrorText, useFormState } from '@/lib/forms.js'
 import { useJobText } from '@/lib/jobText.js'
 import { useFormat } from '@/lib/preferences.js'
+import { useSectors } from '@/lib/sectors.js'
 import { useSubscribeNewsletterMutation } from '../../api.js'
 import { ArrowPill, AvatarStack } from './LandingHero.jsx'
 import InlineSvg from './InlineSvg.jsx'
@@ -121,6 +122,38 @@ export function Categories({ counts }) {
           </Link>
         ))}
       </div>
+    </section>
+  )
+}
+
+/**
+ * 2026-11-24: "Browse by sector": the sectors that have open jobs right now, most jobs first, each opening /jobs on that
+ * sector. Hidden while no job has a sector.
+ */
+export function Sectors({ counts }) {
+  const { t } = useTranslation()
+  const sectors = useSectors()
+  const rows = Object.entries(counts ?? {})
+    .map(([key, count]) => ({ key, count, name: sectors.name(key) }))
+    .filter((row) => row.name && row.count > 0)
+    .sort((a, b) => b.count - a.count || a.name.localeCompare(b.name))
+  if (!rows.length) return null
+  return (
+    <section className={`${styles.card} ${styles.section}`} aria-labelledby="sectors-title" data-landing-sectors>
+      <div className={styles.sectionHead} data-reveal>
+        <Title id="sectors-title" lead={t('landing:sectors.titleLead')} accent={t('landing:sectors.titleAccent')} />
+        <p className={styles.sectionText}>{t('landing:sectors.text')}</p>
+      </div>
+      <ul className={styles.sectorList} data-stagger>
+        {rows.map((row) => (
+          <li key={row.key}>
+            <Link to={`/jobs?sector=${row.key}`} className={styles.sectorLink} data-sector-link={row.key}>
+              <span>{row.name}</span>
+              <span className={styles.sectorCount}>{t('landing:categories.jobs', { count: row.count })}</span>
+            </Link>
+          </li>
+        ))}
+      </ul>
     </section>
   )
 }

@@ -5,6 +5,7 @@ import { celebrate } from '@/app/celebrate.js'
 import { useGetConfigQuery } from '@/app/api.js'
 import { Button, Modal, SelectField, TextField } from '@/components/ui'
 import CityField from '@/components/common/CityField.jsx'
+import SectorPicker from '@/components/common/SectorPicker.jsx'
 import { useDraftJobAlertMutation } from '@/features/ai/api.js'
 import AiFillButton from '@/features/ai/components/AiFillButton.jsx'
 import { check, useErrorText, useFormState } from '@/lib/forms.js'
@@ -36,14 +37,17 @@ function AlertForm({ alert, onClose }) {
   const { values, set, errors, failure, run } = useFormState({
     name: alert?.name ?? '',
     keywords: alert?.keywords ?? '',
+    // 2026-11-24: sector keys; an alert needs keywords or a sector.
+    sectors: alert?.sectors ?? [],
     place: alert?.location ?? null,
     frequency: alert?.frequency ?? config?.enums.alertFrequency[0],
   })
 
   async function handleSubmit(event) {
     event.preventDefault()
-    const body = { name: values.name.trim(), keywords: values.keywords.trim(), placeId: values.place?.placeId ?? null, frequency: values.frequency }
-    const saved = await run({ name: check.text(values.name, limits.name.max), keywords: check.text(values.keywords, limits.keywords.max) }, () =>
+    const body = { name: values.name.trim(), keywords: values.keywords.trim(), sectors: values.sectors, placeId: values.place?.placeId ?? null, frequency: values.frequency }
+    const keywords = values.sectors.length ? check.maxLength(values.keywords, limits.keywords.max) : check.text(values.keywords, limits.keywords.max)
+    const saved = await run({ name: check.text(values.name, limits.name.max), keywords }, () =>
       (alert ? updateAlert({ id: alert.id, ...body }) : createAlert(body)).unwrap(),
     )
     if (!saved) return
@@ -114,6 +118,15 @@ function AlertForm({ alert, onClose }) {
           value={values.keywords}
           onChange={(event) => set('keywords', event.target.value)}
           error={errorText.field('alertKeywords', errors.keywords)}
+        />
+        <SectorPicker
+          name="alertSectors"
+          label={t('jobAlerts:form.sectors')}
+          hint={t('jobAlerts:form.sectorsHint', { max: config.limits.sector.picks })}
+          value={values.sectors}
+          max={config.limits.sector.picks}
+          onChange={(sectors) => set('sectors', sectors)}
+          error={errorText.field('sectors', errors.sectors)}
         />
         <div className={styles.row}>
           {country !== 'REMOTE' && (

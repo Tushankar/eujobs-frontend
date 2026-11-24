@@ -13,6 +13,9 @@ import { listSectors } from './sectors.service.js'
 /* Public catalogue reads (§5 "Meta and public"); mounted at the API root. */
 const router = Router()
 const list = (items) => ({ items, total: items.length, page: 1, pageSize: items.length })
+// perf 2026-11-24: catalogue reads that are the same for every visitor (no session; the language is in the URL) may be
+// kept by browsers for 5 minutes. /plans reads the session, so it is never cached; nor are the sectors (below).
+const PUBLIC_5_MINUTES = 'public, max-age=300'
 
 /**
  * Limits and enum keys, so client forms never hard-code them (§2.4). `placesManual`: city fields take a typed "City,
@@ -23,16 +26,19 @@ router.get('/meta/config', async (req, res) => {
 })
 
 router.get('/meta/countries', async (req, res) => {
-  res.json(list(await meta.listCountries()))
+  const body = list(await meta.listCountries())
+  res.set('Cache-Control', PUBLIC_5_MINUTES).json(body)
 })
 
 // 2026-11-24: job sectors with their names in every language; hidden ones are flagged.
 router.get('/meta/sectors', async (req, res) => {
+  // Not browser-cached: the client fetches it again right after an admin edits the sectors.
   res.json(list(await listSectors()))
 })
 
 router.get('/meta/languages', (req, res) => {
-  res.json(list(meta.listLanguageCodes()))
+  const body = list(meta.listLanguageCodes())
+  res.set('Cache-Control', PUBLIC_5_MINUTES).json(body)
 })
 
 /**
@@ -49,7 +55,8 @@ router.get('/plans', optionalAuth, validate({ query: schemas.plansQuery }), asyn
 })
 
 router.get('/legal/:doc', validate({ params: schemas.legalParams, query: schemas.legalQuery }), async (req, res) => {
-  res.json(await meta.currentLegalDocument(req.params.doc, req.query.language))
+  const body = await meta.currentLegalDocument(req.params.doc, req.query.language)
+  res.set('Cache-Control', PUBLIC_5_MINUTES).json(body)
 })
 
 /** FAQs for the signed-in role, in the requested language or the user's own (M-200). */

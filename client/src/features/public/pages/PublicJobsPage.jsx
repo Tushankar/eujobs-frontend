@@ -1,10 +1,10 @@
 import { useLayoutEffect, useRef, useState } from 'react'
 import { useGSAP } from '@gsap/react'
 import gsap from 'gsap'
-import { ArrowLeft, ArrowUpRight, Bookmark, BriefcaseBusiness, CalendarDays, Globe, MapPin, Plane, SearchX } from 'lucide-react'
+import { ArrowLeft, ArrowUpRight, Bookmark, BriefcaseBusiness, CalendarDays, Globe, Layers, MapPin, Plane, SearchX } from 'lucide-react'
 import { useTranslation } from 'react-i18next'
 import { Link, useSearchParams } from 'react-router-dom'
-import { CompanyLogo, Icon, Skeleton, SkeletonRegion, Switch } from '@/components/ui'
+import { CompanyLogo, Icon, SelectField, Skeleton, SkeletonRegion, Switch } from '@/components/ui'
 import SkillPills from '@/components/common/SkillPills.jsx'
 import VerifiedCompany from '@/components/common/VerifiedCompany.jsx'
 import { useDocumentTitle } from '@/components/layout/useDocumentTitle.js'
@@ -50,7 +50,10 @@ export default function PublicJobsPage() {
   const tab = GROUPS.map((group) => params.get(group) && `${group}:${params.get(group)}`).find(Boolean) ?? 'all'
   // Only jobs that sponsor a work visa (?visa=1, 2026-11-16).
   const visa = params.get('visa') === '1'
-  const query = { language: i18n.language, q, location, ...Object.fromEntries(GROUPS.map((group) => [group, params.get(group)]).filter(([, value]) => value)), ...(visa && { visa: '1' }) }
+  // One sector (?sector=, 2026-11-24): the landing's "Browse by sector" links here.
+  const sector = params.get('sector') ?? ''
+  const sectors = useSectors()
+  const query = { language: i18n.language, q, location, ...Object.fromEntries(GROUPS.map((group) => [group, params.get(group)]).filter(([, value]) => value)), ...(visa && { visa: '1' }), ...(sector && { sector }) }
   const { data, isFetching, isError } = useGetPublicJobsQuery(query)
   useDocumentTitle(t('website:jobs.title'))
   const root = useRef(null)
@@ -126,10 +129,28 @@ export default function PublicJobsPage() {
             <p className={styles.results} aria-live="polite">
               {t('website:jobs.results', { count: items.length })}
             </p>
-            <label className={styles.visaSwitch}>
-              <Switch checked={visa} onChange={(on) => update({ visa: on ? '1' : null })} label={t('website:jobs.visaOnly')} />
-              <span aria-hidden="true">{t('website:jobs.visaOnly')}</span>
-            </label>
+            <div className={styles.barFilters}>
+              {/* Sectors with jobs in this search and tab, and the chosen one even when it has none. */}
+              <SelectField
+                variant="filter"
+                className={styles.sectorFilter}
+                aria-label={t('website:jobs.sector')}
+                name="sector"
+                options={[
+                  { value: '', label: t('website:jobs.allSectors') },
+                  ...sectors
+                    .options(sector)
+                    .filter((option) => data.counts.sector[option.value] || option.value === sector)
+                    .map((option) => ({ value: option.value, label: `${option.label} (${data.counts.sector[option.value] ?? 0})` })),
+                ]}
+                value={sector}
+                onChange={(event) => update({ sector: event.target.value || null })}
+              />
+              <label className={styles.visaSwitch}>
+                <Switch checked={visa} onChange={(on) => update({ visa: on ? '1' : null })} label={t('website:jobs.visaOnly')} />
+                <span aria-hidden="true">{t('website:jobs.visaOnly')}</span>
+              </label>
+            </div>
           </div>
         )}
         {isError ? (
@@ -282,6 +303,12 @@ function JobDetail({ job, onBack }) {
           <Icon as={BriefcaseBusiness} size={15} />
           {t(`enums:employmentType.${job.employmentType}`)}
         </li>
+        {sectors.name(job.sector) && (
+          <li data-job-sector={job.sector}>
+            <Icon as={Layers} size={15} />
+            {sectors.name(job.sector)}
+          </li>
+        )}
         {job.visaSponsorship && (
           <li data-visa-sponsorship>
             <Icon as={Plane} size={15} />

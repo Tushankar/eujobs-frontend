@@ -1,0 +1,47 @@
+/* Sector toggle pills (2026-11-24): neutral outline, filled when chosen (LinkedIn-like filter pills). */
+.pills {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 8px;
+}
+
+.pill {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  min-height: 32px;
+  padding: 6px 12px;
+  border: 1px solid var(--border-strong);
+  border-radius: 999px;
+  background: var(--card);
+  color: var(--foreground);
+  font: inherit;
+  font-size: 12px;
+  font-weight: 600;
+  cursor: pointer;
+  transition: border-color 0.15s ease, background-color 0.15s ease;
+}
+
+.pill:hover:not(:disabled) {
+  border-color: var(--foreground);
+}
+
+.pill:focus-visible {
+  outline: 2px solid var(--primary);
+  outline-offset: 2px;
+}
+
+.on {
+  border-color: var(--primary);
+  background: var(--primary);
+  color: var(--primary-foreground, #fff);
+}
+
+.on:hover:not(:disabled) {
+  border-color: var(--primary);
+}
+
+.pill:disabled {
+  cursor: not-allowed;
+  opacity: 0.45;
+}

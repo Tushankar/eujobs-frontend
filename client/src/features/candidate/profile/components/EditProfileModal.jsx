@@ -5,6 +5,7 @@ import { useGetConfigQuery, useGetCountriesQuery } from '@/app/api.js'
 import { Button, Icon, IconButton, SelectField, TextareaField, TextField } from '@/components/ui'
 import { Field } from '@/components/ui/TextField.jsx'
 import CityField from '@/components/common/CityField.jsx'
+import SectorPicker from '@/components/common/SectorPicker.jsx'
 import { useWriteProfileTextMutation } from '@/features/ai/api.js'
 import AiFillButton from '@/features/ai/components/AiFillButton.jsx'
 import { check, useErrorText, useFormState } from '@/lib/forms.js'
@@ -21,6 +22,8 @@ const toForm = (profile) => ({
   yearsExperience: profile.yearsExperience == null ? '' : String(profile.yearsExperience),
   skills: profile.skills,
   workPreference: profile.workPreference ?? '',
+  // 2026-11-24: sector keys; For you ranks jobs in them a little higher.
+  preferredSectors: profile.preferredSectors ?? [],
   availability: profile.availability,
   salaryAmount: profile.salaryMin ? String(profile.salaryMin.amount) : '',
   salaryPeriod: profile.salaryMin?.period ?? 'year',
@@ -87,6 +90,7 @@ export default function EditProfileModal({ open, profile, onSaved, onClose }) {
           yearsExperience: Number(years),
           skills,
           workPreference: values.workPreference,
+          preferredSectors: values.preferredSectors,
           availability: values.availability,
           salaryMin: amount ? { amount: Number(amount), currency, period: values.salaryPeriod } : null,
         }).unwrap(),
@@ -204,6 +208,15 @@ export default function EditProfileModal({ open, profile, onSaved, onClose }) {
         )}
       </Field>
 
+      <SectorPicker
+        name="preferredSectors"
+        label={t('profile:form.core.preferredSectors')}
+        hint={t('profile:form.core.preferredSectorsHint', { max: config.limits.sector.picks })}
+        value={values.preferredSectors}
+        max={config.limits.sector.picks}
+        onChange={(sectors) => set('preferredSectors', sectors)}
+        error={errorText.field('preferredSectors', errors.preferredSectors)}
+      />
       <SelectField
         label={t('profile:form.core.availability')}
         name="availability"
