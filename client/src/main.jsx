@@ -18,7 +18,8 @@ import App from './app/App.jsx'
 
 // Anonymous language first (M-135); a signed-in account then switches to its own before the first paint.
 await initI18n(readAnonymousPreference('language') ?? browserLanguage())
-await loadMe()
+// A failed /me is shown by the route's loader (RouteError), not here, so the app still mounts.
+await loadMe().catch(() => {})
 startStickySide()
 
 createRoot(document.getElementById('root')).render(

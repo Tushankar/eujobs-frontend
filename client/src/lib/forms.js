@@ -1,4 +1,4 @@
-import { useCallback, useEffect, useState } from 'react'
+import { useCallback, useEffect, useRef, useState } from 'react'
 import { useTranslation } from 'react-i18next'
 import { errorCode } from '@/app/api.js'
 import { useFormat } from './preferences.js'
@@ -54,6 +54,10 @@ export function useFormState(initial) {
   const [values, setValues] = useState(initial)
   const [errors, setErrors] = useState({})
   const [failure, setFailure] = useState(null)
+  // 2026-11-24: a second click (or Enter) while the first request is out used to send it twice. The ref answers at
+  // once; the state is for the button's spinner.
+  const [submitting, setSubmitting] = useState(false)
+  const pending = useRef(false)
 
   const set = useCallback((name, value) => {
     setValues((current) => ({ ...current, [name]: value }))
@@ -61,10 +65,13 @@ export function useFormState(initial) {
   }, [])
 
   async function run(checks, work) {
+    if (pending.current) return false
     const nextErrors = compact(checks)
     setErrors(nextErrors)
     setFailure(null)
     if (Object.keys(nextErrors).length > 0) return false
+    pending.current = true
+    setSubmitting(true)
     try {
       await work()
       return true
@@ -72,10 +79,13 @@ export function useFormState(initial) {
       setErrors(serverFieldErrors(error))
       if (errorCode(error) !== 'VALIDATION_FAILED') setFailure(error)
       return false
+    } finally {
+      pending.current = false
+      setSubmitting(false)
     }
   }
 
-  return { values, set, setValues, errors, setErrors, failure, run }
+  return { values, set, setValues, errors, setErrors, failure, run, submitting }
 }
 
 /** Translators for field errors and API error codes. */

@@ -179,12 +179,13 @@ export default function DetailsTab({ course, checklist }) {
     latest.current = { autosaveNow, flush: autosave && saveState === 'pending' && !priceCheck() ? () => update(payload()) : null }
   })
 
-  // Every edit restarts the timer.
+  // Every edit restarts the timer. 2026-11-24: form.run now ignores a call while a save is out, so the timer waits
+  // for that save to finish instead of dropping the newer edits.
   useEffect(() => {
-    if (!autosave || values === sent) return undefined
+    if (!autosave || values === sent || form.submitting) return undefined
     const timer = window.setTimeout(() => latest.current.autosaveNow(), AUTOSAVE_MS)
     return () => window.clearTimeout(timer)
-  }, [autosave, values, sent])
+  }, [autosave, values, sent, form.submitting])
 
   // Leaving the tab or the page saves what is still waiting; closing the browser tab asks first.
   useEffect(() => () => latest.current.flush?.(), [])

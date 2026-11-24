@@ -42,7 +42,7 @@ export default function AgreementPanel() {
   const [read, { isLoading: reading }] = useReadAgreementMutation()
   const [saveRules] = useSaveAgreementRulesMutation()
   const [publish] = usePublishAgreementMutation()
-  const [deleteDraft] = useDeleteAgreementDraftMutation()
+  const [deleteDraft, draftDeletion] = useDeleteAgreementDraftMutation()
   const [busy, setBusy] = useState(null)
   const [fieldErrors, setFieldErrors] = useState({})
   const [problem, setProblem] = useState('')
@@ -211,6 +211,7 @@ export default function AgreementPanel() {
         description={t('agency:agreement.deleteText')}
         confirmLabel={t('agency:agreement.deleteDraft')}
         tone="danger"
+        loading={draftDeletion.isLoading}
         onConfirm={async () => {
           await deleteDraft().unwrap().catch((error) => setProblem(errorText.code(error)))
           setConfirmDelete(false)

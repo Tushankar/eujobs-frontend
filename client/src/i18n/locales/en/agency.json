@@ -9,10 +9,10 @@
     "manage": "Manage {{name}}",
     "jobs_one": "{{count}} job",
     "jobs_other": "{{count}} jobs",
-    "noDetails": "No industry or city yet",
+    "noDetails": "No sector or city yet",
     "linkedTo": "On EU Jobs as {{company}}",
     "emptyFiltered": "No clients match",
-    "emptyFilteredText": "Try another name, industry or city.",
+    "emptyFilteredText": "Try another name, sector or city.",
     "deleteTitle": "Delete {{name}}?",
     "deleteText": "The client leaves your list. A client with jobs stays, because those jobs and their placements name it.",
     "start": {
@@ -21,7 +21,7 @@
       "steps": [
         {
           "title": "Add a client",
-          "text": "Its name, and if you like its industry, city and logo."
+          "text": "Its name, and if you like its sector, city and logo."
         },
         {
           "title": "Link it if it is on EU Jobs",
@@ -35,7 +35,6 @@
     },
     "fields": {
       "name": "Client name",
-      "industry": "Industry (optional)",
       "city": "City (optional)",
       "sector": "Sector (optional)",
       "noSector": "No sector",

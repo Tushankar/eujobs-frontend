@@ -231,6 +231,7 @@ export default function TalentPage() {
         description={t('agency:talent.removeText')}
         confirmLabel={t('agency:talent.remove')}
         tone="danger"
+        loading={Boolean(ending) && busyId === ending.id}
         onConfirm={() => run(ending, 'end')}
         onClose={() => setEnding(null)}
       />

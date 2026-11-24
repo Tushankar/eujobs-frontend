@@ -8,6 +8,7 @@ import ConfirmDialog from '@/components/common/ConfirmDialog.jsx'
 import NoticeBanner from '@/components/common/NoticeBanner.jsx'
 import DataTable from '@/components/common/DataTable.jsx'
 import EmptyState from '@/components/common/EmptyState.jsx'
+import LoadError from '@/components/common/LoadError.jsx'
 import FilterChips from '@/components/common/FilterChips.jsx'
 import PageTitle from '@/components/common/PageTitle.jsx'
 import StatusBadge from '@/components/common/StatusBadge.jsx'
@@ -15,6 +16,7 @@ import { useCompanyMessageStart } from '@/features/messages/api.js'
 import { CompanyMessageDialog } from '@/features/messages/components/StartConversation.jsx'
 import UpcomingInterviews from '@/features/interviews/components/UpcomingInterviews.jsx'
 import { useMarkSeen } from '@/features/notifications/api.js'
+import { useErrorText } from '@/lib/forms.js'
 import { useJobText } from '@/lib/jobText.js'
 import { useFormat } from '@/lib/preferences.js'
 import { useGetApplicationsQuery, useWithdrawMutation } from '../api.js'
@@ -34,8 +36,11 @@ export default function ApplicationsPage() {
   const format = useFormat()
   const jobText = useJobText()
   const { data: config } = useGetConfigQuery()
-  const { data, isLoading } = useGetApplicationsQuery()
-  const [withdraw] = useWithdrawMutation()
+  const errorText = useErrorText()
+  const { data, isLoading, isError, isFetching, refetch } = useGetApplicationsQuery()
+  const [withdraw, withdrawal] = useWithdrawMutation()
+  // 2026-11-24: a failed withdraw used to close the dialog and say nothing.
+  const [withdrawFailure, setWithdrawFailure] = useState(null)
   const [filter, setFilter] = useState('all')
   // P11b-Q9: a notification's link opens the dialog; the layout remounts a page when its path changes, so in-page opens
   // keep local state and only closing a linked dialog goes back to the list's URL.
@@ -117,8 +122,15 @@ export default function ApplicationsPage() {
 
       {data && applicationId && !applications.some((application) => application.id === applicationId) && <NoticeBanner>{t('notifications:unavailable')}</NoticeBanner>}
       <UpcomingInterviews />
+      {withdrawFailure && (
+        <p className={styles.failure} role="alert">
+          {errorText.code(withdrawFailure)}
+        </p>
+      )}
 
-      {noApplications ? (
+      {isError && !data ? (
+        <LoadError onRetry={refetch} retrying={isFetching} />
+      ) : noApplications ? (
         <FirstApplication />
       ) : (
         <>
@@ -159,10 +171,18 @@ export default function ApplicationsPage() {
         description={withdrawing ? t('applications:withdraw.description', { title: withdrawing.job.title }) : undefined}
         confirmLabel={t('applications:withdraw.confirm')}
         tone="danger"
+        loading={withdrawal.isLoading}
         onClose={() => setWithdrawing(null)}
         onConfirm={() => {
+          // The dialog stays open (spinning) until the answer; a failure shows above the list.
+          setWithdrawFailure(null)
           withdraw(withdrawing.id)
-          setWithdrawing(null)
+            .unwrap()
+            .then(() => setWithdrawing(null))
+            .catch((error) => {
+              setWithdrawing(null)
+              setWithdrawFailure(error)
+            })
         }}
       />
       {reapplying && <ApplyFlow job={reapplying.job} onClose={() => setReapplying(null)} />}

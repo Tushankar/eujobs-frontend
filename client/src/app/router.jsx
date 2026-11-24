@@ -1,5 +1,6 @@
 import { createBrowserRouter, redirect } from 'react-router-dom'
 import HydrateFallback from '@/components/layout/HydrateFallback.jsx'
+import RouteError from '@/components/layout/RouteError.jsx'
 import { WORKSPACES } from './workspaces.js'
 import NotFoundPage from './NotFoundPage.jsx'
 import Root from './Root.jsx'
@@ -74,6 +75,7 @@ const routes = [
   { path: '*', element: <NotFoundPage /> },
 ]
 
-// The first render waits for the loaders (GET /me), so it shows a loading state meanwhile.
-export const router = createBrowserRouter([{ element: <Root />, children: routes.map((route) => ({ ...route, HydrateFallback })) }])
+// The first render waits for the loaders (GET /me), so it shows a loading state meanwhile. A loader or page that
+// fails shows RouteError with a Reload button (perf 2026-11-24).
+export const router = createBrowserRouter([{ element: <Root />, ErrorBoundary: RouteError, children: routes.map((route) => ({ ...route, HydrateFallback })) }])
 setRouter(router)

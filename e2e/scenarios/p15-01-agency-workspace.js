@@ -1,7 +1,7 @@
 import { approvedAgency, dayFromToday, publishAgreement, submittedAgency } from '../lib/agencies.js'
 import { openAsAdmin, sidebarLabels } from '../lib/admins.js'
 import { onboardedCandidate, uploadAs } from '../lib/candidates.js'
-import { bodyText, chooseFile, clickText, fill, signInWithForm, waitForPath, waitForSettled, waitForText } from '../lib/flows.js'
+import { bodyText, chooseFile, clickText, fill, selectOption, signInWithForm, waitForPath, waitForSettled, waitForText } from '../lib/flows.js'
 import { fixture } from '../fixtures/make.js'
 import { jobBody, postJob } from '../lib/recruiters.js'
 import { api, date, db, mailTo, TEST_PASSWORD, uniqueEmail } from '../lib/testApi.js'
@@ -74,7 +74,7 @@ export default {
     await page.click('[data-add-client]')
     await page.waitForSelector('#client-form')
     await fill(page, '#client-form input[name="name"]', 'Acme Logistics')
-    await page.select('#client-form select[name="sector"]', 'logistics_transport')
+    await selectOption(page, '#client-form select[name="sector"]', 'logistics_transport')
     await page.click('button[form="client-form"]')
     await page.waitForSelector('[data-client="Acme Logistics"]')
     await handle.checkOverflow()

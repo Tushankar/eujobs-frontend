@@ -9,6 +9,12 @@
   gap: 20px;
 }
 
+/* While a page shows its skeleton, keep the footer below the fold, so the content arriving doesn't push a visible
+   footer down (CLS 0.72 on /legal, perf 2026-11-24). Loaded pages are unchanged. */
+.main:has([data-skeleton]) {
+  min-height: 100svh;
+}
+
 /* Printing a public page (the legal texts) prints the page itself, not the site chrome. */
 @media print {
   .header,

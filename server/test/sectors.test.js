@@ -5,16 +5,20 @@ import { AgencyClient } from '../modules/agencies/agencies.model.js'
 import { Company } from '../modules/companies/companies.model.js'
 import { Job } from '../modules/jobs/jobs.model.js'
 import { Sector } from '../modules/meta/meta.model.js'
-import { ensureSectors } from '../modules/meta/sectors.service.js'
+import { ensureSectors, sectorNames } from '../modules/meta/sectors.service.js'
+import { alertMatches } from '../modules/alerts/alerts.delivery.js'
+import { CandidateProfile } from '../modules/candidates/candidates.model.js'
+import { Subscription } from '../modules/payments/payments.model.js'
+import { PLACES } from '../seed/data/places.js'
 import { User } from '../modules/users/users.model.js'
 import { seedCatalog } from '../seed/catalog.js'
 import { SECTORS } from '../seed/data/sectors.js'
 import { api, auth, createUser, useTestDb } from './helpers/index.js'
-import { approvedAgency, approvedRecruiter, jobBody } from './helpers/market.js'
+import { approvedAgency, approvedRecruiter, jobBody, listedCandidate } from './helpers/market.js'
 import { useFakePlaces } from './helpers/places.js'
 
 /* Job sectors (2026-11-24): the starter list, admin › Website › Sectors, and sectors on jobs, companies and clients. */
-useTestDb([User, Company, Job, AgencyClient, AuditEvent, Sector])
+useTestDb([User, Company, Job, AgencyClient, AuditEvent, Sector, CandidateProfile, Subscription])
 useFakePlaces()
 before(() => seedCatalog())
 
@@ -106,5 +110,84 @@ describe('job sectors', () => {
 
     const { user: agency } = await approvedAgency()
     assert.deepEqual((await createJob(agency, jobBody({ employmentType: 'volunteer', salary: null }))).body.error.fields, { employmentType: 'not_allowed' })
+  })
+})
+
+/* Step 2 (2026-11-24): finding jobs by sector, alerts with sectors, preferred sectors. */
+describe('finding jobs by sector', () => {
+  const findJobs = (user, query = '') => api().get(`${v1}/jobs${query}`).set(auth(user))
+  async function twoJobs() {
+    await ensureSectors()
+    const { user: recruiter } = await approvedRecruiter()
+    const nurse = await createJob(recruiter, jobBody({ title: 'Ward Nurse', sector: 'healthcare', requiredSkills: ['Patient care'] }))
+    const designer = await createJob(recruiter, jobBody({ title: 'Product Designer', sector: 'it_software' }))
+    for (const job of [nurse, designer]) assert.equal((await publish(recruiter, job.body.id)).status, 200)
+    return { nurse: nurse.body, designer: designer.body }
+  }
+
+  it('filters Find jobs by sectors and finds a sector by its name in the reader’s language', async () => {
+    const { nurse, designer } = await twoJobs()
+    const user = await createUser({ role: 'candidate', language: 'es' })
+    const ids = async (query) => (await findJobs(user, query)).body.items.map((job) => job.id).sort()
+    assert.deepEqual(await ids('?sector=healthcare'), [nurse.id])
+    assert.deepEqual(await ids('?sector=healthcare,it_software'), [designer.id, nurse.id].sort())
+    assert.deepEqual(await ids('?q=sanidad'), [nurse.id])
+    assert.equal((await findJobs(user, '?sector=Bad-Key')).status, 422)
+    assert.equal((await findJobs(user, '?sector=healthcare')).body.items[0].sector, 'healthcare')
+  })
+
+  it('counts and filters the public job list and the landing page by sector', async () => {
+    const { nurse } = await twoJobs()
+    const landing = (await api().get(`${v1}/landing`)).body
+    assert.deepEqual(landing.counts.sector, { healthcare: 1, it_software: 1 })
+    const list = (await api().get(`${v1}/landing/jobs?sector=healthcare`)).body
+    assert.deepEqual([list.items.map((job) => job.id), list.counts.sector, list.total], [[nurse.id], { healthcare: 1, it_software: 1 }, 2])
+    assert.equal((await api().get(`${v1}/landing/jobs?q=nurse&sector=it_software`)).body.items.length, 0)
+  })
+
+  it('ranks For you jobs in the candidate’s preferred sectors higher', async () => {
+    const { nurse, designer } = await twoJobs()
+    const user = await listedCandidate({ profile: { skills: ['Patient care', 'Figma'] } })
+    const forYou = async () => (await api().get(`${v1}/jobs/recommended`).set(auth(user))).body.items.map((job) => job.id)
+    const before = await forYou()
+    assert.deepEqual(before.toSorted(), [designer.id, nurse.id].sort())
+    const preferred = before[1]
+    const profile = (await api().get(`${v1}/candidate/profile`).set(auth(user))).body
+    const body = { fullName: user.fullName, headline: profile.headline, placeId: profile.location.placeId, about: profile.about, yearsExperience: profile.yearsExperience, skills: profile.skills, workPreference: profile.workPreference, availability: profile.availability }
+    const sector = preferred === nurse.id ? 'healthcare' : 'it_software'
+    const saved = await api().put(`${v1}/candidate/profile`).set(auth(user)).send({ ...body, preferredSectors: [sector] })
+    assert.equal(saved.status, 200, JSON.stringify(saved.body))
+    assert.deepEqual(saved.body.preferredSectors, [sector])
+    assert.equal((await forYou())[0], preferred)
+    assert.deepEqual((await api().put(`${v1}/candidate/profile`).set(auth(user)).send({ ...body, preferredSectors: ['unknown'] })).body.error.fields, { preferredSectors: 'invalid' })
+  })
+})
+
+describe('job alerts with sectors', () => {
+  const create = (user, body) => api().post(`${v1}/candidate/job-alerts`).set(auth(user)).send({ frequency: 'instant', ...body })
+  const plus = async () => {
+    const user = await createUser({ role: 'candidate' })
+    await Subscription.create({ userId: user._id, planKey: 'plus', status: 'active' })
+    return user
+  }
+
+  it('saves sectors, needs keywords or a sector, and matches only jobs in its sectors', async () => {
+    await ensureSectors()
+    const user = await plus()
+    assert.deepEqual((await create(user, { name: 'Nothing', keywords: '' })).body.error.fields, { keywords: 'required' })
+    const created = await create(user, { name: 'Care jobs', keywords: '', sectors: ['healthcare'] })
+    assert.equal(created.status, 201, JSON.stringify(created.body))
+    assert.deepEqual([created.body.keywords, created.body.sectors], ['', ['healthcare']])
+    assert.deepEqual((await create(user, { name: 'Bad', sectors: ['unknown'] })).body.error.fields, { sectors: 'invalid' })
+    const cleared = await api().patch(`${v1}/candidate/job-alerts/${created.body.id}`).set(auth(user)).send({ sectors: [] })
+    assert.deepEqual(cleared.body.error.fields, { keywords: 'required' })
+
+    const job = { title: 'Ward Nurse', sector: 'healthcare', country: 'GB', requiredSkills: [], preferredSkills: [], location: PLACES.london }
+    const alert = { country: 'WORLDWIDE', keywords: '', sectors: ['healthcare'], language: 'en' }
+    const company = { displayName: 'St Mary', industry: 'Healthcare' }
+    const names = await sectorNames()
+    assert.equal(alertMatches(alert, job, company, names), true)
+    assert.equal(alertMatches(alert, { ...job, sector: 'it_software' }, company, names), false)
+    assert.equal(alertMatches({ ...alert, sectors: [], keywords: 'healthcare' }, { ...job, title: 'Nurse' }, { displayName: 'X' }, names), true)
   })
 })

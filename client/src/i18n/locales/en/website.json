@@ -51,7 +51,7 @@
   },
   "admin": {
     "title": "Website",
-    "description": "The public website’s blog, newsletter and subscribers.",
+    "description": "The public website’s blog, newsletter, subscribers and job sectors.",
     "tabs": {
       "blog": "Blog",
       "subscribers": "Subscribers",

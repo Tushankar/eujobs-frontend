@@ -8,6 +8,7 @@ import { matchesKeywords } from '../../lib/skills.js'
 import { Company } from '../companies/companies.model.js'
 import { Job } from '../jobs/jobs.model.js'
 import { haystack, visibleFilter } from '../jobs/jobs.search.js'
+import { sectorNames } from '../meta/sectors.service.js'
 import { notify } from '../notifications/notifications.service.js'
 import { planState } from '../payments/payments.service.js'
 import { User } from '../users/users.model.js'
@@ -24,12 +25,14 @@ const DIGEST_HOUR = 8
 
 /**
  * M-098, U35: the alert's country (Remote included; a Worldwide alert, owner 2026-11-16, takes every country) and city,
- * and every keyword in the job's fields and labels.
+ * one of its sectors when it has any (2026-11-24), and every keyword in the job's fields and labels (`sectors`:
+ * sectorNames(), so a sector's name counts as a keyword).
  */
-export function alertMatches(alert, job, company) {
+export function alertMatches(alert, job, company, sectors) {
   if (alert.country !== 'WORLDWIDE' && job.country !== alert.country) return false
   if (alert.location?.placeId && job.location?.placeId !== alert.location.placeId) return false
-  return matchesKeywords(alert.keywords, haystack(job, company, alert.language))
+  if (alert.sectors?.length && !alert.sectors.includes(job.sector)) return false
+  return matchesKeywords(alert.keywords, haystack(job, company, alert.language, sectors))
 }
 
 /** The job line of an email: "Title · Company · City" (Remote jobs show the label in the recipient's language). */
@@ -63,9 +66,9 @@ async function sendInstantAlerts({ jobId }, task, now) {
   if (!job) return
   const alerts = await JobAlert.find({ active: true, country: { $in: [job.country, 'WORLDWIDE'] } })
   const entitled = await entitledIds(alerts.map((alert) => alert.candidateId))
-  const company = await Company.findById(job.companyId, 'displayName industry')
+  const [company, sectors] = await Promise.all([Company.findById(job.companyId, 'displayName industry'), sectorNames()])
   const notified = new Set()
-  for (const alert of alerts.filter((item) => entitled.has(String(item.candidateId)) && alertMatches(item, job, company))) {
+  for (const alert of alerts.filter((item) => entitled.has(String(item.candidateId)) && alertMatches(item, job, company, sectors))) {
     // P11b-Q15: in-app at the first publish whatever the alert's frequency; one per job even when several alerts match.
     if (!notified.has(String(alert.candidateId))) {
       notified.add(String(alert.candidateId))
@@ -112,12 +115,12 @@ async function sendDigests(now) {
   })
   if (!due.length) return
   const entitled = await entitledIds(due.map((alert) => alert.candidateId))
-  const visible = await visibleFilter()
+  const [visible, sectors] = await Promise.all([visibleFilter(), sectorNames()])
   for (const alert of due.filter((item) => entitled.has(String(item.candidateId)))) {
     const user = users.get(String(alert.candidateId))
     const jobs = await Job.find({ ...visible, ...(alert.country !== 'WORLDWIDE' && { country: alert.country }), firstPublishedAt: { $gt: alert.lastDigestAt ?? alert.createdAt, $lte: now } }).sort({ firstPublishedAt: -1 })
     const companies = new Map((await Company.find({ _id: { $in: jobs.map((job) => job.companyId) } }, 'displayName industry')).map((company) => [String(company._id), company]))
-    const matching = jobs.filter((job) => alertMatches(alert, job, companies.get(String(job.companyId))))
+    const matching = jobs.filter((job) => alertMatches(alert, job, companies.get(String(job.companyId)), sectors))
     const unsent = await unsentJobs(alert, matching)
     // The newest jobs only; the rest are reached through "See all" and are not recorded as sent.
     const fresh = await claimMatches(alert, unsent.slice(0, LIMITS.jobAlert.digestItems), 'digest', now)
@@ -126,7 +129,8 @@ async function sendDigests(now) {
       const more = unsent.length > fresh.length && {
         shown: fresh.length,
         total: unsent.length,
-        moreLink: `${config.clientOrigin}/candidate/jobs?${new URLSearchParams({ q: alert.keywords })}`,
+        // The alert's sectors open as Find jobs filters (2026-11-24).
+        moreLink: `${config.clientOrigin}/candidate/jobs?${new URLSearchParams({ q: alert.keywords, ...(alert.sectors?.length && { sector: alert.sectors.join(',') }) })}`,
       }
       await sendEmail({
         type: alert.frequency === 'daily' ? 'alert_daily' : 'alert_weekly',

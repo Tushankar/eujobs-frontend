@@ -4,6 +4,7 @@ import { ENUMS } from '../../config/enums.js'
 import { LIMITS } from '../../config/limits.js'
 import { objectId } from '../../lib/validate.js'
 import { fullName } from '../auth/auth.schemas.js'
+import { sectorKey } from '../jobs/jobs.schemas.js'
 import { placeId } from '../places/places.schemas.js'
 
 /* §3.2 field rules. Rules that compare fields (dates, duplicates, currency) live in the service. */
@@ -38,6 +39,8 @@ export const profileBody = z.object({
   workPreference: z.enum(ENUMS.workPreference),
   availability: z.enum(ENUMS.availability),
   salaryMin: salary.nullable().default(null),
+  // 2026-11-24: sector keys (GET /meta/sectors).
+  preferredSectors: z.array(sectorKey).max(LIMITS.sector.picks).default([]),
 })
 
 /** M-018 */

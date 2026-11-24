@@ -36,7 +36,6 @@
     },
     "fields": {
       "name": "Nombre del cliente",
-      "industry": "Sector (opcional)",
       "city": "Ciudad (opcional)",
       "sector": "Sector (opcional)",
       "noSector": "Sin sector",

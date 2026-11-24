@@ -1,5 +1,6 @@
 {
   "loading": "Chargement…",
+  "reload": "Recharger",
   "codeDigit": "Chiffre {{index}} sur {{count}}",
   "remote": "À distance",
   "closeDialog": "Fermer la boîte de dialogue",
@@ -7,6 +8,11 @@
   "showPassword": "Afficher le mot de passe",
   "cancel": "Annuler",
   "confirm": "Confirmer",
+  "loadError": {
+    "title": "Impossible de charger ce contenu",
+    "text": "Vérifiez votre connexion, puis réessayez.",
+    "retry": "Réessayer"
+  },
   "city": {
     "label": "Ville",
     "placeholder": "Commencez à saisir une ville",

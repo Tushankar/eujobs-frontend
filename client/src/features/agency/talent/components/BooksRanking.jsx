@@ -99,7 +99,7 @@ export default function BooksRanking({ jobId, inJob = false }) {
   const errorText = useErrorText()
   const { data, isLoading } = useGetTalentRankingQuery(jobId)
   const [askReasons, reasons] = useTalentReasonsMutation()
-  const [offerPlacement] = useOfferPlacementMutation()
+  const [offerPlacement, offering] = useOfferPlacementMutation()
   const [offer, setOffer] = useState(null)
   const [failure, setFailure] = useState(null)
   const items = data?.items ?? []
@@ -170,6 +170,7 @@ export default function BooksRanking({ jobId, inJob = false }) {
         title={t('agency:ranking.offerTitle', { name: offer?.candidate.name, job: job?.title })}
         description={job ? t('agency:ranking.offerText', { start: format.date(job.startDate), end: format.date(job.endDate) }) : ''}
         confirmLabel={t('agency:placements.sendOffer')}
+        loading={offering.isLoading}
         onConfirm={sendOffer}
         onClose={() => setOffer(null)}
       />

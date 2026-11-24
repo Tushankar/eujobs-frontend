@@ -1,7 +1,7 @@
 import { readFileSync } from 'node:fs'
 import { join } from 'node:path'
 import { fixture } from '../fixtures/make.js'
-import { chooseFile, clickText, fill, pageApi, signInWithForm, waitForText } from '../lib/flows.js'
+import { chooseFile, clickText, fill, pageApi, selectOption, signInWithForm, waitForText } from '../lib/flows.js'
 import { approvedRecruiter, jobBody, login, postJob } from '../lib/recruiters.js'
 import { api, db, TEST_PASSWORD } from '../lib/testApi.js'
 
@@ -27,7 +27,7 @@ export default {
     ctx.check(!(await page.$('input[name="legalName"]')), 'the legal name is not editable')
 
     await fill(page, 'input[name="displayName"]', 'Northlight')
-    await page.select('select[name="sector"]', 'arts_culture')
+    await selectOption(page, 'select[name="sector"]', 'arts_culture')
     await page.select('select[name="size"]', '51_200')
     await fill(page, 'input[name="companyCity"]', 'Manchester')
     await page.waitForSelector('[role="option"]')

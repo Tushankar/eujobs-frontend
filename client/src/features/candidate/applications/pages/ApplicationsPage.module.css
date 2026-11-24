@@ -72,3 +72,11 @@
   line-height: 16px;
   color: var(--muted-foreground);
 }
+
+/* 2026-11-24: a withdraw the server refused. */
+.failure {
+  margin-top: 16px;
+  font-size: 13px;
+  line-height: 20px;
+  color: var(--destructive);
+}

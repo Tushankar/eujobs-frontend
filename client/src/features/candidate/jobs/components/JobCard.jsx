@@ -16,6 +16,7 @@ import { lacksEntitlement, usePlan } from '@/features/candidate/billing/usePlan.
 import { useJobText } from '@/lib/jobText.js'
 import VerifiedCompany from '@/components/common/VerifiedCompany.jsx'
 import { useFormat, usePreferences } from '@/lib/preferences.js'
+import { useBackState } from '@/lib/urlState.js'
 import JobExplanation from './JobExplanation.jsx'
 import MatchBadge from './MatchBadge.jsx'
 import styles from './JobCard.module.css'
@@ -58,6 +59,8 @@ export default function JobCard({ job, onToggleSave }) {
   const [whyOpen, setWhyOpen] = useState(false)
   const whyId = `why-${job.id}`
   const detailsPath = `/candidate/jobs/${job.id}`
+  // The job page's Back returns to this list with its search (perf 2026-11-24).
+  const backState = useBackState()
   const company = job.company.displayName
   const eligible = jobText.eligible(job)
 
@@ -79,7 +82,7 @@ export default function JobCard({ job, onToggleSave }) {
             )}
           </div>
           <h3 className={styles.title}>
-            <Link to={detailsPath} className={styles.titleLink}>
+            <Link to={detailsPath} state={backState} className={styles.titleLink}>
               {job.title}
             </Link>
           </h3>
@@ -160,7 +163,7 @@ export default function JobCard({ job, onToggleSave }) {
         <div className={styles.actions}>
           {job.publishedAt && <span className={styles.posted}>{format.relative(job.publishedAt)}</span>}
           <JobSummaryButton job={job} />
-          <Link to={detailsPath} className={styles.viewJob} aria-label={t('findJobs:card.viewLabel', { title: job.title, company })}>
+          <Link to={detailsPath} state={backState} className={styles.viewJob} aria-label={t('findJobs:card.viewLabel', { title: job.title, company })}>
             {t('findJobs:card.view')}
             <Icon as={ArrowUpRight} size={12} />
           </Link>

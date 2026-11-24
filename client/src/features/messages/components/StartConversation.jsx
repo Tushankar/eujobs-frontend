@@ -40,6 +40,7 @@ function StartConversationDialog({ body, initialBody = '', title, description, o
   const { me } = usePreferences()
   const [start] = useStartConversationMutation()
   const [draft, setDraft] = useState(null)
+  const [sending, setSending] = useState(false)
   return (
     <Modal
       open
@@ -52,7 +53,7 @@ function StartConversationDialog({ body, initialBody = '', title, description, o
           <Button variant="secondary" onClick={onClose}>
             {t('common:cancel')}
           </Button>
-          <Button type="submit" form={FORM_ID}>
+          <Button type="submit" form={FORM_ID} loading={sending}>
             {t('messages:start.send')}
           </Button>
         </>
@@ -70,6 +71,7 @@ function StartConversationDialog({ body, initialBody = '', title, description, o
         draft={draft}
         rows={6}
         autoFocus
+        onPendingChange={setSending}
         onSubmit={async (text) => {
           const result = await start({ ...body, body: text }).unwrap()
           navigate(`/${me.role}/messages/${result.conversation.id}`)

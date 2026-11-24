@@ -23,6 +23,8 @@ const profileSchema = new Schema(
     // P9-Q2: skills the candidate plans to learn (never profile skills); they also rank "Suggested for you".
     learningPlan: [{ _id: false, name: String, key: String, standard: String }],
     workPreference: { type: String, enum: ENUMS.workPreference },
+    // 2026-11-24: sector keys the candidate prefers; For you ranks jobs in them a little higher.
+    preferredSectors: { type: [String], default: [] },
     availability: { type: String, enum: ENUMS.availability, default: 'open_to_opportunities' },
     salaryMin: new Schema({ amount: Number, currency: String, period: { type: String, enum: ENUMS.salaryPeriod } }, { _id: false }),
     workHistory: [{ title: String, employer: String, start: String, end: String, current: Boolean, description: String }],

@@ -16,10 +16,11 @@ import ReportButton from '@/features/moderation/components/ReportButton.jsx'
 import { useJobText } from '@/lib/jobText.js'
 import VerifiedCompany from '@/components/common/VerifiedCompany.jsx'
 import { useFormat } from '@/lib/preferences.js'
+import { useBackTo } from '@/lib/urlState.js'
 import { useGetJobQuery, useSaveToggle } from '../api.js'
 import MatchBadge from '../components/MatchBadge.jsx'
 import styles from './JobDetailsPage.module.css'
-import { useMarkSeen } from '@/features/notifications/api.js'
+import { useMarkSeen } from '@/features/notifications/api.js'
 import { useSectors } from '@/lib/sectors.js'
 
 /** The company website as its bare host ("kyptronix.com"); the server always stores it with https://. */
@@ -118,13 +119,15 @@ export default function JobDetailsPage() {
   const format = useFormat()
   const jobText = useJobText()
   const { jobId } = useParams()
+  // Back returns to Find jobs with its search and filters when opened from there (perf 2026-11-24).
+  const backTo = useBackTo('/candidate/jobs')
   // P11b-Q10: opening this item marks its notifications read.
   useMarkSeen('job', jobId)
   const { data: job, error, isLoading } = useGetJobQuery(jobId)
   const toggleSave = useSaveToggle()
 
   const back = (
-    <Link to="/candidate/jobs" className={styles.back}>
+    <Link to={backTo} className={styles.back}>
       <Icon as={ArrowLeft} size={14} />
       {t('findJobs:details.back')}
     </Link>

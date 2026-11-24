@@ -11,6 +11,7 @@ import { Job } from '../jobs/jobs.model.js'
 import { agencyCard, agencyClients, haystack, isJobType, visibleFilter } from '../jobs/jobs.search.js'
 import { jobFieldsDto } from '../jobs/jobs.service.js'
 import { listFaqs } from '../meta/meta.service.js'
+import { sectorNames } from '../meta/sectors.service.js'
 import { landingReviews } from '../reviews/reviews.service.js'
 import { User } from '../users/users.model.js'
 
@@ -35,8 +36,15 @@ function countBy(jobs, field) {
   return Object.fromEntries(ENUMS[field].map((value) => [value, jobs.filter((job) => job[field] === value).length]))
 }
 
+/** 2026-11-24: open jobs per sector key (sectors without jobs are left out). */
+function sectorCounts(jobs) {
+  const counts = {}
+  for (const job of jobs) if (job.sector) counts[job.sector] = (counts[job.sector] ?? 0) + 1
+  return counts
+}
+
 export async function landing(language) {
-  const jobs = await Job.find(await visibleFilter(), 'title companyId employmentType workPreference experienceYears country location salary publishedAt visaSponsorship agency').sort({ publishedAt: -1 })
+  const jobs = await Job.find(await visibleFilter(), 'title companyId employmentType sector workPreference experienceYears country location salary publishedAt visaSponsorship agency').sort({ publishedAt: -1 })
   const latest = jobs.slice(0, LATEST_JOBS)
   // Phase 7 (2026-11-23): the newest agency jobs for the landing's own section (hidden there when none).
   const agencyJobs = jobs.filter((job) => job.agency).slice(0, AGENCY_JOBS)
@@ -65,7 +73,7 @@ export async function landing(language) {
 
   return {
     total: jobs.length,
-    counts: { workPreference: countBy(jobs, 'workPreference'), employmentType: countBy(jobs, 'employmentType') },
+    counts: { workPreference: countBy(jobs, 'workPreference'), employmentType: countBy(jobs, 'employmentType'), sector: sectorCounts(jobs) },
     // 2026-11-20: the /agencies page's live figures (open agency jobs, approved agencies).
     agencies: { jobs: jobs.filter((job) => job.agency).length, accounts: await User.countDocuments({ role: 'agency', status: 'active' }) },
     jobs: latest.map(row),
@@ -89,21 +97,27 @@ function placeText(job, language) {
  * browse without signing in. Keywords and place narrow the list and its tab counts; one work mode or employment type
  * picks the tab. Every visible job is returned with the details a candidate reads (no saved, applied or match state).
  */
-export async function publicJobs({ language, q, location, workPreference, employmentType, visa }) {
-  const jobs = await Job.find(await visibleFilter()).sort({ publishedAt: -1 })
+export async function publicJobs({ language, q, location, workPreference, employmentType, sector, visa }) {
+  const [jobs, sectors] = await Promise.all([Job.find(await visibleFilter()).sort({ publishedAt: -1 }), sectorNames()])
   const companies = await Company.find({ _id: { $in: [...new Set(jobs.map((job) => String(job.companyId)))] } })
   const companyById = new Map(companies.map((company) => [String(company._id), company]))
   const company = (job) => companyById.get(String(job.companyId))
   // Keywords, place and "sponsors a visa" narrow the list and its tab counts.
   const searched = jobs.filter(
-    (job) => (!q || matchesKeywords(q, haystack(job, company(job), language))) && (!location || matchesKeywords(location, placeText(job, language))) && (!visa || job.visaSponsorship),
+    (job) => (!q || matchesKeywords(q, haystack(job, company(job), language, sectors))) && (!location || matchesKeywords(location, placeText(job, language))) && (!visa || job.visaSponsorship),
   )
-  const items = searched.filter((job) => (!workPreference || job.workPreference === workPreference) && (!employmentType || isJobType(job, employmentType)))
+  // 2026-11-24: one sector narrows the list like a tab; the sector counts come from the searched jobs of the current tab.
+  const tabbed = searched.filter((job) => (!workPreference || job.workPreference === workPreference) && (!employmentType || isJobType(job, employmentType)))
+  const items = tabbed.filter((job) => !sector || job.sector === sector)
   const [logos, clients] = await Promise.all([logoUrls(companies), agencyClients(items)])
   return {
     total: searched.length,
     // 2026-11-20: "agency" counts every agency job (the Agency tab).
-    counts: { workPreference: countBy(searched, 'workPreference'), employmentType: Object.fromEntries(JOB_TYPES.map((type) => [type, searched.filter((job) => isJobType(job, type)).length])) },
+    counts: {
+      workPreference: countBy(searched, 'workPreference'),
+      employmentType: Object.fromEntries(JOB_TYPES.map((type) => [type, searched.filter((job) => isJobType(job, type)).length])),
+      sector: sectorCounts(tabbed),
+    },
     items: items.map((job) => ({
       ...jobFieldsDto(job),
       agency: agencyCard(job, clients),

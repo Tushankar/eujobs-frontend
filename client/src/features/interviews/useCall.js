@@ -44,6 +44,16 @@ export function useCall({ session, onState }) {
 
   const send = (message) => ws.current?.readyState === 1 && ws.current.send(JSON.stringify(message))
 
+  /** Stops the recording; its onstop closes the AudioContext and the last chunk still goes up. */
+  const stopRecorder = useCallback(() => {
+    if (recorder.current?.state === 'recording') recorder.current.stop()
+    recorder.current = null
+  }, [])
+
+  // 2026-11-24: leaving the page any other way (a link, Back, signing out) used to leave the recorder and its
+  // AudioContext running. Declared before the call's own cleanup, so it stops while the tracks are still live.
+  useEffect(() => stopRecorder, [stopRecorder])
+
   // A fresh peer connection for each pairing (a reconnect of either side starts over).
   const newPeer = useCallback(() => {
     pc.current?.close()
@@ -155,11 +165,6 @@ export function useCall({ session, onState }) {
     media.start(CHUNK_MS)
     recorder.current = media
   }, [remote, session])
-
-  const stopRecorder = useCallback(() => {
-    if (recorder.current?.state === 'recording') recorder.current.stop()
-    recorder.current = null
-  }, [])
 
   const toggle = useCallback((kind) => {
     const tracks = kind === 'audio' ? stream.current?.getAudioTracks() : stream.current?.getVideoTracks()

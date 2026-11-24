@@ -22,7 +22,7 @@ export default function LessonsTab({ course }) {
   const format = useFormat()
   const errorText = useErrorText()
   const [reorder, { error: reorderError }] = useReorderLessonsMutation()
-  const [remove] = useDeleteLessonMutation()
+  const [remove, removal] = useDeleteLessonMutation()
   const [editing, setEditing] = useState(null)
   const [deleting, setDeleting] = useState(null)
   // The dragged row: a ref for the drop handler (no render in between), state for its style.
@@ -99,6 +99,7 @@ export default function LessonsTab({ course }) {
         confirmLabel={t('lessons.deleteConfirm')}
         cancelLabel={t('common:cancel')}
         tone="danger"
+        loading={removal.isLoading}
         onConfirm={async () => {
           await remove({ id: course.id, lessonId: deleting.id })
           setDeleting(null)

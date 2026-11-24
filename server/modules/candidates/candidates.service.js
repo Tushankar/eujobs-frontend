@@ -9,6 +9,7 @@ import { File } from '../files/files.model.js'
 import { reissueCertificates } from '../learning/learning.certificates.js'
 import { scheduleRecompute } from '../matching/matching.service.js'
 import { Country } from '../meta/meta.model.js'
+import { checkSectors } from '../meta/sectors.service.js'
 import { allowedCountryCodes, resolvePlace } from '../places/places.service.js'
 import { User } from '../users/users.model.js'
 import { VerificationSubmission } from '../verification/verification.model.js'
@@ -92,6 +93,7 @@ export async function profileDto(user, profile) {
     yearsExperience: profile.yearsExperience ?? null,
     skills: profile.skills.map((skill) => skill.name),
     workPreference: profile.workPreference ?? null,
+    preferredSectors: profile.preferredSectors ?? [],
     availability: profile.availability,
     salaryMin: salaryMin?.amount ? { amount: salaryMin.amount, currency: salaryMin.currency, period: salaryMin.period } : null,
     workHistory: profile.workHistory.map((entry) => ({
@@ -174,6 +176,7 @@ export async function updateProfile(user, profile, body) {
     // M-064: unique case-insensitively; the key is shared with job skills (M-052).
     skills: skillEntries(body.skills, 'skills'),
     workPreference: body.workPreference,
+    preferredSectors: await checkSectors(body.preferredSectors, 'preferredSectors', profile.preferredSectors),
     availability: body.availability,
     salaryMin: await checkSalary(body.salaryMin, location),
   }

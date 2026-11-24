@@ -11,6 +11,7 @@ import { logoUrls, publicCompanyDto } from '../companies/companies.service.js'
 import { ProfileView } from '../discovery/discovery.model.js'
 import { relevantPair, resultsBy } from '../matching/matching.service.js'
 import { Country } from '../meta/meta.model.js'
+import { sectorNames } from '../meta/sectors.service.js'
 import { planState } from '../payments/payments.service.js'
 import { User } from '../users/users.model.js'
 import { Job, SavedJob } from './jobs.model.js'
@@ -24,6 +25,8 @@ import { agencyDto, jobFieldsDto } from './jobs.service.js'
 const DAY_MS = 24 * 60 * 60 * 1000
 // Phase 6 (owner 2026-11-23): For you lifts jobs of agencies the candidate is on the books of by this many score points (one skill unscored).
 const AGENCY_LIFT = 5
+// 2026-11-24: and jobs in the candidate's preferred sectors, by the same.
+const SECTOR_LIFT = 5
 
 /** M-044: companies whose recruiter is approved and not suspended. */
 async function visibleCompanyIds() {
@@ -80,7 +83,7 @@ async function cardContext(user, jobs) {
   // Owner decision P10-Q8: "Verified company" while the company is approved and its recruiter is active (not suspended).
   const activeOwners = new Set((await User.find({ _id: { $in: companies.map((company) => company.ownerUserId) }, status: 'active' }, '_id')).map((owner) => String(owner._id)))
   const verified = (company) => Boolean(company.verifiedAt) && activeOwners.has(String(company.ownerUserId))
-  const profile = await CandidateProfile.findOne({ userId: user._id }, 'skills')
+  const profile = await CandidateProfile.findOne({ userId: user._id }, 'skills preferredSectors')
   const saved = new Set((await SavedJob.find({ candidateId: user._id, jobId: { $in: jobs.map((job) => job._id) } }, 'jobId')).map((entry) => String(entry.jobId)))
   const applied = new Map(
     (await Application.find({ candidateId: user._id, jobId: { $in: jobs.map((job) => job._id) }, status: { $ne: 'withdrawn' } }, 'jobId status')).map((application) => [String(application.jobId), { id: String(application._id), status: application.status }]),
@@ -112,8 +115,9 @@ async function cardContext(user, jobs) {
     // Phase 6: For you's order, with jobs of the candidate's own agencies a little higher.
     forYou: (a, b) => {
       const lift = (job) => (job.agency && memberships.get(String(job.companyId))?.status === 'active' ? 1 : 0)
-      const score = (job) => (result(job) ? result(job).score + AGENCY_LIFT * lift(job) : -1)
-      const skillCount = (job) => skillOverlap(skills, job).matched.length + lift(job)
+      const preferred = (job) => (job.sector && profile?.preferredSectors?.includes(job.sector) ? 1 : 0)
+      const score = (job) => (result(job) ? result(job).score + AGENCY_LIFT * lift(job) + SECTOR_LIFT * preferred(job) : -1)
+      const skillCount = (job) => skillOverlap(skills, job).matched.length + lift(job) + preferred(job)
       return score(b) - score(a) || skillCount(b) - skillCount(a) || newest(a, b)
     },
     card(job) {
@@ -143,13 +147,18 @@ export async function jobCards(user, jobs) {
   return jobs.map((job) => context.card(job))
 }
 
-/** §3.6 keywords: title, company, skills, city, work mode, level or industry; labels in the user's language. */
-export function haystack(job, company, language) {
+/**
+ * §3.6 keywords: title, company, skills, city, work mode, level or industry; labels in the user's language. `sectors`
+ * (sectorNames()) adds the job's sector name in that language (2026-11-24).
+ */
+export function haystack(job, company, language, sectors) {
+  const sector = job.sector && sectors?.get(job.sector)
   return searchText(
     [
       job.title,
       company.displayName,
       company.industry,
+      sector && (sector[language] ?? sector.en),
       ...job.requiredSkills.map((skill) => skill.name),
       ...job.preferredSkills.map((skill) => skill.name),
       job.location?.city,
@@ -165,8 +174,9 @@ const newest = (a, b) => (b.publishedAt?.getTime() ?? 0) - (a.publishedAt?.getTi
 export async function searchJobs(user, query) {
   const view = viewOf(user)
   const jobs = await Job.find({ ...(await visibleFilter()), ...viewFilter(view) })
-  const context = await cardContext(user, jobs)
+  const [context, sectors] = await Promise.all([cardContext(user, jobs), sectorNames()])
   const kept = jobs.filter((job) => {
+    if (query.sector.length && !query.sector.includes(job.sector)) return false
     if (query.workPreference.length && !query.workPreference.includes(job.workPreference)) return false
     if (query.level.length && !query.level.includes(job.level)) return false
     if (query.employmentType.length && !query.employmentType.some((type) => isJobType(job, type))) return false
@@ -175,7 +185,7 @@ export async function searchJobs(user, query) {
     if (query.eligible && view === 'REMOTE' && job.remoteCountries.length && !job.remoteCountries.includes(query.eligible)) return false
     // Worldwide and Remote mix currencies (remote jobs pay in the recruiter's choice), so they have no minimum salary.
     if (query.salaryMin != null && !MIXED_CURRENCIES.includes(view) && !(annualTop(job.salary) >= query.salaryMin)) return false
-    return !query.q || matchesKeywords(query.q, haystack(job, context.company(job), user.language))
+    return !query.q || matchesKeywords(query.q, haystack(job, context.company(job), user.language, sectors))
   })
   const sorters = {
     recommended: context.byScore,

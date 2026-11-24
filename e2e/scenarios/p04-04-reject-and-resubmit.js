@@ -1,4 +1,4 @@
-import { clickText, fill, signInWithForm, waitForPath, waitForText } from '../lib/flows.js'
+import { clickText, fill, selectOption, signInWithForm, waitForPath, waitForText } from '../lib/flows.js'
 import { submittedRecruiter } from '../lib/recruiters.js'
 import { api, mailTo, TEST_PASSWORD } from '../lib/testApi.js'
 
@@ -37,7 +37,7 @@ export default {
 
     await clickText(page, 'Edit details', 'a')
     await waitForPath(page, '/recruiter/onboarding/company')
-    await page.select('select[name="sector"]', 'arts_culture')
+    await selectOption(page, 'select[name="sector"]', 'arts_culture')
     await clickText(page, 'Continue', 'button[type="submit"]')
     await waitForPath(page, '/recruiter/onboarding/kyc')
     await page.goto(`${ctx.webUrl}/recruiter/onboarding/review`, { waitUntil: 'networkidle0' })

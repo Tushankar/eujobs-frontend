@@ -5,6 +5,33 @@ export function countActiveFilters(filters) {
   return filters.workPreference.length + filters.employmentType.length + filters.level.length + [filters.place, filters.salaryMin, filters.eligible, filters.visaSponsorship].filter(Boolean).length
 }
 
+/** The filters kept in the Find jobs URL (perf 2026-11-24); `?employmentType=agency` links from Agencies use it too. */
+export function filtersFromUrl(params) {
+  const list = (name) => params.get(name)?.split(',').filter(Boolean) ?? []
+  let place = null
+  try {
+    place = JSON.parse(params.get('place'))
+  } catch {
+    // A hand-edited place is ignored.
+  }
+  return {
+    workPreference: list('workPreference'),
+    employmentType: list('employmentType'),
+    level: list('level'),
+    place: typeof place?.placeId === 'string' ? place : null,
+    salaryMin: params.get('salaryMin') ?? '',
+    eligible: params.get('eligible') ?? '',
+    visaSponsorship: params.get('visaSponsorship') === '1',
+  }
+}
+
+/** The URL form of the Find jobs state: the GET /jobs parameters, the picked place itself and how many are shown. */
+export function urlState({ query, filters, sort, shown }) {
+  const { placeId, ...params } = searchParams({ query, filters, sort })
+  const empty = { q: '', workPreference: '', employmentType: '', level: '', salaryMin: '', eligible: '', visaSponsorship: '' }
+  return { ...empty, ...params, sort: sort === 'recommended' ? '' : sort, place: placeId ? JSON.stringify(filters.place) : '', shown }
+}
+
 /** Empty values are left out; lists are comma-separated. */
 export function searchParams({ query, filters, sort }) {
   const params = {

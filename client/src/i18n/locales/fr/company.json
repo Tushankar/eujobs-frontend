@@ -7,7 +7,6 @@
   "fields": {
     "displayName": "Nom de l’entreprise",
     "displayNameHint": "Le nom que les candidats voient sur vos offres.",
-    "industry": "Secteur",
     "city": "Ville de l’entreprise",
     "website": "Site web",
     "size": "Taille de l’entreprise",

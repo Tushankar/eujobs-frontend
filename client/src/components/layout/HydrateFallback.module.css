@@ -7,3 +7,19 @@
   color: var(--muted-foreground);
   background: var(--background);
 }
+
+/* RouteError (perf 2026-11-24): the message and its Reload button. */
+.error {
+  display: grid;
+  justify-items: center;
+  gap: 16px;
+  max-width: 360px;
+  padding: 0 16px;
+  font-size: 15px;
+  text-align: center;
+  color: var(--foreground);
+}
+
+.error p {
+  margin: 0;
+}

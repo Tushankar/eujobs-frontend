@@ -14,7 +14,10 @@ const jobAlertSchema = new Schema(
   {
     candidateId: { type: ObjectId, ref: 'User', required: true },
     name: { type: String, required: true },
-    keywords: { type: String, required: true },
+    // Empty when the alert has sectors (2026-11-24): then every job in them matches.
+    keywords: { type: String, default: '' },
+    // 2026-11-24: sector keys; a job must be in one of them.
+    sectors: { type: [String], default: [] },
     location: { type: placeSchema, default: null },
     country: { type: String, required: true },
     language: { type: String, enum: ENUMS.language, required: true },

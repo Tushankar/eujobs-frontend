@@ -1,5 +1,6 @@
 {
   "loading": "Loading…",
+  "reload": "Reload",
   "codeDigit": "Digit {{index}} of {{count}}",
   "remote": "Remote",
   "closeDialog": "Close dialog",
@@ -7,6 +8,11 @@
   "showPassword": "Show password",
   "cancel": "Cancel",
   "confirm": "Confirm",
+  "loadError": {
+    "title": "We couldn’t load this",
+    "text": "Check your connection, then try again.",
+    "retry": "Try again"
+  },
   "city": {
     "label": "City",
     "placeholder": "Start typing a city",

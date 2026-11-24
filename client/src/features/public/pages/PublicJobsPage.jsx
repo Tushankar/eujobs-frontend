@@ -16,7 +16,7 @@ import PublicShell from '../components/PublicShell.jsx'
 import JobSearchForm from '../components/landing/JobSearchForm.jsx'
 import landing from '../components/landing/Landing.module.css'
 import shell from '../components/PublicShell.module.css'
-import styles from './PublicJobsPage.module.css'
+import styles from './PublicJobsPage.module.css'
 import { useSectors } from '@/lib/sectors.js'
 
 /* The landing page's six categories (and Agency) as tabs (one work mode or employment type at a time), after "All jobs". */
@@ -90,7 +90,8 @@ export default function PublicJobsPage() {
     () => {
       if (!resultsKey) return
       const move = window.matchMedia(REDUCE).matches ? 0 : 1
-      gsap.from('[data-row]', { y: 16 * move, opacity: 0, duration: 0.55, stagger: 0.045, ease: 'power3.out', clearProps: 'transform,opacity' })
+      // Rows after the 12th rise with the 12th (owner 2026-11-24), so a long list doesn't cascade for seconds.
+      gsap.from('[data-row]', { y: 16 * move, opacity: 0, duration: 0.55, stagger: (index) => Math.min(index, 12) * 0.045, ease: 'power3.out', clearProps: 'transform,opacity' })
     },
     { scope: root, dependencies: [resultsKey] },
   )

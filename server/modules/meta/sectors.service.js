@@ -29,6 +29,18 @@ export async function checkSector(key, field, current) {
   if (!(await Sector.exists({ key, hidden: false }))) throw fieldError({ [field]: 'invalid' })
 }
 
+/** Several sector keys (a job alert's, a candidate's preferred ones): each shown, or one the record already has. */
+export async function checkSectors(keys, field, current = []) {
+  const added = keys.filter((key) => !current.includes(key))
+  if (added.length && (await Sector.countDocuments({ key: { $in: added }, hidden: false })) !== new Set(added).size) throw fieldError({ [field]: 'invalid' })
+  return [...new Set(keys)]
+}
+
+/** Every sector's names by key, for keyword searches (a job's sector name is one of its words). */
+export async function sectorNames() {
+  return new Map((await Sector.find({}, 'key name')).map((sector) => [sector.key, sector.name]))
+}
+
 /**
  * The stored fields of a company's or agency client's sector: the key and, as `industry`, the sector's English name.
  * No key keeps an older typed industry until a sector is picked; a removed sector removes both.

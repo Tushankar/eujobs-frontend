@@ -230,7 +230,7 @@ export default function PlacementsPage() {
   const [params, setParams] = useSearchParams()
   const tab = TABS.includes(params.get('tab')) ? params.get('tab') : 'running'
   const { data, isLoading } = useGetPlacementsQuery()
-  const [withdraw] = useWithdrawOfferMutation()
+  const [withdraw, withdrawal] = useWithdrawOfferMutation()
   const [withdrawing, setWithdrawing] = useState(null)
   const [offerPlacement] = useOfferPlacementMutation()
   const [nextOffer, setNextOffer] = useState(null)
@@ -329,6 +329,7 @@ export default function PlacementsPage() {
         description={t('agency:placements.withdrawText', { job: withdrawing?.job.title ?? '' })}
         confirmLabel={t('agency:placements.withdraw')}
         tone="danger"
+        loading={withdrawal.isLoading}
         onConfirm={() => {
           const { id } = withdrawing
           setFailure(null)

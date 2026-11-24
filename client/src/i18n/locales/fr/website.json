@@ -51,7 +51,7 @@
   },
   "admin": {
     "title": "Site web",
-    "description": "Le blog, la newsletter et les abonnés du site public.",
+    "description": "Le blog, la newsletter, les abonnés et les secteurs d’emploi du site public.",
     "tabs": {
       "blog": "Blog",
       "subscribers": "Abonnés",

@@ -43,7 +43,7 @@ export default function ClientsPage() {
   const [editing, setEditing] = useState(null)
   const [deleting, setDeleting] = useState(null)
   const [deleteFailure, setDeleteFailure] = useState(null)
-  const [deleteClient] = useDeleteClientMutation()
+  const [deleteClient, deletion] = useDeleteClientMutation()
   const clients = data?.items ?? []
   const needle = query.trim().toLocaleLowerCase(language)
   const visible = clients.filter((client) => !needle || [client.name, sectors.industry(client), client.location?.city, client.linkedCompany?.displayName].filter(Boolean).some((text) => text.toLocaleLowerCase(language).includes(needle)))
@@ -151,6 +151,7 @@ export default function ClientsPage() {
         description={t('agency:clients.deleteText')}
         confirmLabel={t('agency:clients.delete')}
         tone="danger"
+        loading={deletion.isLoading}
         onConfirm={confirmDelete}
         onClose={() => setDeleting(null)}
       >

@@ -104,6 +104,12 @@ export function waitForText(page, text, timeout = 15_000) {
   return page.waitForFunction((wanted) => document.body.innerText.includes(wanted), { timeout }, text)
 }
 
+/** Picks `value` in a select once that option is there (a list loaded from the API, such as the job sectors). */
+export async function selectOption(page, selector, value) {
+  await page.waitForSelector(`${selector} option[value="${value}"]`)
+  await page.select(selector, value)
+}
+
 /** Sets an input's value the way typing would (month and date inputs, which page.type cannot fill reliably). */
 export async function setValue(page, selector, value) {
   await page.waitForSelector(selector)

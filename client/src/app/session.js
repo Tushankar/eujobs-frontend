@@ -1,7 +1,7 @@
 import { hiringBase, isHiring } from './roles.js'
 import i18n from '@/i18n/index.js'
 import { applyTheme } from '@/lib/theme.js'
-import { api, API_BASE, setAuthRequiredHandler } from './api.js'
+import { api, API_BASE, errorCode, setAuthRequiredHandler } from './api.js'
 import { navigateTo } from './navigation.js'
 import { adminHome } from './permissions.js'
 import { signedIn, signedOut, store } from './store.js'
@@ -52,8 +52,12 @@ export function landingPath(me, next) {
 /** GET /me for the stored token (cached by RTK Query), switching the UI to the account's language and theme. */
 export async function loadMe() {
   if (!getToken()) return null
-  const { data } = await store.dispatch(api.endpoints.getMe.initiate(undefined, { subscribe: false }))
-  if (!data) return null
+  const { data, error } = await store.dispatch(api.endpoints.getMe.initiate(undefined, { subscribe: false }))
+  // Only an ended session signs out (perf 2026-11-24); a network or server error keeps the token and shows RouteError.
+  if (error) {
+    if (errorCode(error) === 'AUTH_REQUIRED') return null
+    throw new Error(errorCode(error))
+  }
   if (data.theme) applyTheme(data.theme)
   if (i18n.language !== data.language) await i18n.changeLanguage(data.language)
   return data

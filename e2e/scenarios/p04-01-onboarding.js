@@ -1,6 +1,6 @@
 import { readFileSync } from 'node:fs'
 import { fixture } from '../fixtures/make.js'
-import { clickText, fill, pageApi, signInWithForm, waitForPath, waitForText } from '../lib/flows.js'
+import { clickText, fill, pageApi, selectOption, signInWithForm, waitForPath, waitForText } from '../lib/flows.js'
 import { registeredRecruiter } from '../lib/recruiters.js'
 import { TEST_PASSWORD } from '../lib/testApi.js'
 
@@ -26,7 +26,7 @@ export default {
     await fill(page, 'input[name="legalName"]', 'Nordlicht Studio GmbH')
     await fill(page, 'input[name="website"]', 'nordlicht.example.com')
     await fill(page, 'input[name="businessEmail"]', 'hello@nordlicht.example.com')
-    await page.select('select[name="sector"]', 'it_software')
+    await selectOption(page, 'select[name="sector"]', 'it_software')
     await page.select('select[name="size"]', '11_50')
     await page.type('input[name="companyCity"]', 'Berlin')
     await page.waitForSelector('[role="option"]')

@@ -12,7 +12,8 @@ import { cx } from '@/utils/cx.js'
 import { useSaveToggle, useSearchJobsQuery } from '../api.js'
 import JobCard, { JobCardSkeleton } from '../components/JobCard.jsx'
 import JobFiltersModal from '../components/JobFiltersModal.jsx'
-import { countActiveFilters, EMPTY_FILTERS, searchParams } from '../utils/jobSearch.js'
+import { useUrlState } from '@/lib/urlState.js'
+import { countActiveFilters, EMPTY_FILTERS, filtersFromUrl, searchParams, urlState } from '../utils/jobSearch.js'
 import styles from './FindJobsPage.module.css'
 
 const PAGE_SIZE = 9
@@ -31,10 +32,12 @@ export default function FindJobsPage() {
   const initialQuery = urlParams.get('q') ?? ''
   const [query, setQuery] = useState(initialQuery)
   const [debounced, setDebounced] = useState(initialQuery)
-  // 2026-11-20: `?employmentType=agency` opens the Agency jobs (links from Agencies).
-  const [filters, setFilters] = useState(() => ({ ...EMPTY_FILTERS, employmentType: urlParams.get('employmentType')?.split(',').filter(Boolean) ?? [] }))
-  const [sort, setSort] = useState('recommended')
-  const [visible, setVisible] = useState(PAGE_SIZE)
+  // The search, filters, sort and "show more" live in the URL too (perf 2026-11-24), so Back from a job returns to
+  // the same list. 2026-11-20: `?employmentType=agency` opens the Agency jobs (links from Agencies).
+  const [filters, setFilters] = useState(() => filtersFromUrl(urlParams))
+  const [sort, setSort] = useState(() => (SORTS.includes(urlParams.get('sort')) ? urlParams.get('sort') : 'recommended'))
+  const [visible, setVisible] = useState(() => Math.max(PAGE_SIZE, Number(urlParams.get('shown')) || 0))
+  useUrlState(urlState({ query: debounced, filters, sort, shown: visible > PAGE_SIZE ? String(visible) : '' }))
   const [filtersOpen, setFiltersOpen] = useState(false)
   const toggleSave = useSaveToggle()
   const search = useSearchJobsQuery(searchParams({ query: debounced, filters, sort }))
@@ -48,6 +51,8 @@ export default function FindJobsPage() {
   const worldwide = data?.view.country === 'WORLDWIDE'
 
   useEffect(() => {
+    // Nothing new typed (the first render, or Back to this page): keep the "show more" count from the URL.
+    if (query === debounced) return
     const timer = window.setTimeout(() => {
       setDebounced(query)
       setVisible(PAGE_SIZE)

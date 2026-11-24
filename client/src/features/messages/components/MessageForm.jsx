@@ -9,13 +9,14 @@ import styles from './MessageForm.module.css'
  * A message body (M-086: text only, up to the server's limit) with the character count. `onSubmit(body)` returns a
  * promise; a failure maps the server's field errors. Used by the thread composer and the start dialog (`formId`).
  * `draft` ({ text }, a new object each time) replaces the body and focuses it: a picked suggested reply.
+ * `onPendingChange(sending)` (2026-11-24) lets a dialog's own `form=` submit button show the spinner.
  */
-export default function MessageForm({ initialBody = '', submitLabel, onSubmit, resetOnSuccess = false, formId, rows = 3, autoFocus = false, draft, placeholder }) {
+export default function MessageForm({ initialBody = '', submitLabel, onSubmit, resetOnSuccess = false, formId, rows = 3, autoFocus = false, draft, placeholder, onPendingChange }) {
   const { t } = useTranslation()
   const errorText = useErrorText()
   const { data: config } = useGetConfigQuery()
   const max = config?.limits.message.body.max
-  const { values, set, errors, failure, run } = useFormState({ body: initialBody })
+  const { values, set, errors, failure, run, submitting } = useFormState({ body: initialBody })
   const generatedId = useId()
   const id = formId ?? generatedId
   const field = useRef(null)
@@ -25,6 +26,10 @@ export default function MessageForm({ initialBody = '', submitLabel, onSubmit, r
     set('body', draft.text)
     field.current?.focus()
   }, [draft, set])
+
+  useEffect(() => {
+    onPendingChange?.(submitting)
+  }, [submitting, onPendingChange])
 
   async function handleSubmit(event) {
     event.preventDefault()
@@ -54,7 +59,9 @@ export default function MessageForm({ initialBody = '', submitLabel, onSubmit, r
       )}
       {!formId && (
         <div className={styles.actions}>
-          <Button type="submit">{submitLabel}</Button>
+          <Button type="submit" loading={submitting}>
+            {submitLabel}
+          </Button>
         </div>
       )}
     </form>

@@ -2,6 +2,7 @@ import { Router } from 'express'
 import { z } from 'zod'
 import { ENUMS, JOB_TYPES } from '../../config/enums.js'
 import { validate } from '../../lib/validate.js'
+import { sectorKey } from '../jobs/jobs.schemas.js'
 import { placesNearPerIp } from '../../middleware/rateLimit.js'
 import { cityNear } from '../places/places.service.js'
 import { landing, publicJobs } from './landing.service.js'
@@ -25,6 +26,7 @@ router.get(
       location: keywords,
       workPreference: z.enum(ENUMS.workPreference).optional(),
       employmentType: z.enum(JOB_TYPES).optional(),
+      sector: sectorKey.optional(),
       visa: z.enum(['1']).optional(),
     }),
   }),

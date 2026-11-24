@@ -32,6 +32,19 @@
   </head>
   <body>
     <div id="root"></div>
+    <script>
+      // Signed-in visitors: the brand mark instead of a white page while the app's JS and GET /me load (perf 2026-11-24).
+      // React replaces it on mount. Signed-out visitors (the landing page) are unchanged.
+      try {
+        if (localStorage.getItem('lwm-auth-token')) {
+          var dark = document.documentElement.dataset.theme === 'dark'
+          document.getElementById('root').innerHTML =
+            '<div role="status" aria-label="Loading" style="display:grid;place-items:center;min-height:100vh;background:' +
+            (dark ? '#0a0b0e' : '#f8f9fb') +
+            '"><img src="/favicon.svg" alt="" width="44" height="44"></div>'
+        }
+      } catch {}
+    </script>
     <script type="module" src="/src/main.jsx"></script>
   </body>
 </html>

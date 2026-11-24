@@ -7,7 +7,6 @@
   "fields": {
     "displayName": "Company name",
     "displayNameHint": "The name candidates see on your jobs.",
-    "industry": "Industry",
     "city": "Company city",
     "website": "Website",
     "size": "Company size",

@@ -51,7 +51,7 @@
   },
   "admin": {
     "title": "Sitio web",
-    "description": "El blog, el boletín y los suscriptores del sitio público.",
+    "description": "El blog, el boletín, los suscriptores y los sectores de empleo del sitio público.",
     "tabs": {
       "blog": "Blog",
       "subscribers": "Suscriptores",

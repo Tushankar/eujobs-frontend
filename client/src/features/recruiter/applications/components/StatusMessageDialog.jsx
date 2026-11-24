@@ -16,6 +16,7 @@ export default function StatusMessageDialog({ application, candidateName, jobTit
   const { t } = useTranslation('applications')
   const [draft, setDraft] = useState(null)
   const [sent, setSent] = useState(false)
+  const [sending, setSending] = useState(false)
   const [messageApplicant] = useMessageApplicantMutation()
   return (
     <Modal
@@ -32,7 +33,7 @@ export default function StatusMessageDialog({ application, candidateName, jobTit
             <Button variant="secondary" onClick={onClose}>
               {t('common:cancel')}
             </Button>
-            <Button type="submit" form={FORM_ID}>
+            <Button type="submit" form={FORM_ID} loading={sending}>
               {t('statusMessage.send')}
             </Button>
           </>
@@ -52,6 +53,7 @@ export default function StatusMessageDialog({ application, candidateName, jobTit
             autoFocus
             draft={draft}
             placeholder={t('statusMessage.placeholder')}
+            onPendingChange={setSending}
             onSubmit={async (body) => {
               await messageApplicant({ id: application.id, body }).unwrap()
               setSent(true)

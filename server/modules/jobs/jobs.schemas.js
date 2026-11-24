@@ -87,6 +87,12 @@ export const searchQuery = z.object({
   level: list(ENUMS.jobLevel),
   // 2026-11-20: job types; "agency" is every agency job (which keeps its full or part time too).
   employmentType: list(JOB_TYPES),
+  // 2026-11-24: sector keys.
+  sector: z
+    .string()
+    .default('')
+    .transform((text) => text.split(',').filter(Boolean))
+    .pipe(z.array(sectorKey)),
   placeId: placeId.optional(),
   salaryMin: z.coerce.number().int().min(0).max(J.salary.max).optional(),
   eligible: z.string().trim().toUpperCase().length(2).optional(),

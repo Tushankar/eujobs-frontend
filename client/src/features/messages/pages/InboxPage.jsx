@@ -2,6 +2,7 @@ import { useTranslation } from 'react-i18next'
 import { Link } from 'react-router-dom'
 import { MessageSquare } from 'lucide-react'
 import EmptyState from '@/components/common/EmptyState.jsx'
+import LoadError from '@/components/common/LoadError.jsx'
 import PageTitle from '@/components/common/PageTitle.jsx'
 import { Skeleton, SkeletonRegion } from '@/components/ui'
 import { usePreferences, useFormat } from '@/lib/preferences.js'
@@ -40,7 +41,7 @@ export default function InboxPage() {
   const { t } = useTranslation()
   const format = useFormat()
   const { me } = usePreferences()
-  const { data, isLoading } = useConversations()
+  const { data, isLoading, isError, isFetching, refetch } = useConversations()
   const conversations = data?.items ?? []
 
   return (
@@ -49,6 +50,8 @@ export default function InboxPage() {
       <div className={styles.body}>
         {isLoading ? (
           <InboxSkeleton role={me.role} />
+        ) : isError && !data ? (
+          <LoadError onRetry={refetch} retrying={isFetching} />
         ) : !data ? null : conversations.length === 0 ? (
           <EmptyState icon={MessageSquare} title={t('messages:inbox.empty')} description={t(`messages:inbox.emptyText.${me.role}`)} />
         ) : (
