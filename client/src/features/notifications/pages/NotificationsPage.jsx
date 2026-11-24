@@ -3,6 +3,7 @@ import { useTranslation } from 'react-i18next'
 import { BellOff, CheckCheck } from 'lucide-react'
 import { Button, Icon, Panel, SkeletonRegion } from '@/components/ui'
 import EmptyState from '@/components/common/EmptyState.jsx'
+import LoadError from '@/components/common/LoadError.jsx'
 import FilterChips from '@/components/common/FilterChips.jsx'
 import PageTitle from '@/components/common/PageTitle.jsx'
 import Pagination from '@/components/common/Pagination.jsx'
@@ -22,7 +23,7 @@ export default function NotificationsPage() {
   const [filter, setFilter] = useState('all')
   const [page, setPage] = useState(1)
   const { unread } = useNotificationCounts()
-  const { data, refetch, isLoading: listLoading } = useGetNotificationsQuery({ filter, page })
+  const { data, refetch, isLoading: listLoading, isError, isFetching } = useGetNotificationsQuery({ filter, page })
   const [readAll, { isLoading }] = useReadAllNotificationsMutation()
   const { openItem, isUnavailable } = useOpenNotification()
 
@@ -67,6 +68,8 @@ export default function NotificationsPage() {
             ))}
           </SkeletonRegion>
         </Panel>
+      ) : isError && !data ? (
+        <LoadError onRetry={refetch} retrying={isFetching} />
       ) : !data ? null : items.length === 0 ? (
         <EmptyState
           size="lg"

@@ -3,6 +3,7 @@ import { Link } from 'react-router-dom'
 import { Bell, BellOff } from 'lucide-react'
 import { Dropdown, Icon, SkeletonRegion } from '@/components/ui'
 import EmptyState from '@/components/common/EmptyState.jsx'
+import LoadError from '@/components/common/LoadError.jsx'
 import { useGetConfigQuery } from '@/app/api.js'
 import { workspacePath } from '@/app/workspaces.js'
 import { useGetNotificationsQuery, useNotificationCounts, useReadAllNotificationsMutation } from '../api.js'
@@ -15,7 +16,7 @@ function BellPanel({ workspace, close }) {
   const { t } = useTranslation()
   const config = useGetConfigQuery()
   const latest = config.data?.limits.notifications.latest
-  const { data, isLoading } = useGetNotificationsQuery({ pageSize: latest }, { skip: !latest, refetchOnMountOrArgChange: true })
+  const { data, isLoading, isError, isFetching, refetch } = useGetNotificationsQuery({ pageSize: latest }, { skip: !latest, refetchOnMountOrArgChange: true })
   const [readAll] = useReadAllNotificationsMutation()
   const { openItem, isUnavailable } = useOpenNotification(close)
   const items = data?.items ?? []
@@ -36,6 +37,8 @@ function BellPanel({ workspace, close }) {
             <NotificationItemSkeleton key={row} compact />
           ))}
         </SkeletonRegion>
+      ) : isError && !data ? (
+        <LoadError compact onRetry={refetch} retrying={isFetching} />
       ) : !data ? null : items.length === 0 ? (
         <div className={styles.empty}>
           <EmptyState icon={BellOff} title={t('notifications:bell.empty')} description={t('notifications:bell.emptyText')} />
