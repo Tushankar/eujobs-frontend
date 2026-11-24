@@ -56,7 +56,8 @@
       "blog": "Blog",
       "subscribers": "Subscribers",
       "newsletter": "Newsletter",
-      "sectors": "Sectors"
+      "sectors": "Sectors",
+      "sites": "Sites"
     },
     "blog": {
       "new": "New post",
@@ -222,6 +223,52 @@
         "renamed": "Sector renamed: {{name}}",
         "hidden": "{{name}} is hidden. Jobs that have it keep it.",
         "shown": "{{name}} is shown again."
+      }
+    },
+    "sites": {
+      "intro": "Sector sites run on their own domains and list only their own jobs. Signing in and applying happen on the main site.",
+      "add": "Add a site",
+      "addTitle": "Add a site",
+      "editTitle": "Edit {{host}}",
+      "dialogText": "Pick what the site lists and how its home page greets visitors. A job in any of its sectors or job types is listed.",
+      "host": "Domain",
+      "hostHint": "Without https:// or www., for example eujobs.health. Attach the domain to the frontend first.",
+      "sectors": "Sectors",
+      "sectorsHint": "Jobs in these sectors are listed.",
+      "types": "Job types",
+      "typesHint": "Jobs of these types are listed too, whatever their sector.",
+      "remoteOnly": "Remote jobs only",
+      "remoteOnlyShort": "Remote only",
+      "everyJob": "Every job",
+      "title": {
+        "en": "First hero line in English",
+        "es": "First hero line in Spanish",
+        "fr": "First hero line in French"
+      },
+      "text": {
+        "en": "Intro in English",
+        "es": "Intro in Spanish",
+        "fr": "Intro in French"
+      },
+      "save": "Save",
+      "cancel": "Cancel",
+      "site": "Site",
+      "lists": "Lists",
+      "liveJobs": "Live jobs",
+      "status": "Status",
+      "actions": "Actions",
+      "on": "On",
+      "off": "Off",
+      "edit": "Edit",
+      "turnOff": "Turn off",
+      "turnOn": "Turn on",
+      "empty": "No sites yet",
+      "caption": "Sector sites",
+      "notice": {
+        "added": "Site added: {{host}}",
+        "saved": "Site saved: {{host}}",
+        "off": "{{host}} is off. It now shows the main site.",
+        "on": "{{host}} is on again."
       }
     }
   },

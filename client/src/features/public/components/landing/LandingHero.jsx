@@ -150,7 +150,7 @@ export default function LandingHero() {
         <div className={styles.heroText}>
           <h1 className={styles.heroTitle}>
             <span className={styles.heroLine}>
-              <span data-hero-line data-site-title={site?.host}>
+              <span data-hero-line data-hero-title data-site-title={site?.host}>
                 {siteText('title') || t('landing:hero.titleLead')}
               </span>
             </span>

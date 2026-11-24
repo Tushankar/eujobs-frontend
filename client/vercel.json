@@ -1,5 +1,11 @@
 {
   "$schema": "https://openapi.vercel.sh/vercel.json",
+  "redirects": [
+    { "source": "/(.*)", "has": [{ "type": "host", "value": "eujobs.site" }], "destination": "https://eujobs.careers/$1", "permanent": true },
+    { "source": "/(.*)", "has": [{ "type": "host", "value": "www.eujobs.site" }], "destination": "https://eujobs.careers/$1", "permanent": true },
+    { "source": "/(.*)", "has": [{ "type": "host", "value": "eujobs.space" }], "destination": "https://eujobs.careers/$1", "permanent": true },
+    { "source": "/(.*)", "has": [{ "type": "host", "value": "www.eujobs.space" }], "destination": "https://eujobs.careers/$1", "permanent": true }
+  ],
   "rewrites": [
     {
       "source": "/(.*)",

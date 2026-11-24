@@ -56,7 +56,8 @@
       "blog": "Blog",
       "subscribers": "Abonnés",
       "newsletter": "Newsletter",
-      "sectors": "Secteurs"
+      "sectors": "Secteurs",
+      "sites": "Sites"
     },
     "blog": {
       "new": "Nouvel article",
@@ -223,6 +224,52 @@
         "renamed": "Secteur renommé : {{name}}",
         "hidden": "{{name}} est masqué. Les offres qui l’ont le gardent.",
         "shown": "{{name}} est de nouveau visible."
+      }
+    },
+    "sites": {
+      "intro": "Les sites sectoriels ont leur propre domaine et n’affichent que leurs offres. La connexion et les candidatures se font sur le site principal.",
+      "add": "Ajouter un site",
+      "addTitle": "Ajouter un site",
+      "editTitle": "Modifier {{host}}",
+      "dialogText": "Choisissez ce que le site affiche et comment sa page d’accueil accueille les visiteurs. Toute offre de ses secteurs ou types de contrat est affichée.",
+      "host": "Domaine",
+      "hostHint": "Sans https:// ni www., par exemple eujobs.health. Reliez d’abord le domaine au frontend.",
+      "sectors": "Secteurs",
+      "sectorsHint": "Les offres de ces secteurs sont affichées.",
+      "types": "Types de contrat",
+      "typesHint": "Les offres de ces types sont aussi affichées, quel que soit leur secteur.",
+      "remoteOnly": "Offres à distance uniquement",
+      "remoteOnlyShort": "À distance uniquement",
+      "everyJob": "Toutes les offres",
+      "title": {
+        "en": "Première ligne du titre en anglais",
+        "es": "Première ligne du titre en espagnol",
+        "fr": "Première ligne du titre en français"
+      },
+      "text": {
+        "en": "Introduction en anglais",
+        "es": "Introduction en espagnol",
+        "fr": "Introduction en français"
+      },
+      "save": "Enregistrer",
+      "cancel": "Annuler",
+      "site": "Site",
+      "lists": "Affiche",
+      "liveJobs": "Offres en ligne",
+      "status": "Statut",
+      "actions": "Actions",
+      "on": "Actif",
+      "off": "Désactivé",
+      "edit": "Modifier",
+      "turnOff": "Désactiver",
+      "turnOn": "Activer",
+      "empty": "Aucun site pour l’instant",
+      "caption": "Sites sectoriels",
+      "notice": {
+        "added": "Site ajouté : {{host}}",
+        "saved": "Site enregistré : {{host}}",
+        "off": "{{host}} est désactivé. Il affiche maintenant le site principal.",
+        "on": "{{host}} est de nouveau actif."
       }
     }
   },

@@ -132,6 +132,10 @@
     },
     "name": {
       "duplicate": "You already have a client with this name."
+    },
+    "host": {
+      "main_site": "That is the main site’s domain.",
+      "duplicate": "This domain already has a site."
     }
   },
   "in_both": "{{skill}} is already a required skill.",

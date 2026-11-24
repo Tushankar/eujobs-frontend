@@ -132,6 +132,10 @@
     },
     "name": {
       "duplicate": "Ya tienes un cliente con este nombre."
+    },
+    "host": {
+      "main_site": "Ese es el dominio del sitio principal.",
+      "duplicate": "Este dominio ya tiene un sitio."
     }
   },
   "in_both": "{{skill}} ya es una competencia obligatoria.",

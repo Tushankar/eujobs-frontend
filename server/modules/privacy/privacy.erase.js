@@ -103,6 +103,7 @@ export const COVERAGE = {
   Permission: 'kept (catalogue)',
   Country: 'kept (catalogue)',
   Sector: 'kept (catalogue)',
+  Site: 'kept (catalogue)',
   LegalDocument: 'kept (catalogue)',
   Faq: 'kept (catalogue)',
   Plan: 'kept (catalogue)',

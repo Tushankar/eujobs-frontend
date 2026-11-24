@@ -1040,7 +1040,11 @@
       "sector_created": "Sector añadido: {{title}}",
       "sector_updated": "Sector renombrado: {{title}}",
       "sector_hidden": "Sector oculto: {{title}}",
-      "sector_shown": "Sector visible: {{title}}"
+      "sector_shown": "Sector visible: {{title}}",
+      "site_created": "Sitio añadido: {{title}}",
+      "site_updated": "Sitio editado: {{title}}",
+      "site_activated": "Sitio activado: {{title}}",
+      "site_deactivated": "Sitio desactivado: {{title}}"
     }
   },
   "reports": {
