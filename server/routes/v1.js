@@ -24,6 +24,7 @@ import notificationRoutes from '../modules/notifications/notifications.routes.js
 import landingRoutes from '../modules/landing/landing.routes.js'
 import metaRoutes from '../modules/meta/meta.routes.js'
 import * as sectorRoutes from '../modules/meta/sectors.routes.js'
+import * as siteRoutes from '../modules/meta/sites.routes.js'
 import * as newsletterRoutes from '../modules/newsletter/newsletter.routes.js'
 import * as paymentRoutes from '../modules/payments/payments.routes.js'
 import placesRoutes from '../modules/places/places.routes.js'
@@ -50,6 +51,7 @@ export const ADMIN_MOUNTS = [
   ['/admin/payments', paymentRoutes.adminRouter],
   ['/admin/content/blog', blogRoutes.adminRouter],
   ['/admin/content/sectors', sectorRoutes.adminRouter],
+  ['/admin/content/sites', siteRoutes.adminRouter],
   ['/admin/content/subscribers', newsletterRoutes.adminRouter],
   ['/admin/content/newsletter', newsletterRoutes.issuesRouter],
   ['/admin', adminRoutes],

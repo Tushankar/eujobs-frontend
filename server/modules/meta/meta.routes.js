@@ -1,4 +1,5 @@
 import { Router } from 'express'
+import { z } from 'zod'
 import { ENUMS, isHiring, sideOf } from '../../config/enums.js'
 import { LIMITS } from '../../config/limits.js'
 import { validate } from '../../lib/validate.js'
@@ -9,6 +10,7 @@ import { companyCurrency } from '../payments/payments.service.js'
 import { placesManual } from '../places/places.service.js'
 import * as meta from './meta.service.js'
 import { listSectors } from './sectors.service.js'
+import { currentSite } from './sites.service.js'
 
 /* Public catalogue reads (§5 "Meta and public"); mounted at the API root. */
 const router = Router()
@@ -34,6 +36,11 @@ router.get('/meta/countries', async (req, res) => {
 router.get('/meta/sectors', async (req, res) => {
   // Not browser-cached: the client fetches it again right after an admin edits the sectors.
   res.json(list(await listSectors()))
+})
+
+// 2026-11-24: the sector site on this domain (null on the main site) and the main site's origin. Same for every visitor.
+router.get('/meta/site', validate({ query: z.object({ host: z.string().trim().max(200).default('') }) }), async (req, res) => {
+  res.set('Cache-Control', PUBLIC_5_MINUTES).json(await currentSite(req.query.host))
 })
 
 router.get('/meta/languages', (req, res) => {

@@ -261,7 +261,9 @@
     "signInNote": "Inicia sesión para postularte o guardar. Volverás directamente a este empleo.",
     "signUp": "¿Eres nuevo? Crea una cuenta gratis",
     "requirements": "Requisitos",
-    "visaOnly": "Solo con patrocinio de visado"
+    "visaOnly": "Solo con patrocinio de visado",
+    "sector": "Sector",
+    "allSectors": "Todos los sectores"
   },
   "agencies": {
     "documentTitle": "Para agencias",

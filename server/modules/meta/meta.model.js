@@ -62,11 +62,32 @@ const sectorSchema = new Schema(
   { timestamps: true },
 )
 
+/*
+ * 2026-11-24: the sector sites (eujobs.health, eujobs.tech, …): one frontend on every domain, eujobs.careers is the main
+ * site. A site lists the visible jobs in its sectors or employment types (either matches; none of both = every job),
+ * remote ones only with `remoteOnly`, under its own first hero line and intro. Admins edit them in admin › Website › Sites.
+ */
+const localizedText = { en: { type: String, required: true }, es: { type: String, required: true }, fr: { type: String, required: true } }
+const siteSchema = new Schema(
+  {
+    host: { type: String, required: true, unique: true },
+    sectors: { type: [String], default: [] },
+    employmentTypes: { type: [String], default: [] },
+    remoteOnly: { type: Boolean, default: false },
+    title: localizedText,
+    text: localizedText,
+    active: { type: Boolean, default: true },
+  },
+  { timestamps: true },
+)
+
 // Public caches read again after a write (perf 2026-11-24).
+trackWrites(siteSchema, 'Site')
 trackWrites(sectorSchema, 'Sector')
 trackWrites(legalDocumentSchema, 'LegalDocument')
 trackWrites(faqSchema, 'Faq')
 export const Country = mongoose.model('Country', countrySchema)
 export const Sector = mongoose.model('Sector', sectorSchema)
+export const Site = mongoose.model('Site', siteSchema)
 export const LegalDocument = mongoose.model('LegalDocument', legalDocumentSchema)
 export const Faq = mongoose.model('Faq', faqSchema)

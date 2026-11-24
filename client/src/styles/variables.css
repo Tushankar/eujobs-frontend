@@ -49,7 +49,7 @@
 
   /* Typography */
   --font-display: 'Manrope', system-ui, sans-serif;
-  --font-body: 'Inter', system-ui, -apple-system, 'Segoe UI', sans-serif;
+  --font-body: 'Inter', 'Inter Fallback', system-ui, -apple-system, 'Segoe UI', sans-serif;
 
   /* Radius (radius/md, radius/lg, radius/xl) */
   --radius-md: 6px;

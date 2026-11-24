@@ -5,6 +5,7 @@ import { AdminRole, Permission } from '../modules/admin/admin.model.js'
 import { ensureDefaultPolicy } from '../modules/matching/matching.admin.js'
 import { Country, Faq, LegalDocument } from '../modules/meta/meta.model.js'
 import { ensureSectors } from '../modules/meta/sectors.service.js'
+import { ensureSites } from '../modules/meta/sites.service.js'
 import { Plan } from '../modules/payments/payments.model.js'
 import { syncPortalConfigurations, yearlyAmount } from '../modules/payments/plans.stripe.js'
 import { COUNTRIES, PLANS, SYSTEM_ROLES } from './data/catalog.js'
@@ -72,6 +73,7 @@ export async function seedCatalog() {
   await ensureDefaultPolicy()
   await upsertExactly(Country, 'code', COUNTRIES)
   await ensureSectors()
+  await ensureSites()
   await seedPlans()
   await upsertExactly(Permission, 'id', PERMISSIONS.map((permission, index) => ({ ...permission, order: index + 1 })))
   for (const role of SYSTEM_ROLES) {

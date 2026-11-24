@@ -247,6 +247,8 @@ export const LIMITS = {
   // 2026-11-24: job sectors (admin › Website › Sectors): a name per language, at most `max` sectors.
   // `picks`: how many sectors a job alert or a candidate's preferred sectors hold.
   sector: { name: { min: 2, max: 60 }, max: 60, picks: 5 },
+  // 2026-11-24: sector sites (admin › Website › Sites): the domain, the hero's first line and its intro per language.
+  site: { host: { max: 100 }, title: { max: 60 }, text: { max: 300 } },
   newsletter: { perIp: { windowMs: HOUR, limit: 10 }, confirmTtlMs: 7 * 24 * HOUR },
   // 2026-11-19: newsletter issues. One batch of mail a minute (Gmail SMTP allows about 500 a day, Workspace 2000).
   newsletterIssue: {

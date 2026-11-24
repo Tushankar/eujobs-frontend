@@ -170,5 +170,10 @@
   },
   "pricing": {
     "details": "Voir le détail des offres"
+  },
+  "sectors": {
+    "titleLead": "Parcourir par",
+    "titleAccent": "secteur",
+    "text": "Trouvez des offres ouvertes dans votre type de travail, de la santé aux arts et aux associations."
   }
 }

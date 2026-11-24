@@ -61,7 +61,8 @@ export default {
     ctx.check(card?.company.logoUrl, 'the candidate job card carries the logo')
     const emma = await ctx.newPage()
     await signInWithForm(emma.page, ctx.webUrl, '/sign-in', ctx.seedCredentials.email('emma'), ctx.seedCredentials.password)
-    await emma.page.goto(`${ctx.webUrl}/candidate/jobs`, { waitUntil: 'networkidle0' })
+    // Find jobs shows nine at a time, so the search puts this job on the first page.
+    await emma.page.goto(`${ctx.webUrl}/candidate/jobs?q=logo%20check`, { waitUntil: 'networkidle0' })
     await emma.page.waitForSelector(`article[data-job="${card.id}"] img[alt="Northlight logo"]`)
     await ctx.screenshot(emma.page, '3-candidate-card')
     ctx.assertClean(emma.issues, 'candidate jobs')

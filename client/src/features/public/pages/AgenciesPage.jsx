@@ -9,7 +9,7 @@ import { bestSaving } from '@/features/payments/bestSaving.js'
 import PlanPrice from '@/features/payments/components/PlanPrice.jsx'
 import { useFormat } from '@/lib/preferences.js'
 import { cx } from '@/utils/cx.js'
-import { useGetLandingQuery, useGetPublicPlansQuery } from '../api.js'
+import { useLanding, useGetPublicPlansQuery } from '../api.js'
 import PublicShell from '../components/PublicShell.jsx'
 import landing from '../components/landing/Landing.module.css'
 import shell from '../components/PublicShell.module.css'
@@ -91,7 +91,7 @@ export default function AgenciesPage() {
   const { t, i18n } = useTranslation()
   const format = useFormat()
   const [interval, setInterval] = useState('month')
-  const { data } = useGetLandingQuery(i18n.language)
+  const { data } = useLanding()
   const { currentData: plans, isError } = useGetPublicPlansQuery({ role: 'agency', language: i18n.language })
   useDocumentTitle(t('website:agencies.documentTitle'))
   const saving = bestSaving(plans)

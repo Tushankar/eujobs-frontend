@@ -261,7 +261,9 @@
     "signInNote": "Connectez-vous pour postuler ou enregistrer. Vous reviendrez directement à cette offre.",
     "signUp": "Nouveau ? Créez un compte gratuit",
     "requirements": "Exigences",
-    "visaOnly": "Uniquement avec parrainage de visa"
+    "visaOnly": "Uniquement avec parrainage de visa",
+    "sector": "Secteur",
+    "allSectors": "Tous les secteurs"
   },
   "agencies": {
     "documentTitle": "Pour les agences",

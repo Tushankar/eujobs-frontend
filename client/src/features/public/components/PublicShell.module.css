@@ -9,10 +9,11 @@
   gap: 20px;
 }
 
-/* While a page shows its skeleton, keep the footer below the fold, so the content arriving doesn't push a visible
-   footer down (CLS 0.72 on /legal, perf 2026-11-24). Loaded pages are unchanged. */
-.main:has([data-skeleton]) {
-  min-height: 100svh;
+/* While a page shows its skeleton, the footer waits: the content arriving would otherwise push a visible footer down
+   (CLS 0.72 on /legal), and a reserved height would pull it up again on short pages. It appears with the content
+   (perf 2026-11-24). Loaded pages are unchanged. */
+.main:has([data-skeleton]) + .footer {
+  display: none;
 }
 
 /* Printing a public page (the legal texts) prints the page itself, not the site chrome. */

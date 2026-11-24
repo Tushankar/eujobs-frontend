@@ -2,7 +2,7 @@ import { useEffect, useRef } from 'react'
 import { useTranslation } from 'react-i18next'
 import { useLocation } from 'react-router-dom'
 import { useDocumentTitle } from '@/components/layout/useDocumentTitle.js'
-import { useGetLandingQuery } from '../api.js'
+import { useLanding } from '../api.js'
 import LandingHero from '../components/landing/LandingHero.jsx'
 import { AgencyBand, AgencyJobs, CallToAction, CareerBanner, Categories, Faq, Footer, Sectors, Steps, TrustedStrip, Vacancies } from '../components/landing/LandingSections.jsx'
 import LandingPricing from '../components/landing/LandingPricing.jsx'
@@ -18,8 +18,8 @@ import { scrollToSection, useLandingMotion } from '../components/landing/useLand
  * /#jobs from another public page scrolls to its section once the data is in.
  */
 export default function LandingPage() {
-  const { i18n, t } = useTranslation()
-  const { data, isError } = useGetLandingQuery(i18n.language)
+  const { t } = useTranslation()
+  const { data, isError } = useLanding()
   const { hash } = useLocation()
   useDocumentTitle(null)
   useHiddenScrollbar()

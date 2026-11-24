@@ -152,6 +152,8 @@ export const api = createApi({
     getCountries: build.query({ query: () => '/meta/countries', transformResponse: (response) => response.items, providesTags: ['Countries'] }),
     // 2026-11-24: job sectors with their names in every language (hidden ones flagged).
     getSectors: build.query({ query: () => '/meta/sectors', transformResponse: (response) => response.items, providesTags: ['Sectors'] }),
+    // 2026-11-24: the sector site of this domain ({ site, mainOrigin }; site null on the main site).
+    getSite: build.query({ query: (host) => ({ url: '/meta/site', params: { host } }) }),
     // ISO 639-1 codes (M-020) for profile and job language fields; names come from Intl.DisplayNames.
     getLanguageCodes: build.query({ query: () => '/meta/languages', transformResponse: (response) => response.items }),
     // City fields of every role (G-1, §2.16): the server proxies Google in the user's language.
@@ -171,6 +173,7 @@ export const {
   useGetConfigQuery,
   useGetCountriesQuery,
   useGetSectorsQuery,
+  useGetSiteQuery,
   useGetLanguageCodesQuery,
   useGetPlaceSuggestionsQuery,
   useLazyGetPlaceQuery,

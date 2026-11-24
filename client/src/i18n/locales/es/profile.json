@@ -117,7 +117,9 @@
       "salary": "Salario mínimo en {{currency}} (opcional)",
       "salaryNoCurrency": "Salario mínimo (opcional)",
       "salaryNeedsCity": "Elige primero tu ciudad para fijar la moneda.",
-      "period": "Periodo del salario"
+      "period": "Periodo del salario",
+      "preferredSectors": "Sectores preferidos (opcional)",
+      "preferredSectorsHint": "Los empleos de estos sectores aparecen más arriba en Para ti. Hasta {{max}}."
     },
     "work": {
       "addTitle": "Añadir un puesto",

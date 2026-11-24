@@ -170,5 +170,10 @@
   },
   "pricing": {
     "details": "Ver todos los detalles de los planes"
+  },
+  "sectors": {
+    "titleLead": "Explora por",
+    "titleAccent": "sector",
+    "text": "Encuentra empleos abiertos en tu tipo de trabajo, de la sanidad al arte y las organizaciones benéficas."
   }
 }

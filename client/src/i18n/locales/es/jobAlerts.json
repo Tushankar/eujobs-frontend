@@ -58,6 +58,8 @@
     "sentence": "Descríbela en una frase (opcional)",
     "sentencePlaceholder": "p. ej. Empleos de React en remoto, o enfermería en Lyon, cada semana",
     "sentenceAction": "Rellenar con IA",
-    "sentenceDone": "La IA ha rellenado la alerta. Revísala y créala."
+    "sentenceDone": "La IA ha rellenado la alerta. Revísala y créala.",
+    "sectors": "Sectores (opcional)",
+    "sectorsHint": "Solo empleos de estos sectores. Hasta {{max}}. Con un sector, las palabras clave son opcionales."
   }
 }

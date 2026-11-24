@@ -1,3 +1,15 @@
+/* Arial scaled to Inter's width and line metrics (measured in Chrome, perf 2026-11-24). Text first paints in it while
+   Inter downloads, so the swap doesn't re-wrap headings and push the page down (CLS on phones). Devices without
+   Arial use the next font in --font-body, as before. */
+@font-face {
+  font-family: 'Inter Fallback';
+  src: local('Arial'), local('ArialMT');
+  size-adjust: 105.5%;
+  ascent-override: 91.9%;
+  descent-override: 22.7%;
+  line-gap-override: 0%;
+}
+
 *,
 *::before,
 *::after {

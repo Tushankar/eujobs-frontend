@@ -1,4 +1,6 @@
+import { useTranslation } from 'react-i18next'
 import { api, writesMe } from '@/app/api.js'
+import { useSite } from '@/app/site.js'
 
 /*
  * Legal texts (M-191, OD12) and their acceptance (U22); the public landing page's live data; the public blog, pricing
@@ -7,7 +9,8 @@ import { api, writesMe } from '@/app/api.js'
 export const publicApi = api.injectEndpoints({
   endpoints: (build) => ({
     getLegal: build.query({ query: ({ doc, language }) => `/legal/${doc}?language=${language}`, providesTags: ['Legal'] }),
-    getLanding: build.query({ query: (language) => `/landing?language=${language}` }),
+    // `site`: the sector site's host (2026-11-24), whose own jobs and counts it returns.
+    getLanding: build.query({ query: ({ language, site }) => ({ url: '/landing', params: { language, ...(site && { site }) } }) }),
     getPublicJobs: build.query({ query: (params) => ({ url: '/landing/jobs', params }) }),
     getCityNear: build.query({ query: (params) => ({ url: '/landing/near', params }) }),
     acceptLegal: build.mutation({ query: () => ({ url: '/me/legal/accept', method: 'POST' }), ...writesMe }),
@@ -22,6 +25,13 @@ export const publicApi = api.injectEndpoints({
     unsubscribeNewsletter: build.mutation({ query: (token) => ({ url: '/newsletter/unsubscribe', method: 'POST', body: { token } }) }),
   }),
 })
+
+/** GET /landing in the reader's language, for this domain's sector site (or the main site). */
+export function useLanding() {
+  const { i18n } = useTranslation()
+  const { host } = useSite()
+  return publicApi.useGetLandingQuery({ language: i18n.language, site: host })
+}
 
 export const {
   useGetLegalQuery,

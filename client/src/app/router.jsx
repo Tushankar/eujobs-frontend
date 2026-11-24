@@ -5,6 +5,7 @@ import { WORKSPACES } from './workspaces.js'
 import NotFoundPage from './NotFoundPage.jsx'
 import Root from './Root.jsx'
 import { setRouter } from './navigation.js'
+import { siteLoader } from './site.js'
 import { landingPath, loadMe, requiredPage } from './session.js'
 import LandingPage from '@/features/public/pages/LandingPage.jsx'
 import authRoutes from '@/features/auth/routes.jsx'
@@ -77,5 +78,9 @@ const routes = [
 
 // The first render waits for the loaders (GET /me), so it shows a loading state meanwhile. A loader or page that
 // fails shows RouteError with a Reload button (perf 2026-11-24).
-export const router = createBrowserRouter([{ element: <Root />, ErrorBoundary: RouteError, children: routes.map((route) => ({ ...route, HydrateFallback })) }])
+// 2026-11-24: on a sector site the root loader sends pages it does not serve to the main site (app/site.js); it runs on
+// every navigation (a path change alone would not run a parent loader again), reading the cached site answer.
+export const router = createBrowserRouter([
+  { element: <Root />, loader: siteLoader, shouldRevalidate: () => true, ErrorBoundary: RouteError, children: routes.map((route) => ({ ...route, HydrateFallback })) },
+])
 setRouter(router)

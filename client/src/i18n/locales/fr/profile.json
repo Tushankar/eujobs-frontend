@@ -117,7 +117,9 @@
       "salary": "Salaire minimum en {{currency}} (facultatif)",
       "salaryNoCurrency": "Salaire minimum (facultatif)",
       "salaryNeedsCity": "Choisissez d’abord votre ville pour définir la devise.",
-      "period": "Période du salaire"
+      "period": "Période du salaire",
+      "preferredSectors": "Secteurs préférés (facultatif)",
+      "preferredSectorsHint": "Les offres de ces secteurs remontent dans Pour vous. Jusqu’à {{max}}."
     },
     "work": {
       "addTitle": "Ajouter un poste",

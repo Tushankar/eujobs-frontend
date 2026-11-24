@@ -1,7 +1,7 @@
 import { useRef, useState } from 'react'
 import { useTranslation } from 'react-i18next'
 import { Link } from 'react-router-dom'
-import { ArrowRight, Earth, FileText, Link2, MapPin, Plus, ShieldCheck, SquarePen, Trash2, Upload } from 'lucide-react'
+import { ArrowRight, Earth, FileText, Layers, Link2, MapPin, Plus, ShieldCheck, SquarePen, Trash2, Upload } from 'lucide-react'
 import { useGetConfigQuery } from '@/app/api.js'
 import { Avatar, Button, Checkbox, Icon, IconButton, Panel, Skeleton, SkeletonRegion } from '@/components/ui'
 import ConfirmDialog from '@/components/common/ConfirmDialog.jsx'
@@ -31,6 +31,7 @@ import ProfileSummaryCard from '../components/ProfileSummaryCard.jsx'
 import RightToWorkDialog from '../components/RightToWorkDialog.jsx'
 import styles from './ProfilePage.module.css'
 import { useMarkSeen } from '@/features/notifications/api.js'
+import { useSectors } from '@/lib/sectors.js'
 
 /** "My profile" (§3.2, OD16): section cards with their editors, the photo, and the server's completeness checklist. */
 export default function ProfilePage() {
@@ -149,6 +150,7 @@ function ProfileCourses() {
 function ProfileView({ profile }) {
   const { t } = useTranslation()
   const format = useFormat()
+  const sectors = useSectors()
   const errorText = useErrorText()
   const { data: config } = useGetConfigQuery()
   const photoRule = config?.limits.uploads.photo
@@ -491,6 +493,15 @@ function ProfileView({ profile }) {
                   </PillBadge>
                 </li>
               )}
+              {/* 2026-11-24: the preferred sectors. */}
+              {profile.preferredSectors.map((key) => sectors.name(key) && (
+                <li key={key} data-preferred-sector={key}>
+                  <PillBadge>
+                    <Icon as={Layers} size={12} />
+                    {sectors.name(key)}
+                  </PillBadge>
+                </li>
+              ))}
               {salaryMin && (
                 <li>
                   <PillBadge>

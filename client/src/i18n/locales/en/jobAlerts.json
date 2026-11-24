@@ -58,6 +58,8 @@
     "sentence": "Describe it in a sentence (optional)",
     "sentencePlaceholder": "e.g. Remote React jobs, or nursing jobs in Lyon, weekly",
     "sentenceAction": "Fill with AI",
-    "sentenceDone": "AI filled the alert below. Check it, then create it."
+    "sentenceDone": "AI filled the alert below. Check it, then create it.",
+    "sectors": "Sectors (optional)",
+    "sectorsHint": "Only jobs in these sectors. Up to {{max}}. With a sector, keywords are optional."
   }
 }

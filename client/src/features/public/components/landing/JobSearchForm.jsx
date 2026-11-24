@@ -7,7 +7,7 @@ import { CompanyLogo, Icon } from '@/components/ui'
 import { useJobText } from '@/lib/jobText.js'
 import { cx } from '@/utils/cx.js'
 import { useGetConfigQuery } from '@/app/api.js'
-import { useGetLandingQuery, useGetPublicJobsQuery, useLazyGetCityNearQuery } from '../../api.js'
+import { useLanding, useGetPublicJobsQuery, useLazyGetCityNearQuery } from '../../api.js'
 import styles from './Landing.module.css'
 import own from './JobSearchForm.module.css'
 
@@ -121,7 +121,7 @@ export default function JobSearchForm({ q = '', location = '', onSearch, classNa
   const { t, i18n } = useTranslation()
   const text = useJobText()
   const navigate = useNavigate()
-  const { data } = useGetLandingQuery(i18n.language)
+  const { data } = useLanding()
   const [what, setWhat] = useState(q)
   const [where, setWhere] = useState(location)
   const [focus, setFocus] = useState(null)

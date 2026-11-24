@@ -20,6 +20,7 @@ import InlineSvg from './InlineSvg.jsx'
 import JobSearchForm from './JobSearchForm.jsx'
 import styles from './Landing.module.css'
 import { NAV, navItemOf } from './siteNav.js'
+import { useSite } from '@/app/site.js'
 
 /** Pill with the round ↗ badge used across the Figma page. */
 export function ArrowPill({ to, children, white = false }) {
@@ -129,8 +130,11 @@ function HeroArt() {
 
 /** Header, search and photo cards (Figma 396:549). The search opens the public job list (/jobs, owner 2026-11-16). */
 export default function LandingHero() {
-  const { t } = useTranslation()
+  const { t, i18n } = useTranslation()
   const navigate = useNavigate()
+  // 2026-11-24: a sector site has its own first line and intro (admin › Website › Sites).
+  const { site } = useSite()
+  const siteText = (field) => site && (site[field][i18n.language] ?? site[field].en)
 
   function search({ q, location }) {
     const query = new URLSearchParams(Object.entries({ q, location }).filter(([, value]) => value)).toString()
@@ -146,7 +150,9 @@ export default function LandingHero() {
         <div className={styles.heroText}>
           <h1 className={styles.heroTitle}>
             <span className={styles.heroLine}>
-              <span data-hero-line>{t('landing:hero.titleLead')}</span>
+              <span data-hero-line data-site-title={site?.host}>
+                {siteText('title') || t('landing:hero.titleLead')}
+              </span>
             </span>
             <span className={styles.heroLine}>
               <span data-hero-line>
@@ -157,7 +163,9 @@ export default function LandingHero() {
 
           <JobSearchForm onSearch={search} data-hero-fade />
 
-          <p className={styles.heroCopy} data-hero-fade>{t('landing:hero.text')}</p>
+          <p className={styles.heroCopy} data-hero-fade>
+            {siteText('text') || t('landing:hero.text')}
+          </p>
 
           <div className={styles.heroActions} data-hero-fade>
             <ArrowPill to="/sign-up">{t('landing:hero.start')}</ArrowPill>

@@ -1,5 +1,4 @@
-import { useTranslation } from 'react-i18next'
-import { useGetLandingQuery } from '../api.js'
+import { useLanding } from '../api.js'
 import { SiteHeader } from './landing/LandingHero.jsx'
 import { Footer } from './landing/LandingSections.jsx'
 import landing from './landing/Landing.module.css'
@@ -9,8 +8,7 @@ import { useHiddenScrollbar } from './useHiddenScrollbar.js'
 
 /** The landing page's header and footer around a public page (blog, pricing, newsletter; 2026-11-13). */
 export default function PublicShell({ children }) {
-  const { i18n } = useTranslation()
-  const { data } = useGetLandingQuery(i18n.language)
+  const { data } = useLanding()
   useHiddenScrollbar()
   return (
     <div className={landing.page}>

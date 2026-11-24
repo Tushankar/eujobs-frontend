@@ -116,7 +116,9 @@
       "salary": "Minimum salary in {{currency}} (optional)",
       "salaryNoCurrency": "Minimum salary (optional)",
       "salaryNeedsCity": "Choose your city first to set the currency.",
-      "period": "Salary period"
+      "period": "Salary period",
+      "preferredSectors": "Preferred sectors (optional)",
+      "preferredSectorsHint": "Jobs in these sectors rank higher in For you. Up to {{max}}."
     },
     "work": {
       "addTitle": "Add a role",

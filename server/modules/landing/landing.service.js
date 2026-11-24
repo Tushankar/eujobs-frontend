@@ -14,7 +14,8 @@ import { jobFieldsDto } from '../jobs/jobs.service.js'
 import { listFaqs } from '../meta/meta.service.js'
 import { sectorNames } from '../meta/sectors.service.js'
 import { landingReviews } from '../reviews/reviews.service.js'
-import { User } from '../users/users.model.js'
+import { User } from '../users/users.model.js'
+import { activeSites, homeHost, jobOnSite, siteByHost } from '../meta/sites.service.js'
 
 /*
  * The public landing page (no session): the newest visible jobs, live counts per work mode and employment type, the
@@ -30,8 +31,8 @@ const AGENCY_JOBS = 4
  * headlines in the reviews and writes from other processes (seed scripts) show within the 60 s.
  */
 const CACHE_MS = 60_000
-const landingCache = versionedCache({ models: ['User', 'Job', 'Company', 'File', 'AgencyClient', 'Faq', 'Review', 'BlogPost'], ttlMs: CACHE_MS })
-const publicJobsCache = versionedCache({ models: ['User', 'Job', 'Company', 'File', 'AgencyClient', 'Sector'], ttlMs: CACHE_MS })
+const landingCache = versionedCache({ models: ['User', 'Job', 'Company', 'File', 'AgencyClient', 'Faq', 'Review', 'BlogPost', 'Site'], ttlMs: CACHE_MS })
+const publicJobsCache = versionedCache({ models: ['User', 'Job', 'Company', 'File', 'AgencyClient', 'Sector', 'Site'], ttlMs: CACHE_MS })
 
 async function logoUrls(companies) {
   const files = await File.find({ _id: { $in: companies.map((company) => company.logoFileId).filter(Boolean) } })
@@ -53,13 +54,16 @@ function sectorCounts(jobs) {
   return counts
 }
 
-/** GET /landing, per language (cached, see above). */
-export function landing(language) {
-  return landingCache.get(language, landingData)
+/** GET /landing, per language and sector site (`site`: its host, 2026-11-24; cached, see above). */
+export async function landing(language, host) {
+  const site = await siteByHost(host)
+  return landingCache.get(`${language}|${site?.host ?? ''}`, () => landingData(language, site))
 }
 
-async function landingData(language) {
-  const jobs = await Job.find(await visibleFilter(), 'title companyId employmentType sector workPreference experienceYears country location salary publishedAt visaSponsorship agency').sort({ publishedAt: -1 })
+async function landingData(language, site) {
+  const visible = await Job.find(await visibleFilter(), 'title companyId employmentType sector workPreference experienceYears country location salary publishedAt visaSponsorship agency').sort({ publishedAt: -1 })
+  // A sector site counts and lists only its own jobs.
+  const jobs = site ? visible.filter((job) => jobOnSite(site, job)) : visible
   const latest = jobs.slice(0, LATEST_JOBS)
   // Phase 7 (2026-11-23): the newest agency jobs for the landing's own section (hidden there when none).
   const agencyJobs = jobs.filter((job) => job.agency).slice(0, AGENCY_JOBS)
@@ -111,8 +115,11 @@ function placeText(job, language, region) {
  * browse without signing in. Keywords and place narrow the list and its tab counts; one work mode or employment type
  * picks the tab. Every visible job is returned with the details a candidate reads (no saved, applied or match state).
  */
-export async function publicJobs({ language, q, location, workPreference, employmentType, sector, visa }) {
-  const { jobs, sectors, companyById, logos, clients } = await publicJobsCache.get('all', publicJobsData)
+export async function publicJobs({ language, q, location, workPreference, employmentType, sector, visa, site: host }) {
+  const [cachedData, site, sites] = await Promise.all([publicJobsCache.get('all', publicJobsData), siteByHost(host), activeSites()])
+  const { sectors, companyById, logos, clients } = cachedData
+  // 2026-11-24: a sector site lists only its own jobs.
+  const jobs = site ? cachedData.jobs.filter((job) => jobOnSite(site, job)) : cachedData.jobs
   const company = (job) => companyById.get(String(job.companyId))
   // One formatter per call, not per job (perf 2026-11-24).
   const region = location && new Intl.DisplayNames([language], { type: 'region' })
@@ -133,6 +140,8 @@ export async function publicJobs({ language, q, location, workPreference, employ
     },
     items: items.map((job) => ({
       ...jobFieldsDto(job),
+      // 2026-11-24: the sector site this job's public page lives on (null: the main site), for its canonical link.
+      homeHost: homeHost(job, sites),
       agency: agencyCard(job, clients),
       // The list only holds jobs of approved, active recruiters, so a verified company is one with a verification date.
       company: { ...publicCompanyDto(company(job), logos.get(String(job.companyId))), verified: Boolean(company(job).verifiedAt) },

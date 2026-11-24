@@ -15,8 +15,11 @@ router.use(landingPerIp)
 const PUBLIC_MINUTE = 'public, max-age=60'
 
 /** GET /landing: the public home page's live data (no session needed). */
-router.get('/', validate({ query: z.object({ language: z.enum(ENUMS.language).default('en') }) }), async (req, res) => {
-  const body = await landing(req.query.language)
+// `site`: the sector site's host (2026-11-24); its own jobs and counts only.
+const siteHost = z.string().trim().max(200).optional()
+
+router.get('/', validate({ query: z.object({ language: z.enum(ENUMS.language).default('en'), site: siteHost }) }), async (req, res) => {
+  const body = await landing(req.query.language, req.query.site)
   res.set('Cache-Control', PUBLIC_MINUTE).json(body)
 })
 
@@ -33,6 +36,7 @@ router.get(
       workPreference: z.enum(ENUMS.workPreference).optional(),
       employmentType: z.enum(JOB_TYPES).optional(),
       sector: sectorKey.optional(),
+      site: siteHost,
       visa: z.enum(['1']).optional(),
     }),
   }),

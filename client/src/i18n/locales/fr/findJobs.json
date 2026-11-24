@@ -44,7 +44,8 @@
     "show_other": "Afficher {{count}} offres",
     "visa": "Visa",
     "visaSponsorship": "Propose un parrainage de visa",
-    "employmentType": "Type de poste"
+    "employmentType": "Type de poste",
+    "sector": "Secteur"
   },
   "card": {
     "save": "Enregistrer {{title}} chez {{company}}",

@@ -18,6 +18,8 @@ import landing from '../components/landing/Landing.module.css'
 import shell from '../components/PublicShell.module.css'
 import styles from './PublicJobsPage.module.css'
 import { useSectors } from '@/lib/sectors.js'
+import { useSite } from '@/app/site.js'
+import { useCanonical } from '@/lib/canonical.js'
 
 /* The landing page's six categories (and Agency) as tabs (one work mode or employment type at a time), after "All jobs". */
 const TABS = [
@@ -53,13 +55,17 @@ export default function PublicJobsPage() {
   // One sector (?sector=, 2026-11-24): the landing's "Browse by sector" links here.
   const sector = params.get('sector') ?? ''
   const sectors = useSectors()
-  const query = { language: i18n.language, q, location, ...Object.fromEntries(GROUPS.map((group) => [group, params.get(group)]).filter(([, value]) => value)), ...(visa && { visa: '1' }), ...(sector && { sector }) }
+  // 2026-11-24: on a sector site, its own jobs only.
+  const { host: site, mainOrigin } = useSite()
+  const query = { language: i18n.language, ...(site && { site }), q, location, ...Object.fromEntries(GROUPS.map((group) => [group, params.get(group)]).filter(([, value]) => value)), ...(visa && { visa: '1' }), ...(sector && { sector }) }
   const { data, isFetching, isError } = useGetPublicJobsQuery(query)
   useDocumentTitle(t('website:jobs.title'))
   const root = useRef(null)
   const items = data?.items ?? []
   const openId = params.get('job')
   const job = items.find((item) => item.id === openId) ?? items[0] ?? null
+  // The open job's one public address: its home sector site, else the main site (so search engines see no copies).
+  useCanonical(openId && job ? `${job.homeHost ? `https://${job.homeHost}` : mainOrigin}/jobs?job=${job.id}` : null)
 
   /** Changes the search or tab (replacing history) and closes the open job, so the first result shows. */
   function update(changes) {

@@ -44,7 +44,8 @@
     "show_other": "Ver {{count}} ofertas",
     "visa": "Visado",
     "visaSponsorship": "Ofrece patrocinio de visado",
-    "employmentType": "Tipo de empleo"
+    "employmentType": "Tipo de empleo",
+    "sector": "Sector"
   },
   "card": {
     "save": "Guardar {{title}} en {{company}}",

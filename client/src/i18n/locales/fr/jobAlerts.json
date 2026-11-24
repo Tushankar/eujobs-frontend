@@ -58,6 +58,8 @@
     "sentence": "Décrivez-la en une phrase (facultatif)",
     "sentencePlaceholder": "ex. Postes React en télétravail, ou infirmier à Lyon, chaque semaine",
     "sentenceAction": "Remplir avec l’IA",
-    "sentenceDone": "L’IA a rempli l’alerte. Vérifiez-la, puis créez-la."
+    "sentenceDone": "L’IA a rempli l’alerte. Vérifiez-la, puis créez-la.",
+    "sectors": "Secteurs (facultatif)",
+    "sectorsHint": "Uniquement les offres de ces secteurs. Jusqu’à {{max}}. Avec un secteur, les mots-clés sont facultatifs."
   }
 }

@@ -6,7 +6,8 @@ import { errorHandler, notFound } from './middleware/error.js'
 import { webhookRouter } from './modules/payments/payments.routes.js'
 import { manualPlaces } from './modules/places/places.manual.js'
 import { setPlacesClient } from './modules/places/places.service.js'
-import v1 from './routes/v1.js'
+import v1 from './routes/v1.js'
+import { allowedOrigin } from './modules/meta/sites.service.js'
 
 /* The Express app without listening, so tests can import it (§2.1, §2.12). */
 const app = express()
@@ -18,7 +19,15 @@ if (config.placesManual) setPlacesClient(manualPlaces)
 app.set('trust proxy', 'loopback')
 app.use(helmet())
 // Content-Disposition exposed: the client reads the file name of downloads (.ics, CSV exports) across origins.
-app.use(cors({ origin: config.clientOrigin, exposedHeaders: ['Content-Disposition'] }))
+// 2026-11-24: the main site and the active sector sites (eujobs.health, …) call the API.
+app.use(
+  cors({
+    origin: (origin, done) => {
+      allowedOrigin(origin).then((allowed) => done(null, allowed), done)
+    },
+    exposedHeaders: ['Content-Disposition'],
+  }),
+)
 // The Stripe webhook needs the raw body for its signature (§2.10), so it comes before the JSON parser.
 app.use('/api/v1/stripe/webhook', webhookRouter)
 app.use(express.json({ limit: '1mb' }))
