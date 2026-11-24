@@ -61,6 +61,7 @@
 .footer {
   display: flex;
   flex-direction: column;
+  gap: 8px;
   margin-top: 16px;
   padding-top: 12px;
   border-top: 1.2px solid var(--border);
@@ -70,7 +71,6 @@
   display: flex;
   align-items: flex-start;
   gap: 6px;
-  padding-top: 8px;
   font-size: 11px;
   line-height: 16px;
   color: var(--muted-foreground);
@@ -81,6 +81,7 @@
   flex-wrap: wrap;
   align-items: center;
   gap: 6px;
+  margin-bottom: 12px;
 }
 
 /* A wrapped "Job · applied date" keeps its clock on the first line (2026-11-23). */

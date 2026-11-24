@@ -1,6 +1,6 @@
 .status {
   display: flex;
-  align-items: center;
+  align-items: flex-start;
   gap: 6px;
   margin: 0;
   font-size: 12px;
@@ -12,5 +12,6 @@
 
 .status svg {
   flex: none;
+  margin-top: 2.5px;
   color: var(--muted-foreground);
 }
