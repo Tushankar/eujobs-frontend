@@ -38,6 +38,9 @@ export const failedLoginsPerEmail = limiter(rateLimits.failedLoginsPerEmail, byE
 export const forgotPasswordPerEmail = limiter(rateLimits.forgotPasswordPerEmail, byEmail)
 export const signUpsPerIp = limiter(rateLimits.signUpsPerIp, byIp)
 export const loginStepsPerIp = limiter(rateLimits.loginStepsPerIp, byIp)
+export const verifyResendPerIp = limiter(rateLimits.verifyResendPerIp, byIp)
+// The public landing data and job list (perf 2026-11-24)
+export const landingPerIp = limiter(rateLimits.landingPerIp, byIp)
 // U17: the public certificate check
 export const certificateVerifyPerIp = limiter(LIMITS.certificate.verifyPerIp, byIp)
 // The public newsletter form

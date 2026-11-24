@@ -27,6 +27,9 @@ export const LIMITS = {
     signUpsPerIp: { windowMs: HOUR, limit: 10 },
     // 2026-11-18: sign-in code, resend and 2FA setup requests
     loginStepsPerIp: { windowMs: 15 * MINUTE, limit: 30 },
+    // perf 2026-11-24: the public verification-email resend (each address also has verifyEmailSends) and the landing reads
+    verifyResendPerIp: { windowMs: 15 * MINUTE, limit: 20 },
+    landingPerIp: { windowMs: MINUTE, limit: 120 },
   },
   // OD9, OQ-6c
   nonCriticalEmailsPer24h: 400,

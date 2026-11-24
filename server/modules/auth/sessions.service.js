@@ -15,12 +15,17 @@ const SEEN_EVERY_MS = 60 * 1000
 const HISTORY_LIMIT = 100
 const SETTINGS_PATH = { candidate: '/candidate/settings/data-account', recruiter: '/recruiter/settings/data-account', admin: '/admin/settings', agency: '/agency/settings/data-account' }
 
-// geoip-lite loads its city database into memory, so only on the first sign-in.
+// geoip-lite loads its city database into memory, so only once (preloadGeoip after startup, or the first sign-in).
 let geoip
 async function locate(ip) {
   geoip ??= (await import('geoip-lite')).default
   const place = geoip.lookup(ip)
   return { city: place?.city || undefined, country: place?.country || undefined }
+}
+
+/** Loads the geoip database once the API listens, so the first sign-in does not wait for it (perf 2026-11-24). */
+export async function preloadGeoip() {
+  await locate('127.0.0.1')
 }
 
 /** Who signed in from where: IP (IPv4 without its ::ffff: prefix), browser, OS, device type, city and country. */

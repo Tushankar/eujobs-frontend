@@ -3,12 +3,13 @@ import { useGetConfigQuery } from '@/app/api.js'
 import { Button, Checkbox, Modal, TextField } from '@/components/ui'
 import CityField from '@/components/common/CityField.jsx'
 import { countryChoices, useCountryOptions } from '@/lib/countries.js'
+import { useSectors } from '@/lib/sectors.js'
 import { EMPTY_FILTERS } from '../utils/jobSearch.js'
 import styles from './JobFiltersModal.module.css'
 import CountryField from '@/components/common/CountryField.jsx'
 
 /**
- * Filters of Find jobs (OD2, U25, P4-Q4, OQ-6i, G-1): work model (country views list hybrid and on-site jobs only),
+ * Filters of Find jobs (OD2, U25, P4-Q4, OQ-6i, G-1): sector (2026-11-24), work model (country views list hybrid and on-site jobs only),
  * level, city, minimum yearly salary in the view's currency, and the eligible country inside the Remote view. The
  * Worldwide view (owner 2026-11-16) offers every work model. Worldwide and Remote have no view currency (their jobs pay
  * in different currencies), so they have no salary filter.
@@ -18,7 +19,10 @@ export default function JobFiltersModal({ open, onClose, filters, onChange, resu
   const { t } = useTranslation()
   const { data: config } = useGetConfigQuery()
   const countries = useCountryOptions().filter((option) => !option.isRemote)
+  const sectors = useSectors()
   const groups = [
+    // 2026-11-24: the kind of work.
+    { key: 'sector', options: sectors.options().map((option) => option.value), label: sectors.name },
     ...(remote ? [] : [{ key: 'workPreference', options: (config?.enums.workPreference ?? []).filter((mode) => worldwide || mode !== 'remote') }]),
     // 2026-11-20: job types, with Agency (every agency job, whatever its hours).
     { key: 'employmentType', options: config ? [...config.enums.employmentType, 'agency'] : [] },
@@ -54,7 +58,7 @@ export default function JobFiltersModal({ open, onClose, filters, onChange, resu
             <div className={styles.options}>
               {group.options.map((option) => (
                 <Checkbox key={option} checked={filters[group.key].includes(option)} onChange={() => toggle(group.key, option)}>
-                  {t(`enums:${enumOf[group.key]}.${option}`)}
+                  {group.label ? group.label(option) : t(`enums:${enumOf[group.key]}.${option}`)}
                 </Checkbox>
               ))}
             </div>

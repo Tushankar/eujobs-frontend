@@ -1,7 +1,7 @@
 import { config } from '../config/env.js'
 import { ENUMS } from '../config/enums.js'
 import { connectDb, disconnectDb } from '../lib/db.js'
-import { sendEmail } from '../lib/mailer.js'
+import { closeMailer, sendEmail } from '../lib/mailer.js'
 import { demoAddress } from '../seed/demo.js'
 import { mailSample } from './mailSamples.js'
 
@@ -24,4 +24,5 @@ await connectDb()
 const { ical, ...emailParams } = params
 const status = await sendEmail({ type, to, language, params: emailParams, ical })
 console.log(`mail:test ${type} (${language}) to ${target.startsWith('+') ? `the ${target} alias` : 'the given address'}: ${status}`)
+closeMailer()
 await disconnectDb()

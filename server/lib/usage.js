@@ -72,7 +72,10 @@ export async function saveUsageSettings(value) {
 export async function recordUsage({ provider, model, kind, userId = null, inputTokens = 0, outputTokens = 0, seconds = 0 }) {
   try {
     await ApiUsage.updateOne({ day: utcDay(), provider, model, kind, userId }, { $inc: { calls: 1, inputTokens, outputTokens, seconds } }, { upsert: true })
-    spendCache.delete(provider)
+    // perf 2026-11-24: the call's cost is added to a cached month total (prices are linear) instead of re-summing the month.
+    const cached = spendCache.get(provider)
+    if (cached && cached.month === utcMonth()) cached.value += costOf({ provider, model, calls: 1, inputTokens, outputTokens, seconds }, (await usageSettings()).prices) ?? 0
+    else spendCache.delete(provider)
     await alertBudget(provider)
   } catch (error) {
     console.error(`Usage not recorded: ${error.message}`)

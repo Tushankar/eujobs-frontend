@@ -23,7 +23,17 @@ const transport = config.isTest
       port: config.smtp.port,
       secure: config.smtp.port === 465,
       auth: { user: config.smtp.user, pass: config.smtp.pass },
+      // perf 2026-11-24: reused connections, and a stalled SMTP server fails the send instead of hanging it.
+      pool: true,
+      connectionTimeout: 15_000,
+      greetingTimeout: 15_000,
+      socketTimeout: 20_000,
     })
+
+/** Closes the pooled SMTP connections, so a script that sent mail can exit. */
+export function closeMailer() {
+  transport?.close()
+}
 
 export function isReservedAddress(address) {
   const domain = address.split('@').pop().toLowerCase()

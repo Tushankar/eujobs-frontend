@@ -4,7 +4,8 @@ import { CandidateNote } from '../modules/discovery/discovery.model.js'
 /*
  * node --env-file=.env scripts/migrateNotes.js (once per database, 2026-11-05): the single note per company and
  * candidate becomes the first entry of the notes list (M-080, owner decision). Its last editor becomes its author;
- * an empty note is removed. Connecting drops the old one-note-per-candidate unique index (syncIndexes). Safe to rerun.
+ * an empty note is removed. The old one-note-per-candidate unique index was dropped by syncIndexes on connect then (since
+ * 2026-11-24 connecting only creates indexes: scripts/dropOldIndexes.js lists undeclared ones). Safe to rerun.
  */
 await connectDb()
 const notes = CandidateNote.collection

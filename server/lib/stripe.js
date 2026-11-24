@@ -9,7 +9,8 @@ import { AppError } from './errors.js'
  */
 export const STRIPE_API_VERSION = '2026-10-28.endive'
 
-const realClient = new Stripe(config.stripe.secretKey, { apiVersion: STRIPE_API_VERSION })
+// perf 2026-11-24: a call fails after 20 s instead of the SDK's 80 s.
+const realClient = new Stripe(config.stripe.secretKey, { apiVersion: STRIPE_API_VERSION, timeout: 20_000 })
 let client = realClient
 
 /** The client in use; tests swap in a fake for calls made while handling constructed webhook payloads. */

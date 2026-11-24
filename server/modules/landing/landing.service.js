@@ -3,6 +3,7 @@ import { ENUMS, JOB_TYPES } from '../../config/enums.js'
 import { signedUrl } from '../../lib/files.js'
 import { t } from '../../lib/i18n.js'
 import { matchesKeywords, searchText } from '../../lib/skills.js'
+import { versionedCache } from '../../lib/writeVersions.js'
 import { latestPosts } from '../blog/blog.service.js'
 import { Company } from '../companies/companies.model.js'
 import { publicCompanyDto } from '../companies/companies.service.js'
@@ -22,6 +23,15 @@ import { User } from '../users/users.model.js'
  */
 const LATEST_JOBS = 6
 const AGENCY_JOBS = 4
+
+/*
+ * perf 2026-11-24: both answers are the same for every visitor, so they are cached in-process for 60 s (signed logo links
+ * live 10 to 15 minutes) and read again at once after a write to a model they show (lib/writeVersions.js). Candidate
+ * headlines in the reviews and writes from other processes (seed scripts) show within the 60 s.
+ */
+const CACHE_MS = 60_000
+const landingCache = versionedCache({ models: ['User', 'Job', 'Company', 'File', 'AgencyClient', 'Faq', 'Review', 'BlogPost'], ttlMs: CACHE_MS })
+const publicJobsCache = versionedCache({ models: ['User', 'Job', 'Company', 'File', 'AgencyClient', 'Sector'], ttlMs: CACHE_MS })
 
 async function logoUrls(companies) {
   const files = await File.find({ _id: { $in: companies.map((company) => company.logoFileId).filter(Boolean) } })
@@ -43,7 +53,12 @@ function sectorCounts(jobs) {
   return counts
 }
 
-export async function landing(language) {
+/** GET /landing, per language (cached, see above). */
+export function landing(language) {
+  return landingCache.get(language, landingData)
+}
+
+async function landingData(language) {
   const jobs = await Job.find(await visibleFilter(), 'title companyId employmentType sector workPreference experienceYears country location salary publishedAt visaSponsorship agency').sort({ publishedAt: -1 })
   const latest = jobs.slice(0, LATEST_JOBS)
   // Phase 7 (2026-11-23): the newest agency jobs for the landing's own section (hidden there when none).
@@ -86,8 +101,7 @@ export async function landing(language) {
 }
 
 /** The words a location search matches: the city, the country in this language, or "Remote". */
-function placeText(job, language) {
-  const region = new Intl.DisplayNames([language], { type: 'region' })
+function placeText(job, language, region) {
   const country = job.location?.countryCode
   return searchText([job.location?.city, country, country && region.of(country), job.country === 'REMOTE' && t(language, 'labels.workPreference.remote')].filter(Boolean).join(' '))
 }
@@ -98,18 +112,17 @@ function placeText(job, language) {
  * picks the tab. Every visible job is returned with the details a candidate reads (no saved, applied or match state).
  */
 export async function publicJobs({ language, q, location, workPreference, employmentType, sector, visa }) {
-  const [jobs, sectors] = await Promise.all([Job.find(await visibleFilter()).sort({ publishedAt: -1 }), sectorNames()])
-  const companies = await Company.find({ _id: { $in: [...new Set(jobs.map((job) => String(job.companyId)))] } })
-  const companyById = new Map(companies.map((company) => [String(company._id), company]))
+  const { jobs, sectors, companyById, logos, clients } = await publicJobsCache.get('all', publicJobsData)
   const company = (job) => companyById.get(String(job.companyId))
+  // One formatter per call, not per job (perf 2026-11-24).
+  const region = location && new Intl.DisplayNames([language], { type: 'region' })
   // Keywords, place and "sponsors a visa" narrow the list and its tab counts.
   const searched = jobs.filter(
-    (job) => (!q || matchesKeywords(q, haystack(job, company(job), language, sectors))) && (!location || matchesKeywords(location, placeText(job, language))) && (!visa || job.visaSponsorship),
+    (job) => (!q || matchesKeywords(q, haystack(job, company(job), language, sectors))) && (!location || matchesKeywords(location, placeText(job, language, region))) && (!visa || job.visaSponsorship),
   )
   // 2026-11-24: one sector narrows the list like a tab; the sector counts come from the searched jobs of the current tab.
   const tabbed = searched.filter((job) => (!workPreference || job.workPreference === workPreference) && (!employmentType || isJobType(job, employmentType)))
   const items = tabbed.filter((job) => !sector || job.sector === sector)
-  const [logos, clients] = await Promise.all([logoUrls(companies), agencyClients(items)])
   return {
     total: searched.length,
     // 2026-11-20: "agency" counts every agency job (the Agency tab).
@@ -125,4 +138,12 @@ export async function publicJobs({ language, q, location, workPreference, employ
       company: { ...publicCompanyDto(company(job), logos.get(String(job.companyId))), verified: Boolean(company(job).verifiedAt) },
     })),
   }
+}
+
+/** What every /landing/jobs answer starts from (cached, see above): the visible jobs, newest first, with their companies, logos and agency clients. */
+async function publicJobsData() {
+  const [jobs, sectors] = await Promise.all([Job.find(await visibleFilter()).sort({ publishedAt: -1 }), sectorNames()])
+  const companies = await Company.find({ _id: { $in: [...new Set(jobs.map((job) => String(job.companyId)))] } })
+  const [logos, clients] = await Promise.all([logoUrls(companies), agencyClients(jobs)])
+  return { jobs, sectors, companyById: new Map(companies.map((company) => [String(company._id), company])), logos, clients }
 }

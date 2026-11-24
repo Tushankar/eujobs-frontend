@@ -1,7 +1,7 @@
 import { Router } from 'express'
 import { HIRING_ROLES } from '../../config/enums.js'
 import { requireAuth, requireRole } from '../../middleware/auth.js'
-import { failedLoginsPerEmail, forgotPasswordPerEmail, loginsPerIp, loginStepsPerIp, signUpsPerIp } from '../../middleware/rateLimit.js'
+import { failedLoginsPerEmail, forgotPasswordPerEmail, loginsPerIp, loginStepsPerIp, signUpsPerIp, verifyResendPerIp } from '../../middleware/rateLimit.js'
 import { validate } from '../../lib/validate.js'
 import { acceptInvite, inviteDetails } from '../admin/admin.access.js'
 import { meDto } from '../users/users.service.js'
@@ -65,7 +65,7 @@ router.post('/verify-email', validate({ body: schemas.tokenBody }), async (req, 
   res.json({ role: user.role, deviceToken: await rememberBrowser(user) })
 })
 
-router.post('/verify-email/resend', validate({ body: schemas.emailBody }), async (req, res) => {
+router.post('/verify-email/resend', verifyResendPerIp, validate({ body: schemas.emailBody }), async (req, res) => {
   await auth.resendVerifyEmail(req.body.email)
   res.status(202).end()
 })
