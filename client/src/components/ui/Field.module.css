@@ -224,9 +224,12 @@ select.input {
   color: var(--card);
 }
 
-/* The open list uses the theme's colours. The field's background is transparent, so without this Chrome opens a
-   white list with the dark theme's light text on it (and an applied filter's inverted colours). */
-select.input option {
-  background: var(--card);
-  color: var(--foreground);
+/* The open list (styled in globals.css) lines up with the whole field box, not just the text inside its padding. */
+.control:has(> select) {
+  anchor-name: --select-field;
+  anchor-scope: --select-field;
+}
+
+.control > select::picker(select) {
+  position-anchor: --select-field;
 }

@@ -85,6 +85,113 @@ textarea {
   }
 }
 
+/*
+ * Dropdown lists (owner 2026-11-24: "make sure all the dropdowns are professional, properly aligned and visible").
+ * Every <select> keeps its native behaviour (keyboard, forms, e2e page.select). Chrome/Edge 135+ open the list as a
+ * themed popover from the customisable select: anchored right under the field and at least as wide as it, card
+ * surface, hairline border, popover shadow, 14px rows with a hover fill and a check on the chosen one, flipping above
+ * the field when there is no room below. Other browsers keep their own list in the theme's colours.
+ */
+select option {
+  background: var(--card);
+  color: var(--foreground);
+}
+
+@supports (appearance: base-select) {
+  /* !important: the field modules set `appearance: none` for the browsers without base-select. */
+  select,
+  ::picker(select) {
+    appearance: base-select !important;
+  }
+
+  /* Each dropdown draws its own chevron (or opts back in to this one). */
+  select::picker-icon {
+    display: none;
+  }
+
+  ::picker(select) {
+    box-sizing: border-box;
+    min-inline-size: anchor-size(inline);
+    max-inline-size: min(420px, calc(100vw - 32px));
+    max-block-size: min(320px, 50vh);
+    margin-block: 6px;
+    padding: 6px;
+    overflow-y: auto;
+    border: 1px solid var(--border);
+    border-radius: var(--radius-xl);
+    background: var(--card);
+    color: var(--foreground);
+    box-shadow: var(--shadow-popover);
+    font-size: 14px;
+    position-try-fallbacks: flip-block;
+  }
+
+  select option {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+    min-block-size: 36px;
+    padding: 8px 12px;
+    border-radius: var(--radius-lg);
+    background: transparent;
+    font-size: 14px;
+    font-weight: 500;
+    line-height: 20px;
+    color: var(--foreground);
+    cursor: pointer;
+  }
+
+  select option:hover,
+  select option:focus-visible {
+    outline: 0;
+    background: var(--muted);
+  }
+
+  select option:checked {
+    font-weight: 600;
+  }
+
+  /* The check sits at the row's end, in the action colour, only on the chosen option. */
+  select option::checkmark {
+    order: 1;
+    margin-inline-start: auto;
+    color: var(--primary);
+    font-weight: 700;
+  }
+
+  /* "Choose a sector" and other placeholders show in the field, not as a dead first row of the list. */
+  select option[value='']:disabled {
+    display: none;
+  }
+
+  select option:disabled {
+    color: var(--text-placeholder);
+    cursor: default;
+  }
+
+  @media (prefers-reduced-motion: no-preference) {
+    ::picker(select) {
+      transition:
+        opacity 120ms var(--ease-out),
+        translate 120ms var(--ease-out),
+        overlay 120ms allow-discrete,
+        display 120ms allow-discrete;
+    }
+
+    select:not(:open)::picker(select) {
+      opacity: 0;
+      translate: 0 -4px;
+    }
+
+    @starting-style {
+      select:open::picker(select) {
+        opacity: 0;
+        translate: 0 -4px;
+      }
+    }
+  }
+}
+
 button {
   cursor: pointer;
 }

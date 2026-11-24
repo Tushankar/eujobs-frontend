@@ -99,6 +99,11 @@
   color: var(--muted-foreground);
 }
 
+/* No chevron of its own: keep the customisable select's built-in one (hidden by default in globals.css). */
+.category::picker-icon {
+  display: block;
+}
+
 /* As wide as its longest status (14 px field text); the name field takes the rest. */
 .newCategory {
   flex-shrink: 0;

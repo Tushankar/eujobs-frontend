@@ -8,3 +8,8 @@
   font-size: 12px;
   color: var(--muted-foreground);
 }
+
+/* No chevron of its own: keep the customisable select's built-in one (hidden by default in globals.css). */
+.language select::picker-icon {
+  display: block;
+}
