@@ -157,12 +157,12 @@ export default function JobsTable({ jobs, sort, onSort, caption, loading = false
         <table className={styles.table} aria-busy={loading || undefined}>
           <caption className="sr-only">{loading ? `${caption} — ${t('common:loading')}` : caption}</caption>
           <colgroup>
-            <col style={{ width: '29.2%' }} />
-            <col style={{ width: '19%' }} />
-            <col style={{ width: '12.5%' }} />
-            <col style={{ width: '16%' }} />
+            <col style={{ width: '32%' }} />
+            <col style={{ width: '17%' }} />
+            <col style={{ width: '13%' }} />
+            <col style={{ width: '14%' }} />
             {/* The AI summary button and two icon buttons need about 240 px. */}
-            <col style={{ width: '23.3%' }} />
+            <col style={{ width: '24%' }} />
           </colgroup>
           <thead>
             <tr>
