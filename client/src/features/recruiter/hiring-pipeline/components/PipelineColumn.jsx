@@ -11,6 +11,7 @@ export default function PipelineColumn({ stage, count, isDropTarget, onDragOver,
       className={cx(styles.column, isDropTarget && styles.dropTarget)}
       aria-labelledby={`stage-${stage.id}`}
       data-column={stage.name}
+      data-column-count={count}
       onDragOver={onDragOver}
       onDragLeave={onDragLeave}
       onDrop={onDrop}

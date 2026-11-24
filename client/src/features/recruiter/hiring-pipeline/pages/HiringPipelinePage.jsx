@@ -1,5 +1,5 @@
 import { hiringPath } from '@/app/roles.js'
-import { useState } from 'react'
+import { useEffect, useRef, useState } from 'react'
 import { useTranslation } from 'react-i18next'
 import { useLocation, useNavigate, useSearchParams } from 'react-router-dom'
 import { Columns3, Layers, Settings2 } from 'lucide-react'
@@ -70,6 +70,26 @@ export default function HiringPipelinePage() {
   const boardLoading = pipelineLoading || applicationsLoading
   const busy = applicationsFetching && !currentData && !boardLoading
   const selectedStage = funnelStages.find((stage) => stage.id === params.get('stage')) ?? funnelStages.find((stage) => stage.now > 0) ?? funnelStages[0]
+
+  // Auto-scroll the board to the first column that has applicants.
+  const boardRef = useRef(null)
+  const scrolledRef = useRef(false)
+  useEffect(() => {
+    if (boardLoading || busy || scrolledRef.current || view !== 'board') return
+    const board = boardRef.current
+    if (!board) return
+    // Find the first column whose data-count > 0.
+    const firstPopulated = board.querySelector('[data-column-count]:not([data-column-count="0"])')
+    if (firstPopulated && firstPopulated !== board.firstElementChild) {
+      firstPopulated.scrollIntoView({ behavior: 'smooth', inline: 'start', block: 'nearest' })
+    }
+    scrolledRef.current = true
+  }, [boardLoading, busy, view, applications.length])
+
+  // Reset the scroll flag when the job filter changes so it scrolls again.
+  useEffect(() => {
+    scrolledRef.current = false
+  }, [jobId])
 
   /** Sets or clears one query value, keeping the others (job filter, selected stage, open panel). */
   function setParam(name, value) {
@@ -179,7 +199,7 @@ export default function HiringPipelinePage() {
           </section>
         )
       ) : (
-        <div className={`${styles.board} ${busy ? styles.busy : ''}`} role="region" aria-label={t('applications:board.label')} aria-busy={busy || undefined} tabIndex={0}>
+        <div className={`${styles.board} ${busy ? styles.busy : ''}`} role="region" aria-label={t('applications:board.label')} aria-busy={busy || undefined} tabIndex={0} ref={boardRef}>
           {boardLoading && (
             <SkeletonRegion className={styles.skeletonBoard}>
               {SKELETON_COLUMNS.map((cards, index) => (
