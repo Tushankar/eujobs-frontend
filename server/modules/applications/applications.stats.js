@@ -17,14 +17,22 @@ export function activeApplicationCount(company) {
   return Application.countDocuments({ companyId: company._id, ...ACTIVE_FILTER })
 }
 
-/** M-178: per stage, the applications that ever sat in it; withdrawn ones are left out, rejected ones counted. */
+/**
+ * M-178: per stage, the applications that ever sat in it; withdrawn ones are left out, rejected ones counted. One
+ * aggregate counts every stage (perf 2026-11-24): each application once per distinct stage in its history.
+ */
 export async function funnel(company) {
-  const stages = await PipelineStage.find({ companyId: company._id }).sort({ order: 1 })
-  const items = []
-  for (const stage of stages) {
-    const count = await Application.countDocuments({ companyId: company._id, status: { $ne: 'withdrawn' }, 'history.stageId': stage._id })
-    items.push({ id: String(stage._id), name: stage.name, category: stage.category, count })
-  }
+  const [stages, reached] = await Promise.all([
+    PipelineStage.find({ companyId: company._id }).sort({ order: 1 }),
+    Application.aggregate([
+      { $match: { companyId: company._id, status: { $ne: 'withdrawn' } } },
+      { $project: { stageIds: { $setUnion: ['$history.stageId', []] } } },
+      { $unwind: '$stageIds' },
+      { $group: { _id: '$stageIds', count: { $sum: 1 } } },
+    ]),
+  ])
+  const countOf = new Map(reached.map((entry) => [String(entry._id), entry.count]))
+  const items = stages.map((stage) => ({ id: String(stage._id), name: stage.name, category: stage.category, count: countOf.get(String(stage._id)) ?? 0 }))
   return { items, total: items.length, page: 1, pageSize: items.length }
 }
 

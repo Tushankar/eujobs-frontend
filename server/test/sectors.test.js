@@ -178,7 +178,7 @@ describe('job alerts with sectors', () => {
     const created = await create(user, { name: 'Care jobs', keywords: '', sectors: ['healthcare'] })
     assert.equal(created.status, 201, JSON.stringify(created.body))
     assert.deepEqual([created.body.keywords, created.body.sectors], ['', ['healthcare']])
-    assert.deepEqual((await create(user, { name: 'Bad', sectors: ['unknown'] })).body.error.fields, { sectors: 'invalid' })
+    assert.deepEqual((await create(user, { name: 'Bad', keywords: 'nurse', sectors: ['unknown'] })).body.error.fields, { sectors: 'invalid' })
     const cleared = await api().patch(`${v1}/candidate/job-alerts/${created.body.id}`).set(auth(user)).send({ sectors: [] })
     assert.deepEqual(cleared.body.error.fields, { keywords: 'required' })
 

@@ -20,6 +20,9 @@ import MessageForm from '../components/MessageForm.jsx'
 import ReplySuggestions from '../components/ReplySuggestions.jsx'
 import styles from './ThreadPage.module.css'
 
+// How close (px) the end of the messages must be to the bottom of the window for a new message to scroll to it.
+const NEAR_END_PX = 120
+
 // The loading thread's bubbles: whose side, width and lines.
 const BUBBLES = [
   [false, 320, 2],
@@ -90,10 +93,32 @@ export default function ThreadPage() {
     if (unread > 0) markRead(conversationId)
   }, [unread, conversationId, markRead])
 
+  /*
+   * 2026-11-24: every poll with a new message used to scroll the window to the end, pulling away someone reading older
+   * messages. Now: the first load (or a new ?card) goes to the end or the card; later only the reader's own send, or
+   * a new message while they are already near the end, scrolls. The window is what scrolls (the thread grows the page).
+   */
+  const nearEnd = useRef(true)
   useEffect(() => {
-    const card = focusCard && document.querySelector(`[data-interview-card="${focusCard}"], [data-document-request="${focusCard}"]`)
-    ;(card ?? end.current)?.scrollIntoView({ block: card ? 'center' : 'end' })
-  }, [count, focusCard])
+    const measure = () => {
+      if (end.current) nearEnd.current = end.current.getBoundingClientRect().top - window.innerHeight <= NEAR_END_PX
+    }
+    window.addEventListener('scroll', measure, { passive: true })
+    return () => window.removeEventListener('scroll', measure)
+  }, [])
+  const shown = useRef({ conversationId: null, count: 0, focusCard: null })
+  const lastMine = data?.items.at(-1)?.mine ?? false
+  useEffect(() => {
+    if (!end.current) return
+    const before = shown.current
+    shown.current = { conversationId, count, focusCard }
+    if (before.conversationId !== conversationId || before.count === 0 || before.focusCard !== focusCard) {
+      const card = focusCard && document.querySelector(`[data-interview-card="${focusCard}"], [data-document-request="${focusCard}"]`)
+      ;(card ?? end.current).scrollIntoView({ block: card ? 'center' : 'end' })
+      return
+    }
+    if (count > before.count && (lastMine || nearEnd.current)) end.current.scrollIntoView({ block: 'end' })
+  }, [conversationId, count, focusCard, lastMine])
 
   const back = (
     <Link to={inboxPath} className={styles.back}>

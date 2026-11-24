@@ -1,5 +1,6 @@
 import mongoose from 'mongoose'
 import { ENUMS } from '../../config/enums.js'
+import { trackWrites } from '../../lib/writeVersions.js'
 import { rulesSchema } from '../agencies/rules.schema.js'
 import { placeSchema } from '../candidates/candidates.model.js'
 
@@ -83,5 +84,7 @@ const savedJobSchema = new Schema(
 )
 savedJobSchema.index({ candidateId: 1, jobId: 1 }, { unique: true })
 
+// Public caches read again after a write (perf 2026-11-24).
+trackWrites(jobSchema, 'Job')
 export const Job = mongoose.model('Job', jobSchema)
 export const SavedJob = mongoose.model('SavedJob', savedJobSchema)

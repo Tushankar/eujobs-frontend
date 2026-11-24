@@ -18,7 +18,7 @@ import { notify } from '../notifications/notifications.service.js'
 import { User } from '../users/users.model.js'
 import { VerificationSubmission } from '../verification/verification.model.js'
 import { CandidateNote, ProfileView, RecruiterActivity, ShortlistEntry } from './discovery.model.js'
-import { hasRightToWorkIn, inMarket, listableCandidates, marketCandidates, validRightToWork } from './discovery.population.js'
+import { hasRightToWorkIn, inMarket, listableCandidates, marketCandidates, marketLoader, validRightToWork } from './discovery.population.js'
 import { normalizeRegion } from '../../config/regions.js'
 
 /*
@@ -443,11 +443,17 @@ export async function relevantTalent(user, company, jobId) {
 
 const rank = (a, b) => (b.result?.score ?? -1) - (a.result?.score ?? -1) || b.overlap.matched.length - a.overlap.matched.length
 
-/** Every candidate relevant to at least one published job, with the job where they rank best. */
+/**
+ * Every candidate relevant to at least one published job, with the job where they rank best. Each market is loaded
+ * once and the jobs' results are read together (perf 2026-11-24); merged in job order as before.
+ */
 async function relevantAcrossJobs(company) {
   const best = new Map()
-  for (const job of await Job.find({ companyId: company._id, status: 'published' })) {
-    for (const item of await relevantCandidates(job)) {
+  const jobs = await Job.find({ companyId: company._id, status: 'published' })
+  const marketOf = marketLoader()
+  const relevantByJob = await Promise.all(jobs.map(async (job) => (job.country ? relevantCandidates(job, await marketOf(job.country)) : [])))
+  for (const [index, job] of jobs.entries()) {
+    for (const item of relevantByJob[index]) {
       const id = String(item.entry.user._id)
       if (!best.has(id) || rank(item, best.get(id)) < 0) best.set(id, { ...item, job })
     }

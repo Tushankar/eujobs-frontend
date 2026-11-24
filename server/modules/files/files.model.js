@@ -1,5 +1,6 @@
 import mongoose from 'mongoose'
 import { ENUMS } from '../../config/enums.js'
+import { trackWrites } from '../../lib/writeVersions.js'
 
 const { Schema } = mongoose
 
@@ -33,5 +34,7 @@ const fileAccessLogSchema = new Schema(
 )
 fileAccessLogSchema.index({ ownerId: 1, at: -1 })
 
+// Public caches read again after a write (perf 2026-11-24).
+trackWrites(fileSchema, 'File')
 export const File = mongoose.model('File', fileSchema)
 export const FileAccessLog = mongoose.model('FileAccessLog', fileAccessLogSchema)

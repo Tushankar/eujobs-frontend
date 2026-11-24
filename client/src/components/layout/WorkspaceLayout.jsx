@@ -2,7 +2,7 @@ import { HIRING_ROLES, isHiring } from '@/app/roles.js'
 import { useRef, useState } from 'react'
 import { useTranslation } from 'react-i18next'
 import { useSelector } from 'react-redux'
-import { Link, Navigate, Outlet, useLocation } from 'react-router-dom'
+import { Link, Navigate, Outlet, useLocation, useMatches, useNavigation } from 'react-router-dom'
 import ForbiddenPage from '@/app/ForbiddenPage.jsx'
 import { adminHome, adminNavItemFor, can } from '@/app/permissions.js'
 import { WORKSPACES } from '@/app/workspaces.js'
@@ -25,8 +25,13 @@ export default function WorkspaceLayout({ workspaceId }) {
   const { t } = useTranslation()
   const workspace = WORKSPACES[workspaceId]
   const { pathname, state } = useLocation()
+  const navigation = useNavigation()
+  // Sub-views of one page (the pipeline's Board, Funnel and Manage stages; an application's panel) share the route
+  // handle's `pageKey`, so switching between them keeps the page and its state instead of remounting it (perf
+  // 2026-11-24). Every other page is keyed by its path.
+  const pageKey = useMatches().findLast((match) => match.handle?.pageKey)?.handle.pageKey ?? pathname
   const content = useRef(null)
-  useWorkspaceMotion(content, pathname)
+  useWorkspaceMotion(content, pageKey)
   // The mobile drawer remembers the path it was opened on, so navigating anywhere closes it.
   const [drawerPath, setDrawerPath] = useState(null)
   const drawerOpen = drawerPath === pathname
@@ -41,12 +46,13 @@ export default function WorkspaceLayout({ workspaceId }) {
 
   return (
     <>
+      {navigation.state === 'loading' && <div className={styles.progress} aria-hidden="true" />}
       <Sidebar workspace={workspace} open={drawerOpen} onClose={() => setDrawerPath(null)} />
       <div className={styles.platform}>
         <Header workspace={workspace} onOpenMenu={() => setDrawerPath(pathname)} />
         <main className={styles.main}>
-          {/* Keyed by path so each page's sections rise in again on navigation (GSAP, useWorkspaceMotion). */}
-          <div ref={content} className={styles.content} key={pathname}>
+          {/* Keyed by page so each page's sections rise in again on navigation (GSAP, useWorkspaceMotion). */}
+          <div ref={content} className={styles.content} key={pageKey}>
             {/* M-005: signed in on the other portal, so this account's own workspace opened instead. */}
             {state?.notice === 'wrongPortal' && <NoticeBanner>{t('shell:notices.wrongPortal')}</NoticeBanner>}
             {blocked ? (

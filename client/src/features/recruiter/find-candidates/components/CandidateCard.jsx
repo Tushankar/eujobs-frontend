@@ -8,6 +8,7 @@ import PlanButton from '@/features/candidate/billing/components/PlanButton.jsx'
 import { Avatar, Checkbox, Icon, IconButton, Skeleton } from '@/components/ui'
 import PillBadge from '@/components/common/PillBadge.jsx'
 import { usePreferences } from '@/lib/preferences.js'
+import { useBackState } from '@/lib/urlState.js'
 import { cx } from '@/utils/cx.js'
 import { useCandidateText } from '../utils/candidateText.js'
 import MatchInsights from './MatchInsights.jsx'
@@ -23,12 +24,14 @@ export default function CandidateCard({ candidate, hasJob, jobId, locked, onTogg
   const { country } = usePreferences()
   const text = useCandidateText()
   const profilePath = `${hiringPath()}/find-candidates/${candidate.id}${jobId ? `?jobId=${jobId}` : ''}`
+  // The profile's Back returns to this list with its search (perf 2026-11-24).
+  const backState = useBackState()
   const rightToWork = country && country !== 'REMOTE' ? text.rightToWork(candidate, country) : null
 
   return (
     <article className={styles.card} data-candidate={candidate.id}>
       <div className={styles.top}>
-        <Link to={profilePath} tabIndex={-1} aria-hidden="true">
+        <Link to={profilePath} state={backState} tabIndex={-1} aria-hidden="true">
           <Avatar name={candidate.fullName} src={candidate.photoUrl ?? undefined} size={48} />
         </Link>
         {/* §3.22: without Recruiter Plus the shortlist button keeps its label and opens the upgrade dialog. */}
@@ -44,7 +47,7 @@ export default function CandidateCard({ candidate, hasJob, jobId, locked, onTogg
       </div>
 
       <h2 className={styles.name}>
-        <Link to={profilePath}>{candidate.fullName}</Link>
+        <Link to={profilePath} state={backState}>{candidate.fullName}</Link>
       </h2>
       <p className={styles.headline}>{candidate.headline}</p>
 
@@ -99,7 +102,7 @@ export default function CandidateCard({ candidate, hasJob, jobId, locked, onTogg
           {t('discovery:compare.label')}
         </Checkbox>
         )}
-        <Link to={profilePath} className={styles.view}>
+        <Link to={profilePath} state={backState} className={styles.view}>
           {t('discovery:card.view')}
           <Icon as={ArrowUpRight} size={12} strokeWidth={2} />
         </Link>

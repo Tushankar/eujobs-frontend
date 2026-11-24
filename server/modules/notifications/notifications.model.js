@@ -26,7 +26,8 @@ const notificationSchema = new Schema(
   },
   { timestamps: true, minimize: false },
 )
-notificationSchema.index({ userId: 1, at: -1 })
+// With _id, as the list sorts { at: -1, _id: -1 } (perf 2026-11-24; scripts/dropOldIndexes.js drops the old { userId, at }).
+notificationSchema.index({ userId: 1, at: -1, _id: -1 })
 notificationSchema.index({ userId: 1, readAt: 1, section: 1 })
 notificationSchema.index({ userId: 1, groupKey: 1, readAt: 1 })
 notificationSchema.index({ at: 1 }, { expireAfterSeconds: LIMITS.notifications.retentionDays * 24 * 60 * 60 })

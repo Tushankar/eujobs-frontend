@@ -1,5 +1,6 @@
 import mongoose from 'mongoose'
 import { ENUMS } from '../../config/enums.js'
+import { trackWrites } from '../../lib/writeVersions.js'
 
 const { Schema } = mongoose
 const localized = { en: String, es: String, fr: String }
@@ -61,6 +62,10 @@ const sectorSchema = new Schema(
   { timestamps: true },
 )
 
+// Public caches read again after a write (perf 2026-11-24).
+trackWrites(sectorSchema, 'Sector')
+trackWrites(legalDocumentSchema, 'LegalDocument')
+trackWrites(faqSchema, 'Faq')
 export const Country = mongoose.model('Country', countrySchema)
 export const Sector = mongoose.model('Sector', sectorSchema)
 export const LegalDocument = mongoose.model('LegalDocument', legalDocumentSchema)

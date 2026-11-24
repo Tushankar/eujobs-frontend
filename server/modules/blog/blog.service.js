@@ -171,7 +171,8 @@ export async function publicList(language, page = 1) {
 }
 
 export async function latestPosts(language) {
-  const posts = await BlogPost.find({ status: 'published', language: await shownLanguage(language) }).sort({ publishedAt: -1 }).limit(LIMITS.blog.landing)
+  // The landing cards never show the body (perf 2026-11-24).
+  const posts = await BlogPost.find({ status: 'published', language: await shownLanguage(language) }, '-bodyMarkdown -bodyHtml').sort({ publishedAt: -1 }).limit(LIMITS.blog.landing)
   const extra = await related(posts)
   return posts.map((post) => cardDto(post, extra))
 }

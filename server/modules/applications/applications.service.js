@@ -223,8 +223,9 @@ async function recruiterDtos(viewer, applications) {
   const candidateIds = applications.map((application) => application.candidateId)
   const [users, profiles, jobs, stages, notes, interviews] = await Promise.all([
     User.find({ _id: { $in: candidateIds } }, 'fullName'),
-    CandidateProfile.find({ userId: { $in: candidateIds } }),
-    Job.find({ _id: { $in: applications.map((application) => application.jobId) } }),
+    // Only the fields the rows read (perf 2026-11-24).
+    CandidateProfile.find({ userId: { $in: candidateIds } }, 'userId photo headline yearsExperience workPreference skills'),
+    Job.find({ _id: { $in: applications.map((application) => application.jobId) } }, 'title agency requiredSkills preferredSkills'),
     PipelineStage.find({ _id: { $in: applications.map((application) => application.stageId) } }),
     applications.length ? noteCounts(applications[0].companyId, candidateIds) : new Map(),
     latestInterviews(applications.map((application) => application._id)),

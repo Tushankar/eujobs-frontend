@@ -4,7 +4,7 @@ import { isHiring } from '../config/enums.js'
 import { AppError } from '../lib/errors.js'
 import { Company } from '../modules/companies/companies.model.js'
 import { currentStep } from '../modules/companies/companies.service.js'
-import { liveSession } from '../modules/auth/sessions.service.js'
+import { findSession, liveSession } from '../modules/auth/sessions.service.js'
 import { User } from '../modules/users/users.model.js'
 
 /**
@@ -20,9 +20,10 @@ async function sessionUser(req) {
   } catch {
     return null
   }
-  const user = await User.findById(claims.sub)
+  // Both ids are in the token, so the user and the session are read together (perf 2026-11-24).
+  const [user, session] = await Promise.all([User.findById(claims.sub), claims.sid ? findSession(claims.sid) : null])
   if (!user || user.tokenVersion !== claims.tv) return null
-  if (claims.sid && !(await liveSession(claims.sid, user._id))) return null
+  if (claims.sid && !liveSession(session, user._id)) return null
   req.sessionId = claims.sid
   return user
 }
@@ -59,13 +60,17 @@ export function requireVerifiedEmail(req, res, next) {
  * req.company. Use after requireAuth.
  */
 export async function requireApprovedRecruiter(req, res, next) {
-  const { user } = req
+  await assertApprovedRecruiter(req.user)
+  req.company = await Company.findById(req.user.companyId)
+  next()
+}
+
+/** requireApprovedRecruiter's checks without loading the company (GET /me/counters reads none, perf 2026-11-24). */
+export async function assertApprovedRecruiter(user) {
   if (!isHiring(user.role)) throw new AppError('FORBIDDEN')
   if (!user.emailVerifiedAt) throw new AppError('EMAIL_UNVERIFIED')
   if (user.status === 'suspended') throw new AppError('ACCOUNT_SUSPENDED')
   if (user.status !== 'active') throw new AppError('RECRUITER_NOT_APPROVED', { params: { status: user.status, step: await currentStep(user) } })
-  req.company = await Company.findById(user.companyId)
-  next()
 }
 
 /** 2026-11-20: agency-only endpoints (clients); an approved agency, with req.company. Use after requireAuth. */

@@ -2231,3 +2231,14 @@
     padding-left: 16px;
   }
 }
+
+/* Touch screens (perf 2026-11-24): footer and social links get a 26px tap height; the negative margin keeps the
+   layout exactly as it was. */
+@media (pointer: coarse) {
+  .footerColumn a,
+  .socials a {
+    display: inline-block;
+    margin-block: -4px;
+    padding-block: 4px;
+  }
+}

@@ -1,6 +1,6 @@
 import { HIRING_ROLES, isHiring } from '../../config/enums.js'
 import { Router } from 'express'
-import { requireApprovedRecruiter, requireAuth, requireVerifiedEmail } from '../../middleware/auth.js'
+import { assertApprovedRecruiter, requireAuth, requireVerifiedEmail } from '../../middleware/auth.js'
 import { z } from 'zod'
 import { objectId, validate } from '../../lib/validate.js'
 import { switchesBody } from '../notifications/notifications.schemas.js'
@@ -28,7 +28,11 @@ router.patch('/', validate({ body: schemas.mePatchBody }), async (req, res) => {
 // (candidates and recruiters) and every role's unread notifications (the bell and the sidebar sections).
 router.get(
   '/counters',
-  (req, res, next) => (isHiring(req.user.role) ? requireApprovedRecruiter(req, res, next) : next()),
+  // The approved-recruiter checks without loading the company, which the counters do not read (perf 2026-11-24).
+  async (req, res, next) => {
+    if (isHiring(req.user.role)) await assertApprovedRecruiter(req.user)
+    next()
+  },
   async (req, res) => {
     res.json(await users.counters(req.user))
   },

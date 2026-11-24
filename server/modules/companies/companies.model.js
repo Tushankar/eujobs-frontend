@@ -1,5 +1,6 @@
 import mongoose from 'mongoose'
 import { ENUMS } from '../../config/enums.js'
+import { trackWrites } from '../../lib/writeVersions.js'
 import { placeSchema } from '../candidates/candidates.model.js'
 
 const { Schema } = mongoose
@@ -49,5 +50,7 @@ const kycDocumentSchema = new Schema(
 )
 kycDocumentSchema.index({ companyId: 1 })
 
+// Public caches read again after a write (perf 2026-11-24).
+trackWrites(companySchema, 'Company')
 export const Company = mongoose.model('Company', companySchema)
 export const KycDocument = mongoose.model('KycDocument', kycDocumentSchema)

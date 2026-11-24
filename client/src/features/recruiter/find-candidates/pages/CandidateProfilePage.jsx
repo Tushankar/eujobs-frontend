@@ -4,6 +4,7 @@ import { Link, Outlet, useParams } from 'react-router-dom'
 import { ArrowLeft, UserX } from 'lucide-react'
 import { Button, Icon, SkeletonRegion } from '@/components/ui'
 import EmptyState from '@/components/common/EmptyState.jsx'
+import { useBackTo } from '@/lib/urlState.js'
 import { useGetCandidateProfileQuery, useShortlistToggle } from '../api.js'
 import { useMatchJob } from '../hooks/useMatchJob.js'
 import { ProfileSectionSkeleton } from '../components/ProfileSection.jsx'
@@ -83,8 +84,10 @@ export default function CandidateProfilePage() {
 
 function BackLink() {
   const { t } = useTranslation()
+  // Back to the list it was opened from, with its search and filters (perf 2026-11-24).
+  const backTo = useBackTo(listPath())
   return (
-    <Link to={listPath()} className={styles.back}>
+    <Link to={backTo} className={styles.back}>
       <Icon as={ArrowLeft} size={14} strokeWidth={2} />
       {t('discovery:profile.back')}
     </Link>

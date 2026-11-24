@@ -7,6 +7,7 @@ import { cx } from '@/utils/cx.js'
 import { Button, Icon, IconButton, Panel, Skeleton, SkeletonRegion } from '@/components/ui'
 import ConfirmDialog from '@/components/common/ConfirmDialog.jsx'
 import GetStartedCard from '@/components/common/GetStartedCard.jsx'
+import LoadError from '@/components/common/LoadError.jsx'
 import PageTitle from '@/components/common/PageTitle.jsx'
 import { PlanGate } from '@/features/candidate/billing/components/RequirePlan.jsx'
 import { useFormat } from '@/lib/preferences.js'
@@ -23,13 +24,21 @@ export default function JobAlertsPage() {
   const { t } = useTranslation()
   const format = useFormat()
   const dispatch = useDispatch()
-  const { data, isLoading } = useGetJobAlertsQuery()
+  const { data, isLoading, isError, isFetching, refetch } = useGetJobAlertsQuery()
   const [updateAlert] = useUpdateJobAlertMutation()
   const [deleteAlert] = useDeleteJobAlertMutation()
   const [editing, setEditing] = useState(null) // null | 'new' | alert
   const [deleting, setDeleting] = useState(null)
 
   if (isLoading) return <JobAlertsSkeleton />
+  if (isError && !data) {
+    return (
+      <div>
+        <PageTitle title={t('jobAlerts:title')} description={t('jobAlerts:description')} />
+        <LoadError onRetry={refetch} retrying={isFetching} />
+      </div>
+    )
+  }
   if (!data) return null
   const alerts = data.items
   const paused = data.planPaused

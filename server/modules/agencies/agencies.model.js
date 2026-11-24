@@ -1,5 +1,6 @@
 import mongoose from 'mongoose'
 import { ENUMS } from '../../config/enums.js'
+import { trackWrites } from '../../lib/writeVersions.js'
 import { placeSchema } from '../candidates/candidates.model.js'
 import { rulesSchema } from './rules.schema.js'
 
@@ -28,6 +29,8 @@ const agencyClientSchema = new Schema(
 )
 agencyClientSchema.index({ companyId: 1, nameKey: 1 }, { unique: true })
 
+// Public caches read again after a write (perf 2026-11-24).
+trackWrites(agencyClientSchema, 'AgencyClient')
 export const AgencyClient = mongoose.model('AgencyClient', agencyClientSchema)
 
 /*

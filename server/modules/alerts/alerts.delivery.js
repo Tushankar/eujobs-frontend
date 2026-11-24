@@ -108,7 +108,8 @@ export function digestSlot(now, frequency, timeZone) {
 
 async function sendDigests(now) {
   const alerts = await JobAlert.find({ frequency: { $in: ['daily', 'weekly'] }, active: true })
-  const users = new Map((await User.find({ _id: { $in: alerts.map((alert) => alert.candidateId) } })).map((user) => [String(user._id), user]))
+  // Only what the digest reads (perf 2026-11-24); not lean, so the schema's default language still applies.
+  const users = new Map((await User.find({ _id: { $in: alerts.map((alert) => alert.candidateId) } }, 'email fullName language timezone')).map((user) => [String(user._id), user]))
   const due = alerts.filter((alert) => {
     const user = users.get(String(alert.candidateId))
     return user && (alert.lastDigestAt ?? alert.createdAt) < digestSlot(now, alert.frequency, user.timezone)

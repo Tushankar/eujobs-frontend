@@ -58,7 +58,7 @@ export default function FindJobsPage() {
       setVisible(PAGE_SIZE)
     }, DEBOUNCE_MS)
     return () => window.clearTimeout(timer)
-  }, [query])
+  }, [query, debounced])
 
   function change(setter) {
     return (value) => {

@@ -7,6 +7,7 @@ import { Avatar, Icon, SelectField, TextField } from '@/components/ui'
 import DataTable from '@/components/common/DataTable.jsx'
 import { tableState } from '@/components/common/tableState.js'
 import EmptyState from '@/components/common/EmptyState.jsx'
+import LoadError from '@/components/common/LoadError.jsx'
 import NoticeBanner from '@/components/common/NoticeBanner.jsx'
 import PageTitle from '@/components/common/PageTitle.jsx'
 import InterviewStatus from '@/features/interviews/components/InterviewStatus.jsx'
@@ -174,6 +175,8 @@ export default function ApplicationsPage() {
             getRowKey={(row) => row.id}
             getRowProps={(row) => ({ 'data-application-row': row.id, ...(row.id === focus?.id && { className: styles.focused, 'aria-current': 'true' }) })}
           />
+        ) : result.isError && !data ? (
+          <LoadError onRetry={result.refetch} retrying={result.isFetching} />
         ) : !data ? null : nothingYet ? (
           <EmptyState icon={FileText} title={t('applications:recruiter.noApplications')} description={t('applications:recruiter.noApplicationsText')} />
         ) : (

@@ -56,11 +56,18 @@ export async function recordFailedSignIn(email, req) {
   if (user) await LoginEvent.create({ userId: user._id, outcome: 'failed', ...(await describe(req)) })
 }
 
-/** The session of a token, or null when it was signed out; marks it seen at most once a minute. */
-export async function liveSession(sid, userId) {
-  const session = await LoginEvent.findById(sid, 'userId revokedAt lastSeenAt')
+/** The stored session of a token's `sid` (read alongside the user, perf 2026-11-24; check it with liveSession). */
+export function findSession(sid) {
+  return LoginEvent.findById(sid, 'userId revokedAt lastSeenAt')
+}
+
+/**
+ * The found session, or null when it is missing, signed out or another user's; marks it seen at most once a minute,
+ * without holding up the request (perf 2026-11-24).
+ */
+export function liveSession(session, userId) {
   if (!session || session.revokedAt || !session.userId.equals(userId)) return null
-  if (Date.now() - session.lastSeenAt > SEEN_EVERY_MS) await LoginEvent.updateOne({ _id: sid }, { lastSeenAt: new Date() })
+  if (Date.now() - session.lastSeenAt > SEEN_EVERY_MS) LoginEvent.updateOne({ _id: session._id }, { lastSeenAt: new Date() }).catch(() => {})
   return session
 }
 

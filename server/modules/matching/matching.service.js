@@ -4,7 +4,7 @@ import { t } from '../../lib/i18n.js'
 import { skillLabel, skillOverlap } from '../../lib/skills.js'
 import { CandidateProfile } from '../candidates/candidates.model.js'
 import { CvVersion } from '../cv/cv.model.js'
-import { marketCandidates } from '../discovery/discovery.population.js'
+import { marketCandidates, marketLoader } from '../discovery/discovery.population.js'
 import { Job } from '../jobs/jobs.model.js'
 import { User } from '../users/users.model.js'
 import { Embedding, MatchingPolicy, MatchResult } from './matching.model.js'
@@ -17,6 +17,8 @@ import { scoreMatch } from './matching.score.js'
  * have no result and use the Phase 4 skill fallback (M-051).
  */
 const EMBED_BATCH = 16
+// Every owner type (the model's enum), so lookups by owner id use the { ownerType, ownerId } index (perf 2026-11-24).
+const OWNER_TYPES = ['candidate', 'job']
 const english = new Intl.DisplayNames(['en'], { type: 'language' })
 
 /* ---------- texts (U6) ---------- */
@@ -73,7 +75,7 @@ const eligibleJobs = (ids) => Job.find({ status: { $ne: 'draft' }, ...(ids && { 
 export async function ensureEmbeddings(owners) {
   const model = embeddingModel()
   const hashed = owners.map((owner) => ({ ...owner, sourceHash: hashOf(`${model}\n${owner.text}`) }))
-  const current = new Map((await Embedding.find({ ownerId: { $in: owners.map((owner) => owner.ownerId) } }, 'ownerId sourceHash')).map((item) => [String(item.ownerId), item.sourceHash]))
+  const current = new Map((await Embedding.find({ ownerType: { $in: OWNER_TYPES }, ownerId: { $in: owners.map((owner) => owner.ownerId) } }, 'ownerId sourceHash')).map((item) => [String(item.ownerId), item.sourceHash]))
   const stale = hashed.filter((owner) => current.get(String(owner.ownerId)) !== owner.sourceHash)
   if (!stale.length) return
   const vectors = new Map((await Embedding.find({ sourceHash: { $in: stale.map((owner) => owner.sourceHash) } }, 'sourceHash dims vector')).map((item) => [item.sourceHash, item]))
@@ -103,7 +105,7 @@ async function scorePairs(candidates, jobs) {
   const policy = await activePolicy()
   if (!policy || !candidates.length || !jobs.length) return
   const ids = [...candidates.map(({ user }) => user._id), ...jobs.map((job) => job._id)]
-  const vectors = new Map((await Embedding.find({ ownerId: { $in: ids } }, 'ownerId vector')).map((item) => [String(item.ownerId), toVector(item.vector)]))
+  const vectors = new Map((await Embedding.find({ ownerType: { $in: OWNER_TYPES }, ownerId: { $in: ids } }, 'ownerId vector')).map((item) => [String(item.ownerId), toVector(item.vector)]))
   const now = new Date()
   const operations = []
   for (const { user, profile } of candidates) {
@@ -123,8 +125,8 @@ async function scorePairs(candidates, jobs) {
 
 /* ---------- relevance (M-051, U7, C7) ---------- */
 
-/** A pair is relevant with a score ≥ Good; without a result (no vector), with at least 1 required skill. */
-export const relevantPair = (job, profile, result) => (result ? result.label !== null : skillOverlap(profile.skills, job).requiredMatched > 0)
+/** A pair is relevant with a score ≥ Good; without a result (no vector), with at least 1 required skill (`overlap`: already worked out). */
+export const relevantPair = (job, profile, result, overlap) => (result ? result.label !== null : (overlap ?? skillOverlap(profile.skills, job)).requiredMatched > 0)
 
 /** Results of one candidate (`candidateId`) or one job (`jobId`), keyed by the other side's id. */
 export async function resultsBy(filter, ids) {
@@ -143,19 +145,23 @@ export async function relevantCandidates(job, population) {
   const results = await resultsBy({ jobId: job._id })
   return population
     .map((entry) => ({ entry, result: results.get(String(entry.user._id)) ?? null, overlap: skillOverlap(entry.profile.skills, job) }))
-    .filter(({ entry, result }) => relevantPair(job, entry.profile, result))
+    .filter(({ entry, result, overlap }) => relevantPair(job, entry.profile, result, overlap))
     .sort((a, b) => (b.result?.score ?? -1) - (a.result?.score ?? -1) || b.overlap.matched.length - a.overlap.matched.length)
 }
 
-/** Stores each job's relevant count. */
+/**
+ * Stores each job's relevant count. Each market is loaded once and the jobs are counted together, then written in one
+ * bulkWrite (perf 2026-11-24).
+ */
 export async function refreshRelevantCounts(jobs) {
-  const markets = new Map()
-  for (const job of jobs) {
-    if (job.country && !markets.has(job.country)) markets.set(job.country, await marketCandidates(job.country))
-    const count = job.country ? (await relevantCandidates(job, markets.get(job.country))).length : 0
-    job.relevantCount = count
-    await Job.updateOne({ _id: job._id }, { relevantCount: count, relevantComputedAt: new Date() }, { timestamps: false })
-  }
+  const marketOf = marketLoader()
+  const counts = await Promise.all(jobs.map(async (job) => (job.country ? (await relevantCandidates(job, await marketOf(job.country))).length : 0)))
+  const now = new Date()
+  jobs.forEach((job, index) => {
+    job.relevantCount = counts[index]
+  })
+  if (!jobs.length) return
+  await Job.bulkWrite(jobs.map((job, index) => ({ updateOne: { filter: { _id: job._id }, update: { $set: { relevantCount: counts[index], relevantComputedAt: now } }, timestamps: false } })))
 }
 
 const openJobs = () => Job.find({ status: { $ne: 'closed' } })

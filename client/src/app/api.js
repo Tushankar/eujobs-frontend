@@ -133,6 +133,10 @@ export const api = createApi({
   reducerPath: 'api',
   baseQuery: baseQueryWithReauth,
   tagTypes: TAG_TYPES,
+  // Perf 2026-11-24: a page opened again within 5 minutes shows its last data at once (no skeleton); data older than
+  // 60 s is refetched in the background, as it was before when the 60 s cache had expired.
+  keepUnusedDataFor: 300,
+  refetchOnMountOrArgChange: 60,
   endpoints: (build) => ({
     getMe: build.query({ query: () => '/me', providesTags: ['Me'] }),
     updateMe: build.mutation({

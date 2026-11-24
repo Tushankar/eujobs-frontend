@@ -76,11 +76,24 @@ const ALIASES = {
 // cooking" is "Mediterranean cuisine". Never a word that changes the skill ("React Native" is not React).
 const FILLER = new Set(['crm', 'software', 'platform', 'tool', 'tools', 'skill', 'skills', 'cuisine', 'cooking', 'framework', 'library'])
 
+// skillCanon's results by typed name (perf 2026-11-24).
+const canonCache = new Map()
+const CANON_CACHE_MAX = 10_000
+
 /**
  * The code canonical form of a skill name: accent- and case-insensitive, without trailing filler words, spaces, dots,
  * hyphens and slashes (C++, C# and F# keep their signs), without a trailing "js" (React js, Node.js), then the aliases.
  */
 export function skillCanon(name) {
+  // perf 2026-11-24: pure, and job lists and sorts ask for the same names many times; bounded, as names are typed text.
+  if (canonCache.has(name)) return canonCache.get(name)
+  if (canonCache.size >= CANON_CACHE_MAX) canonCache.clear()
+  const canon = computeCanon(name)
+  canonCache.set(name, canon)
+  return canon
+}
+
+function computeCanon(name) {
   const words = searchText(name).replace(/&/g, ' and ').split(/[^\p{L}\p{N}+#]+/u).filter(Boolean)
   while (words.length > 1 && FILLER.has(words.at(-1))) words.pop()
   let compact = words.join('')
@@ -111,9 +124,11 @@ export function skillEntries(names, field) {
   return names.map((name, index) => ({ name, key: keys[index] }))
 }
 
-/** M-052: `skills` are the candidate's [{ name, standard }]. Names are the job's; `missing` lists the required skills not matched. */
-export function skillOverlap(skills, job) {
-  const listed = skillSet(skills)
+/**
+ * M-052: `skills` are the candidate's [{ name, standard }]. Names are the job's; `missing` lists the required skills not
+ * matched. `listed` is skillSet(skills) when the caller already built it (perf 2026-11-24).
+ */
+export function skillOverlap(skills, job, listed = skillSet(skills)) {
   const all = [...job.requiredSkills, ...job.preferredSkills]
   return {
     matched: all.filter((skill) => listed.has(skill)).map((skill) => skill.name),

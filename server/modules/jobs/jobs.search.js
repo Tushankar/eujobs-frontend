@@ -1,7 +1,8 @@
 import { HIRING_ROLES } from '../../config/enums.js'
 import { AppError } from '../../lib/errors.js'
 import { t } from '../../lib/i18n.js'
-import { matchesKeywords, searchText, skillOverlap } from '../../lib/skills.js'
+import { matchesKeywords, searchText, skillOverlap, skillSet } from '../../lib/skills.js'
+import { versionedCache } from '../../lib/writeVersions.js'
 import { AgencyClient, AgencyMembership, AgencyPlacement } from '../agencies/agencies.model.js'
 import { checkWith, targetOf } from '../agencies/lock.js'
 import { Application } from '../applications/applications.model.js'
@@ -28,9 +29,12 @@ const AGENCY_LIFT = 5
 // 2026-11-24: and jobs in the candidate's preferred sectors, by the same.
 const SECTOR_LIFT = 5
 
-/** M-044: companies whose recruiter is approved and not suspended. */
+// perf 2026-11-24: read on every job list, so cached until any User write (approval, suspension, company link) or 30 s.
+const visibleIds = versionedCache({ models: ['User'], ttlMs: 30_000 })
+
+/** M-044: companies whose recruiter is approved and not suspended (a copy: callers' filters own their arrays). */
 async function visibleCompanyIds() {
-  return (await User.find({ role: { $in: HIRING_ROLES }, status: 'active', companyId: { $ne: null } }, 'companyId')).map((user) => user.companyId)
+  return [...(await visibleIds.get('all', () => User.distinct('companyId', { role: { $in: HIRING_ROLES }, status: 'active', companyId: { $ne: null } }).exec()))]
 }
 
 /** Published, not restricted (M-167), from an approved recruiter. */
@@ -75,54 +79,78 @@ export function agencyCard(job, clients) {
   return { ...fields, client: client ? { name: client.name } : null }
 }
 
-/** Everything a card needs for these jobs and this candidate: companies, logos, profile skills, saved ids. */
-async function cardContext(user, jobs) {
-  const companies = await Company.find({ _id: { $in: [...new Set(jobs.map((job) => String(job.companyId)))] } })
-  const logos = await logoUrls(companies, user._id)
-  const byId = new Map(companies.map((company) => [String(company._id), company]))
-  // Owner decision P10-Q8: "Verified company" while the company is approved and its recruiter is active (not suspended).
-  const activeOwners = new Set((await User.find({ _id: { $in: companies.map((company) => company.ownerUserId) }, status: 'active' }, '_id')).map((owner) => String(owner._id)))
-  const verified = (company) => Boolean(company.verifiedAt) && activeOwners.has(String(company.ownerUserId))
-  const profile = await CandidateProfile.findOne({ userId: user._id }, 'skills preferredSectors')
-  const saved = new Set((await SavedJob.find({ candidateId: user._id, jobId: { $in: jobs.map((job) => job._id) } }, 'jobId')).map((entry) => String(entry.jobId)))
-  const applied = new Map(
-    (await Application.find({ candidateId: user._id, jobId: { $in: jobs.map((job) => job._id) }, status: { $ne: 'withdrawn' } }, 'jobId status')).map((application) => [String(application.jobId), { id: String(application._id), status: application.status }]),
-  )
-  // 2026-11-20: agency jobs: the client, the candidate's membership with the agency and the placement rule check.
-  const clients = await agencyClients(jobs)
+/**
+ * Everything a card needs for these jobs and this candidate: companies, logos, profile skills, saved ids. The queries
+ * that do not depend on each other run together (perf 2026-11-24); `cards: false` skips what only cards and For you's
+ * order read (logos, verified owners, saved ids, memberships) for callers that only count.
+ */
+async function cardContext(user, jobs, { cards = true } = {}) {
+  const jobIds = jobs.map((job) => job._id)
   const agencyIds = [...new Set(jobs.filter((job) => job.agency).map((job) => String(job.companyId)))]
-  const memberships = new Map(
-    agencyIds.length ? (await AgencyMembership.find({ candidateId: user._id, companyId: { $in: agencyIds } }, 'companyId status')).map((entry) => [String(entry.companyId), { id: String(entry._id), status: entry.status }]) : [],
-  )
-  const placements = await AgencyPlacement.find({ candidateId: user._id, status: 'confirmed' })
+  const [{ companies, logos, activeOwners }, profile, saved, applied, clients, memberships, placements, { scored, results }] = await Promise.all([
+    Company.find({ _id: { $in: [...new Set(jobs.map((job) => String(job.companyId)))] } }).then(async (companies) => {
+      if (!cards) return { companies }
+      const [logos, owners] = await Promise.all([
+        logoUrls(companies, user._id),
+        // Owner decision P10-Q8: "Verified company" while the company is approved and its recruiter is active (not suspended).
+        User.find({ _id: { $in: companies.map((company) => company.ownerUserId) }, status: 'active' }, '_id'),
+      ])
+      return { companies, logos, activeOwners: new Set(owners.map((owner) => String(owner._id))) }
+    }),
+    CandidateProfile.findOne({ userId: user._id }, 'skills preferredSectors'),
+    cards ? SavedJob.find({ candidateId: user._id, jobId: { $in: jobIds } }, 'jobId').then((entries) => new Set(entries.map((entry) => String(entry.jobId)))) : new Set(),
+    Application.find({ candidateId: user._id, jobId: { $in: jobIds }, status: { $ne: 'withdrawn' } }, 'jobId status').then(
+      (applications) => new Map(applications.map((application) => [String(application.jobId), { id: String(application._id), status: application.status }])),
+    ),
+    // 2026-11-20: agency jobs: the client, the candidate's membership with the agency and the placement rule check.
+    agencyClients(jobs),
+    cards && agencyIds.length
+      ? AgencyMembership.find({ candidateId: user._id, companyId: { $in: agencyIds } }, 'companyId status').then((entries) => new Map(entries.map((entry) => [String(entry.companyId), { id: String(entry._id), status: entry.status }])))
+      : new Map(),
+    AgencyPlacement.find({ candidateId: user._id, status: 'confirmed' }),
+    (async () => {
+      const scored = user.privacy?.matchingConsent && (await planState(user._id)).entitlements.includes('ai')
+      return { scored, results: scored ? await resultsBy({ candidateId: user._id }, jobIds) : new Map() }
+    })(),
+  ])
+  const byId = new Map(companies.map((company) => [String(company._id), company]))
+  const verified = (company) => Boolean(company.verifiedAt) && activeOwners.has(String(company.ownerUserId))
   const lockOf = (job) => {
     if (!placements.length) return null
     const result = checkWith(placements, targetOf(job, clients.get(String(job.agency?.clientId)), byId.get(String(job.companyId))))
     return result.allowed ? null : { freeFrom: result.freeFrom }
   }
   const skills = profile?.skills ?? []
-  const scored = user.privacy?.matchingConsent && (await planState(user._id)).entitlements.includes('ai')
-  const results = scored ? await resultsBy({ candidateId: user._id }, jobs.map((job) => job._id)) : new Map()
+  // perf 2026-11-24: the sorts compare each job many times, so its overlap is worked out once (one skill set for all).
+  const listed = skillSet(skills)
+  const overlaps = new Map()
+  const overlapOf = (job) => {
+    const id = String(job._id)
+    if (!overlaps.has(id)) overlaps.set(id, skillOverlap(skills, job, listed))
+    return overlaps.get(id)
+  }
   const result = (job) => results.get(String(job._id)) ?? null
   return {
     scored,
     company: (job) => byId.get(String(job.companyId)),
-    overlap: (job) => skillOverlap(skills, job),
+    overlap: overlapOf,
     // M-051: a score ≥ Good, or at least 1 required skill when the pair has no score (U8 for Free).
-    relevant: (job) => relevantPair(job, { skills }, result(job)),
+    relevant: (job) => relevantPair(job, { skills }, result(job), overlapOf(job)),
+    // For you leaves out jobs applied to and agency jobs the candidate's placements block (the card's application and lock).
+    hidden: (job) => applied.has(String(job._id)) || Boolean(job.agency && lockOf(job)),
     // Scored jobs first by score, then by overlap and recency (U8).
-    byScore: (a, b) => (result(b)?.score ?? -1) - (result(a)?.score ?? -1) || skillOverlap(skills, b).matched.length - skillOverlap(skills, a).matched.length || newest(a, b),
+    byScore: (a, b) => (result(b)?.score ?? -1) - (result(a)?.score ?? -1) || overlapOf(b).matched.length - overlapOf(a).matched.length || newest(a, b),
     // Phase 6: For you's order, with jobs of the candidate's own agencies a little higher.
     forYou: (a, b) => {
       const lift = (job) => (job.agency && memberships.get(String(job.companyId))?.status === 'active' ? 1 : 0)
       const preferred = (job) => (job.sector && profile?.preferredSectors?.includes(job.sector) ? 1 : 0)
       const score = (job) => (result(job) ? result(job).score + AGENCY_LIFT * lift(job) + SECTOR_LIFT * preferred(job) : -1)
-      const skillCount = (job) => skillOverlap(skills, job).matched.length + lift(job) + preferred(job)
+      const skillCount = (job) => overlapOf(job).matched.length + lift(job) + preferred(job)
       return score(b) - score(a) || skillCount(b) - skillCount(a) || newest(a, b)
     },
     card(job) {
       const company = byId.get(String(job.companyId))
-      const { matched, total } = skillOverlap(skills, job)
+      const { matched, total } = overlapOf(job)
       return {
         ...jobFieldsDto(job),
         company: { ...publicCompanyDto(company, logos.get(String(company._id))), verified: verified(company) },
@@ -210,11 +238,21 @@ export async function recommendedJobs(user, { now = Date.now(), forYou = false }
   const cards = jobs
     .filter(context.relevant)
     .sort(forYou ? context.forYou : context.byScore)
+    .filter((job) => !forYou || !context.hidden(job))
     .map((job) => ({ job, card: context.card(job) }))
-    .filter(({ card }) => !forYou || (!card.application && !(card.agency && card.lock)))
-  // M-053: "+N this week" = published in the last 7 days.
-  const newThisWeek = cards.filter(({ job }) => job.publishedAt && job.publishedAt.getTime() >= now - 7 * DAY_MS).length
+  const newThisWeek = cards.filter(({ job }) => publishedThisWeek(job, now)).length
   return { items: cards.map(({ card }) => card), total: cards.length, newThisWeek, byScore: Boolean(context.scored) }
+}
+
+// M-053: "+N this week" = published in the last 7 days.
+const publishedThisWeek = (job, now) => Boolean(job.publishedAt) && job.publishedAt.getTime() >= now - 7 * DAY_MS
+
+/** The Overview's For you numbers (perf 2026-11-24): the jobs recommendedJobs(user, { forYou: true }) lists, counted without cards. */
+async function forYouCounts(user, now) {
+  const jobs = await Job.find({ ...(await visibleFilter()), ...viewFilter(viewOf(user)) })
+  const context = await cardContext(user, jobs, { cards: false })
+  const kept = jobs.filter((job) => context.relevant(job) && !context.hidden(job))
+  return { total: kept.length, newThisWeek: kept.filter((job) => publishedThisWeek(job, now)).length, byScore: Boolean(context.scored) }
 }
 
 export async function isVisible(job) {
@@ -254,8 +292,8 @@ export function unsaveJob(user, jobId) {
 
 /** GET /candidate/overview: Recommended jobs (M-053), saved jobs and profile views (M-184). */
 export async function candidateOverview(user, now = Date.now()) {
-  const recommended = await recommendedJobs(user, { now, forYou: true })
-  const [savedCount, last30, previous30] = await Promise.all([
+  const [recommended, savedCount, last30, previous30] = await Promise.all([
+    forYouCounts(user, now),
     SavedJob.countDocuments({ candidateId: user._id }),
     ProfileView.countDocuments({ candidateId: user._id, at: { $gte: new Date(now - 30 * DAY_MS) } }),
     ProfileView.countDocuments({ candidateId: user._id, at: { $gte: new Date(now - 60 * DAY_MS), $lt: new Date(now - 30 * DAY_MS) } }),

@@ -10,7 +10,8 @@ import { usePreferences } from '@/lib/preferences.js'
 import { cx } from '@/utils/cx.js'
 import { useShortlistToggle } from '../api.js'
 import { useMatchJob } from '../hooks/useMatchJob.js'
-import { EMPTY_FILTERS, filterParams } from '../utils/candidateText.js'
+import { useUrlState } from '@/lib/urlState.js'
+import { EMPTY_FILTERS, filterParams, filtersFromUrl, urlState } from '../utils/candidateText.js'
 import CandidateCard, { CandidateCardSkeleton } from './CandidateCard.jsx'
 import CompareModal from './CompareModal.jsx'
 import DiscoveryToolbar from './DiscoveryToolbar.jsx'
@@ -34,15 +35,17 @@ export default function CandidateBrowser({ useList, notice, extra, empty }) {
   const plan = usePaidPlanName()
   const { me } = usePreferences()
   const locked = lacksEntitlement(me, 'discovery', RECRUITER)
-  const [query, setQuery] = useState('')
-  const [debounced, setDebounced] = useState('')
-  const [filters, setFilters] = useState(EMPTY_FILTERS)
-  const [sort, setSort] = useState('recommended')
+  const [searchParams, setSearchParams] = useSearchParams()
+  // The search, filters and sort live in the URL too (perf 2026-11-24), so Back from a profile keeps them.
+  const [query, setQuery] = useState(() => searchParams.get('q') ?? '')
+  const [debounced, setDebounced] = useState(query)
+  const [filters, setFilters] = useState(() => filtersFromUrl(searchParams))
+  const [sort, setSort] = useState(() => (SORTS.includes(searchParams.get('sort')) ? searchParams.get('sort') : 'recommended'))
+  useUrlState(urlState({ query: debounced, filters, sort }))
   const [comparedIds, setComparedIds] = useState([])
   const [compareOpen, setCompareOpen] = useState(false)
   const [limitHit, setLimitHit] = useState(false)
   const { jobs, job, setJobId, ready, loading: jobsLoading } = useMatchJob()
-  const [searchParams, setSearchParams] = useSearchParams()
   // "N relevant" on Jobs links here with `?relevant=1`: only that job's relevant candidates, until cleared.
   const relevantOnly = !locked && searchParams.get('relevant') === '1' && Boolean(job)
   const toggleShortlist = useShortlistToggle()

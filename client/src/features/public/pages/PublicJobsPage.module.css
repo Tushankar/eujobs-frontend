@@ -618,3 +618,11 @@ section.panel {
     transition: none;
   }
 }
+
+/* Touch screens (perf 2026-11-24): the whole label toggles the switch; give it a 32px tap height, same layout. */
+@media (pointer: coarse) {
+  .visaSwitch {
+    margin-block: -6px;
+    padding-block: 6px;
+  }
+}

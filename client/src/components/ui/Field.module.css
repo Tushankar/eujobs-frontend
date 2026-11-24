@@ -85,6 +85,13 @@
   color: var(--foreground);
 }
 
+/* The input covers the control's vertical padding (same layout), so a tap anywhere in the 44px box focuses it, not
+   only on its 20px text line (touch targets, perf 2026-11-24). Filter pills have no vertical padding. */
+.control:not(.filter) .input {
+  margin-block: -11px;
+  padding-block: 11px;
+}
+
 /* Chrome paints autofilled inputs light blue; keep the field's own card background instead. */
 .input:-webkit-autofill {
   box-shadow: 0 0 0 100px var(--card) inset;

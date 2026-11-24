@@ -17,11 +17,12 @@ const TABS = [
 /** Underlined route tabs of the candidate profile. `basePath` is the profile's own path; the match job (`?jobId`) is kept. */
 export default function ProfileTabs({ basePath }) {
   const { t } = useTranslation()
-  const { search } = useLocation()
+  // The Back target (link state) carries over between tabs (perf 2026-11-24).
+  const { search, state } = useLocation()
   return (
     <nav ref={tabRowRef} className={styles.tabs} aria-label={t('discovery:profile.tabsLabel')}>
       {TABS.map((tab) => (
-        <NavLink key={tab.key} to={`${tab.to ? `${basePath}/${tab.to}` : basePath}${search}`} end className={({ isActive }) => cx(styles.tab, isActive && styles.active)}>
+        <NavLink key={tab.key} to={`${tab.to ? `${basePath}/${tab.to}` : basePath}${search}`} state={state} end className={({ isActive }) => cx(styles.tab, isActive && styles.active)}>
           {t(`discovery:profile.tabs.${tab.key}`)}
         </NavLink>
       ))}

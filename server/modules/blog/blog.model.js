@@ -1,5 +1,6 @@
 import mongoose from 'mongoose'
 import { ENUMS } from '../../config/enums.js'
+import { trackWrites } from '../../lib/writeVersions.js'
 
 const { Schema } = mongoose
 
@@ -25,4 +26,6 @@ const blogPostSchema = new Schema(
 )
 blogPostSchema.index({ status: 1, language: 1, publishedAt: -1 })
 
+// Public caches read again after a write (perf 2026-11-24).
+trackWrites(blogPostSchema, 'BlogPost')
 export const BlogPost = mongoose.model('BlogPost', blogPostSchema)

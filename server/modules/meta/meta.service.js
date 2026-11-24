@@ -4,6 +4,7 @@ import { ENUMS } from '../../config/enums.js'
 import { AppError, fieldError } from '../../lib/errors.js'
 import { interpolate, t } from '../../lib/i18n.js'
 import { usageSettings } from '../../lib/usage.js'
+import { versionedCache } from '../../lib/writeVersions.js'
 import { Plan } from '../payments/payments.model.js'
 import { chargeCurrency } from '../payments/currencies.js'
 import { savingPercent } from '../payments/plans.stripe.js'
@@ -24,10 +25,17 @@ export async function listCountries() {
 
 const latestVersion = (doc) => LegalDocument.findOne({ doc, publishedAt: { $ne: null } }, 'version').sort({ publishedAt: -1 })
 
+// perf 2026-11-24: GET /me reads these on every load; cached until a LegalDocument write here, or 60 s (seed runs elsewhere).
+const legalVersions = versionedCache({ models: ['LegalDocument'], ttlMs: 60_000 })
+
 /** The latest published Terms and Privacy versions (M-191, U22); null while none exists. */
 export async function currentLegalVersions() {
-  const [terms, privacy] = await Promise.all([latestVersion('terms'), latestVersion('privacy')])
-  return { termsVersion: terms?.version ?? null, privacyVersion: privacy?.version ?? null }
+  return {
+    ...(await legalVersions.get('current', async () => {
+      const [terms, privacy] = await Promise.all([latestVersion('terms'), latestVersion('privacy')])
+      return { termsVersion: terms?.version ?? null, privacyVersion: privacy?.version ?? null }
+    })),
+  }
 }
 
 /** The current version of a legal text in `language`, falling back to English (M-191). */

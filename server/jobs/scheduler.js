@@ -84,12 +84,25 @@ export async function tick(now = new Date()) {
   for (let task = await claimNextTask(now); task; task = await claimNextTask(now)) await runTask(task, now)
 }
 
-/** Startup: release tasks left running by a stopped server, catch up once, then tick every 60 s. */
+/**
+ * Startup: release tasks left running by a stopped server, catch up once, then tick every 60 s. A tick still running
+ * when the next is due skips it (perf 2026-11-24: slow digests or recomputes never overlap themselves).
+ */
 export async function startScheduler() {
   await ScheduledTask.updateMany(
     { status: 'running', lockedAt: { $lt: new Date(Date.now() - STALE_RUNNING_MS) } },
     { status: 'pending' },
   )
   await tick()
-  if (!config.isTest) setInterval(() => tick().catch((error) => console.error(`Scheduler tick failed: ${error.message}`)), TICK_MS)
+  if (config.isTest) return
+  let ticking = false
+  setInterval(() => {
+    if (ticking) return
+    ticking = true
+    tick()
+      .catch((error) => console.error(`Scheduler tick failed: ${error.message}`))
+      .finally(() => {
+        ticking = false
+      })
+  }, TICK_MS)
 }

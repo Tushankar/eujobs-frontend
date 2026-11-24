@@ -1,6 +1,6 @@
 import mongoose from 'mongoose'
 import { config } from '../config/env.js'
-// Every model is registered here so syncIndexes creates all unique and TTL indexes before any data (§4.3).
+// Every model is registered here so createIndexes makes all unique and TTL indexes before any data (§4.3).
 import '../modules/users/users.model.js'
 import '../modules/auth/auth.model.js'
 import '../modules/meta/meta.model.js'
@@ -18,9 +18,14 @@ import '../modules/learning/learning.model.js'
 import './mail/emailLog.model.js'
 import '../jobs/models.js'
 
+/**
+ * Connects and creates every declared index that is missing, all models at once. Never syncIndexes (perf and safety
+ * 2026-11-24): it dropped any index a model does not declare, on a database other sessions and processes share. An
+ * index removed from a model is dropped by hand (scripts/dropOldIndexes.js). autoIndex is off, as this does it.
+ */
 export async function connectDb() {
-  await mongoose.connect(config.mongodbUri, { dbName: config.dbName })
-  for (const model of Object.values(mongoose.models)) await model.syncIndexes()
+  await mongoose.connect(config.mongodbUri, { dbName: config.dbName, autoIndex: false })
+  await Promise.all(Object.values(mongoose.models).map((model) => model.createIndexes()))
 }
 
 export function disconnectDb() {

@@ -46,7 +46,21 @@ async function homeCountryOf(user) {
  * `legal.acceptRequired` is true when a newer Terms or Privacy version exists (U22).
  */
 export async function meDto(user) {
-  const current = await currentLegalVersions()
+  // perf 2026-11-24: every read below is independent, so they run together; the dto keeps its key order.
+  const hiring = isHiring(user.role)
+  const admin = user.role === 'admin'
+  const [current, homeCountry, tour, plan, summary, company, permissions, permissionList, role] = await Promise.all([
+    currentLegalVersions(),
+    homeCountryOf(user),
+    user.role === 'candidate' || hiring ? tourPending(user) : undefined,
+    user.role === 'candidate' || hiring ? planState(user._id) : undefined,
+    user.role === 'candidate' ? candidateSummary(user) : undefined,
+    // The shell subtitle and logo (M-195); null until onboarding step 2.
+    hiring && user.companyId ? Company.findById(user.companyId, 'displayName logoFileId sector') : null,
+    admin ? effectivePermissions(user) : undefined,
+    admin ? listPermissions() : undefined,
+    admin && user.adminAccess?.roleId ? AdminRole.findById(user.adminAccess.roleId, 'name description system') : null,
+  ])
   const legal = user.legal ?? {}
   const dto = {
     id: String(user._id),
@@ -58,7 +72,7 @@ export async function meDto(user) {
     languageExplicit: user.languageExplicit,
     theme: user.theme ?? null,
     pickerCountry: user.pickerCountry ?? null,
-    homeCountry: await homeCountryOf(user),
+    homeCountry,
     // Owner 2026-11-16: candidates browse jobs worldwide until they pick Remote or a country.
     ...(user.role === 'candidate' && { jobsWorldwide: user.jobsWorldwide !== false }),
     timezone: user.timezone ?? null,
@@ -74,39 +88,36 @@ export async function meDto(user) {
         Boolean(current.privacyVersion && current.privacyVersion !== legal.privacyVersion),
     },
   }
-  if (user.role === 'candidate' || isHiring(user.role)) {
-    dto.tourPending = await tourPending(user)
+  if (user.role === 'candidate' || hiring) {
+    dto.tourPending = tour
     // 2026-11-17: success moments waiting for their modal.
     dto.celebrations = celebrationDtos(user)
   }
   if (user.role === 'candidate') {
     dto.onboardingCompleted = Boolean(user.onboardingCompletedAt)
     // From the Stripe subscription (U38): plan key and entitlement keys (§3.3).
-    Object.assign(dto, await planState(user._id))
-    Object.assign(dto, await candidateSummary(user))
+    Object.assign(dto, plan)
+    Object.assign(dto, summary)
   }
-  if (isHiring(user.role)) {
+  if (hiring) {
     // §3.22: Free or Recruiter Plus (Agency Plus for agencies, 2026-11-20), with its entitlement keys.
-    Object.assign(dto, await planState(user._id))
+    Object.assign(dto, plan)
     dto.jobTitle = user.jobTitle ?? null
     dto.phone = { e164: user.phone?.e164 ?? null, verified: Boolean(user.phone?.verifiedAt) }
-    // The shell subtitle and logo (M-195); null until onboarding step 2.
-    const company = user.companyId ? await Company.findById(user.companyId, 'displayName logoFileId sector') : null
     // `sector` (2026-11-24): a new job starts from the company's sector.
     dto.company = company ? { id: String(company._id), displayName: company.displayName, sector: company.sector ?? null, logoUrl: (await logoUrls([company], user._id)).get(String(company._id)) } : null
   }
-  if (user.role === 'admin') {
+  if (admin) {
     dto.isOwner = user.isOwner
-    dto.permissions = [...(await effectivePermissions(user))]
+    dto.permissions = [...permissions]
     // Settings › Your access: every catalogue group (catalogue order) with each of its permissions and whether it is held.
     const groups = new Map()
-    for (const { id, group } of await listPermissions()) {
+    for (const { id, group } of permissionList) {
       if (!groups.has(group)) groups.set(group, { group, permissions: [] })
       groups.get(group).permissions.push({ id, held: dto.permissions.includes(id) })
     }
     dto.permissionGroups = [...groups.values()]
     // The shell subtitle shows the role name, or "Owner" for owners (M-195).
-    const role = user.adminAccess?.roleId ? await AdminRole.findById(user.adminAccess.roleId, 'name description system') : null
     dto.adminRole = role ? { id: String(role._id), name: roleText(role, user.language).name } : null
   }
   // P11b-Q3, Q12: the email switches of this role's categories.
@@ -132,12 +143,18 @@ export async function finishTour(user) {
 
 /** GET /me/counters (M-094, P11b-Q2): unread messages (candidates, recruiters), the candidate's active applications, unread notifications. */
 export async function counters(user) {
-  const notifications = await notificationCounts(user)
+  // perf 2026-11-24: the counts are independent, so they run together.
+  const candidate = user.role === 'candidate'
+  const [notifications, unreadMessages, applications, agencyActions] = await Promise.all([
+    notificationCounts(user),
+    user.role === 'admin' ? undefined : unreadCount(user, user.companyId),
+    candidate ? candidateCounters(user) : undefined,
+    candidate ? candidateAgencyActions(user) : undefined,
+  ])
   if (user.role === 'admin') return { notifications }
-  const unreadMessages = await unreadCount(user, user.companyId)
-  if (user.role !== 'candidate') return { unreadMessages, notifications }
+  if (!candidate) return { unreadMessages, notifications }
   // 2026-11-20: agencyActions = re-hire offers and agreements waiting (the Agencies sidebar badge).
-  return { unreadMessages, ...(await candidateCounters(user)), agencyActions: await candidateAgencyActions(user), notifications }
+  return { unreadMessages, ...applications, agencyActions, notifications }
 }
 
 /** PATCH /me. Until the language is explicit, the country's default language follows the country (M-134). */

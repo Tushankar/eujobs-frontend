@@ -68,6 +68,8 @@ applicationSchema.index({ candidateId: 1, jobId: 1 }, { unique: true, partialFil
 applicationSchema.index({ companyId: 1, status: 1 })
 applicationSchema.index({ jobId: 1, status: 1 })
 applicationSchema.index({ candidateId: 1, appliedAt: -1 })
+// The recruiter lists, newest first (perf 2026-11-24).
+applicationSchema.index({ companyId: 1, appliedAt: -1 })
 
 /** An application is active until it is withdrawn or not selected (M-082, M-094). */
 export const ACTIVE_FILTER = { status: { $nin: ['withdrawn', 'not_selected'] } }

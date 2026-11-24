@@ -26,6 +26,37 @@ export function filterParams({ query, filters, sort, jobId, relevant }) {
 
 export const EMPTY_FILTERS = { workPreference: '', availability: '', minYears: '', skill: '', language: '', languageLevel: '', rightToWork: false, verified: false, place: null }
 
+const TEXT_FILTERS = ['workPreference', 'availability', 'minYears', 'skill', 'language', 'languageLevel']
+
+/** The filters kept in the Find candidates URL (perf 2026-11-24), so Back from a profile returns to the same list. */
+export function filtersFromUrl(params) {
+  let place = null
+  try {
+    place = JSON.parse(params.get('place'))
+  } catch {
+    // A hand-edited place is ignored.
+  }
+  return {
+    ...EMPTY_FILTERS,
+    ...Object.fromEntries(TEXT_FILTERS.map((name) => [name, params.get(name) ?? ''])),
+    rightToWork: params.get('rightToWork') === '1',
+    verified: params.get('verified') === '1',
+    place: typeof place?.placeId === 'string' ? place : null,
+  }
+}
+
+/** The URL form of the search, filters and sort ('' leaves a parameter out). */
+export function urlState({ query, filters, sort }) {
+  return {
+    q: query.trim(),
+    sort: sort === 'recommended' ? '' : sort,
+    ...Object.fromEntries(TEXT_FILTERS.map((name) => [name, filters[name]])),
+    rightToWork: filters.rightToWork ? '1' : '',
+    verified: filters.verified ? '1' : '',
+    place: filters.place ? JSON.stringify(filters.place) : '',
+  }
+}
+
 export function countActiveFilters(filters) {
   return Object.values(filters).filter(Boolean).length
 }

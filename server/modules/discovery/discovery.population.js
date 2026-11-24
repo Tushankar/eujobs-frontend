@@ -41,3 +41,17 @@ export async function listableCandidates(ids) {
 export async function marketCandidates(country) {
   return (await listableCandidates()).filter(({ profile }) => inMarket(profile, country))
 }
+
+/**
+ * marketCandidates for several countries from one load of the listable candidates (perf 2026-11-24): a function of the
+ * country, for one batch of work (relevant counts, the recruiter Overview).
+ */
+export function marketLoader() {
+  let listable
+  const markets = new Map()
+  return (country) => {
+    listable ??= listableCandidates()
+    if (!markets.has(country)) markets.set(country, listable.then((entries) => entries.filter(({ profile }) => inMarket(profile, country))))
+    return markets.get(country)
+  }
+}

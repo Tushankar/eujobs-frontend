@@ -10,6 +10,10 @@ import styles from './Modal.module.css'
 // Keep in sync with the exit animation in Modal.module.css.
 const EXIT_MS = 180
 
+// 2026-11-24: the open dialogs, oldest first. Escape and the Tab trap belong to the top one only, so Escape in a
+// dialog opened over another (a note over the pipeline's candidate panel) no longer closes both.
+const openDialogs = []
+
 const FOCUSABLE = 'a[href], button:not([disabled]), input:not([disabled]), select:not([disabled]), textarea:not([disabled]), [tabindex]:not([tabindex="-1"])'
 
 /**
@@ -78,6 +82,18 @@ export default function Modal({
     onCloseRef.current = onClose
   }, [onClose])
 
+  // Its own effect (open only), so a change of `dismissible` does not move this dialog to the top of the stack.
+  const stackEntry = useRef({})
+  useEffect(() => {
+    if (!open) return undefined
+    const entry = stackEntry.current
+    openDialogs.push(entry)
+    return () => {
+      const at = openDialogs.indexOf(entry)
+      if (at !== -1) openDialogs.splice(at, 1)
+    }
+  }, [open])
+
   useEffect(() => {
     if (!open) return undefined
     const opener = document.activeElement
@@ -88,6 +104,7 @@ export default function Modal({
     first?.focus()
 
     function onKeyDown(event) {
+      if (openDialogs[openDialogs.length - 1] !== stackEntry.current) return
       if (event.key === 'Escape') {
         if (dismissible) onCloseRef.current()
         return

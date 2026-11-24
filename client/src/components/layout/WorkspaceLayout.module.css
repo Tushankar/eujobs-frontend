@@ -56,3 +56,32 @@
     align-items: flex-start;
   }
 }
+
+/* A thin bar at the top while the next page's code or data loads (perf 2026-11-24), so a first click never looks
+   dead. It waits 150 ms, so quick navigations show nothing; it only scales (no layout work). */
+.progress {
+  position: fixed;
+  top: 0;
+  right: 0;
+  left: 0;
+  z-index: 1000;
+  height: 2px;
+  background: var(--primary);
+  transform: scaleX(0);
+  transform-origin: left;
+  animation: progress 2.4s var(--ease-out) 150ms forwards;
+  pointer-events: none;
+}
+
+@keyframes progress {
+  to {
+    transform: scaleX(0.9);
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .progress {
+    transform: scaleX(0.6);
+    animation: none;
+  }
+}
