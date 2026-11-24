@@ -102,6 +102,7 @@ export const COVERAGE = {
   AdminRole: 'kept (admins cannot erase themselves)',
   Permission: 'kept (catalogue)',
   Country: 'kept (catalogue)',
+  Sector: 'kept (catalogue)',
   LegalDocument: 'kept (catalogue)',
   Faq: 'kept (catalogue)',
   Plan: 'kept (catalogue)',

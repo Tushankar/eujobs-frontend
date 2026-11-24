@@ -6,24 +6,11 @@
   gap: 4px 8px;
 }
 
-.action {
-  padding: 0;
-  border: 0;
-  background: none;
-  font: inherit;
+/* 2026-11-24 (owner: "not looking like buttons"): real pill buttons, a touch shorter so they sit in a badge row. */
+.chip .action {
+  min-height: 28px;
+  padding: 4px 12px;
   font-size: 12px;
-  font-weight: 600;
-  color: var(--primary);
-  cursor: pointer;
-}
-
-.action:hover {
-  text-decoration: underline;
-}
-
-.action:disabled {
-  color: var(--muted-foreground);
-  cursor: progress;
 }
 
 .error {

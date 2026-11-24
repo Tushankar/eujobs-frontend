@@ -2,6 +2,7 @@ import { useTranslation } from 'react-i18next'
 import { Link } from 'react-router-dom'
 import { hiringPath } from '@/app/roles.js'
 import PillBadge from '@/components/common/PillBadge.jsx'
+import { Button } from '@/components/ui'
 import { useErrorText } from '@/lib/forms.js'
 import { useTalentActionMutation } from '../api.js'
 import styles from './BooksChip.module.css'
@@ -23,14 +24,14 @@ export default function BooksChip({ books }) {
     <span className={styles.chip} data-books={state}>
       <PillBadge tone={state === 'agreementPending' ? 'warning' : (TONE[books.status] ?? 'neutral')}>{t(`agency:booksChip.${state}`)}</PillBadge>
       {books.status === 'requested' && books.id && (
-        <button type="button" className={styles.action} disabled={isLoading} onClick={() => act({ id: books.id, action: 'accept' })} data-books-accept>
+        <Button size="sm" className={styles.action} loading={isLoading} onClick={() => act({ id: books.id, action: 'accept' })} data-books-accept>
           {t('agency:booksChip.accept')}
-        </button>
+        </Button>
       )}
       {books.status === 'none' && (
-        <Link to={hiringPath('talent')} className={styles.action}>
+        <Button as={Link} to={hiringPath('talent')} size="sm" variant="outline" className={styles.action}>
           {t('agency:booksChip.howTo')}
-        </Link>
+        </Button>
       )}
       {error && (
         <span className={styles.error} role="alert">
