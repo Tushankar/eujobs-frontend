@@ -36,6 +36,7 @@ async function publishedJob(fields = {}) {
     createdBy: user._id,
     title: 'Senior Product Designer',
     employmentType: 'full_time',
+    sector: 'it_software',
     brief: 'Lead the design of our hiring tools, from research to shipped product, with a small and kind team.',
     responsibilities: ['Run research', 'Design flows', 'Ship with engineers'],
     requiredSkills: [{ name: 'Figma', key: 'figma' }],

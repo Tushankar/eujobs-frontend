@@ -8,7 +8,6 @@ import cardBottom from '@/assets/landing/hero-card-bottom.svg'
 import cardMan from '@/assets/landing/hero-card-man.svg'
 import cardTop from '@/assets/landing/hero-card-top.svg'
 import cardWoman from '@/assets/landing/hero-card-woman.svg'
-import maskMan from '@/assets/landing/hero-mask-man.svg'
 import maskWoman from '@/assets/landing/hero-mask-woman.svg'
 import orbit1 from '@/assets/landing/hero-orbit-1.svg?raw'
 import orbit2 from '@/assets/landing/hero-orbit-2.svg?raw'
@@ -82,6 +81,8 @@ export function SiteHeader({ className = '' }) {
 // The page's LCP photos live in public/ with fixed names so index.html can preload them before any JS runs.
 const photoMan = '/landing/hero-man.webp'
 const photoWoman = '/landing/hero-woman.webp'
+/** Fades the man photo's bottom (it ends mid-leg) into the card, inside the card's slanted bottom edge. */
+const manFade = 'linear-gradient(to bottom, #000 68%, transparent 86%)'
 
 /** A box placed at Figma coordinates inside the 468 × 445 art frame. */
 const at = (left, top, width, height) => ({ left, top, width, height })
@@ -100,10 +101,9 @@ function HeroArt() {
         <img src={cardMan} alt="" style={{ width: '100%', height: '97.02%' }} />
       </div>
       <img src={sparkles} alt="" style={{ ...at(292, 187, 48, 45.5), opacity: 0.5 }} data-twinkle data-sparkle />
-      {/* Figma 457:23289: the cut-out photo, clipped by the card shape. */}
-      <div className={styles.maskedPhoto} style={{ ...at(225, 127, 274, 414), maskImage: `url("${maskMan}")`, WebkitMaskImage: `url("${maskMan}")`, maskPosition: '52px 55.227px', WebkitMaskPosition: '52px 55.227px', maskSize: '191px 257.773px', WebkitMaskSize: '191px 257.773px' }}>
-        <img src={photoMan} alt="" fetchPriority="high" style={{ left: 0, width: '100%', height: '100%', objectFit: 'cover' }} />
-      </div>
+      {/* Figma 457:23289 clipped this photo by the card shape; the owner (2026-11-24) wants his body never cut, so it is not
+          masked by the card. The photo itself stops at his shins, so its bottom fades out into the card instead. */}
+      <img src={photoMan} alt="" fetchPriority="high" style={{ ...at(269, 155, 214, 323), maskImage: manFade, WebkitMaskImage: manFade }} />
       <div className={styles.flipY} style={at(277, 8, 190, 164)}>
         <img src={cardTop} alt="" style={{ position: 'absolute', top: 0, left: 0, width: '99.61%', height: '94.89%' }} />
       </div>
