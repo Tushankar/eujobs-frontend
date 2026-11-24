@@ -16,7 +16,8 @@ import { useErrorText } from '@/lib/forms.js'
 import { useJobText } from '@/lib/jobText.js'
 import { useFormat } from '@/lib/preferences.js'
 import { useGetMyAgenciesQuery, useGetMyPlacementsQuery, useJoinAgencyMutation, useMembershipActionMutation, usePlacementActionMutation } from '../api.js'
-import styles from './AgenciesPage.module.css'
+import styles from './AgenciesPage.module.css'
+import { useSectors } from '@/lib/sectors.js'
 
 /*
  * 2026-11-20 (agencies, phase 5): the candidate's Agencies page: placements (running, upcoming, over), re-hire offers
@@ -245,6 +246,7 @@ function Offers({ offers, onOpen }) {
 /** The agencies: status, the agreement state and what the candidate can do next. */
 function Agencies({ memberships, onLeave }) {
   const { t } = useTranslation()
+  const sectors = useSectors()
   const format = useFormat()
   const errorText = useErrorText()
   const [act, { error: actError }] = useMembershipActionMutation()
@@ -272,7 +274,7 @@ function Agencies({ memberships, onLeave }) {
                   ? t('agency:candidate.membership.agreed', { version: membership.acceptedVersion, date: format.date(membership.acceptedAt) })
                   : membership.requestedBy === 'agency' && membership.status === 'awaiting_agreement'
                     ? t('agency:candidate.membership.invited')
-                    : membership.agency.industry
+                    : sectors.industry(membership.agency)
           return (
             <li key={membership.id} className={styles.row} data-membership={membership.agency.displayName}>
               <CompanyLogo name={membership.agency.displayName} id={membership.agency.id} src={membership.agency.logoUrl ?? undefined} size={40} />

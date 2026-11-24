@@ -17,6 +17,7 @@ import styles from './JobWizard.module.css'
 const READ_ONLY_STEPS = ['quality', 'review']
 // 2026-11-23: the fields the AI draft can fill, by the step that shows them (for the step list's AI marks).
 const AI_STEP_FIELDS = {
+  basics: ['sector'],
   responsibilities: ['brief', 'responsibilities'],
   'required-skills': ['requiredSkills'],
   'preferred-skills': ['preferredSkills'],

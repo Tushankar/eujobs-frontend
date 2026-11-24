@@ -3,6 +3,7 @@ import { ENUMS, HIRING_ROLES } from '../../config/enums.js'
 import { LIMITS } from '../../config/limits.js'
 import { objectId } from '../../lib/validate.js'
 import { email, fullName } from '../auth/auth.schemas.js'
+import { sectorKey } from '../jobs/jobs.schemas.js'
 import { placeId } from '../places/places.schemas.js'
 
 /* Recruiter onboarding (M-151 … M-153), the Company page (M-147) and Account review (M-165). Limits: P4-Q3. */
@@ -39,7 +40,8 @@ export const companyBody = z.object({
   website,
   // The email rule already caps it at 254 (C.businessEmail).
   businessEmail: email,
-  industry: text(C.industry),
+  // 2026-11-24: a sector key (GET /meta/sectors) instead of a typed industry.
+  sector: sectorKey,
   size: z.enum(ENUMS.companySize),
   placeId,
   businessAddress: text(C.businessAddress),
@@ -49,7 +51,7 @@ export const companyBody = z.object({
 /** The Company page after approval: public fields only (M-147). */
 export const companyPatchBody = z.object({
   displayName: text(C.name),
-  industry: text(C.industry),
+  sector: sectorKey,
   size: z.enum(ENUMS.companySize),
   placeId,
   website,

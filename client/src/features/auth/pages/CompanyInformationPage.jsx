@@ -6,6 +6,7 @@ import { refreshMe } from '@/app/session.js'
 import { SelectField, TextareaField, TextField } from '@/components/ui'
 import CityField from '@/components/common/CityField.jsx'
 import { check, useErrorText, useFormState } from '@/lib/forms.js'
+import { useSectors } from '@/lib/sectors.js'
 import { useSaveOnboardingCompanyMutation } from '../api.js'
 import hintStyles from '../components/compactHint.module.css'
 import StepFooter from '../components/StepFooter.jsx'
@@ -27,11 +28,13 @@ export default function CompanyInformationPage() {
   const { data: config } = useGetConfigQuery()
   const [saveCompany, { isLoading }] = useSaveOnboardingCompanyMutation()
   const company = state.company
+  const sectors = useSectors()
   const { values, set, errors, setErrors, failure, run } = useFormState({
     legalName: company?.legalName ?? '',
     website: company?.website ?? '',
     businessEmail: company?.businessEmail ?? '',
-    industry: company?.industry ?? '',
+    // 2026-11-24: a sector instead of a typed industry.
+    sector: company?.sector ?? '',
     size: company?.size ?? '',
     place: company?.location ?? null,
     registrationDetails: company?.registrationDetails ?? '',
@@ -49,7 +52,7 @@ export default function CompanyInformationPage() {
         legalName: check.text(values.legalName, limits.name.max),
         website: check.text(values.website, limits.website.max),
         businessEmail: check.email(values.businessEmail),
-        industry: check.text(values.industry, limits.industry.max),
+        sector: check.required(values.sector),
         size: check.required(values.size),
         placeId: values.place ? undefined : { key: 'required' },
         businessAddress: check.text(values.businessAddress, limits.businessAddress.max),
@@ -100,7 +103,16 @@ export default function CompanyInformationPage() {
                 onChange={field('businessEmail')}
                 error={errorOf('businessEmail')}
               />
-              <TextField label={t('auth:onboarding.company.industry')} name="industry" value={values.industry} onChange={field('industry')} error={errorOf('industry')} />
+              <SelectField
+                label={t('auth:onboarding.company.sector')}
+                name="sector"
+                placeholder={t('auth:onboarding.company.sectorPlaceholder')}
+                hint={t('auth:onboarding.company.sectorHint')}
+                options={sectors.options(company?.sector)}
+                value={values.sector}
+                onChange={field('sector')}
+                error={errorOf('sector')}
+              />
               <SelectField
                 label={t('auth:onboarding.company.size')}
                 name="size"

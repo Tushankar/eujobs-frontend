@@ -19,7 +19,8 @@ import { useFormat } from '@/lib/preferences.js'
 import { useGetJobQuery, useSaveToggle } from '../api.js'
 import MatchBadge from '../components/MatchBadge.jsx'
 import styles from './JobDetailsPage.module.css'
-import { useMarkSeen } from '@/features/notifications/api.js'
+import { useMarkSeen } from '@/features/notifications/api.js'
+import { useSectors } from '@/lib/sectors.js'
 
 /** The company website as its bare host ("kyptronix.com"); the server always stores it with https://. */
 const hostOf = (website) => new URL(website).hostname.replace(/^www\./, '')
@@ -113,6 +114,7 @@ function SkillEvidence({ job }) {
  */
 export default function JobDetailsPage() {
   const { t } = useTranslation()
+  const sectors = useSectors()
   const format = useFormat()
   const jobText = useJobText()
   const { jobId } = useParams()
@@ -180,7 +182,7 @@ export default function JobDetailsPage() {
                 {job.agency && <PillBadge tone="neutral">{t('agency:candidate.agencyTag')}</PillBadge>}
                 <MatchBadge job={job} />
               </div>
-              <p className={styles.posted}>{[company.industry, job.publishedAt && t('findJobs:details.posted', { time: format.relative(job.publishedAt) })].filter(Boolean).join(' · ')}</p>
+              <p className={styles.posted}>{[sectors.industry(company), job.publishedAt && t('findJobs:details.posted', { time: format.relative(job.publishedAt) })].filter(Boolean).join(' · ')}</p>
             </div>
           </header>
 
@@ -267,7 +269,7 @@ export default function JobDetailsPage() {
               <CompanyLogo name={company.displayName} id={company.id} src={company.logoUrl ?? undefined} size={48} />
               <div className={styles.aboutHeadText}>
                 <VerifiedCompany className={styles.aboutName} name={company.displayName} verified={company.verified} />
-                <p className={styles.aboutMeta}>{[company.industry, company.size && t(`enums:companySize.${company.size}`)].filter(Boolean).join(' · ')}</p>
+                <p className={styles.aboutMeta}>{[sectors.industry(company), company.size && t(`enums:companySize.${company.size}`)].filter(Boolean).join(' · ')}</p>
               </div>
             </div>
             {company.description && (

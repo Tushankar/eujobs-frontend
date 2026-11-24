@@ -9,6 +9,7 @@ import { normalizePhone } from '../auth/auth.service.js'
 import { File } from '../files/files.model.js'
 import { reissueCertificates } from '../learning/learning.certificates.js'
 import { notifyAdmins } from '../notifications/notifications.service.js'
+import { sectorFields } from '../meta/sectors.service.js'
 import { resolvePlace } from '../places/places.service.js'
 import { updateMe } from '../users/users.service.js'
 import { Company, KycDocument } from './companies.model.js'
@@ -40,6 +41,7 @@ export function publicCompanyDto(company, logoUrl) {
   return {
     id: String(company._id),
     displayName: company.displayName,
+    sector: company.sector ?? null,
     industry: company.industry ?? null,
     size: company.size ?? null,
     description: company.description ?? '',
@@ -149,7 +151,7 @@ export async function saveOnboardingCompany(user, body) {
   assertEditable(user)
   const existing = await companyOf(user)
   const location = existing?.location?.placeId === body.placeId ? existing.location : await resolvePlace(body.placeId, user.language)
-  const fields = { ...body, placeId: undefined, displayName: body.legalName, location, registrationDetails: body.registrationDetails || undefined }
+  const fields = { ...body, placeId: undefined, displayName: body.legalName, location, registrationDetails: body.registrationDetails || undefined, ...(await sectorFields(body.sector, 'sector', existing?.sector)) }
   const company = existing ?? new Company({ ownerUserId: user._id })
   company.set(fields)
   await company.save()
@@ -218,7 +220,7 @@ export async function submit(user) {
 /** M-147: display name, industry, size, city, website and description; the legal name stays as verified. */
 export async function updateCompany(user, company, body) {
   const location = company.location?.placeId === body.placeId ? company.location : await resolvePlace(body.placeId, user.language)
-  company.set({ ...body, placeId: undefined, location })
+  company.set({ ...body, placeId: undefined, location, ...(await sectorFields(body.sector, 'sector', company.sector)) })
   await company.save()
 }
 

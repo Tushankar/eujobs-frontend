@@ -8,6 +8,7 @@ import { AgencyClient } from '../agencies/agencies.model.js'
 import { clientNameKey } from '../agencies/agencies.service.js'
 import { Company } from '../companies/companies.model.js'
 import { Job } from '../jobs/jobs.model.js'
+import { Sector } from '../meta/meta.model.js'
 import { MatchResult } from '../matching/matching.model.js'
 import { User } from '../users/users.model.js'
 import { jobFacts, write } from './ai.facts.js'
@@ -76,7 +77,9 @@ function agencyTerms(draft, clients) {
 
 /** POST /recruiter/ai/job-draft: brief, responsibilities, skills, level, years and languages for a title. */
 export async function jobDraft(user, { title, employmentType, notes }) {
-  const input = { title, employmentType, notes: notes || null, company: await companyFacts(user) }
+  // 2026-11-24: the shown sectors, so the draft can suggest the job's sector.
+  const sectors = await Sector.find({ hidden: false }, 'key name.en').sort({ key: 1 })
+  const input = { title, employmentType, notes: notes || null, company: await companyFacts(user), sectors: sectors.map((sector) => ({ key: sector.key, name: sector.name.en })) }
   const agency = user.role === 'agency'
   const clients = agency ? (await AgencyClient.find({ companyId: user.companyId }, 'name nameKey')).map((client, index) => ({ ref: `c${index + 1}`, id: client._id, name: client.name, nameKey: client.nameKey })) : []
   if (agency) Object.assign(input, { today: today(), clients: clients.map(({ ref, name }) => ({ ref, name })) })
@@ -88,6 +91,7 @@ export async function jobDraft(user, { title, employmentType, notes }) {
   const codes = new Set()
   return {
     ...(terms && { agency: terms }),
+    sector: sectors.some((sector) => sector.key === draft.sector) ? draft.sector : null,
     brief: clip(withoutNames(draft.brief, clientNames), J.brief.max),
     responsibilities: names(draft.responsibilities.map((item) => withoutNames(item, clientNames)), J.responsibilities),
     requiredSkills,

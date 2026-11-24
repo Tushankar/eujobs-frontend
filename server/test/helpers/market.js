@@ -4,6 +4,7 @@ import { createDefaultStages } from '../../modules/companies/companies.review.js
 import { Company } from '../../modules/companies/companies.model.js'
 import { CvVersion } from '../../modules/cv/cv.model.js'
 import { File } from '../../modules/files/files.model.js'
+import { ensureSectors } from '../../modules/meta/sectors.service.js'
 import { Subscription } from '../../modules/payments/payments.model.js'
 import { VerificationSubmission } from '../../modules/verification/verification.model.js'
 import { PLACES } from '../../seed/data/places.js'
@@ -14,6 +15,8 @@ import { createUser } from './index.js'
 /** An approved recruiter with a company; on Recruiter Plus unless `plus: false` (§3.22: Free tests opt out). */
 export async function approvedRecruiter({ city = 'london', plus = true, ...fields } = {}) {
   const user = await createUser({ role: 'recruiter', status: 'active', jobTitle: 'Talent lead', ...fields })
+  // 2026-11-24: publishing needs a sector (jobBody's is IT & Software).
+  await ensureSectors()
   const company = await Company.create({
     ownerUserId: user._id,
     legalName: `${user.fullName} Ltd`,
@@ -64,6 +67,7 @@ export async function listedCandidate({ city = 'london', profile = {}, ...fields
 export const jobBody = (overrides = {}) => ({
   title: 'Senior Product Designer',
   employmentType: 'full_time',
+  sector: 'it_software',
   brief: 'Lead the design of our hiring tools, from research to shipped product, with a small and kind team.',
   responsibilities: ['Run research', 'Design flows', 'Ship with engineers'],
   requiredSkills: ['Figma', 'Design Systems'],

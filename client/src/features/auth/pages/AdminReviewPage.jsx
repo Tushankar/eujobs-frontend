@@ -12,7 +12,8 @@ import { useSubmitOnboardingMutation } from '../api.js'
 import StepHeading from '../components/StepHeading.jsx'
 import { stepPath } from '../data/onboarding.js'
 import { useOnboarding } from '../utils/useOnboarding.js'
-import styles from './AdminReviewPage.module.css'
+import styles from './AdminReviewPage.module.css'
+import { useSectors } from '@/lib/sectors.js'
 
 const STATUS_TONES = { pending_review: 'warning', rejected: 'danger', suspended: 'danger' }
 
@@ -38,6 +39,7 @@ function Checked({ ok, children, note }) {
  */
 export default function AdminReviewPage() {
   const { t } = useTranslation()
+  const sectors = useSectors()
   const format = useFormat()
   const errorText = useErrorText()
   const { state } = useOnboarding()
@@ -133,7 +135,7 @@ export default function AdminReviewPage() {
             <div className={styles.companyText}>
               <p className={styles.companyName}>{company.legalName}</p>
               <p className={styles.companyMeta}>
-                {[company.industry, company.location && t('common:city.value', { city: company.location.city, country: format.country(company.location.countryCode) })]
+                {[sectors.industry(company), company.location && t('common:city.value', { city: company.location.city, country: format.country(company.location.countryCode) })]
                   .filter(Boolean)
                   .join(' · ')}
               </p>

@@ -17,6 +17,9 @@ const companySchema = new Schema(
     displayName: { type: String, required: true },
     website: String,
     businessEmail: String,
+    // 2026-11-24: the sector's key (meta Sector) and, in `industry`, its English name; older companies keep the
+    // industry they typed until they pick a sector.
+    sector: String,
     industry: String,
     size: { type: String, enum: ENUMS.companySize },
     location: placeSchema,

@@ -15,7 +15,8 @@ import dialogStyles from './ReviewDialog.module.css'
 import detailStyles from './ReviewDetails.module.css'
 import styles from './VerificationReview.module.css'
 import accountStyles from './AccountReview.module.css'
-import { useMarkSeen } from '@/features/notifications/api.js'
+import { useMarkSeen } from '@/features/notifications/api.js'
+import { useSectors } from '@/lib/sectors.js'
 
 const ICONS = { approved: Check, rejected: X, suspended: Pause }
 const DECISION_TONES = { approved: 'success', rejected: 'danger', suspended: 'danger' }
@@ -74,6 +75,7 @@ export default function AccountReview({ userId, onDecided, onClose }) {
   // P11b-Q10: opening this item marks its notifications read.
   useMarkSeen('account', userId)
   const { t } = useTranslation()
+  const sectors = useSectors()
   const format = useFormat()
   const errorText = useErrorText()
   const { data: config } = useGetConfigQuery()
@@ -175,7 +177,7 @@ export default function AccountReview({ userId, onDecided, onClose }) {
     ? [
         ['legalName', company.legalName],
         ['businessEmail', company.businessEmail],
-        ['industry', company.industry],
+        ['industry', sectors.industry(company)],
         ['size', company.size && t(`enums:companySize.${company.size}`)],
         ['location', company.location && t('common:city.value', { city: company.location.city, country: format.country(company.location.countryCode) })],
         ['businessAddress', company.businessAddress],

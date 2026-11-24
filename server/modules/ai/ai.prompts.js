@@ -102,6 +102,7 @@ Leave a list empty when they say nothing about it.`,
   jobDraft: {
     kind: 'job_draft',
     schema: object({
+      sector: text,
       brief: text,
       responsibilities: texts,
       requiredSkills: texts,
@@ -117,7 +118,8 @@ responsibilities: 4 to 7 duties, each one sentence of at most ${J.responsibiliti
 requiredSkills: 4 to 8 skills essential for the role, each a short standard name of at most ${J.requiredSkills.itemMax} characters (a skill, tool or qualification, not a sentence).
 preferredSkills: 2 to 5 nice-to-have skills in the same form, none repeating a required one.
 level and experienceYears (a whole number from ${J.experienceYears.min} to ${J.experienceYears.max}): what the title and notes suggest; mid and 3 when nothing does.
-languages: only languages the notes ask for or the role plainly needs, as ISO 639-1 codes with a minimum CEFR level (or native); usually none.`,
+languages: only languages the notes ask for or the role plainly needs, as ISO 639-1 codes with a minimum CEFR level (or native); usually none.
+sector: the key of the entry in sectors that best describes the kind of work in this role (not the employer's industry: a developer at a bank is IT & Software), copied exactly; an empty string when none fits.`,
   },
   // 2026-11-23 (phase 6): the agency's job post writer: the same draft plus the client, dates, pay rate and hours.
   get agencyJobDraft() {

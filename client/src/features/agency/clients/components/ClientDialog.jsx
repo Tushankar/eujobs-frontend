@@ -2,15 +2,17 @@ import { useState } from 'react'
 import { useTranslation } from 'react-i18next'
 import { LoaderCircle, X } from 'lucide-react'
 import { errorCode, useGetConfigQuery } from '@/app/api.js'
-import { Button, CompanyLogo, Icon, Modal, TextField } from '@/components/ui'
+import { Button, CompanyLogo, Icon, Modal, SelectField, TextField } from '@/components/ui'
 import CityField from '@/components/common/CityField.jsx'
 import { check, checkUpload, compact, serverFieldErrors, useErrorText, useUploadText } from '@/lib/forms.js'
+import { useSectors } from '@/lib/sectors.js'
 import { useCreateClientMutation, useRemoveClientLogoMutation, useSearchClientCompaniesQuery, useUpdateClientMutation, useUploadClientLogoMutation } from '../../api.js'
 import styles from './ClientDialog.module.css'
 
 /** Picks the EU Jobs company a client is (optional), searched by name; shows the chosen one with a remove button. */
 function CompanyLink({ value, onChange }) {
   const { t } = useTranslation('agency')
+  const sectors = useSectors()
   const [query, setQuery] = useState('')
   const term = query.trim()
   const { data: found = [], isFetching } = useSearchClientCompaniesQuery(term, { skip: term.length < 2 })
@@ -36,7 +38,7 @@ function CompanyLink({ value, onChange }) {
                 <CompanyLogo name={company.displayName} src={company.logoUrl ?? undefined} size={28} />
                 <span className={styles.resultText}>
                   <span className={styles.resultName}>{company.displayName}</span>
-                  {company.industry && <span className={styles.resultMeta}>{company.industry}</span>}
+                  {sectors.industry(company) && <span className={styles.resultMeta}>{sectors.industry(company)}</span>}
                 </span>
               </button>
             </li>
@@ -47,16 +49,18 @@ function CompanyLink({ value, onChange }) {
   )
 }
 
-/** Add or edit a client: name, industry, city, the EU Jobs company it is, and (once saved) its logo. */
+/** Add or edit a client: name, sector, city, the EU Jobs company it is, and (once saved) its logo. */
 export default function ClientDialog({ client, open, onClose, onSaved }) {
   const { t } = useTranslation()
+  const sectors = useSectors()
   const errorText = useErrorText()
   const { data: config } = useGetConfigQuery()
   const logoRule = config?.limits.uploads.client_logo
   const uploadText = useUploadText(logoRule)
   const [values, setValues] = useState(() => ({
     name: client?.name ?? '',
-    industry: client?.industry ?? '',
+    // 2026-11-24: a sector instead of a typed industry; a client from before keeps its text until a sector is picked.
+    sector: client?.sector ?? '',
     place: client?.location ?? null,
     linked: client?.linkedCompany ?? null,
   }))
@@ -77,7 +81,7 @@ export default function ClientDialog({ client, open, onClose, onSaved }) {
     setErrors(nextErrors)
     setFailure(null)
     if (Object.keys(nextErrors).length) return
-    const body = { name: values.name.trim(), industry: values.industry.trim() || null, placeId: values.place?.placeId ?? null, linkedCompanyId: values.linked?.id ?? null }
+    const body = { name: values.name.trim(), sector: values.sector || null, placeId: values.place?.placeId ?? null, linkedCompanyId: values.linked?.id ?? null }
     try {
       const saved = await (client ? update({ id: client.id, body }) : create(body)).unwrap()
       // 2026-11-23: the job wizard picks a client added from it.
@@ -142,9 +146,18 @@ export default function ClientDialog({ client, open, onClose, onSaved }) {
           </div>
         )}
         <TextField label={t('agency:clients.fields.name')} name="name" value={values.name} onChange={set('name')} error={errorText.field('name', errors.name)} />
-        <TextField label={t('agency:clients.fields.industry')} name="industry" value={values.industry} onChange={set('industry')} error={errorText.field('industry', errors.industry)} />
+        <SelectField
+          label={t('agency:clients.fields.sector')}
+          name="sector"
+          hint={!values.sector && client?.industry && !client.sector ? t('agency:clients.fields.sectorBefore', { industry: client.industry }) : undefined}
+          options={[{ value: '', label: t('agency:clients.fields.noSector') }, ...sectors.options(client?.sector)]}
+          value={values.sector}
+          onChange={set('sector')}
+          error={errorText.field('sector', errors.sector)}
+        />
         <CityField label={t('agency:clients.fields.city')} name="clientCity" value={values.place} onChange={(place) => setValues((current) => ({ ...current, place }))} error={errorText.field('placeId', errors.placeId)} />
-        <CompanyLink value={values.linked} onChange={(linked) => setValues((current) => ({ ...current, linked }))} />
+        {/* A linked company's sector fills an empty one. */}
+        <CompanyLink value={values.linked} onChange={(linked) => setValues((current) => ({ ...current, linked, sector: current.sector || linked?.sector || '' }))} />
         {errors.linkedCompanyId && <p className={styles.error}>{errorText.field('linkedCompanyId', errors.linkedCompanyId)}</p>}
         {failure && (
           <p className={styles.error} role="alert">

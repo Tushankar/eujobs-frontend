@@ -8,6 +8,7 @@ import { Button, CompanyLogo, Icon, Panel, SelectField, Skeleton, SkeletonRegion
 import CityField from '@/components/common/CityField.jsx'
 import PillBadge from '@/components/common/PillBadge.jsx'
 import { check, checkUpload, useErrorText, useFormState, useUploadText } from '@/lib/forms.js'
+import { useSectors } from '@/lib/sectors.js'
 import { useGetCompanyQuery, useRemoveLogoMutation, useUpdateCompanyMutation, useUploadLogoMutation } from '../api.js'
 import CompanyAiDraft from '../components/CompanyAiDraft.jsx'
 import styles from './CompanyPage.module.css'
@@ -37,7 +38,7 @@ function PageHeading() {
 /** The page while the company loads: the real heading and field labels, placeholders for the values. */
 function CompanySkeleton() {
   const { t } = useTranslation()
-  const fields = ['displayName', 'industry', 'city', 'website', 'size']
+  const fields = ['displayName', 'sector', 'city', 'website', 'size']
   const hints = { displayName: t('company:fields.displayNameHint'), city: t('common:city.hint') }
   return (
     <>
@@ -100,9 +101,11 @@ function CompanyForm({ company }) {
   const uploadText = useUploadText(logoRule)
   const [logoError, setLogoError] = useState(null)
   const [saved, setSaved] = useState(false)
+  const sectors = useSectors()
   const { values, set, errors, setErrors, failure, run } = useFormState({
     displayName: company.displayName,
-    industry: company.industry ?? '',
+    // 2026-11-24: a sector instead of a typed industry; a company from before keeps its text until it picks one.
+    sector: company.sector ?? '',
     place: company.location,
     website: company.website ?? '',
     size: company.size ?? '',
@@ -136,7 +139,7 @@ function CompanyForm({ company }) {
     const ok = await run(
       {
         displayName: check.text(values.displayName, limits.name.max),
-        industry: check.text(values.industry, limits.industry.max),
+        sector: check.required(values.sector),
         placeId: values.place ? undefined : { key: 'required' },
         website: check.text(values.website, limits.website.max),
         size: check.required(values.size),
@@ -146,7 +149,7 @@ function CompanyForm({ company }) {
       () =>
         updateCompany({
           displayName: values.displayName,
-          industry: values.industry,
+          sector: values.sector,
           placeId: values.place.placeId,
           website: values.website,
           size: values.size,
@@ -207,7 +210,16 @@ function CompanyForm({ company }) {
               onChange={field('displayName')}
               error={errorOf('displayName')}
             />
-            <TextField label={t('company:fields.industry')} name="industry" value={values.industry} onChange={field('industry')} error={errorOf('industry')} />
+            <SelectField
+              label={t('company:fields.sector')}
+              name="sector"
+              placeholder={t('company:fields.sectorPlaceholder')}
+              hint={!values.sector && company.industry ? t('company:fields.sectorBefore', { industry: company.industry }) : t('company:fields.sectorHint')}
+              options={sectors.options(company.sector)}
+              value={values.sector}
+              onChange={field('sector')}
+              error={errorOf('sector')}
+            />
             <CityField
               label={t('company:fields.city')}
               name="companyCity"
@@ -247,7 +259,7 @@ function CompanyForm({ company }) {
             error={errorOf('description')}
           />
           {/* 2026-11-17: the company description writer (Recruiter Plus). */}
-          <CompanyAiDraft values={values} onChange={(text) => field('description')({ target: { value: text } })} />
+          <CompanyAiDraft values={{ ...values, industry: sectors.name(values.sector) ?? '' }} onChange={(text) => field('description')({ target: { value: text } })} />
 
           {failure && <p role="alert">{errorText.code(failure)}</p>}
           <div className={styles.actions}>

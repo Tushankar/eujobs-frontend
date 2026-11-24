@@ -15,6 +15,7 @@ const skills = (max) => z.array(z.string().trim().min(1).max(J.requiredSkills.it
 const salaryAmount = z.number().int().min(J.salary.min).max(J.salary.max).nullable().default(null)
 const A = J.agency
 const day = z.iso.date().nullable().default(null)
+export const sectorKey = z.string().regex(/^[a-z0-9_]{1,50}$/)
 
 /* 2026-11-20: an agency job's terms; formats only, so a draft can be saved with them empty (publish rules in the service). */
 export const agencyTermsBody = z.object({
@@ -33,6 +34,8 @@ export const agencyTermsBody = z.object({
 export const jobBody = z.object({
   title: z.string().trim().min(J.title.min).max(J.title.max),
   employmentType: z.enum(ENUMS.employmentType),
+  // 2026-11-24: a sector key (GET /meta/sectors); needed to publish.
+  sector: sectorKey.nullable().default(null),
   brief: z.string().trim().max(J.brief.max).default(''),
   responsibilities: z.array(z.string().trim().min(1).max(J.responsibilities.itemMax)).max(J.responsibilities.max).default([]),
   requiredSkills: skills(J.requiredSkills.max).default([]),

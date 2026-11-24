@@ -91,8 +91,9 @@ export async function meDto(user) {
     dto.jobTitle = user.jobTitle ?? null
     dto.phone = { e164: user.phone?.e164 ?? null, verified: Boolean(user.phone?.verifiedAt) }
     // The shell subtitle and logo (M-195); null until onboarding step 2.
-    const company = user.companyId ? await Company.findById(user.companyId, 'displayName logoFileId') : null
-    dto.company = company ? { id: String(company._id), displayName: company.displayName, logoUrl: (await logoUrls([company], user._id)).get(String(company._id)) } : null
+    const company = user.companyId ? await Company.findById(user.companyId, 'displayName logoFileId sector') : null
+    // `sector` (2026-11-24): a new job starts from the company's sector.
+    dto.company = company ? { id: String(company._id), displayName: company.displayName, sector: company.sector ?? null, logoUrl: (await logoUrls([company], user._id)).get(String(company._id)) } : null
   }
   if (user.role === 'admin') {
     dto.isOwner = user.isOwner

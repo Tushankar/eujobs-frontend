@@ -241,6 +241,8 @@ export const LIMITS = {
   // 2026-11-13: the landing page's moderated reviews, the blog and the newsletter double opt-in
   review: { text: { min: 20, max: 400 }, landing: 6 },
   blog: { title: { min: 5, max: 120 }, excerpt: { min: 20, max: 300 }, body: { min: 50, max: 50_000 }, landing: 3, pageSize: 9 },
+  // 2026-11-24: job sectors (admin › Website › Sectors): a name per language, at most `max` sectors.
+  sector: { name: { min: 2, max: 60 }, max: 60 },
   newsletter: { perIp: { windowMs: HOUR, limit: 10 }, confirmTtlMs: 7 * 24 * HOUR },
   // 2026-11-19: newsletter issues. One batch of mail a minute (Gmail SMTP allows about 500 a day, Workspace 2000).
   newsletterIssue: {

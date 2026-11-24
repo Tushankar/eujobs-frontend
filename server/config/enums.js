@@ -211,7 +211,8 @@ export const ENUMS = {
   // Owner 2026-11-16: the colour theme an account picked (light is the default when none is saved).
   theme: ['light', 'dark'],
   workPreference: ['remote', 'hybrid', 'on_site'],
-  employmentType: ['full_time', 'part_time', 'contract', 'internship'],
+  // 2026-11-24: 'volunteer' (unpaid, no salary; company jobs only).
+  employmentType: ['full_time', 'part_time', 'contract', 'internship', 'volunteer'],
   jobLevel: ['junior', 'mid', 'senior', 'lead'],
   // M-040: also the tab and sort order
   jobStatus: ['published', 'paused', 'draft', 'closed'],

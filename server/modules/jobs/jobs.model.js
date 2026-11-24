@@ -40,6 +40,8 @@ const jobSchema = new Schema(
     createdBy: { type: ObjectId, ref: 'User' },
     title: String,
     employmentType: { type: String, enum: ENUMS.employmentType },
+    // 2026-11-24: the job sector's key (meta Sector): the kind of work.
+    sector: String,
     brief: String,
     responsibilities: [String],
     requiredSkills: [skill],
@@ -68,6 +70,7 @@ const jobSchema = new Schema(
 )
 jobSchema.index({ status: 1, country: 1 })
 jobSchema.index({ companyId: 1, status: 1 })
+jobSchema.index({ status: 1, sector: 1 })
 jobSchema.index({ 'agency.clientId': 1 }, { sparse: true })
 
 /* M-065 */

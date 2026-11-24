@@ -117,6 +117,9 @@ const TAG_TYPES = [
     // 2026-11-20 (phase 5): the candidate's agencies and placements
     'CandidateAgencies',
     'CandidatePlacements',
+    // 2026-11-24: job sectors (GET /meta/sectors; admin › Website › Sectors changes them)
+    'Sectors',
+    'AdminSectors',
 ]
 
 /**
@@ -143,6 +146,8 @@ export const api = createApi({
     markCelebrationSeen: build.mutation({ query: (id) => ({ url: `/me/celebrations/${id}/seen`, method: 'POST' }), invalidatesTags: ['Me'] }),
     getConfig: build.query({ query: () => '/meta/config', providesTags: ['Config'] }),
     getCountries: build.query({ query: () => '/meta/countries', transformResponse: (response) => response.items, providesTags: ['Countries'] }),
+    // 2026-11-24: job sectors with their names in every language (hidden ones flagged).
+    getSectors: build.query({ query: () => '/meta/sectors', transformResponse: (response) => response.items, providesTags: ['Sectors'] }),
     // ISO 639-1 codes (M-020) for profile and job language fields; names come from Intl.DisplayNames.
     getLanguageCodes: build.query({ query: () => '/meta/languages', transformResponse: (response) => response.items }),
     // City fields of every role (G-1, §2.16): the server proxies Google in the user's language.
@@ -161,6 +166,7 @@ export const {
   useMarkCelebrationSeenMutation,
   useGetConfigQuery,
   useGetCountriesQuery,
+  useGetSectorsQuery,
   useGetLanguageCodesQuery,
   useGetPlaceSuggestionsQuery,
   useLazyGetPlaceQuery,

@@ -23,7 +23,7 @@ const COMPANY = {
   legalName: 'Nordlicht Studio GmbH',
   website: 'nordlicht.example',
   businessEmail: 'hello@nordlicht.example',
-  industry: 'Design services',
+  sector: 'it_software',
   size: '11_50',
   placeId: PLACES.berlin.placeId,
   businessAddress: 'Torstraße 1, 10119 Berlin',
@@ -236,7 +236,7 @@ describe('company page and logo (M-147, M-150)', () => {
 
   it('edits the public fields only; the legal name stays as verified', async () => {
     const user = await approved()
-    const body = { displayName: 'Nordlicht', industry: 'Product design', size: '51_200', placeId: PLACES.munich.placeId, website: 'https://nordlicht.example/about', description: 'We design calm software for busy teams.' }
+    const body = { displayName: 'Nordlicht', sector: 'it_software', size: '51_200', placeId: PLACES.munich.placeId, website: 'https://nordlicht.example/about', description: 'We design calm software for busy teams.' }
     const res = await api().patch('/api/v1/recruiter/company').set(auth(user)).send({ ...body, legalName: 'Changed GmbH' })
     assert.equal(res.status, 200)
     assert.deepEqual([res.body.displayName, res.body.legalName, res.body.location.city], ['Nordlicht', COMPANY.legalName, 'Munich'])

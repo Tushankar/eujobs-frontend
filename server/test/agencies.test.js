@@ -130,7 +130,7 @@ describe('agency clients', () => {
     const { user: agency } = await approvedAgency()
     const { company: linked } = await approvedRecruiter()
     const { company: otherAgency } = await approvedAgency()
-    const created = await addClient(agency, { name: 'Acme Ltd', industry: 'Logistics', placeId: PLACES.london.placeId })
+    const created = await addClient(agency, { name: 'Acme Ltd', sector: 'logistics_transport', placeId: PLACES.london.placeId })
     assert.equal(created.status, 201)
     assert.deepEqual([created.body.name, created.body.location.city, created.body.jobs, created.body.linkedCompany], ['Acme Ltd', 'London', 0, null])
     assert.deepEqual((await addClient(agency, { name: 'ACME' })).body.error.fields, { name: 'duplicate' })

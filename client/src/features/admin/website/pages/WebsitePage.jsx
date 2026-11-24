@@ -1,7 +1,7 @@
 import { useState } from 'react'
 import { useTranslation } from 'react-i18next'
 import { Link, useLocation } from 'react-router-dom'
-import { Download, FileText, Mail, Newspaper, Plus, Send } from 'lucide-react'
+import { Download, FileText, Layers, Mail, Newspaper, Plus, Send } from 'lucide-react'
 import { can } from '@/app/permissions.js'
 import ConfirmDialog from '@/components/common/ConfirmDialog.jsx'
 import DataTable from '@/components/common/DataTable.jsx'
@@ -18,7 +18,8 @@ import { downloadFromApi } from '@/lib/download.js'
 import { useErrorText } from '@/lib/forms.js'
 import { useFormat, usePreferences } from '@/lib/preferences.js'
 import NewsletterTab from '../components/NewsletterTab.jsx'
-import { useDeletePostMutation, useGetAdminPostsQuery, useGetNewsletterIssuesQuery, useGetSubscribersQuery, useSetPostStatusMutation } from '../api.js'
+import SectorsTab from '../components/SectorsTab.jsx'
+import { useDeletePostMutation, useGetAdminPostsQuery, useGetAdminSectorsQuery, useGetNewsletterIssuesQuery, useGetSubscribersQuery, useSetPostStatusMutation } from '../api.js'
 import styles from './WebsitePage.module.css'
 
 const SUBSCRIBER_STATUSES = ['confirmed', 'pending', 'unsubscribed']
@@ -228,16 +229,17 @@ function SubscribersTab({ canExport, onNotice }) {
   )
 }
 
-/** Admin › Website (2026-11-13): /admin/website (Blog), /admin/website/subscribers and /admin/website/newsletter (2026-11-19). */
+/** Admin › Website (2026-11-13): /admin/website (Blog), /admin/website/subscribers, /admin/website/newsletter (2026-11-19) and /admin/website/sectors (2026-11-24). */
 export default function WebsitePage() {
   const { t } = useTranslation()
   const { me } = usePreferences()
   const { pathname } = useLocation()
-  const tab = pathname.endsWith('/subscribers') ? 'subscribers' : pathname.endsWith('/newsletter') ? 'newsletter' : 'blog'
+  const tab = ['subscribers', 'newsletter', 'sectors'].find((id) => pathname.endsWith(`/${id}`)) ?? 'blog'
   const [notice, setNotice] = useState('')
   const posts = useGetAdminPostsQuery()
   const subscribers = useGetSubscribersQuery({ status: 'confirmed', page: 1 })
   const issues = useGetNewsletterIssuesQuery()
+  const sectors = useGetAdminSectorsQuery()
 
   return (
     <>
@@ -262,6 +264,7 @@ export default function WebsitePage() {
             loading: issues.isLoading,
             to: '/admin/website/newsletter',
           },
+          { id: 'sectors', label: t('website:admin.tabs.sectors'), icon: Layers, count: sectors.data?.total ?? 0, loading: sectors.isLoading, to: '/admin/website/sectors' },
         ]}
       />
       {notice && <NoticeBanner>{notice}</NoticeBanner>}
@@ -269,6 +272,7 @@ export default function WebsitePage() {
         {tab === 'blog' && <BlogTab manage={can(me, 'content.manage')} onNotice={setNotice} />}
         {tab === 'subscribers' && <SubscribersTab canExport={can(me, 'reports.export')} onNotice={setNotice} />}
         {tab === 'newsletter' && <NewsletterTab manage={can(me, 'content.manage')} onNotice={setNotice} />}
+        {tab === 'sectors' && <SectorsTab manage={can(me, 'content.manage')} onNotice={setNotice} />}
       </div>
     </>
   )

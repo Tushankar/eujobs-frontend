@@ -11,6 +11,7 @@ import { Company } from '../companies/companies.model.js'
 import { logoUrlsById } from '../companies/companies.service.js'
 import { File } from '../files/files.model.js'
 import { Country } from '../meta/meta.model.js'
+import { checkSector } from '../meta/sectors.service.js'
 import { ModerationCase } from '../moderation/moderation.model.js'
 import { planState } from '../payments/payments.service.js'
 import { refreshRelevantCounts, scheduleRecompute } from '../matching/matching.service.js'
@@ -32,7 +33,7 @@ const SUGGESTIONS = 12
 
 // M-039: the wizard step of each field; a 422 names the first step with an invalid field.
 const STEPS = {
-  basics: ['title', 'employmentType'],
+  basics: ['title', 'employmentType', 'sector'],
   responsibilities: ['brief', 'responsibilities'],
   'required-skills': ['requiredSkills'],
   'preferred-skills': ['preferredSkills'],
@@ -133,15 +134,19 @@ async function jobFields(user, input, existing) {
 
   let salary
   const { min = null, max = null, period, currency: chosen } = input.salary ?? {}
-  // 2026-11-23: an agency job pays its rate (agency terms) and never shows a salary, so it keeps none.
-  if ((min !== null || max !== null) && user.role !== 'agency') {
+  // 2026-11-23: an agency job pays its rate (agency terms) and never shows a salary, so it keeps none; nor does an
+  // unpaid volunteer job (2026-11-24).
+  if ((min !== null || max !== null) && user.role !== 'agency' && input.employmentType !== 'volunteer') {
     if (min !== null && max !== null && max < min) throw fieldError({ 'salary.max': 'below_min' })
     salary = { min: min ?? undefined, max: max ?? undefined, currency: await payCurrency(country, chosen, 'salary.currency'), period }
   }
 
+  await checkSector(input.sector, 'sector', existing?.sector)
+
   return {
     title: input.title,
     employmentType: input.employmentType,
+    sector: input.sector ?? undefined,
     brief: input.brief,
     responsibilities: input.responsibilities,
     requiredSkills,
@@ -163,6 +168,7 @@ async function jobFields(user, input, existing) {
 function assertPublishable(job) {
   const fields = {}
   const params = {}
+  if (!job.sector) fields.sector = 'required'
   if (!job.brief) fields.brief = 'required'
   else if (job.brief.length < J.brief.min) {
     fields.brief = 'too_short'
@@ -198,6 +204,7 @@ export function jobFieldsDto(job) {
     id: String(job._id),
     title: job.title,
     employmentType: job.employmentType,
+    sector: job.sector ?? null,
     brief: job.brief ?? '',
     responsibilities: job.responsibilities,
     requiredSkills: names(job.requiredSkills),

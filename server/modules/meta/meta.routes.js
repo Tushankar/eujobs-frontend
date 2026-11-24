@@ -8,6 +8,7 @@ import { chargeCurrency } from '../payments/currencies.js'
 import { companyCurrency } from '../payments/payments.service.js'
 import { placesManual } from '../places/places.service.js'
 import * as meta from './meta.service.js'
+import { listSectors } from './sectors.service.js'
 
 /* Public catalogue reads (§5 "Meta and public"); mounted at the API root. */
 const router = Router()
@@ -23,6 +24,11 @@ router.get('/meta/config', async (req, res) => {
 
 router.get('/meta/countries', async (req, res) => {
   res.json(list(await meta.listCountries()))
+})
+
+// 2026-11-24: job sectors with their names in every language; hidden ones are flagged.
+router.get('/meta/sectors', async (req, res) => {
+  res.json(list(await listSectors()))
 })
 
 router.get('/meta/languages', (req, res) => {

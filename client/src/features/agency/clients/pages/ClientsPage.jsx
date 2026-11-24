@@ -9,6 +9,7 @@ import PillBadge from '@/components/common/PillBadge.jsx'
 import { Button, CompanyLogo, Dropdown, Icon, IconButton, Skeleton, SkeletonRegion, TextField } from '@/components/ui'
 import { useErrorText } from '@/lib/forms.js'
 import { useFormat, usePreferences } from '@/lib/preferences.js'
+import { useSectors } from '@/lib/sectors.js'
 import { useDeleteClientMutation, useGetClientsQuery } from '../../api.js'
 import ClientDialog from '../components/ClientDialog.jsx'
 import styles from './ClientsPage.module.css'
@@ -34,6 +35,7 @@ export default function ClientsPage() {
   const { t } = useTranslation()
   const format = useFormat()
   const { language } = usePreferences()
+  const sectors = useSectors()
   const errorText = useErrorText()
   const { data, isLoading } = useGetClientsQuery()
   const [query, setQuery] = useState('')
@@ -44,7 +46,7 @@ export default function ClientsPage() {
   const [deleteClient] = useDeleteClientMutation()
   const clients = data?.items ?? []
   const needle = query.trim().toLocaleLowerCase(language)
-  const visible = clients.filter((client) => !needle || [client.name, client.industry, client.location?.city, client.linkedCompany?.displayName].filter(Boolean).some((text) => text.toLocaleLowerCase(language).includes(needle)))
+  const visible = clients.filter((client) => !needle || [client.name, sectors.industry(client), client.location?.city, client.linkedCompany?.displayName].filter(Boolean).some((text) => text.toLocaleLowerCase(language).includes(needle)))
   const noClients = Boolean(data) && clients.length === 0
 
   const addButton = (
@@ -63,7 +65,7 @@ export default function ClientsPage() {
   }
 
   const meta = (client) =>
-    [client.industry, client.location && t('common:city.value', { city: client.location.city, country: format.country(client.location.countryCode) })].filter(Boolean).join(' · ')
+    [sectors.industry(client), client.location && t('common:city.value', { city: client.location.city, country: format.country(client.location.countryCode) })].filter(Boolean).join(' · ')
 
   return (
     <>

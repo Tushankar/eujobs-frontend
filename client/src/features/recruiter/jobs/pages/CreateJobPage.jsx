@@ -1,4 +1,4 @@
-import { hiringPath } from '@/app/roles.js'
+import { currentRole, hiringPath } from '@/app/roles.js'
 import { useTranslation } from 'react-i18next'
 import { useDispatch } from 'react-redux'
 import { useNavigate, useParams, useSearchParams } from 'react-router-dom'
@@ -43,7 +43,8 @@ function NewJob() {
       <Heading companyName={me?.company?.displayName} note={t('jobs:wizard.newNote')} />
       <div className={styles.wizard}>
         <JobWizard
-          initialValues={EMPTY_VALUES}
+          // 2026-11-24: a recruiter's job starts in the company's sector; an agency's takes its client's (agency terms).
+          initialValues={{ ...EMPTY_VALUES, sector: (currentRole() !== 'agency' && me?.company?.sector) || '' }}
           companyName={me?.company?.displayName ?? ''}
           finishActions={DRAFT_ACTIONS}
           onContinue={createDraft}

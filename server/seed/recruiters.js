@@ -9,6 +9,7 @@ import { User } from '../modules/users/users.model.js'
 import { pdf } from './candidates.js'
 import { CANDIDATES } from './data/candidates.js'
 import { PLACES } from './data/places.js'
+import { SECTORS } from './data/sectors.js'
 import { ACME_SHORTLIST, ALEX_SAVED_JOBS, APPLICANT_COMPANY, COMPANIES, JOBS, PROFILE_VIEWS } from './data/recruiters.js'
 
 /*
@@ -38,7 +39,9 @@ async function seedCompany({ owner, recruiter, now, data, status }) {
     displayName: data.name,
     website: data.website ?? `https://${data.key}.example.com`,
     businessEmail: data.businessEmail ?? `hiring@${data.key}.example.com`,
-    industry: data.industry,
+    // 2026-11-24: a company with a sector keeps the sector's English name as its industry (as the Company page saves it).
+    sector: data.sector,
+    industry: data.sector ? SECTORS.find((sector) => sector.key === data.sector).name.en : data.industry,
     size: data.size,
     location: PLACES[data.city],
     businessAddress: data.businessAddress ?? `${PLACES[data.city].city} (sample address)`,

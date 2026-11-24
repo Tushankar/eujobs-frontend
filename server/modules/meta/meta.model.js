@@ -48,6 +48,20 @@ const faqSchema = new Schema(
 )
 faqSchema.index({ audiences: 1, order: 1 })
 
+/*
+ * 2026-11-24: job sectors (the kind of work). Jobs, companies and agency clients keep the permanent `key`; admins
+ * rename and hide sectors (a hidden one stays on what already has it but is not offered any more).
+ */
+const sectorSchema = new Schema(
+  {
+    key: { type: String, required: true, unique: true },
+    name: { en: { type: String, required: true }, es: { type: String, required: true }, fr: { type: String, required: true } },
+    hidden: { type: Boolean, default: false },
+  },
+  { timestamps: true },
+)
+
 export const Country = mongoose.model('Country', countrySchema)
+export const Sector = mongoose.model('Sector', sectorSchema)
 export const LegalDocument = mongoose.model('LegalDocument', legalDocumentSchema)
 export const Faq = mongoose.model('Faq', faqSchema)

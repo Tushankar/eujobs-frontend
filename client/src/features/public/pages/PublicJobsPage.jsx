@@ -16,7 +16,8 @@ import PublicShell from '../components/PublicShell.jsx'
 import JobSearchForm from '../components/landing/JobSearchForm.jsx'
 import landing from '../components/landing/Landing.module.css'
 import shell from '../components/PublicShell.module.css'
-import styles from './PublicJobsPage.module.css'
+import styles from './PublicJobsPage.module.css'
+import { useSectors } from '@/lib/sectors.js'
 
 /* The landing page's six categories (and Agency) as tabs (one work mode or employment type at a time), after "All jobs". */
 const TABS = [
@@ -231,6 +232,7 @@ function JobRow({ job, active, onOpen }) {
 /** The open job, pinned beside the list: what a candidate reads, with Apply and Save going through sign-in. */
 function JobDetail({ job, onBack }) {
   const { t } = useTranslation()
+  const sectors = useSectors()
   const format = useFormat()
   const text = useJobText()
   const { company } = job
@@ -251,7 +253,7 @@ function JobDetail({ job, onBack }) {
         <CompanyLogo name={company.displayName} id={company.id} src={company.logoUrl ?? undefined} size={52} />
         <div>
           <VerifiedCompany className={styles.detailCompany} name={company.displayName} verified={company.verified} />
-          <p className={styles.detailPosted}>{[company.industry, job.publishedAt && t('findJobs:details.posted', { time: format.relative(job.publishedAt) })].filter(Boolean).join(' · ')}</p>
+          <p className={styles.detailPosted}>{[sectors.industry(company), job.publishedAt && t('findJobs:details.posted', { time: format.relative(job.publishedAt) })].filter(Boolean).join(' · ')}</p>
         </div>
       </header>
       <h2 id="job-title" className={styles.detailTitle} data-part>
@@ -349,7 +351,7 @@ function JobDetail({ job, onBack }) {
           <CompanyLogo name={company.displayName} id={company.id} src={company.logoUrl ?? undefined} size={40} />
           <div>
             <VerifiedCompany className={styles.companyName} name={company.displayName} verified={company.verified} />
-            <p className={styles.detailPosted}>{[company.industry, company.size && t(`enums:companySize.${company.size}`)].filter(Boolean).join(' · ')}</p>
+            <p className={styles.detailPosted}>{[sectors.industry(company), company.size && t(`enums:companySize.${company.size}`)].filter(Boolean).join(' · ')}</p>
           </div>
         </div>
         {company.description && <p className={styles.prose}>{company.description}</p>}

@@ -14,7 +14,8 @@ import { useGetAdminFileUrlQuery } from '@/features/admin/moderation/api.js'
 import { useFormat, usePreferences } from '@/lib/preferences.js'
 import { useGetAdminUserQuery } from '../api.js'
 import { CATEGORY_ICONS, STATE_TONES, STATUS_TONES, SUBMISSION_TONES, VERIFICATION_TONES } from '../tones.js'
-import styles from './UserDetailPage.module.css'
+import styles from './UserDetailPage.module.css'
+import { useSectors } from '@/lib/sectors.js'
 
 /** One labelled section of facts; `rows` = [label, value] pairs (empty values are skipped); `badge` sits beside the title. */
 function Facts({ title, badge, rows, children }) {
@@ -240,6 +241,7 @@ function CandidateSections({ user, part }) {
 /** A recruiter's sections: `part="main"` company, KYC files, review history, learning; `part="side"` the plan and the job counts. */
 function RecruiterSections({ user, part }) {
   const { t } = useTranslation(['adminUsers', 'enums'])
+  const sectors = useSectors()
   const format = useFormat()
   const { me } = usePreferences()
   const { company } = user
@@ -265,7 +267,7 @@ function RecruiterSections({ user, part }) {
           company && [
             [t('detail.legalName'), company.legalName],
             [t('detail.displayName'), company.displayName],
-            [t('detail.industry'), company.industry],
+            [t('detail.industry'), sectors.industry(company)],
             [t('detail.size'), company.size && t(`enums:companySize.${company.size}`)],
             [t('detail.location'), company.location && `${company.location.city}, ${format.country(company.location.countryCode)}`],
             [t('detail.website'), company.website],

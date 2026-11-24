@@ -158,7 +158,7 @@ export async function endByAgency(company, id) {
 /* ---------- the candidate's side ---------- */
 
 async function candidateDtos(user, memberships) {
-  const companies = await Company.find({ _id: { $in: memberships.map((membership) => membership.companyId) } }, 'displayName logoFileId industry')
+  const companies = await Company.find({ _id: { $in: memberships.map((membership) => membership.companyId) } }, 'displayName logoFileId sector industry')
   const companyOf = new Map(companies.map((company) => [String(company._id), company]))
   const logos = await logoUrls(companies, user._id)
   const currents = new Map(await Promise.all(companies.map(async (company) => [String(company._id), await currentAgreement(company._id)])))
@@ -169,7 +169,7 @@ async function candidateDtos(user, memberships) {
       id: String(membership._id),
       status: membership.status,
       requestedBy: membership.requestedBy,
-      agency: { id: String(company._id), displayName: company.displayName, industry: company.industry ?? null, logoUrl: logos.get(String(company._id)) ?? null },
+      agency: { id: String(company._id), displayName: company.displayName, sector: company.sector ?? null, industry: company.industry ?? null, logoUrl: logos.get(String(company._id)) ?? null },
       agreement: current ? { version: current.version, publishedAt: current.publishedAt } : null,
       ...agreementState(membership, current),
       endedBy: membership.endedBy ?? null,

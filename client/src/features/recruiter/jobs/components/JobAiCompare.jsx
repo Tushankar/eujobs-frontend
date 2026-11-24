@@ -3,6 +3,7 @@ import { Sparkles } from 'lucide-react'
 import { Button, Icon } from '@/components/ui'
 import { useGetClientsQuery } from '@/features/agency/api.js'
 import { useFormat } from '@/lib/preferences.js'
+import { useSectors } from '@/lib/sectors.js'
 import styles from './JobAiDraft.module.css'
 
 const lines = (text) =>
@@ -17,8 +18,11 @@ function useShow(agency) {
   const { t } = useTranslation()
   const format = useFormat()
   const { data: clients } = useGetClientsQuery(undefined, { skip: !agency })
+  const sectors = useSectors()
   return (field, value, period) => {
     switch (field) {
+      case 'sector':
+        return sectors.name(value) ?? '—'
       case 'brief':
         return <span className={styles.compareClamp}>{value.trim()}</span>
       case 'responsibilities':

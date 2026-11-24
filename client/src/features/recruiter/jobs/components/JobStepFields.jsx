@@ -6,6 +6,7 @@ import { useGetConfigQuery, useGetCountriesQuery } from '@/app/api.js'
 import { Checkbox, Icon, SelectField, Skeleton, SkeletonRegion, TextareaField, TextField } from '@/components/ui'
 import CityField from '@/components/common/CityField.jsx'
 import { useJobText } from '@/lib/jobText.js'
+import { useSectors } from '@/lib/sectors.js'
 import { useGetQualityChecksQuery } from '../api.js'
 import { valuesToBody } from '../utils/jobForm.js'
 import { useJobPreview } from '../utils/useJobPreview.js'
@@ -68,8 +69,17 @@ export default function JobStepFields({ step, values, bind, errorOf, setValue, o
   const { preview, currency, remote } = useJobPreview(values)
   // 2026-11-23: an agency job pays its rate (Agency terms) and has no salary: the rate shows where a salary would.
   const agency = currentRole() === 'agency'
+  // 2026-11-24: a volunteer job is unpaid, so it has no salary.
+  const volunteer = values.employmentType === 'volunteer'
+  const sectors = useSectors()
   const rateAmount = Number(String(values.rateAmount ?? '').trim())
-  const pay = agency ? (currency && rateAmount > 0 ? jobText.rate({ rate: { amountMinor: Math.round(rateAmount * 100), currency, period: values.ratePeriod } }) : '') : jobText.salary(preview)
+  const pay = agency
+    ? currency && rateAmount > 0
+      ? jobText.rate({ rate: { amountMinor: Math.round(rateAmount * 100), currency, period: values.ratePeriod } })
+      : ''
+    : volunteer
+      ? t('jobs:fields.unpaid')
+      : jobText.salary(preview)
   const enumOptions = (name) => (config?.enums[name] ?? []).map((key) => ({ value: key, label: t(`enums:${name}.${key}`) }))
   const currencies = useCurrencyOptions()
   const J = config?.limits.job
@@ -88,6 +98,15 @@ export default function JobStepFields({ step, values, bind, errorOf, setValue, o
               {...bind('employmentType')}
             />
           </div>
+          {/* 2026-11-24: the kind of work; candidates filter and browse jobs by it. */}
+          <SelectField
+            className={aiFilled('sector')}
+            label={t('jobs:fields.sector')}
+            hint={t('jobs:fields.sectorHint')}
+            placeholder={t('jobs:fields.sectorPlaceholder')}
+            options={sectors.options(values.sector)}
+            {...bind('sector')}
+          />
           {/* 2026-11-17: the job post writer fills the later steps' empty fields. */}
           <JobAiDraft values={values} setValue={setValue} onDrafted={onAiDrafted} />
         </div>
@@ -152,7 +171,8 @@ export default function JobStepFields({ step, values, bind, errorOf, setValue, o
           {remote && <EligibleCountries value={values.remoteCountries} error={errorOf('remoteCountries')} onChange={(codes) => setValue('remoteCountries', codes)} />}
           {/* An agency sets its pay rate in Agency terms; a remote agency job still picks the currency it pays in. */}
           {agency && remote && <SelectField label={t('agency:terms.rateCurrency')} options={currencies} {...bind('salaryCurrency')} />}
-          {!agency && (
+          {volunteer && <p className={styles.note}>{t('jobs:fields.volunteerNoSalary')}</p>}
+          {!agency && !volunteer && (
           <>
           <div className={styles.pair}>
             <TextField
@@ -185,7 +205,7 @@ export default function JobStepFields({ step, values, bind, errorOf, setValue, o
         <div className={styles.preview}>
           <h3 className={styles.previewTitle}>{preview.title || t('jobs:review.untitled')}</h3>
           <p className={styles.previewMeta}>
-            {[companyName, jobText.place(preview), pay, preview.employmentType && t(`enums:employmentType.${preview.employmentType}`), preview.level && t(`enums:jobLevel.${preview.level}`)]
+            {[companyName, jobText.place(preview), pay, preview.employmentType && t(`enums:employmentType.${preview.employmentType}`), sectors.name(values.sector), preview.level && t(`enums:jobLevel.${preview.level}`)]
               .filter(Boolean)
               .join(' · ')}
           </p>

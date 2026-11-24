@@ -4,6 +4,7 @@ import { Check, ChevronDown, Plus } from 'lucide-react'
 import { useGetConfigQuery } from '@/app/api.js'
 import { CompanyLogo, DatePicker, Dropdown, Field, Icon, TextField } from '@/components/ui'
 import { useFormat, usePreferences } from '@/lib/preferences.js'
+import { useSectors } from '@/lib/sectors.js'
 import { addDays, shiftMonth } from '@/utils/calendarDays.js'
 import { cx } from '@/utils/cx.js'
 import ClientDialog from '../clients/components/ClientDialog.jsx'
@@ -45,9 +46,10 @@ function Segmented({ label, value, options, onChange, name }) {
   )
 }
 
-/** The client: a list with logos and industries, and "Add a client" opening the client dialog right here. */
+/** The client: a list with logos and sectors, and "Add a client" opening the client dialog right here. `onChange` gets the client. */
 function ClientPicker({ value, onChange, error }) {
   const { t } = useTranslation()
+  const sectors = useSectors()
   const { data, isLoading } = useGetClientsQuery()
   const [adding, setAdding] = useState(false)
   const clients = data?.items ?? []
@@ -77,7 +79,7 @@ function ClientPicker({ value, onChange, error }) {
                     <CompanyLogo name={chosen.name} src={chosen.logoUrl ?? undefined} size={28} />
                     <span className={styles.pickerText}>
                       <span className={styles.pickerName}>{chosen.name}</span>
-                      {chosen.industry && <span className={styles.pickerMeta}>{chosen.industry}</span>}
+                      {sectors.industry(chosen) && <span className={styles.pickerMeta}>{sectors.industry(chosen)}</span>}
                     </span>
                   </span>
                 ) : (
@@ -100,7 +102,7 @@ function ClientPicker({ value, onChange, error }) {
                     aria-selected={client.id === value}
                     className={cx(styles.option, client.id === value && styles.optionActive)}
                     onClick={() => {
-                      onChange(client.id)
+                      onChange(client)
                       close()
                     }}
                     data-client-option={client.name}
@@ -108,7 +110,7 @@ function ClientPicker({ value, onChange, error }) {
                     <CompanyLogo name={client.name} src={client.logoUrl ?? undefined} size={32} />
                     <span className={styles.pickerText}>
                       <span className={styles.pickerName}>{client.name}</span>
-                      {(client.industry || client.location?.city) && <span className={styles.pickerMeta}>{[client.industry, client.location?.city].filter(Boolean).join(' · ')}</span>}
+                      {(sectors.industry(client) || client.location?.city) && <span className={styles.pickerMeta}>{[sectors.industry(client), client.location?.city].filter(Boolean).join(' · ')}</span>}
                     </span>
                     {client.id === value && <Icon as={Check} size={16} className={styles.optionCheck} />}
                   </button>
@@ -130,7 +132,7 @@ function ClientPicker({ value, onChange, error }) {
           </Dropdown>
         )}
       </Field>
-      {adding && <ClientDialog open client={null} onClose={() => setAdding(false)} onSaved={(client) => onChange(client.id)} />}
+      {adding && <ClientDialog open client={null} onClose={() => setAdding(false)} onSaved={(client) => onChange(client)} />}
     </>
   )
 }
@@ -163,7 +165,15 @@ export default function AgencyTermsFields({ values, bind, setValue, errorOf, cur
         <h3 id="terms-client" className={cx(styles.sectionTitle, aiFilled('clientId'))}>
           {t('agency:terms.sectionClient')}
         </h3>
-        <ClientPicker value={values.clientId} onChange={(id) => setValue('clientId', id)} error={errorOf('clientId')} />
+        <ClientPicker
+          value={values.clientId}
+          onChange={(picked) => {
+            setValue('clientId', picked.id)
+            // 2026-11-24: a job without a sector takes its client's.
+            if (!values.sector && picked.sector) setValue('sector', picked.sector)
+          }}
+          error={errorOf('clientId')}
+        />
         <div className={styles.visibility}>
           <span className={styles.visibilityLabel}>{t('agency:terms.visibility')}</span>
           <Segmented

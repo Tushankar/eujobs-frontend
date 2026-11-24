@@ -8,6 +8,7 @@ import { Company } from '../companies/companies.model.js'
 import { logoUrls } from '../companies/companies.service.js'
 import { File } from '../files/files.model.js'
 import { Job } from '../jobs/jobs.model.js'
+import { sectorFields } from '../meta/sectors.service.js'
 import { resolvePlace } from '../places/places.service.js'
 import { User } from '../users/users.model.js'
 import { AgencyClient } from './agencies.model.js'
@@ -62,6 +63,7 @@ async function clientDtos(clients, viewerId) {
     return {
       id: String(client._id),
       name: client.name,
+      sector: client.sector ?? null,
       industry: client.industry ?? null,
       location: place(client.location),
       logoUrl: logo ? signedUrl(logo, viewerId) : null,
@@ -96,7 +98,7 @@ async function clientFields(user, company, body, existing) {
   if (body.linkedCompanyId && !(await linkableCompanyIds()).some((id) => String(id) === body.linkedCompanyId)) throw fieldError({ linkedCompanyId: 'invalid' })
   let location
   if (body.placeId) location = existing?.location?.placeId === body.placeId ? existing.location : await resolvePlace(body.placeId, user.language)
-  return { name: body.name, nameKey, industry: body.industry ?? undefined, location, linkedCompanyId: body.linkedCompanyId ?? undefined }
+  return { name: body.name, nameKey, ...(await sectorFields(body.sector, 'sector', existing?.sector)), location, linkedCompanyId: body.linkedCompanyId ?? undefined }
 }
 
 export async function createClient(user, company, body) {
@@ -144,7 +146,7 @@ export async function removeClientLogo(company, id) {
 /** GET /agency/clients/companies?q=: verified recruiter companies whose name contains q, to link a client to. */
 export async function searchCompanies(user, q) {
   const needle = searchText(q)
-  const companies = await Company.find({ _id: { $in: await linkableCompanyIds() }, verifiedAt: { $ne: null }, deletedAt: null }, 'displayName industry location logoFileId')
+  const companies = await Company.find({ _id: { $in: await linkableCompanyIds() }, verifiedAt: { $ne: null }, deletedAt: null }, 'displayName sector industry location logoFileId')
   const found = companies
     .filter((company) => searchText(company.displayName).includes(needle))
     .sort((a, b) => a.displayName.localeCompare(b.displayName))
@@ -154,6 +156,7 @@ export async function searchCompanies(user, q) {
     items: found.map((company) => ({
       id: String(company._id),
       displayName: company.displayName,
+      sector: company.sector ?? null,
       industry: company.industry ?? null,
       countryCode: company.location?.countryCode ?? null,
       logoUrl: logos.get(String(company._id)) ?? null,

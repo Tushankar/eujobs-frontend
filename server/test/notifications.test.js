@@ -214,7 +214,7 @@ describe('admin events: only admins whose permission covers them (P11b-Q1, Q4, Q
       legalName: 'Nordlicht Studio GmbH',
       website: 'nordlicht.example',
       businessEmail: 'hello@nordlicht.example',
-      industry: 'Design services',
+      sector: 'it_software',
       size: '11_50',
       placeId: PLACES.berlin.placeId,
       businessAddress: 'Torstraße 1, 10119 Berlin',

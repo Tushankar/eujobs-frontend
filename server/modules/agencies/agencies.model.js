@@ -17,6 +17,8 @@ const agencyClientSchema = new Schema(
     companyId: { type: ObjectId, ref: 'Company', required: true },
     name: { type: String, required: true },
     nameKey: { type: String, required: true },
+    // 2026-11-24: as on companies, the sector's key and its English name in `industry`.
+    sector: String,
     industry: String,
     location: placeSchema,
     logoFileId: ObjectId,

@@ -11,11 +11,14 @@ import AiStatus from '@/features/ai/components/AiStatus.jsx'
 import AiUsesLeft from '@/features/ai/components/AiUsesLeft.jsx'
 import { useJobText } from '@/lib/jobText.js'
 import { useFormat } from '@/lib/preferences.js'
+import { useSectors } from '@/lib/sectors.js'
 import JobAiCompare from './JobAiCompare.jsx'
 import styles from './JobAiDraft.module.css'
 
 // The form fields a draft can fill, in wizard order, with the value they count as empty.
 const EMPTY = {
+  // 2026-11-24: the AI suggests the sector (the kind of work) too.
+  sector: (value) => !value,
   brief: (value) => !value.trim(),
   responsibilities: (value) => !value.trim(),
   requiredSkills: (value) => value.length === 0,
@@ -46,6 +49,7 @@ const agencyValues = (terms) => ({
 /** The draft as form values (strings for text inputs). */
 const asValues = (draft) => ({
   ...(draft.agency && agencyValues(draft.agency)),
+  sector: draft.sector ?? '',
   brief: draft.brief,
   responsibilities: draft.responsibilities.join('\n'),
   requiredSkills: draft.requiredSkills,
@@ -79,6 +83,7 @@ const comparable = (field, value, period) => {
 function DraftPreview({ values, agency }) {
   const { t } = useTranslation()
   const format = useFormat()
+  const sectors = useSectors()
   const text = useJobText()
   const responsibilities = lines(values.responsibilities)
   const required = skillNames(values.requiredSkills)
@@ -92,6 +97,7 @@ function DraftPreview({ values, agency }) {
     ? [values.startDate && values.endDate && text.dates({ startDate: values.startDate, endDate: values.endDate }), String(values.hoursPerWeek).trim() && t('jobs:aiDraft.previewHours', { count: Number(values.hoursPerWeek) })].filter(Boolean)
     : []
   const rows = [
+    [t('jobs:fields.sector'), sectors.name(values.sector)],
     [t('jobs:fields.brief'), values.brief.trim() && <p key="brief" className={styles.previewBrief}>{values.brief.trim()}</p>],
     [
       t('jobs:fields.responsibilities'),

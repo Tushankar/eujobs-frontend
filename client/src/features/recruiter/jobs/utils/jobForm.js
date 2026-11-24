@@ -16,6 +16,8 @@ export function jobSteps(role = currentRole()) {
 export const EMPTY_VALUES = {
   title: '',
   employmentType: 'full_time',
+  // 2026-11-24: a sector key; a new job starts from the company's sector (an agency's from the client it picks).
+  sector: '',
   brief: '',
   responsibilities: '',
   requiredSkills: [],
@@ -55,6 +57,7 @@ export function jobToValues(job) {
   return {
     title: job.title ?? '',
     employmentType: job.employmentType ?? 'full_time',
+    sector: job.sector ?? '',
     brief: job.brief ?? '',
     responsibilities: job.responsibilities.join('\n'),
     requiredSkills: job.requiredSkills,
@@ -103,6 +106,7 @@ export function valuesToBody(values) {
   return {
     title: values.title.trim(),
     employmentType: values.employmentType,
+    sector: values.sector || null,
     brief: values.brief.trim(),
     responsibilities: lines(values.responsibilities),
     requiredSkills: values.requiredSkills,
@@ -114,8 +118,8 @@ export function valuesToBody(values) {
     workPreference: values.workPreference || null,
     placeId: !remote && values.place ? values.place.placeId : null,
     remoteCountries: remote ? values.remoteCountries : [],
-    // 2026-11-23: an agency job pays its rate and keeps no salary.
-    salary: currentRole() === 'agency' || (min == null && max == null) ? null : { min, max, period: values.salaryPeriod, ...(remote && { currency: values.salaryCurrency }) },
+    // 2026-11-23: an agency job pays its rate and keeps no salary; an unpaid volunteer job has none either (2026-11-24).
+    salary: currentRole() === 'agency' || values.employmentType === 'volunteer' || (min == null && max == null) ? null : { min, max, period: values.salaryPeriod, ...(remote && { currency: values.salaryCurrency }) },
     ...(currentRole() === 'agency' && { agency: agencyBody(values) }),
   }
 }
@@ -145,6 +149,7 @@ export function validateStep(step, values, limits, { publishing = false } = {}) 
     else if (title.length < J.title.min) errors.title = { key: 'too_short', params: { min: J.title.min } }
     else if (title.length > J.title.max) errors.title = { key: 'too_long', params: { max: J.title.max } }
     if (!values.employmentType) errors.employmentType = { key: 'required' }
+    need('sector', !values.sector)
   }
   if (step === 'responsibilities') {
     const brief = values.brief.trim()
@@ -166,13 +171,13 @@ export function validateStep(step, values, limits, { publishing = false } = {}) 
   if (step === 'location') {
     need('workPreference', !values.workPreference)
     if (values.workPreference && values.workPreference !== 'remote') need('placeId', !values.place)
-    for (const field of ['salaryMin', 'salaryMax']) {
+    for (const field of values.employmentType === 'volunteer' ? [] : ['salaryMin', 'salaryMax']) {
       if (!blank(values[field])) {
         const problem = wholeNumber(values[field], J.salary)
         if (problem) errors[field] = problem
       }
     }
-    if (!errors.salaryMin && !errors.salaryMax && !blank(values.salaryMin) && !blank(values.salaryMax) && Number(values.salaryMax) < Number(values.salaryMin)) {
+    if (values.employmentType !== 'volunteer' && !errors.salaryMin && !errors.salaryMax && !blank(values.salaryMin) && !blank(values.salaryMax) && Number(values.salaryMax) < Number(values.salaryMin)) {
       errors.salaryMax = { key: 'below_min' }
     }
   }

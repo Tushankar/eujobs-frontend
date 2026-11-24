@@ -35,8 +35,9 @@ describe('recruiter jobs (§3.7, M-033 … M-041, P4-D6 … D8)', () => {
     assert.deepEqual([draft.status, draft.body.status, draft.body.company.displayName], [201, 'draft', `${user.fullName} Studio`])
     const invalid = await setStatus(user, draft.body.id, 'published')
     assert.equal(invalid.status, 422)
-    assert.equal(invalid.body.error.params.step, 'responsibilities')
-    assert.deepEqual(Object.keys(invalid.body.error.fields).sort(), ['brief', 'experienceYears', 'level', 'requiredSkills', 'workPreference'])
+    // 2026-11-24: the sector is on step 1 (basics).
+    assert.equal(invalid.body.error.params.step, 'basics')
+    assert.deepEqual(Object.keys(invalid.body.error.fields).sort(), ['brief', 'experienceYears', 'level', 'requiredSkills', 'sector', 'workPreference'])
 
     const saved = await update(user, draft.body.id, jobBody({ title: 'Designer', employmentType: 'contract' }))
     assert.equal(saved.body.status, 'draft')

@@ -2,6 +2,7 @@ import { z } from 'zod'
 import { ENUMS } from '../../config/enums.js'
 import { LIMITS } from '../../config/limits.js'
 import { objectId } from '../../lib/validate.js'
+import { sectorKey } from '../jobs/jobs.schemas.js'
 import { placeId } from '../places/places.schemas.js'
 
 /* 2026-11-20: an agency's clients. Only the name is required; the rest can be added later. */
@@ -10,7 +11,8 @@ const text = ({ min, max }) => z.string().trim().min(min).max(max)
 
 export const clientBody = z.object({
   name: text(C.name),
-  industry: text(C.industry).nullable().default(null),
+  // 2026-11-24: a sector key (GET /meta/sectors) instead of a typed industry.
+  sector: sectorKey.nullable().default(null),
   placeId: placeId.nullable().default(null),
   // An EU Jobs company this client is, so same-client rules match it exactly.
   linkedCompanyId: objectId.nullable().default(null),
