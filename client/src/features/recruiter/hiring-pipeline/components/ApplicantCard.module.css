@@ -69,7 +69,7 @@
 
 .activity {
   display: flex;
-  align-items: flex-start;
+  align-items: baseline;
   gap: 6px;
   font-size: 11px;
   line-height: 16px;
@@ -87,7 +87,7 @@
 /* A wrapped "Job · applied date" keeps its clock on the first line (2026-11-23). */
 .activityIcon {
   flex-shrink: 0;
-  margin-top: 2.5px;
+  translate: 0 2px;
 }
 
 /* The candidate's note count; opens the panel on its notes. */
