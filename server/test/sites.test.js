@@ -87,8 +87,14 @@ describe('sector sites', () => {
     assert.deepEqual([created.body.host, created.body.active, created.body.liveJobs], ['eujobs.green', true, 0])
     const duplicate = await api().post(`${v1}/admin/content/sites`).set(auth(admin)).send({ host: 'eujobs.green', title, text })
     assert.deepEqual(duplicate.body.error.fields, { host: 'duplicate' })
-    const mainHost = new URL(config.clientOrigin).host
-    assert.deepEqual((await api().post(`${v1}/admin/content/sites`).set(auth(admin)).send({ host: mainHost.replace(/:\d+$/, ''), title, text })).body.error.fields, { host: 'main_site' })
+    // The main site as production has it (the test origin is localhost, which is no domain).
+    const testOrigin = config.clientOrigin
+    config.clientOrigin = 'https://eujobs.careers'
+    try {
+      assert.deepEqual((await api().post(`${v1}/admin/content/sites`).set(auth(admin)).send({ host: 'www.eujobs.careers', title, text })).body.error.fields, { host: 'main_site' })
+    } finally {
+      config.clientOrigin = testOrigin
+    }
     assert.deepEqual((await api().post(`${v1}/admin/content/sites`).set(auth(admin)).send({ host: 'eujobs.bad', sectors: ['nope'], title, text })).body.error.fields, { sectors: 'invalid' })
 
     const off = await api().patch(`${v1}/admin/content/sites/eujobs.green`).set(auth(admin)).send({ active: false, remoteOnly: true })

@@ -63,7 +63,8 @@ export default {
     await api('/me', { method: 'PATCH', token, body: { pickerCountry: 'REMOTE' } })
     const remote = await list()
     ctx.check(remote.length > 0 && remote.every((item) => item.workPreference === 'remote'), `Remote lists remote candidates only (got ${names(remote)})`)
-    await page.reload({ waitUntil: 'networkidle0' })
+    // The filters live in the URL (perf 2026-11-24), so a reload would keep them: open the page without them.
+    await page.goto(`${ctx.webUrl}/recruiter/find-candidates`, { waitUntil: 'networkidle0' })
     await waitForText(page, 'open to remote work')
     await waitForText(page, `${remote.length} candidate`)
     await ctx.screenshot(page, '3-remote')

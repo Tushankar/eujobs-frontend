@@ -45,6 +45,9 @@ export default {
     await page.waitForFunction(() => new URL(location.href).searchParams.get('sort') === 'newest')
     ctx.check(true, `search and sort are in the URL: ${new URL(page.url()).search}`)
     await page.waitForSelector(`article[data-job="${job.id}"]`)
+    // The sort change refetches the list (cards dimmed, aria-busy): click once it has settled.
+    await page.waitForFunction(() => !document.querySelector('[aria-busy="true"]'))
+    await sleep(600)
 
     const bookmark = `article[data-job="${job.id}"] button[aria-pressed]`
     const before = await page.$eval(bookmark, (button) => button.getAttribute('aria-pressed'))
@@ -59,7 +62,7 @@ export default {
 
     await page.click(`article[data-job="${job.id}"] a[href="/candidate/jobs/${job.id}"]`)
     await waitForPath(page, `/candidate/jobs/${job.id}`)
-    const backHref = await page.evaluate(() => [...document.querySelectorAll('a')].find((link) => link.textContent.includes('Back to opportunities'))?.getAttribute('href'))
+    const backHref = await (await page.waitForFunction(() => [...document.querySelectorAll('main a')].find((link) => link.textContent.includes('Back to opportunities'))?.getAttribute('href'))).jsonValue()
     ctx.check(backHref?.includes('q=PerfA') && backHref.includes('sort=newest'), `the job page's Back keeps the search: ${backHref}`)
     await clickText(page, 'Back to opportunities', 'a')
     await page.waitForFunction(() => location.pathname === '/candidate/jobs')
