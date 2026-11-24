@@ -233,3 +233,36 @@ select.input {
 .control > select::picker(select) {
   position-anchor: --select-field;
 }
+
+/* SelectField's face inside the customisable select (see SelectField.jsx): the hidden labels set the width, the
+   chosen one shows on top and ends in an ellipsis when the field is narrower. */
+.selectFace {
+  all: unset;
+  display: grid;
+  flex: 1;
+  grid-template-columns: minmax(0, 1fr);
+  min-width: 0;
+}
+
+.selectSizer,
+.selectFace selectedcontent {
+  grid-area: 1 / 1;
+  min-width: 0;
+  overflow: hidden;
+  white-space: nowrap;
+}
+
+.selectSizer {
+  display: grid;
+  height: 0;
+  visibility: hidden;
+}
+
+.selectSizer > span {
+  grid-area: 1 / 1;
+}
+
+.selectFace selectedcontent {
+  display: block;
+  text-overflow: ellipsis;
+}

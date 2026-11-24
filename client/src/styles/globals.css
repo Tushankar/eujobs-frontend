@@ -97,6 +97,11 @@ select option {
   color: var(--foreground);
 }
 
+/* A field still on its placeholder ("Choose a sector") reads as empty, like a text field's placeholder. */
+select:has(option[value='']:disabled:checked) {
+  color: var(--text-placeholder);
+}
+
 @supports (appearance: base-select) {
   /* !important: the field modules set `appearance: none` for the browsers without base-select. */
   select,
