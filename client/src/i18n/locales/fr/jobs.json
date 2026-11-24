@@ -111,7 +111,8 @@
       "startDate": "date de début",
       "endDate": "date de fin",
       "rateAmount": "tarif",
-      "hoursPerWeek": "heures par semaine"
+      "hoursPerWeek": "heures par semaine",
+      "sector": "secteur"
     },
     "agencyText": "À partir de l'intitulé, du type de contrat et de quelques notes, l'IA rédige la description, les responsabilités, les compétences, le niveau, les années et les langues, ainsi que le client, les dates, le tarif et les heures indiqués dans vos notes. Elle ne remplit que les champs vides et ne nomme jamais le client dans le texte ; relisez chaque étape avant de publier.",
     "agencyNotesPlaceholder": "ex. 3 semaines de nuit pour Acme à partir de lundi, 14,50 € de l'heure, 38 heures par semaine, CACES chariot",
@@ -184,7 +185,12 @@
     "salaryCurrency": "Devise du salaire",
     "salaryCurrencyHint": "Les offres à distance peuvent payer dans n’importe quelle devise.",
     "salaryNote": "Le salaire est facultatif, mais les postes avec une fourchette attirent généralement des candidats plus pertinents.",
-    "visaSponsorship": "Parrainage de visa possible"
+    "visaSponsorship": "Parrainage de visa possible",
+    "sector": "Secteur",
+    "sectorHint": "Le type de travail. Les candidats filtrent et parcourent les offres par secteur.",
+    "sectorPlaceholder": "Choisissez un secteur",
+    "unpaid": "Non rémunéré (bénévolat)",
+    "volunteerNoSalary": "Le bénévolat n’est pas rémunéré : cette offre n’a pas de salaire."
   },
   "skills": {
     "placeholder": "Saisissez une compétence et appuyez sur Entrée",

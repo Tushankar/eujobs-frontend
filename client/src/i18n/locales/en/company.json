@@ -11,7 +11,11 @@
     "city": "Company city",
     "website": "Website",
     "size": "Company size",
-    "description": "What you’re building"
+    "description": "What you’re building",
+    "sector": "Sector",
+    "sectorPlaceholder": "Choose a sector",
+    "sectorHint": "New jobs start in this sector; you can change it per job.",
+    "sectorBefore": "Before: {{industry}}. Pick the sector that fits."
   },
   "aiDraft": {
     "notes": "Notes for the AI (optional)",

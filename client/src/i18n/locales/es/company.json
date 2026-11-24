@@ -11,7 +11,11 @@
     "city": "Ciudad de la empresa",
     "website": "Sitio web",
     "size": "Tamaño de la empresa",
-    "description": "Qué estás construyendo"
+    "description": "Qué estás construyendo",
+    "sector": "Sector",
+    "sectorPlaceholder": "Elige un sector",
+    "sectorHint": "Los empleos nuevos empiezan en este sector; puedes cambiarlo en cada empleo.",
+    "sectorBefore": "Antes: {{industry}}. Elige el sector que corresponda."
   },
   "aiDraft": {
     "notes": "Notas para la IA (opcional)",

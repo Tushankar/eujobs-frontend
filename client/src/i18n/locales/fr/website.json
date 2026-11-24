@@ -55,7 +55,8 @@
     "tabs": {
       "blog": "Blog",
       "subscribers": "Abonnés",
-      "newsletter": "Newsletter"
+      "newsletter": "Newsletter",
+      "sectors": "Secteurs"
     },
     "blog": {
       "new": "Nouvel article",
@@ -187,6 +188,41 @@
         "pointsHint": "Nécessite un titre. Un point par ligne ; l’article n’utilise que le titre et ces points. Non enregistré avec l’article.",
         "action": "Rédiger l’article avec l’IA",
         "done": "Résumé et article remplis. Vérifiez chaque fait avant de publier."
+      }
+    },
+    "sectors": {
+      "intro": "Les secteurs décrivent le type de travail. Les recruteurs en choisissent un par offre ; les candidats filtrent par secteur.",
+      "add": "Ajouter un secteur",
+      "addTitle": "Ajouter un secteur",
+      "editTitle": "Renommer le secteur",
+      "dialogText": "Nommez le secteur dans chaque langue. Son lien ne change jamais.",
+      "name": {
+        "en": "Nom en anglais",
+        "es": "Nom en espagnol",
+        "fr": "Nom en français"
+      },
+      "save": "Enregistrer",
+      "cancel": "Annuler",
+      "sector": "Secteur",
+      "jobs": "Offres",
+      "companies": "Entreprises et clients",
+      "status": "Statut",
+      "actions": "Actions",
+      "jobsValue_one": "{{count}} offre · {{live}} en ligne",
+      "jobsValue_many": "{{count}} offres · {{live}} en ligne",
+      "jobsValue_other": "{{count}} offres · {{live}} en ligne",
+      "shown": "Visible",
+      "hidden": "Masqué",
+      "rename": "Renommer",
+      "hide": "Masquer",
+      "show": "Afficher",
+      "empty": "Aucun secteur pour l’instant",
+      "caption": "Secteurs d’emploi",
+      "notice": {
+        "added": "Secteur ajouté : {{name}}",
+        "renamed": "Secteur renommé : {{name}}",
+        "hidden": "{{name}} est masqué. Les offres qui l’ont le gardent.",
+        "shown": "{{name}} est de nouveau visible."
       }
     }
   },

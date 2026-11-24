@@ -29,7 +29,8 @@
     "part_time": "Media jornada",
     "contract": "Contrato temporal",
     "internship": "Prácticas",
-    "agency": "Agencia"
+    "agency": "Agencia",
+    "volunteer": "Voluntariado"
   },
   "jobLevel": {
     "junior": "Junior",

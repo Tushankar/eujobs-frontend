@@ -110,7 +110,8 @@
       "startDate": "start date",
       "endDate": "end date",
       "rateAmount": "pay rate",
-      "hoursPerWeek": "hours per week"
+      "hoursPerWeek": "hours per week",
+      "sector": "sector"
     },
     "agencyText": "From the title, the employment type and a few notes, AI drafts the description, responsibilities, skills, level, years and languages, plus the client, dates, pay rate and hours your notes give. It only fills fields you left empty and never names the client in the text; review every step before you publish.",
     "agencyNotesPlaceholder": "e.g. 3 weeks of night cover for Acme from next Monday, €14.50 an hour, 38 hours a week, forklift licence",
@@ -183,7 +184,12 @@
     "salaryCurrency": "Salary currency",
     "salaryCurrencyHint": "Remote jobs can pay in any currency.",
     "salaryNote": "Salary is optional, but roles with a range usually attract more relevant applicants.",
-    "visaSponsorship": "Visa sponsorship available"
+    "visaSponsorship": "Visa sponsorship available",
+    "sector": "Sector",
+    "sectorHint": "The kind of work. Candidates filter and browse jobs by sector.",
+    "sectorPlaceholder": "Choose a sector",
+    "unpaid": "Unpaid (volunteer)",
+    "volunteerNoSalary": "Volunteer roles are unpaid, so this job has no salary."
   },
   "skills": {
     "placeholder": "Type a skill and press Enter",

@@ -29,7 +29,8 @@
     "part_time": "Temps partiel",
     "contract": "Contrat",
     "internship": "Stage",
-    "agency": "Agence"
+    "agency": "Agence",
+    "volunteer": "Bénévolat"
   },
   "jobLevel": {
     "junior": "Junior",

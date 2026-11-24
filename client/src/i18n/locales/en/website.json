@@ -55,7 +55,8 @@
     "tabs": {
       "blog": "Blog",
       "subscribers": "Subscribers",
-      "newsletter": "Newsletter"
+      "newsletter": "Newsletter",
+      "sectors": "Sectors"
     },
     "blog": {
       "new": "New post",
@@ -187,6 +188,40 @@
         "pointsHint": "Needs a title. One point per line; the article uses only the title and these points. Not saved with the post.",
         "action": "Write article with AI",
         "done": "Summary and article filled in. Check every fact before publishing."
+      }
+    },
+    "sectors": {
+      "intro": "Job sectors describe the kind of work. Recruiters pick one for each job; candidates filter by them.",
+      "add": "Add a sector",
+      "addTitle": "Add a sector",
+      "editTitle": "Rename sector",
+      "dialogText": "Give the sector a name in each language. Its link never changes.",
+      "name": {
+        "en": "Name in English",
+        "es": "Name in Spanish",
+        "fr": "Name in French"
+      },
+      "save": "Save",
+      "cancel": "Cancel",
+      "sector": "Sector",
+      "jobs": "Jobs",
+      "companies": "Companies and clients",
+      "status": "Status",
+      "actions": "Actions",
+      "jobsValue_one": "{{count}} job · {{live}} live",
+      "jobsValue_other": "{{count}} jobs · {{live}} live",
+      "shown": "Shown",
+      "hidden": "Hidden",
+      "rename": "Rename",
+      "hide": "Hide",
+      "show": "Show",
+      "empty": "No sectors yet",
+      "caption": "Job sectors",
+      "notice": {
+        "added": "Sector added: {{name}}",
+        "renamed": "Sector renamed: {{name}}",
+        "hidden": "{{name}} is hidden. Jobs that have it keep it.",
+        "shown": "{{name}} is shown again."
       }
     }
   },

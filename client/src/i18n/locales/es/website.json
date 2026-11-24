@@ -55,7 +55,8 @@
     "tabs": {
       "blog": "Blog",
       "subscribers": "Suscriptores",
-      "newsletter": "Boletín"
+      "newsletter": "Boletín",
+      "sectors": "Sectores"
     },
     "blog": {
       "new": "Nuevo artículo",
@@ -187,6 +188,41 @@
         "pointsHint": "Necesita un título. Un punto por línea; el artículo usa solo el título y estos puntos. No se guarda con la entrada.",
         "action": "Escribir artículo con IA",
         "done": "Resumen y artículo completados. Comprueba cada dato antes de publicar."
+      }
+    },
+    "sectors": {
+      "intro": "Los sectores describen el tipo de trabajo. Los reclutadores eligen uno por empleo; los candidatos filtran por ellos.",
+      "add": "Añadir un sector",
+      "addTitle": "Añadir un sector",
+      "editTitle": "Renombrar sector",
+      "dialogText": "Pon nombre al sector en cada idioma. Su enlace nunca cambia.",
+      "name": {
+        "en": "Nombre en inglés",
+        "es": "Nombre en español",
+        "fr": "Nombre en francés"
+      },
+      "save": "Guardar",
+      "cancel": "Cancelar",
+      "sector": "Sector",
+      "jobs": "Empleos",
+      "companies": "Empresas y clientes",
+      "status": "Estado",
+      "actions": "Acciones",
+      "jobsValue_one": "{{count}} empleo · {{live}} publicados",
+      "jobsValue_many": "{{count}} empleos · {{live}} publicados",
+      "jobsValue_other": "{{count}} empleos · {{live}} publicados",
+      "shown": "Visible",
+      "hidden": "Oculto",
+      "rename": "Renombrar",
+      "hide": "Ocultar",
+      "show": "Mostrar",
+      "empty": "Aún no hay sectores",
+      "caption": "Sectores de empleo",
+      "notice": {
+        "added": "Sector añadido: {{name}}",
+        "renamed": "Sector renombrado: {{name}}",
+        "hidden": "{{name}} está oculto. Los empleos que lo tienen lo conservan.",
+        "shown": "{{name}} vuelve a estar visible."
       }
     }
   },

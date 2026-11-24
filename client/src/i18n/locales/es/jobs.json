@@ -111,7 +111,8 @@
       "startDate": "fecha de inicio",
       "endDate": "fecha de fin",
       "rateAmount": "tarifa",
-      "hoursPerWeek": "horas semanales"
+      "hoursPerWeek": "horas semanales",
+      "sector": "sector"
     },
     "agencyText": "A partir del título, el tipo de empleo y unas notas, la IA redacta la descripción, las responsabilidades, las habilidades, el nivel, los años y los idiomas, además del cliente, las fechas, la tarifa y las horas que den tus notas. Solo rellena los campos vacíos y nunca nombra al cliente en el texto; revisa cada paso antes de publicar.",
     "agencyNotesPlaceholder": "p. ej. 3 semanas de turno de noche para Acme desde el lunes, 14,50 € la hora, 38 horas a la semana, carné de carretilla",
@@ -184,7 +185,12 @@
     "salaryCurrency": "Moneda del salario",
     "salaryCurrencyHint": "Las ofertas en remoto pueden pagar en cualquier moneda.",
     "salaryNote": "El salario es opcional, pero los puestos con una horquilla suelen atraer a candidatos más relevantes.",
-    "visaSponsorship": "Patrocinio de visado disponible"
+    "visaSponsorship": "Patrocinio de visado disponible",
+    "sector": "Sector",
+    "sectorHint": "El tipo de trabajo. Los candidatos filtran y exploran empleos por sector.",
+    "sectorPlaceholder": "Elige un sector",
+    "unpaid": "No remunerado (voluntariado)",
+    "volunteerNoSalary": "El voluntariado no es remunerado, así que este empleo no tiene salario."
   },
   "skills": {
     "placeholder": "Escribe una habilidad y pulsa Intro",

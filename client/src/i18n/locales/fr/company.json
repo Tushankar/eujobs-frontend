@@ -11,7 +11,11 @@
     "city": "Ville de l’entreprise",
     "website": "Site web",
     "size": "Taille de l’entreprise",
-    "description": "Ce que vous construisez"
+    "description": "Ce que vous construisez",
+    "sector": "Secteur",
+    "sectorPlaceholder": "Choisissez un secteur",
+    "sectorHint": "Les nouvelles offres partent de ce secteur ; vous pouvez le changer pour chaque offre.",
+    "sectorBefore": "Avant : {{industry}}. Choisissez le secteur qui convient."
   },
   "aiDraft": {
     "notes": "Notes pour l’IA (facultatif)",

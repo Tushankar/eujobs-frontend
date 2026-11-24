@@ -37,7 +37,10 @@
     "fields": {
       "name": "Nombre del cliente",
       "industry": "Sector (opcional)",
-      "city": "Ciudad (opcional)"
+      "city": "Ciudad (opcional)",
+      "sector": "Sector (opcional)",
+      "noSector": "Sin sector",
+      "sectorBefore": "Antes: {{industry}}. Elige el sector que corresponda."
     },
     "dialog": {
       "addTitle": "Añadir un cliente",

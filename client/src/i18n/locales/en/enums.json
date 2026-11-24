@@ -29,7 +29,8 @@
     "part_time": "Part-time",
     "contract": "Contract",
     "internship": "Internship",
-    "agency": "Agency"
+    "agency": "Agency",
+    "volunteer": "Volunteer"
   },
   "jobLevel": {
     "junior": "Junior",

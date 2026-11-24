@@ -1036,7 +1036,11 @@
       "newsletter_created": "Borrador del boletín creado",
       "newsletter_deleted": "Borrador del boletín eliminado",
       "newsletter_sent": "Boletín enviado: {{title}} ({{count}} destinatarios)",
-      "newsletter_sent_new": "Boletín enviado a {{count}} nuevos suscriptores: {{title}}"
+      "newsletter_sent_new": "Boletín enviado a {{count}} nuevos suscriptores: {{title}}",
+      "sector_created": "Sector añadido: {{title}}",
+      "sector_updated": "Sector renombrado: {{title}}",
+      "sector_hidden": "Sector oculto: {{title}}",
+      "sector_shown": "Sector visible: {{title}}"
     }
   },
   "reports": {
