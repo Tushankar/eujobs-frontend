@@ -21,11 +21,11 @@
   color: var(--muted-foreground);
 }
 
-/* Wide board: scrolls sideways inside the page, bleeding 4px past the content column like the Figma frame. */
+/* Wide board: scrolls sideways within the content column so it never widens the page itself. */
 .board {
   display: flex;
   gap: 16px;
-  margin: 20px -4px 0;
+  margin: 20px 0 0;
   padding: 0 4px 32px;
   overflow-x: auto;
 }
