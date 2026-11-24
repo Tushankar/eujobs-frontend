@@ -85,7 +85,9 @@
 
 .category {
   flex-shrink: 0;
-  max-width: 240px; /* fits the longest status label (fr “En cours d’examen (présélection)”) */
+  /* One width on every row so the column lines up: fits the longest status label (fr “En cours d’examen
+     (présélection)”). The customisable select sizes to its chosen option, not its longest one. */
+  width: 210px;
   min-height: 32px;
   padding: 4px 8px;
   border: 1px solid var(--border);
