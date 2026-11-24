@@ -120,6 +120,7 @@ const TAG_TYPES = [
     // 2026-11-24: job sectors (GET /meta/sectors; admin › Website › Sectors changes them)
     'Sectors',
     'AdminSectors',
+    'AdminSites',
 ]
 
 /**

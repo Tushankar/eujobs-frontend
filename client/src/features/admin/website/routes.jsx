@@ -10,6 +10,7 @@ export default [
   { path: 'website/subscribers', lazy: websitePage },
   { path: 'website/newsletter', lazy: websitePage },
   { path: 'website/sectors', lazy: websitePage },
+  { path: 'website/sites', lazy: websitePage },
   { path: 'website/newsletter/:issueId', lazy: issuePage },
   { path: 'website/blog/new', lazy: editorPage },
   { path: 'website/blog/:postId/edit', lazy: editorPage },

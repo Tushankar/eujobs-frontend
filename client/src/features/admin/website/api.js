@@ -20,6 +20,10 @@ export const websiteApi = api.injectEndpoints({
       query: ({ key, ...body }) => ({ url: `/admin/content/sectors/${key}`, method: 'PATCH', body }),
       invalidatesTags: ['AdminSectors', 'Sectors'],
     }),
+    // 2026-11-24: the sector sites; a change also refreshes the domain's own site answer (GET /meta/site).
+    getAdminSites: build.query({ query: () => '/admin/content/sites', providesTags: ['AdminSites'] }),
+    createSite: build.mutation({ query: (body) => ({ url: '/admin/content/sites', method: 'POST', body }), invalidatesTags: ['AdminSites'] }),
+    updateSite: build.mutation({ query: ({ host, ...body }) => ({ url: `/admin/content/sites/${host}`, method: 'PATCH', body }), invalidatesTags: ['AdminSites'] }),
     getSubscribers: build.query({
       query: ({ status, page }) => ({ url: '/admin/content/subscribers', params: { status, page } }),
       providesTags: ['Subscribers'],
@@ -66,6 +70,9 @@ export const {
   useGetAdminSectorsQuery,
   useCreateSectorMutation,
   useUpdateSectorMutation,
+  useGetAdminSitesQuery,
+  useCreateSiteMutation,
+  useUpdateSiteMutation,
   useGetSubscribersQuery,
   useGetNewsletterIssuesQuery,
   useGetNewsletterIssueQuery,

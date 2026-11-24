@@ -1,7 +1,7 @@
 import { useState } from 'react'
 import { useTranslation } from 'react-i18next'
 import { Link, useLocation } from 'react-router-dom'
-import { Download, FileText, Layers, Mail, Newspaper, Plus, Send } from 'lucide-react'
+import { Download, FileText, Globe, Layers, Mail, Newspaper, Plus, Send } from 'lucide-react'
 import { can } from '@/app/permissions.js'
 import ConfirmDialog from '@/components/common/ConfirmDialog.jsx'
 import DataTable from '@/components/common/DataTable.jsx'
@@ -19,7 +19,8 @@ import { useErrorText } from '@/lib/forms.js'
 import { useFormat, usePreferences } from '@/lib/preferences.js'
 import NewsletterTab from '../components/NewsletterTab.jsx'
 import SectorsTab from '../components/SectorsTab.jsx'
-import { useDeletePostMutation, useGetAdminPostsQuery, useGetAdminSectorsQuery, useGetNewsletterIssuesQuery, useGetSubscribersQuery, useSetPostStatusMutation } from '../api.js'
+import SitesTab from '../components/SitesTab.jsx'
+import { useDeletePostMutation, useGetAdminPostsQuery, useGetAdminSectorsQuery, useGetAdminSitesQuery, useGetNewsletterIssuesQuery, useGetSubscribersQuery, useSetPostStatusMutation } from '../api.js'
 import styles from './WebsitePage.module.css'
 
 const SUBSCRIBER_STATUSES = ['confirmed', 'pending', 'unsubscribed']
@@ -234,12 +235,13 @@ export default function WebsitePage() {
   const { t } = useTranslation()
   const { me } = usePreferences()
   const { pathname } = useLocation()
-  const tab = ['subscribers', 'newsletter', 'sectors'].find((id) => pathname.endsWith(`/${id}`)) ?? 'blog'
+  const tab = ['subscribers', 'newsletter', 'sectors', 'sites'].find((id) => pathname.endsWith(`/${id}`)) ?? 'blog'
   const [notice, setNotice] = useState('')
   const posts = useGetAdminPostsQuery()
   const subscribers = useGetSubscribersQuery({ status: 'confirmed', page: 1 })
   const issues = useGetNewsletterIssuesQuery()
   const sectors = useGetAdminSectorsQuery()
+  const sites = useGetAdminSitesQuery()
 
   return (
     <>
@@ -265,6 +267,7 @@ export default function WebsitePage() {
             to: '/admin/website/newsletter',
           },
           { id: 'sectors', label: t('website:admin.tabs.sectors'), icon: Layers, count: sectors.data?.total ?? 0, loading: sectors.isLoading, to: '/admin/website/sectors' },
+          { id: 'sites', label: t('website:admin.tabs.sites'), icon: Globe, count: sites.data?.total ?? 0, loading: sites.isLoading, to: '/admin/website/sites' },
         ]}
       />
       {notice && <NoticeBanner>{notice}</NoticeBanner>}
@@ -273,6 +276,7 @@ export default function WebsitePage() {
         {tab === 'subscribers' && <SubscribersTab canExport={can(me, 'reports.export')} onNotice={setNotice} />}
         {tab === 'newsletter' && <NewsletterTab manage={can(me, 'content.manage')} onNotice={setNotice} />}
         {tab === 'sectors' && <SectorsTab manage={can(me, 'content.manage')} onNotice={setNotice} />}
+        {tab === 'sites' && <SitesTab manage={can(me, 'content.manage')} onNotice={setNotice} />}
       </div>
     </>
   )
