@@ -795,7 +795,8 @@
       "access": "Access",
       "learning": "Learning",
       "payments": "Payments",
-      "jobs": "Jobs"
+      "jobs": "Jobs",
+      "content": "Content"
     },
     "actorType": {
       "admin": "Admin",
@@ -1001,7 +1002,8 @@
       "user_access_revoked": "Access revoked for {{name}}",
       "admin_invited": "Admin invited: {{name}} ({{email}}) as {{role}}",
       "invite_accepted": "Invitation accepted: {{name}}",
-      "account_deleted": "Account deleted by its owner ({{accountRole}})"
+      "account_deleted": "Account deleted by its owner ({{accountRole}})",
+      "two_factor_reset": "Two-step verification reset for {{name}}"
     },
     "reports": {
       "candidates_exported": "Candidates exported ({{count}} rows)",
@@ -1012,11 +1014,13 @@
       "applications_exported": "Applications exported ({{count}} rows)",
       "report_generated": "Report generated: {{report}} ({{filename}})",
       "report_downloaded": "Report downloaded again: {{report}} ({{filename}})",
-      "subscribers_exported": "Newsletter subscribers exported ({{count}} rows)"
+      "subscribers_exported": "Newsletter subscribers exported ({{count}} rows)",
+      "agencies_exported": "Agencies exported ({{count}} rows)"
     },
     "jobs": {
       "status_changed": "Job status changed: {{title}} ({{company}}), {{from}} → {{to}}",
-      "cv_downloaded": "CV downloaded: {{candidate}}, version {{version}} ({{company}})"
+      "cv_downloaded": "CV downloaded: {{candidate}}, version {{version}} ({{company}})",
+      "agreement_published": "Agency agreement published: {{company}}, version {{version}}"
     },
     "payments": {
       "payment_recorded": "Payment {{reference}}: {{payer}}, {{item}} ({{amount}})",

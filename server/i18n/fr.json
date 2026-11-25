@@ -795,7 +795,8 @@
       "access": "Accès",
       "learning": "Formation",
       "payments": "Paiements",
-      "jobs": "Offres"
+      "jobs": "Offres",
+      "content": "Contenu"
     },
     "actorType": {
       "admin": "Administrateur",
@@ -1001,7 +1002,8 @@
       "user_access_revoked": "Accès révoqué pour {{name}}",
       "admin_invited": "Administrateur invité : {{name}} ({{email}}) avec le rôle {{role}}",
       "invite_accepted": "Invitation acceptée : {{name}}",
-      "account_deleted": "Compte supprimé par son titulaire ({{accountRole}})"
+      "account_deleted": "Compte supprimé par son titulaire ({{accountRole}})",
+      "two_factor_reset": "Validation en deux étapes réinitialisée pour {{name}}"
     },
     "reports": {
       "candidates_exported": "Candidats exportés ({{count}} lignes)",
@@ -1012,11 +1014,13 @@
       "applications_exported": "Candidatures exportées ({{count}} lignes)",
       "report_generated": "Rapport généré : {{report}} ({{filename}})",
       "report_downloaded": "Rapport téléchargé à nouveau : {{report}} ({{filename}})",
-      "subscribers_exported": "Abonnés à la newsletter exportés ({{count}} lignes)"
+      "subscribers_exported": "Abonnés à la newsletter exportés ({{count}} lignes)",
+      "agencies_exported": "Agences exportées ({{count}} lignes)"
     },
     "jobs": {
       "status_changed": "Statut de l’offre modifié : {{title}} ({{company}}), {{from}} → {{to}}",
-      "cv_downloaded": "CV téléchargé : {{candidate}}, version {{version}} ({{company}})"
+      "cv_downloaded": "CV téléchargé : {{candidate}}, version {{version}} ({{company}})",
+      "agreement_published": "Accord d’agence publié : {{company}}, version {{version}}"
     },
     "payments": {
       "payment_recorded": "Paiement {{reference}} : {{payer}}, {{item}} ({{amount}})",

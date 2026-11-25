@@ -795,7 +795,8 @@
       "access": "Acceso",
       "learning": "Formación",
       "payments": "Pagos",
-      "jobs": "Empleos"
+      "jobs": "Empleos",
+      "content": "Contenido"
     },
     "actorType": {
       "admin": "Administración",
@@ -1001,7 +1002,8 @@
       "user_access_revoked": "Acceso revocado para {{name}}",
       "admin_invited": "Administrador invitado: {{name}} ({{email}}) como {{role}}",
       "invite_accepted": "Invitación aceptada: {{name}}",
-      "account_deleted": "Cuenta eliminada por su titular ({{accountRole}})"
+      "account_deleted": "Cuenta eliminada por su titular ({{accountRole}})",
+      "two_factor_reset": "Verificación en dos pasos restablecida para {{name}}"
     },
     "reports": {
       "candidates_exported": "Candidatos exportados ({{count}} filas)",
@@ -1012,11 +1014,13 @@
       "applications_exported": "Solicitudes exportadas ({{count}} filas)",
       "report_generated": "Informe generado: {{report}} ({{filename}})",
       "report_downloaded": "Informe descargado de nuevo: {{report}} ({{filename}})",
-      "subscribers_exported": "Suscriptores del boletín exportados ({{count}} filas)"
+      "subscribers_exported": "Suscriptores del boletín exportados ({{count}} filas)",
+      "agencies_exported": "Agencias exportadas ({{count}} filas)"
     },
     "jobs": {
       "status_changed": "Estado de la oferta cambiado: {{title}} ({{company}}), {{from}} → {{to}}",
-      "cv_downloaded": "CV descargado: {{candidate}}, versión {{version}} ({{company}})"
+      "cv_downloaded": "CV descargado: {{candidate}}, versión {{version}} ({{company}})",
+      "agreement_published": "Acuerdo de agencia publicado: {{company}}, versión {{version}}"
     },
     "payments": {
       "payment_recorded": "Pago {{reference}}: {{payer}}, {{item}} ({{amount}})",

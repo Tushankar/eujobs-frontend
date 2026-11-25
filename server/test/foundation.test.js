@@ -156,6 +156,17 @@ describe('server i18n (§2.11)', () => {
     })
   }
 
+  // 2026-11-25: the audit CSV writes each event with these server texts; one missing key failed the whole export.
+  it('has the audit sentence of every event type the admin screen shows, and a label for every audit category', () => {
+    const keys = (node, prefix = '') => Object.entries(node).flatMap(([key, value]) => (value && typeof value === 'object' ? keys(value, `${prefix}${key}.`) : [`${prefix}${key}`]))
+    for (const language of ENUMS.language) {
+      const screen = JSON.parse(readFileSync(new URL(`../../client/src/i18n/locales/${language}/audit.json`, import.meta.url), 'utf8')).types
+      const server = new Set(keys(dictionaries[language].audit))
+      assert.deepEqual(keys(screen).filter((key) => !server.has(key)), [], `${language}: audit types without a server sentence`)
+      for (const name of ['auditCategory', 'actorType']) assert.deepEqual(ENUMS[name].filter((value) => !dictionaries[language].labels[name]?.[value]), [], `${language}: labels.${name}`)
+    }
+  })
+
   it('renders every email type in every language, translated and with every parameter filled', () => {
     for (const type of ENUMS.emailType) {
       const names = new Set(JSON.stringify(dictionaries.en.email[type]).match(/\{\{\w+\}\}/g)?.map((name) => name.slice(2, -2)) ?? [])
