@@ -69,7 +69,7 @@ export default function JobCard({ job, onToggleSave }) {
   return (
     <article className={styles.card} data-job={job.id}>
       <div className={styles.head}>
-        <CompanyLogo name={company} id={job.company.id} src={job.company.logoUrl ?? undefined} size={44} />
+        <CompanyLogo name={company} id={job.company.id} src={job.company.logoUrl ?? undefined} size={44} className={styles.logo} />
         <div className={styles.headText}>
           <div className={styles.eyebrow}>
             <VerifiedCompany className={styles.company} name={company} verified={job.company.verified} />
@@ -195,7 +195,7 @@ export function JobCardSkeleton() {
   return (
     <div className={styles.card}>
       <div className={styles.head}>
-        <Skeleton shape="circle" width={44} height={44} />
+        <Skeleton shape="circle" width={44} height={44} className={styles.logo} />
         <div className={styles.headText}>
           <div className={styles.eyebrow}>
             <Skeleton width={110} />

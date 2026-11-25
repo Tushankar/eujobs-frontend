@@ -16,6 +16,11 @@
   min-width: 0;
 }
 
+/* 2026-11-25 (owner: "the logo should be aligned with the text"): centred on the company line and title beside it. */
+.logo {
+  align-self: center;
+}
+
 .eyebrow {
   display: flex;
   flex-wrap: wrap;
