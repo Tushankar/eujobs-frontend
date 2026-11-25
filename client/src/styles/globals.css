@@ -109,6 +109,12 @@ select:has(option[value='']:disabled:checked) {
     appearance: base-select !important;
   }
 
+  /* base-select makes the field a flex box with `align-items: normal`, which pins the chosen text to the top of a
+     fixed-height field (the overview's 28px "This week", 2026-11-25); centre it like the native field did. */
+  select {
+    align-items: center;
+  }
+
   /* Each dropdown draws its own chevron (or opts back in to this one). */
   select::picker-icon {
     display: none;

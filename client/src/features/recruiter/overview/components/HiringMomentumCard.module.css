@@ -61,9 +61,10 @@
   mask: url('../../../../assets/icons/overview-chart-bars.svg') center / contain no-repeat;
 }
 
+/* Flex, not block: an inline select in a block sits on the text baseline, 3px below the view toggle. */
 .period {
   position: relative;
-  display: block;
+  display: flex;
 }
 
 .select {
@@ -80,8 +81,9 @@
 
 .chevron {
   position: absolute;
-  top: 9px;
+  top: 50%;
   right: 8px;
+  translate: 0 -50%;
   color: var(--muted-foreground);
   pointer-events: none;
 }
