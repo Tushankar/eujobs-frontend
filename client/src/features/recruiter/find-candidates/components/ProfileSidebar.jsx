@@ -83,7 +83,7 @@ export default function ProfileSidebar({ candidate, jobs, job, onJobChange, onTo
           </PlanButton>
           <MessageCandidateButton candidate={candidate} job={job} onBooks={Boolean(candidate.onBooks)} />
           {/* 2026-11-20: agencies invite candidates onto their books. */}
-          <InviteToBooks candidateId={candidate.id} />
+          <InviteToBooks candidate={candidate} />
           <ReportButton targetType="candidate_profile" targetId={candidate.id} size="sm" fullWidth />
         </div>
       </Panel>

@@ -317,7 +317,23 @@
   "invite": {
     "invite": "Invite to your books",
     "acceptRequest": "Accept their request",
-    "openTalent": "Open in Talent"
+    "openTalent": "Open in Talent",
+    "confirm": {
+      "title": "Invite {{name}} to your books?",
+      "description": "They join once they accept your invitation and agree to your agreement.",
+      "nextTitle": "What happens next",
+      "step1Title": "They get your invitation",
+      "step1Text": "{{name}} is notified that your agency wants them on its books.",
+      "step2Title": "They agree to your agreement",
+      "step2Text": "They read and agree to version {{version}} of your agreement.",
+      "step3Title": "You can place them",
+      "step3Text": "Once they agree, they are on your books and you can offer them your agency jobs.",
+      "viewAgreement": "View agreement",
+      "withdrawNote": "Until they answer, you can withdraw the invitation from Talent › Requests.",
+      "send": "Send invitation",
+      "noAgreement": "Publish your agreement before you invite anyone. Candidates agree to it to join your books.",
+      "openAgreement": "Open the agreement"
+    }
   },
   "summary": {
     "title": "Agency terms",

@@ -138,6 +138,11 @@ export default {
     await page.goto(`${ctx.webUrl}/agency/find-candidates/${second.id}`, { waitUntil: 'networkidle0' })
     await page.waitForSelector('[data-invite-books]', { timeout: 10_000 }).catch(() => issue('no "Invite to your books" on the profile'))
     await page.click('[data-invite-books]')
+    // 2026-11-25: a confirmation comes first (who, what happens next); nothing is sent until it is confirmed.
+    await page.waitForSelector('[data-invite-confirm]:not([disabled])', { timeout: 10_000 }).catch(() => issue('no invite confirmation dialog'))
+    expect((await page.$eval('[data-books-state]', (box) => box.dataset.booksState).catch(() => null)) === 'none', 'opening the confirmation sends nothing')
+    await ctx.screenshot(page, '05a-agency-invite-confirm')
+    await page.click('[data-invite-confirm]')
     await modal(page, 'books_invite_sent', ['Invite sent', second.fullName], '05-agency-invite-sent')
     expect((await page.$eval('[data-books-state]', (box) => box.dataset.booksState).catch(() => null)) === 'awaiting_agreement', 'the profile then shows them as invited')
 

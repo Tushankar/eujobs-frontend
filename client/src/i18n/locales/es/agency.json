@@ -322,7 +322,23 @@
   "invite": {
     "invite": "Invitar a tu cartera",
     "acceptRequest": "Aceptar su solicitud",
-    "openTalent": "Abrir en Talento"
+    "openTalent": "Abrir en Talento",
+    "confirm": {
+      "title": "¿Invitar a {{name}} a tu cartera?",
+      "description": "Se une cuando acepte tu invitación y tu acuerdo.",
+      "nextTitle": "Qué pasa después",
+      "step1Title": "Recibe tu invitación",
+      "step1Text": "{{name}} recibe un aviso de que tu agencia quiere incluirle en su cartera.",
+      "step2Title": "Acepta tu acuerdo",
+      "step2Text": "Lee y acepta la versión {{version}} de tu acuerdo.",
+      "step3Title": "Puedes colocarle",
+      "step3Text": "Una vez aceptado, está en tu cartera y puedes ofrecerle los empleos de tu agencia.",
+      "viewAgreement": "Ver acuerdo",
+      "withdrawNote": "Hasta que responda, puedes retirar la invitación desde Talento › Solicitudes.",
+      "send": "Enviar invitación",
+      "noAgreement": "Publica tu acuerdo antes de invitar a nadie. Los candidatos lo aceptan para unirse a tu cartera.",
+      "openAgreement": "Abrir el acuerdo"
+    }
   },
   "summary": {
     "title": "Condiciones de agencia",

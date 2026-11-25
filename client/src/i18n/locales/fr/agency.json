@@ -322,7 +322,23 @@
   "invite": {
     "invite": "Inviter dans votre vivier",
     "acceptRequest": "Accepter sa demande",
-    "openTalent": "Ouvrir dans Talents"
+    "openTalent": "Ouvrir dans Talents",
+    "confirm": {
+      "title": "Inviter {{name}} dans votre vivier ?",
+      "description": "La personne le rejoint une fois votre invitation et votre accord acceptés.",
+      "nextTitle": "Et ensuite",
+      "step1Title": "Votre invitation est envoyée",
+      "step1Text": "{{name}} est averti·e que votre agence souhaite l’ajouter à son vivier.",
+      "step2Title": "Acceptation de votre accord",
+      "step2Text": "La personne lit et accepte la version {{version}} de votre accord.",
+      "step3Title": "Vous pouvez la placer",
+      "step3Text": "Une fois l’accord accepté, elle est dans votre vivier et vous pouvez lui proposer vos offres d’agence.",
+      "viewAgreement": "Voir l’accord",
+      "withdrawNote": "Tant qu’elle n’a pas répondu, vous pouvez retirer l’invitation depuis Talents › Demandes.",
+      "send": "Envoyer l’invitation",
+      "noAgreement": "Publiez votre accord avant d’inviter qui que ce soit. Les candidats l’acceptent pour rejoindre votre vivier.",
+      "openAgreement": "Ouvrir l’accord"
+    }
   },
   "summary": {
     "title": "Conditions d’agence",
