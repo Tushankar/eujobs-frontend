@@ -6,22 +6,21 @@ import { useFormat } from '@/lib/preferences.js'
 import { cx } from '@/utils/cx.js'
 import styles from './ActivityCharts.module.css'
 
-/* Drawn in real pixels at the card's width (2026-11-25), so the axis text stays 11px on a phone instead of shrinking
-   with a scaled viewBox. */
-const HEIGHT = 220
+/* Drawn in real pixels at the box's size (2026-11-25), so the axis text stays 11px on a phone instead of shrinking
+   with a scaled viewBox; the box is at least 220px tall and grows with its card. */
 const TOP = 12
 const BOTTOM = 28
 const RIGHT = 4
 
-function useWidth() {
+function useSize() {
   const ref = useRef(null)
-  const [width, setWidth] = useState(0)
+  const [size, setSize] = useState({ width: 0, height: 0 })
   useEffect(() => {
-    const observer = new ResizeObserver(([entry]) => setWidth(Math.floor(entry.contentRect.width)))
+    const observer = new ResizeObserver(([entry]) => setSize({ width: Math.floor(entry.contentRect.width), height: Math.floor(entry.contentRect.height) }))
     observer.observe(ref.current)
     return () => observer.disconnect()
   }, [])
-  return [ref, width]
+  return [ref, size]
 }
 
 /** A bar from the baseline up to `top`, its data end rounded 4px. */
@@ -37,11 +36,14 @@ function barPath(x, width, top, baseline) {
 export function ActivityChart({ view, labels, registrations, applications }) {
   const { t } = useTranslation('adminOverview')
   const format = useFormat()
-  const [ref, width] = useWidth()
+  const [ref, { width, height }] = useSize()
   const [active, setActive] = useState(null)
-  const { ceiling, ticks } = countScale(Math.max(...registrations, ...applications))
+  const empty = [...registrations, ...applications].every((value) => value === 0)
+  const { ceiling, ticks: scaleTicks } = countScale(Math.max(...registrations, ...applications))
+  // An empty period draws only the baseline, under its message.
+  const ticks = empty ? [0] : scaleTicks
   const left = Math.max(...ticks.map((tick) => format.number(tick).length)) * 7 + 12
-  const baseline = HEIGHT - BOTTOM
+  const baseline = height - BOTTOM
   const band = Math.max(width - left - RIGHT, 0) / labels.length
   const xAt = (index) => left + band * (index + 0.5)
   const yAt = (value) => baseline - (value / ceiling) * (baseline - TOP)
@@ -50,7 +52,6 @@ export function ActivityChart({ view, labels, registrations, applications }) {
     { key: 'registrations', values: registrations, className: styles.registrations },
     { key: 'applications', values: applications, className: styles.applications },
   ]
-  const empty = series.every(({ values }) => values.every((value) => value === 0))
   const pick = (event) => {
     const index = Math.floor((event.clientX - event.currentTarget.getBoundingClientRect().left - left) / band)
     setActive(index >= 0 && index < labels.length ? index : null)
@@ -59,7 +60,7 @@ export function ActivityChart({ view, labels, registrations, applications }) {
   return (
     <div ref={ref} className={styles.root}>
       {width > 0 && (
-        <svg width={width} height={HEIGHT} className={styles.svg} aria-hidden="true" onPointerMove={pick} onPointerDown={pick} onPointerLeave={() => setActive(null)}>
+        <svg width={width} height={height} className={styles.svg} aria-hidden="true" onPointerMove={pick} onPointerDown={pick} onPointerLeave={() => setActive(null)}>
           {active !== null &&
             (view === 'line' ? (
               <line x1={xAt(active)} x2={xAt(active)} y1={TOP} y2={baseline} className={styles.crosshair} />

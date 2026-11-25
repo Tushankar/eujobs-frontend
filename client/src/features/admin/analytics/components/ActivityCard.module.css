@@ -134,6 +134,9 @@
 }
 
 .chart {
+  display: flex;
+  flex: 1;
+  flex-direction: column;
   padding-top: 16px;
   transition: opacity var(--transition);
 }

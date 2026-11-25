@@ -1,9 +1,15 @@
+/* At least 220px; in a card stretched to its row (Overview) the plot takes the spare height. The SVG is absolute so
+   its own size never feeds back into the box it measures. */
 .root {
   position: relative;
-  height: 220px;
+  flex: 1;
+  min-height: 220px;
 }
 
 .svg {
+  position: absolute;
+  top: 0;
+  left: 0;
   display: block;
   touch-action: pan-y;
 }

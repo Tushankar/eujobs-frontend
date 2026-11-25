@@ -66,15 +66,57 @@
   color: var(--foreground);
 }
 
-.moneyLines {
+/* Collected and MRR: a small table inside the card, label on the left, amount right-aligned so the figures line up.
+   The card's value box stretches to the card's width for it. */
+.stats p > span:has(> .breakdown) {
+  flex: 1 1 auto;
+  min-width: 0;
+}
+
+.breakdown {
   display: flex;
   flex-direction: column;
-  gap: 4px;
-  font-size: 20px;
+  gap: 6px;
+  letter-spacing: 0;
+}
+
+.row {
+  display: flex;
+  align-items: baseline;
+  justify-content: space-between;
+  gap: 12px;
+}
+
+.rowLabel {
+  min-width: 0;
+  overflow: hidden;
+  font-family: var(--font-body);
+  font-size: 12px;
+  font-weight: 500;
   line-height: 24px;
+  white-space: nowrap;
+  text-overflow: ellipsis;
+  color: var(--muted-foreground);
+}
+
+.amounts {
+  display: flex;
+  flex-direction: column;
+  align-items: flex-end;
+}
+
+.amount {
+  font-size: 18px;
+  font-weight: 700;
+  line-height: 24px;
+  white-space: nowrap;
+  font-variant-numeric: tabular-nums;
+  color: var(--foreground);
 }
 
 .more {
+  align-self: flex-end;
+  font-family: var(--font-body);
   font-size: 12px;
   font-weight: 600;
   line-height: 16px;
@@ -102,25 +144,4 @@
   .select {
     flex-basis: 100%;
   }
-}
-
-/* P11c-Q8: the MRR card per role, one line per role ("Candidates" and the amount), the amounts in one column. */
-.roleMoney {
-  display: inline-grid;
-  grid-template-columns: auto auto;
-  align-items: baseline;
-  gap: 4px 16px;
-}
-
-.roleGroup {
-  display: contents;
-}
-
-.roleLabel {
-  font-family: var(--font-body);
-  font-size: 12px;
-  font-weight: 500;
-  line-height: 24px;
-  letter-spacing: 0;
-  color: var(--muted-foreground);
 }

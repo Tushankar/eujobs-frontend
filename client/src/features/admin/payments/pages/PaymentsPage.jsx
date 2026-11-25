@@ -33,30 +33,45 @@ const FILTERS = {
 }
 const ALL = { status: 'allStatuses', payer: 'allPayers', kind: 'allKinds', source: 'allSources', country: 'allCountries' }
 
-/** U34: one line per currency, largest first, at most 3, then "+n more"; never summed across currencies (C15). */
+/** One amount, always with cents so a column of amounts lines up; the currency's full name on hover. */
+function Money({ entry }) {
+  const format = useFormat()
+  return (
+    <span className={styles.amount} title={format.currencyName(entry.currency)}>
+      {format.money(entry.amountMinor, entry.currency, { cents: true })}
+    </span>
+  )
+}
+
+/** U34: one row per currency (its name, then the amount), largest first, at most 3, then "+n more"; never summed across currencies (C15). */
 function MoneyLines({ totals }) {
   const { t } = useTranslation('adminPayments')
   const format = useFormat()
   if (!totals?.length) return t('stats.none')
   return (
-    <span className={styles.moneyLines}>
+    <span className={styles.breakdown}>
       {totals.slice(0, MONEY_LINES).map((entry) => (
-        <span key={entry.currency}>{format.money(entry.amountMinor, entry.currency)}</span>
+        <span key={entry.currency} className={styles.row}>
+          <span className={styles.rowLabel}>{format.currencyName(entry.currency)}</span>
+          <Money entry={entry} />
+        </span>
       ))}
       {totals.length > MONEY_LINES && <span className={styles.more}>{t('stats.more', { count: totals.length - MONEY_LINES })}</span>}
     </span>
   )
 }
 
-/** P11c-Q8: the MRR card's lines per role (Plus = candidates, Recruiter Plus = recruiters), each by currency. */
+/** P11c-Q8: the MRR card's rows per role (Plus = candidates, Recruiter Plus = recruiters), each role's currencies stacked. */
 function RoleMoney({ mrr }) {
   const { t } = useTranslation('adminPayments')
   return (
-    <span className={styles.roleMoney}>
+    <span className={styles.breakdown}>
       {['candidate', 'recruiter', 'agency'].map((role) => (
-        <span key={role} className={styles.roleGroup} data-mrr-role={role}>
-          <span className={styles.roleLabel}>{t(`stats.role.${role}`)}</span>
-          <MoneyLines totals={mrr[role]} />
+        <span key={role} className={styles.row} data-mrr-role={role}>
+          <span className={styles.rowLabel}>{t(`stats.role.${role}`)}</span>
+          <span className={styles.amounts}>
+            {mrr[role]?.length ? mrr[role].map((entry) => <Money key={entry.currency} entry={entry} />) : <span className={styles.amount}>—</span>}
+          </span>
         </span>
       ))}
     </span>

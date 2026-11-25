@@ -15,9 +15,10 @@ export function formatNumber(value, locale, options) {
 }
 
 /** U24: integer minor units (two decimals in all eight currencies, D2); whole amounts show no decimals. */
-export function formatMoney(amountMinor, currency, locale) {
+export function formatMoney(amountMinor, currency, locale, { cents = false } = {}) {
   const amount = amountMinor / 100
-  const digits = Number.isInteger(amount) ? 0 : 2
+  // `cents`: always two decimals, so amounts stacked in a column line up (€30.00 under £1,056.73).
+  const digits = cents || !Number.isInteger(amount) ? 2 : 0
   return new Intl.NumberFormat(locale, { style: 'currency', currency, minimumFractionDigits: digits, maximumFractionDigits: digits }).format(amount)
 }
 
@@ -125,6 +126,11 @@ export function formatList(items, locale, type = 'conjunction') {
 /** An ISO 639-1 language's name in the UI language (M-020). */
 export function languageNameIn(code, language) {
   return new Intl.DisplayNames([language], { type: 'language' }).of(code)
+}
+
+/** A currency's name in the UI language, e.g. SEK → "Swedish krona". */
+export function currencyName(code, language) {
+  return new Intl.DisplayNames([language], { type: 'currency' }).of(code)
 }
 
 /** A country's name in the UI language (M-139). REMOTE is not a region; callers translate it. */
