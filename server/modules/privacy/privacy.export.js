@@ -16,7 +16,7 @@ import { CandidateNote } from '../discovery/discovery.model.js'
 import { File, FileAccessLog } from '../files/files.model.js'
 import { DocumentRequest, Interview } from '../interviews/interviews.model.js'
 import { Job, SavedJob } from '../jobs/jobs.model.js'
-import { refreshRenamedPdfs } from '../learning/learning.certificates.js'
+import { refreshStalePdfs } from '../learning/learning.certificates.js'
 import { Certificate, Course, Enrollment, QuizAttempt } from '../learning/learning.model.js'
 import { Conversation, Message } from '../messages/messages.model.js'
 import { Notification } from '../notifications/notifications.model.js'
@@ -96,7 +96,7 @@ async function subscription(user) {
 }
 
 async function learning(user) {
-  await refreshRenamedPdfs(user)
+  await refreshStalePdfs(user)
   const [enrollments, attempts, certificates] = await Promise.all([
     Enrollment.find({ userId: user._id }).lean(),
     QuizAttempt.find({ userId: user._id }).sort({ submittedAt: 1 }).lean(),

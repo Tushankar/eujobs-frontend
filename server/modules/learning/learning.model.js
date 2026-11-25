@@ -108,7 +108,7 @@ const quizAttemptSchema = new Schema(
 quizAttemptSchema.index({ userId: 1, courseId: 1 })
 
 /*
- * M-105, U17, C18: a snapshot of the holder's name and the course title at issue, the PDF in the holder's language,
+ * M-105, U17, C18: a snapshot of the holder's name and the course at issue, the PDF in the holder's language,
  * and the public status. A name change re-issues the PDF under the same code. `userId` is null for a tombstone.
  */
 const certificateSchema = new Schema(
@@ -118,9 +118,15 @@ const certificateSchema = new Schema(
     courseId: { type: Schema.Types.ObjectId, ref: 'Course', required: true },
     holderName: String,
     courseTitle: String,
+    // The course's level, category and lesson count at issue, printed on the PDF (2026-11-25).
+    courseLevel: { type: String, enum: ENUMS.courseLevel },
+    courseCategory: String,
+    lessonCount: Number,
     language: { type: String, enum: ENUMS.language },
     issuedAt: { type: Date, required: true },
     pdfFileId: { type: Schema.Types.ObjectId, ref: 'File' },
+    // The PDF design the stored file was drawn in (missing = 1, before "Heritage"); see learning.certificates.js.
+    pdfDesign: Number,
     status: { type: String, enum: ENUMS.certificateStatus, default: 'valid' },
     revokedAt: Date,
     revokedBy: { type: Schema.Types.ObjectId, ref: 'User' },

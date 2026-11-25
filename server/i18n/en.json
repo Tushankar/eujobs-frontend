@@ -863,9 +863,21 @@
   },
   "certificate": {
     "title": "Certificate of completion",
-    "intro": "This certifies that",
-    "completed": "has completed the course",
-    "issued": "Issued on {{date}}",
+    "intro": "This is to certify that",
+    "completed": "has successfully completed the course",
+    "completedLevel": "has successfully completed the {{level}} course",
+    "level": {
+      "foundation": "foundation",
+      "intermediate": "intermediate",
+      "advanced": "advanced"
+    },
+    "lessons": {
+      "one": "1 lesson",
+      "other": "{{count}} lessons"
+    },
+    "passed": "Final assessment passed",
+    "dateLabel": "Date of issue",
+    "issuerLabel": "Issued by",
     "code": "Certificate code",
     "verify": "Check this certificate at",
     "note": "This certificate confirms that the course was completed and its final quiz passed. It does not verify workplace skills."

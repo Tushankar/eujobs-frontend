@@ -864,8 +864,20 @@
   "certificate": {
     "title": "Certificado de finalización",
     "intro": "Se certifica que",
-    "completed": "ha completado el curso",
-    "issued": "Emitido el {{date}}",
+    "completed": "ha completado con éxito el curso",
+    "completedLevel": "ha completado con éxito el curso de nivel {{level}}",
+    "level": {
+      "foundation": "básico",
+      "intermediate": "intermedio",
+      "advanced": "avanzado"
+    },
+    "lessons": {
+      "one": "1 lección",
+      "other": "{{count}} lecciones"
+    },
+    "passed": "Evaluación final superada",
+    "dateLabel": "Fecha de emisión",
+    "issuerLabel": "Emitido por",
     "code": "Código del certificado",
     "verify": "Comprueba este certificado en",
     "note": "Este certificado confirma que se completó el curso y se aprobó su cuestionario final. No verifica competencias profesionales."

@@ -864,8 +864,20 @@
   "certificate": {
     "title": "Certificat de réussite",
     "intro": "Nous certifions que",
-    "completed": "a terminé la formation",
-    "issued": "Délivré le {{date}}",
+    "completed": "a suivi avec succès la formation",
+    "completedLevel": "a suivi avec succès la formation de niveau {{level}}",
+    "level": {
+      "foundation": "fondamental",
+      "intermediate": "intermédiaire",
+      "advanced": "avancé"
+    },
+    "lessons": {
+      "one": "1 leçon",
+      "other": "{{count}} leçons"
+    },
+    "passed": "Évaluation finale réussie",
+    "dateLabel": "Date de délivrance",
+    "issuerLabel": "Délivré par",
     "code": "Code du certificat",
     "verify": "Vérifiez ce certificat sur",
     "note": "Ce certificat confirme que la formation a été suivie et son quiz final réussi. Il ne vérifie pas les compétences professionnelles."

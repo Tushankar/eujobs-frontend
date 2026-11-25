@@ -9,7 +9,7 @@ import { certificatePdf } from '../../lib/pdf.js'
 import { File } from '../files/files.model.js'
 import { notify } from '../notifications/notifications.service.js'
 import { User } from '../users/users.model.js'
-import { Certificate } from './learning.model.js'
+import { Certificate, Course } from './learning.model.js'
 import { celebrate } from '../users/celebrations.js'
 
 /*
@@ -28,10 +28,23 @@ const currentCode = (code) => code.toUpperCase().replace(/^LWM-/, 'EUJ-')
 
 export const verifyUrl = (code) => `${config.clientOrigin}/certificates/${code}`
 
+// The PDF design (lib/pdf.js); 2 = "Heritage" (2026-11-25). A stored PDF of an older design is rebuilt like a renamed one.
+const PDF_DESIGN = 2
+const courseSnapshot = (course) => ({ courseLevel: course.level, courseCategory: course.category, lessonCount: course.lessons.length })
+
+/** Draws and stores the PDF; the caller saves the certificate. A certificate issued before the snapshot gets it now. */
 async function storePdf(certificate, user) {
+  if (certificate.lessonCount === undefined) {
+    const course = await Course.findById(certificate.courseId, 'level category lessons')
+    if (course) Object.assign(certificate, courseSnapshot(course))
+  }
+  certificate.pdfDesign = PDF_DESIGN
   const buffer = await certificatePdf({
     holderName: certificate.holderName,
     courseTitle: certificate.courseTitle,
+    courseLevel: certificate.courseLevel,
+    courseCategory: certificate.courseCategory,
+    lessonCount: certificate.lessonCount,
     issuedAt: certificate.issuedAt,
     code: certificate.code,
     language: certificate.language,
@@ -46,7 +59,7 @@ export async function issueCertificate(user, course) {
   let certificate
   for (let attempt = 0; !certificate; attempt++) {
     try {
-      certificate = await Certificate.create({ code: newCode(), userId: user._id, courseId: course._id, holderName: user.fullName, courseTitle: course.title, language: user.language, issuedAt: new Date() })
+      certificate = await Certificate.create({ code: newCode(), userId: user._id, courseId: course._id, holderName: user.fullName, courseTitle: course.title, ...courseSnapshot(course), language: user.language, issuedAt: new Date() })
     } catch (error) {
       // A code collision (unique index) draws a new code.
       if (error.code !== 11000 || attempt >= 4) throw error
@@ -104,27 +117,31 @@ export async function listOwnCertificates(user) {
 }
 
 /*
- * A certificate renamed from LWM- to EUJ- (scripts/renameLwmCodes.js) still has a PDF printed with the old code. It is
- * rebuilt the first time it is served, by the server that holds the old file: dev and production share the database
- * but not the upload folders, so a server without the file leaves it alone.
+ * A stale PDF (printed with an LWM- code before scripts/renameLwmCodes.js, or in an older design) is rebuilt the first
+ * time it is served, by the server that holds the old file: dev and production share the database but not the upload
+ * folders, so a server without the file leaves it alone. Resolves with the current file and whether it was rebuilt.
  */
 async function currentPdf(certificate, user) {
   const file = certificate.pdfFileId && (await File.findById(certificate.pdfFileId))
-  if (!file || file.originalName === `${certificate.code}.pdf`) return file
-  if (!(await access(absolutePath(file)).then(() => true, () => false))) return file
+  if (!file || (file.originalName === `${certificate.code}.pdf` && (certificate.pdfDesign ?? 1) >= PDF_DESIGN)) return { file, rebuilt: false }
+  if (!(await access(absolutePath(file)).then(() => true, () => false))) return { file, rebuilt: false }
   await replaceCertificatePdf(certificate, user)
-  return File.findById(certificate.pdfFileId)
+  return { file: await File.findById(certificate.pdfFileId), rebuilt: true }
 }
 
-/** The data export (privacy.export.js) ships each PDF with the current code. */
-export async function refreshRenamedPdfs(user) {
-  for (const certificate of await Certificate.find({ userId: user._id, pdfFileId: { $ne: null } })) await currentPdf(certificate, user)
+/** Rebuilds the user's stale PDFs held here (the data export, scripts/rebuildCertificatePdfs.js); resolves with how many. */
+export async function refreshStalePdfs(user, filter = {}) {
+  let rebuilt = 0
+  for (const certificate of await Certificate.find({ ...filter, userId: user._id, pdfFileId: { $ne: null } })) {
+    if ((await currentPdf(certificate, user)).rebuilt) rebuilt++
+  }
+  return rebuilt
 }
 
 /** GET /learning/certificates/:id/pdf: a signed download link to the stored snapshot. */
 export async function ownCertificatePdf(user, id) {
   const certificate = await Certificate.findOne({ _id: id, userId: user._id })
-  const file = certificate && (await currentPdf(certificate, user))
+  const file = certificate && (await currentPdf(certificate, user)).file
   if (!file) throw new AppError('NOT_FOUND')
   return { url: signedUrl(file, user._id, { download: true }) }
 }

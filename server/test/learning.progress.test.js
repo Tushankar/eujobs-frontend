@@ -13,6 +13,7 @@ import { enroll } from '../modules/learning/learning.service.js'
 import { Payment } from '../modules/payments/payments.model.js'
 import { User } from '../modules/users/users.model.js'
 import { absolutePath } from '../lib/files.js'
+import { rebuildCertificatePdfs } from '../scripts/rebuildCertificatePdfs.js'
 import { seedCatalog } from '../seed/catalog.js'
 import { PLACES } from '../seed/data/places.js'
 import { api, auth, createUser, mailTo, useTestDb, useTestUploads } from './helpers/index.js'
@@ -176,14 +177,30 @@ describe('certificates (M-105, U17, C18, C24)', () => {
     return { bytes: buffer.toString('latin1'), text: (await page.getTextContent()).items.map((item) => item.str).join(' ') }
   }
 
-  it('stores a PDF with the embedded Inter fonts, the name with its diacritics, the chrome in French and the code', async () => {
+  it('stores a PDF with the embedded fonts, the name with its diacritics, the course details, the chrome in French and the code', async () => {
     const { certificate } = await certified()
     const stored = await Certificate.findOne({ code: certificate.code })
+    assert.deepEqual([stored.courseLevel, stored.courseCategory, stored.lessonCount, stored.pdfDesign], ['foundation', 'Interaction Design', 2, 2])
     const { bytes, text } = await pdfText(stored.pdfFileId)
     assert.match(bytes, /\/FontFile2/)
-    assert.match(bytes, /Inter-Bold/)
-    for (const expected of ['Łukasz Żółć', 'Interaction design foundations', 'CERTIFICAT DE RÉUSSITE', certificate.code]) assert.ok(text.includes(expected), `${expected} in ${text}`)
-    assert.match(text, /Délivré le \d+/)
+    for (const font of ['Inter-Bold', 'Cinzel-SemiBold', 'CormorantGaramond-SemiBold', 'CormorantGaramond-MediumItalic']) assert.match(bytes, new RegExp(font))
+    const expected = ['Łukasz Żółć', 'Interaction design foundations', 'CERTIFICAT DE RÉUSSITE', 'a suivi avec succès la formation de niveau fondamental', '2 LEÇONS', 'ÉVALUATION FINALE RÉUSSIE', 'INTERACTION DESIGN', 'DATE DE DÉLIVRANCE', 'DÉLIVRÉ PAR', certificate.code]
+    for (const value of expected) assert.ok(text.includes(value), `${value} in ${text}`)
+    assert.match(text, /\d+ \p{L}+ 20\d\d/u)
+  })
+
+  it('redraws older-design PDFs with the course snapshot: scripts/rebuildCertificatePdfs.js, once', async () => {
+    const { certificate } = await certified()
+    const stored = await Certificate.findOne({ code: certificate.code })
+    // As issued before the "Heritage" design: no design number and no course snapshot.
+    await Certificate.updateOne({ _id: stored._id }, { $unset: { pdfDesign: 1, courseLevel: 1, courseCategory: 1, lessonCount: 1 } })
+    assert.deepEqual(await rebuildCertificatePdfs(), { rebuilt: 1 })
+    const rebuilt = await Certificate.findById(stored._id)
+    assert.deepEqual([rebuilt.courseLevel, rebuilt.lessonCount, rebuilt.pdfDesign], ['foundation', 2, 2])
+    assert.notEqual(String(rebuilt.pdfFileId), String(stored.pdfFileId))
+    assert.equal(await File.exists({ _id: stored.pdfFileId }), null, 'the old PDF is removed')
+    assert.ok((await pdfText(rebuilt.pdfFileId)).text.includes('2 LEÇONS'))
+    assert.deepEqual(await rebuildCertificatePdfs(), { rebuilt: 0 }, 'safe to rerun')
   })
 
   it('rebuilds a PDF still printed with an LWM- code on its first download, only where the old file is', async () => {
