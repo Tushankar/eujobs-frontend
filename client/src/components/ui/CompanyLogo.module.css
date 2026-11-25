@@ -28,9 +28,16 @@
   color: light-dark(#1f5fa8, #5b9ae1);
 }
 
-/* Uploaded logos keep their proportions on a white circle (logos are drawn for white, also in dark mode). */
+/* Uploaded logos: a square or round one fills the circle (like the header avatar). The hairline is an outline, drawn
+   over the image, so a white logo still has an edge on a white card. */
 .image {
-  border: 1px solid var(--border);
   background: #fff;
+  object-fit: cover;
+  outline: 1px solid color-mix(in srgb, var(--foreground) 10%, transparent);
+  outline-offset: -1px;
+}
+
+/* A wide or tall wordmark stays whole on white, with an inner margin (set inline from the size). */
+.wordmark {
   object-fit: contain;
 }
