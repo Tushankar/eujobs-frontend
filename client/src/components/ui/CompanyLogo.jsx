@@ -10,13 +10,17 @@ function paletteFor(seed) {
   return PALETTES[sum % PALETTES.length]
 }
 
-/** DS Company logo: the uploaded logo, else a compact rounded-square tile with the initials. `id` seeds the colour. */
+/**
+ * DS Company logo: the uploaded logo, else a tile with the initials. `id` seeds the colour.
+ * 2026-11-25 (owner: "logos everywhere circular, properly aligned"): always a circle. An uploaded logo sits on white
+ * with an inner margin, so a wide wordmark fits inside the circle instead of being cut at the edges.
+ */
 export default function CompanyLogo({ name, id, src, size = 40, className }) {
   const { t } = useTranslation()
   const style = { width: size, height: size, fontSize: Math.round(size * 0.32) }
   const label = t('common:companyLogo', { name })
   if (src) {
-    return <img src={src} alt={label} className={cx(styles.logo, styles.image, className)} style={style} />
+    return <img src={src} alt={label} className={cx(styles.logo, styles.image, className)} style={{ ...style, padding: Math.max(3, Math.round(size * 0.12)) }} />
   }
   const initials = name
     .split(/\s+/)

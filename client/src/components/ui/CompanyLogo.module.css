@@ -3,7 +3,7 @@
   flex-shrink: 0;
   align-items: center;
   justify-content: center;
-  border-radius: var(--radius-lg);
+  border-radius: 50%;
   font-weight: 700;
   object-fit: cover;
 }
@@ -28,9 +28,9 @@
   color: light-dark(#1f5fa8, #5b9ae1);
 }
 
-/* Uploaded logos keep their proportions on a white tile */
+/* Uploaded logos keep their proportions on a white circle (logos are drawn for white, also in dark mode). */
 .image {
   border: 1px solid var(--border);
-  background: var(--card);
+  background: #fff;
   object-fit: contain;
 }

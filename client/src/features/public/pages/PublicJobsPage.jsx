@@ -419,7 +419,7 @@ function ListSkeleton() {
         <div className={styles.rows}>
           {[0, 1, 2, 3, 4].map((index) => (
             <div key={index} className={styles.row}>
-              <Skeleton shape="block" width={44} height={44} />
+              <Skeleton shape="circle" width={44} height={44} />
               <span className={styles.rowBody}>
                 <Skeleton width="70%" />
                 <Skeleton width="45%" height={10} />
@@ -430,7 +430,7 @@ function ListSkeleton() {
         </div>
       </div>
       <div className={styles.detail}>
-        <Skeleton shape="block" width={52} height={52} />
+        <Skeleton shape="circle" width={52} height={52} />
         <Skeleton width="55%" height={26} />
         <Skeleton width="70%" />
         <Skeleton shape="pill" width={180} height={44} />

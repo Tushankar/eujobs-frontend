@@ -16,7 +16,8 @@ import { useErrorText } from '@/lib/forms.js'
 import { useJobText } from '@/lib/jobText.js'
 import { useFormat } from '@/lib/preferences.js'
 import { useGetMyAgenciesQuery, useGetMyPlacementsQuery, useJoinAgencyMutation, useMembershipActionMutation, usePlacementActionMutation } from '../api.js'
-import styles from './AgenciesPage.module.css'
+import styles from './AgenciesPage.module.css'
+
 import { useSectors } from '@/lib/sectors.js'
 
 /*
@@ -370,7 +371,7 @@ export default function AgenciesPage() {
             <SkeletonRegion className={styles.card}>
               {[0, 1, 2].map((key) => (
                 <div key={key} className={styles.row}>
-                  <Skeleton shape="block" width={40} height={40} />
+                  <Skeleton shape="circle" width={40} height={40} />
                   <div className={styles.text}>
                     <Skeleton width={160} height={14} />
                     <Skeleton width={240} height={12} />

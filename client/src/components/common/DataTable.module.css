@@ -173,9 +173,6 @@
   gap: 12px;
 }
 
-.skeletonLogo {
-  border-radius: var(--radius-lg);
-}
 
 .table tbody {
   transition: opacity var(--transition);

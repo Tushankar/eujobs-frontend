@@ -10,7 +10,7 @@ const WIDTHS = [96, 72, 88, 64, 108, 80]
 
 /**
  * One cell's placeholder, shaped like the content it stands for. `kind`: 'title' (a name over a meta line),
- * 'avatar' / 'logo' (that pair beside a round photo / square logo), 'text', 'pill' (a status) or 'action' (a button).
+ * 'avatar' / 'logo' (that pair beside a round photo / logo), 'text', 'pill' (a status) or 'action' (a button).
  * Shared with tables that render their own markup (JobsTable).
  */
 export function SkeletonCell({ kind, row }) {
@@ -27,7 +27,7 @@ export function SkeletonCell({ kind, row }) {
   if (kind === 'title') return lines
   return (
     <span className={styles.skeletonMedia}>
-      <Skeleton shape="circle" width={36} height={36} className={kind === 'logo' ? styles.skeletonLogo : undefined} />
+      <Skeleton shape="circle" width={36} height={36} />
       {lines}
     </span>
   )

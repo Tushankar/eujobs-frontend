@@ -27,7 +27,7 @@ export default function ApplicationActivityCard() {
         <SkeletonRegion as="ul" className={styles.activityList}>
           {Array.from({ length: SHOWN }, (_, index) => (
             <li key={index} className={styles.activityRow}>
-              <Skeleton shape="block" width={36} height={36} />
+              <Skeleton shape="circle" width={36} height={36} />
               <span className={styles.activityText}>
                 <Skeleton width={140} />
                 <span className={styles.activityCompany}>

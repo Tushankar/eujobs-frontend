@@ -18,7 +18,7 @@ export default function RolePicker({ roles, jobId, onChange, loading }) {
     return (
       <Panel className={styles.picker} padding={20}>
         <SkeletonRegion className={styles.summary}>
-          <Skeleton shape="block" width={44} height={44} />
+          <Skeleton shape="circle" width={44} height={44} />
           <div className={styles.skeletonText}>
             <Skeleton width="60%" height={14} />
             <Skeleton width="80%" />

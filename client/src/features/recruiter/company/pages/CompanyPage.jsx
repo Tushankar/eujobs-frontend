@@ -46,7 +46,7 @@ function CompanySkeleton() {
       <Panel className={styles.panel} padding="clamp(20px, 4vw, 32px)">
         <SkeletonRegion>
           <div className={styles.identity}>
-            <Skeleton shape="block" width={64} height={64} />
+            <Skeleton shape="circle" width={64} height={64} />
             <div className={styles.identityText}>
               <p className={styles.companyName}>
                 <Skeleton width={200} height={18} />

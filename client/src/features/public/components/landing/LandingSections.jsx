@@ -220,7 +220,7 @@ function JobRow({ job }) {
   return (
     <article className={styles.job}>
       <div className={styles.jobTop}>
-        <CompanyLogo name={job.company.name} src={job.company.logoUrl} size={34} className={styles.jobLogo} />
+        <CompanyLogo name={job.company.name} src={job.company.logoUrl} size={34} />
         <div className={styles.jobHead}>
           <h3 className={styles.jobTitle}>
             <Link to={`/jobs?job=${job.id}`}>{job.title}</Link>

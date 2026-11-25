@@ -19,7 +19,7 @@ function RowsSkeleton() {
     <SkeletonRegion className={styles.card}>
       {[0, 1, 2].map((key) => (
         <div key={key} className={styles.row}>
-          <Skeleton shape="block" width={40} height={40} />
+          <Skeleton shape="circle" width={40} height={40} />
           <div className={styles.text}>
             <Skeleton width={160} height={14} />
             <Skeleton width={220} height={12} />

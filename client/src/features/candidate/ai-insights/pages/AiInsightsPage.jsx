@@ -202,7 +202,7 @@ function OverviewSkeleton() {
           {[0, 1].map((index) => (
             <Panel key={index} padding={20}>
               <div className={styles.matchHead}>
-                <Skeleton shape="block" width={36} height={36} />
+                <Skeleton shape="circle" width={36} height={36} />
                 <div className={styles.matchText}>
                   <Skeleton width="50%" />
                   <Skeleton width="30%" height={8} />

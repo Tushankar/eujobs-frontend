@@ -41,7 +41,7 @@ function RowsSkeleton({ divided, badge }) {
       <ul className={styles.list}>
         {SKELETON_ROWS.map(([title, meta], index) => (
           <li key={index} className={divided ? styles.dividedRow : styles.row}>
-            <Skeleton shape="block" width={32} height={32} />
+            <Skeleton shape="circle" width={32} height={32} />
             <div className={styles.rowText}>
               <p className={styles.rowTitle}>
                 <Skeleton width={title} height={12} />

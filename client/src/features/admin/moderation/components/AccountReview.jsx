@@ -15,7 +15,8 @@ import dialogStyles from './ReviewDialog.module.css'
 import detailStyles from './ReviewDetails.module.css'
 import styles from './VerificationReview.module.css'
 import accountStyles from './AccountReview.module.css'
-import { useMarkSeen } from '@/features/notifications/api.js'
+import { useMarkSeen } from '@/features/notifications/api.js'
+
 import { useSectors } from '@/lib/sectors.js'
 
 const ICONS = { approved: Check, rejected: X, suspended: Pause }
@@ -49,7 +50,7 @@ function ReviewSkeleton() {
       <div className={cx(accountStyles.card, accountStyles.facts, accountStyles.contact)}>{rows(['email', 'phone', 'submittedAt'])}</div>
       <div className={accountStyles.card}>
         <div className={accountStyles.companyHead}>
-          <Skeleton shape="block" width={40} height={40} />
+          <Skeleton shape="circle" width={40} height={40} />
           <div className={styles.personText}>
             <p className={accountStyles.companyName}>
               <Skeleton width={140} height={14} />

@@ -32,13 +32,13 @@ const BUBBLES = [
 ]
 
 /** The thread while it loads: the counterpart, a few bubbles on both sides and the composer, as placeholders. */
-function ThreadSkeleton({ role }) {
+function ThreadSkeleton() {
   return (
     <SkeletonRegion>
       <Panel padding={0} className={styles.thread}>
         <header className={styles.header}>
           <span className={styles.skeletonPerson}>
-            <Skeleton shape="circle" width={44} height={44} className={role === 'candidate' ? styles.skeletonLogo : undefined} />
+            <Skeleton shape="circle" width={44} height={44} />
             <span className={styles.skeletonLines}>
               <Skeleton width={160} height={12} />
               <Skeleton width={220} />
@@ -138,7 +138,7 @@ export default function ThreadPage() {
     return (
       <>
         {back}
-        <ThreadSkeleton role={me.role} />
+        <ThreadSkeleton />
       </>
     )
   }

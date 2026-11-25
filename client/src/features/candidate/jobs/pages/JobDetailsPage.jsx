@@ -323,7 +323,7 @@ function JobDetailsSkeleton() {
     <div className={styles.layout}>
       <SkeletonRegion className={styles.article}>
         <div className={styles.hero}>
-          <Skeleton shape="block" width={44} height={44} />
+          <Skeleton shape="circle" width={44} height={44} />
           <div className={styles.heroText}>
             <Skeleton width={140} height={12} />
             <p className={styles.posted}>

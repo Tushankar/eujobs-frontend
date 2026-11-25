@@ -12,13 +12,13 @@ import { useConversations } from '../api.js'
 import styles from './InboxPage.module.css'
 
 /** The inbox while it loads: rows shaped like the threads (logo or photo, name and job, preview, time). */
-function InboxSkeleton({ role }) {
+function InboxSkeleton() {
   return (
     <SkeletonRegion className={styles.list}>
       {[0, 1, 2, 3, 4].map((row) => (
         <div key={row} className={cx(styles.row, styles.skeletonRow)}>
           <span className={styles.skeletonPerson}>
-            <Skeleton shape="circle" width={40} height={40} className={role === 'candidate' ? styles.skeletonLogo : undefined} />
+            <Skeleton shape="circle" width={40} height={40} />
             <span className={styles.skeletonLines}>
               <Skeleton width={140} height={12} />
               <Skeleton width={180} />
@@ -49,7 +49,7 @@ export default function InboxPage() {
       <PageTitle title={t('messages:inbox.title')} description={t(`messages:inbox.description.${me.role}`)} />
       <div className={styles.body}>
         {isLoading ? (
-          <InboxSkeleton role={me.role} />
+          <InboxSkeleton />
         ) : isError && !data ? (
           <LoadError onRetry={refetch} retrying={isFetching} />
         ) : !data ? null : conversations.length === 0 ? (

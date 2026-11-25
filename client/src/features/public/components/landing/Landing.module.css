@@ -759,10 +759,6 @@
   gap: 12px;
 }
 
-.jobLogo {
-  border-radius: 17px;
-}
-
 .jobHead {
   flex: 1;
   min-width: 0;

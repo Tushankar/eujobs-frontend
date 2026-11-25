@@ -195,7 +195,7 @@ export function JobCardSkeleton() {
   return (
     <div className={styles.card}>
       <div className={styles.head}>
-        <Skeleton shape="block" width={44} height={44} />
+        <Skeleton shape="circle" width={44} height={44} />
         <div className={styles.headText}>
           <div className={styles.eyebrow}>
             <Skeleton width={110} />
