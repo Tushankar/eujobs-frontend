@@ -328,7 +328,7 @@
       "description": "La personne le rejoint une fois votre invitation et votre accord acceptés.",
       "nextTitle": "Et ensuite",
       "step1Title": "Votre invitation est envoyée",
-      "step1Text": "{{name}} est averti·e que votre agence souhaite l’ajouter à son vivier.",
+      "step1Text": "{{name}} reçoit un e-mail et une notification l’invitant à rejoindre votre vivier.",
       "step2Title": "Acceptation de votre accord",
       "step2Text": "La personne lit et accepte la version {{version}} de votre accord.",
       "step3Title": "Vous pouvez la placer",

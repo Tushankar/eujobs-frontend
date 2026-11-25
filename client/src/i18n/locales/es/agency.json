@@ -328,7 +328,7 @@
       "description": "Se une cuando acepte tu invitación y tu acuerdo.",
       "nextTitle": "Qué pasa después",
       "step1Title": "Recibe tu invitación",
-      "step1Text": "{{name}} recibe un aviso de que tu agencia quiere incluirle en su cartera.",
+      "step1Text": "{{name}} recibe un correo y un aviso para unirse a tu cartera.",
       "step2Title": "Acepta tu acuerdo",
       "step2Text": "Lee y acepta la versión {{version}} de tu acuerdo.",
       "step3Title": "Puedes colocarle",
