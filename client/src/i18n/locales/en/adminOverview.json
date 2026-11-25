@@ -31,10 +31,7 @@
     "applications": "Applications",
     "summary": "{{period}}: {{items}}",
     "point": "{{label}}: {{registrations}} registrations, {{applications}} applications",
-    "barSummary": "Bar chart. {{items}}",
-    "lineSummary": "Line chart. {{items}}",
-    "registrationsAt": "{{label}}: {{count}} registrations",
-    "applicationsAt": "{{label}}: {{count}} applications"
+    "empty": "No registrations or applications in this period."
   },
   "health": {
     "title": "Marketplace health",

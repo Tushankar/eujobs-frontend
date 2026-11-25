@@ -32,10 +32,7 @@
     "applications": "Candidatures",
     "summary": "{{period}} : {{items}}",
     "point": "{{label}} : {{registrations}} inscriptions, {{applications}} candidatures",
-    "barSummary": "Graphique en barres. {{items}}",
-    "lineSummary": "Graphique en courbe. {{items}}",
-    "registrationsAt": "{{label}} : {{count}} inscriptions",
-    "applicationsAt": "{{label}} : {{count}} candidatures"
+    "empty": "Aucune inscription ni candidature sur cette période."
   },
   "health": {
     "title": "Santé du marché",
