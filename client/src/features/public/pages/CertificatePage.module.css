@@ -160,12 +160,15 @@
 }
 
 .facts dt {
+  flex: 0 0 auto;
   font-size: 13px;
   color: var(--muted-foreground);
 }
 
+/* A long value (the course title) wraps beside its label, not under it. */
 .facts dd {
-  margin: 0 0 0 auto;
+  flex: 1 1 160px;
+  margin: 0;
   font-size: 14px;
   font-weight: 600;
   text-align: right;
