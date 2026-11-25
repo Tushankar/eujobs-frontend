@@ -167,7 +167,8 @@
 
 /* A long value (the course title) wraps beside its label, not under it. */
 .facts dd {
-  flex: 1 1 160px;
+  flex: 1 1 0;
+  min-width: 96px;
   margin: 0;
   font-size: 14px;
   font-weight: 600;
