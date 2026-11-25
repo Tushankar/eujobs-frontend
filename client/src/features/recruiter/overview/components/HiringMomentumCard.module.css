@@ -110,7 +110,7 @@
 .applicationSwatch,
 .applicationBar,
 .applicationDot {
-  background: var(--primary-strong);
+  background: var(--chart-1);
 }
 
 .shortlistSwatch,
