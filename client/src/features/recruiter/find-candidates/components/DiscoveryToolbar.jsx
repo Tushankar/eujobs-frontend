@@ -112,7 +112,7 @@ export default function DiscoveryToolbar({ locked, jobsLoading, query, onQueryCh
               onChange={setFilter('languageLevel')}
               options={enumOptions('languageLevel', t('discovery:toolbar.anyLevel'))}
             />
-            <CityField label={t('discovery:toolbar.city')} name="candidateCity" value={filters.place} onChange={(place) => onFiltersChange({ ...filters, place })} />
+            <CityField label={t('discovery:toolbar.city')} hint="" name="candidateCity" value={filters.place} onChange={(place) => onFiltersChange({ ...filters, place })} />
           </div>
           <div className={styles.footer}>
             <div className={styles.checks}>
