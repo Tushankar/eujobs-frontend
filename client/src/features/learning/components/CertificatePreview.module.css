@@ -1,0 +1,53 @@
+.preview {
+  position: relative;
+  container-type: inline-size;
+  overflow: hidden;
+  border-radius: 4px;
+  box-shadow:
+    0 1px 2px rgb(0 0 0 / 18%),
+    0 8px 24px rgb(0 0 0 / 12%);
+}
+
+.svg {
+  display: block;
+  width: 100%;
+  height: auto;
+}
+
+/* Inside the SVG (foreignObject): the note sits on the footer's bottom line, right-aligned like the PDF. */
+.note {
+  display: flex;
+  align-items: flex-end;
+  justify-content: flex-end;
+  box-sizing: border-box;
+  height: 100%;
+  margin: 0;
+  font-family: Inter, system-ui, sans-serif;
+  font-size: 10.5px;
+  line-height: 1.55;
+  color: #5b6475;
+  text-align: right;
+}
+
+/* A revoked certificate: the paper fades and a stamp crosses it. */
+.revoked {
+  position: absolute;
+  inset: 0;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  background: rgb(253 251 245 / 55%);
+}
+
+.revoked span {
+  padding: 0.25em 0.75em;
+  border: 3px solid #bf4545;
+  border-radius: 6px;
+  transform: rotate(-12deg);
+  font-family: var(--font-display);
+  font-size: clamp(16px, 4cqw, 28px);
+  font-weight: 800;
+  letter-spacing: 0.18em;
+  text-transform: uppercase;
+  color: #bf4545;
+}
