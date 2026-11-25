@@ -231,6 +231,7 @@ describe('certificates (M-105, U17, C18, C24)', () => {
     const check = (ip = '203.0.113.7') => api().get(`${v1}/public/certificates/${certificate.code}`).set('X-Forwarded-For', ip)
     const valid = await check()
     assert.deepEqual([valid.status, valid.body.status, valid.body.holderName, valid.body.courseTitle], [200, 'valid', 'Łukasz Żółć', 'Interaction design foundations'])
+    assert.deepEqual([valid.body.courseLevel, valid.body.courseCategory, valid.body.lessonCount], ['foundation', 'Interaction Design', 2])
     for (let index = 0; index < 29; index++) await check()
     const limited = await check()
     assert.deepEqual([limited.status, code(limited)], [429, 'RATE_LIMITED'])

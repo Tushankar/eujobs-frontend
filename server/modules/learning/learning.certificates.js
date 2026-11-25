@@ -146,12 +146,17 @@ export async function ownCertificatePdf(user, id) {
   return { url: signedUrl(file, user._id, { download: true }) }
 }
 
-/** GET /public/certificates/:code (U17, C18): a tombstone shows only its code and "No longer valid". */
+/**
+ * GET /public/certificates/:code (U17, C18): a tombstone shows only its code and "No longer valid". The course snapshot
+ * (level, category, lesson count) is null on a certificate issued before it until its PDF is rebuilt.
+ */
 export async function publicCertificate(code) {
   const certificate = await Certificate.findOne({ code: currentCode(code) })
   if (!certificate) throw new AppError('NOT_FOUND')
   if (certificate.status === 'no_longer_valid') return { code: certificate.code, status: certificate.status }
-  return { code: certificate.code, status: certificate.status, holderName: certificate.holderName, courseTitle: certificate.courseTitle, issuedAt: certificate.issuedAt, revokedAt: certificate.revokedAt ?? null }
+  const { holderName, courseTitle, issuedAt } = certificate
+  const snapshot = { courseLevel: certificate.courseLevel ?? null, courseCategory: certificate.courseCategory ?? null, lessonCount: certificate.lessonCount ?? null }
+  return { code: certificate.code, status: certificate.status, holderName, courseTitle, ...snapshot, issuedAt, revokedAt: certificate.revokedAt ?? null }
 }
 
 /** POST /admin/certificates/:id/revoke (M-105): audited; the public check then answers Revoked. */
