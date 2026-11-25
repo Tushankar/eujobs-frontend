@@ -124,7 +124,7 @@ export const LIMITS = {
   // U15: video heartbeats every 15 s; credit min(Δwall, 15 s) × min(rate, 2) when the position advanced without a
   // seek (the position may run ahead of the credit by `seekToleranceSec` for timer jitter); complete at 90 %.
   lessonProgress: { heartbeatSec: 15, maxRate: 2, seekToleranceSec: 2, completeShare: 0.9 },
-  // M-105, U17, C18: the certificate code is LWM- and 8 characters; a revoke needs a reason (the moderation limit)
+  // M-105, U17, C18: the certificate code is EUJ- and 8 characters (old LWM- codes still verify); a revoke needs a reason (the moderation limit)
   certificate: { revokeReason: { min: 1, max: 300 }, verifyPerIp: { windowMs: MINUTE, limit: 30 } },
   // OQ-3: For-you jobs read for candidate gap skills; recruiter suggestions shown
   suggestions: { forYouJobs: 10, recruiterCourses: 3 },

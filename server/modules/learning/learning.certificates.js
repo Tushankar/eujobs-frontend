@@ -20,7 +20,10 @@ import { celebrate } from '../users/celebrations.js'
 // No 0/O or 1/I, so a code read from paper is not ambiguous (P8-C7).
 const ALPHABET = '23456789ABCDEFGHJKLMNPQRSTUVWXYZ'
 const block = () => Array.from({ length: 4 }, () => ALPHABET[randomInt(ALPHABET.length)]).join('')
-const newCode = () => `LWM-${block()}-${block()}`
+const newCode = () => `EUJ-${block()}-${block()}`
+// Codes issued before the EU Jobs rename (2026-11-25) were LWM-…; scripts/renameLwmCodes.js kept their 8 characters,
+// so an old printed code or link still finds its certificate.
+const currentCode = (code) => code.toUpperCase().replace(/^LWM-/, 'EUJ-')
 
 export const verifyUrl = (code) => `${config.clientOrigin}/certificates/${code}`
 
@@ -63,15 +66,20 @@ export async function issueCertificate(user, course) {
   return certificate
 }
 
+/** Stores a fresh PDF of the certificate and removes the old one (a name change, a renamed code). */
+export async function replaceCertificatePdf(certificate, user) {
+  const previous = certificate.pdfFileId
+  certificate.pdfFileId = (await storePdf(certificate, user))._id
+  await certificate.save()
+  if (previous) await removeFiles([previous])
+}
+
 /** U17: after a name change, every valid certificate gets a new PDF with the new name and the same code. */
 export async function reissueCertificates(user) {
   for (const certificate of await Certificate.find({ userId: user._id, status: 'valid' })) {
-    const previous = certificate.pdfFileId
     certificate.holderName = user.fullName
     certificate.language = user.language
-    certificate.pdfFileId = (await storePdf(certificate, user))._id
-    await certificate.save()
-    await removeFiles([previous])
+    await replaceCertificatePdf(certificate, user)
   }
 }
 
@@ -104,7 +112,7 @@ export async function ownCertificatePdf(user, id) {
 
 /** GET /public/certificates/:code (U17, C18): a tombstone shows only its code and "No longer valid". */
 export async function publicCertificate(code) {
-  const certificate = await Certificate.findOne({ code: code.toUpperCase() })
+  const certificate = await Certificate.findOne({ code: currentCode(code) })
   if (!certificate) throw new AppError('NOT_FOUND')
   if (certificate.status === 'no_longer_valid') return { code: certificate.code, status: certificate.status }
   return { code: certificate.code, status: certificate.status, holderName: certificate.holderName, courseTitle: certificate.courseTitle, issuedAt: certificate.issuedAt, revokedAt: certificate.revokedAt ?? null }

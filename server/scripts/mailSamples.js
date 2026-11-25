@@ -73,9 +73,9 @@ export function mailSample(type, language, origin, role = 'candidate') {
       : { plan: 'Plus', amount: '£9', link: `${origin}/candidate/settings/billing` },
     certificate_issued: {
       course: 'Interaction design foundations',
-      code: 'LWM-7K3P-Q9XD',
+      code: 'EUJ-7K3P-Q9XD',
       link: `${origin}/candidate/learning`,
-      secondaryLink: `${origin}/certificates/LWM-7K3P-Q9XD`,
+      secondaryLink: `${origin}/certificates/EUJ-7K3P-Q9XD`,
     },
     plan_ended: { plan: 'Plus', link: `${origin}/candidate/settings/billing` },
     recruiter_plan_ended: {
@@ -129,7 +129,7 @@ export function mailSample(type, language, origin, role = 'candidate') {
     admin_renewal_failed: {
       payer: 'Mail Tester',
       plan: recruiter ? 'Recruiter Plus' : 'Plus',
-      reference: 'LWM-000099',
+      reference: 'EUJ-000099',
       amount: recruiter ? money('EUR', 57) : money('GBP', 9),
       link: `${origin}/admin/payments`,
     },

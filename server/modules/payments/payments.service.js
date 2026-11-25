@@ -40,10 +40,10 @@ export async function planState(userId) {
   return { plan: subscription.planKey, entitlements: plan?.entitlements ?? [] }
 }
 
-/** M-128: LWM-000001, LWM-000002, … (atomic, so concurrent webhooks never share a number). */
+/** M-128: EUJ-000001, EUJ-000002, … (EU Jobs; LWM- before the 2026-11-25 rename; atomic, so concurrent webhooks never share a number). */
 export async function nextReference() {
   const { seq } = await Counter.findOneAndUpdate({ _id: 'paymentReference' }, { $inc: { seq: 1 } }, { upsert: true, returnDocument: 'after' })
-  return `LWM-${String(seq).padStart(6, '0')}`
+  return `EUJ-${String(seq).padStart(6, '0')}`
 }
 
 const formatAmount = (language, amountMinor, currency) => new Intl.NumberFormat(language, { style: 'currency', currency }).format(amountMinor / 100)

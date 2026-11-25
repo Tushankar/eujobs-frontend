@@ -98,7 +98,7 @@ paymentSchema.index({ 'stripe.invoiceId': 1 }, { unique: true, partialFilterExpr
 paymentSchema.index({ 'stripe.checkoutSessionId': 1 }, { unique: true, partialFilterExpression: { 'stripe.checkoutSessionId': { $type: 'string' } } })
 paymentSchema.index({ 'stripe.paymentIntentId': 1 })
 
-/* Server sequences, e.g. { _id: 'paymentReference', seq } for LWM-000001 (M-128). */
+/* Server sequences, e.g. { _id: 'paymentReference', seq } for EUJ-000001 (M-128). */
 const counterSchema = new Schema({ _id: String, seq: { type: Number, default: 0 } })
 
 /* Processed webhook events: inserted first, so a redelivered event is a no-op (ordering item 11). */

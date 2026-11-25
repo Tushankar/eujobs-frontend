@@ -345,7 +345,7 @@ export async function sendExport(user, res) {
     if (await access(path).then(() => true, () => false)) present.push({ path, name: entry.name.endsWith(ext) ? entry.name : `${entry.name}${ext}` })
   }
   const archive = new ZipArchive({ zlib: { level: 9 } })
-  res.attachment(`local-workman-export-${day(new Date())}.zip`)
+  res.attachment(`eu-jobs-export-${day(new Date())}.zip`)
   res.set('Cache-Control', 'no-store')
   archive.pipe(res)
   for (const [name, value] of Object.entries(data)) archive.append(typeof value === 'string' ? value : JSON.stringify(value, null, 2), { name })

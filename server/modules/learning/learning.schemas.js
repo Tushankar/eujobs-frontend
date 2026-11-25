@@ -95,5 +95,5 @@ export const attemptBody = z.object({
   answers: z.array(z.object({ questionId: objectId, optionIds: z.array(objectId).max(C.quiz.options.max) })).max(C.quiz.questions.max),
 })
 
-export const codeParams = z.object({ code: z.string().trim().regex(/^LWM-[A-Z\d]{4}-[A-Z\d]{4}$/i) })
+export const codeParams = z.object({ code: z.string().trim().regex(/^(EUJ|LWM)-[A-Z\d]{4}-[A-Z\d]{4}$/i) })
 export const revokeBody = z.object({ reason: z.string().trim().min(LIMITS.certificate.revokeReason.min).max(LIMITS.certificate.revokeReason.max) })
