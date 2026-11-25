@@ -38,7 +38,6 @@
     "rightToWork": "Con permiso de trabajo en {{country}}",
     "verified": "Solo perfiles verificados",
     "city": "Ciudad",
-    "cityHint": "Candidatos cuyo perfil indica esta ciudad.",
     "clear": "Borrar filtros"
   },
   "sort": {

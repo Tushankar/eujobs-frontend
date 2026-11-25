@@ -38,7 +38,6 @@
     "rightToWork": "Droit au travail : {{country}}",
     "verified": "Profils vérifiés uniquement",
     "city": "Ville",
-    "cityHint": "Candidats dont le profil indique cette ville.",
     "clear": "Effacer les filtres"
   },
   "sort": {

@@ -37,7 +37,6 @@
     "rightToWork": "Has right to work in {{country}}",
     "verified": "Verified profiles only",
     "city": "City",
-    "cityHint": "Candidates whose profile city is this city.",
     "clear": "Clear filters"
   },
   "sort": {

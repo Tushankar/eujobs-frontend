@@ -38,22 +38,42 @@
 }
 
 .filters {
-  display: grid;
-  grid-template-columns: repeat(4, minmax(0, 1fr));
-  align-items: end;
-  gap: 12px;
   margin-top: 16px;
   padding-top: 16px;
   border-top: 1px solid var(--border);
 }
 
-/* Right to work and Verified, under the selects */
+/* Two even rows: work mode, availability, experience, skill / language, level, city (the last field, two columns). */
+.fields {
+  display: grid;
+  grid-template-columns: repeat(4, minmax(0, 1fr));
+  align-items: start;
+  gap: 16px 12px;
+}
+
+.fields > :last-child {
+  grid-column: span 2;
+}
+
+/* Right to work and Verified on the left, Clear filters (only once something is applied) on the right. */
+.footer {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  justify-content: space-between;
+  gap: 12px 16px;
+  min-height: 32px;
+  margin-top: 16px;
+}
+
 .checks {
   display: flex;
   flex-wrap: wrap;
-  gap: 8px 20px;
-  grid-column: span 2;
-  padding-bottom: 12px;
+  gap: 8px 24px;
+}
+
+.clear {
+  margin-left: auto;
 }
 
 @media (max-width: 1023px) {
@@ -70,7 +90,7 @@
     width: auto;
   }
 
-  .filters {
+  .fields {
     grid-template-columns: repeat(2, minmax(0, 1fr));
   }
 }
@@ -81,12 +101,16 @@
     flex-basis: 100%;
   }
 
-  .filters {
+  .fields {
     grid-template-columns: minmax(0, 1fr);
   }
 
-  .checks {
+  .fields > :last-child {
     grid-column: auto;
+  }
+
+  .checks {
+    flex-direction: column;
   }
 }
 

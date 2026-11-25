@@ -92,40 +92,46 @@ export default function DiscoveryToolbar({ locked, jobsLoading, query, onQueryCh
 
       {filtersOpen && (
         <div className={styles.filters} id="candidate-filters">
-          <SelectField label={t('discovery:toolbar.workPreference')} name="workPreference" value={filters.workPreference} onChange={setFilter('workPreference')} options={enumOptions('workPreference', t('discovery:toolbar.anyWorkPreference'))} />
-          <SelectField label={t('discovery:toolbar.availability')} name="availability" value={filters.availability} onChange={setFilter('availability')} options={enumOptions('availability', t('discovery:toolbar.anyAvailability'))} />
-          <SelectField
-            label={t('discovery:toolbar.experience')}
-            name="minYears"
-            value={filters.minYears}
-            onChange={setFilter('minYears')}
-            options={[{ value: '', label: t('discovery:toolbar.anyExperience') }, ...MIN_YEARS.map((years) => ({ value: String(years), label: t('discovery:toolbar.minYears', { count: years }) }))]}
-          />
-          <TextField label={t('discovery:toolbar.skill')} name="skill" placeholder={t('discovery:toolbar.skillPlaceholder')} value={filters.skill} onChange={setFilter('skill')} />
-          <SelectField label={t('discovery:toolbar.language')} name="language" value={filters.language} onChange={setFilter('language')} options={[{ value: '', label: t('discovery:toolbar.anyLanguage') }, ...languages]} />
-          <SelectField
-            label={t('discovery:toolbar.languageLevel')}
-            name="languageLevel"
-            disabled={!filters.language}
-            value={filters.languageLevel}
-            onChange={setFilter('languageLevel')}
-            options={enumOptions('languageLevel', t('discovery:toolbar.anyLevel'))}
-          />
-          <CityField label={t('discovery:toolbar.city')} hint={t('discovery:toolbar.cityHint')} name="candidateCity" value={filters.place} onChange={(place) => onFiltersChange({ ...filters, place })} />
-          <div className={styles.checks}>
-            {/* OD4: only a country view has a country to have the right to work in. */}
-            {country && country !== 'REMOTE' && (
-              <Checkbox name="rightToWork" checked={filters.rightToWork} onChange={setFilter('rightToWork')}>
-                {t('discovery:toolbar.rightToWork', { country: format.country(country) })}
-              </Checkbox>
-            )}
-            <Checkbox name="verified" checked={filters.verified} onChange={setFilter('verified')}>
-              {t('discovery:toolbar.verified')}
-            </Checkbox>
+          <div className={styles.fields}>
+            <SelectField label={t('discovery:toolbar.workPreference')} name="workPreference" value={filters.workPreference} onChange={setFilter('workPreference')} options={enumOptions('workPreference', t('discovery:toolbar.anyWorkPreference'))} />
+            <SelectField label={t('discovery:toolbar.availability')} name="availability" value={filters.availability} onChange={setFilter('availability')} options={enumOptions('availability', t('discovery:toolbar.anyAvailability'))} />
+            <SelectField
+              label={t('discovery:toolbar.experience')}
+              name="minYears"
+              value={filters.minYears}
+              onChange={setFilter('minYears')}
+              options={[{ value: '', label: t('discovery:toolbar.anyExperience') }, ...MIN_YEARS.map((years) => ({ value: String(years), label: t('discovery:toolbar.minYears', { count: years }) }))]}
+            />
+            <TextField label={t('discovery:toolbar.skill')} name="skill" placeholder={t('discovery:toolbar.skillPlaceholder')} value={filters.skill} onChange={setFilter('skill')} />
+            <SelectField label={t('discovery:toolbar.language')} name="language" value={filters.language} onChange={setFilter('language')} options={[{ value: '', label: t('discovery:toolbar.anyLanguage') }, ...languages]} />
+            <SelectField
+              label={t('discovery:toolbar.languageLevel')}
+              name="languageLevel"
+              disabled={!filters.language}
+              value={filters.languageLevel}
+              onChange={setFilter('languageLevel')}
+              options={enumOptions('languageLevel', t('discovery:toolbar.anyLevel'))}
+            />
+            <CityField label={t('discovery:toolbar.city')} name="candidateCity" value={filters.place} onChange={(place) => onFiltersChange({ ...filters, place })} />
           </div>
-          <Button variant="ghost" disabled={activeFilters === 0} onClick={() => onFiltersChange(EMPTY_FILTERS)}>
-            {t('discovery:toolbar.clear')}
-          </Button>
+          <div className={styles.footer}>
+            <div className={styles.checks}>
+              {/* OD4: only a country view has a country to have the right to work in. */}
+              {country && country !== 'REMOTE' && (
+                <Checkbox name="rightToWork" checked={filters.rightToWork} onChange={setFilter('rightToWork')}>
+                  {t('discovery:toolbar.rightToWork', { country: format.country(country) })}
+                </Checkbox>
+              )}
+              <Checkbox name="verified" checked={filters.verified} onChange={setFilter('verified')}>
+                {t('discovery:toolbar.verified')}
+              </Checkbox>
+            </div>
+            {activeFilters > 0 && (
+              <Button variant="ghost" size="sm" className={styles.clear} onClick={() => onFiltersChange(EMPTY_FILTERS)}>
+                {t('discovery:toolbar.clear')}
+              </Button>
+            )}
+          </div>
         </div>
       )}
     </Panel>

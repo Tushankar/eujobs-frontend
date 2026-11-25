@@ -5,18 +5,20 @@
 }
 
 .select {
-  height: 31.27px;
-  padding: 0 32px 0 12px;
-  border: 1px solid var(--border);
-  border-radius: var(--radius-md);
+  height: 32px;
+  padding: 0 32px 0 14px;
+  border: 1px solid var(--border-strong);
+  border-radius: var(--radius-full);
   background: var(--card);
-  font-size: 11px;
-  color: var(--muted-foreground);
+  font-size: 13px;
+  font-weight: 600;
+  color: var(--foreground);
   appearance: none;
+  cursor: pointer;
 }
 
 .select:hover {
-  color: var(--foreground);
+  border-color: var(--foreground);
 }
 
 .chevron {
