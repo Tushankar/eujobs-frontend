@@ -1,83 +1,151 @@
+.root {
+  position: relative;
+  height: 220px;
+}
+
 .svg {
   display: block;
-  width: 100%;
-  height: auto;
-  overflow: visible;
+  touch-action: pan-y;
 }
 
-.baseline {
-  stroke: var(--border);
-  stroke-width: 1;
-}
-
+/* Registrations and applications (--chart-1 / --chart-2, validated against the card in both themes). */
 .registrations {
-  fill: var(--primary);
+  --series: var(--chart-1);
 }
 
 .applications {
-  fill: var(--chart-2);
-}
-
-.barLabel {
-  font-size: 9px;
-  fill: var(--muted-foreground);
-}
-
-.axisLabel {
-  font-size: 12px;
-  fill: rgba(0, 0, 0, 0.7);
+  --series: var(--chart-2);
 }
 
 .grid {
-  stroke: light-dark(#000, var(--foreground));
-  stroke-opacity: 0.25;
-  stroke-dasharray: 1 2;
+  stroke: var(--border);
+  stroke-width: 1;
+  shape-rendering: crispEdges;
 }
 
-/* Registrations are drawn in brand blue, applications in the pale accent blue. */
-.registrationsSeries {
-  --series: var(--primary);
+.axis {
+  stroke: var(--border-strong);
+  stroke-width: 1;
+  shape-rendering: crispEdges;
 }
 
-.applicationsSeries {
-  --series: var(--chart-2);
+.tick {
+  font-size: 11px;
+  font-variant-numeric: tabular-nums;
+  fill: var(--muted-foreground);
+}
+
+.tickActive {
+  font-weight: 600;
+  fill: var(--foreground);
+}
+
+.bar {
+  fill: var(--series);
+}
+
+.hoverBand {
+  fill: var(--muted);
+}
+
+.crosshair {
+  stroke: var(--border-strong);
+  stroke-width: 1;
+}
+
+.area {
+  fill: var(--series);
+  fill-opacity: 0.1;
 }
 
 .line {
   fill: none;
   stroke: var(--series);
-  stroke-width: 1;
+  stroke-width: 2;
+  stroke-linejoin: round;
+  stroke-linecap: round;
 }
 
-.ripple {
+/* A 2px ring in the card colour keeps a dot legible where the lines cross. */
+.dot {
   fill: var(--series);
-  opacity: 0.25;
+  stroke: var(--card);
+  stroke-width: 2;
 }
 
-.node {
-  fill: var(--series);
-  stroke: #fff;
-  stroke-width: 1;
+/* A period with nothing in it says so, over the empty plot. */
+.empty {
+  position: absolute;
+  top: 12px;
+  right: 4px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: 0 16px;
+  font-size: 13px;
+  line-height: 18px;
+  text-align: center;
+  color: var(--muted-foreground);
+  pointer-events: none;
 }
 
-.axisBaseline {
-  stroke: light-dark(#000, var(--foreground));
-  stroke-opacity: 0.5;
+.tooltip {
+  position: absolute;
+  top: 0;
+  z-index: 1;
+  min-width: 136px;
+  padding: 10px 12px;
+  border: 1px solid var(--border);
+  border-radius: var(--radius-lg);
+  background: var(--card);
+  box-shadow: var(--shadow-popover);
+  transform: translateX(-50%);
+  pointer-events: none;
+}
+
+.tooltipLabel {
+  padding-bottom: 6px;
+  font-size: 12px;
+  font-weight: 600;
+  line-height: 16px;
+  color: var(--foreground);
+}
+
+.tooltipRow {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  font-size: 12px;
+  line-height: 20px;
+  color: var(--muted-foreground);
+}
+
+.tooltipRow strong {
+  font-weight: 600;
+  font-variant-numeric: tabular-nums;
+  color: var(--foreground);
+}
+
+/* Tooltip rows key their series with a short stroke, not a box. */
+.key {
+  width: 12px;
+  height: 3px;
+  border-radius: 2px;
+  background: var(--series);
 }
 
 .skeleton {
   display: flex;
   flex-direction: column;
-  aspect-ratio: 502 / 202;
+  height: 220px;
 }
 
-/* The plot ends on the SVG's baseline (176 of 202). */
 .skeletonPlot {
   display: flex;
-  flex: 0 0 87%;
+  flex: 1;
   align-items: flex-end;
-  gap: 20px;
-  padding: 0 16px;
+  gap: 12px;
+  padding: 12px 8px 0 32px;
   border-bottom: 1px solid var(--border);
 }
 
@@ -86,7 +154,7 @@
   flex: 1 1 0;
   align-items: flex-end;
   justify-content: center;
-  gap: 6px;
+  gap: 2px;
   min-width: 0;
   height: 100%;
 }
@@ -97,8 +165,9 @@
 
 .skeletonLabels {
   display: flex;
-  gap: 20px;
-  padding: 10px 16px 0;
+  gap: 12px;
+  height: 28px;
+  padding: 10px 8px 0 32px;
 }
 
 .skeletonLabels > span {

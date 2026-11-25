@@ -1,73 +1,124 @@
+import { useEffect, useRef, useState } from 'react'
 import { useTranslation } from 'react-i18next'
 import { Skeleton, SkeletonRegion } from '@/components/ui'
-import { niceCeiling } from '@/features/admin/overview/chartScale.js'
+import { countScale } from '@/features/admin/overview/chartScale.js'
+import { useFormat } from '@/lib/preferences.js'
+import { cx } from '@/utils/cx.js'
 import styles from './ActivityCharts.module.css'
 
-const WIDTH = 502
-const HEIGHT = 202
-const BASELINE = 176
-/* The line view's plot is taller than the bars' (Figma: 189px vs 168px). */
-const LINE_BASELINE = 197
-const PLOT_LEFT = 29
-const PLOT_TOP = 8
+/* Drawn in real pixels at the card's width (2026-11-25), so the axis text stays 11px on a phone instead of shrinking
+   with a scaled viewBox. */
+const HEIGHT = 220
+const TOP = 12
+const BOTTOM = 28
+const RIGHT = 4
 
-/** The chart in words, for screen readers. */
-function useDescribe() {
+function useWidth() {
+  const ref = useRef(null)
+  const [width, setWidth] = useState(0)
+  useEffect(() => {
+    const observer = new ResizeObserver(([entry]) => setWidth(Math.floor(entry.contentRect.width)))
+    observer.observe(ref.current)
+    return () => observer.disconnect()
+  }, [])
+  return [ref, width]
+}
+
+/** A bar from the baseline up to `top`, its data end rounded 4px. */
+function barPath(x, width, top, baseline) {
+  const radius = Math.min(4, (baseline - top) / 2, width / 2)
+  return `M${x} ${baseline}V${top + radius}a${radius} ${radius} 0 0 1 ${radius} ${-radius}h${width - 2 * radius}a${radius} ${radius} 0 0 1 ${radius} ${radius}V${baseline}Z`
+}
+
+/**
+ * Registrations and applications per day or week (M-170, M-171) as paired bars (`view` "bar") or lines, on one
+ * whole-number axis. Hover or tap a day for both counts; the card's accessible label lists every value.
+ */
+export function ActivityChart({ view, labels, registrations, applications }) {
   const { t } = useTranslation('adminOverview')
-  return {
-    t,
-    points: (labels, registrations, applications) =>
-      labels.map((label, index) => t('chart.point', { label, registrations: registrations[index], applications: applications[index] })).join('; '),
+  const format = useFormat()
+  const [ref, width] = useWidth()
+  const [active, setActive] = useState(null)
+  const { ceiling, ticks } = countScale(Math.max(...registrations, ...applications))
+  const left = Math.max(...ticks.map((tick) => format.number(tick).length)) * 7 + 12
+  const baseline = HEIGHT - BOTTOM
+  const band = Math.max(width - left - RIGHT, 0) / labels.length
+  const xAt = (index) => left + band * (index + 0.5)
+  const yAt = (value) => baseline - (value / ceiling) * (baseline - TOP)
+  const barWidth = Math.min(20, Math.max(4, (band * 0.6 - 2) / 2))
+  const series = [
+    { key: 'registrations', values: registrations, className: styles.registrations },
+    { key: 'applications', values: applications, className: styles.applications },
+  ]
+  const empty = series.every(({ values }) => values.every((value) => value === 0))
+  const pick = (event) => {
+    const index = Math.floor((event.clientX - event.currentTarget.getBoundingClientRect().left - left) / band)
+    setActive(index >= 0 && index < labels.length ? index : null)
   }
-}
-
-/** Bar-top path with 4px rounded top corners, growing up from the baseline. */
-function barPath(x, width, height) {
-  const radius = Math.min(4, height)
-  const top = BASELINE - height
-  return `M${x} ${BASELINE}V${top + radius}a${radius} ${radius} 0 0 1 ${radius} ${-radius}h${width - 2 * radius}a${radius} ${radius} 0 0 1 ${radius} ${radius}V${BASELINE}Z`
-}
-
-/** Paired bars (registrations in brand blue, applications in pale blue) per label. */
-export function BarChart({ labels, registrations, applications }) {
-  const { t, points } = useDescribe()
-  const max = Math.max(...registrations, ...applications, 1)
-  const barWidth = 20
-  const gap = 6
-  const itemWidth = (WIDTH - 32 - 20 * (labels.length - 1)) / labels.length
 
   return (
-    <svg
-      className={styles.svg}
-      viewBox={`0 0 ${WIDTH} ${HEIGHT}`}
-      role="img"
-      aria-label={t('chart.barSummary', { items: points(labels, registrations, applications) })}
-    >
-      <line x1="0" x2={WIDTH} y1={BASELINE + 0.5} y2={BASELINE + 0.5} className={styles.baseline} />
-      {labels.map((label, index) => {
-        const center = 16 + itemWidth / 2 + (itemWidth + 20) * index
-        const left = center - barWidth - gap / 2
-        const registrationHeight = (registrations[index] / max) * 147
-        const applicationHeight = (applications[index] / max) * 147
-        return (
-          <g key={label}>
-            {registrationHeight > 0 && (
-              <path d={barPath(left, barWidth, registrationHeight)} className={styles.registrations}>
-                <title>{t('chart.registrationsAt', { label, count: registrations[index] })}</title>
-              </path>
-            )}
-            {applicationHeight > 0 && (
-              <path d={barPath(left + barWidth + gap, barWidth, applicationHeight)} className={styles.applications}>
-                <title>{t('chart.applicationsAt', { label, count: applications[index] })}</title>
-              </path>
-            )}
-            <text x={center} y={BASELINE + 22} textAnchor="middle" className={styles.barLabel}>
+    <div ref={ref} className={styles.root}>
+      {width > 0 && (
+        <svg width={width} height={HEIGHT} className={styles.svg} aria-hidden="true" onPointerMove={pick} onPointerDown={pick} onPointerLeave={() => setActive(null)}>
+          {active !== null &&
+            (view === 'line' ? (
+              <line x1={xAt(active)} x2={xAt(active)} y1={TOP} y2={baseline} className={styles.crosshair} />
+            ) : (
+              <rect x={left + band * active + 2} y={TOP} width={band - 4} height={baseline - TOP} rx="6" className={styles.hoverBand} />
+            ))}
+          {ticks.map((tick) => (
+            <g key={tick}>
+              <line x1={left} x2={width - RIGHT} y1={yAt(tick)} y2={yAt(tick)} className={tick === 0 ? styles.axis : styles.grid} />
+              <text x={left - 8} y={yAt(tick)} dy="0.32em" textAnchor="end" className={styles.tick}>
+                {format.number(tick)}
+              </text>
+            </g>
+          ))}
+          {view === 'line'
+            ? [...series].reverse().map(({ key, values, className }) => {
+                const points = values.map((value, index) => `${xAt(index)},${yAt(value)}`)
+                return (
+                  <g key={key} className={className}>
+                    <path d={`M${xAt(0)},${baseline}L${points.join('L')}L${xAt(values.length - 1)},${baseline}Z`} className={styles.area} />
+                    <polyline points={points.join(' ')} className={styles.line} />
+                    {values.map((value, index) => (
+                      <circle key={index} cx={xAt(index)} cy={yAt(value)} r={index === active ? 5 : 4} className={styles.dot} />
+                    ))}
+                  </g>
+                )
+              })
+            : labels.map((label, index) =>
+                series.map(({ key, values, className }, order) =>
+                  values[index] > 0 ? (
+                    <path key={`${label}-${key}`} d={barPath(xAt(index) - barWidth - 1 + order * (barWidth + 2), barWidth, yAt(values[index]), baseline)} className={cx(styles.bar, className)} />
+                  ) : null,
+                ),
+              )}
+          {labels.map((label, index) => (
+            <text key={label} x={xAt(index)} y={baseline + 18} textAnchor="middle" className={cx(styles.tick, index === active && styles.tickActive)}>
               {label}
             </text>
-          </g>
-        )
-      })}
-    </svg>
+          ))}
+        </svg>
+      )}
+      {empty && width > 0 && (
+        <p className={styles.empty} style={{ left, bottom: BOTTOM }}>
+          {t('chart.empty')}
+        </p>
+      )}
+      {active !== null && width > 0 && (
+        <div className={styles.tooltip} style={{ left: Math.min(Math.max(xAt(active), 76), width - 76) }} aria-hidden="true">
+          <p className={styles.tooltipLabel}>{labels[active]}</p>
+          {series.map(({ key, values, className }) => (
+            <p key={key} className={cx(styles.tooltipRow, className)}>
+              <span className={styles.key} />
+              <strong>{format.number(values[active])}</strong>
+              {t(`chart.${key}`)}
+            </p>
+          ))}
+        </div>
+      )}
+    </div>
   )
 }
 
@@ -82,15 +133,15 @@ const SKELETON_BARS = [
   [44, 28],
 ]
 
-/** The bar chart's shape (same proportions as its SVG) while the counts load. */
+/** The bar chart's shape (same height as the chart) while the counts load. */
 export function ChartSkeleton() {
   return (
     <SkeletonRegion className={styles.skeleton}>
       <div className={styles.skeletonPlot}>
         {SKELETON_BARS.map(([registrations, applications], index) => (
           <div key={index} className={styles.skeletonColumn}>
-            <Skeleton shape="block" width={20} height={`${registrations}%`} className={styles.skeletonBar} />
-            <Skeleton shape="block" width={20} height={`${applications}%`} className={styles.skeletonBar} />
+            <Skeleton shape="block" width={14} height={`${registrations}%`} className={styles.skeletonBar} />
+            <Skeleton shape="block" width={14} height={`${applications}%`} className={styles.skeletonBar} />
           </div>
         ))}
       </div>
@@ -102,88 +153,5 @@ export function ChartSkeleton() {
         ))}
       </div>
     </SkeletonRegion>
-  )
-}
-
-/** Two area-and-line series on a dashed grid with a left value axis. */
-export function LineChart({ labels, registrations, applications }) {
-  const { t, points } = useDescribe()
-  const ceiling = niceCeiling(Math.max(...registrations, ...applications))
-  const plotWidth = WIDTH - PLOT_LEFT
-  const band = plotWidth / labels.length
-  const plotHeight = LINE_BASELINE - PLOT_TOP
-  const xAt = (index) => PLOT_LEFT + band * (index + 0.5)
-  const yAt = (value) => PLOT_TOP + plotHeight * (1 - value / ceiling)
-  const ticks = Array.from({ length: 6 }, (_, index) => (ceiling / 5) * index)
-
-  function series(values, key, className, gradientId) {
-    const points = values.map((value, index) => [xAt(index), yAt(value)])
-    const line = points.map(([x, y], index) => `${index === 0 ? 'M' : 'L'}${x} ${y}`).join('')
-    const area = `${line}L${points[points.length - 1][0]} ${LINE_BASELINE}L${points[0][0]} ${LINE_BASELINE}Z`
-    return (
-      <g className={className} key={key}>
-        <path d={area} fill={`url(#${gradientId})`} />
-        <path d={line} className={styles.line} />
-        {points.map(([x, y], index) => (
-          <g key={labels[index]}>
-            <circle cx={x} cy={y} r="8" className={styles.ripple} />
-            <circle cx={x} cy={y} r="4" className={styles.node}>
-              <title>{t(`chart.${key}At`, { label: labels[index], count: values[index] })}</title>
-            </circle>
-          </g>
-        ))}
-      </g>
-    )
-  }
-
-  return (
-    <svg
-      className={styles.svg}
-      viewBox={`0 0 ${WIDTH} ${LINE_BASELINE + HEIGHT - BASELINE - 2}`}
-      role="img"
-      aria-label={t('chart.lineSummary', { items: points(labels, registrations, applications) })}
-    >
-      <defs>
-        <linearGradient id="activity-registrations" x1="0" x2="0" y1="0" y2="1">
-          <stop offset="0" stopColor="#0263dc" stopOpacity="0.3" />
-          <stop offset="1" stopColor="#0263dc" stopOpacity="0.05" />
-        </linearGradient>
-        <linearGradient id="activity-applications" x1="0" x2="0" y1="0" y2="1">
-          <stop offset="0" stopColor="#eaf1fd" stopOpacity="0.3" />
-          <stop offset="1" stopColor="#eaf1fd" stopOpacity="0.05" />
-        </linearGradient>
-      </defs>
-      {ticks.map((tick) => (
-        <g key={tick}>
-          <text x={PLOT_LEFT - 5} y={yAt(tick) + 4} textAnchor="end" className={styles.axisLabel}>
-            {tick}
-          </text>
-          <line
-            x1={PLOT_LEFT + 1}
-            x2={WIDTH - 1}
-            y1={yAt(tick)}
-            y2={yAt(tick)}
-            className={tick === 0 ? styles.axisBaseline : styles.grid}
-          />
-        </g>
-      ))}
-      {Array.from({ length: labels.length + 1 }, (_, index) => (
-        <line
-          key={index}
-          x1={PLOT_LEFT + 1 + ((plotWidth - 2) / labels.length) * index}
-          x2={PLOT_LEFT + 1 + ((plotWidth - 2) / labels.length) * index}
-          y1={PLOT_TOP}
-          y2={LINE_BASELINE}
-          className={styles.grid}
-        />
-      ))}
-      {series(applications, 'applications', styles.applicationsSeries, 'activity-applications')}
-      {series(registrations, 'registrations', styles.registrationsSeries, 'activity-registrations')}
-      {labels.map((label, index) => (
-        <text key={label} x={xAt(index)} y={LINE_BASELINE + 22} textAnchor="middle" className={styles.axisLabel}>
-          {label}
-        </text>
-      ))}
-    </svg>
   )
 }
