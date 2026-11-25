@@ -62,7 +62,8 @@
   font-size: 14px;
   font-weight: 600;
   line-height: 24px;
-  color: var(--card);
+  /* Sits on the cover photo's dark scrim in both themes, so it stays white (--card turns dark in dark mode). */
+  color: #ffffff;
 }
 
 .section {
