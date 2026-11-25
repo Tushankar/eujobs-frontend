@@ -601,8 +601,9 @@ section.panel {
     font-size: 24px;
   }
 
+  /* The logo column follows the logo (44px), so the circle is never squeezed into an oval. */
   .row {
-    grid-template-columns: 40px minmax(0, 1fr);
+    grid-template-columns: 44px minmax(0, 1fr);
   }
 
   .rowAgo {

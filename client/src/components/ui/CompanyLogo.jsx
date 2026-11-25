@@ -1,3 +1,4 @@
+import { useState } from 'react'
 import { useTranslation } from 'react-i18next'
 import { cx } from '@/utils/cx.js'
 import styles from './CompanyLogo.module.css'
@@ -17,10 +18,20 @@ function paletteFor(seed) {
  */
 export default function CompanyLogo({ name, id, src, size = 40, className }) {
   const { t } = useTranslation()
+  // A logo that fails to load (an expired signed URL, a missing file) shows the initials, like Avatar.
+  const [failedSrc, setFailedSrc] = useState(null)
   const style = { width: size, height: size, fontSize: Math.round(size * 0.32) }
   const label = t('common:companyLogo', { name })
-  if (src) {
-    return <img src={src} alt={label} className={cx(styles.logo, styles.image, className)} style={{ ...style, padding: Math.max(3, Math.round(size * 0.12)) }} />
+  if (src && src !== failedSrc) {
+    return (
+      <img
+        src={src}
+        alt={label}
+        className={cx(styles.logo, styles.image, className)}
+        style={{ ...style, padding: Math.max(3, Math.round(size * 0.12)) }}
+        onError={() => setFailedSrc(src)}
+      />
+    )
   }
   const initials = name
     .split(/\s+/)
