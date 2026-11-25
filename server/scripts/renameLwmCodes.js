@@ -16,7 +16,9 @@ import { User } from '../modules/users/users.model.js'
  */
 const OLD = /^LWM-/
 const renamed = (field) => ({ $cond: [{ $eq: [{ $substrCP: [field, 0, 4] }, 'LWM-'] }, { $concat: ['EUJ-', { $substrCP: [field, 4, 100] }] }, field] })
-const renameField = async (Model, path) => (await Model.updateMany({ [path]: OLD }, [{ $set: { [path]: renamed(`$${path}`) } }])).modifiedCount
+// Mongoose 9 takes an aggregation-pipeline update only with `updatePipeline`.
+const PIPELINE = { updatePipeline: true }
+const renameField = async (Model, path) => (await Model.updateMany({ [path]: OLD }, [{ $set: { [path]: renamed(`$${path}`) } }], PIPELINE)).modifiedCount
 
 export async function renameLwmCodes() {
   const payments = await renameField(Payment, 'reference')
@@ -44,7 +46,7 @@ export async function renameLwmCodes() {
         },
       },
     },
-  ])
+  ], PIPELINE)
   return { payments, certificates, notifications, audit, celebrations: celebrations.modifiedCount, skipped }
 }
 
