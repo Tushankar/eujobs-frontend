@@ -1,8 +1,9 @@
 import { randomInt } from 'node:crypto'
+import { access } from 'node:fs/promises'
 import { config } from '../../config/env.js'
 import { actorFor, recordAudit } from '../../lib/audit.js'
 import { AppError } from '../../lib/errors.js'
-import { removeFiles, signedUrl, storeFile } from '../../lib/files.js'
+import { absolutePath, removeFiles, signedUrl, storeFile } from '../../lib/files.js'
 import { sendEmail } from '../../lib/mailer.js'
 import { certificatePdf } from '../../lib/pdf.js'
 import { File } from '../files/files.model.js'
@@ -102,10 +103,28 @@ export async function listOwnCertificates(user) {
   return { items, total: items.length, page: 1, pageSize: items.length }
 }
 
+/*
+ * A certificate renamed from LWM- to EUJ- (scripts/renameLwmCodes.js) still has a PDF printed with the old code. It is
+ * rebuilt the first time it is served, by the server that holds the old file: dev and production share the database
+ * but not the upload folders, so a server without the file leaves it alone.
+ */
+async function currentPdf(certificate, user) {
+  const file = certificate.pdfFileId && (await File.findById(certificate.pdfFileId))
+  if (!file || file.originalName === `${certificate.code}.pdf`) return file
+  if (!(await access(absolutePath(file)).then(() => true, () => false))) return file
+  await replaceCertificatePdf(certificate, user)
+  return File.findById(certificate.pdfFileId)
+}
+
+/** The data export (privacy.export.js) ships each PDF with the current code. */
+export async function refreshRenamedPdfs(user) {
+  for (const certificate of await Certificate.find({ userId: user._id, pdfFileId: { $ne: null } })) await currentPdf(certificate, user)
+}
+
 /** GET /learning/certificates/:id/pdf: a signed download link to the stored snapshot. */
 export async function ownCertificatePdf(user, id) {
   const certificate = await Certificate.findOne({ _id: id, userId: user._id })
-  const file = certificate && (await File.findById(certificate.pdfFileId))
+  const file = certificate && (await currentPdf(certificate, user))
   if (!file) throw new AppError('NOT_FOUND')
   return { url: signedUrl(file, user._id, { download: true }) }
 }
