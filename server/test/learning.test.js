@@ -229,13 +229,13 @@ describe('lock, unpublish and the learner side (M-106, M-108, M-109, M-110, M-13
     const user = await owner()
     const { id } = await readyCourse(user)
     const buyer = await createUser()
-    const payment = await Payment.create({ reference: 'LWM-T00009', userId: buyer._id, payerRole: 'candidate', payerName: 'B', kind: 'course', itemId: id, itemName: 'x', amountMinor: 2200, currency: 'EUR', status: 'paid', source: 'stripe', receiptUrl: 'https://pay.stripe.com/receipts/x', paidAt: new Date() })
+    const payment = await Payment.create({ reference: 'EUJ-T00009', userId: buyer._id, payerRole: 'candidate', payerName: 'B', kind: 'course', itemId: id, itemName: 'x', amountMinor: 2200, currency: 'EUR', status: 'paid', source: 'stripe', receiptUrl: 'https://pay.stripe.com/receipts/x', paidAt: new Date() })
     await enroll({ userId: buyer._id, courseId: id, source: 'purchase', paymentId: payment._id })
     const { items } = (await api().get(`${v1}/learning/enrollments`).set(auth(buyer))).body
     assert.equal(items.length, 1)
     const [item] = items
     assert.deepEqual([item.courseId, item.source, item.lessonsDone, item.lessonsTotal > 0, Boolean(item.course.title)], [id, 'purchase', 0, true, true])
-    assert.deepEqual(item.payment && [item.payment.reference, item.payment.amountMinor, item.payment.currency, item.payment.receiptUrl], ['LWM-T00009', 2200, 'EUR', 'https://pay.stripe.com/receipts/x'])
+    assert.deepEqual(item.payment && [item.payment.reference, item.payment.amountMinor, item.payment.currency, item.payment.receiptUrl], ['EUJ-T00009', 2200, 'EUR', 'https://pay.stripe.com/receipts/x'])
     assert.equal(item.certificate, null)
     assert.deepEqual((await api().get(`${v1}/learning/enrollments`).set(auth(await createUser()))).body.items, [])
   })
@@ -247,7 +247,7 @@ describe('lock, unpublish and the learner side (M-106, M-108, M-109, M-110, M-13
     await enroll({ userId: a._id, courseId: id, source: 'purchase' })
     await enroll({ userId: b._id, courseId: id, source: 'seed' })
     await Enrollment.updateOne({ userId: a._id }, { lessons: [{ lessonId: lessons[0].id, completedAt: new Date() }] })
-    await Payment.create({ reference: 'LWM-T00001', userId: a._id, payerRole: 'candidate', payerName: 'A', kind: 'course', itemId: id, itemName: 'x', amountMinor: 1900, currency: 'GBP', status: 'paid', source: 'stripe', paidAt: new Date() })
+    await Payment.create({ reference: 'EUJ-T00001', userId: a._id, payerRole: 'candidate', payerName: 'A', kind: 'course', itemId: id, itemName: 'x', amountMinor: 1900, currency: 'GBP', status: 'paid', source: 'stripe', paidAt: new Date() })
     const list = await api().get(`${v1}/admin/courses?audience=candidate`).set(auth(user))
     const [row] = list.body.items
     assert.deepEqual([row.enrolled, row.purchased, row.active, row.lessons], [2, 1, 1, 2])

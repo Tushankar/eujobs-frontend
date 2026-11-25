@@ -84,7 +84,7 @@ export default {
     await page.waitForSelector('[data-quiz-result="passed"]', { visible: true })
     await page.waitForSelector('[data-certificate-code]', { visible: true })
     const code = await page.$eval('[data-certificate-code]', (element) => element.textContent.trim())
-    ctx.check(/^LWM-[A-Z\d]{4}-[A-Z\d]{4}$/.test(code), `a certificate is issued (${code})`)
+    ctx.check(/^EUJ-[A-Z\d]{4}-[A-Z\d]{4}$/.test(code), `a certificate is issued (${code})`)
     await settle()
     await ctx.screenshot(page, '3-passed')
     const [mail] = await mailTo(learner.email, 'certificate_issued')

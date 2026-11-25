@@ -144,7 +144,7 @@ describe('final quiz (M-104)', () => {
 
     const passed = await attempt(user, created._id, answersFor(created))
     assert.deepEqual([passed.body.scorePercent, passed.body.passed, passed.body.bestScore], [100, true, 100])
-    assert.match(passed.body.certificate.code, /^LWM-[2-9A-HJ-NP-Z]{4}-[2-9A-HJ-NP-Z]{4}$/)
+    assert.match(passed.body.certificate.code, /^EUJ-[2-9A-HJ-NP-Z]{4}-[2-9A-HJ-NP-Z]{4}$/)
     const [mail] = mailTo(user.email, 'certificate_issued')
     assert.equal(mail.language, 'fr')
     assert.ok(mail.params.secondaryLink.endsWith(`/certificates/${passed.body.certificate.code}`))
@@ -186,6 +186,27 @@ describe('certificates (M-105, U17, C18, C24)', () => {
     assert.match(text, /Délivré le \d+/)
   })
 
+  it('rebuilds a PDF still printed with an LWM- code on its first download, only where the old file is', async () => {
+    const { user, certificate } = await certified()
+    const stored = await Certificate.findOne({ code: certificate.code })
+    const download = () => api().get(`${v1}/learning/certificates/${certificate.id}/pdf`).set(auth(user))
+    // As left by scripts/renameLwmCodes.js: the code is EUJ-, the stored PDF still the LWM- one.
+    await File.updateOne({ _id: stored.pdfFileId }, { originalName: `${certificate.code.replace('EUJ-', 'LWM-')}.pdf` })
+    assert.equal((await download()).status, 200)
+    const rebuilt = await Certificate.findById(stored._id)
+    assert.notEqual(String(rebuilt.pdfFileId), String(stored.pdfFileId))
+    assert.equal(await File.exists({ _id: stored.pdfFileId }), null, 'the old PDF is removed')
+    assert.equal((await File.findById(rebuilt.pdfFileId)).originalName, `${certificate.code}.pdf`)
+    assert.ok((await pdfText(rebuilt.pdfFileId)).text.includes(certificate.code))
+    await download()
+    assert.equal(String((await Certificate.findById(stored._id)).pdfFileId), String(rebuilt.pdfFileId), 'built once')
+
+    // A server without the file (the other side of the shared database) leaves it alone.
+    await File.updateOne({ _id: rebuilt.pdfFileId }, { originalName: 'LWM-OLD.pdf', path: 'missing/elsewhere.pdf' })
+    await download()
+    assert.equal(String((await Certificate.findById(stored._id)).pdfFileId), String(rebuilt.pdfFileId))
+  })
+
   it('answers the public check, rate-limits it at 30 a minute per IP, and shows a revoke', async () => {
     const { certificate } = await certified()
     const check = (ip = '203.0.113.7') => api().get(`${v1}/public/certificates/${certificate.code}`).set('X-Forwarded-For', ip)
@@ -195,7 +216,10 @@ describe('certificates (M-105, U17, C18, C24)', () => {
     const limited = await check()
     assert.deepEqual([limited.status, code(limited)], [429, 'RATE_LIMITED'])
     assert.equal((await check('203.0.113.8')).status, 200, 'another IP is not limited')
-    assert.equal((await api().get(`${v1}/public/certificates/LWM-2222-2222`).set('X-Forwarded-For', '203.0.113.9')).status, 404)
+    assert.equal((await api().get(`${v1}/public/certificates/EUJ-2222-2222`).set('X-Forwarded-For', '203.0.113.9')).status, 404)
+    // A code printed before the EU Jobs rename (LWM-…, same characters) still finds the certificate.
+    const old = await api().get(`${v1}/public/certificates/${certificate.code.replace('EUJ-', 'lwm-')}`).set('X-Forwarded-For', '203.0.113.11')
+    assert.deepEqual([old.status, old.body.code, old.body.status], [200, certificate.code, 'valid'])
 
     const owner = await createUser({ role: 'admin', isOwner: true })
     const id = String((await Certificate.findOne({ code: certificate.code }))._id)
@@ -247,9 +271,9 @@ describe('admin stats and learners (M-110, M-111)', () => {
     for (const user of [a, b, c]) await enroll({ userId: user._id, courseId: created._id, source: 'purchase' })
     const paid = (user, currency, amountMinor, reference) =>
       Payment.create({ reference, userId: user._id, payerRole: 'candidate', payerName: 'x', kind: 'course', itemId: String(created._id), itemName: created.title, amountMinor, currency, status: 'paid', source: 'stripe', paidAt: new Date() })
-    await paid(a, 'GBP', 1900, 'LWM-T00001')
-    await paid(b, 'EUR', 2200, 'LWM-T00002')
-    await paid(c, 'EUR', 2200, 'LWM-T00003')
+    await paid(a, 'GBP', 1900, 'EUJ-T00001')
+    await paid(b, 'EUR', 2200, 'EUJ-T00002')
+    await paid(c, 'EUR', 2200, 'EUJ-T00003')
     await finishLessons(a, created)
     await attempt(a, created._id, answersFor(created))
 

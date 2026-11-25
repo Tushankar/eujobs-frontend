@@ -200,7 +200,7 @@ describe('seed:demo (§3.20, OD9, P12)', () => {
     assert.equal(rows.length, 10)
     assert.deepEqual(
       rows.map((row) => row.reference),
-      rows.map((_, index) => `LWM-${String(index + 1).padStart(6, '0')}`),
+      rows.map((_, index) => `EUJ-${String(index + 1).padStart(6, '0')}`),
     )
     assert.ok(rows.every((row) => row.source === 'seed' && row.status === 'paid'))
     const sarah = await User.findOne({ email: demoAddress('sarah') })

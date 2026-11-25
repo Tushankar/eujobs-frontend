@@ -73,7 +73,7 @@ export default {
       const [owner] = await db('users', 'find', { filter: { email: ownerEmail } })
       const now = { $date: new Date().toISOString() }
       await db('payments', 'insertOne', {
-        doc: { reference: 'LWM-FMT-HUF', payerRole: 'candidate', payerName: 'Format check', kind: 'course', itemName: 'Format check', amountMinor: 1_234_500, currency: 'HUF', status: 'paid', source: 'seed', paidAt: now, createdAt: now, updatedAt: now },
+        doc: { reference: 'EUJ-FMT-HUF', payerRole: 'candidate', payerName: 'Format check', kind: 'course', itemName: 'Format check', amountMinor: 1_234_500, currency: 'HUF', status: 'paid', source: 'seed', paidAt: now, createdAt: now, updatedAt: now },
       })
       try {
         for (const language of ['fr', 'es']) {
@@ -92,7 +92,7 @@ export default {
           ctx.assertClean(admin.issues, `admin Payments ${language}`)
         }
       } finally {
-        await db('payments', 'deleteMany', { filter: { reference: 'LWM-FMT-HUF' } })
+        await db('payments', 'deleteMany', { filter: { reference: 'EUJ-FMT-HUF' } })
         await db('users', 'updateMany', { filter: { email: ownerEmail }, update: { $set: { language: owner.language, languageExplicit: owner.languageExplicit ?? false } } })
       }
     } finally {

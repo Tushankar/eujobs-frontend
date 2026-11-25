@@ -367,7 +367,7 @@ describe('admin totals by role (P11c-Q8, Q17, Q20)', () => {
     // 2026-11-13: a yearly plan counts a twelfth of its price in MRR.
     const yearly = await createUser()
     await Subscription.create({ userId: yearly._id, planKey: 'plus', status: 'active', currency: 'EUR', amountMinor: 10200, interval: 'year' })
-    await Payment.create({ reference: 'LWM-900001', userId: plus._id, payerRole: 'recruiter', kind: 'subscription', amountMinor: 4900, currency: 'GBP', status: 'failed', paidAt: new Date() })
+    await Payment.create({ reference: 'EUJ-900001', userId: plus._id, payerRole: 'recruiter', kind: 'subscription', amountMinor: 4900, currency: 'GBP', status: 'failed', paidAt: new Date() })
 
     const stats = (await api().get(`${v1}/admin/payments/stats`).set(auth(admin))).body
     assert.deepEqual(stats.activeSubscribers, { total: 3, candidate: 2, recruiter: 1, agency: 0 })

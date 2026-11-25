@@ -3,7 +3,7 @@ import { continueToStripe, freeCandidate, meOf, openAs, openUpgrade, payOnChecko
 
 /**
  * P5-01 (M-118, M-124, M-125, M-126, M-130, C13, U40): a Free candidate in Poland opens AI insights, sees the gate in
- * PLN, confirms, pays on Stripe's hosted Checkout with 4242 and comes back to AI insights unlocked. One paid LWM- row
+ * PLN, confirms, pays on Stripe's hosted Checkout with 4242 and comes back to AI insights unlocked. One paid EUJ- row
  * with a receipt link; Billing shows PLN and the renewal date.
  */
 export default {
@@ -46,7 +46,7 @@ export default {
     ctx.check(subscription?.status === 'active' && subscription.currency === 'PLN', 'an active PLN subscription is stored')
     const payments = await until(() => rowsOf('payments', user.id), (rows) => rows.length === 1, { label: 'one payment row' })
     const [row] = payments
-    ctx.check(/^LWM-\d{6}$/.test(row.reference) && row.status === 'paid' && row.amountMinor === 4500 && row.receiptUrl, 'one paid LWM- row with a receipt link')
+    ctx.check(/^EUJ-\d{6}$/.test(row.reference) && row.status === 'paid' && row.amountMinor === 4500 && row.receiptUrl, 'one paid EUJ- row with a receipt link')
 
     await page.goto(`${ctx.webUrl}/candidate/settings/billing`, { waitUntil: 'networkidle0' })
     await page.waitForSelector('[data-billing-state="active"]')

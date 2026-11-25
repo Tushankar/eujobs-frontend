@@ -69,10 +69,10 @@ describe('entitlement rule (U38, M-120)', () => {
 })
 
 describe('reference sequence (M-128)', () => {
-  it('gives unique consecutive LWM- numbers under concurrency', async () => {
+  it('gives unique consecutive EUJ- numbers under concurrency', async () => {
     const references = await Promise.all(Array.from({ length: 25 }, () => nextReference()))
     assert.equal(new Set(references).size, 25)
-    assert.deepEqual([...references].sort(), Array.from({ length: 25 }, (_, i) => `LWM-${String(i + 1).padStart(6, '0')}`))
+    assert.deepEqual([...references].sort(), Array.from({ length: 25 }, (_, i) => `EUJ-${String(i + 1).padStart(6, '0')}`))
   })
 })
 
@@ -312,7 +312,7 @@ describe('webhook (§2.10; signed constructed payloads)', () => {
     const rows = await Payment.find({ userId: user._id })
     assert.equal(rows.length, 1)
     const [row] = rows
-    assert.match(row.reference, /^LWM-\d{6}$/)
+    assert.match(row.reference, /^EUJ-\d{6}$/)
     assert.deepEqual(
       [row.kind, row.status, row.amountMinor, row.currency, row.method.brand, row.method.last4, row.receiptUrl, row.stripe.chargeId],
       ['subscription', 'paid', 900, 'GBP', 'visa', '4242', `https://invoice.stripe.com/i/${ids.in1}`, ids.ch1],

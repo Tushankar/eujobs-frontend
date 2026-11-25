@@ -134,7 +134,7 @@ describe('admin Candidates and Recruiters (M-161, M-169, M-206)', () => {
 describe('admin Payments (M-122, M-123, P10-Q5 … Q7)', () => {
   let n = 0
   const pay = (user, fields) =>
-    Payment.create({ reference: `LWM-T${++n}`, userId: user?._id, payerRole: user?.role, payerName: user?.fullName, kind: 'course', itemName: 'Course', amountMinor: 1900, currency: 'GBP', status: 'paid', paidAt: new Date(Date.now() - n * 1000), ...fields })
+    Payment.create({ reference: `EUJ-T${++n}`, userId: user?._id, payerRole: user?.role, payerName: user?.fullName, kind: 'course', itemName: 'Course', amountMinor: 1900, currency: 'GBP', status: 'paid', paidAt: new Date(Date.now() - n * 1000), ...fields })
 
   async function rows() {
     const london = await listedCandidate({ fullName: 'Lena London' })
@@ -195,7 +195,7 @@ describe('admin Payments (M-122, M-123, P10-Q5 … Q7)', () => {
     assert.deepEqual([detail.subscription.status, detail.subscription.paid, detail.failureReason], ['active', true, 'card_declined'])
     const csv = await get(admin, '/admin/payments/export?payer=candidate&status=failed')
     assert.ok(csv.text.startsWith('\uFEFFReference,Date,Payer,Payer type,Item,Type,Amount,Currency,Method,Status,Failure reason,Source'))
-    assert.match(csv.text.trim().split('\r\n')[1], /^LWM-T\d+,.*,Lena London,Candidate,Plus,Subscription,9\.00,GBP,,Failed,card_declined,Stripe$/)
+    assert.match(csv.text.trim().split('\r\n')[1], /^EUJ-T\d+,.*,Lena London,Candidate,Plus,Subscription,9\.00,GBP,,Failed,card_declined,Stripe$/)
     assert.equal((await AuditEvent.findOne({ type: 'reports.payments_exported' })).params.count, 1)
   })
 })
@@ -222,7 +222,7 @@ describe('admin Audit logs (M-162, M-163)', () => {
     const at = new Date()
     await AuditEvent.insertMany([
       { type: 'jobs.status_changed', category: 'jobs', actor: { type: 'user', name: 'Rae' }, params: { title: 'Designer', company: 'Acme', from: 'draft', to: 'published' }, at },
-      { type: 'payments.payment_refunded', category: 'payments', actor: { type: 'system' }, params: { reference: 'LWM-000009', payer: 'Lena', item: 'Plus', amountMinor: 900, currency: 'GBP' }, at },
+      { type: 'payments.payment_refunded', category: 'payments', actor: { type: 'system' }, params: { reference: 'EUJ-000009', payer: 'Lena', item: 'Plus', amountMinor: 900, currency: 'GBP' }, at },
       { type: 'access.role_created', category: 'access', actor: { type: 'admin', name: 'Workspace admin' }, params: { role: 'Support' }, at },
     ])
     const list = async (query) => (await get(admin, `/admin/audit-events?${query}`)).body
@@ -236,7 +236,7 @@ describe('admin Audit logs (M-162, M-163)', () => {
     assert.equal(lines[0], 'Date,Catégorie,Type d’acteur,Acteur,Événement')
     assert.match(lines[1], /,Offres,Utilisateur,Rae,"Statut de l’offre modifié : Designer \(Acme\), Brouillon → Publiée"$/)
     const refund = await get(admin, '/admin/audit-events/export?category=payments')
-    assert.match(refund.text, /Paiement remboursé LWM-000009 : Lena, Plus \(9,00\s£GB\)/)
+    assert.match(refund.text, /Paiement remboursé EUJ-000009 : Lena, Plus \(9,00\s£GB\)/)
     assert.ok(await AuditEvent.exists({ type: 'reports.audit_exported' }))
   })
 })
