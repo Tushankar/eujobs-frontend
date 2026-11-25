@@ -5,14 +5,57 @@
     "revoked": "Révoqué",
     "no_longer_valid": "N’est plus valide"
   },
-  "holder": "Titulaire",
+  "headline": {
+    "valid": "Ce certificat est valide",
+    "revoked": "Ce certificat a été révoqué",
+    "no_longer_valid": "Ce certificat n’est plus valide"
+  },
+  "lead": {
+    "valid": "EU Jobs a délivré ce certificat à {{name}} pour avoir suivi une formation et réussi son évaluation finale.",
+    "revoked": "EU Jobs a révoqué ce certificat le {{date}}. Il ne confirme plus que la formation a été suivie."
+  },
+  "checkedAt": "Vérifié le {{time}}",
+  "awardedTo": "Décerné à",
   "course": "Formation",
+  "level": "Niveau",
+  "lessons": "Leçons",
+  "category": "Catégorie",
   "issued": "Délivré le",
   "revoked": "Révoqué le",
+  "code": "Code du certificat",
+  "issuer": "Délivré par",
+  "copyLink": "Copier le lien",
+  "linkCopied": "Lien copié",
+  "copyCode": "Copier le code",
+  "codeCopied": "Code copié",
+  "previewCaption": "Un aperçu du certificat. Le titulaire conserve le PDF ; cette page le vérifie auprès du registre d’EU Jobs.",
+  "aboutTitle": "Ce que confirme ce certificat",
+  "howTitle": "Comment fonctionne cette vérification",
+  "how": "Cette page lit le registre du certificat chez EU Jobs à chaque ouverture. Si un certificat est révoqué, il apparaît ici comme révoqué, quoi qu’indique le PDF.",
   "noLongerValid": "Ce certificat a été délivré sur EU Jobs, mais il n’est plus valide.",
   "note": "Un certificat confirme qu’une formation a été suivie et son quiz final réussi sur EU Jobs. Il ne vérifie pas les compétences professionnelles.",
   "notFound": {
     "title": "Aucun certificat avec ce code",
     "text": "Vérifiez le code indiqué sur le certificat. Les codes ont la forme EUJ-7K3P-Q9XD."
+  },
+  "preview": {
+    "label": "Certificat de réussite : {{name}}, {{course}}, délivré le {{date}}",
+    "title": "Certificat de réussite",
+    "intro": "Nous certifions que",
+    "completed": "a suivi avec succès la formation",
+    "completedLevel": "a suivi avec succès la formation de niveau {{level}}",
+    "level": {
+      "foundation": "fondamental",
+      "intermediate": "intermédiaire",
+      "advanced": "avancé"
+    },
+    "lessons_one": "{{count}} leçon",
+    "lessons_many": "{{count}} leçons",
+    "lessons_other": "{{count}} leçons",
+    "passed": "Évaluation finale réussie",
+    "dateLabel": "Date de délivrance",
+    "issuerLabel": "Délivré par",
+    "code": "Code du certificat",
+    "verify": "Vérifiez ce certificat sur"
   }
 }

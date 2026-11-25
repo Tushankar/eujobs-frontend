@@ -5,14 +5,56 @@
     "revoked": "Revoked",
     "no_longer_valid": "No longer valid"
   },
-  "holder": "Holder",
+  "headline": {
+    "valid": "This certificate is valid",
+    "revoked": "This certificate was revoked",
+    "no_longer_valid": "This certificate is no longer valid"
+  },
+  "lead": {
+    "valid": "EU Jobs issued this certificate to {{name}} for completing a course and passing its final assessment.",
+    "revoked": "EU Jobs revoked this certificate on {{date}}. It no longer confirms that the course was completed."
+  },
+  "checkedAt": "Checked {{time}}",
+  "awardedTo": "Awarded to",
   "course": "Course",
+  "level": "Level",
+  "lessons": "Lessons",
+  "category": "Category",
   "issued": "Issued",
   "revoked": "Revoked on",
+  "code": "Certificate code",
+  "issuer": "Issued by",
+  "copyLink": "Copy link",
+  "linkCopied": "Link copied",
+  "copyCode": "Copy code",
+  "codeCopied": "Code copied",
+  "previewCaption": "A preview of the certificate. The holder keeps the PDF; this page checks it against the EU Jobs record.",
+  "aboutTitle": "What this certificate confirms",
+  "howTitle": "How this check works",
+  "how": "This page reads the certificate’s record from EU Jobs each time it opens. If a certificate is revoked, it shows here as revoked, whatever the PDF says.",
   "noLongerValid": "This certificate was issued on EU Jobs but is no longer valid.",
   "note": "A certificate confirms that a course was completed and its final quiz passed on EU Jobs. It does not verify workplace skills.",
   "notFound": {
     "title": "No certificate with this code",
     "text": "Check the code on the certificate. Codes look like EUJ-7K3P-Q9XD."
+  },
+  "preview": {
+    "label": "Certificate of completion: {{name}}, {{course}}, issued {{date}}",
+    "title": "Certificate of completion",
+    "intro": "This is to certify that",
+    "completed": "has successfully completed the course",
+    "completedLevel": "has successfully completed the {{level}} course",
+    "level": {
+      "foundation": "foundation",
+      "intermediate": "intermediate",
+      "advanced": "advanced"
+    },
+    "lessons_one": "{{count}} lesson",
+    "lessons_other": "{{count}} lessons",
+    "passed": "Final assessment passed",
+    "dateLabel": "Date of issue",
+    "issuerLabel": "Issued by",
+    "code": "Certificate code",
+    "verify": "Check this certificate at"
   }
 }
