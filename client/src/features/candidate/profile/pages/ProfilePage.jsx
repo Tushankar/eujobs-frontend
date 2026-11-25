@@ -230,7 +230,7 @@ function ProfileView({ profile }) {
           <div className={styles.actions}>
             {/* 2026-11-17: build the profile by talking (Plus). */}
             <VoiceProfileBuilder />
-            <Button data-tour="profile-edit" leftIcon={<Icon as={SquarePen} size={20} />} onClick={() => openDialog('core')}>
+            <Button data-tour="profile-edit" leftIcon={<Icon as={SquarePen} size={16} />} onClick={() => openDialog('core')}>
               {t('profile:edit')}
             </Button>
           </div>

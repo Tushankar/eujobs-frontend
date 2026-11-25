@@ -1,4 +1,5 @@
 import { ROUTES } from '../routes.js'
+import { checkAlignment } from './alignment.js'
 import { signInWithForm } from './flows.js'
 import { checkLayout, findLeftovers, textsFor } from './i18nChecks.js'
 import { db } from './testApi.js'
@@ -7,7 +8,7 @@ import { db } from './testApi.js'
  * Visits every route of e2e/routes.js per group, signed in through the sign-in form with the seeded accounts (no
  * session for `public`), in one UI language. A route fails on any page check (console errors include a missing
  * i18n key), a redirect away from it, the 404 panel, the router error screen, a near-empty page, a layout problem
- * (lib/i18nChecks.js) and, outside English, an English leftover.
+ * (lib/i18nChecks.js), controls in one row out of line (lib/alignment.js) and, outside English, an English leftover.
  */
 const GROUPS = {
   public: null,
@@ -37,7 +38,7 @@ async function visit(ctx, handle, group, path, texts, label) {
   await ctx.screenshot(page, `${label}${group}${path}`)
 
   const layout = await checkLayout(page, texts)
-  const problems = [...handle.issues, ...layout.problems]
+  const problems = [...handle.issues, ...layout.problems, ...(await checkAlignment(page))]
   if (texts.language !== 'en') problems.push(...(await findLeftovers(page, texts)))
   if (state.language !== texts.language) problems.push(`<html lang> is ${state.language}`)
   if (!REDIRECTS_ALLOWED.has(group) && state.path !== path) problems.push(`landed on ${state.path}`)

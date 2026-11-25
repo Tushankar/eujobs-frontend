@@ -172,7 +172,8 @@ export function checkLayout(page, texts, root = 'body') {
         const style = getComputedStyle(select)
         pen.font = `${style.fontWeight} ${style.fontSize} ${style.fontFamily}`
         const text = select.options[select.selectedIndex]?.text ?? ''
-        const room = select.clientWidth - parseFloat(style.paddingLeft) - parseFloat(style.paddingRight) - (style.appearance === 'none' ? 0 : 20)
+        // A base-select field (globals.css, 2026-11-24) hides the browser's arrow, like `appearance: none`.
+        const room = select.clientWidth - parseFloat(style.paddingLeft) - parseFloat(style.paddingRight) - (['none', 'base-select'].includes(style.appearance) ? 0 : 20)
         if (!text || pen.measureText(text).width <= room + 1) continue
         if (style.textOverflow === 'ellipsis' && !uiLabels.has(normal(text))) notes.push(`ellipsis (data): select "${text}"`)
         else problems.push(`select text cut: select "${text}" (${Math.round(pen.measureText(text).width - room)}px)`)
