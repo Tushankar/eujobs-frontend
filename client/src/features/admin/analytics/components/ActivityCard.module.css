@@ -1,21 +1,24 @@
 .card {
   display: flex;
   flex-direction: column;
+  min-width: 0;
 }
 
 .controls {
   display: flex;
   flex-shrink: 0;
-  align-items: flex-start;
-  gap: 14px;
+  align-items: center;
+  gap: 8px;
 }
 
+/* Bars / line: a 32px segmented pill, the same height as the period select beside it. */
 .toggle {
   display: flex;
-  height: 28px;
-  padding: 3px 4px;
-  border: 1px solid var(--border);
-  border-radius: var(--radius-lg);
+  gap: 2px;
+  height: 32px;
+  padding: 3px;
+  border: 1px solid var(--border-strong);
+  border-radius: var(--radius-full);
   background: var(--card);
 }
 
@@ -23,9 +26,9 @@
   display: inline-flex;
   align-items: center;
   justify-content: center;
-  padding: 3px 10px;
-  border: 1px solid transparent;
-  border-radius: var(--radius-md);
+  width: 32px;
+  border: 0;
+  border-radius: var(--radius-full);
   background: transparent;
   color: var(--muted-foreground);
   transition:
@@ -39,15 +42,14 @@
 
 .active,
 .active:hover {
-  background: var(--primary-strong);
-  box-shadow: var(--shadow-segment);
-  color: var(--primary-foreground);
+  background: var(--foreground);
+  color: var(--card);
 }
 
 .barGlyph {
   display: block;
-  width: 12px;
-  height: 12px;
+  width: 14px;
+  height: 14px;
   background: currentColor;
   mask: url('../../../../assets/icons/overview-chart-bars.svg') center / contain no-repeat;
 }
@@ -59,29 +61,38 @@
 }
 
 .select select {
-  min-width: 86.5px;
-  height: 28px;
-  padding: 0 26px 0 12px;
-  border: 1px solid var(--border);
-  border-radius: var(--radius-md);
+  display: inline-flex;
+  align-items: center;
+  height: 32px;
+  padding: 0 34px 0 14px;
+  border: 1px solid var(--border-strong);
+  border-radius: var(--radius-full);
   background: var(--card);
-  font-size: 10px;
-  color: var(--muted-foreground);
+  font-size: 13px;
+  font-weight: 600;
+  line-height: 18px;
+  color: var(--foreground);
   appearance: none;
   cursor: pointer;
 }
 
+.select select:hover {
+  border-color: var(--foreground);
+}
+
 .chevron {
   position: absolute;
-  right: 10px;
-  color: var(--muted-foreground);
+  right: 12px;
+  color: var(--foreground);
   pointer-events: none;
 }
 
+/* The two series with the period's totals, so the card answers "how many" before any hover. */
 .legend {
   display: flex;
-  gap: 20px;
-  padding-top: 20px;
+  flex-wrap: wrap;
+  gap: 8px 24px;
+  padding-top: 16px;
   list-style: none;
 }
 
@@ -89,27 +100,41 @@
   display: flex;
   align-items: center;
   gap: 8px;
-  font-size: 10px;
-  line-height: 15px;
+  font-size: 13px;
+  line-height: 18px;
   color: var(--muted-foreground);
 }
 
-.swatch {
-  width: 8px;
-  height: 8px;
-  border-radius: 4px;
+.legend strong {
+  font-weight: 600;
+  font-variant-numeric: tabular-nums;
+  color: var(--foreground);
 }
 
 .registrations {
-  background: var(--primary-strong);
+  --series: var(--chart-1);
 }
 
 .applications {
-  background: var(--chart-2);
+  --series: var(--chart-2);
+}
+
+/* The legend key mirrors the mark: a rounded square for bars, a short stroke for lines. */
+.swatch {
+  width: 10px;
+  height: 10px;
+  border-radius: 3px;
+  background: var(--series);
+}
+
+.lineSwatch {
+  width: 14px;
+  height: 3px;
+  border-radius: 2px;
 }
 
 .chart {
-  padding-top: 20px;
+  padding-top: 16px;
   transition: opacity var(--transition);
 }
 
@@ -117,15 +142,6 @@
 .busy {
   opacity: 0.5;
   pointer-events: none;
-}
-
-/* Figma's line view starts its legend and plot higher (the plot is 21px taller, ending on the same baseline). */
-.lineView .legend {
-  padding-top: 12px;
-}
-
-.lineView .chart {
-  padding-top: 9px;
 }
 
 /* Phones (owner 2026-11-16): 16 px side padding, so nested boxes do not stack wide gaps. */
