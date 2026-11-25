@@ -62,7 +62,9 @@ export default function ActivityCard({ source = 'analytics', titleId, view, peri
         ))}
       </ul>
       {loading ? (
-        <ChartSkeleton />
+        <div className={styles.chart}>
+          <ChartSkeleton />
+        </div>
       ) : (
         <div className={cx(styles.chart, busy && styles.busy)} role="img" aria-label={summary ?? ''} aria-busy={busy || undefined} data-activity-chart={activity ? period : undefined}>
           {activity && <ActivityChart view={view} {...activity} />}

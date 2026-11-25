@@ -13,10 +13,11 @@ import { usePreferences } from '@/lib/preferences.js'
 import { useUrlFilters } from '@/lib/useUrlFilters.js'
 import { cx } from '@/utils/cx.js'
 import { useGetOverviewQuery } from '../api.js'
+import { PERIODS } from '../useActivity.js'
 import CountryFilter from '../components/CountryFilter.jsx'
 import DemandedSkillsCard from '../components/DemandedSkillsCard.jsx'
 import MarketplaceHealthCard from '../components/MarketplaceHealthCard.jsx'
-import PlatformActivityCard from '../components/PlatformActivityCard.jsx'
+import ActivityCard from '@/features/admin/analytics/components/ActivityCard.jsx'
 import RecentActivityCard from '../components/RecentActivityCard.jsx'
 import styles from './OverviewPage.module.css'
 
@@ -33,6 +34,8 @@ export default function OverviewPage() {
   const { data, isLoading, isFetching, currentData } = useGetOverviewQuery(country ? { country } : {}, { refetchOnMountOrArgChange: true })
   // A new country: the numbers on screen are the previous one's until the new ones arrive.
   const busy = isFetching && !currentData && !isLoading
+  const [chartView, setChartView] = useState('bar')
+  const [chartPeriod, setChartPeriod] = useState(PERIODS[0])
   const [exporting, setExporting] = useState(false)
   const [exportError, setExportError] = useState('')
   const kpis = data?.kpis
@@ -102,7 +105,7 @@ export default function OverviewPage() {
         })}
       </div>
       <div className={styles.activity}>
-        <PlatformActivityCard country={country} />
+        <ActivityCard source="overview" titleId="platform-activity-title" view={chartView} period={chartPeriod} country={country} onViewChange={setChartView} onPeriodChange={setChartPeriod} />
         <MarketplaceHealthCard health={data?.health} loading={isLoading} />
       </div>
       <div className={cx(styles.insights, busy && styles.busy)} aria-busy={busy || undefined}>
