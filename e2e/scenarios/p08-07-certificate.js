@@ -41,8 +41,10 @@ export default {
     const { code } = certificate
 
     const pdf = await certificatePdf(learner.token)
-    for (const expected of [NAME, title, 'CERTIFICAT DE RÉUSSITE', 'Délivré le', code]) ctx.check(pdf.text.includes(expected), `the PDF shows "${expected}"`)
-    ctx.check(/\/FontFile2/.test(pdf.raw) && /Inter-Bold/.test(pdf.raw), 'the Inter fonts are embedded')
+    // Letter-spaced lines come out of pdf.js with spaces between the letters, so the check ignores white space.
+    const squash = (value) => value.replace(/\s+/g, '')
+    for (const expected of [NAME, title, 'CERTIFICAT DE RÉUSSITE', 'DATE DE DÉLIVRANCE', 'ÉVALUATION FINALE RÉUSSIE', code]) ctx.check(squash(pdf.text).includes(squash(expected)), `the PDF shows "${expected}"`)
+    ctx.check(/\/FontFile2/.test(pdf.raw) && ['Inter-Bold', 'Cinzel-SemiBold', 'CormorantGaramond-SemiBold'].every((font) => pdf.raw.includes(font)), 'the Inter, Cinzel and Cormorant fonts are embedded')
     // The browser part runs in the learner's French (the learning screens are translated since Phase 11).
 
     const handle = await ctx.newPage()

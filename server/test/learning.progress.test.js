@@ -176,6 +176,7 @@ describe('certificates (M-105, U17, C18, C24)', () => {
     const page = await (await getDocument({ data: new Uint8Array(buffer) }).promise).getPage(1)
     return { bytes: buffer.toString('latin1'), text: (await page.getTextContent()).items.map((item) => item.str).join(' ') }
   }
+  const squash = (value) => value.replace(/\s+/g, '')
 
   it('stores a PDF with the embedded fonts, the name with its diacritics, the course details, the chrome in French and the code', async () => {
     const { certificate } = await certified()
@@ -185,7 +186,8 @@ describe('certificates (M-105, U17, C18, C24)', () => {
     assert.match(bytes, /\/FontFile2/)
     for (const font of ['Inter-Bold', 'Cinzel-SemiBold', 'CormorantGaramond-SemiBold', 'CormorantGaramond-MediumItalic']) assert.match(bytes, new RegExp(font))
     const expected = ['Łukasz Żółć', 'Interaction design foundations', 'CERTIFICAT DE RÉUSSITE', 'a suivi avec succès la formation de niveau fondamental', '2 LEÇONS', 'ÉVALUATION FINALE RÉUSSIE', 'INTERACTION DESIGN', 'DATE DE DÉLIVRANCE', 'DÉLIVRÉ PAR', certificate.code]
-    for (const value of expected) assert.ok(text.includes(value), `${value} in ${text}`)
+    // Letter-spaced lines come out of pdf.js with spaces between the letters, so the check ignores white space.
+    for (const value of expected) assert.ok(squash(text).includes(squash(value)), `${value} in ${text}`)
     assert.match(text, /\d+ \p{L}+ 20\d\d/u)
   })
 
@@ -199,7 +201,7 @@ describe('certificates (M-105, U17, C18, C24)', () => {
     assert.deepEqual([rebuilt.courseLevel, rebuilt.lessonCount, rebuilt.pdfDesign], ['foundation', 2, 2])
     assert.notEqual(String(rebuilt.pdfFileId), String(stored.pdfFileId))
     assert.equal(await File.exists({ _id: stored.pdfFileId }), null, 'the old PDF is removed')
-    assert.ok((await pdfText(rebuilt.pdfFileId)).text.includes('2 LEÇONS'))
+    assert.ok(squash((await pdfText(rebuilt.pdfFileId)).text).includes('2LEÇONS'))
     assert.deepEqual(await rebuildCertificatePdfs(), { rebuilt: 0 }, 'safe to rerun')
   })
 
