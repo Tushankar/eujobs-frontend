@@ -127,6 +127,9 @@ export default {
     const step = (await (await login).json().catch(() => null))?.verification
     if (step) await finishLoginStep(signIn.page, recruiter.email, step.method)
     await waitForPath(signIn.page, () => location.pathname.startsWith('/recruiter') && !location.pathname.includes('sign-in'))
+    // 2026-11-26: they picked their own workspace, so no "you're in your … workspace" notice (a stale tile showed it).
+    await signIn.page.waitForSelector('main')
+    ctx.check(!(await bodyText(signIn.page)).includes('You signed in on the'), 'no wrong-page notice after "Sign in as Recruiter"')
     ctx.assertClean(signIn.issues, 'wrong-tile sign-in')
 
     // 6c. (2026-11-23) A Free agency: a client logo shows in the open dialog right after the upload, and Upgrade names
