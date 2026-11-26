@@ -1,9 +1,10 @@
 /*
- * 2026-11-26 (owner): more sector jobs for seed:demo and the live database (scripts/addSectorJobs.js). The ten mock
- * companies get roles that fit them in other sectors (a sector is the kind of work, not the employer's industry), and
- * twelve fictional employers on example.com cover the sectors none of them fit, so every sector has at least three jobs.
- * The employers and their people are invented; their logos are original (seed/assets/logos). Pay is in the city's
- * currency (remote: EUR); part-time and internship pay is monthly; volunteer roles are unpaid.
+ * 2026-11-26 (owner): more sector jobs for seed:demo and the live database (scripts/addSectorJobs.js): 42 fictional
+ * employers on example.com, one job each, so every sector has at least three jobs (Acme, on Recruiter Plus, gets an
+ * intern too). Without Recruiter Plus a company keeps only its newest job live (enforceFreeJobLimit, P11c-Q12), hence one
+ * job per employer. A sector is the kind of work, not the employer's industry. The employers and their people are
+ * invented; their logos are original (seed/assets/logos). Pay is in the city's currency (remote: EUR); part-time and
+ * internship pay is monthly; volunteer roles are unpaid.
  */
 
 /** The currency of each seed city (PLACES) and of remote jobs. */
@@ -95,7 +96,7 @@ const job = ({ company, title, type = 'full_time', sector, brief, does, skills, 
 })
 
 export const SECTOR_JOBS = [
-  /* ---------- the mock companies, in other sectors ---------- */
+  /* ---------- Acme (Recruiter Plus), then one job per employer ---------- */
   job({
     company: 'acme', title: 'Software Engineering Intern', type: 'internship', sector: 'it_software', level: 'junior', years: 0, mode: 'hybrid', city: 'london', salary: pay('london', 2200, 2400, 'month'), hoursAgo: 30,
     brief: 'Spend six months building real features with our product engineering team. You will pair with a senior engineer every day, ship code to customers and learn how a small SaaS team plans, tests and releases.',

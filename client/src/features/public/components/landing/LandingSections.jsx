@@ -42,7 +42,7 @@ import { CompanyLogo, Skeleton, SkeletonRegion } from '@/components/ui'
 import { check, useErrorText, useFormState } from '@/lib/forms.js'
 import { useJobText } from '@/lib/jobText.js'
 import { useFormat } from '@/lib/preferences.js'
-import { useSectors } from '@/lib/sectors.js'
+import { sectorIcon, useSectors } from '@/lib/sectors.js'
 import { useSubscribeNewsletterMutation } from '../../api.js'
 import { ArrowPill, AvatarStack } from './LandingHero.jsx'
 import InlineSvg from './InlineSvg.jsx'
@@ -135,7 +135,7 @@ export function Sectors({ counts }) {
   const { t } = useTranslation()
   const sectors = useSectors()
   const rows = Object.entries(counts ?? {})
-    .map(([key, count]) => ({ key, count, name: sectors.name(key) }))
+    .map(([key, count]) => ({ key, count, name: sectors.name(key), Icon: sectorIcon(key) }))
     .filter((row) => row.name && row.count > 0)
     .sort((a, b) => b.count - a.count || a.name.localeCompare(b.name))
   if (!rows.length) return null
@@ -149,7 +149,7 @@ export function Sectors({ counts }) {
           <ArrowRight size={16} aria-hidden="true" />
         </Link>
       </div>
-      {/* Directory rows (owner 2026-11-26): name, live count and a chevron, hairline dividers. */}
+      {/* Directory rows (owner 2026-11-26): grey line icon, name, live count and a chevron, hairline dividers. */}
       <ul className={styles.sectorList} data-stagger>
         {rows.map((row) => (
           <li key={row.key}>
@@ -159,6 +159,7 @@ export function Sectors({ counts }) {
               data-sector-link={row.key}
               aria-label={`${row.name}, ${t('landing:categories.jobs', { count: row.count })}`}
             >
+              <row.Icon size={18} strokeWidth={1.75} className={styles.sectorIcon} aria-hidden="true" />
               <span className={styles.sectorName}>{row.name}</span>
               <span className={styles.sectorCount}>{row.count}</span>
               <ChevronRight size={16} className={styles.sectorChevron} aria-hidden="true" />

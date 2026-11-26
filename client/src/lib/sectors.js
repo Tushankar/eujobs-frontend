@@ -1,4 +1,24 @@
 import { useMemo } from 'react'
+import {
+  Briefcase,
+  Building2,
+  ChartLine,
+  Code,
+  Cog,
+  ConciergeBell,
+  FlaskConical,
+  GraduationCap,
+  HandHeart,
+  HardHat,
+  Landmark,
+  Megaphone,
+  Palette,
+  Scale,
+  ShoppingBag,
+  Stethoscope,
+  Truck,
+  Users,
+} from 'lucide-react'
 import { useGetSectorsQuery } from '@/app/api.js'
 import { usePreferences } from './preferences.js'
 
@@ -29,3 +49,26 @@ export function useSectors() {
     }
   }, [sectors, language, isLoading])
 }
+
+/** A grey line icon per starter sector (owner 2026-11-26); sectors an admin adds later get the briefcase. */
+const SECTOR_ICONS = {
+  arts_culture: Palette,
+  charity_nonprofit: HandHeart,
+  construction_trades: HardHat,
+  education: GraduationCap,
+  engineering: Cog,
+  finance_economics: ChartLine,
+  healthcare: Stethoscope,
+  hospitality_tourism: ConciergeBell,
+  hr_recruitment: Users,
+  it_software: Code,
+  legal: Scale,
+  logistics_transport: Truck,
+  marketing_media: Megaphone,
+  public_sector: Landmark,
+  real_estate: Building2,
+  retail_ecommerce: ShoppingBag,
+  science_research: FlaskConical,
+}
+
+export const sectorIcon = (key) => SECTOR_ICONS[key] ?? Briefcase

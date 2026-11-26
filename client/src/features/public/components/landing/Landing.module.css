@@ -2285,7 +2285,7 @@
 .sectorLink {
   display: flex;
   align-items: center;
-  gap: 10px;
+  gap: 12px;
   margin-inline: -8px;
   padding: 13px 8px;
   border-radius: 8px;
@@ -2294,6 +2294,13 @@
   font-weight: 500;
   text-decoration: none;
   transition: background-color 0.15s ease, color 0.15s ease;
+}
+
+/* Neutral grey line icon, no tile (LinkedIn style); turns blue with the row on hover. */
+.sectorIcon {
+  flex: none;
+  color: light-dark(#5e6470, var(--muted-foreground));
+  transition: color 0.15s ease;
 }
 
 .sectorName {
@@ -2319,6 +2326,11 @@
 .sectorLink:hover,
 .sectorLink:focus-visible {
   background: var(--muted);
+  color: var(--primary);
+}
+
+.sectorLink:hover .sectorIcon,
+.sectorLink:focus-visible .sectorIcon {
   color: var(--primary);
 }
 
