@@ -195,4 +195,11 @@ export const CITY_TIME_ZONES = {
   stockholm: 'Europe/Stockholm',
   dublin: 'Europe/Dublin',
   lisbon: 'Europe/Lisbon',
+  // 2026-11-26: the cities of the sector employers and agencies (employers.js, agencies.js)
+  manchester: 'Europe/London',
+  munich: 'Europe/Berlin',
+  lyon: 'Europe/Paris',
+  madrid: 'Europe/Madrid',
+  barcelona: 'Europe/Madrid',
+  warsaw: 'Europe/Warsaw',
 }

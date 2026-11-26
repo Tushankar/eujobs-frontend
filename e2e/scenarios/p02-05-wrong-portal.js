@@ -1,4 +1,4 @@
-import { bodyText, clickText, fill, submitSignIn, waitForPath, waitForText } from '../lib/flows.js'
+import { bodyText, fill, submitSignIn, waitForPath, waitForText } from '../lib/flows.js'
 
 async function attempt(ctx, path, email) {
   const handle = await ctx.newPage()
@@ -25,8 +25,6 @@ export default {
     const title = 'You’re in your Candidate workspace'
     await waitForText(page, title)
     ctx.check((await bodyText(page)).includes('You signed in on the Recruiter page, but this account uses the Candidate workspace'), 'the notice names both pages')
-    // Emma's first sign-in opens the welcome tour over the page.
-    await clickText(page, 'Skip for now', '[role="dialog"] button')
     await ctx.screenshot(page, '1-candidate-on-recruiter-portal')
     await page.click('[role="status"] button[aria-label="Close"]')
     await page.waitForFunction((text) => !document.body.innerText.includes(text), {}, title)
