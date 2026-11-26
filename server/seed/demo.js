@@ -5,6 +5,7 @@ import { ENUMS } from '../config/enums.js'
 import { ScheduledTask } from '../jobs/models.js'
 import { connectDb, disconnectDb } from '../lib/db.js'
 import { AdminRole, AuditEvent } from '../modules/admin/admin.model.js'
+import { AgencyAgreement, AgencyClient, AgencyMembership, AgencyPlacement } from '../modules/agencies/agencies.model.js'
 import { AlertMatch, JobAlert } from '../modules/alerts/alerts.model.js'
 import { Application, PipelineStage } from '../modules/applications/applications.model.js'
 import { EmailToken, VerificationCode } from '../modules/auth/auth.model.js'
@@ -32,6 +33,7 @@ import { Counter, Payment, StripeEvent, Subscription } from '../modules/payments
 import { ReportExport } from '../modules/reports/reports.model.js'
 import { User } from '../modules/users/users.model.js'
 import { VerificationSubmission } from '../modules/verification/verification.model.js'
+import { seedAgencies } from './agencies.js'
 import { seedApplications } from './applications.js'
 import { seedCandidates } from './candidates.js'
 import { seedLearning } from './learning.js'
@@ -40,6 +42,7 @@ import { seedMessages } from './messages.js'
 import { seedModeration } from './moderation.js'
 import { seedWebsite } from './website.js'
 import { seedNotifications } from './notifications.js'
+import { AGENCIES } from './data/agencies.js'
 import { CANDIDATES, CITY_TIME_ZONES } from './data/candidates.js'
 import { DEMO_ACCOUNTS } from './data/demo.js'
 import { PLACES } from './data/places.js'
@@ -63,9 +66,10 @@ export function demoAddress(tag) {
 }
 
 /** The address of a seeded person: a demo plus-alias, or their example.com address (OD9). */
-const emailOf = (person) => person.email ?? demoAddress(person.tag)
+export const emailOf = (person) => person.email ?? demoAddress(person.tag)
 
-export async function seedDemo() {
+/** Every seeded account but the Owner's data: the demo accounts, then the example.com people. */
+export function seedAccounts() {
   const demoAccounts = DEMO_ACCOUNTS.map(({ tag, ...account }) => ({ ...account, email: demoAddress(tag) }))
   // The recruiter-mock candidates (§3.20) that are not demo accounts.
   const people = CANDIDATES.filter((person) => person.email).map((person) => ({
@@ -76,16 +80,44 @@ export async function seedDemo() {
     country: PLACES[person.city].countryCode,
     timezone: CITY_TIME_ZONES[person.city],
   }))
-  // One approved recruiter per mock company (M-145); Acme's is Sarah, a demo account.
-  const recruiters = COMPANIES.filter((company) => company.recruiter.email).map((company) => ({
-    role: 'recruiter',
-    status: 'active',
-    fullName: company.recruiter.fullName,
-    email: company.recruiter.email,
-    jobTitle: 'Talent lead',
-    country: PLACES[company.city].countryCode,
-    timezone: CITY_TIME_ZONES[company.city],
-  }))
+  // One approved recruiter per mock company (M-145) and per agency (2026-11-26); Acme's is Sarah and Northbridge's
+  // Priya, demo accounts.
+  const hiring = [...COMPANIES.map((company) => ['recruiter', company]), ...AGENCIES.map((agency) => ['agency', agency])]
+  const recruiters = hiring
+    .filter(([, company]) => company.recruiter.email)
+    .map(([role, company]) => ({
+      role,
+      status: 'active',
+      fullName: company.recruiter.fullName,
+      email: company.recruiter.email,
+      jobTitle: company.recruiter.jobTitle ?? 'Talent lead',
+      country: PLACES[company.city].countryCode,
+      timezone: CITY_TIME_ZONES[company.city],
+    }))
+  return [...demoAccounts, ...people, ...recruiters]
+}
+
+/** Creates seeded accounts: SEED_PASSWORD, the current legal texts accepted, a verified email, their country's language. */
+export async function insertAccounts(accounts, now) {
+  const passwordHash = await hashPassword(config.seed.password)
+  const legal = { ...(await currentLegalVersions()), acceptedAt: now }
+  const languages = Object.fromEntries((await Country.find({}, 'code defaultLanguage')).map((c) => [c.code, c.defaultLanguage]))
+  await User.insertMany(
+    accounts.map(({ country, ...account }) => ({
+      ...account,
+      passwordHash,
+      legal,
+      emailVerifiedAt: now,
+      language: country ? languages[country] : 'en',
+      pickerCountry: country,
+      onboardingCompletedAt: account.role === 'candidate' ? now : undefined,
+    })),
+  )
+}
+
+export async function seedDemo() {
+  const accounts = seedAccounts()
+  const demoAccounts = accounts.slice(0, DEMO_ACCOUNTS.length)
   for (const account of demoAccounts) {
     try {
       checkPassword(config.seed.password, account.email)
@@ -140,33 +172,24 @@ export async function seedDemo() {
     Notification.deleteMany({}),
     Interview.deleteMany({}),
     DocumentRequest.deleteMany({}),
+    AgencyClient.deleteMany({}),
+    AgencyAgreement.deleteMany({}),
+    AgencyMembership.deleteMany({}),
+    AgencyPlacement.deleteMany({}),
   ])
   await ensureDefaultPolicy()
   // Every stored file is demo data: one folder per purpose under the upload root (never another root).
   await Promise.all(ENUMS.filePurpose.map((purpose) => rm(join(config.uploadRoot, purpose), { recursive: true, force: true })))
 
   const now = new Date()
-  const passwordHash = await hashPassword(config.seed.password)
-  const legal = { ...(await currentLegalVersions()), acceptedAt: now }
-  const languages = Object.fromEntries((await Country.find({}, 'code defaultLanguage')).map((c) => [c.code, c.defaultLanguage]))
-
-  await User.insertMany(
-    [...demoAccounts, ...people, ...recruiters].map(({ country, ...account }) => ({
-      ...account,
-      passwordHash,
-      legal,
-      emailVerifiedAt: now,
-      language: country ? languages[country] : 'en',
-      pickerCountry: country,
-      onboardingCompletedAt: account.role === 'candidate' ? now : undefined,
-    })),
-  )
+  await insertAccounts(accounts, now)
   const owner = await User.findOne({ isOwner: true })
   await seedCandidates({ emailOf, owner, now: now.getTime() })
   await seedRecruiters({ emailOf, owner, now: now.getTime() })
   await seedPayments({ emailOf, now: now.getTime() })
   await seedLearning({ emailOf, owner, now: now.getTime() })
   await seedApplications({ emailOf, now: now.getTime() })
+  await seedAgencies({ emailOf, owner, now: now.getTime() })
   await seedMessages({ emailOf, now: now.getTime() })
   await seedInterviews({ emailOf, now: now.getTime() })
   await seedModeration({ emailOf, owner, now: now.getTime() })

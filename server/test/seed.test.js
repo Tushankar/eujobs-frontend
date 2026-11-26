@@ -81,19 +81,20 @@ describe('seed:demo (§3.20, OD9, P12)', () => {
       pickerCountry,
     }))
 
-  it('recreates the Owner and the 4 demo accounts on plus-aliases, the same each run', async () => {
+  it('recreates the Owner and the 5 demo accounts on plus-aliases, the same each run', async () => {
     await seedCatalog()
     await seedDemo()
     const first = await snapshot()
     await seedDemo()
     // Compared without printing: the addresses derive from SEED_ADMIN_EMAIL.
     assert.ok(JSON.stringify(await snapshot()) === JSON.stringify(first), 'the second run gives the same accounts')
-    // The Owner, 4 demo accounts, the 5 recruiter-mock candidates and 9 mock-company recruiters on example.com (§3.20).
-    assert.equal(first.length, 19)
+    // The Owner, 5 demo accounts, the 5 recruiter-mock candidates, 9 mock-company and 12 sector-employer recruiters and
+    // Atlas Interim's contact on example.com (§3.20, 2026-11-26).
+    assert.equal(first.length, 33)
 
     const owner = first.find((user) => user.isOwner)
     assert.ok(owner.email === config.seed.adminEmail && owner.role === 'admin', 'Owner uses SEED_ADMIN_EMAIL')
-    const expected = { alex: 'candidate:active:GB', emma: 'candidate:active:GB', sarah: 'recruiter:active:GB', james: 'recruiter:pending_review:IE' }
+    const expected = { alex: 'candidate:active:GB', emma: 'candidate:active:GB', sarah: 'recruiter:active:GB', james: 'recruiter:pending_review:IE', priya: 'agency:active:GB' }
     for (const [tag, state] of Object.entries(expected)) {
       const user = first.find((u) => u.email === demoAddress(tag))
       assert.ok(user, `+${tag} alias exists`)
@@ -102,18 +103,31 @@ describe('seed:demo (§3.20, OD9, P12)', () => {
     const exampleCom = first.filter((user) => user.email.endsWith('@example.com')).map((user) => `${user.email}:${user.pickerCountry}`)
     assert.deepEqual(exampleCom, [
       'aisha.patel@example.com:SE',
+      'astrid.lindqvist@example.com:SE',
       'camille.martin@example.com:FR',
+      'chloe.bernard@example.com:FR',
+      'ciara.byrne@example.com:IE',
       'daniel.kim@example.com:FR',
+      'diego.navarro@example.com:ES',
+      'edward.vale@example.com:GB',
       'erik.lund@example.com:SE',
+      'felix.brandt@example.com:DE',
+      'grace.okafor@example.com:GB',
+      'hannah.price@example.com:GB',
       'ines.costa@example.com:PT',
       'james.chen@example.com:NL',
+      'jonas.weber@example.com:DE',
+      'laura.puig@example.com:ES',
       'lena.fischer@example.com:DE',
       'lucas.meyer@example.com:NL',
+      'marek.kowalski@example.com:PL',
       'maya.brooks@example.com:IE',
       'nora.kelly@example.com:IE',
       'oliver.park@example.com:DE',
       'ravi.shah@example.com:GB',
+      'rita.almeida@example.com:PT',
       'sofia.martinez@example.com:GB',
+      'stefan.huber@example.com:DE',
       'tom.becker@example.com:GB',
     ])
   })
@@ -144,20 +158,29 @@ describe('seed:demo (§3.20, OD9, P12)', () => {
 
   it('seeds approved companies with their jobs, the applicant and the recruiter-mock state (OQ-4, P4-C)', async () => {
     const companies = await Company.find().populate('ownerUserId', 'email status')
-    assert.equal(companies.length, 11)
+    // 10 mock companies, 12 sector employers, 2 agencies and the applicant (2026-11-26)
+    assert.equal(companies.length, 25)
     const acme = companies.find((company) => company.displayName === 'Acme Studio')
     assert.deepEqual([acme.ownerUserId.email === demoAddress('sarah'), acme.location.toObject(), Boolean(acme.verifiedAt)], [true, PLACES.london, true])
     assert.equal(await PipelineStage.countDocuments({ companyId: acme._id }), 6)
-    assert.equal(await PipelineStage.countDocuments(), 10 * 6)
+    assert.equal(await PipelineStage.countDocuments(), 24 * 6)
+    assert.ok(companies.filter((company) => company.ownerUserId.status === 'active').every((company) => company.sector && company.logoFileId), 'every approved company has a sector and a logo')
 
     const jobs = await Job.find()
-    assert.equal(jobs.length, 12)
-    assert.ok(jobs.every((job) => job.status === 'published' && job.firstPublishedAt))
-    assert.equal(jobs.filter((job) => String(job.companyId) === String(acme._id)).length, 3)
-    // OQ-4: $110k–$140k in London = £83,000–£105,000; remote jobs are in EUR.
+    assert.equal(jobs.length, 68)
+    assert.ok(jobs.every((job) => job.firstPublishedAt))
+    // The two filled agency jobs (their placements are running) are closed; every other job is open.
+    assert.deepEqual(jobs.filter((job) => job.status !== 'published').map((job) => `${job.title}:${job.status}`).sort(), ['Interim Lead Product Designer:closed', 'Interim UX Researcher:closed'])
+    assert.equal(jobs.filter((job) => String(job.companyId) === String(acme._id)).length, 4)
+    // OQ-4: $110k–$140k in London = £83,000–£105,000; remote company jobs are in EUR.
     const monzo = jobs.find((job) => job.title === 'Product Designer, Fintech')
     assert.deepEqual([monzo.country, monzo.salary.min, monzo.salary.max, monzo.salary.currency], ['GB', 83000, 105000, 'GBP'])
-    assert.ok(jobs.filter((job) => job.country === 'REMOTE').every((job) => job.salary.currency === 'EUR' && !job.location?.placeId))
+    assert.ok(jobs.filter((job) => job.country === 'REMOTE').every((job) => !job.location?.placeId && (job.agency || job.salary.currency === 'EUR')))
+    // 2026-11-26: every sector has at least three open jobs, and every job type is there.
+    const open = jobs.filter((job) => job.status === 'published')
+    for (const sector of SECTORS) assert.ok(open.filter((job) => job.sector === sector.key).length >= 3, `${sector.key} has 3 open jobs`)
+    assert.deepEqual([...new Set(open.map((job) => job.employmentType))].sort(), ['contract', 'full_time', 'internship', 'part_time', 'volunteer'])
+    assert.ok(open.filter((job) => job.employmentType === 'volunteer').every((job) => !job.salary?.period))
     assert.ok(jobs.some((job) => job.relevantCount > 0), 'relevant counts are computed')
 
     const applicant = companies.find((company) => company.ownerUserId.email === demoAddress('james'))

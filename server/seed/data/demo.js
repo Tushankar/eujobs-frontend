@@ -9,4 +9,6 @@ export const DEMO_ACCOUNTS = [
   { tag: 'emma', role: 'candidate', status: 'active', fullName: 'Emma Wilson', country: 'GB', timezone: 'Europe/London' },
   { tag: 'sarah', role: 'recruiter', status: 'active', fullName: 'Sarah Miller', jobTitle: 'Head of Talent', country: 'GB', timezone: 'Europe/London' },
   { tag: 'james', role: 'recruiter', status: 'pending_review', fullName: 'James Chen', jobTitle: 'Founder', country: 'IE', timezone: 'Europe/Dublin' },
+  // 2026-11-26: Northbridge Staffing's director, the demo agency account (data/agencies.js)
+  { tag: 'priya', role: 'agency', status: 'active', fullName: 'Priya Nair', jobTitle: 'Agency director', country: 'GB', timezone: 'Europe/London' },
 ]
