@@ -296,7 +296,6 @@ describe('seed:demo (§3.20, OD9, P12)', () => {
       assert.ok(application.history.every((step, index, all) => index === 0 || step.at > all[index - 1].at))
       assert.ok(application.history.at(-1).at < new Date())
     }
-    const oliver = applications.find((application) => application.candidateId.fullName === 'Oliver Park')
     const oliverAtAcme = applications.find((application) => application.candidateId.fullName === 'Oliver Park' && application.status === 'interview')
     assert.deepEqual(oliverAtAcme.history.map((step) => step.stageName), ['Applied', 'Screening', 'Shortlisted', 'Interview'])
     // Acme's 6 (1 + 7 moves) and the agencies' 4 (13 moves, made by the agency: the recruiter side).

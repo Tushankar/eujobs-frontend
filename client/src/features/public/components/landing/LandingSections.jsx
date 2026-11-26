@@ -1,6 +1,7 @@
 import { useRef, useState } from 'react'
 import { useTranslation } from 'react-i18next'
 import { Link } from 'react-router-dom'
+import { ArrowRight, ChevronRight } from 'lucide-react'
 import { BRAND } from '@/app/brand.js'
 import careerGlass from '@/assets/landing/career-glass.webp'
 import careerPhoto from '@/assets/landing/career-photo.webp'
@@ -139,17 +140,28 @@ export function Sectors({ counts }) {
     .sort((a, b) => b.count - a.count || a.name.localeCompare(b.name))
   if (!rows.length) return null
   return (
-    <section className={`${styles.card} ${styles.section}`} aria-labelledby="sectors-title" data-landing-sectors>
+    <section className={`${styles.card} ${styles.section} ${styles.sectors}`} aria-labelledby="sectors-title" data-landing-sectors>
       <div className={styles.sectionHead} data-reveal>
         <Title id="sectors-title" lead={t('landing:sectors.titleLead')} accent={t('landing:sectors.titleAccent')} />
         <p className={styles.sectionText}>{t('landing:sectors.text')}</p>
+        <Link to="/jobs" className={styles.sectorAll}>
+          {t('landing:sectors.viewAll')}
+          <ArrowRight size={16} aria-hidden="true" />
+        </Link>
       </div>
+      {/* Directory rows (owner 2026-11-26): name, live count and a chevron, hairline dividers. */}
       <ul className={styles.sectorList} data-stagger>
         {rows.map((row) => (
           <li key={row.key}>
-            <Link to={`/jobs?sector=${row.key}`} className={styles.sectorLink} data-sector-link={row.key}>
-              <span>{row.name}</span>
-              <span className={styles.sectorCount}>{t('landing:categories.jobs', { count: row.count })}</span>
+            <Link
+              to={`/jobs?sector=${row.key}`}
+              className={styles.sectorLink}
+              data-sector-link={row.key}
+              aria-label={`${row.name}, ${t('landing:categories.jobs', { count: row.count })}`}
+            >
+              <span className={styles.sectorName}>{row.name}</span>
+              <span className={styles.sectorCount}>{row.count}</span>
+              <ChevronRight size={16} className={styles.sectorChevron} aria-hidden="true" />
             </Link>
           </li>
         ))}
