@@ -3,8 +3,11 @@
  * from the recruiter mocks (company.js, jobs.js); every other company of the candidate job mocks (jobs.js) gets
  * one approved recruiter on example.com (OD9). Jobs keep their mock work mode: remote jobs list in the Remote
  * view, the others move to U42 cities. USD salaries use OQ-4 (1 USD = 0.75 GBP = 0.87 EUR = 3.75 PLN = 9.6 SEK),
- * rounded to 1,000. Websites are on example.com so no real domain is linked.
+ * rounded to 1,000. Websites are on example.com so no real domain is linked. The sector employers and their jobs
+ * (2026-11-26) are in employers.js.
  */
+import { EMPLOYERS, SECTOR_JOBS } from './employers.js'
+
 const USD = { GBP: 0.75, EUR: 0.87, PLN: 3.75, SEK: 9.6 }
 const CURRENCY = { london: 'GBP', stockholm: 'SEK', remote: 'EUR', amsterdam: 'EUR', paris: 'EUR' }
 
@@ -49,6 +52,7 @@ export const COMPANIES = [
   { key: 'shopify', recruiter: { fullName: 'Inês Costa', email: 'ines.costa@example.com' }, name: 'Shopify', industry: 'E-commerce', sector: 'retail_ecommerce', size: '1000_plus', city: 'lisbon', description: 'Commerce tools for millions of merchants, with design teams that own quality end to end.' },
   { key: 'canva', recruiter: { fullName: 'Camille Martin', email: 'camille.martin@example.com' }, name: 'Canva', industry: 'Design software', sector: 'it_software', size: '1000_plus', city: 'paris', description: 'A visual communication platform that makes design approachable for everyone.' },
   { key: 'monzo', recruiter: { fullName: 'Ravi Shah', email: 'ravi.shah@example.com' }, name: 'Monzo', industry: 'Fintech', sector: 'finance_economics', size: '1000_plus', city: 'london', description: 'A digital bank built around clear, human product design and fast iteration.' },
+  ...EMPLOYERS,
 ]
 
 const mockJob = ({ company, title, tagline, city, workPreference, level, years, usd, skills, hoursAgo }) => ({
@@ -136,6 +140,7 @@ export const JOBS = [
     salary: salaryIn('remote', [130, 165]),
     hoursAgo: 21 * 24,
   },
+  ...SECTOR_JOBS,
 ]
 
 /** OQ-4.1: the recruiter applicant James Chen, pending review with a Dublin company (P1-Q3). */
