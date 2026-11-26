@@ -72,6 +72,10 @@ export const EMPLOYERS = [
   { key: 'grafton', recruiter: { fullName: 'Emer Quinn', email: 'emer.quinn@example.com' }, name: 'Grafton Property Research', sector: 'real_estate', size: '11_50', city: 'dublin', description: 'Rent, yield and market research for residential landlords and investors in Ireland.' },
   { key: 'balticlab', recruiter: { fullName: 'Johan Ek', email: 'johan.ek@example.com' }, name: 'Baltic Marine Lab', sector: 'science_research', size: '11_50', city: 'stockholm', description: 'A small research lab studying water quality and sediment chemistry in the Baltic Sea.' },
   { key: 'isar', recruiter: { fullName: 'Lukas Maier', email: 'lukas.maier@example.com' }, name: 'Isar Automation', legalName: 'Isar Automation GmbH', sector: 'engineering', size: '51_200', city: 'munich', description: 'Controls and automation for battery and electric drive test lines.' },
+  // Agriculture & Food, the 18th sector (owner 2026-11-26)
+  { key: 'terraverde', recruiter: { fullName: 'Pablo Ortega', email: 'pablo.ortega@example.com' }, name: 'Terra Verde Farms', sector: 'agriculture_food', size: '51_200', city: 'madrid', description: 'Family-owned olive groves and vegetable farms in the Tagus valley, supplying supermarkets and restaurants across Spain.' },
+  { key: 'polderfresh', recruiter: { fullName: 'Femke Bakker', email: 'femke.bakker@example.com' }, name: 'Polder Fresh', legalName: 'Polder Fresh B.V.', sector: 'agriculture_food', size: '201_500', city: 'amsterdam', description: 'Fresh salads, soups and ready meals made from Dutch-grown vegetables, sold in shops across the Benelux.' },
+  { key: 'zlotyklos', recruiter: { fullName: 'Piotr Zieliński', email: 'piotr.zielinski@example.com' }, name: 'Złoty Kłos', legalName: 'Złoty Kłos Sp. z o.o.', sector: 'agriculture_food', size: '51_200', city: 'warsaw', description: 'A farmers’ cooperative growing grain and oilseed on 9,000 hectares around Warsaw, with its own storage and mill.' },
 ]
 
 /** A job in the JOBS shape (recruiters.js). */
@@ -356,5 +360,23 @@ export const SECTOR_JOBS = [
     brief: 'A nine-month contract to program and commission the controls for a new battery test line. You will write PLC code, set up safety systems and work with the customer’s team on site.',
     does: ['Program PLCs and operator screens', 'Design and test safety functions', 'Commission the line on site with the customer'],
     skills: ['PLC Programming', 'Siemens TIA Portal', 'Functional Safety', 'Commissioning'], nice: ['Python'],
+  }),
+  job({
+    company: 'terraverde', title: 'Farm Operations Manager', sector: 'agriculture_food', level: 'senior', years: 6, mode: 'on_site', city: 'madrid', salary: pay('madrid', 42000, 50000), hoursAgo: 15, languages: [['es', 'c1']],
+    brief: 'Run day-to-day operations across our olive groves and vegetable farms south of Madrid. You will plan planting and harvest with the agronomy team, lead 40 field staff and keep machinery, water and safety in good order.',
+    does: ['Plan planting, irrigation and harvest schedules', 'Lead and schedule field teams through the seasons', 'Manage machinery, maintenance and farm budgets', 'Keep food safety and organic certification records'],
+    skills: ['Farm Management', 'Crop Planning', 'Team Leadership', 'Irrigation'], nice: ['Organic Certification'],
+  }),
+  job({
+    company: 'polderfresh', title: 'Food Technologist', sector: 'agriculture_food', level: 'mid', years: 3, mode: 'on_site', city: 'amsterdam', salary: pay('amsterdam', 46000, 56000), hoursAgo: 42, languages: [['en', 'c1']],
+    brief: 'Develop new salads, soups and ready meals and take them from kitchen trial to the production line. You will work with growers, the factory and retail customers on recipes, shelf life and labelling.',
+    does: ['Develop and trial new recipes with the product team', 'Run shelf-life and taste tests', 'Write product specifications and labels', 'Support the first production runs on the factory floor'],
+    skills: ['Food Science', 'Product Development', 'HACCP', 'Food Labelling'], nice: ['Dutch'],
+  }),
+  job({
+    company: 'zlotyklos', title: 'Seasonal Harvest Operator', type: 'contract', sector: 'agriculture_food', level: 'junior', years: 1, mode: 'on_site', city: 'warsaw', salary: pay('warsaw', 6500, 7500, 'month'), hoursAgo: 75, languages: [['pl', 'b1']],
+    brief: 'A four-month contract driving combines and grain trailers through the summer harvest. Training on our machines is provided, accommodation is available on the farm, and harvest bonuses are paid on top.',
+    does: ['Drive combines and grain trailers safely', 'Carry out daily machine checks and cleaning', 'Deliver grain to our store and record the loads'],
+    skills: ['Agricultural Machinery', 'Driving Licence', 'Reliability'], nice: ['Tractor Licence'],
   }),
 ]

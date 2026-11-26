@@ -2,6 +2,7 @@ import { pathToFileURL } from 'node:url'
 import { connectDb, disconnectDb } from '../lib/db.js'
 import { Company } from '../modules/companies/companies.model.js'
 import { Job } from '../modules/jobs/jobs.model.js'
+import { ensureSectors } from '../modules/meta/sectors.service.js'
 import { scheduleRecompute } from '../modules/matching/matching.service.js'
 import { User } from '../modules/users/users.model.js'
 import { seedAgencies } from '../seed/agencies.js'
@@ -22,6 +23,8 @@ import { jobDoc, logoBuffer, restoreFile, seedApprovedCompany } from '../seed/re
 export async function addSectorJobs({ now = Date.now() } = {}) {
   const owner = await User.findOne({ isOwner: true })
   const before = await Job.countDocuments()
+  // The starter sectors (Agriculture & Food came later); servers add them at start too.
+  await ensureSectors()
 
   // The new employers' recruiters and the agencies' contacts that this database does not have yet.
   const wanted = new Set([...EMPLOYERS, ...AGENCIES].map((company) => emailOf(company.recruiter)))

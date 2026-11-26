@@ -1,9 +1,10 @@
 /*
  * 2026-11-24: the starter job sectors (owner-approved list). A sector describes the kind of work, not the employer's
  * industry. The key is permanent (jobs, companies, links and the sector sites use it); admins rename or hide sectors in
- * admin › Website › Sectors, and add their own.
+ * admin › Website › Sectors, and add their own. Agriculture & Food added 2026-11-26 (owner: 18 fill the landing grid).
  */
 export const SECTORS = [
+  { key: 'agriculture_food', name: { en: 'Agriculture & Food', es: 'Agricultura y alimentación', fr: 'Agriculture et alimentation' } },
   { key: 'arts_culture', name: { en: 'Arts & Culture', es: 'Arte y cultura', fr: 'Arts et culture' } },
   { key: 'charity_nonprofit', name: { en: 'Charity & Non-profit', es: 'Benéfico y sin ánimo de lucro', fr: 'Associatif et humanitaire' } },
   { key: 'construction_trades', name: { en: 'Construction & Trades', es: 'Construcción y oficios', fr: 'BTP et métiers' } },

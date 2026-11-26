@@ -16,7 +16,7 @@ export default {
     await page.waitForSelector('[data-landing-sectors] [data-sector-link]')
     const sectors = await page.$$eval('[data-sector-link]', (links) => links.map((link) => link.innerText.replace(/\s+/g, ' ')))
     ctx.note(`landing sectors (${sectors.length}): ${sectors.join(' | ')}`)
-    ctx.check(sectors.length === 17, 'the landing lists all 17 sectors')
+    ctx.check(sectors.length === 18, 'the landing lists all 18 sectors')
     await page.$eval('[data-landing-sectors]', (section) => section.scrollIntoView({ block: 'start' }))
     await settle()
     await ctx.screenshot(page, '1-landing-sectors')

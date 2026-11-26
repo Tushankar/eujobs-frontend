@@ -18,6 +18,7 @@ import {
   Stethoscope,
   Truck,
   Users,
+  Wheat,
 } from 'lucide-react'
 import { useGetSectorsQuery } from '@/app/api.js'
 import { usePreferences } from './preferences.js'
@@ -52,6 +53,7 @@ export function useSectors() {
 
 /** A grey line icon per starter sector (owner 2026-11-26); sectors an admin adds later get the briefcase. */
 const SECTOR_ICONS = {
+  agriculture_food: Wheat,
   arts_culture: Palette,
   charity_nonprofit: HandHeart,
   construction_trades: HardHat,

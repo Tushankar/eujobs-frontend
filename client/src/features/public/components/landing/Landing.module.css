@@ -2244,10 +2244,22 @@
 /* Heading and "View all jobs" on the left, sectors in 3 columns of divided rows on the right. */
 .sectors {
   display: grid;
-  grid-template-columns: minmax(0, 280px) minmax(0, 1fr);
+  grid-template-columns: max-content minmax(0, 1fr);
   gap: 24px 40px;
   align-items: start;
   padding-bottom: 40px;
+}
+
+/* Side by side, the head column is as wide as the one-line title and the text wraps under it. */
+@media (min-width: 1280px) {
+  .sectors .sectionTitle {
+    white-space: nowrap;
+  }
+
+  .sectors .sectionText {
+    width: 0;
+    min-width: 100%;
+  }
 }
 
 .sectorAll {
@@ -2345,6 +2357,13 @@
 
   .sectorAll {
     margin-top: 14px;
+  }
+}
+
+/* Tablets: two columns keep every name on one line. */
+@media (max-width: 899px) {
+  .sectorList {
+    grid-template-columns: repeat(2, minmax(0, 1fr));
   }
 }
 

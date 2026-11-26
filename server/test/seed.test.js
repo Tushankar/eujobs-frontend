@@ -17,6 +17,7 @@ import { CandidateProfile } from '../modules/candidates/candidates.model.js'
 import { Company, KycDocument } from '../modules/companies/companies.model.js'
 import { ProfileView, RecruiterActivity, ShortlistEntry } from '../modules/discovery/discovery.model.js'
 import { Job, SavedJob } from '../modules/jobs/jobs.model.js'
+import { enforceFreeJobLimit } from '../modules/jobs/jobs.service.js'
 import { Course, Enrollment } from '../modules/learning/learning.model.js'
 import { File } from '../modules/files/files.model.js'
 import { DocumentRequest, Interview } from '../modules/interviews/interviews.model.js'
@@ -97,9 +98,9 @@ describe('seed:demo (§3.20, OD9, P12)', () => {
     await seedDemo()
     // Compared without printing: the addresses derive from SEED_ADMIN_EMAIL.
     assert.ok(JSON.stringify(await snapshot()) === JSON.stringify(first), 'the second run gives the same accounts')
-    // The Owner, 5 demo accounts, the 5 recruiter-mock candidates, 9 mock-company and 42 sector-employer recruiters and
+    // The Owner, 5 demo accounts, the 5 recruiter-mock candidates, 9 mock-company and 45 sector-employer recruiters and
     // Atlas Interim's contact on example.com (§3.20, 2026-11-26).
-    assert.equal(first.length, 63)
+    assert.equal(first.length, 66)
 
     const owner = first.find((user) => user.isOwner)
     assert.ok(owner.email === config.seed.adminEmail && owner.role === 'admin', 'Owner uses SEED_ADMIN_EMAIL')
@@ -131,7 +132,7 @@ describe('seed:demo (§3.20, OD9, P12)', () => {
     for (const [email, country] of Object.entries(mock)) assert.equal(exampleCom.get(email), country, email)
     const sectorPeople = [...EMPLOYERS, ...AGENCIES].filter((company) => company.recruiter.email)
     for (const company of sectorPeople) assert.equal(exampleCom.get(company.recruiter.email), PLACES[company.city].countryCode, company.recruiter.email)
-    assert.equal(exampleCom.size, 14 + 43)
+    assert.equal(exampleCom.size, 14 + 46)
   })
 
   it('seeds Alex incomplete and the recruiter-mock candidates complete, with their files on disk (OQ-4, P3-D11)', async () => {
@@ -160,16 +161,16 @@ describe('seed:demo (§3.20, OD9, P12)', () => {
 
   it('seeds approved companies with their jobs, the applicant and the recruiter-mock state (OQ-4, P4-C)', async () => {
     const companies = await Company.find().populate('ownerUserId', 'email status')
-    // 10 mock companies, 42 sector employers, 2 agencies and the applicant (2026-11-26)
-    assert.equal(companies.length, 55)
+    // 10 mock companies, 45 sector employers, 2 agencies and the applicant (2026-11-26)
+    assert.equal(companies.length, 58)
     const acme = companies.find((company) => company.displayName === 'Acme Studio')
     assert.deepEqual([acme.ownerUserId.email === demoAddress('sarah'), acme.location.toObject(), Boolean(acme.verifiedAt)], [true, PLACES.london, true])
     assert.equal(await PipelineStage.countDocuments({ companyId: acme._id }), 6)
-    assert.equal(await PipelineStage.countDocuments(), 54 * 6)
+    assert.equal(await PipelineStage.countDocuments(), 57 * 6)
     assert.ok(companies.filter((company) => company.ownerUserId.status === 'active').every((company) => company.sector && company.logoFileId), 'every approved company has a sector and a logo')
 
     const jobs = await Job.find()
-    assert.equal(jobs.length, 68)
+    assert.equal(jobs.length, 71)
     assert.ok(jobs.every((job) => job.firstPublishedAt))
     // The two filled agency jobs (their placements are running) are closed; every other job is open.
     assert.deepEqual(jobs.filter((job) => job.status !== 'published').map((job) => `${job.title}:${job.status}`).sort(), ['Interim Lead Product Designer:closed', 'Interim UX Researcher:closed'])
@@ -183,6 +184,9 @@ describe('seed:demo (§3.20, OD9, P12)', () => {
     for (const sector of SECTORS) assert.ok(open.filter((job) => job.sector === sector.key).length >= 3, `${sector.key} has 3 open jobs`)
     assert.deepEqual([...new Set(open.map((job) => job.employmentType))].sort(), ['contract', 'full_time', 'internship', 'part_time', 'volunteer'])
     assert.ok(open.filter((job) => job.employmentType === 'volunteer').every((job) => !job.salary?.period))
+    // Without Recruiter or Agency Plus a company keeps one live job (P11c-Q12): the check the server runs at start pauses none.
+    await enforceFreeJobLimit()
+    assert.equal(await Job.countDocuments({ status: 'paused' }), 0, 'the Free-plan job limit pauses no seeded job')
     assert.ok(jobs.some((job) => job.relevantCount > 0), 'relevant counts are computed')
 
     const applicant = companies.find((company) => company.ownerUserId.email === demoAddress('james'))
@@ -221,8 +225,9 @@ describe('seed:demo (§3.20, OD9, P12)', () => {
     assert.deepEqual([subscription.status, subscription.currency, subscription.amountMinor, subscription.source], ['active', 'GBP', 900, 'seed'])
 
     const rows = await Payment.find({}).sort({ paidAt: 1 })
-    // 3 mock course rows, 5 historical Plus months (every applicant but Emma), Emma's and Sarah's real first invoices (P11c-Q11).
-    assert.equal(rows.length, 10)
+    // 3 mock course rows, 5 historical Plus months (every applicant but Emma), Emma's and Sarah's real first invoices (P11c-Q11)
+    // and the two agencies' Agency Plus first invoices (2026-11-26).
+    assert.equal(rows.length, 12)
     assert.deepEqual(
       rows.map((row) => row.reference),
       rows.map((_, index) => `EUJ-${String(index + 1).padStart(6, '0')}`),
@@ -234,7 +239,7 @@ describe('seed:demo (§3.20, OD9, P12)', () => {
     const sarahPlus = rows.find((row) => String(row.userId) === String(sarah._id) && row.kind === 'subscription')
     assert.deepEqual([sarahPlus.payerRole, sarahPlus.itemId, sarahPlus.itemName, sarahPlus.amountMinor, sarahPlus.currency], ['recruiter', 'recruiter_plus', 'Recruiter Plus', 4900, 'GBP'])
     for (const row of [emmaPlus, sarahPlus]) assert.match(row.receiptUrl, /^https:\/\/invoice\.stripe\.com\//)
-    assert.equal(rows.filter((row) => row.receiptUrl).length, 2)
+    assert.equal(rows.filter((row) => row.receiptUrl).length, 4)
     const sarahSubscription = await Subscription.findOne({ userId: sarah._id })
     assert.deepEqual(
       [sarahSubscription.planKey, sarahSubscription.status, sarahSubscription.currency, sarahSubscription.amountMinor, sarahSubscription.source],
@@ -248,13 +253,13 @@ describe('seed:demo (§3.20, OD9, P12)', () => {
       'Oliver Park:1000 EUR',
       'Sofia Martinez:900 GBP',
     ])
-    assert.equal(await Subscription.countDocuments({}), 2)
+    assert.equal(await Subscription.countDocuments({}), 4)
 
     await seedDemo()
     assert.equal((await stripe().customers.retrieve(firstCustomer)).deleted, true)
     const again = await User.findOne({ email: demoAddress('emma') })
     assert.notEqual(again.stripeCustomerId, firstCustomer)
-    assert.equal(await Payment.countDocuments({}), 10)
+    assert.equal(await Payment.countDocuments({}), 12)
   })
 
   it('seeds the six pipeline placements and the four agency hires as applications with coherent histories, and none for Alex (Phase 6, P6-Q1)', async () => {
@@ -362,14 +367,14 @@ describe('seed:demo (§3.20, OD9, P12)', () => {
     ])
     assert.equal(await Job.countDocuments(), 12)
 
-    // 12 employer recruiters and the 2 agency contacts; 43 company jobs and 13 agency jobs
-    assert.deepEqual(await addSectorJobs(), { accounts: 14, jobs: 56 })
+    // 45 employer recruiters and the 2 agency contacts; 46 company jobs and 13 agency jobs
+    assert.deepEqual(await addSectorJobs(), { accounts: 47, jobs: 59 })
     assert.deepEqual(await counts(), seeded)
     assert.ok(await ScheduledTask.exists({ type: 'matching.recompute' }))
     // The two waiting events (Aisha's join request, James's invitation) get their bell notification once; nothing is emailed.
     const agencyNotifications = async () => (await Notification.find({ type: /^agency_/ })).map((item) => item.type).sort()
     assert.deepEqual(await agencyNotifications(), ['agency_invited', 'agency_join_requested'])
-    assert.equal(mailTo(demoAddress('priya')).length, 0)
+    assert.equal(mailTo(demoAddress('priya'), 'agency_update').length, 0)
     assert.deepEqual(await addSectorJobs(), { accounts: 0, jobs: 0 })
     assert.deepEqual(await counts(), seeded)
     assert.deepEqual(await agencyNotifications(), ['agency_invited', 'agency_join_requested'])
