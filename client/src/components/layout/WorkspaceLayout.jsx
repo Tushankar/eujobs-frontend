@@ -2,12 +2,12 @@ import { HIRING_ROLES, isHiring } from '@/app/roles.js'
 import { useRef, useState } from 'react'
 import { useTranslation } from 'react-i18next'
 import { useSelector } from 'react-redux'
-import { Link, Navigate, Outlet, useLocation, useMatches, useNavigation } from 'react-router-dom'
+import { Link, Navigate, Outlet, useLocation, useMatches, useNavigate, useNavigation } from 'react-router-dom'
 import ForbiddenPage from '@/app/ForbiddenPage.jsx'
 import { adminHome, adminNavItemFor, can } from '@/app/permissions.js'
 import { WORKSPACES } from '@/app/workspaces.js'
 import { usePreferences } from '@/lib/preferences.js'
-import NoticeBanner from '@/components/common/NoticeBanner.jsx'
+import FormAlert from '@/features/auth/components/FormAlert.jsx'
 import UpgradeDialog from '@/features/candidate/billing/components/UpgradeDialog.jsx'
 import InterviewMovePrompts from '@/features/interviews/components/InterviewMovePrompts.jsx'
 import LegalAcceptDialog from '@/features/public/components/LegalAcceptDialog.jsx'
@@ -24,7 +24,8 @@ const LEGAL_DOCS = ['terms', 'privacy', 'imprint']
 export default function WorkspaceLayout({ workspaceId }) {
   const { t } = useTranslation()
   const workspace = WORKSPACES[workspaceId]
-  const { pathname, state } = useLocation()
+  const { pathname, search, state } = useLocation()
+  const navigate = useNavigate()
   const navigation = useNavigation()
   // Sub-views of one page (the pipeline's Board, Funnel and Manage stages; an application's panel) share the route
   // handle's `pageKey`, so switching between them keeps the page and its state instead of remounting it (perf
@@ -53,8 +54,19 @@ export default function WorkspaceLayout({ workspaceId }) {
         <main className={styles.main}>
           {/* Keyed by page so each page's sections rise in again on navigation (GSAP, useWorkspaceMotion). */}
           <div ref={content} className={styles.content} key={pageKey}>
-            {/* M-005: signed in on the other portal, so this account's own workspace opened instead. */}
-            {state?.notice === 'wrongPortal' && <NoticeBanner>{t('shell:notices.wrongPortal')}</NoticeBanner>}
+            {/* M-005: signed in on the other portal, so this account's own workspace opened instead. 2026-11-26: an info
+                card (owner) naming both pages; × clears it from history so a refresh doesn't bring it back. */}
+            {state?.notice === 'wrongPortal' && (
+              <FormAlert
+                tone="info"
+                className={styles.notice}
+                title={t('shell:notices.wrongPortal.title', { workspace: t(`auth:portals.${workspaceId}`) })}
+                closeLabel={t('success:close')}
+                onClose={() => navigate({ pathname, search }, { replace: true, state: null })}
+              >
+                {t('shell:notices.wrongPortal.body', { from: t(`auth:portals.${state.from}`), workspace: t(`auth:portals.${workspaceId}`) })}
+              </FormAlert>
+            )}
             {blocked ? (
               // The Overview sends an admin without it to their first page; any other page shows the 403 page.
               blocked.end ? <Navigate to={adminHome(me)} replace /> : <ForbiddenPage permission={blocked.permission} homePath={adminHome(me)} />

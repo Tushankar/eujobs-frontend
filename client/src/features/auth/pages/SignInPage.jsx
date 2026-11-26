@@ -47,10 +47,12 @@ export default function SignInPage({ workspace = 'candidate' }) {
   // The portal the last sign-in used: the chosen tile, or the account's own after "Sign in as …" (2026-11-23).
   const [usedPortal, setUsedPortal] = useState(workspace)
 
-  async function finish({ token, me }) {
+  // `portal` is passed in by submit: right after "Sign in as …" the usedPortal state is not re-rendered yet, and the
+  // stale tile showed the notice to someone who had just picked their own workspace (fixed 2026-11-26).
+  async function finish({ token, me }, portal = usedPortal) {
     await signIn(token, me)
-    const wrongPortal = usedPortal !== 'admin' && me.role !== usedPortal
-    navigate(landingPath(me, searchParams.get('next')), { replace: true, state: wrongPortal ? { notice: 'wrongPortal' } : undefined })
+    const wrongPortal = portal !== 'admin' && me.role !== portal
+    navigate(landingPath(me, searchParams.get('next')), { replace: true, state: wrongPortal ? { notice: 'wrongPortal', from: portal } : undefined })
   }
 
   async function submit(portal) {
@@ -59,7 +61,7 @@ export default function SignInPage({ workspace = 'candidate' }) {
     try {
       const result = await login({ ...values, portal, timezone: browserTimeZone() }).unwrap()
       if (result.verification) setVerification(result.verification)
-      else await finish(result)
+      else await finish(result, portal)
     } catch (error) {
       setErrors(serverFieldErrors(error))
       setFailure(error)

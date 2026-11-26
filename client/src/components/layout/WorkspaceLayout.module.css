@@ -13,6 +13,10 @@
   min-width: 0;
 }
 
+.notice {
+  margin-bottom: 24px;
+}
+
 .footer {
   margin-top: auto;
   padding-top: 48px;

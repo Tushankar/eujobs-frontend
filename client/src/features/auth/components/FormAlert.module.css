@@ -51,6 +51,14 @@
   color: var(--muted-foreground);
 }
 
+/* The optional × sits in the top-right corner without growing the card. */
+.alert .close {
+  width: 28px;
+  height: 28px;
+  margin: -4px -8px -4px 0;
+  border-radius: var(--radius-full);
+}
+
 /* A message from a control inside the alert (e.g. resend) reads as plain text, not a second card. */
 .alert .alert {
   padding: 0;
@@ -65,7 +73,7 @@
 }
 
 .alert a,
-.alert button {
+.alert button:not(:where(.close)) {
   align-self: flex-start;
   min-height: 0;
   padding: 0;
