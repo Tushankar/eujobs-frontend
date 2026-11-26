@@ -169,6 +169,7 @@
   "sectors": {
     "titleLead": "Browse by",
     "titleAccent": "sector",
-    "text": "Find open jobs in the kind of work you do, from healthcare to arts and charities."
+    "text": "Find open jobs in the kind of work you do, from healthcare to arts and charities.",
+    "viewAll": "View all jobs"
   }
 }

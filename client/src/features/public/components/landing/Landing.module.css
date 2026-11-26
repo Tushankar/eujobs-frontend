@@ -2239,42 +2239,114 @@
   }
 }
 
-/* ---------- Browse by sector (2026-11-24) ---------- */
+/* ---------- Browse by sector (2026-11-24; directory rows, owner 2026-11-26) ---------- */
+
+/* Heading and "View all jobs" on the left, sectors in 3 columns of divided rows on the right. */
+.sectors {
+  display: grid;
+  grid-template-columns: minmax(0, 300px) minmax(0, 1fr);
+  gap: 24px 56px;
+  align-items: start;
+  padding-bottom: 40px;
+}
+
+.sectorAll {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  margin-top: 20px;
+  color: var(--primary);
+  font-size: 14px;
+  font-weight: 600;
+  text-decoration: none;
+}
+
+.sectorAll:hover,
+.sectorAll:focus-visible {
+  text-decoration: underline;
+  text-underline-offset: 3px;
+}
 
 .sectorList {
   position: relative;
   z-index: 1;
-  display: flex;
-  flex-wrap: wrap;
-  gap: 10px;
-  margin: 24px 0 0;
+  display: grid;
+  grid-template-columns: repeat(3, minmax(0, 1fr));
+  column-gap: 32px;
+  margin: 0;
   padding: 0;
   list-style: none;
 }
 
+.sectorList li {
+  border-bottom: 1px solid light-dark(#eef0f3, var(--border));
+}
+
 .sectorLink {
-  display: inline-flex;
-  align-items: baseline;
-  gap: 8px;
-  padding: 10px 16px;
-  border: 1px solid var(--border);
-  border-radius: 999px;
-  background: var(--card);
-  color: var(--foreground);
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  margin-inline: -8px;
+  padding: 13px 8px;
+  border-radius: 8px;
+  color: light-dark(#161719, var(--foreground));
   font-size: 14px;
-  font-weight: 600;
+  font-weight: 500;
   text-decoration: none;
-  transition: border-color 0.2s ease, background-color 0.2s ease;
+  transition: background-color 0.15s ease, color 0.15s ease;
+}
+
+.sectorName {
+  flex: 1;
+  min-width: 0;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+.sectorCount {
+  font-size: 13px;
+  font-variant-numeric: tabular-nums;
+  color: light-dark(#777c84, var(--muted-foreground));
+}
+
+.sectorChevron {
+  flex: none;
+  color: light-dark(#a3a8b0, var(--muted-foreground));
+  transition: transform 0.15s ease, color 0.15s ease;
 }
 
 .sectorLink:hover,
 .sectorLink:focus-visible {
-  border-color: var(--primary);
-  background: color-mix(in srgb, var(--primary) 6%, var(--card));
+  background: var(--muted);
+  color: var(--primary);
 }
 
-.sectorCount {
-  font-size: 12px;
-  font-weight: 500;
-  color: light-dark(#777c84, var(--muted-foreground));
+.sectorLink:hover .sectorChevron,
+.sectorLink:focus-visible .sectorChevron {
+  color: var(--primary);
+  transform: translateX(2px);
+}
+
+@media (max-width: 1099px) {
+  .sectors {
+    grid-template-columns: minmax(0, 1fr);
+  }
+
+  .sectorAll {
+    margin-top: 14px;
+  }
+}
+
+@media (max-width: 699px) {
+  .sectorList {
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+    column-gap: 24px;
+  }
+}
+
+@media (max-width: 479px) {
+  .sectorList {
+    grid-template-columns: minmax(0, 1fr);
+  }
 }
