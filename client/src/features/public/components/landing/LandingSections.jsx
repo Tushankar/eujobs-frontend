@@ -155,6 +155,8 @@ export function Sectors({ counts }) {
   }
   return (
     <section className={`${styles.card} ${styles.section} ${styles.sectors}`} aria-labelledby="sectors-title" data-landing-sectors>
+      {/* Same decor as Categories (owner 2026-11-26): circuit lines top right, soft blue glow behind the heading. */}
+      <InlineSvg svg={circuit} className={styles.circuit} motion="circuit" />
       <div className={styles.sectionHead} data-reveal>
         <Title id="sectors-title" lead={t('landing:sectors.titleLead')} accent={t('landing:sectors.titleAccent')} />
         <p className={styles.sectionText}>{t('landing:sectors.text')}</p>
@@ -163,7 +165,8 @@ export function Sectors({ counts }) {
           <ArrowRight size={16} aria-hidden="true" />
         </Link>
       </div>
-      {/* Directory rows (owner 2026-11-26): grey line icon, name, live count and a chevron, hairline dividers. */}
+      {/* Directory rows (owner 2026-11-26): blue line icon, name, live count and a chevron, hairline dividers; a hovered
+          row becomes a small Categories card (light blue, curved lines, blue border). */}
       {/* Phones (owner 2026-11-26): the top MOBILE_SECTORS rows, then "Show all sectors" opens the rest. */}
       <ul ref={listRef} id="sector-list" className={styles.sectorList} data-expanded={expanded || undefined} data-stagger>
         {rows.map((row, index) => (
@@ -174,6 +177,7 @@ export function Sectors({ counts }) {
               data-sector-link={row.key}
               aria-label={`${row.name}, ${t('landing:categories.jobs', { count: row.count })}`}
             >
+              <img src={cardLines} alt="" className={styles.sectorLines} aria-hidden="true" />
               <row.Icon size={18} strokeWidth={1.75} className={styles.sectorIcon} aria-hidden="true" />
               <span className={styles.sectorName}>{row.name}</span>
               <span className={styles.sectorCount}>{row.count}</span>

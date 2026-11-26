@@ -2250,6 +2250,33 @@
   padding-bottom: 40px;
 }
 
+/* Soft blue glow behind the heading. */
+.sectors::before {
+  content: '';
+  position: absolute;
+  top: -180px;
+  left: -160px;
+  width: 560px;
+  height: 460px;
+  border-radius: 50%;
+  background: radial-gradient(
+    closest-side,
+    light-dark(color-mix(in srgb, var(--primary) 14%, transparent), color-mix(in srgb, var(--primary) 26%, transparent)),
+    transparent
+  );
+  pointer-events: none;
+}
+
+/* The circuit runs behind the third column here, so it is fainter than on Categories to keep the text crisp. */
+.sectors .circuit {
+  opacity: 0.55;
+}
+
+.sectors > :not(.circuit) {
+  position: relative;
+  z-index: 1;
+}
+
 /* Side by side, the head column is as wide as the one-line title and the text wraps under it. */
 @media (min-width: 1280px) {
   .sectors .sectionTitle {
@@ -2295,24 +2322,43 @@
 }
 
 .sectorLink {
+  position: relative;
   display: flex;
   align-items: center;
   gap: 12px;
-  margin-inline: -8px;
-  padding: 13px 8px;
-  border-radius: 8px;
+  margin-inline: -10px;
+  padding: 12px 9px;
+  overflow: hidden;
+  border: 1px solid transparent;
+  border-radius: 10px;
   color: light-dark(#161719, var(--foreground));
   font-size: 14px;
   font-weight: 500;
   text-decoration: none;
-  transition: background-color 0.15s ease, color 0.15s ease;
+  transition: background-color 0.2s ease, border-color 0.2s ease, color 0.2s ease;
 }
 
-/* Neutral grey line icon, no tile (LinkedIn style); turns blue with the row on hover. */
+.sectorLink > :not(.sectorLines) {
+  position: relative;
+}
+
+/* The Categories card's curved lines, shown on the hovered row only. */
+.sectorLines {
+  position: absolute;
+  top: 0;
+  right: 0;
+  height: 100%;
+  aspect-ratio: 240 / 115;
+  opacity: 0;
+  pointer-events: none;
+  transform-origin: 100% 0;
+  transition: opacity 0.25s ease, transform 0.8s var(--ease-out);
+}
+
+/* Blue line icon like the Categories cards, no tile. */
 .sectorIcon {
   flex: none;
-  color: light-dark(#5e6470, var(--muted-foreground));
-  transition: color 0.15s ease;
+  color: var(--primary);
 }
 
 .sectorName {
@@ -2334,13 +2380,15 @@
 
 .sectorLink:hover,
 .sectorLink:focus-visible {
-  background: var(--muted);
+  border-color: var(--primary);
+  background: var(--accent);
   color: var(--primary);
 }
 
-.sectorLink:hover .sectorIcon,
-.sectorLink:focus-visible .sectorIcon {
-  color: var(--primary);
+.sectorLink:hover .sectorLines,
+.sectorLink:focus-visible .sectorLines {
+  opacity: 1;
+  transform: scale(1.06);
 }
 
 .sectorLink:hover .sectorChevron,
