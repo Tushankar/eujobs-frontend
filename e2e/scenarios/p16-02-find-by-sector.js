@@ -29,7 +29,9 @@ export default {
     await page.waitForFunction(() => location.pathname === '/jobs' && location.search.includes('sector=healthcare'))
     await page.waitForSelector('[data-row]')
     const rows = await page.$$eval('[data-row]', (items) => items.map((item) => item.innerText))
-    ctx.check(rows.length >= 1 && rows.every((text) => text.includes('Ward Nurse')), `only healthcare jobs are listed (${rows.length})`)
+    // The seed has healthcare jobs too (2026-11-26): every row is one of the API's healthcare jobs, ours included.
+    const healthcare = (await api('/landing/jobs?sector=healthcare')).body.items.map((job) => job.title)
+    ctx.check(rows.some((text) => text.includes(`Ward Nurse ${tag}`)) && rows.every((text) => healthcare.some((title) => text.includes(title))), `only healthcare jobs are listed (${rows.length})`)
     ctx.check((await page.$eval('select[name="sector"]', (field) => field.value)) === 'healthcare', 'the sector filter shows the chosen sector')
     await page.waitForSelector('[data-detail] [data-job-sector="healthcare"]')
     await visitor.checkOverflow()

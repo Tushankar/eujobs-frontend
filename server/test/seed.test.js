@@ -1,11 +1,16 @@
 import assert from 'node:assert/strict'
-import { existsSync } from 'node:fs'
+import { createHash } from 'node:crypto'
+import { existsSync, readFileSync } from 'node:fs'
+import { rm } from 'node:fs/promises'
 import { describe, it } from 'node:test'
 import { config } from '../config/env.js'
 import { absolutePath } from '../lib/files.js'
 import { ScheduledTask } from '../jobs/models.js'
 import { stripe } from '../lib/stripe.js'
 import { AdminRole, Permission } from '../modules/admin/admin.model.js'
+import { AgencyAgreement, AgencyClient, AgencyMembership, AgencyPlacement } from '../modules/agencies/agencies.model.js'
+import { documentText } from '../modules/agencies/contracts.js'
+import { phaseOf } from '../modules/agencies/lock.js'
 import { JobAlert } from '../modules/alerts/alerts.model.js'
 import { Application, PipelineStage } from '../modules/applications/applications.model.js'
 import { CandidateProfile } from '../modules/candidates/candidates.model.js'
@@ -21,12 +26,16 @@ import { Country, Faq, LegalDocument } from '../modules/meta/meta.model.js'
 import { Payment, Plan, Subscription } from '../modules/payments/payments.model.js'
 import { User } from '../modules/users/users.model.js'
 import { VerificationSubmission } from '../modules/verification/verification.model.js'
+import { addSectorJobs } from '../scripts/addSectorJobs.js'
 import { seedCatalog } from '../seed/catalog.js'
+import { AGENCIES } from '../seed/data/agencies.js'
+import { EMPLOYERS, SECTOR_JOBS } from '../seed/data/employers.js'
 import { FAQS } from '../seed/data/faqs.js'
 import { LEGAL_VERSION } from '../seed/data/legal.js'
 import { PLACES } from '../seed/data/places.js'
+import { SECTORS } from '../seed/data/sectors.js'
 import { demoAddress, seedDemo } from '../seed/demo.js'
-import { api, finishLogin, useTestDb, useTestUploads } from './helpers/index.js'
+import { api, finishLogin, mailTo, useTestDb, useTestUploads } from './helpers/index.js'
 
 useTestDb()
 useTestUploads()
@@ -255,16 +264,20 @@ describe('seed:demo (§3.20, OD9, P12)', () => {
     assert.equal(await Payment.countDocuments({}), 10)
   })
 
-  it('seeds the six pipeline placements as applications with coherent histories, and none for Alex (Phase 6, P6-Q1)', async () => {
+  it('seeds the six pipeline placements and the four agency hires as applications with coherent histories, and none for Alex (Phase 6, P6-Q1)', async () => {
     const applications = await Application.find().populate('candidateId', 'fullName email').populate('jobId', 'title')
     const placement = (application) => `${application.candidateId.fullName}: ${application.jobId.title}: ${application.status}`
     assert.deepEqual(applications.map(placement).sort(), [
       'Aisha Patel: Product Designer, Growth: applied',
+      'Daniel Kim: Contract Interaction Designer: hired',
       'Daniel Kim: Senior UX Designer: applied',
+      'Emma Wilson: Contract Senior Product Designer: hired',
       // P11d-Q30: Emma's seeded interview booking moved her to Interview.
       'Emma Wilson: Senior Product Designer: interview',
       'James Chen: Product Designer, Growth: under_review',
+      'Oliver Park: Interim Lead Product Designer: hired',
       'Oliver Park: Senior UX Designer: interview',
+      'Sofia Martinez: Interim UX Researcher: hired',
       'Sofia Martinez: Senior Product Designer: applied',
     ])
     assert.equal(await Application.countDocuments({ candidateId: (await User.findOne({ email: demoAddress('alex') }))._id }), 0)
@@ -284,11 +297,99 @@ describe('seed:demo (§3.20, OD9, P12)', () => {
       assert.ok(application.history.at(-1).at < new Date())
     }
     const oliver = applications.find((application) => application.candidateId.fullName === 'Oliver Park')
-    assert.deepEqual(oliver.history.map((step) => step.stageName), ['Applied', 'Screening', 'Shortlisted', 'Interview'])
-    assert.equal(await RecruiterActivity.countDocuments({ type: 'applied' }), 6)
-    assert.equal(await RecruiterActivity.countDocuments({ type: 'stage_changed' }), 7)
-    const emma = applications.find((application) => application.candidateId.fullName === 'Emma Wilson')
+    const oliverAtAcme = applications.find((application) => application.candidateId.fullName === 'Oliver Park' && application.status === 'interview')
+    assert.deepEqual(oliverAtAcme.history.map((step) => step.stageName), ['Applied', 'Screening', 'Shortlisted', 'Interview'])
+    // Acme's 6 (1 + 7 moves) and the agencies' 4 (13 moves, made by the agency: the recruiter side).
+    assert.equal(await RecruiterActivity.countDocuments({ type: 'applied' }), 10)
+    assert.equal(await RecruiterActivity.countDocuments({ type: 'stage_changed' }), 20)
+    const emma = applications.find((application) => application.candidateId.fullName === 'Emma Wilson' && application.status === 'interview')
     assert.deepEqual(emma.history.map((step) => step.stageName), ['Applied', 'Screening', 'Interview'])
+    const hired = applications.filter((application) => application.status === 'hired')
+    assert.ok(hired.every((application) => application.history.slice(1).every((step) => step.actorType === 'recruiter')))
+  })
+
+  it('seeds two approved agencies with clients, a published agreement, books, and a running and an upcoming placement each (2026-11-26)', async () => {
+    const agencies = await User.find({ role: 'agency' }).sort({ fullName: 1 })
+    assert.deepEqual(agencies.map((user) => `${user.fullName}:${user.status}`), ['Jonas Weber:active', 'Priya Nair:active'])
+    assert.equal(agencies[1].email, demoAddress('priya'))
+    for (const user of agencies) {
+      const company = await Company.findOne({ ownerUserId: user._id })
+      assert.ok(company.verifiedAt && company.logoFileId)
+      const clients = await AgencyClient.find({ companyId: company._id })
+      assert.equal(clients.length, 4)
+      assert.ok(clients.every((client) => client.logoFileId && client.sector && client.industry))
+      assert.equal(clients.filter((client) => client.linkedCompanyId).length, company.displayName === 'Atlas Interim' ? 2 : 1)
+
+      const [agreement] = await AgencyAgreement.find({ companyId: company._id })
+      assert.equal(agreement.status, 'published')
+      const text = await documentText(agreement.file.fileId)
+      for (const name of ['exclusivity', 'noticeDays', 'coolingOffDays', 'maxWeeklyHours']) {
+        const clause = agreement.rules[name]?.clause
+        if (clause) assert.ok(text.replace(/\s+/g, ' ').includes(clause), `${company.displayName} PDF quotes the ${name} clause`)
+      }
+
+      const jobs = await Job.find({ companyId: company._id })
+      assert.ok(jobs.every((job) => job.agency.clientId && job.agency.startDate < job.agency.endDate && job.agency.rate.amountMinor > 0 && !job.salary?.period))
+      assert.ok(jobs.some((job) => job.agency.showClient === false), 'a confidential client')
+      assert.ok(jobs.every((job) => ['full_time', 'part_time'].includes(job.employmentType)))
+
+      const placements = await AgencyPlacement.find({ companyId: company._id, status: 'confirmed' })
+      assert.deepEqual(placements.map((placement) => phaseOf(placement)).sort(), ['running', 'upcoming'])
+      assert.ok(placements.every((placement) => placement.agreementVersion === 1 && placement.sources.exclusivity === 'agreement' && placement.client.name))
+      for (const placement of placements) {
+        const membership = await AgencyMembership.findOne({ companyId: company._id, candidateId: placement.candidateId })
+        assert.ok(membership.status === 'active' && membership.acceptances[0].at < placement.confirmedAt, 'agreed before being hired')
+      }
+    }
+    const books = await AgencyMembership.find().populate('candidateId', 'fullName')
+    assert.deepEqual(books.map((item) => `${item.candidateId.fullName}:${item.status}`).sort(), [
+      'Aisha Patel:requested',
+      'Daniel Kim:active',
+      'Emma Wilson:active',
+      'James Chen:awaiting_agreement',
+      'Oliver Park:active',
+      'Sofia Martinez:active',
+    ])
+  })
+
+  it('scripts/addSectorJobs.js adds the sector data to a database seeded before it, once, and restores missing files (2026-11-26)', async () => {
+    const models = [User, Company, Job, PipelineStage, AgencyClient, AgencyAgreement, AgencyMembership, AgencyPlacement, Application]
+    const counts = () => Promise.all(models.map((Model) => Model.countDocuments()))
+    const seeded = await counts()
+
+    // The database as it was before 2026-11-26: no sector employers, agencies or new jobs of the mock companies.
+    const users = await User.find({ email: { $in: [...EMPLOYERS, ...AGENCIES].map((company) => company.recruiter.email ?? demoAddress(company.recruiter.tag)) } })
+    const companyIds = (await Company.find({ ownerUserId: { $in: users.map((user) => user._id) } })).map((company) => company._id)
+    await Promise.all([
+      Job.deleteMany({ $or: [{ companyId: { $in: companyIds } }, { title: { $in: SECTOR_JOBS.map((job) => job.title) } }] }),
+      Application.deleteMany({ companyId: { $in: companyIds } }),
+      PipelineStage.deleteMany({ companyId: { $in: companyIds } }),
+      Company.deleteMany({ _id: { $in: companyIds } }),
+      User.deleteMany({ _id: { $in: users.map((user) => user._id) } }),
+      ...[AgencyClient, AgencyAgreement, AgencyMembership, AgencyPlacement].map((Model) => Model.deleteMany({})),
+    ])
+    assert.equal(await Job.countDocuments(), 12)
+
+    // 12 employer recruiters and the 2 agency contacts; 43 company jobs and 13 agency jobs
+    assert.deepEqual(await addSectorJobs(), { accounts: 14, jobs: 56 })
+    assert.deepEqual(await counts(), seeded)
+    assert.ok(await ScheduledTask.exists({ type: 'matching.recompute' }))
+    // The two waiting events (Aisha's join request, James's invitation) get their bell notification once; nothing is emailed.
+    const agencyNotifications = async () => (await Notification.find({ type: /^agency_/ })).map((item) => item.type).sort()
+    assert.deepEqual(await agencyNotifications(), ['agency_invited', 'agency_join_requested'])
+    assert.equal(mailTo(demoAddress('priya')).length, 0)
+    assert.deepEqual(await addSectorJobs(), { accounts: 0, jobs: 0 })
+    assert.deepEqual(await counts(), seeded)
+    assert.deepEqual(await agencyNotifications(), ['agency_invited', 'agency_join_requested'])
+
+    // The other machine: the records are there, the files are not; the agreement comes back byte for byte.
+    const agreement = await AgencyAgreement.findOne()
+    const pdfFile = await File.findById(agreement.file.fileId)
+    const logo = await File.findById((await Company.findOne({ displayName: 'Harbourview Health' })).logoFileId)
+    await Promise.all([pdfFile, logo].map((file) => rm(absolutePath(file))))
+    await addSectorJobs()
+    assert.ok(existsSync(absolutePath(logo)))
+    assert.equal(createHash('sha256').update(readFileSync(absolutePath(pdfFile))).digest('hex'), pdfFile.sha256)
   })
 
   it('seeds Emma’s booked interview and document request and Oliver’s pending offer, with their tasks (P11d-Q25, Q30)', async () => {

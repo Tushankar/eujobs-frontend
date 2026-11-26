@@ -31,7 +31,9 @@ export default {
     await page.goto(`${ctx.webUrl}/jobs`, { waitUntil: 'networkidle0' })
     await page.waitForSelector('[data-row]')
     const rows = await page.$$eval('[data-row]', (items) => items.map((item) => item.innerText))
-    ctx.check(rows.length >= 1 && rows.every((text) => text.includes('Nurse')), `/jobs on the health site lists healthcare jobs only (${rows.length})`)
+    // The seed has healthcare jobs too (2026-11-26): every row is one of the API's healthcare jobs.
+    const healthcare = (await api('/landing/jobs?sector=healthcare')).body.items.map((job) => job.title)
+    ctx.check(rows.length >= 1 && rows.every((text) => healthcare.some((jobTitle) => text.includes(jobTitle))), `/jobs on the health site lists healthcare jobs only (${rows.length})`)
     await page.goto(`${ctx.webUrl}/jobs?job=${nurse.id}`, { waitUntil: 'networkidle0' })
     await page.waitForSelector('link[rel="canonical"]')
     const canonical = await page.$eval('link[rel="canonical"]', (link) => link.href)

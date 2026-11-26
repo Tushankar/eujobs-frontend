@@ -12,6 +12,7 @@ import { User } from '../modules/users/users.model.js'
 import { pdf } from './candidates.js'
 import { CANDIDATES } from './data/candidates.js'
 import { PLACES } from './data/places.js'
+import { EMPLOYERS } from './data/employers.js'
 import { SECTORS } from './data/sectors.js'
 import { ACME_SHORTLIST, ALEX_SAVED_JOBS, APPLICANT_COMPANY, COMPANIES, JOBS, PROFILE_VIEWS } from './data/recruiters.js'
 
@@ -153,7 +154,8 @@ export async function seedRecruiters({ emailOf, owner, now }) {
   }
   // Alex's profile is incomplete, so no recruiter can open it (P4-D11); Emma, the complete demo candidate, has the views.
   const emma = await person('Emma Wilson')
-  const recruiters = Object.values(companies).map(({ company, recruiter }) => ({ company, recruiter }))
+  // The mock companies' recruiters only (the sector employers of 2026-11-26 are not in the mock).
+  const recruiters = COMPANIES.filter((data) => !EMPLOYERS.includes(data)).map((data) => companies[data.key])
   const views = []
   const spread = (count, fromDay) => {
     for (let index = 0; index < count; index++) {

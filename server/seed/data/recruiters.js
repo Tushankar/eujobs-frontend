@@ -72,7 +72,7 @@ const mockJob = ({ company, title, tagline, city, workPreference, level, years, 
   hoursAgo,
 })
 
-/** The nine candidate-mock jobs of other companies, plus the three Acme jobs of the recruiter mock. */
+/** The nine candidate-mock jobs of other companies, the three Acme jobs of the recruiter mock and the sector jobs (employers.js). */
 export const JOBS = [
   mockJob({ company: 'linear', title: 'Senior Product Designer', tagline: 'Build something meaningful, with people who care about the details.', city: 'remote', workPreference: 'remote', level: 'senior', years: 5, usd: [140, 180], skills: ['Product Design', 'Figma', 'Design Systems'], hoursAgo: 2 }),
   mockJob({ company: 'notion', title: 'Product Designer, Growth', tagline: 'Shape how millions of people discover and adopt better ways to work.', city: 'amsterdam', workPreference: 'hybrid', level: 'mid', years: 3, usd: [120, 160], skills: ['UX Research', 'Prototyping', 'Figma'], hoursAgo: 5 }),
