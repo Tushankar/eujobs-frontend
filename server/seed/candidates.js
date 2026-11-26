@@ -18,9 +18,10 @@ import { PLACES } from './data/places.js'
  */
 const DAY_MS = 24 * 60 * 60 * 1000
 
-export function pdf(lines) {
+/** `info` (e.g. a fixed CreationDate) makes the bytes the same on every run (agencies.js writes them on two machines). */
+export function pdf(lines, info) {
   return new Promise((resolve, reject) => {
-    const doc = new PDFDocument({ margin: 56 })
+    const doc = new PDFDocument({ margin: 56, ...(info && { info }) })
     const chunks = []
     doc.on('data', (chunk) => chunks.push(chunk))
     doc.on('end', () => resolve(Buffer.concat(chunks)))

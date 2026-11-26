@@ -41,7 +41,7 @@ async function placementRules(job, candidateId) {
 }
 
 /** The rules from the job's confirmed contract, else `agreement`, else the default exclusivity, with their sources. */
-function rulesFrom(job, agreement) {
+export function rulesFrom(job, agreement) {
   const contract = job.agency.contract?.confirmedAt ? job.agency.contract.rules : null
   const rules = {}
   const sources = {}
@@ -63,7 +63,7 @@ function rulesFrom(job, agreement) {
 }
 
 /** A placement's fields from its job. */
-async function fromJob(job, candidateId) {
+export async function fromJob(job, candidateId) {
   const client = await AgencyClient.findById(job.agency.clientId)
   return {
     companyId: job.companyId,

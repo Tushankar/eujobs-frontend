@@ -1,9 +1,12 @@
 import { existsSync, readFileSync } from 'node:fs'
+import { mkdir, writeFile } from 'node:fs/promises'
+import { dirname } from 'node:path'
 import sharp from 'sharp'
-import { storeFile } from '../lib/files.js'
+import { absolutePath, storeFile } from '../lib/files.js'
 import { createDefaultStages } from '../modules/companies/companies.review.js'
 import { Company, KycDocument } from '../modules/companies/companies.model.js'
 import { ProfileView, RecruiterActivity, ShortlistEntry } from '../modules/discovery/discovery.model.js'
+import { File } from '../modules/files/files.model.js'
 import { Job, SavedJob } from '../modules/jobs/jobs.model.js'
 import { User } from '../modules/users/users.model.js'
 import { pdf } from './candidates.js'
@@ -24,10 +27,33 @@ const ago = (now, ms) => new Date(now - ms)
 // Real-brand demo companies get their public logo (owner request 2026-11-11); fictional ones an original logo (2026-11-16).
 const logoPath = (key) => new URL(`./assets/logos/${key}.png`, import.meta.url)
 
+/** The seed logo of `key` as stored (256 px PNG), or null when the seed has none. */
+export async function logoBuffer(key) {
+  if (!existsSync(logoPath(key))) return null
+  return sharp(readFileSync(logoPath(key))).resize(256, 256, { fit: 'contain', background: { r: 0, g: 0, b: 0, alpha: 0 } }).png().toBuffer()
+}
+
+/** Stores the seed logo of `key` (a company's, or an agency client's with purpose client_logo); null when there is none. */
+export async function storeLogo(ownerId, key, purpose = 'company_logo') {
+  const buffer = await logoBuffer(key)
+  return buffer && storeFile({ ownerId, purpose, buffer, ext: 'png', originalName: `${key}.png` })
+}
+
+/**
+ * 2026-11-26: dev and production share the database but not the upload folder, so scripts/addSectorJobs.js runs on both.
+ * A seeded file whose record exists but whose bytes are not on this machine is written again from `bytes()`. Only the
+ * seed's own file (same original name); a file someone uploaded in its place is left alone.
+ */
+export async function restoreFile(fileId, originalName, bytes) {
+  const file = fileId && (await File.findById(fileId))
+  if (!file || file.originalName !== originalName || existsSync(absolutePath(file))) return
+  await mkdir(dirname(absolutePath(file)), { recursive: true })
+  await writeFile(absolutePath(file), await bytes())
+}
+
 async function seedLogo(company, ownerId, key) {
-  if (!existsSync(logoPath(key))) return
-  const buffer = await sharp(readFileSync(logoPath(key))).resize(256, 256, { fit: 'contain', background: { r: 0, g: 0, b: 0, alpha: 0 } }).png().toBuffer()
-  const file = await storeFile({ ownerId, purpose: 'company_logo', buffer, ext: 'png', originalName: `${key}.png` })
+  const file = await storeLogo(ownerId, key)
+  if (!file) return
   company.logoFileId = file._id
   await company.save()
 }
@@ -60,15 +86,37 @@ async function seedCompany({ owner, recruiter, now, data, status }) {
   return company
 }
 
+/** An approved company (or agency): reviewed over 30 days ago, so its KYC records stay and the files are gone (M-186). */
+export async function seedApprovedCompany({ owner, recruiter, now, data }) {
+  const company = await seedCompany({ owner, recruiter, now, data, status: 'active' })
+  await KycDocument.insertMany(['identity', 'registration'].map((type) => ({ companyId: company._id, userId: recruiter._id, type, uploadedAt: company.submittedAt })))
+  await createDefaultStages(company, recruiter.language)
+  return company
+}
+
+/** A published job of the seed data (JOBS, agencies.js) for `company`, published `hoursAgo` before `now`. */
+export function jobDoc({ company: _key, city, hoursAgo, requiredSkills, preferredSkills, ...fields }, { company, recruiter, now }) {
+  const publishedAt = ago(now, hoursAgo * HOUR_MS)
+  return {
+    ...fields,
+    companyId: company._id,
+    createdBy: recruiter._id,
+    requiredSkills: skills(requiredSkills),
+    preferredSkills: skills(preferredSkills),
+    country: city === 'remote' ? 'REMOTE' : PLACES[city].countryCode,
+    location: city === 'remote' ? undefined : PLACES[city],
+    status: 'published',
+    publishedAt,
+    firstPublishedAt: publishedAt,
+    createdAt: publishedAt,
+  }
+}
+
 export async function seedRecruiters({ emailOf, owner, now }) {
   const companies = {}
   for (const data of COMPANIES) {
     const recruiter = await User.findOne({ email: emailOf(data.recruiter) })
-    const company = await seedCompany({ owner, recruiter, now, data, status: 'active' })
-    // Reviewed over 30 days ago: the KYC records stay, the files were deleted (M-186).
-    await KycDocument.insertMany(['identity', 'registration'].map((type) => ({ companyId: company._id, userId: recruiter._id, type, uploadedAt: company.submittedAt })))
-    await createDefaultStages(company, recruiter.language)
-    companies[data.key] = { company, recruiter }
+    companies[data.key] = { company: await seedApprovedCompany({ owner, recruiter, now, data }), recruiter }
   }
 
   // OQ-4.1: the recruiter applicant, with generated sample KYC files.
@@ -87,25 +135,7 @@ export async function seedRecruiters({ emailOf, owner, now }) {
   }
 
   const jobs = []
-  for (const { company: key, city, hoursAgo, requiredSkills, preferredSkills, ...fields } of JOBS) {
-    const { company, recruiter } = companies[key]
-    const publishedAt = ago(now, hoursAgo * HOUR_MS)
-    jobs.push(
-      await Job.create({
-        ...fields,
-        companyId: company._id,
-        createdBy: recruiter._id,
-        requiredSkills: skills(requiredSkills),
-        preferredSkills: skills(preferredSkills),
-        country: city === 'remote' ? 'REMOTE' : PLACES[city].countryCode,
-        location: city === 'remote' ? undefined : PLACES[city],
-        status: 'published',
-        publishedAt,
-        firstPublishedAt: publishedAt,
-        createdAt: publishedAt,
-      }),
-    )
-  }
+  for (const data of JOBS) jobs.push(await Job.create(jobDoc(data, { ...companies[data.company], now })))
 
   // The recruiter mocks: Acme's shortlist (with its activity), Alex's saved jobs and the profile-views KPI.
   const acme = companies.acme
