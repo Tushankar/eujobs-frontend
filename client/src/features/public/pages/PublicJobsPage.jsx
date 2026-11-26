@@ -14,6 +14,7 @@ import { cx } from '@/utils/cx.js'
 import { useGetPublicJobsQuery } from '../api.js'
 import PublicShell from '../components/PublicShell.jsx'
 import JobSearchForm from '../components/landing/JobSearchForm.jsx'
+import { useSplitScroll } from '../components/useSplitScroll.js'
 import landing from '../components/landing/Landing.module.css'
 import shell from '../components/PublicShell.module.css'
 import styles from './PublicJobsPage.module.css'
@@ -66,6 +67,7 @@ export default function PublicJobsPage() {
   const job = items.find((item) => item.id === openId) ?? items[0] ?? null
   // The open job's one public address: its home sector site, else the main site (so search engines see no copies).
   useCanonical(openId && job ? `${job.homeHost ? `https://${job.homeHost}` : mainOrigin}/jobs?job=${job.id}` : null)
+  const split = useSplitScroll(job?.id)
 
   /** Changes the search or tab (replacing history) and closes the open job, so the first result shows. */
   function update(changes) {
@@ -75,6 +77,7 @@ export default function PublicJobsPage() {
     setParams(next, { replace: true })
   }
   function open(id) {
+    if (id !== job?.id) split.pick()
     const next = new URLSearchParams(params)
     next.set('job', id)
     setParams(next)
@@ -173,8 +176,8 @@ export default function PublicJobsPage() {
             </button>
           </div>
         ) : (
-          <div className={cx(styles.layout, openId && styles.layoutOpen)}>
-            <div className={cx(styles.list, isFetching && styles.busy)} aria-busy={isFetching}>
+          <div ref={split.layout} className={cx(styles.layout, openId && styles.layoutOpen)}>
+            <div ref={split.list} className={cx(styles.list, isFetching && styles.busy)} aria-busy={isFetching}>
               <ul className={styles.rows}>
                 {items.map((item) => (
                   <li key={item.id} data-row>
@@ -183,7 +186,11 @@ export default function PublicJobsPage() {
                 ))}
               </ul>
             </div>
-            {job && <JobDetail key={job.id} job={job} onBack={close} />}
+            {job && (
+              <div className={styles.detailColumn}>
+                <JobDetail key={job.id} job={job} onBack={close} />
+              </div>
+            )}
           </div>
         )}
       </section>

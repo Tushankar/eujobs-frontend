@@ -178,11 +178,45 @@ section.panel {
 }
 
 .layout {
+  --split-top: 96px; /* clear of the floating navbar (StickyNav); read by useSplitScroll.js */
   display: grid;
   grid-template-columns: minmax(0, 400px) minmax(0, 1fr);
   gap: 24px;
   align-items: start;
   margin-top: 14px;
+}
+
+/*
+ * Wide screens (owner 2026-11-26): scrolling the page reads the open job first while the list stays; once the job's
+ * end shows, it stays there and the list scrolls on. Both columns are sticky; useSplitScroll.js sets the offsets.
+ */
+@media (min-width: 900px) {
+  .layout {
+    min-height: var(--split-height, auto);
+    overflow-anchor: none;
+  }
+
+  .list {
+    position: sticky;
+    top: var(--list-top, var(--split-top));
+  }
+
+  .detailColumn {
+    align-self: stretch;
+  }
+
+  /* Room above the job, so a job picked further down the list starts beside it. */
+  .detailColumn::before {
+    display: block;
+    height: var(--detail-offset, 0);
+    content: '';
+  }
+
+  .detail {
+    position: sticky;
+    top: var(--detail-top, var(--split-top));
+    bottom: var(--detail-bottom, auto);
+  }
 }
 
 .list {
@@ -320,20 +354,14 @@ section.panel {
 /* ---------- The open job ---------- */
 
 .detail {
-  position: sticky;
-  top: 96px; /* clear of the floating navbar (StickyNav) */
   display: flex;
   flex-direction: column;
   gap: 18px;
-  max-height: calc(100vh - 112px);
   padding: 32px;
-  overflow-y: auto;
-  overscroll-behavior: contain;
   border: 1px solid light-dark(#eef0f3, var(--border));
   border-radius: 20px;
   background: linear-gradient(180deg, light-dark(#f3f7ff, #111f3b) 0, light-dark(#fff, var(--card)) 160px);
   box-shadow: 0 8px 30px rgba(19, 31, 53, 0.04);
-  scrollbar-width: thin;
 }
 
 .back {
@@ -567,13 +595,10 @@ section.panel {
   }
 
   .detail {
-    position: static;
-    max-height: none;
     padding: 24px 20px;
-    overflow: visible;
   }
 
-  .layout:not(.layoutOpen) .detail,
+  .layout:not(.layoutOpen) :is(.detailColumn, .detail),
   .layoutOpen .list {
     display: none;
   }
