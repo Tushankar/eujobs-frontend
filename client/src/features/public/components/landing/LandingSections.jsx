@@ -1,7 +1,7 @@
 import { useRef, useState } from 'react'
 import { useTranslation } from 'react-i18next'
 import { Link } from 'react-router-dom'
-import { ArrowRight, ChevronRight } from 'lucide-react'
+import { ArrowRight, ChevronDown, ChevronRight } from 'lucide-react'
 import { BRAND } from '@/app/brand.js'
 import careerGlass from '@/assets/landing/career-glass.webp'
 import careerPhoto from '@/assets/landing/career-photo.webp'
@@ -127,6 +127,8 @@ export function Categories({ counts }) {
   )
 }
 
+const MOBILE_SECTORS = 6
+
 /**
  * 2026-11-24: "Browse by sector": the sectors that have open jobs right now, most jobs first, each opening /jobs on that
  * sector. Hidden while no job has a sector.
@@ -134,11 +136,23 @@ export function Categories({ counts }) {
 export function Sectors({ counts }) {
   const { t } = useTranslation()
   const sectors = useSectors()
+  const listRef = useRef(null)
+  const [expanded, setExpanded] = useState(false)
   const rows = Object.entries(counts ?? {})
     .map(([key, count]) => ({ key, count, name: sectors.name(key), Icon: sectorIcon(key) }))
     .filter((row) => row.name && row.count > 0)
     .sort((a, b) => b.count - a.count || a.name.localeCompare(b.name))
   if (!rows.length) return null
+  const toggle = () => {
+    // Rows that were hidden on a phone may still carry the scroll-in animation's start state: show them as they are.
+    if (!expanded) {
+      listRef.current?.querySelectorAll('[data-more]').forEach((item) => {
+        item.style.removeProperty('opacity')
+        item.style.removeProperty('transform')
+      })
+    }
+    setExpanded(!expanded)
+  }
   return (
     <section className={`${styles.card} ${styles.section} ${styles.sectors}`} aria-labelledby="sectors-title" data-landing-sectors>
       <div className={styles.sectionHead} data-reveal>
@@ -150,9 +164,10 @@ export function Sectors({ counts }) {
         </Link>
       </div>
       {/* Directory rows (owner 2026-11-26): grey line icon, name, live count and a chevron, hairline dividers. */}
-      <ul className={styles.sectorList} data-stagger>
-        {rows.map((row) => (
-          <li key={row.key}>
+      {/* Phones (owner 2026-11-26): the top MOBILE_SECTORS rows, then "Show all sectors" opens the rest. */}
+      <ul ref={listRef} id="sector-list" className={styles.sectorList} data-expanded={expanded || undefined} data-stagger>
+        {rows.map((row, index) => (
+          <li key={row.key} data-more={index >= MOBILE_SECTORS || undefined}>
             <Link
               to={`/jobs?sector=${row.key}`}
               className={styles.sectorLink}
@@ -167,6 +182,12 @@ export function Sectors({ counts }) {
           </li>
         ))}
       </ul>
+      {rows.length > MOBILE_SECTORS && (
+        <button type="button" className={styles.sectorMore} aria-expanded={expanded} aria-controls="sector-list" onClick={toggle}>
+          {expanded ? t('landing:sectors.showFewer') : t('landing:sectors.showAll', { count: rows.length })}
+          <ChevronDown size={16} aria-hidden="true" className={expanded ? styles.sectorMoreOpen : undefined} />
+        </button>
+      )}
     </section>
   )
 }

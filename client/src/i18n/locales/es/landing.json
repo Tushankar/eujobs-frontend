@@ -175,6 +175,8 @@
     "titleLead": "Explora por",
     "titleAccent": "sector",
     "text": "Encuentra empleos abiertos en tu tipo de trabajo, de la sanidad al arte y las organizaciones benéficas.",
-    "viewAll": "Ver todos los empleos"
+    "viewAll": "Ver todos los empleos",
+    "showAll": "Ver todos los sectores ({{count}})",
+    "showFewer": "Ver menos"
   }
 }

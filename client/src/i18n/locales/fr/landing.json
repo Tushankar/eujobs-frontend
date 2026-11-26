@@ -175,6 +175,8 @@
     "titleLead": "Parcourir par",
     "titleAccent": "secteur",
     "text": "Trouvez des offres ouvertes dans votre type de travail, de la santé aux arts et aux associations.",
-    "viewAll": "Voir toutes les offres"
+    "viewAll": "Voir toutes les offres",
+    "showAll": "Voir tous les secteurs ({{count}})",
+    "showFewer": "Voir moins"
   }
 }

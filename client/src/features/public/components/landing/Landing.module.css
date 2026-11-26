@@ -2244,8 +2244,8 @@
 /* Heading and "View all jobs" on the left, sectors in 3 columns of divided rows on the right. */
 .sectors {
   display: grid;
-  grid-template-columns: minmax(0, 300px) minmax(0, 1fr);
-  gap: 24px 56px;
+  grid-template-columns: minmax(0, 280px) minmax(0, 1fr);
+  gap: 24px 40px;
   align-items: start;
   padding-bottom: 40px;
 }
@@ -2272,7 +2272,7 @@
   z-index: 1;
   display: grid;
   grid-template-columns: repeat(3, minmax(0, 1fr));
-  column-gap: 32px;
+  column-gap: 24px;
   margin: 0;
   padding: 0;
   list-style: none;
@@ -2305,10 +2305,7 @@
 
 .sectorName {
   flex: 1;
-  min-width: 0;
-  overflow: hidden;
-  text-overflow: ellipsis;
-  white-space: nowrap;
+  min-width: 0; /* long names wrap, never cut off */
 }
 
 .sectorCount {
@@ -2340,7 +2337,8 @@
   transform: translateX(2px);
 }
 
-@media (max-width: 1099px) {
+/* Narrower laptops: heading on top so the three columns get the full width. */
+@media (max-width: 1279px) {
   .sectors {
     grid-template-columns: minmax(0, 1fr);
   }
@@ -2350,15 +2348,52 @@
   }
 }
 
-@media (max-width: 699px) {
-  .sectorList {
-    grid-template-columns: repeat(2, minmax(0, 1fr));
-    column-gap: 24px;
-  }
+/* "Show all sectors" only exists on phones. */
+.sectorMore {
+  display: none;
 }
 
-@media (max-width: 479px) {
+/* Phones (owner 2026-11-26): one column, the top 6 rows, then an outlined pill opens the rest. */
+@media (max-width: 699px) {
   .sectorList {
     grid-template-columns: minmax(0, 1fr);
+  }
+
+  .sectorList:not([data-expanded]) li[data-more] {
+    display: none;
+  }
+
+  .sectorMore {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    gap: 6px;
+    width: 100%;
+    min-height: 44px;
+    margin-top: 4px;
+    padding: 0 20px;
+    border: 1px solid light-dark(#d5d9e0, var(--border));
+    border-radius: 999px;
+    background: transparent;
+    color: light-dark(#161719, var(--foreground));
+    font: inherit;
+    font-size: 14px;
+    font-weight: 600;
+    cursor: pointer;
+    transition: background-color 0.15s ease, border-color 0.15s ease;
+  }
+
+  .sectorMore:hover,
+  .sectorMore:focus-visible {
+    border-color: light-dark(#161719, var(--foreground));
+    background: var(--muted);
+  }
+
+  .sectorMore svg {
+    transition: transform 0.2s ease;
+  }
+
+  .sectorMore .sectorMoreOpen {
+    transform: rotate(180deg);
   }
 }

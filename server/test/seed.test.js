@@ -97,9 +97,9 @@ describe('seed:demo (§3.20, OD9, P12)', () => {
     await seedDemo()
     // Compared without printing: the addresses derive from SEED_ADMIN_EMAIL.
     assert.ok(JSON.stringify(await snapshot()) === JSON.stringify(first), 'the second run gives the same accounts')
-    // The Owner, 5 demo accounts, the 5 recruiter-mock candidates, 9 mock-company and 12 sector-employer recruiters and
+    // The Owner, 5 demo accounts, the 5 recruiter-mock candidates, 9 mock-company and 42 sector-employer recruiters and
     // Atlas Interim's contact on example.com (§3.20, 2026-11-26).
-    assert.equal(first.length, 33)
+    assert.equal(first.length, 63)
 
     const owner = first.find((user) => user.isOwner)
     assert.ok(owner.email === config.seed.adminEmail && owner.role === 'admin', 'Owner uses SEED_ADMIN_EMAIL')
@@ -109,36 +109,29 @@ describe('seed:demo (§3.20, OD9, P12)', () => {
       assert.ok(user, `+${tag} alias exists`)
       assert.equal(`${user.role}:${user.status}:${user.pickerCountry}`, state)
     }
-    const exampleCom = first.filter((user) => user.email.endsWith('@example.com')).map((user) => `${user.email}:${user.pickerCountry}`)
-    assert.deepEqual(exampleCom, [
-      'aisha.patel@example.com:SE',
-      'astrid.lindqvist@example.com:SE',
-      'camille.martin@example.com:FR',
-      'chloe.bernard@example.com:FR',
-      'ciara.byrne@example.com:IE',
-      'daniel.kim@example.com:FR',
-      'diego.navarro@example.com:ES',
-      'edward.vale@example.com:GB',
-      'erik.lund@example.com:SE',
-      'felix.brandt@example.com:DE',
-      'grace.okafor@example.com:GB',
-      'hannah.price@example.com:GB',
-      'ines.costa@example.com:PT',
-      'james.chen@example.com:NL',
-      'jonas.weber@example.com:DE',
-      'laura.puig@example.com:ES',
-      'lena.fischer@example.com:DE',
-      'lucas.meyer@example.com:NL',
-      'marek.kowalski@example.com:PL',
-      'maya.brooks@example.com:IE',
-      'nora.kelly@example.com:IE',
-      'oliver.park@example.com:DE',
-      'ravi.shah@example.com:GB',
-      'rita.almeida@example.com:PT',
-      'sofia.martinez@example.com:GB',
-      'stefan.huber@example.com:DE',
-      'tom.becker@example.com:GB',
-    ])
+    // The recruiter-mock people and recruiters on example.com (§3.20), plus each sector employer's recruiter and Atlas
+    // Interim's contact (2026-11-26), every one in their city's country.
+    const exampleCom = new Map(first.filter((user) => user.email.endsWith('@example.com')).map((user) => [user.email, user.pickerCountry]))
+    const mock = {
+      'aisha.patel@example.com': 'SE',
+      'camille.martin@example.com': 'FR',
+      'daniel.kim@example.com': 'FR',
+      'erik.lund@example.com': 'SE',
+      'ines.costa@example.com': 'PT',
+      'james.chen@example.com': 'NL',
+      'lena.fischer@example.com': 'DE',
+      'lucas.meyer@example.com': 'NL',
+      'maya.brooks@example.com': 'IE',
+      'nora.kelly@example.com': 'IE',
+      'oliver.park@example.com': 'DE',
+      'ravi.shah@example.com': 'GB',
+      'sofia.martinez@example.com': 'GB',
+      'tom.becker@example.com': 'GB',
+    }
+    for (const [email, country] of Object.entries(mock)) assert.equal(exampleCom.get(email), country, email)
+    const sectorPeople = [...EMPLOYERS, ...AGENCIES].filter((company) => company.recruiter.email)
+    for (const company of sectorPeople) assert.equal(exampleCom.get(company.recruiter.email), PLACES[company.city].countryCode, company.recruiter.email)
+    assert.equal(exampleCom.size, 14 + 43)
   })
 
   it('seeds Alex incomplete and the recruiter-mock candidates complete, with their files on disk (OQ-4, P3-D11)', async () => {
@@ -167,12 +160,12 @@ describe('seed:demo (§3.20, OD9, P12)', () => {
 
   it('seeds approved companies with their jobs, the applicant and the recruiter-mock state (OQ-4, P4-C)', async () => {
     const companies = await Company.find().populate('ownerUserId', 'email status')
-    // 10 mock companies, 12 sector employers, 2 agencies and the applicant (2026-11-26)
-    assert.equal(companies.length, 25)
+    // 10 mock companies, 42 sector employers, 2 agencies and the applicant (2026-11-26)
+    assert.equal(companies.length, 55)
     const acme = companies.find((company) => company.displayName === 'Acme Studio')
     assert.deepEqual([acme.ownerUserId.email === demoAddress('sarah'), acme.location.toObject(), Boolean(acme.verifiedAt)], [true, PLACES.london, true])
     assert.equal(await PipelineStage.countDocuments({ companyId: acme._id }), 6)
-    assert.equal(await PipelineStage.countDocuments(), 24 * 6)
+    assert.equal(await PipelineStage.countDocuments(), 54 * 6)
     assert.ok(companies.filter((company) => company.ownerUserId.status === 'active').every((company) => company.sector && company.logoFileId), 'every approved company has a sector and a logo')
 
     const jobs = await Job.find()

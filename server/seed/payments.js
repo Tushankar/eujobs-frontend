@@ -61,8 +61,8 @@ export async function seedPayments({ emailOf, now }) {
   await subscribe(users.get(emailOf({ tag: 'sarah' })), 'recruiter_plus', recruiterPlus.prices.find((price) => price.currency === 'GBP').stripePriceId)
 }
 
-/** A real Stripe test subscription (pm_card_visa) whose first invoice and state the webhook handlers record. */
-async function subscribe(user, planKey, priceId) {
+/** A real Stripe test subscription (pm_card_visa) whose first invoice and state the webhook handlers record (also the agencies' Agency Plus, agencies.js). */
+export async function subscribe(user, planKey, priceId) {
   const metadata = { db: config.dbName, userId: String(user._id), seed: 'true' }
   const customer = await stripe().customers.create({
     email: user.email,

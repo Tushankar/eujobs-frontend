@@ -8,9 +8,11 @@ import { RULES } from '../modules/agencies/rules.schema.js'
 import { Company } from '../modules/companies/companies.model.js'
 import { Job } from '../modules/jobs/jobs.model.js'
 import { notify } from '../modules/notifications/notifications.service.js'
+import { Plan, Subscription } from '../modules/payments/payments.model.js'
 import { User } from '../modules/users/users.model.js'
 import { seedApplication } from './applications.js'
 import { pdf } from './candidates.js'
+import { subscribe } from './payments.js'
 import { AGENCIES } from './data/agencies.js'
 import { CANDIDATES } from './data/candidates.js'
 import { CITY_CURRENCY } from './data/employers.js'
@@ -173,6 +175,11 @@ export async function seedAgencies({ emailOf, owner, now }) {
     if (!user) continue
     const company = (await Company.findOne({ ownerUserId: user._id })) ?? (await seedApprovedCompany({ owner, recruiter: user, now, data: agency }))
     await restoreFile(company.logoFileId, `${agency.key}.png`, () => logoBuffer(agency.key))
+    // Owner 2026-11-26: Agency Plus, so every agency job stays live (without it only the newest does, enforceFreeJobLimit).
+    if (!(await Subscription.exists({ userId: user._id }))) {
+      const plan = await Plan.findOne({ key: 'agency_plus' })
+      await subscribe(user, 'agency_plus', plan.prices.find((price) => price.currency === agency.currency).stripePriceId)
+    }
     const clients = await seedClients(agency, company, user, emailOf)
     const agreement = await seedAgreement(agency, company, user, now)
     const jobs = await seedJobs(agency, company, user, clients, now)
