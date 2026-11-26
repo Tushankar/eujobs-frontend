@@ -108,7 +108,10 @@
     "noRole": "Aucun rôle attribué"
   },
   "notices": {
-    "wrongPortal": "Ce compte utilise cet espace de travail, nous l’avons donc ouvert pour vous."
+    "wrongPortal": {
+      "title": "Vous êtes dans votre espace {{workspace}}",
+      "body": "Vous avez utilisé la page de connexion {{from}}, mais ce compte utilise l’espace {{workspace}} : nous l’avons donc ouvert pour vous."
+    }
   },
   "footer": {
     "legal": "Informations légales"

@@ -108,7 +108,10 @@
     "noRole": "Sin rol asignado"
   },
   "notices": {
-    "wrongPortal": "Esta cuenta usa este espacio de trabajo, así que lo hemos abierto para ti."
+    "wrongPortal": {
+      "title": "Estás en tu espacio de trabajo de {{workspace}}",
+      "body": "Iniciaste sesión en la página de {{from}}, pero esta cuenta usa el espacio de trabajo de {{workspace}}, así que lo hemos abierto para ti."
+    }
   },
   "footer": {
     "legal": "Información legal"

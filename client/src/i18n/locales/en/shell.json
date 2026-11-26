@@ -108,7 +108,10 @@
     "noRole": "No role assigned"
   },
   "notices": {
-    "wrongPortal": "This account uses this workspace, so we opened it for you."
+    "wrongPortal": {
+      "title": "You’re in your {{workspace}} workspace",
+      "body": "You signed in on the {{from}} page, but this account uses the {{workspace}} workspace, so we opened it for you."
+    }
   },
   "footer": {
     "legal": "Legal"
